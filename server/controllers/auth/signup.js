@@ -50,14 +50,19 @@ exports.signup = (req, res, next) => {
           INSERT INTO
             member(member_id, email_address, password)
           VALUES
-            ('${memberId}', '${email}', '${passwordHash}');
+            ('${memberId}', '${email}', '${passwordHash}')
+          RETURNING
+            member_id, email_address, created_at;
         `)
         .then(result => {
+          const newMember = result.rows[0];
+
           res.status(200).send({
             status: {
               code: 200,
               type: "success"
-            }
+            },
+            member: newMember
           })
           next();
         })
