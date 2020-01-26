@@ -17,18 +17,18 @@ exports.signup = (req, res, next) => {
       member
     WHERE
       email_address = '${email}';
-  `).then(res => {
+  `).then(result => {
     /**
      * res.rows
      * returns array of object
      */
-    if (res.rows[0]) {
+    if (result.rows[0]) {
       res.status(409).send({
         "status": {
           "code": 409,
           "type": "error"
         },
-        user: res.rows[0],
+        user: result.rows[0],
         "error": {
           "code": "invalid_email",
           "message": "E-Mail already taken" 
@@ -52,7 +52,7 @@ exports.signup = (req, res, next) => {
           VALUES
             ('${memberId}', '${email}', '${passwordHash}');
         `)
-        .then(res => {
+        .then(result => {
           res.status(200).send({
             status: {
               code: 200,
