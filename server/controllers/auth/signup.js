@@ -70,6 +70,9 @@ exports.signup = (req, res, next) => {
             },
             member: newMember
           })
+
+          // todo: send email for account verification
+
           next();
         })
         .catch(error => {
