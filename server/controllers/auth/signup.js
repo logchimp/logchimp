@@ -1,6 +1,7 @@
 // modules 
 const bcrypt = require('bcrypt');
 const uuid = require('uuid/v1');
+const jwt = require('jsonwebtoken');
 
 const database = require("../../database");
 
@@ -56,6 +57,11 @@ exports.signup = (req, res, next) => {
         `)
         .then(result => {
           const newMember = result.rows[0];
+
+          /**
+           * authToken sent via email will expire after 1 hr
+           */
+          const authToken = jwt.sign(newMember, 'scretKey', { expiresIn: '1h' });
 
           res.status(200).send({
             status: {
