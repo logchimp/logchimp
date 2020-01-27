@@ -29,7 +29,6 @@ exports.signup = (req, res, next) => {
           "code": 409,
           "type": "error"
         },
-        user: result.rows[0],
         "error": {
           "code": "invalid_email",
           "message": "E-Mail already taken" 
