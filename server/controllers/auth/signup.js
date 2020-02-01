@@ -52,7 +52,7 @@ exports.signup = (req, res, next) => {
           VALUES
             ('${memberId}', '${email}', '${passwordHash}')
           RETURNING
-            member_id, email_address, created_at;
+            member_id, email_address, is_owner, is_moderator, is_blocked, created_at;
         `)
         .then(result => {
           const newMember = result.rows[0];
