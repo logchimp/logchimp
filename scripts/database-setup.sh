@@ -113,7 +113,7 @@ echo
 #     (1, 'New', 'new', '3778ff'),
 #     (2, 'Improvement', 'improvement', '11C63C'),
 #     (3, 'Fix', 'fix', 'ff4772')
-#   );" \
+#   ;" \
 # -d $PG_DATABASE \
 # -h $PG_HOST \
 # -p $PG_PORT \
