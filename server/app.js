@@ -17,9 +17,9 @@ database.connect().then(err => {
 
     // start express server at SERVER_PORT
     app.listen(process.env.SERVER_PORT, () => {
-      
+
       // contains key-value pairs of data submitted in the request body
-      app.use(bodyParser.json()) 
+      app.use(bodyParser.json())
 
       // enable all CORS requests
       app.use(cors());
@@ -32,4 +32,4 @@ database.connect().then(err => {
   }
 }).catch(error => {
   console.log(error);
-});  
+});
