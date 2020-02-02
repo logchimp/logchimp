@@ -1,11 +1,11 @@
-function notFound(req, res, next) {
+exports.notFound = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);
   res.status(404);
   next(error);
 }
 
 // eslint-disable-next-line no-unused-vars
-function errorHandler(error, req, res, next) {
+exports.errorHandler = (error, req, res, next) => {
   const { message, stack } = error;
   const status = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(status).json({
@@ -19,8 +19,3 @@ function errorHandler(error, req, res, next) {
     stack: process.env.NODE_ENV === 'production' ? '🥞' : stack,
   });
 }
-
-module.exports = {
-  errorHandler,
-  notFound,
-};
