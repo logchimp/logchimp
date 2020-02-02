@@ -1,5 +1,5 @@
 // modules 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const uuid = require('uuid/v1');
 const jwt = require('jsonwebtoken');
 

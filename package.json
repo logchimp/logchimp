@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "bcrypt": "^3.0.7",
+    "bcryptjs": "^2.4.3",
     "core-js": "^3.4.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -31,20 +31,6 @@
     "eslint-plugin-vue": "^5.0.0",
     "nodemon": "^2.0.2",
     "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
   },
   "browserslist": [
     "> 1%",
