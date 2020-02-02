@@ -66,7 +66,7 @@ exports.login = (req, res, next) => {
       }
     });
   }).catch(error => {
-    console.log(error);
+    console.error(error);
 
     res.status(409).send({
       status: {
