@@ -10,6 +10,7 @@
     "server-start": "node -r dotenv/config server/app.js"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^3.0.7",
     "core-js": "^3.4.4",
     "cors": "^2.8.5",
