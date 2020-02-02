@@ -1,14 +1,34 @@
-// modules 
+// modules
+const Joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 const uuid = require('uuid/v1');
 const jwt = require('jsonwebtoken');
 
 const database = require("../../database");
 
+const signupSchema = Joi.object({
+	email: Joi.string()
+		.email()
+    .min(4)
+    .max(50)
+    .required(),
+	password: Joi.string()
+		.min(6)
+    .max(72)
+    .required(),
+});
+
 exports.signup = (req, res, next) => {
-  const email = req.body.email;
-  // password cannot be longer than 72 characters
-  const password = req.body.password;
+
+	const valid = signupSchema.validate(req.body);
+
+	if (valid.error) {
+		res.status(422);
+		next(valid.error);
+		return false;
+	}
+
+	const { email, password } = valid.value;
 
   // validate member existance in database
   database.query(`
@@ -31,10 +51,9 @@ exports.signup = (req, res, next) => {
         },
         "error": {
           "code": "invalid_email",
-          "message": "E-Mail already taken" 
+          "message": "E-Mail already taken"
         }
       })
-      next();
     } else {
       // password hashing
       const bcryptSaltRounds = 10;
