@@ -52,7 +52,6 @@ exports.login = (req, res, next) => {
           },
           token: loginToken
         })
-        next();
       } else {
         res.status(409).send({
           status: {
@@ -64,7 +63,6 @@ exports.login = (req, res, next) => {
             message: "Password is incorrect"
           }
         })
-        next();
       }
     });
   }).catch(error => {
@@ -80,6 +78,5 @@ exports.login = (req, res, next) => {
         message: "Member not found."
       }
     })
-    next();
   });
 }
