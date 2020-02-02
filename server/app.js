@@ -8,6 +8,8 @@ const routes = require("./routes/v1");
 
 const app = express()
 
+const SERVER_PORT = process.env.SERVER_PORT;
+
 database.connect().then(err => {
   if (err) {
     // output error on connection to database failed
@@ -16,7 +18,7 @@ database.connect().then(err => {
     console.log(`Connected to '${process.env.PG_DATABASE}' database!`);
 
     // start express server at SERVER_PORT
-    app.listen(process.env.SERVER_PORT, () => {
+    app.listen(SERVER_PORT, () => {
       
       // contains key-value pairs of data submitted in the request body
       app.use(bodyParser.json()) 
@@ -27,7 +29,7 @@ database.connect().then(err => {
       // importing all routes modules
       app.use(routes)
 
-      console.log(`Listening at port: ${process.env.SERVER_PORT}`);
+      console.log(`Listening at port: ${SERVER_PORT}`);
     })
   }
 }).catch(error => {

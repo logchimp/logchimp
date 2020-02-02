@@ -1,4 +1,4 @@
-# logchimp
+# logChimp
 
 ## Project setup
 ```
@@ -7,17 +7,18 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+yarn server-dev
+yarn client-dev
 ```
 
 ### Compiles and minifies for production
 ```
-yarn build
+yarn client-build
 ```
 
 ### Lints and fixes files
 ```
-yarn lint
+yarn client-lint
 ```
 
 ### Customize configuration
