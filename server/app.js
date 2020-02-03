@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 
 const database = require("./database");
 const routes = require("./routes/v1");
+const { errorHandler, notFound } = require('./middlewares');
 
 const app = express()
 
@@ -25,7 +26,11 @@ database.connect().then(err => {
       app.use(cors());
 
       // importing all routes modules
-      app.use(routes)
+			app.use(routes);
+
+			// Error handler middlewares
+			app.use(notFound);
+			app.use(errorHandler);
 
       console.log(`Listening at port: ${process.env.SERVER_PORT}`);
     })
