@@ -10,7 +10,7 @@ exports.validate = (req, res, next) => {
 
     jwt.verify(headersToken, "secretKey", err => {
       if (err) {
-        console.log(err);
+        console.error(err);
 
         /**
          * sending response to client
