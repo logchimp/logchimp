@@ -15,6 +15,6 @@ exports.deleteById = (req, res, next) => {
 			}
 		})
 	}).catch(error => {
-		console.log(error);
+		console.error(error);
 	});
 }

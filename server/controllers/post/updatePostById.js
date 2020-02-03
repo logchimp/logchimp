@@ -35,6 +35,6 @@ exports.updatePostById = (req, res, next) => {
 			post: postData
 		})
 	}).catch(error => {
-		console.log(error);
+		console.error(error);
 	});
 }
