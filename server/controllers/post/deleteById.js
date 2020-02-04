@@ -16,5 +16,16 @@ exports.deleteById = (req, res, next) => {
 		})
 	}).catch(error => {
 		console.error(error);
+
+		res.status(500).send({
+			status: {
+				code: 500,
+				type: "error"
+			},
+			error: {
+				code: "post_not_deleted",
+				message: "Unable to delete post."
+			}
+		})
 	});
 }
