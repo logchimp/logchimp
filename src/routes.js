@@ -4,6 +4,14 @@ import VueRouter from "vue-router"
 
 Vue.use(VueRouter)
 
+const routes = [
+	{
+		path: "/",
+		name: "HomePage",
+		component: require("./pages/Home").default
+	}
+]
+
 const router = new VueRouter({
 	base: "/",
 	mode: "history",
