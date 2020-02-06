@@ -8,8 +8,6 @@ exports.create = (req, res, next) => {
 	const postSlug = req.body.slug;
 	const bodyMarkdown = req.body.bodyMarkdown;
 	const memberId = req.body.memberId;
-	const categoryId = req.body.categoryId;
-	const statusId = req.body.statusId;
 
 	// generate unique indentification
 	const postId = uuid()
@@ -17,22 +15,20 @@ exports.create = (req, res, next) => {
 	const postSlugId = `${postSlug}-${Date.now().toString(36)}`
 
 	database.query(`
-    INSERT INTO
-      post
-        (post_id, title, slug, body_markdown, member_id, category_id, status_id)
-    VALUES
-      (
-        '${postId}',
-        '${postTitle}',
-        '${postSlugId}',
-        '${bodyMarkdown}',
-        '${memberId}',
-        '${categoryId}',
-        '${statusId}'
-      )
-    RETURNING
-      post_id, slug
-  ;`).then(post => {
+	  INSERT INTO
+	    post
+	      (post_id, title, slug, body_markdown, member_id)
+	  VALUES
+	    (
+	      '${postId}',
+	      '${postTitle}',
+	      '${postSlugId}',
+	      '${bodyMarkdown}',
+	      '${memberId}'
+	    )
+	  RETURNING
+	    post_id, slug
+	;`).then(post => {
 		// post data after inserting inside database
 		const postData = post.rows[0];
 
