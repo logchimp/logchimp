@@ -91,7 +91,24 @@ export default {
 					// todo: invalid email show error message
 				});
 			} else {
-				// todo: login
+				axios
+					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/login`, {
+						email: this.email,
+						password: this.password
+					})
+					.then(response => {
+						if (response.status === 200) {
+							// store member data inside localStorage
+							const memberToken = response.data.token;
+							localStorage.setItem("authToken", memberToken);
+
+							const memberId = response.data.member.member_id;
+							localStorage.setItem("memberId", memberId);
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					});
 			}
 		}
 	}
