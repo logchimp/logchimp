@@ -28,6 +28,9 @@
 
 			<component :is="homeTab"></component>
 		</tabs>
+		<div>
+			<create-post />
+		</div>
 	</div>
 </template>
 
@@ -38,6 +41,7 @@ import TabGroup from "../components/ui/tab/TabGroup";
 import TabItem from "../components/ui/tab/TabItem";
 import LatestPosts from "../components/layout/LatestPosts";
 import OldestPosts from "../components/layout/OldestPosts";
+import CreatePost from "../components/layout/CreatePost";
 
 // icons
 import BarIcon from "../assets/images/icons/bar";
@@ -56,6 +60,7 @@ export default {
 		TabItem,
 		LatestPosts,
 		OldestPosts,
+		CreatePost,
 		BarIcon,
 		AlignCenterIcon
 	},
