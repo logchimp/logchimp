@@ -8,7 +8,9 @@
 			{{ voters }}
 		</div>
 		<div class="post__content">
-			<h3 class="post__content-title">{{ title }}</h3>
+			<router-link class="post__content-link" :to="`post/${slug}`">
+				<h3 class="post__content-title">{{ title }}</h3>
+			</router-link>
 			<p class="post__content-bodyMarkdown" v-html="bodyMarkdown" />
 		</div>
 	</div>
@@ -30,6 +32,10 @@ export default {
 		bodyMarkdown: {
 			type: String,
 			default: ""
+		},
+		slug: {
+			type: String,
+			required: true
 		},
 		voters: {
 			type: Number,
