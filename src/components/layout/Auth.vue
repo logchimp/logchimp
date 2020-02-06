@@ -71,25 +71,25 @@ export default {
 			this.authType = value;
 		},
 		memberAuth() {
-			if (this.authType === 'signup') {
+			if (this.authType === "signup") {
 				axios
-				.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
-					email: this.email,
-					password: this.passwod
-				})
-				.then(response => {
-					if (response.status === 200) {
-						/**
-						 * todo: show snackbar notification
-						 * check your inbox for email verification.
-						 */
-					}
-				})
-				.catch(error => {
-					console.log(error);
-					// todo: email exist re-direct to login page
-					// todo: invalid email show error message
-				});
+					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
+						email: this.email,
+						password: this.password
+					})
+					.then(response => {
+						if (response.status === 200) {
+							/**
+							 * todo: show snackbar notification
+							 * check your inbox for email verification.
+							 */
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						// todo: email exist re-direct to login page
+						// todo: invalid email show error message
+					});
 			} else {
 				// todo: login
 			}
