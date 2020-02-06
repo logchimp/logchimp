@@ -1,0 +1,42 @@
+header
+	background-color: #484D7C
+	padding: .875rem 1rem
+
+.header__container,
+.header__logo,
+.nav__list,
+.nav__item
+	display: flex
+	align-items: center
+
+// navbar
+.header__nav
+	margin-left: auto
+
+.nav__list, .nav__item
+	display: flex
+	align-items: center
+
+.nav__item
+	margin-left: 1.5rem
+	color: rgba(255, 255, 255, .5)
+	font-weight: 600
+	position: relative
+
+	&:first-child
+		margin-left: 0
+
+.nav__profile
+	width: 1.875rem
+	height: 1.875rem
+	border-radius: 1.875rem
+	cursor: pointer
+
+.nav__profile-dropdown
+	top: 2.4rem
+
+.nav__auth-link
+	cursor: pointer
+
+	&:hover
+		color: #ffffff
