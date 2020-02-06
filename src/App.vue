@@ -1,7 +1,10 @@
 <template>
 	<div id="app">
 		<Header />
-	</div>
+		<div class="container">
+			<router-view />
+		</div>
+  </div>
 </template>
 
 <script>
