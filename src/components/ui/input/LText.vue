@@ -1,7 +1,7 @@
 <template>
 	<input
 		:type="type"
-		class="input__text"
+		class="input__field input__text"
 		:class="{
 			'disabled': disabled
 		}"
