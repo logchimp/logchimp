@@ -40,7 +40,6 @@ psql \
     member_id VARCHAR(80) NOT NULL REFERENCES member(member_id),
     category_id VARCHAR(80) REFERENCES category(category_id),
     status_id VARCHAR(80) REFERENCES status(status_id),
-    voters VARCHAR [],
     created_at timestamp DEFAULT current_timestamp,
     updated_at timestamp DEFAULT current_timestamp
   );" \
