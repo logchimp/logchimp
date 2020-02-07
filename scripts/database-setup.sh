@@ -50,6 +50,21 @@ psql \
 -U $PG_USER
 echo
 
+echo "==== vote table ===="
+psql \
+-c \
+  "CREATE TABLE IF NOT EXISTS vote (
+    vote_id VARCHAR(80) PRIMARY KEY,
+    post_id VARCHAR(100) NOT NULL,
+    member_id VARCHAR(100) NOT NULL,
+    created_at timestamp DEFAULT current_timestamp
+  );" \
+-d $PG_DATABASE \
+-h $PG_HOST \
+-p $PG_PORT \
+-U $PG_USER
+echo
+
 echo "==== board table ===="
 psql \
 -c \
