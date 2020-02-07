@@ -32,15 +32,40 @@ exports.create = (req, res, next) => {
 		// post data after inserting inside database
 		const postData = post.rows[0];
 
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			post: {
-				postId: postData.post_id,
-				slug: postData.slug
-			}
+		// generate unique indentification
+		const voteId = uuid()
+
+		/**
+		 * after saving post to post table
+		 * by-default add one upvote from the author of the post
+		 */
+		database.query(`
+		INSERT INTO
+			vote
+				(vote_id, post_id, member_id)
+		VALUES
+			(
+				'${voteId}',
+				'${postId}',
+				'${memberId}'
+			)
+		RETURNING
+			vote_id, post_id, member_id
+	;`).then(vote => {
+
+			res.status(200).send({
+				status: {
+					code: 200,
+					type: "success"
+				},
+				post: {
+					postId: postData.post_id,
+					slug: postData.slug
+				}
+			});
+
+		}).catch(error => {
+			console.error(error);
 		});
 	}).catch(error => {
 		console.error(error);
