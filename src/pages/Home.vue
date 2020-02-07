@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<tabs>
+	<div class="homepage">
+		<tabs class="homepage__posts">
 			<tab-group>
 				<tab-item
 					@click.native="updateTab('latest')"
@@ -28,7 +28,7 @@
 
 			<component :is="homeTab"></component>
 		</tabs>
-		<div>
+		<div class="homepage__createpost">
 			<create-post />
 		</div>
 	</div>
