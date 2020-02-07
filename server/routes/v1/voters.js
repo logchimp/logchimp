@@ -8,6 +8,6 @@ const vote = require('../../controllers/vote');
 // middleware
 const token = require('../../middlewares/token');
 
-router.post('/vote/create', token.validate, vote.create)
+router.post('/vote/upvote', token.validate, vote.upvote)
 
 module.exports = router

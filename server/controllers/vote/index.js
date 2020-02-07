@@ -1,4 +1,5 @@
-const create = require('./create');
+const upvote = require('./upvote');
+
 module.exports = {
-	...create
+	...upvote
 }
