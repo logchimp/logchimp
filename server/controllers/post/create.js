@@ -5,14 +5,20 @@ const database = require('../../database')
 
 exports.create = (req, res, next) => {
 	const postTitle = req.body.title;
-	const postSlug = req.body.slug;
 	const bodyMarkdown = req.body.bodyMarkdown;
 	const memberId = req.body.memberId;
 
 	// generate unique indentification
 	const postId = uuid()
 
-	const postSlugId = `${postSlug}-${Date.now().toString(36)}`
+	const slug = `${
+		postTitle
+			.replace(/[^\w\s]/gi, '')
+			.replace(/\s\s+/gi, ' ')
+			.toLowerCase()
+			.split(" ")
+			.join("-")
+		}-${Date.now().toString(36)}`
 
 	database.query(`
 	  INSERT INTO
@@ -22,7 +28,7 @@ exports.create = (req, res, next) => {
 	    (
 	      '${postId}',
 	      '${postTitle}',
-	      '${postSlugId}',
+	      '${slug}',
 	      '${bodyMarkdown}',
 	      '${memberId}'
 	    )
