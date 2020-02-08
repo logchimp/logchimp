@@ -21,8 +21,8 @@
   <a href="https://logchimp.codecarrot.net/">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome!" />
   </a>
-  <a href="https://twitter.com/intent/follow?screen_name=logchimp">
-    <img src="https://img.shields.io/twitter/follow/gitthermal.svg?label=Follow%20@logchimp" alt="Follow @logchimp" />
+  <a href="https://twitter.com/intent/follow?screen_name=@logchimp">
+    <img src="https://img.shields.io/twitter/follow/logchimp.svg?label=Follow%20@logchimp" alt="Follow @logchimp" />
   </a>
 </p>
 
