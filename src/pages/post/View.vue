@@ -13,6 +13,12 @@
 					class="viewpost__menu-icon"
 				/>
 				<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
+					<dropdown-item @click.native="editPost">
+						<template v-slot:icon>
+							<edit-icon />
+						</template>
+						Edit
+					</dropdown-item>
 					<dropdown-item @click.native="deletePost">
 						<template v-slot:icon>
 							<trash-icon />
@@ -36,6 +42,7 @@ import DropdownItem from "../../components/ui/dropdown/DropdownItem";
 
 // icons
 import MenuIcon from "../../assets/images/icons/menu";
+import EditIcon from "../../assets/images/icons/edit";
 import TrashIcon from "../../assets/images/icons/trash";
 
 export default {
@@ -50,6 +57,7 @@ export default {
 		Dropdown,
 		DropdownItem,
 		MenuIcon,
+		EditIcon,
 		TrashIcon
 	},
 	methods: {
@@ -89,6 +97,9 @@ export default {
 				.catch(error => {
 					console.log(error);
 				});
+		},
+		editPost() {
+			this.$router.push(`/post/${this.post.slug}/edit`);
 		},
 		toggleMenuDropdown() {
 			this.menuDropdown = !this.menuDropdown;
