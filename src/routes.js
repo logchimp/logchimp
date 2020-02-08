@@ -14,6 +14,11 @@ const routes = [
 		path: '/post/:slug',
 		name: "PostView",
 		component: require("./pages/post/View").default
+	},
+	{
+		path: '/post/:slug/edit',
+		name: "PostEdit",
+		component: require("./pages/post/Edit").default
 	}
 ]
 

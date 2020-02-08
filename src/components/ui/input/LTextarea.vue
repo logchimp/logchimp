@@ -1,5 +1,6 @@
 <template>
 	<textarea
+		:value="value"
 		class="input__field input__textarea"
 		:class="{
 			'input__field-disabled': disabled
@@ -15,6 +16,10 @@ export default {
 		type: {
 			type: String,
 			default: "text"
+		},
+		value: {
+			type: String,
+			default: ""
 		},
 		disabled: {
 			type: Boolean,
