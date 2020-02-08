@@ -36,8 +36,10 @@ exports.filterPost = (req, res, next) => {
 
 	database.query(`
 		SELECT
+			post_id,
 			title,
 			slug,
+			body_markdown,
 			created_at
 		FROM
 			post
