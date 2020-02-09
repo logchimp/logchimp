@@ -15,16 +15,10 @@ exports.filterPost = (req, res, next) => {
 	let sortBy = "";
 	if (sort) {
 		if (sort === 'latest') {
-			sortBy = `
-				ORDER BY
-					created_at DESC
-			`
+			sortBy = "DESC"
 		}
 		if (sort === 'oldest') {
-			sortBy = `
-				ORDER BY
-					created_at ASC
-			`
+			sortBy = "ASC"
 		}
 	}
 
@@ -34,26 +28,22 @@ exports.filterPost = (req, res, next) => {
 	 * page number based query
 	 */
 
-	database.query(`
-		SELECT
-			post_id,
-			title,
-			slug,
-			body_markdown,
-			created_at
-		FROM
-			post
-		${sortBy}
-	;`).then(posts => {
-
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			posts: posts.rows
-		})
-	}).catch(error => {
-		console.error(error);
-	});
+	database
+		.select("post_id", "title", "slug", "body_markdown", "created_at")
+		.from("post")
+		.orderBy([{
+			column: "created_at",
+			order: sortBy
+		}])
+		.then(posts => {
+			res.status(200).send({
+				status: {
+					code: 200,
+					type: "success"
+				},
+				posts
+			})
+		}).catch(error => {
+			console.error(error);
+		});
 }

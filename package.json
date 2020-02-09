@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "knex": "^0.20.8",
     "node-sass": "^4.13.1",
     "pg": "^7.17.1",
     "sass-loader": "^8.0.2",
