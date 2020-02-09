@@ -3,7 +3,6 @@ const database = require('../../database');
 exports.updatePostById = (req, res, next) => {
 	const postId = req.params.postId;
 	const postTitle = req.body.title;
-	const slugId = req.body.slugId;
 	const bodyMarkdown = req.body.bodyMarkdown;
 	const categoryId = req.body.categoryId;
 	const statusId = req.body.statusId;
@@ -15,7 +14,7 @@ exports.updatePostById = (req, res, next) => {
 			.toLowerCase()
 			.split(" ")
 			.join("-")
-		}-${slugId}`
+		}-${postId}`
 
   /**
    * note: do not add memberId and postId

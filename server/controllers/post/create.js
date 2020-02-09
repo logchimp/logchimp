@@ -11,7 +11,6 @@ exports.create = (req, res, next) => {
 	// generate unique indentification
 	const postId = nanoid();
 
-	const slugId = Date.now().toString(36);
 	const slug = `${
 		postTitle
 			.replace(/[^\w\s]/gi, '')
@@ -19,18 +18,17 @@ exports.create = (req, res, next) => {
 			.toLowerCase()
 			.split(" ")
 			.join("-")
-		}-${slugId}`
+		}-${postId}`
 
 	database.query(`
 	  INSERT INTO
 	    post
-	      (post_id, title, slug, slug_id, body_markdown, member_id)
+	      (post_id, title, slug, body_markdown, member_id)
 	  VALUES
 	    (
 	      '${postId}',
 	      '${postTitle}',
 				'${slug}',
-				'${slugId}',
 	      '${bodyMarkdown}',
 	      '${memberId}'
 	    )
