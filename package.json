@@ -7,7 +7,8 @@
 		"client-build": "vue-cli-service build",
 		"client-lint": "vue-cli-service lint",
 		"server-dev": "nodemon -r dotenv/config server/app.js",
-		"server-start": "node -r dotenv/config server/app.js"
+		"server-start": "node -r dotenv/config server/app.js",
+		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
 	},
 	"dependencies": {
 		"@hapi/joi": "^17.1.0",
