@@ -36,7 +36,6 @@ psql \
     post_id VARCHAR(80) PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     slug VARCHAR(150) NOT NULL,
-		slug_id VARCHAR(8) NOT NULL,
     body_markdown TEXT,
     member_id VARCHAR(80) NOT NULL REFERENCES member(member_id),
     category_id VARCHAR(80) REFERENCES category(category_id),

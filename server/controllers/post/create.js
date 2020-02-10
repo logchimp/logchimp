@@ -1,5 +1,5 @@
 // modules
-const uuid = require("uuid/v1");
+const nanoid = require("nanoid");
 
 const database = require("../../database");
 
@@ -9,22 +9,20 @@ exports.create = (req, res, next) => {
 	const memberId = req.body.memberId;
 
 	// generate unique indentification
-	const postId = uuid();
+	const postId = nanoid();
 
-	const slugId = Date.now().toString(36);
 	const slug = `${postTitle
 		.replace(/[^\w\s]/gi, "")
 		.replace(/\s\s+/gi, " ")
 		.toLowerCase()
 		.split(" ")
-		.join("-")}-${slugId}`;
+		.join("-")}-${postId}`;
 
 	database
 		.insert({
 			post_id: postId,
 			title: postTitle,
 			slug,
-			slug_id: slugId,
 			body_markdown: bodyMarkdown,
 			member_id: memberId
 		})

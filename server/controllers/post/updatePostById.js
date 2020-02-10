@@ -3,7 +3,6 @@ const database = require("../../database");
 exports.updatePostById = (req, res, next) => {
 	const postId = req.params.postId;
 	const postTitle = req.body.title;
-	const slugId = req.body.slugId;
 	const bodyMarkdown = req.body.bodyMarkdown;
 
 	const slug = `${postTitle
@@ -11,7 +10,7 @@ exports.updatePostById = (req, res, next) => {
 		.replace(/\s\s+/gi, " ")
 		.toLowerCase()
 		.split(" ")
-		.join("-")}-${slugId}`;
+		.join("-")}-${postId}`;
 
 	/**
 	 * note: do not add memberId and postId
@@ -21,7 +20,6 @@ exports.updatePostById = (req, res, next) => {
 		.update({
 			title: postTitle,
 			slug,
-			slug_id: slugId,
 			body_markdown: bodyMarkdown,
 			updated_at: new Date()
 		})
