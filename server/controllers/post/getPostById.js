@@ -1,13 +1,13 @@
 const database = require("../../database");
 
 exports.getPostById = (req, res, next) => {
-	const postSlug = req.params.slug;
+	const postId = req.params.postId;
 
 	database
 		.select()
 		.from("post")
 		.where({
-			slug: postSlug
+			slug: postId
 		})
 		.then(post => {
 			const postData = post[0];
