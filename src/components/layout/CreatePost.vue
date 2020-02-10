@@ -58,7 +58,7 @@ export default {
 				}
 			})
 				.then(response => {
-					const postSlug = response.data.post.slug
+					const postSlug = response.data.post.slug;
 					this.$router.push({ path: `post/${postSlug}` });
 				})
 				.catch(error => {

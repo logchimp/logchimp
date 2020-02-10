@@ -1,8 +1,8 @@
 // packages
-import Vue from "vue"
-import VueRouter from "vue-router"
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
 	{
@@ -11,21 +11,21 @@ const routes = [
 		component: require("./pages/Home").default
 	},
 	{
-		path: '/post/:slug',
+		path: "/post/:slug",
 		name: "PostView",
 		component: require("./pages/post/View").default
 	},
 	{
-		path: '/post/:slug/edit',
+		path: "/post/:slug/edit",
 		name: "PostEdit",
 		component: require("./pages/post/Edit").default
 	}
-]
+];
 
 const router = new VueRouter({
 	base: "/",
 	mode: "history",
 	routes
-})
+});
 
-export default router
+export default router;

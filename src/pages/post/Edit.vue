@@ -68,7 +68,7 @@ export default {
 				}
 			})
 				.then(response => {
-					this.post = response.data.post
+					this.post = response.data.post;
 
 					// redirect to post view page
 					this.$router.push(`/post/${this.post.slug}`);
