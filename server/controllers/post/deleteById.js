@@ -1,4 +1,4 @@
-const database = require('../../database');
+const database = require("../../database");
 
 exports.deleteById = (req, res, next) => {
 	const postId = req.query.postId;
@@ -8,15 +8,17 @@ exports.deleteById = (req, res, next) => {
 		.from("post")
 		.where({
 			post_id: postId
-		}).then(post => {
+		})
+		.then(post => {
 			// todo: improve the response output
 			res.status(200).send({
 				status: {
 					code: 200,
 					type: "success"
 				}
-			})
-		}).catch(error => {
+			});
+		})
+		.catch(error => {
 			console.error(error);
 
 			res.status(500).send({
@@ -28,6 +30,6 @@ exports.deleteById = (req, res, next) => {
 					code: "post_not_deleted",
 					message: "Unable to delete post."
 				}
-			})
+			});
 		});
-}
+};

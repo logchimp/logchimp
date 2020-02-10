@@ -1,4 +1,4 @@
-const database = require('../../database')
+const database = require("../../database");
 
 exports.getPostById = (req, res, next) => {
 	const postSlug = req.params.slug;
@@ -8,7 +8,8 @@ exports.getPostById = (req, res, next) => {
 		.from("post")
 		.where({
 			slug: postSlug
-		}).then(post => {
+		})
+		.then(post => {
 			const postData = post[0];
 
 			if (postData) {
@@ -29,9 +30,10 @@ exports.getPostById = (req, res, next) => {
 						code: "post_not_found",
 						message: "Post not found."
 					}
-				})
+				});
 			}
-		}).catch(error => {
+		})
+		.catch(error => {
 			console.error(error);
 		});
-}
+};
