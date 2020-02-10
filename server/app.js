@@ -6,10 +6,17 @@ const bodyParser = require("body-parser");
 const routes = require("./routes/v1");
 const { errorHandler, notFound } = require("./middlewares");
 
+const database = require("./database");
+
 const app = express();
 
 // start express server at SERVER_PORT
 app.listen(process.env.SERVER_PORT, () => {
+	// migrations to latest version
+	database.migrate.latest().then(() => {
+		console.log("Migrations are completed");
+	});
+
 	// contains key-value pairs of data submitted in the request body
 	app.use(bodyParser.json());
 
