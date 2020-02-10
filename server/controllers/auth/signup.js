@@ -1,8 +1,8 @@
 // modules
-const Joi = require('@hapi/joi');
-const bcrypt = require('bcryptjs');
-const uuid = require('uuid/v1');
-const jwt = require('jsonwebtoken');
+const Joi = require("@hapi/joi");
+const bcrypt = require("bcryptjs");
+const uuid = require("uuid/v1");
+const jwt = require("jsonwebtoken");
 
 const database = require("../../database");
 
@@ -15,11 +15,10 @@ const signupSchema = Joi.object({
 	password: Joi.string()
 		.min(6)
 		.max(72)
-		.required(),
+		.required()
 });
 
 exports.signup = (req, res, next) => {
-
 	const valid = signupSchema.validate(req.body);
 
 	if (valid.error) {
@@ -36,22 +35,23 @@ exports.signup = (req, res, next) => {
 		.from("member")
 		.where({
 			email_address: email
-		}).then(result => {
+		})
+		.then(result => {
 			/**
 			 * res.rows
 			 * returns array of object
 			 */
 			if (result[0]) {
 				res.status(409).send({
-					"status": {
-						"code": 409,
-						"type": "error"
+					status: {
+						code: 409,
+						type: "error"
 					},
-					"error": {
-						"code": "invalid_email",
-						"message": "E-Mail already taken"
+					error: {
+						code: "invalid_email",
+						message: "E-Mail already taken"
 					}
-				})
+				});
 			} else {
 				// password hashing
 				const bcryptSaltRounds = 10;
@@ -59,7 +59,7 @@ exports.signup = (req, res, next) => {
 				const passwordHash = bcrypt.hashSync(password, bcryptSalt);
 
 				// generate unique indentification
-				const memberId = uuid(email)
+				const memberId = uuid(email);
 
 				// save member to database
 				database
@@ -69,17 +69,16 @@ exports.signup = (req, res, next) => {
 						password: passwordHash
 					})
 					.into("member")
-					.returning([
-						"member_id", "email_address", "created_at"
-					])
+					.returning(["member_id", "email_address", "created_at"])
 					.then(result => {
-
 						const newMember = result[0];
 
 						/**
 						 * authToken sent via email will expire after 1 hr
 						 */
-						const authToken = jwt.sign(newMember, 'scretKey', { expiresIn: '1h' });
+						const authToken = jwt.sign(newMember, "scretKey", {
+							expiresIn: "1h"
+						});
 
 						res.status(200).send({
 							status: {
@@ -87,16 +86,16 @@ exports.signup = (req, res, next) => {
 								type: "success"
 							},
 							member: newMember
-						})
+						});
 
 						// todo: send email for account verification
 					})
 					.catch(error => {
-						console.error(error)
-					})
+						console.error(error);
+					});
 			}
-		}).catch(error => {
-			console.error(error);
 		})
-
-}
+		.catch(error => {
+			console.error(error);
+		});
+};

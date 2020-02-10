@@ -1,4 +1,4 @@
-const database = require('../../database');
+const database = require("../../database");
 
 exports.filterPost = (req, res, next) => {
 	/**
@@ -14,11 +14,11 @@ exports.filterPost = (req, res, next) => {
 
 	let sortBy = "";
 	if (sort) {
-		if (sort === 'latest') {
-			sortBy = "DESC"
+		if (sort === "latest") {
+			sortBy = "DESC";
 		}
-		if (sort === 'oldest') {
-			sortBy = "ASC"
+		if (sort === "oldest") {
+			sortBy = "ASC";
 		}
 	}
 
@@ -31,10 +31,12 @@ exports.filterPost = (req, res, next) => {
 	database
 		.select("post_id", "title", "slug", "body_markdown", "created_at")
 		.from("post")
-		.orderBy([{
-			column: "created_at",
-			order: sortBy
-		}])
+		.orderBy([
+			{
+				column: "created_at",
+				order: sortBy
+			}
+		])
 		.then(posts => {
 			res.status(200).send({
 				status: {
@@ -42,8 +44,9 @@ exports.filterPost = (req, res, next) => {
 					type: "success"
 				},
 				posts
-			})
-		}).catch(error => {
+			});
+		})
+		.catch(error => {
 			console.error(error);
 		});
-}
+};

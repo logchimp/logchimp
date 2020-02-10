@@ -1,7 +1,7 @@
 // modules
-const uuid = require('uuid/v1');
+const uuid = require("uuid/v1");
 
-const database = require('../../database')
+const database = require("../../database");
 
 exports.create = (req, res, next) => {
 	const postTitle = req.body.title;
@@ -9,17 +9,15 @@ exports.create = (req, res, next) => {
 	const memberId = req.body.memberId;
 
 	// generate unique indentification
-	const postId = uuid()
+	const postId = uuid();
 
 	const slugId = Date.now().toString(36);
-	const slug = `${
-		postTitle
-			.replace(/[^\w\s]/gi, '')
-			.replace(/\s\s+/gi, ' ')
-			.toLowerCase()
-			.split(" ")
-			.join("-")
-		}-${slugId}`
+	const slug = `${postTitle
+		.replace(/[^\w\s]/gi, "")
+		.replace(/\s\s+/gi, " ")
+		.toLowerCase()
+		.split(" ")
+		.join("-")}-${slugId}`;
 
 	database
 		.insert({
@@ -31,9 +29,8 @@ exports.create = (req, res, next) => {
 			member_id: memberId
 		})
 		.into("post")
-		.returning([
-			"post_id", "slug"
-		]).then(post => {
+		.returning(["post_id", "slug"])
+		.then(post => {
 			// post data after inserting inside database
 			const postData = post[0];
 
@@ -47,7 +44,8 @@ exports.create = (req, res, next) => {
 					slug: postData.slug
 				}
 			});
-		}).catch(error => {
+		})
+		.catch(error => {
 			console.error(error);
 
 			res.status(500).send({
@@ -59,6 +57,6 @@ exports.create = (req, res, next) => {
 					code: "post_not_created",
 					message: "Unable to create post."
 				}
-			})
+			});
 		});
-}
+};

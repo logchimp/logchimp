@@ -1,4 +1,4 @@
-const database = require('../../database');
+const database = require("../../database");
 
 exports.updatePostById = (req, res, next) => {
 	const postId = req.params.postId;
@@ -6,19 +6,17 @@ exports.updatePostById = (req, res, next) => {
 	const slugId = req.body.slugId;
 	const bodyMarkdown = req.body.bodyMarkdown;
 
-	const slug = `${
-		postTitle
-			.replace(/[^\w\s]/gi, '')
-			.replace(/\s\s+/gi, ' ')
-			.toLowerCase()
-			.split(" ")
-			.join("-")
-		}-${slugId}`
+	const slug = `${postTitle
+		.replace(/[^\w\s]/gi, "")
+		.replace(/\s\s+/gi, " ")
+		.toLowerCase()
+		.split(" ")
+		.join("-")}-${slugId}`;
 
-  /**
-   * note: do not add memberId and postId
-   * inside this query
-   */
+	/**
+	 * note: do not add memberId and postId
+	 * inside this query
+	 */
 	database
 		.update({
 			title: postTitle,
@@ -31,7 +29,7 @@ exports.updatePostById = (req, res, next) => {
 		.where({
 			post_id: postId
 		})
-		.returning('*')
+		.returning("*")
 		.then(post => {
 			const postData = post[0];
 
@@ -41,8 +39,9 @@ exports.updatePostById = (req, res, next) => {
 					type: "success"
 				},
 				post: postData
-			})
-		}).catch(error => {
+			});
+		})
+		.catch(error => {
 			console.error(error);
 		});
-}
+};
