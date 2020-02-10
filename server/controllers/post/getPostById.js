@@ -2,8 +2,7 @@ const database = require("../../database");
 
 exports.getPostById = (req, res, next) => {
 	const postId = req.params.postId;
-	console.log("postId");
-	console.log(postId);
+
 	database
 		.select()
 		.from("post")
