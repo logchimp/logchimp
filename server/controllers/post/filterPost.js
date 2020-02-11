@@ -1,4 +1,4 @@
-const database = require('../../database');
+const database = require("../../database");
 
 exports.filterPost = (req, res, next) => {
 	/**
@@ -14,17 +14,11 @@ exports.filterPost = (req, res, next) => {
 
 	let sortBy = "";
 	if (sort) {
-		if (sort === 'latest') {
-			sortBy = `
-				ORDER BY
-					created_at DESC
-			`
+		if (sort === "latest") {
+			sortBy = "DESC";
 		}
-		if (sort === 'oldest') {
-			sortBy = `
-				ORDER BY
-					created_at ASC
-			`
+		if (sort === "oldest") {
+			sortBy = "ASC";
 		}
 	}
 
@@ -34,24 +28,25 @@ exports.filterPost = (req, res, next) => {
 	 * page number based query
 	 */
 
-	database.query(`
-		SELECT
-			title,
-			slug,
-			created_at
-		FROM
-			post
-		${sortBy}
-	;`).then(posts => {
-
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			posts: posts.rows
+	database
+		.select("post_id", "title", "slug", "body_markdown", "created_at")
+		.from("post")
+		.orderBy([
+			{
+				column: "created_at",
+				order: sortBy
+			}
+		])
+		.then(posts => {
+			res.status(200).send({
+				status: {
+					code: 200,
+					type: "success"
+				},
+				posts
+			});
 		})
-	}).catch(error => {
-		console.error(error);
-	});
-}
+		.catch(error => {
+			console.error(error);
+		});
+};

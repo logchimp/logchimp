@@ -1,10 +1,10 @@
 <template>
-	<div>
+	<div class="header">
 		<header>
 			<div class="container header__container">
-				<div class="header__logo">
+				<router-link to="/" class="header__logo">
 					<img src="@/assets/images/logo_invert_color.svg" />
-				</div>
+				</router-link>
 				<nav class="header__nav">
 					<div class="nav__list">
 						<div class="nav__item">

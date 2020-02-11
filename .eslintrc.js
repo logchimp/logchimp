@@ -1,5 +1,5 @@
 module.exports = {
-  root: true,
+	root: true,
 	parserOptions: {
 		parser: "babel-eslint",
 		sourceType: "module",
@@ -9,13 +9,17 @@ module.exports = {
 		browser: true,
 		node: true
 	},
-  extends: ["eslint:recommended", "plugin:vue/essential"],
-  parserOptions: {
-    parser: "babel-eslint"
-  },
-  rules: {
-    camelcase: 1,
-    "no-console": 1,
-    "vue/camelcase": "error"
-  }
+	extends: [
+		"eslint:recommended",
+		"plugin:vue/essential",
+		"plugin:prettier/recommended"
+	],
+	parserOptions: {
+		parser: "babel-eslint"
+	},
+	rules: {
+		camelcase: 1,
+		"no-console": 1,
+		"vue/camelcase": "error"
+	}
 }
