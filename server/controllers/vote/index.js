@@ -1,5 +1,7 @@
-const upvote = require('./upvote');
+const upvote = require("./upvote");
+const deleteById = require("./deleteById")
 
 module.exports = {
-	...upvote
-}
+	...upvote,
+	...deleteById
+};
