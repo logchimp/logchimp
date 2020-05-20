@@ -1,11 +1,7 @@
 <template>
 	<div class="post">
-		<div class="post__voters">
-			<arrow-icon
-				class="post__voters-arrow"
-				:class="{ 'post__voters-vote': vote }"
-			/>
-			{{ voters }}
+		<div class="post__vote-count">
+			<vote-count :vote-count="voteCount" />
 		</div>
 		<div class="post__content">
 			<router-link class="post__content-link" :to="`post/${slug}`">
@@ -17,12 +13,13 @@
 </template>
 
 <script>
-import ArrowIcon from "../../assets/images/icons/arrow";
+// components
+import VoteCount from "../ui/post/VoteCount";
 
 export default {
 	name: "post",
 	components: {
-		ArrowIcon
+		VoteCount
 	},
 	props: {
 		title: {
@@ -37,7 +34,7 @@ export default {
 			type: String,
 			required: true
 		},
-		voters: {
+		voteCount: {
 			type: Number,
 			default: 0
 		},
