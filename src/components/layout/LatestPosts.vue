@@ -5,6 +5,9 @@
 			:title="post.title"
 			:slug="post.slug"
 			:bodyMarkdown="post.body_markdown"
+			:postId="post.post_id"
+			:vote-count="post.vote"
+			:post-member-id="post.member_id"
 			:key="post.post_id"
 		/>
 	</div>

@@ -34,13 +34,17 @@ export default {
 			type: String,
 			required: true
 		},
+		postId: {
+			type: String,
+			required: true
+		},
 		voteCount: {
 			type: Number,
 			default: 0
 		},
-		vote: {
-			type: Boolean,
-			default: false
+		postMemberId: {
+			type: String,
+			default: ""
 		}
 	}
 };
