@@ -1,34 +1,36 @@
 <template>
-	<div class="viewpost">
-		<h2 class="viewpost__title">
-			{{ post.title }}
-		</h2>
-		<div class="viewpost__meta">
-			<div class="viewpost__meta-about">
-				{{ post.created_at }}
+	<div class="view">
+		<div class="viewpost">
+			<h1 class="viewpost__title">
+				{{ post.title }}
+			</h1>
+			<div class="viewpost__meta">
+				<div class="viewpost__meta-about">
+					{{ post.created_at }}
+				</div>
+				<div class="viewpost__menu">
+					<menu-icon
+						@click.native="toggleMenuDropdown"
+						class="viewpost__menu-icon"
+					/>
+					<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
+						<dropdown-item @click.native="editPost">
+							<template v-slot:icon>
+								<edit-icon />
+							</template>
+							Edit
+						</dropdown-item>
+						<dropdown-item @click.native="deletePost">
+							<template v-slot:icon>
+								<trash-icon />
+							</template>
+							Delete
+						</dropdown-item>
+					</dropdown>
+				</div>
 			</div>
-			<div class="viewpost__menu">
-				<menu-icon
-					@click.native="toggleMenuDropdown"
-					class="viewpost__menu-icon"
-				/>
-				<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
-					<dropdown-item @click.native="editPost">
-						<template v-slot:icon>
-							<edit-icon />
-						</template>
-						Edit
-					</dropdown-item>
-					<dropdown-item @click.native="deletePost">
-						<template v-slot:icon>
-							<trash-icon />
-						</template>
-						Delete
-					</dropdown-item>
-				</dropdown>
-			</div>
+			<markdown :markdown="post.body_markdown" />
 		</div>
-		<div v-html="post.body_markdown" />
 	</div>
 </template>
 
@@ -39,6 +41,7 @@ import axios from "axios";
 // components
 import Dropdown from "../../components/ui/dropdown/DropdownGroup";
 import DropdownItem from "../../components/ui/dropdown/DropdownItem";
+import Markdown from "../../components/ui/markdown";
 
 // icons
 import MenuIcon from "../../assets/images/icons/menu";
@@ -56,6 +59,7 @@ export default {
 	components: {
 		Dropdown,
 		DropdownItem,
+		Markdown,
 		MenuIcon,
 		EditIcon,
 		TrashIcon
