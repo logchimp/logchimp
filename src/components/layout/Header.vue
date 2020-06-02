@@ -48,8 +48,8 @@ import DropdownItem from "../ui/dropdown/DropdownItem";
 import AuthModal from "./Auth";
 
 // icons
-import SettingsIcon from "../../assets/images/settings";
-import LogoutIcon from "../../assets/images/logout";
+import SettingsIcon from "../../assets/images/icons/settings";
+import LogoutIcon from "../../assets/images/icons/logout";
 
 export default {
 	name: "Header",
