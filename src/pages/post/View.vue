@@ -6,7 +6,7 @@
 			</h1>
 			<div class="viewpost__meta">
 				<div class="viewpost__meta-about">
-					{{ post.created_at }}
+					{{ post.created_at | moment("MMMM DD, YYYY") }}
 				</div>
 				<div class="viewpost__menu">
 					<menu-icon
