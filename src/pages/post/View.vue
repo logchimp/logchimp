@@ -5,6 +5,17 @@
 				{{ post.title }}
 			</h1>
 			<div class="viewpost__meta">
+				<div class="viewpost__meta-author">
+					<avatar
+						class="viewpost__author-avatar"
+						:first-name="post.first_name"
+						:last-name="post.last_name"
+					/>
+					{{ authorFullName }}
+				</div>
+				<div class="viewpost__meta-divider">
+					|
+				</div>
 				<div class="viewpost__meta-about">
 					{{ post.created_at | moment("MMMM DD, YYYY") }}
 				</div>
@@ -42,6 +53,7 @@ import axios from "axios";
 import Dropdown from "../../components/ui/dropdown/DropdownGroup";
 import DropdownItem from "../../components/ui/dropdown/DropdownItem";
 import Markdown from "../../components/ui/markdown";
+import Avatar from "../../components/ui/Avatar";
 
 // icons
 import MenuIcon from "../../assets/images/icons/menu";
@@ -60,9 +72,15 @@ export default {
 		Dropdown,
 		DropdownItem,
 		Markdown,
+		Avatar,
 		MenuIcon,
 		EditIcon,
 		TrashIcon
+	},
+	computed: {
+		authorFullName() {
+			return this.post.first_name + " " + this.post.last_name;
+		}
 	},
 	methods: {
 		getPostBySlug() {
