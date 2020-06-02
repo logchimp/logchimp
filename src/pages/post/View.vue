@@ -42,6 +42,16 @@
 			</div>
 			<markdown :markdown="post.body_markdown" />
 		</div>
+		<!-- todo: list of member who upvote the post -->
+		<div class="viewvoters">
+			<div class="viewvoters__container">
+				<div class="viewvoters__members">
+					<h6 class="viewvoters__members-heading">
+						Voters
+					</h6>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
