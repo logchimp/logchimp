@@ -87,6 +87,7 @@ const actions = {
 			createdAt: "",
 			updatedAt: ""
 		});
+		localStorage.removeItem("member");
 	}
 };
 
