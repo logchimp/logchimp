@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const database = require("../../database");
 
 exports.login = (req, res, next) => {
-	// todo: 'remember me' feature
 	const email = req.body.email;
 	const password = req.body.password;
 
