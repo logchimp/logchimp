@@ -4,7 +4,7 @@
 			v-for="post in posts"
 			:title="post.title"
 			:slug="post.slug"
-			:bodyMarkdown="post.body_markdown"
+			:description="post.body_markdown"
 			:key="post.post_id"
 		/>
 	</div>
