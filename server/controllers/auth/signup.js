@@ -1,7 +1,7 @@
 // modules
 const Joi = require("@hapi/joi");
 const bcrypt = require("bcryptjs");
-const uuid = require("uuid/v1");
+const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 
 const database = require("../../database");
@@ -59,7 +59,7 @@ exports.signup = (req, res, next) => {
 				const passwordHash = bcrypt.hashSync(password, bcryptSalt);
 
 				// generate unique indentification
-				const memberId = uuid(email);
+				const memberId = uuidv4(email);
 
 				// save member to database
 				database
