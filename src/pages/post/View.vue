@@ -40,7 +40,6 @@
 					</dropdown>
 				</div>
 			</div>
-			<markdown :markdown="post.body_markdown" />
 		</div>
 		<!-- todo: list of member who upvote the post -->
 		<div class="viewvoters">
@@ -62,7 +61,6 @@ import axios from "axios";
 // components
 import Dropdown from "../../components/ui/dropdown/DropdownGroup";
 import DropdownItem from "../../components/ui/dropdown/DropdownItem";
-import Markdown from "../../components/ui/markdown";
 import Avatar from "../../components/ui/Avatar";
 
 // icons
@@ -81,7 +79,6 @@ export default {
 	components: {
 		Dropdown,
 		DropdownItem,
-		Markdown,
 		Avatar,
 		MenuIcon,
 		EditIcon,
