@@ -1,34 +1,57 @@
 <template>
-	<div class="viewpost">
-		<h2 class="viewpost__title">
-			{{ post.title }}
-		</h2>
-		<div class="viewpost__meta">
-			<div class="viewpost__meta-about">
-				{{ post.created_at }}
+	<div class="view">
+		<div class="viewpost">
+			<h1 class="viewpost__title">
+				{{ post.title }}
+			</h1>
+			<div class="viewpost__meta">
+				<div class="viewpost__meta-author">
+					<avatar
+						class="viewpost__author-avatar"
+						:first-name="post.first_name"
+						:last-name="post.last_name"
+					/>
+					{{ authorFullName }}
+				</div>
+				<div class="viewpost__meta-divider">
+					|
+				</div>
+				<div class="viewpost__meta-about">
+					{{ post.created_at | moment("MMMM DD, YYYY") }}
+				</div>
+				<div class="viewpost__menu">
+					<menu-icon
+						@click.native="toggleMenuDropdown"
+						class="viewpost__menu-icon"
+					/>
+					<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
+						<dropdown-item @click.native="editPost">
+							<template v-slot:icon>
+								<edit-icon />
+							</template>
+							Edit
+						</dropdown-item>
+						<dropdown-item @click.native="deletePost">
+							<template v-slot:icon>
+								<trash-icon />
+							</template>
+							Delete
+						</dropdown-item>
+					</dropdown>
+				</div>
 			</div>
-			<div class="viewpost__menu">
-				<menu-icon
-					@click.native="toggleMenuDropdown"
-					class="viewpost__menu-icon"
-				/>
-				<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
-					<dropdown-item @click.native="editPost">
-						<template v-slot:icon>
-							<edit-icon />
-						</template>
-						Edit
-					</dropdown-item>
-					<dropdown-item @click.native="deletePost">
-						<template v-slot:icon>
-							<trash-icon />
-						</template>
-						Delete
-					</dropdown-item>
-				</dropdown>
+			<p v-html="post.body_markdown" />
+		</div>
+		<!-- todo: list of member who upvote the post -->
+		<div class="viewvoters">
+			<div class="viewvoters__container">
+				<div class="viewvoters__members">
+					<h6 class="viewvoters__members-heading">
+						Voters
+					</h6>
+				</div>
 			</div>
 		</div>
-		<div v-html="post.body_markdown" />
 	</div>
 </template>
 
@@ -39,6 +62,7 @@ import axios from "axios";
 // components
 import Dropdown from "../../components/ui/dropdown/DropdownGroup";
 import DropdownItem from "../../components/ui/dropdown/DropdownItem";
+import Avatar from "../../components/ui/Avatar";
 
 // icons
 import MenuIcon from "../../assets/images/icons/menu";
@@ -56,9 +80,15 @@ export default {
 	components: {
 		Dropdown,
 		DropdownItem,
+		Avatar,
 		MenuIcon,
 		EditIcon,
 		TrashIcon
+	},
+	computed: {
+		authorFullName() {
+			return this.post.first_name + " " + this.post.last_name;
+		}
 	},
 	methods: {
 		getPostBySlug() {
