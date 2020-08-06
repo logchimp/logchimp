@@ -40,6 +40,7 @@
 					</dropdown>
 				</div>
 			</div>
+			<p v-html="post.body_markdown" />
 		</div>
 		<!-- todo: list of member who upvote the post -->
 		<div class="viewvoters">

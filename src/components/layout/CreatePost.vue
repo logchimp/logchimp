@@ -7,7 +7,7 @@
 			placeholder="Name of the feature"
 		/>
 		<l-textarea
-			v-model="bodyMarkdown"
+			v-model="description"
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
@@ -31,7 +31,7 @@ export default {
 	data() {
 		return {
 			title: "",
-			bodyMarkdown: ""
+			description: ""
 		};
 	},
 	components: {
@@ -50,7 +50,7 @@ export default {
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/post/create`,
 				data: {
 					title: this.title,
-					bodyMarkdown: this.bodyMarkdown,
+					bodyMarkdown: this.description,
 					memberId
 				},
 				headers: {

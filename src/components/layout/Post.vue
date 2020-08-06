@@ -11,7 +11,7 @@
 			<router-link class="post__content-link" :to="`post/${slug}`">
 				<h3 class="post__content-title">{{ title }}</h3>
 			</router-link>
-			<p class="post__content-bodyMarkdown" v-html="bodyMarkdown" />
+			<p class="post__content-description" v-html="description" />
 		</div>
 	</div>
 </template>
@@ -29,7 +29,7 @@ export default {
 			type: String,
 			required: true
 		},
-		bodyMarkdown: {
+		description: {
 			type: String,
 			default: ""
 		},
