@@ -98,12 +98,21 @@ export default {
 					})
 					.then(response => {
 						if (response.status === 200) {
-							// store member data inside localStorage
-							const memberToken = response.data.token;
-							localStorage.setItem("authToken", memberToken);
-
-							const memberId = response.data.member.member_id;
-							localStorage.setItem("memberId", memberId);
+							this.$store.dispatch("member/login", {
+								authToken: response.data.token,
+								memberId: response.data.member.member_id,
+								firstName: response.data.member.first_name,
+								lastName: response.data.member.last_name,
+								emailAddress: response.data.member.email_address,
+								profilePicture: response.data.member.profile_picture,
+								isVerified: response.data.member.is_verified,
+								isBlocked: response.data.member.is_blocked,
+								isModerator: response.data.member.is_moderator,
+								isOwner: response.data.member.is_owner,
+								createdAt: response.data.member.created_at,
+								updatedAt: response.data.member.updated_at
+							});
+							this.$router.push("/");
 						}
 					})
 					.catch(error => {
