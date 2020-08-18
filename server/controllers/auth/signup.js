@@ -74,10 +74,10 @@ exports.signup = (req, res, next) => {
 						const newMember = result[0];
 
 						/**
-						 * authToken sent via email will expire after 1 hr
+						 * authToken sent via email will expire after 3 hr
 						 */
 						const authToken = jwt.sign(newMember, "scretKey", {
-							expiresIn: "1h"
+							expiresIn: "3h"
 						});
 
 						res.status(200).send({
