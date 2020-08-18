@@ -1,9 +1,9 @@
 <template>
 	<div class="view">
 		<div class="viewpost">
-			<h1 class="viewpost__title">
+			<h2 class="viewpost__title">
 				{{ post.title }}
-			</h1>
+			</h2>
 			<div class="viewpost__meta">
 				<div class="viewpost__meta-author">
 					<avatar
@@ -16,7 +16,7 @@
 				<div class="viewpost__meta-divider">
 					|
 				</div>
-				<div class="viewpost__meta-about">
+				<div class="viewpost__meta-date">
 					{{ post.created_at | moment("MMMM DD, YYYY") }}
 				</div>
 				<div class="viewpost__menu">
