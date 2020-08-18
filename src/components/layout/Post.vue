@@ -9,9 +9,9 @@
 		</div>
 		<div class="post__content">
 			<router-link class="post__content-link" :to="`post/${slug}`">
-				<h3 class="post__content-title">{{ title }}</h3>
+				<h5 class="post__content-title">{{ title }}</h5>
 			</router-link>
-			<p class="post__content-description" v-html="description" />
+			<p class="post__content-description" v-html="sliceDescription" />
 		</div>
 	</div>
 </template>
@@ -44,6 +44,14 @@ export default {
 		vote: {
 			type: Boolean,
 			default: false
+		}
+	},
+	computed: {
+		sliceDescription() {
+			return (
+				this.description.slice(0, 120) +
+				(this.description.length > 120 ? "..." : "")
+			);
 		}
 	}
 };
