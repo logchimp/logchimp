@@ -7093,10 +7093,10 @@ pg-types@^2.1.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-8.3.0.tgz#941383300d38eef51ecb88a0188cec441ab64d81"
-  integrity sha512-jQPKWHWxbI09s/Z9aUvoTbvGgoj98AU7FDCcQ7kdejupn/TcNpx56v2gaOTzXkzOajmOEJEdi9eTh9cA2RVAjQ==
+pg@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-8.3.2.tgz#52766e41302f5b878fe1efa10d4cdd486f6dff50"
+  integrity sha512-hOoRCTriXS+VWwyXHchRjWb9yv3Koq8irlwwXniqhdgK0AbfWvEnybGS2HIUE+UdCSTuYAM4WGPujFpPg9Vcaw==
   dependencies:
     buffer-writer "2.0.0"
     packet-reader "1.0.0"
