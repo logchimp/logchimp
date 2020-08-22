@@ -35,6 +35,11 @@ const routes = [
 		path: "/login",
 		name: "Login",
 		component: require("./pages/Login").default
+	},
+	{
+		path: "/join",
+		name: "Join",
+		component: require("./pages/Join").default
 	}
 ];
 
