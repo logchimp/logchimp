@@ -15,6 +15,7 @@ const state = {
 
 const getters = {
 	getMember: state => state,
+	getMemberId: state => state.memberId,
 	getAuthToken: state => state.authToken
 };
 

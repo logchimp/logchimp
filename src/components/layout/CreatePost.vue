@@ -41,9 +41,8 @@ export default {
 	},
 	methods: {
 		submitPost() {
-			// get memberId and token from localStorage
-			const memberId = localStorage.getItem("memberId");
-			const token = localStorage.getItem("authToken");
+			const memberId = this.$store.getters["member/getMemberId"];
+			const token = this.$store.getters["member/getAuthToken"];
 
 			axios({
 				method: "post",
