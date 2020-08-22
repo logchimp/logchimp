@@ -48,7 +48,6 @@
 // components
 import Dropdown from "../ui/dropdown/DropdownGroup";
 import DropdownItem from "../ui/dropdown/DropdownItem";
-import AuthModal from "./Auth";
 import Button from "../ui/Button";
 
 // icons
@@ -66,7 +65,6 @@ export default {
 	components: {
 		Dropdown,
 		DropdownItem,
-		AuthModal,
 		Button,
 		SettingsIcon,
 		LogoutIcon
