@@ -1,11 +1,11 @@
 <template>
-	<div class="login">
-		<div class="loginform">
-			<div class="loginform__wrapper">
-				<router-link to="/" class="loginform__logo">
+	<div class="auth">
+		<div class="authform">
+			<div class="authform__wrapper">
+				<router-link to="/" class="authform__logo">
 					<img src="@/assets/images/logo.svg" />
 				</router-link>
-				<div class="loginform__header">
+				<div class="authform__header">
 					<h3>Welcome back!</h3>
 				</div>
 				<l-text
@@ -24,7 +24,7 @@
 					Login
 				</Button>
 			</div>
-			<div class="loginform__other">
+			<div class="authform__other">
 				Don't have an account yet?
 				<router-link to="/join">Sign up Here</router-link>
 			</div>
