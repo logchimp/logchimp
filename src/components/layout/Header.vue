@@ -28,10 +28,13 @@
 								</dropdown-item>
 							</dropdown>
 						</div>
-						<div @click="toggleAuthModal" class="nav__item nav__auth">
-							<div class="nav__auth-link">Login</div>
-							/
-							<div class="nav__auth-link">Signup</div>
+						<div v-if="!isAuthenticated" class="nav__item nav__auth">
+							<Button @click.native="login" type="text">
+								Login
+							</Button>
+							<Button @click.native="join" type="outline">
+								Create an account
+							</Button>
 						</div>
 					</div>
 				</nav>
@@ -46,6 +49,7 @@
 import Dropdown from "../ui/dropdown/DropdownGroup";
 import DropdownItem from "../ui/dropdown/DropdownItem";
 import AuthModal from "./Auth";
+import Button from "../ui/Button";
 
 // icons
 import SettingsIcon from "../../assets/images/icons/settings";
@@ -63,6 +67,7 @@ export default {
 		Dropdown,
 		DropdownItem,
 		AuthModal,
+		Button,
 		SettingsIcon,
 		LogoutIcon
 	},
@@ -70,8 +75,11 @@ export default {
 		toggleProfileDropdown() {
 			this.profileDropdown = !this.profileDropdown;
 		},
-		toggleAuthModal() {
-			this.authModal = !this.authModal;
+		login() {
+			this.$router.push("/login");
+		},
+		join() {
+			this.$router.push("/join");
 		},
 		logout() {
 			this.$store.dispatch("member/logout");
