@@ -15,6 +15,11 @@ const routes = [
 				component: require("./pages/Home").default
 			},
 			{
+				path: "/settings",
+				name: "UserSettings",
+				component: require("./pages/user/Settings").default
+			},
+			{
 				path: "/post/:slug",
 				component: require("./pages/post/Post").default,
 				children: [
