@@ -67,7 +67,27 @@ export default {
 					console.log(error);
 				});
 		},
-		updateSettings() {}
+		updateSettings() {
+			const userId = this.$store.getters["member/getMemberId"];
+
+			axios({
+				method: "patch",
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/user`,
+				data: {
+					userId,
+					firstName: this.firstName,
+					lastName: this.lastName
+				}
+			})
+				.then(response => {
+					console.log(response);
+					this.firstName = response.data.user.first_name || "";
+					this.lastName = response.data.user.last_name || "";
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		}
 	},
 	created() {
 		this.user();
