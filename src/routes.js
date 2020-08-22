@@ -7,18 +7,29 @@ Vue.use(VueRouter);
 const routes = [
 	{
 		path: "/",
-		name: "HomePage",
-		component: require("./pages/Home").default
-	},
-	{
-		path: "/post/:slug",
-		name: "PostView",
-		component: require("./pages/post/View").default
-	},
-	{
-		path: "/post/:slug/edit",
-		name: "PostEdit",
-		component: require("./pages/post/Edit").default
+		component: require("./layout/HeaderFooter").default,
+		children: [
+			{
+				path: "",
+				name: "HomePage",
+				component: require("./pages/Home").default
+			},
+			{
+				path: "/post/:slug",
+				component: require("./pages/post/Post").default,
+				children: [
+					{
+						path: "",
+						component: require("./pages/post/View").default
+					},
+					{
+						path: "edit",
+						name: "PostEdit",
+						component: require("./pages/post/Edit").default
+					}
+				]
+			}
+		]
 	}
 ];
 
