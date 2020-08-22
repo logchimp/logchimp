@@ -6,7 +6,7 @@
 					<img src="@/assets/images/logo.svg" />
 				</router-link>
 				<div class="authform__header">
-					<h3>Welcome back!</h3>
+					<h3>Create your account</h3>
 				</div>
 				<l-text
 					v-model="email"
@@ -20,13 +20,13 @@
 					name="password"
 					placeholder="Password"
 				/>
-				<Button @click.native="login" type="primary">
-					Login
+				<Button @click.native="join" type="primary">
+					Create account
 				</Button>
 			</div>
 			<div class="authform__other">
-				Don't have an account yet?
-				<router-link to="/join">Sign up Here</router-link>
+				Already have an account?
+				<router-link to="/login">Log in here</router-link>
 			</div>
 		</div>
 	</div>
@@ -41,7 +41,7 @@ import LText from "../components/ui/input/LText";
 import Button from "../components/ui/Button";
 
 export default {
-	name: "Login",
+	name: "Join",
 	data() {
 		return {
 			email: "",
@@ -53,33 +53,24 @@ export default {
 		Button
 	},
 	methods: {
-		login() {
+		join() {
 			axios
-				.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/login`, {
+				.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
 					email: this.email,
 					password: this.password
 				})
 				.then(response => {
 					if (response.status === 200) {
-						this.$store.dispatch("member/login", {
-							authToken: response.data.token,
-							memberId: response.data.member.member_id,
-							firstName: response.data.member.first_name,
-							lastName: response.data.member.last_name,
-							emailAddress: response.data.member.email_address,
-							profilePicture: response.data.member.profile_picture,
-							isVerified: response.data.member.is_verified,
-							isBlocked: response.data.member.is_blocked,
-							isModerator: response.data.member.is_moderator,
-							isOwner: response.data.member.is_owner,
-							createdAt: response.data.member.created_at,
-							updatedAt: response.data.member.updated_at
-						});
-						this.$router.push("/");
+						/**
+						 * todo: show snackbar notification
+						 * check your inbox for email verification.
+						 */
 					}
 				})
 				.catch(error => {
 					console.log(error);
+					// todo: email exist re-direct to login page
+					// todo: invalid email show error message
 				});
 		}
 	}
