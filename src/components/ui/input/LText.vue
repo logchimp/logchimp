@@ -3,9 +3,10 @@
 		:type="type"
 		class="input__field input__text"
 		:class="{
-			'input__text-disabled': disabled
+			'input__field-disabled': disabled
 		}"
 		@input="$emit('input', $event.target.value)"
+		:disabled="disabled"
 	/>
 </template>
 
