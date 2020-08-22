@@ -11,9 +11,9 @@
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
-		<l-primary-button @click.native="savePost">
+		<Button type="primary" @click.native="savePost">
 			Update
-		</l-primary-button>
+		</Button>
 	</div>
 </template>
 
@@ -24,7 +24,7 @@ import axios from "axios";
 // components
 import LText from "../../components/ui/input/LText";
 import LTextarea from "../../components/ui/input/LTextarea";
-import LPrimaryButton from "../../components/ui/button/LPrimaryButton";
+import Button from "../../components/ui/Button";
 
 export default {
 	name: "PostEdit",
@@ -36,7 +36,7 @@ export default {
 	components: {
 		LText,
 		LTextarea,
-		LPrimaryButton
+		Button
 	},
 	methods: {
 		loadPostData() {
