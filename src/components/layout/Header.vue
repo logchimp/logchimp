@@ -7,7 +7,7 @@
 				</router-link>
 				<nav class="header__nav">
 					<div class="nav__list">
-						<div class="nav__item">
+						<div v-if="isAuthenticated" class="nav__item">
 							<img
 								@click="toggleProfileDropdown"
 								class="nav__profile"
@@ -70,6 +70,12 @@ export default {
 		Button,
 		SettingsIcon,
 		LogoutIcon
+	},
+	computed: {
+		isAuthenticated() {
+			const token = this.$store.getters["member/getAuthToken"];
+			return !!token;
+		}
 	},
 	methods: {
 		toggleProfileDropdown() {
