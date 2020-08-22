@@ -135,7 +135,7 @@ export default {
 			this.menuDropdown = !this.menuDropdown;
 		}
 	},
-	mounted() {
+	created() {
 		this.getPostBySlug();
 	}
 };

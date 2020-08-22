@@ -7,7 +7,7 @@
 <script>
 export default {
 	name: "app",
-	mounted() {
+	created() {
 		const member = JSON.parse(localStorage.getItem("member"));
 		if (member) {
 			this.$store.dispatch("member/login", {
