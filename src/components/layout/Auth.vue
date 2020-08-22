@@ -16,9 +16,9 @@
 				name="password"
 				placeholder="Password"
 			/>
-			<l-primary-button @click.native="memberAuth">
+			<!-- <l-primary-button @click.native="memberAuth">
 				{{ authType === "signup" ? "Sign up" : "Login" }}
-			</l-primary-button>
+			</l-primary-button> -->
 			<p
 				v-if="authType === 'signup'"
 				class="auth__type-switch"
@@ -50,7 +50,7 @@ import axios from "axios";
 // component
 import LModal from "../ui/modal/LModal";
 import LText from "../ui/input/LText";
-import LPrimaryButton from "../ui/button/LPrimaryButton";
+// import LPrimaryButton from "../ui/button/LPrimaryButton";
 
 export default {
 	name: "AuthModal",
@@ -63,8 +63,8 @@ export default {
 	},
 	components: {
 		LModal,
-		LText,
-		LPrimaryButton
+		LText
+		// LPrimaryButton
 	},
 	methods: {
 		switchAuthType(value) {
@@ -89,34 +89,6 @@ export default {
 						console.log(error);
 						// todo: email exist re-direct to login page
 						// todo: invalid email show error message
-					});
-			} else {
-				axios
-					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/login`, {
-						email: this.email,
-						password: this.password
-					})
-					.then(response => {
-						if (response.status === 200) {
-							this.$store.dispatch("member/login", {
-								authToken: response.data.token,
-								memberId: response.data.member.member_id,
-								firstName: response.data.member.first_name,
-								lastName: response.data.member.last_name,
-								emailAddress: response.data.member.email_address,
-								profilePicture: response.data.member.profile_picture,
-								isVerified: response.data.member.is_verified,
-								isBlocked: response.data.member.is_blocked,
-								isModerator: response.data.member.is_moderator,
-								isOwner: response.data.member.is_owner,
-								createdAt: response.data.member.created_at,
-								updatedAt: response.data.member.updated_at
-							});
-							this.$router.push("/");
-						}
-					})
-					.catch(error => {
-						console.log(error);
 					});
 			}
 		}

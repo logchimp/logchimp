@@ -30,6 +30,11 @@ const routes = [
 				]
 			}
 		]
+	},
+	{
+		path: "/login",
+		name: "Login",
+		component: require("./pages/Login").default
 	}
 ];
 
