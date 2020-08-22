@@ -14,7 +14,7 @@
 								src="https://picsum.photos/200"
 							/>
 							<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
-								<dropdown-item>
+								<dropdown-item @click.native="settings">
 									<template v-slot:icon>
 										<settings-icon />
 									</template>
@@ -78,6 +78,10 @@ export default {
 	methods: {
 		toggleProfileDropdown() {
 			this.profileDropdown = !this.profileDropdown;
+		},
+		settings() {
+			this.$router.push("/settings");
+			this.profileDropdown = false;
 		},
 		login() {
 			this.$router.push("/login");

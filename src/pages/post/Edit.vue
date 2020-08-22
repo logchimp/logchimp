@@ -78,7 +78,7 @@ export default {
 				});
 		}
 	},
-	mounted() {
+	created() {
 		this.loadPostData();
 	}
 };
