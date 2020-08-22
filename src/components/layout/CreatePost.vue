@@ -11,9 +11,9 @@
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
-		<l-primary-button @click.native="submitPost">
+		<Button type="primary" @click.native="submitPost">
 			Submit
-		</l-primary-button>
+		</Button>
 	</div>
 </template>
 
@@ -24,7 +24,7 @@ import axios from "axios";
 // components
 import LText from "../ui/input/LText";
 import LTextarea from "../ui/input/LTextarea";
-import LPrimaryButton from "../ui/button/LPrimaryButton";
+import Button from "../ui/Button";
 
 export default {
 	name: "CreatePost",
@@ -37,7 +37,7 @@ export default {
 	components: {
 		LText,
 		LTextarea,
-		LPrimaryButton
+		Button
 	},
 	methods: {
 		submitPost() {
