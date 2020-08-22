@@ -14,9 +14,6 @@ module.exports = {
 		"plugin:vue/essential",
 		"plugin:prettier/recommended"
 	],
-	parserOptions: {
-		parser: "babel-eslint"
-	},
 	rules: {
 		camelcase: 1,
 		"no-console": 1,
