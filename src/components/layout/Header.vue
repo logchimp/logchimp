@@ -20,7 +20,7 @@
 									</template>
 									Settings
 								</dropdown-item>
-								<dropdown-item>
+								<dropdown-item @click.native="logout">
 									<template v-slot:icon>
 										<logout-icon />
 									</template>
@@ -72,6 +72,11 @@ export default {
 		},
 		toggleAuthModal() {
 			this.authModal = !this.authModal;
+		},
+		logout() {
+			this.$store.dispatch("member/logout");
+			this.profileDropdown = false;
+			this.$router.push("/");
 		}
 	}
 };
