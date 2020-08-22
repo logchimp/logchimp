@@ -56,7 +56,7 @@ export default {
 
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/user/${memberId}`
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${memberId}`
 			})
 				.then(response => {
 					this.firstName = response.data.user.first_name || "";
