@@ -27,4 +27,101 @@ const knex = require("knex")({
 	}
 });
 
+knex.schema.hasTable("users").then(exists => {
+	if (!exists) {
+		return knex.schema
+			.createTable("users", table => {
+				table
+					.uuid("userId")
+					.notNullable()
+					.unique()
+					.primary();
+				table.string("firstname", 30);
+				table.string("lastname", 30);
+				table
+					.string("emailAddress", 320)
+					.notNullable()
+					.unique();
+				table.string("password", 72).notNullable();
+				table
+					.string("username", 30)
+					.notNullable()
+					.unique();
+				table.text("avatar");
+				table.boolean("isVerified").defaultTo(false);
+				table.boolean("isOwner").defaultTo(false);
+				table.boolean("isModerator").defaultTo(false);
+				table.boolean("isBlocked").defaultTo(false);
+				table.timestamp("createdAt", { useTz: true }).notNullable();
+				table.timestamp("updatedAt", { useTz: true }).notNullable();
+				table.comment("Storing users data");
+			})
+			.then(() => {
+				console.log("Creating 'users' table");
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	} else {
+		console.log("'Users' table already exist");
+	}
+});
+
+knex.schema.hasTable("posts").then(exists => {
+	if (!exists) {
+		return knex.schema
+			.createTable("posts", table => {
+				table
+					.uuid("postId")
+					.notNullable()
+					.unique()
+					.primary();
+				table.string("title", 100).notNullable();
+				table
+					.string("slug", 150)
+					.notNullable()
+					.unique();
+				table.text("contentMarkdown");
+				table.uuid("userId").notNullable();
+				table.timestamp("createdAt", { useTz: true }).notNullable();
+				table.timestamp("updatedAt", { useTz: true }).notNullable();
+				table.comment("Storing posts data");
+			})
+			.then(() => {
+				console.log("Creating 'posts' table");
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	} else {
+		console.log("'Posts' table already exist");
+	}
+});
+
+knex.schema.hasTable("votes").then(exists => {
+	if (!exists) {
+		return knex.schema
+			.createTable("votes", table => {
+				table
+					.uuid("voteId")
+					.notNullable()
+					.unique()
+					.primary();
+				table.uuid("userId").notNullable();
+				table.uuid("postId").notNullable();
+				table.timestamp("createdAt", { useTz: true }).notNullable();
+				table.timestamp("updatedAt", { useTz: true }).notNullable();
+				table.comment("Storing post votes data");
+			})
+			.then(() => {
+				console.log("Creating 'votes' table");
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	} else {
+		console.log("'Votes' table already exist");
+	}
+});
+
 module.exports = knex;
