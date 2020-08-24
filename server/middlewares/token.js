@@ -2,13 +2,13 @@
 const jwt = require("jsonwebtoken");
 
 exports.validate = (req, res, next) => {
-	const token = req.headers["authorization"];
+	const headersToken = req.headers["authorization"];
 
-	if (token) {
+	if (headersToken) {
 		// grab token from headers request
-		const headersToken = token.split(" ")[1];
+		const token = headersToken.split(" ")[1];
 
-		jwt.verify(headersToken, "secretKey", err => {
+		jwt.verify(token, "secretKey", (err, decoded) => {
 			if (err) {
 				console.error(err);
 
@@ -28,6 +28,7 @@ exports.validate = (req, res, next) => {
 				});
 			} else {
 				// move to next middleware on success
+				res.locals.user = decoded;
 				next();
 			}
 		});

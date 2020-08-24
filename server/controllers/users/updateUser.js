@@ -1,22 +1,22 @@
+// database
 const database = require("../../database");
 
-exports.updateUser = (req, res, next) => {
+exports.updateUser = (req, res) => {
 	const userId = req.body.userId;
-	const firstName = req.body.firstName;
-	const lastName = req.body.lastName;
+	const firstname = req.body.firstname;
+	const lastname = req.body.lastname;
 
 	database
 		.update({
-			first_name: firstName,
-			last_name: lastName
+			firstname,
+			lastname
 		})
-		.from("member")
+		.from("users")
 		.where({
-			member_id: userId
+			userId
 		})
 		.returning("*")
 		.then(response => {
-			console.log(response);
 			const user = response[0];
 
 			if (user) {
@@ -35,7 +35,7 @@ exports.updateUser = (req, res, next) => {
 					},
 					error: {
 						code: "user_not_found",
-						message: "User not found."
+						message: "User not found"
 					}
 				});
 			}

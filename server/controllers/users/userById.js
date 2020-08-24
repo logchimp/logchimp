@@ -1,13 +1,14 @@
+// database
 const database = require("../../database");
 
-exports.userById = (req, res, next) => {
+exports.userById = (req, res) => {
 	const userId = req.params.userId;
 
 	database
 		.select()
-		.from("member")
+		.from("users")
 		.where({
-			member_id: userId
+			userId
 		})
 		.limit(1)
 		.then(response => {
@@ -29,7 +30,7 @@ exports.userById = (req, res, next) => {
 					},
 					error: {
 						code: "user_not_found",
-						message: "User not found."
+						message: "User not found"
 					}
 				});
 			}

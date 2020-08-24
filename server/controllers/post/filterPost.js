@@ -1,49 +1,27 @@
 const database = require("../../database");
 
-exports.filterPost = (req, res, next) => {
+exports.filterPost = (req, res) => {
 	/**
-	 * latest, oldest, top, trending
+	 * top, latest, oldest, trending
 	 */
-	const sort = req.query.sort;
-	// status and category can include multiple IDs as query parameter
-	const statusId = req.query.status;
-	const categoryId = req.query.category;
-
-	const statusArray = Array.isArray(statusId);
-	const categoryArray = Array.isArray(categoryId);
-
-	let sortBy = "";
-	if (sort) {
-		if (sort === "latest") {
-			sortBy = "DESC";
-		}
-		if (sort === "oldest") {
-			sortBy = "ASC";
-		}
-	}
-
-	// todo
-	/**
-	 * status, category
-	 * page number based query
-	 */
+	const created = req.query.created;
 
 	database
-		.select("post_id", "title", "slug", "body_markdown", "created_at")
-		.from("post")
+		.select("postId", "title", "slug", "contentMarkdown", "createdAt")
+		.from("posts")
 		.orderBy([
 			{
-				column: "created_at",
-				order: sortBy
+				column: "createdAt",
+				order: created
 			}
 		])
-		.then(posts => {
+		.then(response => {
 			res.status(200).send({
 				status: {
 					code: 200,
 					type: "success"
 				},
-				posts
+				posts: response
 			});
 		})
 		.catch(error => {
