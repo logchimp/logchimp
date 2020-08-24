@@ -41,8 +41,8 @@ export default {
 	},
 	methods: {
 		submitPost() {
-			const memberId = this.$store.getters["member/getMemberId"];
-			const token = this.$store.getters["member/getAuthToken"];
+			const userId = this.$store.getters["user/getUserId"];
+			const token = this.$store.getters["user/getAuthToken"];
 
 			axios({
 				method: "post",

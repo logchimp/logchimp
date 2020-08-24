@@ -71,7 +71,7 @@ export default {
 	},
 	computed: {
 		isAuthenticated() {
-			const token = this.$store.getters["member/getAuthToken"];
+			const token = this.$store.getters["user/getAuthToken"];
 			return !!token;
 		}
 	},
@@ -90,7 +90,7 @@ export default {
 			this.$router.push("/join");
 		},
 		logout() {
-			this.$store.dispatch("member/logout");
+			this.$store.dispatch("user/logout");
 			this.profileDropdown = false;
 			this.$router.push("/");
 		}
