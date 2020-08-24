@@ -4,8 +4,8 @@
 			v-for="post in posts"
 			:title="post.title"
 			:slug="post.slug"
-			:description="post.body_markdown"
-			:key="post.post_id"
+			:description="post.contentMarkdown || ''"
+			:key="post.postId"
 		/>
 	</div>
 </template>
@@ -29,11 +29,12 @@ export default {
 	},
 	methods: {
 		getPosts() {
-			const urlQuery = new URLSearchParams();
-			urlQuery.append("sort", "latest");
+			const url = new URL(
+				`${process.env.VUE_APP_SEVER_URL}/api/v1/posts?created=desc`
+			);
 
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts`, urlQuery)
+				.get(url)
 				.then(response => {
 					this.posts = response.data.posts;
 				})

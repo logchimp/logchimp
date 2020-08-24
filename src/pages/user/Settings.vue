@@ -2,20 +2,27 @@
 	<div>
 		<div class="usersettings__name">
 			<l-text
-				v-model="firstName"
+				v-model="firstname"
 				type="text"
 				name="First name"
 				placeholder="First name"
 				class="usersettings__name-item"
 			/>
 			<l-text
-				v-model="lastName"
+				v-model="lastname"
 				type="text"
 				name="Last name"
 				placeholder="Last name"
 				class="usersettings__name-item"
 			/>
 		</div>
+		<l-text
+			v-model="username"
+			type="text"
+			name="Username"
+			placeholder="Username"
+			:disabled="true"
+		/>
 		<l-text
 			v-model="emailAddress"
 			type="text"
@@ -41,8 +48,9 @@ export default {
 	name: "UserSettings",
 	data() {
 		return {
-			firstName: "",
-			lastName: "",
+			firstname: "",
+			lastname: "",
+			username: "",
 			emailAddress: ""
 		};
 	},
@@ -59,9 +67,10 @@ export default {
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
 			})
 				.then(response => {
-					this.firstName = response.data.user.first_name || "";
-					this.lastName = response.data.user.last_name || "";
-					this.emailAddress = response.data.user.email_address;
+					this.firstname = response.data.user.firstname || "";
+					this.lastname = response.data.user.lastname || "";
+					this.username = response.data.user.username || "";
+					this.emailAddress = response.data.user.emailAddress;
 				})
 				.catch(error => {
 					console.log(error);
@@ -75,14 +84,13 @@ export default {
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/user`,
 				data: {
 					userId,
-					firstName: this.firstName,
-					lastName: this.lastName
+					firstname: this.firstname,
+					lastname: this.lastname
 				}
 			})
 				.then(response => {
-					console.log(response);
-					this.firstName = response.data.user.first_name || "";
-					this.lastName = response.data.user.last_name || "";
+					this.firstname = response.data.user.firstname || "";
+					this.lastname = response.data.user.lastname || "";
 				})
 				.catch(error => {
 					console.log(error);

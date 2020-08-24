@@ -9,7 +9,7 @@
 					<h3>Welcome back!</h3>
 				</div>
 				<l-text
-					v-model="email"
+					v-model="emailAddress"
 					type="email"
 					name="email"
 					placeholder="Email address"
@@ -44,7 +44,7 @@ export default {
 	name: "Login",
 	data() {
 		return {
-			email: "",
+			emailAddress: "",
 			password: ""
 		};
 	},
@@ -56,7 +56,7 @@ export default {
 		login() {
 			axios
 				.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/login`, {
-					email: this.email,
+					emailAddress: this.emailAddress,
 					password: this.password
 				})
 				.then(response => {
