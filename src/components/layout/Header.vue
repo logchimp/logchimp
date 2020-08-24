@@ -8,10 +8,10 @@
 				<nav class="header__nav">
 					<div class="nav__list">
 						<div v-if="isAuthenticated" class="nav__item">
-							<img
-								@click="toggleProfileDropdown"
+							<avatar
+								@click.native="toggleProfileDropdown"
 								class="nav__profile"
-								src="https://picsum.photos/200"
+								:name="username"
 							/>
 							<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
 								<dropdown-item @click.native="settings">
@@ -49,6 +49,7 @@
 import Dropdown from "../ui/dropdown/DropdownGroup";
 import DropdownItem from "../ui/dropdown/DropdownItem";
 import Button from "../ui/Button";
+import Avatar from "../../components/ui/Avatar";
 
 // icons
 import SettingsIcon from "../../assets/images/icons/settings";
@@ -66,6 +67,7 @@ export default {
 		Dropdown,
 		DropdownItem,
 		Button,
+		Avatar,
 		SettingsIcon,
 		LogoutIcon
 	},
@@ -73,6 +75,13 @@ export default {
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];
 			return !!token;
+		},
+		username() {
+			const name = this.$store.getters["user/getUser"];
+			if (name.firstname) {
+				return `${name.firstname}${name.lastname ? ` ${name.lastname}` : ""}`;
+			}
+			return name.username;
 		}
 	},
 	methods: {

@@ -6,12 +6,8 @@
 			</h2>
 			<div class="viewpost__meta">
 				<div class="viewpost__meta-author">
-					<avatar
-						class="viewpost__author-avatar"
-						:first-name="post.first_name"
-						:last-name="post.last_name"
-					/>
-					{{ authorFullName }}
+					<avatar class="viewpost__author-avatar" :name="username" />
+					{{ username }}
 				</div>
 				<div class="viewpost__meta-divider">
 					|
@@ -86,8 +82,13 @@ export default {
 		TrashIcon
 	},
 	computed: {
-		authorFullName() {
-			return this.post.first_name + " " + this.post.last_name;
+		username() {
+			if (this.post.firstname) {
+				return `${this.post.firstname}${
+					this.post.lastname ? ` ${this.post.lastname}` : ""
+				}`;
+			}
+			return this.post.username;
 		}
 	},
 	methods: {
