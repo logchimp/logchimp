@@ -9,7 +9,7 @@
 					<h3>Create your account</h3>
 				</div>
 				<l-text
-					v-model="email"
+					v-model="emailAddress"
 					type="email"
 					name="email"
 					placeholder="Email address"
@@ -44,7 +44,7 @@ export default {
 	name: "Join",
 	data() {
 		return {
-			email: "",
+			emailAddress: "",
 			password: ""
 		};
 	},
@@ -56,15 +56,31 @@ export default {
 		join() {
 			axios
 				.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
-					email: this.email,
+					emailAddress: this.emailAddress,
 					password: this.password
 				})
 				.then(response => {
-					if (response.status === 200) {
+					if (response.status === 201) {
 						/**
 						 * todo: show snackbar notification
 						 * check your inbox for email verification.
 						 */
+						this.$store.dispatch("user/login", {
+							authToken: response.data.user.authToken,
+							userId: response.data.user.userId,
+							firstname: response.data.user.firstname,
+							lastname: response.data.user.lastname,
+							emailAddress: response.data.user.emailAddress,
+							username: response.data.user.username,
+							avatar: response.data.user.avatar,
+							isVerified: response.data.user.isVerified,
+							isBlocked: response.data.user.isBlocked,
+							isModerator: response.data.user.isModerator,
+							isOwner: response.data.user.isOwner,
+							createdAt: response.data.user.createdAt,
+							updatedAt: response.data.user.updatedAt
+						});
+						this.$router.push("/");
 					}
 				})
 				.catch(error => {
