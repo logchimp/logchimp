@@ -7,7 +7,7 @@
 			placeholder="Name of the feature"
 		/>
 		<l-textarea
-			v-model="post.body_markdown"
+			v-model="post.contentMarkdown"
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
@@ -39,11 +39,11 @@ export default {
 		Button
 	},
 	methods: {
-		loadPostData() {
+		getPost() {
 			const slug = this.$route.params.slug;
 
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/post/${slug}`)
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
 				.then(response => {
 					this.post = response.data.post;
 				})
@@ -52,34 +52,40 @@ export default {
 				});
 		},
 		savePost() {
-			// get memberId and token from localStorage
-			const token = localStorage.getItem("authToken");
+			const userId = this.$store.getters["user/getUserId"];
 
-			axios({
-				method: "patch",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/post/update/${this.post.post_id}`,
-				data: {
-					title: this.post.title,
-					bodyMarkdown: this.post.body_markdown,
-					slugId: this.post.slug_id
-				},
-				headers: {
-					Authorization: `Bearer ${token}`
-				}
-			})
-				.then(response => {
-					this.post = response.data.post;
+			if (this.post.userId === userId) {
+				const token = this.$store.getters["user/getAuthToken"];
 
-					// redirect to post view page
-					this.$router.push(`/post/${this.post.slug}`);
+				axios({
+					method: "patch",
+					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${this.post.postId}`,
+					data: {
+						title: this.post.title,
+						contentMarkdown: this.post.contentMarkdown,
+						slugId: this.post.slugId,
+						userId: this.post.userId
+					},
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
 				})
-				.catch(error => {
-					console.log(error);
-				});
+					.then(response => {
+						this.post = response.data.post;
+
+						// redirect to post view page
+						this.$router.push(`/post/${this.post.slug}`);
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			} else {
+				// show error alert 'insufficient_premissions'
+			}
 		}
 	},
 	created() {
-		this.loadPostData();
+		this.getPost();
 	}
 };
 </script>
