@@ -81,6 +81,7 @@ knex.schema.hasTable("posts").then(exists => {
 					.string("slug", 150)
 					.notNullable()
 					.unique();
+				table.string("slugId", 20).notNullable();
 				table.text("contentMarkdown");
 				table.uuid("userId").notNullable();
 				table.timestamp("createdAt", { useTz: true }).notNullable();
