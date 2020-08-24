@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 
+// database
 const database = require("../../database");
 
 const signupSchema = Joi.object({
@@ -18,77 +19,83 @@ const signupSchema = Joi.object({
 		.required()
 });
 
-exports.signup = (req, res, next) => {
-	const valid = signupSchema.validate(req.body);
+exports.signup = (req, res) => {
+	const emailAddress = req.body.emailAddress;
+	const password = req.body.password;
 
-	if (valid.error) {
-		res.status(422);
-		next(valid.error);
-		return false;
-	}
-
-	const { email, password } = valid.value;
-
-	// validate member existance in database
+	// validate user existance in database
 	database
-		.select("email_address")
-		.from("member")
+		.select("emailAddress")
+		.from("users")
 		.where({
-			email_address: email
+			emailAddress
 		})
-		.then(result => {
-			/**
-			 * res.rows
-			 * returns array of object
-			 */
-			if (result[0]) {
+		.limit(1)
+		.then(response => {
+			const findUser = response[0];
+
+			if (findUser) {
 				res.status(409).send({
 					status: {
 						code: 409,
 						type: "error"
 					},
 					error: {
-						code: "invalid_email",
-						message: "E-Mail already taken"
+						code: "email_already_taken",
+						message: "Email address already taken"
 					}
 				});
 			} else {
 				// password hashing
 				const bcryptSaltRounds = 10;
 				const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
-				const passwordHash = bcrypt.hashSync(password, bcryptSalt);
+				const hashPassword = bcrypt.hashSync(password, bcryptSalt);
 
-				// generate unique indentification
-				const memberId = uuidv4(email);
+				// generate user unique indentification
+				const userId = uuidv4(emailAddress);
 
-				// save member to database
+				// get username from email address
+				const username = emailAddress.split("@")[0];
+
+				// save user to database
 				database
 					.insert({
-						member_id: memberId,
-						email_address: email,
-						password: passwordHash
+						userId,
+						emailAddress,
+						username,
+						password: hashPassword,
+						createdAt: new Date().toJSON(),
+						updatedAt: new Date().toJSON()
 					})
-					.into("member")
-					.returning(["member_id", "email_address", "created_at"])
-					.then(result => {
-						const newMember = result[0];
+					.into("users")
+					.returning("*")
+					.then(response => {
+						const user = response[0];
 
 						/**
 						 * authToken sent via email will expire after 3 hr
 						 */
-						const authToken = jwt.sign(newMember, "scretKey", {
+						const emailValidationAuthToken = jwt.sign(user, "secretKey", {
 							expiresIn: "3h"
 						});
+						// todo: send email for account verification
 
-						res.status(200).send({
-							status: {
-								code: 200,
-								type: "success"
-							},
-							member: newMember
+						// generate authToken
+						const authToken = jwt.sign(user, "secretKey", {
+							expiresIn: "2d"
 						});
 
-						// todo: send email for account verification
+						// send user data with authToken as response
+						res.status(201).send({
+							status: {
+								code: 201,
+								type: "success"
+							},
+							user: {
+								...user,
+								authToken
+							}
+						});
 					})
 					.catch(error => {
 						console.error(error);

@@ -1,13 +1,13 @@
 const create = require("./create");
 const filterPost = require("./filterPost");
-const getPostById = require("./getPostById");
-const updatePostById = require("./updatePostById");
+const postBySlug = require("./postBySlug");
+const updatePost = require("./updatePost");
 const deleteById = require("./deleteById");
 
 module.exports = {
 	...create,
 	...filterPost,
-	...getPostById,
-	...updatePostById,
+	...postBySlug,
+	...updatePost,
 	...deleteById
 };
