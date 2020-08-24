@@ -2,11 +2,11 @@
 const jwt = require("jsonwebtoken");
 
 exports.validate = (req, res, next) => {
-	const token = req.headers["authorization"];
+	const headersToken = req.headers["authorization"];
 
-	if (token) {
+	if (headersToken) {
 		// grab token from headers request
-		const headersToken = token.split(" ")[1];
+		const token = headersToken.split(" ")[1];
 
 		jwt.verify(token, "secretKey", (err, decoded) => {
 			if (err) {
