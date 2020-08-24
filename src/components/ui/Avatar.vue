@@ -10,7 +10,6 @@
 </template>
 
 <script>
-// icons
 export default {
 	name: "Avatar",
 	props: {
@@ -18,12 +17,7 @@ export default {
 			type: String,
 			default: ""
 		},
-		firstName: {
-			type: String,
-			required: true,
-			default: ""
-		},
-		lastName: {
+		name: {
 			type: String,
 			default: ""
 		}
@@ -33,7 +27,7 @@ export default {
 			return this.firstName + " " + this.lastName;
 		},
 		initals() {
-			return this.firstName.slice(0, 1);
+			return this.name.slice(0, 1);
 		}
 	}
 };
