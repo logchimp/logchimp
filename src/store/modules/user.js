@@ -1,10 +1,11 @@
 const state = {
 	authToken: "",
-	memberId: "",
-	firstName: "",
-	lastName: "",
+	userId: "",
+	firstname: "",
+	lastname: "",
 	emailAddress: "",
-	profilePicture: "",
+	username: "",
+	avatar: "",
 	isVerified: false,
 	isBlocked: false,
 	isModerator: false,
@@ -14,19 +15,20 @@ const state = {
 };
 
 const getters = {
-	getMember: state => state,
-	getMemberId: state => state.memberId,
+	getUser: state => state,
+	getUserId: state => state.userId,
 	getAuthToken: state => state.authToken
 };
 
 const mutations = {
-	setMember(state, payload) {
+	setUser(state, payload) {
 		state.authToken = payload.authToken;
-		state.memberId = payload.memberId;
-		state.firstName = payload.firstName;
-		state.lastName = payload.lastName;
+		state.userId = payload.userId;
+		state.firstname = payload.firstname;
+		state.lastname = payload.lastname;
 		state.emailAddress = payload.emailAddress;
-		state.profilePicture = payload.profilePicture;
+		state.username = payload.username;
+		state.avatar = payload.avatar;
 		state.isVerified = payload.isVerified;
 		state.isBlocked = payload.isBlocked;
 		state.isModerator = payload.isModerator;
@@ -35,14 +37,15 @@ const mutations = {
 		state.updatedAt = payload.updatedAt;
 
 		localStorage.setItem(
-			"member",
+			"user",
 			JSON.stringify({
 				authToken: payload.authToken,
-				memberId: payload.memberId,
-				firstName: payload.firstName,
-				lastName: payload.lastName,
+				userId: payload.userId,
+				firstname: payload.firstname,
+				lastname: payload.lastname,
 				emailAddress: payload.emailAddress,
-				profilePicture: payload.profilePicture,
+				username: payload.username,
+				avatar: payload.avatar,
 				isVerified: payload.isVerified,
 				isBlocked: payload.isBlocked,
 				isModerator: payload.isModerator,
@@ -57,13 +60,14 @@ const mutations = {
 const actions = {
 	login: ({ commit }, payload) => {
 		commit({
-			type: "setMember",
+			type: "setUser",
 			authToken: payload.authToken,
-			memberId: payload.memberId,
-			firstName: payload.firstName,
-			lastName: payload.lastName,
+			userId: payload.userId,
+			firstname: payload.firstname,
+			lastname: payload.lastname,
 			emailAddress: payload.emailAddress,
-			profilePicture: payload.profilePicture,
+			username: payload.username,
+			avatar: payload.avatar,
 			isVerified: payload.isVerified,
 			isBlocked: payload.isBlocked,
 			isModerator: payload.isModerator,
@@ -74,13 +78,14 @@ const actions = {
 	},
 	logout: ({ commit }) => {
 		commit({
-			type: "setMember",
+			type: "setUser",
 			authToken: "",
-			memberId: "",
-			firstName: "",
-			lastName: "",
+			userId: "",
+			firstname: "",
+			lastname: "",
 			emailAddress: "",
-			profilePicture: "",
+			username: "",
+			avatar: "",
 			isVerified: "",
 			isBlocked: "",
 			isModerator: "",
@@ -88,7 +93,7 @@ const actions = {
 			createdAt: "",
 			updatedAt: ""
 		});
-		localStorage.removeItem("member");
+		localStorage.removeItem("user");
 	}
 };
 

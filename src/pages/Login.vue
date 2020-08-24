@@ -61,19 +61,20 @@ export default {
 				})
 				.then(response => {
 					if (response.status === 200) {
-						this.$store.dispatch("member/login", {
-							authToken: response.data.token,
-							memberId: response.data.member.member_id,
-							firstName: response.data.member.first_name,
-							lastName: response.data.member.last_name,
-							emailAddress: response.data.member.email_address,
-							profilePicture: response.data.member.profile_picture,
-							isVerified: response.data.member.is_verified,
-							isBlocked: response.data.member.is_blocked,
-							isModerator: response.data.member.is_moderator,
-							isOwner: response.data.member.is_owner,
-							createdAt: response.data.member.created_at,
-							updatedAt: response.data.member.updated_at
+						this.$store.dispatch("user/login", {
+							authToken: response.data.user.authToken,
+							userId: response.data.user.userId,
+							firstname: response.data.user.firstname,
+							lastname: response.data.user.lastname,
+							emailAddress: response.data.user.emailAddress,
+							username: response.data.user.username,
+							avatar: response.data.user.avatar,
+							isVerified: response.data.user.isVerified,
+							isBlocked: response.data.user.isBlocked,
+							isModerator: response.data.user.isModerator,
+							isOwner: response.data.user.isOwner,
+							createdAt: response.data.user.createdAt,
+							updatedAt: response.data.user.updatedAt
 						});
 						this.$router.push("/");
 					}
