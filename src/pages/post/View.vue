@@ -27,12 +27,6 @@
 							</template>
 							Edit
 						</dropdown-item>
-						<dropdown-item @click.native="deletePost">
-							<template v-slot:icon>
-								<trash-icon />
-							</template>
-							Delete
-						</dropdown-item>
 					</dropdown>
 				</div>
 			</div>
@@ -63,7 +57,6 @@ import Avatar from "../../components/ui/Avatar";
 // icons
 import MenuIcon from "../../assets/images/icons/menu";
 import EditIcon from "../../assets/images/icons/edit";
-import TrashIcon from "../../assets/images/icons/trash";
 
 export default {
 	name: "PostView",
@@ -78,8 +71,7 @@ export default {
 		DropdownItem,
 		Avatar,
 		MenuIcon,
-		EditIcon,
-		TrashIcon
+		EditIcon
 	},
 	computed: {
 		username() {
@@ -99,29 +91,6 @@ export default {
 				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
 				.then(response => {
 					this.post = response.data.post;
-				})
-				.catch(error => {
-					console.log(error);
-				});
-		},
-		deletePost() {
-			// get memberId and token from localStorage
-			const token = localStorage.getItem("authToken");
-
-			axios({
-				method: "delete",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/post/delete`,
-				params: {
-					postId: this.post.post_id
-				},
-				headers: {
-					Authorization: `Bearer ${token}`
-				}
-			})
-				.then(response => {
-					console.log(response);
-
-					this.$router.push("/");
 				})
 				.catch(error => {
 					console.log(error);
