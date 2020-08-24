@@ -8,7 +8,7 @@ exports.validate = (req, res, next) => {
 		// grab token from headers request
 		const headersToken = token.split(" ")[1];
 
-		jwt.verify(headersToken, "secretKey", err => {
+		jwt.verify(token, "secretKey", (err, decoded) => {
 			if (err) {
 				console.error(err);
 
@@ -28,6 +28,7 @@ exports.validate = (req, res, next) => {
 				});
 			} else {
 				// move to next middleware on success
+				res.locals.user = decoded;
 				next();
 			}
 		});
