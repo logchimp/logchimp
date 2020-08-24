@@ -15,7 +15,7 @@
 				<div class="viewpost__meta-date">
 					{{ post.createdAt | moment("MMMM DD, YYYY") }}
 				</div>
-				<div class="viewpost__menu">
+				<div v-if="postAuthor" class="viewpost__menu">
 					<menu-icon
 						@click.native="toggleMenuDropdown"
 						class="viewpost__menu-icon"
@@ -30,13 +30,13 @@
 					</dropdown>
 				</div>
 			</div>
-			<p v-html="post.body_markdown" />
+			<p v-html="post.contentMarkdown" />
 		</div>
-		<!-- todo: list of member who upvote the post -->
+		<!-- todo: list of user who upvote the post -->
 		<div class="viewvoters">
 			<div class="viewvoters__container">
-				<div class="viewvoters__members">
-					<h6 class="viewvoters__members-heading">
+				<div class="viewvoters__users">
+					<h6 class="viewvoters__users-heading">
 						Voters
 					</h6>
 				</div>
@@ -81,6 +81,10 @@ export default {
 				}`;
 			}
 			return this.post.username;
+		},
+		postAuthor() {
+			const userId = this.$store.getters["user/getUserId"];
+			return userId === this.post.userId;
 		}
 	},
 	methods: {
