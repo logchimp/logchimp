@@ -46,19 +46,19 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/post/create`,
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts`,
 				data: {
 					title: this.title,
-					bodyMarkdown: this.description,
-					memberId
+					contentMarkdown: this.description,
+					userId
 				},
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
 			})
 				.then(response => {
-					const postSlug = response.data.post.slug;
-					this.$router.push({ path: `post/${postSlug}` });
+					const slug = response.data.post.slug;
+					this.$router.push({ path: `post/${slug}` });
 				})
 				.catch(error => {
 					console.log(error);

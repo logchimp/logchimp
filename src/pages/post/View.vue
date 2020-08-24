@@ -17,7 +17,7 @@
 					|
 				</div>
 				<div class="viewpost__meta-date">
-					{{ post.created_at | moment("MMMM DD, YYYY") }}
+					{{ post.createdAt | moment("MMMM DD, YYYY") }}
 				</div>
 				<div class="viewpost__menu">
 					<menu-icon
@@ -91,14 +91,12 @@ export default {
 		}
 	},
 	methods: {
-		getPostBySlug() {
+		postBySlug() {
 			const slug = this.$route.params.slug;
 
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/post/${slug}`)
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
 				.then(response => {
-					console.log(response);
-
 					this.post = response.data.post;
 				})
 				.catch(error => {
@@ -136,7 +134,7 @@ export default {
 		}
 	},
 	created() {
-		this.getPostBySlug();
+		this.postBySlug();
 	}
 };
 </script>
