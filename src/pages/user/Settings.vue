@@ -52,11 +52,11 @@ export default {
 	},
 	methods: {
 		user() {
-			const memberId = this.$store.getters["member/getMemberId"];
+			const userId = this.$store.getters["user/getUserId"];
 
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${memberId}`
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
 			})
 				.then(response => {
 					this.firstName = response.data.user.first_name || "";
@@ -68,7 +68,7 @@ export default {
 				});
 		},
 		updateSettings() {
-			const userId = this.$store.getters["member/getMemberId"];
+			const userId = this.$store.getters["user/getUserId"];
 
 			axios({
 				method: "patch",
