@@ -16,6 +16,7 @@
 					placeholder="Email address"
 					:error="emailAddress.error"
 					@keydown.native="emailAddressHandler"
+					@keyup.native.enter="login"
 				/>
 				<l-text
 					v-model="password.value"
@@ -25,6 +26,7 @@
 					placeholder="Password"
 					:error="password.error"
 					@keydown.native="passwordHandler"
+					@keyup.native.enter="login"
 				/>
 				<Button @click.native="login" type="primary">
 					Login

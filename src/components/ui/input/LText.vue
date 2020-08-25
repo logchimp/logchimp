@@ -11,6 +11,7 @@
 			:value="value"
 			@input="$emit('input', $event.target.value)"
 			@keydown="$emit('keydown')"
+			@keyup.enter="$emit('keyup.enter')"
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
