@@ -97,7 +97,18 @@ export default {
 					this.post = response.data.post;
 				})
 				.catch(error => {
-					console.log(error);
+					const err = { ...error };
+
+					if (err.response.data.error.code === "post_not_found") {
+						this.$store.dispatch("alerts/add", {
+							title: "Post not found",
+							description: "The post you have opened doesn't exist.",
+							type: "error",
+							timeout: 5000
+						});
+
+						this.$router.push("/");
+					}
 				});
 		},
 		editPost() {

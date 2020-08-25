@@ -61,6 +61,12 @@ export default {
 				})
 				.then(response => {
 					if (response.status === 200) {
+						this.$store.dispatch("alerts/add", {
+							title: `Welcome back, @${response.data.user.username}!`,
+							type: "success",
+							timeout: 4000
+						});
+
 						this.$store.dispatch("user/login", {
 							authToken: response.data.user.authToken,
 							userId: response.data.user.userId,
@@ -80,7 +86,25 @@ export default {
 					}
 				})
 				.catch(error => {
-					console.log(error);
+					const err = { ...error };
+
+					if (err.response.data.error.code === "user_not_found") {
+						this.$store.dispatch("alerts/add", {
+							title: "Huh! User not found",
+							description: "Account doesn't exist, check your email again.",
+							type: "error",
+							timeout: 8000
+						});
+					}
+
+					if (err.response.data.error.code === "invalid_password") {
+						this.$store.dispatch("alerts/add", {
+							title: "Whow! Password",
+							description: "Enter the correct password and try again.",
+							type: "warning",
+							timeout: 6000
+						});
+					}
 				});
 		}
 	}

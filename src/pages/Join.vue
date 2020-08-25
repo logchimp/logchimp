@@ -65,6 +65,13 @@ export default {
 						 * todo: show snackbar notification
 						 * check your inbox for email verification.
 						 */
+						this.$store.dispatch("alerts/add", {
+							title: "Yay! Welcome onboard!",
+							description: "Congrats on creating your account.",
+							type: "success",
+							timeout: 10000
+						});
+
 						this.$store.dispatch("user/login", {
 							authToken: response.data.user.authToken,
 							userId: response.data.user.userId,
@@ -84,9 +91,16 @@ export default {
 					}
 				})
 				.catch(error => {
-					console.log(error);
-					// todo: email exist re-direct to login page
-					// todo: invalid email show error message
+					const err = { ...error };
+
+					if (err.response.data.error.code === "email_already_taken") {
+						this.$store.dispatch("alerts/add", {
+							title: "Bummer! Email exists",
+							description: "Try again with another email address.",
+							type: "error",
+							timeout: 4000
+						});
+					}
 				});
 		}
 	}
