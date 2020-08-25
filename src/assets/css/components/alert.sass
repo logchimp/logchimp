@@ -1,0 +1,76 @@
+.alerts
+	position: fixed
+	top: 1.5rem
+	right: 1.5rem
+	z-index: 10
+
+.alert__item
+	background-color: white
+	border-radius: 0.375rem
+	padding: 0.625rem 2rem 0.625rem 0.625rem
+	display: flex
+	width: 100%
+	max-width: 480px
+	margin-bottom: 1rem
+	box-shadow: 2px 4px 20px 2px rgba(0, 0, 0, 0.12)
+	animation-name: alertfade
+	animation-timing-function: linear
+
+	&-content
+		padding: 0.5rem 0
+		display: flex
+		align-items: center
+
+	&-icon
+		display: flex
+		margin-right: 1rem
+
+	&-type
+		width: 4px
+		border-radius: 1rem
+		background: pink
+		margin-right: 1rem
+
+	&-title
+		font-weight: 600
+
+	&-description
+		margin-top: 0.375rem
+		font-weight: 500
+		color: #93959A
+		flex-wrap: wrap
+
+.alert__type-success
+	background-color: #64B285
+
+.alert__type-warning
+	background-color: #E8BD43
+
+.alert__type-error
+	background-color: #DE544E
+
+.alert__icon
+	width: 2rem
+	height: 2rem
+
+	&-success
+		fill: #64B285
+		stroke: #ffffff
+
+	&-warning
+		fill: #E8BD43
+		stroke: #ffffff
+
+	&-error
+		fill: #DE544E
+		stroke: #ffffff
+
+@keyframes alertfade
+	0%
+		opacity: 1
+	60%
+		opacity: 1
+	80%
+		opacity: 0.5
+	100%
+		opacity: 0
