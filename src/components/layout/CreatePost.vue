@@ -2,12 +2,14 @@
 	<div class="createpost">
 		<l-text
 			v-model="title"
+			label="Title"
 			type="text"
 			name="Post title"
 			placeholder="Name of the feature"
 		/>
 		<l-textarea
 			v-model="description"
+			label="Description"
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>

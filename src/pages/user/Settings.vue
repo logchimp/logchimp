@@ -3,6 +3,7 @@
 		<div class="usersettings__name">
 			<l-text
 				v-model="firstname"
+				label="First name"
 				type="text"
 				name="First name"
 				placeholder="First name"
@@ -10,6 +11,7 @@
 			/>
 			<l-text
 				v-model="lastname"
+				label="Last name"
 				type="text"
 				name="Last name"
 				placeholder="Last name"
@@ -18,6 +20,7 @@
 		</div>
 		<l-text
 			v-model="username"
+			label="Username"
 			type="text"
 			name="Username"
 			placeholder="Username"
@@ -25,6 +28,7 @@
 		/>
 		<l-text
 			v-model="emailAddress"
+			label="Email Address"
 			type="text"
 			name="Email Address"
 			placeholder="Email address"
