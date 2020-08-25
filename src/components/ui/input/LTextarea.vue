@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="input">
 		<p v-if="label" class="input__field-label">{{ label }}</p>
 		<textarea
 			:value="value"
@@ -11,6 +11,7 @@
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
+		<p v-if="error.show" class="input__error-message">{{ error.message }}</p>
 	</div>
 </template>
 
@@ -33,6 +34,15 @@ export default {
 		disabled: {
 			type: Boolean,
 			default: false
+		},
+		error: {
+			type: Object,
+			default: () => {
+				return {
+					show: false,
+					message: ""
+				};
+			}
 		}
 	}
 };

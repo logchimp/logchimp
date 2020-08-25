@@ -5,12 +5,16 @@
 			:type="type"
 			class="input__field input__text"
 			:class="{
-				'input__field-disabled': disabled
+				'input__field-disabled': disabled,
+				'input__error': error.show
 			}"
+			:value="value"
 			@input="$emit('input', $event.target.value)"
+			@keydown="$emit('keydown')"
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
+		<p v-if="error.show" class="input__error-message">{{ error.message }}</p>
 	</div>
 </template>
 
@@ -30,9 +34,22 @@ export default {
 			type: String,
 			default: ""
 		},
+		value: {
+			type: String,
+			default: ""
+		},
 		disabled: {
 			type: Boolean,
 			default: false
+		},
+		error: {
+			type: Object,
+			default: () => {
+				return {
+					show: false,
+					message: ""
+				};
+			}
 		}
 	}
 };
