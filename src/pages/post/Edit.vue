@@ -8,6 +8,7 @@
 			placeholder="Name of the feature"
 			:error="title.error"
 			@keydown.native="titleHandler"
+			@keyup.native.enter="savePost"
 		/>
 		<l-textarea
 			v-model="contentMarkdown"
