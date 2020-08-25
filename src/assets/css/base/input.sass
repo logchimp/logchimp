@@ -1,3 +1,6 @@
+.input
+	margin-bottom: 1rem
+
 .input, .input__field
 	width: 100%
 
@@ -13,9 +16,7 @@
 		family: inherit
 		size: .875rem
 	display: flex
-	width: 100%
 	outline: none
-	margin-bottom: 0.75rem
 
 	&::placeholder
 		color: #a3a3a3
@@ -34,3 +35,11 @@
 	background-color: #eaeaea
 	color: #A3A3A3
 	border-color: #eaeaea
+
+.input__error
+	border-color: #DE544E
+
+	&-message
+		color: #DE544E
+		font-size: 0.75rem
+		margin-top: 0.375rem
