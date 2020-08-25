@@ -62,19 +62,29 @@ export default {
 		user() {
 			const userId = this.$store.getters["user/getUserId"];
 
-			axios({
-				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
-			})
-				.then(response => {
-					this.firstname = response.data.user.firstname || "";
-					this.lastname = response.data.user.lastname || "";
-					this.username = response.data.user.username || "";
-					this.emailAddress = response.data.user.emailAddress;
+			if (userId) {
+				axios({
+					method: "get",
+					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
 				})
-				.catch(error => {
-					console.log(error);
+					.then(response => {
+						this.firstname = response.data.user.firstname || "";
+						this.lastname = response.data.user.lastname || "";
+						this.username = response.data.user.username || "";
+						this.emailAddress = response.data.user.emailAddress;
+					})
+					.catch(error => {
+						console.error(error);
+					});
+			} else {
+				this.$store.dispatch("alerts/add", {
+					title: "Unauthorized",
+					description: "You need to login to access 'User settings' page.",
+					type: "error",
+					timeout: 6000
 				});
+				this.$router.push("/login");
+			}
 		},
 		updateSettings() {
 			const userId = this.$store.getters["user/getUserId"];
@@ -93,7 +103,7 @@ export default {
 					this.lastname = response.data.user.lastname || "";
 				})
 				.catch(error => {
-					console.log(error);
+					console.error(error);
 				});
 		}
 	},

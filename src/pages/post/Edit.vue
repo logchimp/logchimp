@@ -52,36 +52,46 @@ export default {
 				});
 		},
 		savePost() {
-			const userId = this.$store.getters["user/getUserId"];
+			const token = this.$store.getters["user/getAuthToken"];
 
-			if (this.post.userId === userId) {
-				const token = this.$store.getters["user/getAuthToken"];
+			axios({
+				method: "patch",
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${this.post.postId}`,
+				data: {
+					title: this.post.title,
+					contentMarkdown: this.post.contentMarkdown,
+					slugId: this.post.slugId,
+					userId: this.post.userId
+				},
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			})
+				.then(response => {
+					if (response.data.status.code === 200) {
+						this.$store.dispatch("alerts/add", {
+							title: "Updated",
+							description: "The post have been updated successfully.",
+							type: "success",
+							timeout: 5000
+						});
 
-				axios({
-					method: "patch",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${this.post.postId}`,
-					data: {
-						title: this.post.title,
-						contentMarkdown: this.post.contentMarkdown,
-						slugId: this.post.slugId,
-						userId: this.post.userId
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
+						this.post = response.data.post;
+						this.$router.push(`/post/${this.post.slug}`);
 					}
 				})
-					.then(response => {
-						this.post = response.data.post;
+				.catch(error => {
+					const err = { ...error };
 
-						// redirect to post view page
-						this.$router.push(`/post/${this.post.slug}`);
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			} else {
-				// show error alert 'insufficient_premissions'
-			}
+					if (err.response.data.error.code === "insufficient_premissions") {
+						this.$store.dispatch("alerts/add", {
+							title: "Insufficient premissions",
+							description: "You're not allowed to edit this post.",
+							type: "warning",
+							timeout: 6000
+						});
+					}
+				});
 		}
 	},
 	created() {

@@ -57,11 +57,29 @@ export default {
 				}
 			})
 				.then(response => {
-					const slug = response.data.post.slug;
-					this.$router.push({ path: `post/${slug}` });
+					if (response.data.status.code === 201) {
+						this.$store.dispatch("alerts/add", {
+							title: "🎉 Feature posted",
+							description: "You have successfully submitted feature request.",
+							type: "success",
+							timeout: 5000
+						});
+
+						const slug = response.data.post.slug;
+						this.$router.push({ path: `post/${slug}` });
+					}
 				})
 				.catch(error => {
-					console.log(error);
+					const err = { ...error };
+
+					if (err.response.data.error.code === "token_invalid") {
+						this.$store.dispatch("alerts/add", {
+							title: "Hold on! ✋",
+							description: "You need to login to submit feature request.",
+							type: "error",
+							timeout: 5000
+						});
+					}
 				});
 		}
 	}
