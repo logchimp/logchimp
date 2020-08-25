@@ -2,7 +2,7 @@
 	<div>
 		<div class="usersettings__name">
 			<l-text
-				v-model="firstname"
+				v-model="firstname.value"
 				label="First name"
 				type="text"
 				name="First name"
@@ -10,7 +10,7 @@
 				class="usersettings__name-item"
 			/>
 			<l-text
-				v-model="lastname"
+				v-model="lastname.value"
 				label="Last name"
 				type="text"
 				name="Last name"
@@ -19,7 +19,7 @@
 			/>
 		</div>
 		<l-text
-			v-model="username"
+			v-model="username.value"
 			label="Username"
 			type="text"
 			name="Username"
@@ -27,7 +27,7 @@
 			:disabled="true"
 		/>
 		<l-text
-			v-model="emailAddress"
+			v-model="emailAddress.value"
 			label="Email Address"
 			type="text"
 			name="Email Address"
@@ -52,10 +52,18 @@ export default {
 	name: "UserSettings",
 	data() {
 		return {
-			firstname: "",
-			lastname: "",
-			username: "",
-			emailAddress: ""
+			firstname: {
+				value: ""
+			},
+			lastname: {
+				value: ""
+			},
+			username: {
+				value: ""
+			},
+			emailAddress: {
+				value: ""
+			}
 		};
 	},
 	components: {
@@ -72,10 +80,10 @@ export default {
 					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
 				})
 					.then(response => {
-						this.firstname = response.data.user.firstname || "";
-						this.lastname = response.data.user.lastname || "";
-						this.username = response.data.user.username || "";
-						this.emailAddress = response.data.user.emailAddress;
+						this.firstname.value = response.data.user.firstname || "";
+						this.lastname.value = response.data.user.lastname || "";
+						this.username.value = response.data.user.username || "";
+						this.emailAddress.value = response.data.user.emailAddress;
 					})
 					.catch(error => {
 						console.error(error);
@@ -98,13 +106,13 @@ export default {
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/user`,
 				data: {
 					userId,
-					firstname: this.firstname,
-					lastname: this.lastname
+					firstname: this.firstname.value,
+					lastname: this.lastname.value
 				}
 			})
 				.then(response => {
-					this.firstname = response.data.user.firstname || "";
-					this.lastname = response.data.user.lastname || "";
+					this.firstname.value = response.data.user.firstname || "";
+					this.lastname.value = response.data.user.lastname || "";
 				})
 				.catch(error => {
 					console.error(error);
