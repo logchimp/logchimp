@@ -2,12 +2,14 @@
 	<div class="editpost">
 		<l-text
 			v-model="post.title"
+			label="Title"
 			type="text"
 			name="Post title"
 			placeholder="Name of the feature"
 		/>
 		<l-textarea
 			v-model="post.contentMarkdown"
+			label="Description"
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>

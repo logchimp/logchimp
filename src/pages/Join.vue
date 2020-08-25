@@ -10,12 +10,14 @@
 				</div>
 				<l-text
 					v-model="emailAddress"
+					label="Email Address"
 					type="email"
 					name="email"
 					placeholder="Email address"
 				/>
 				<l-text
 					v-model="password"
+					label="Password"
 					type="password"
 					name="password"
 					placeholder="Password"
