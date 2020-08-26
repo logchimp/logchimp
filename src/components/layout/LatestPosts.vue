@@ -7,6 +7,11 @@
 			:description="post.contentMarkdown || ''"
 			:key="post.postId"
 		/>
+		<infinite-loading @infinite="getMorePosts">
+			<div slot="spinner"><loading /></div>
+			<div slot="no-more"></div>
+			<div slot="no-results"></div>
+		</infinite-loading>
 	</div>
 </template>
 
@@ -16,35 +21,43 @@ import axios from "axios";
 
 // components
 import Post from "../layout/Post";
+import Loading from "../ui/Loading";
 
 export default {
 	name: "LatestPosts",
 	data() {
 		return {
-			posts: []
+			posts: [],
+			page: 1
 		};
 	},
 	components: {
-		Post
+		Post,
+		Loading
 	},
 	methods: {
-		getPosts() {
-			const url = new URL(
-				`${process.env.VUE_APP_SEVER_URL}/api/v1/posts?created=desc`
-			);
-
+		getMorePosts($state) {
 			axios
-				.get(url)
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts`, {
+					params: {
+						page: this.page,
+						created: "desc"
+					}
+				})
 				.then(response => {
-					this.posts = response.data.posts;
+					if (response.data.posts.length) {
+						this.posts.push(...response.data.posts);
+						this.page += 1;
+						$state.loaded();
+					} else {
+						$state.complete();
+					}
 				})
 				.catch(error => {
-					console.log(error);
+					console.error(error);
+					$state.complete();
 				});
 		}
-	},
-	created() {
-		this.getPosts();
 	}
 };
 </script>
