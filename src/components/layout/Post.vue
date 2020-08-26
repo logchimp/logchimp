@@ -3,15 +3,15 @@
 		<div class="post__voters">
 			<arrow-icon
 				class="post__voters-arrow"
-				:class="{ 'post__voters-vote': vote }"
+				:class="{ 'post__voters-vote': isVoted }"
 			/>
-			{{ voters }}
+			{{ voteCount }}
 		</div>
 		<div class="post__content">
-			<router-link class="post__content-link" :to="`post/${slug}`">
-				<h5 class="post__content-title">{{ title }}</h5>
+			<router-link class="post__content-link" :to="`post/${post.slug}`">
+				<h5 class="post__content-title">{{ post.title }}</h5>
 			</router-link>
-			<p class="post__content-description" v-html="sliceDescription" />
+			<p class="post__content-description" v-html="sliceContentMarkdown" />
 		</div>
 	</div>
 </template>
@@ -25,33 +25,33 @@ export default {
 		ArrowIcon
 	},
 	props: {
-		title: {
-			type: String,
-			required: true
-		},
-		description: {
-			type: String,
-			default: ""
-		},
-		slug: {
-			type: String,
-			required: true
-		},
-		voters: {
-			type: Number,
-			default: 0
-		},
-		vote: {
-			type: Boolean,
-			default: false
+		post: {
+			type: Object,
+			required: true,
+			default: () => {}
 		}
 	},
 	computed: {
-		sliceDescription() {
-			return (
-				this.description.slice(0, 120) +
-				(this.description.length > 120 ? "..." : "")
-			);
+		voteCount() {
+			return this.post.voters.length;
+		},
+		sliceContentMarkdown() {
+			if (this.post.contentMarkdown) {
+				return (
+					this.post.contentMarkdown.slice(0, 120) +
+					(this.post.contentMarkdown.length > 120 ? "..." : "")
+				);
+			} else {
+				return "";
+			}
+		},
+		isVoted() {
+			const userId = this.$store.getters["user/getUserId"];
+			return this.post.voters.find(item => {
+				return item.userId === userId;
+			});
+		}
+	},
 		}
 	}
 };
