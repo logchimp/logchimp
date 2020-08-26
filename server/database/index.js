@@ -111,7 +111,6 @@ knex.schema.hasTable("votes").then(exists => {
 				table.uuid("userId").notNullable();
 				table.uuid("postId").notNullable();
 				table.timestamp("createdAt", { useTz: true }).notNullable();
-				table.timestamp("updatedAt", { useTz: true }).notNullable();
 				table.comment("Storing post votes data");
 			})
 			.then(() => {
