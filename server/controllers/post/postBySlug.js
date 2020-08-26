@@ -1,9 +1,9 @@
 const database = require("../../database");
 
-exports.postBySlug = (req, res) => {
+exports.postBySlug = async (req, res) => {
 	const slug = req.params.slug;
 
-	database
+	const posts = await database
 		.select(
 			"users.userId",
 			"users.firstname",
@@ -17,32 +17,44 @@ exports.postBySlug = (req, res) => {
 		.where({
 			slug
 		})
-		.limit(1)
-		.then(response => {
-			const post = response[0];
+		.limit(1);
 
-			if (post) {
+	try {
+		const post = posts[0];
+
+		if (post) {
+			const postId = post.postId;
+
+			const voters = await database
+				.select()
+				.from("votes")
+				.where({ postId });
+
+			try {
 				res.status(200).send({
 					status: {
 						code: 200,
 						type: "success"
 					},
-					post
+					post,
+					voters
 				});
-			} else {
-				res.status(404).send({
-					status: {
-						code: 404,
-						type: "error"
-					},
-					error: {
-						code: "post_not_found",
-						message: "Post not found"
-					}
-				});
+			} catch (error) {
+				console.error(error);
 			}
-		})
-		.catch(error => {
-			console.log(error);
-		});
+		} else {
+			res.status(404).send({
+				status: {
+					code: 404,
+					type: "error"
+				},
+				error: {
+					code: "post_not_found",
+					message: "Post not found"
+				}
+			});
+		}
+	} catch (error) {
+		console.error(error);
+	}
 };

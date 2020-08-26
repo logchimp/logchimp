@@ -1,12 +1,6 @@
 <template>
 	<div class="latest__post">
-		<post
-			v-for="post in posts"
-			:title="post.title"
-			:slug="post.slug"
-			:description="post.contentMarkdown || ''"
-			:key="post.postId"
-		/>
+		<post v-for="post in posts" :post="post" :key="post.postId" />
 		<infinite-loading @infinite="getMorePosts">
 			<div slot="spinner"><loading /></div>
 			<div slot="no-more"></div>

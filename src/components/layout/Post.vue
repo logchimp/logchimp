@@ -1,57 +1,50 @@
 <template>
 	<div class="post">
-		<div class="post__voters">
-			<arrow-icon
-				class="post__voters-arrow"
-				:class="{ 'post__voters-vote': vote }"
-			/>
-			{{ voters }}
-		</div>
+		<Vote
+			:post-id="post.postId"
+			:voters="post.voters"
+			@update-voters="updateVoters"
+		/>
 		<div class="post__content">
-			<router-link class="post__content-link" :to="`post/${slug}`">
-				<h5 class="post__content-title">{{ title }}</h5>
+			<router-link class="post__content-link" :to="`post/${post.slug}`">
+				<h5 class="post__content-title">{{ post.title }}</h5>
 			</router-link>
-			<p class="post__content-description" v-html="sliceDescription" />
+			<p class="post__content-description" v-html="sliceContentMarkdown" />
 		</div>
 	</div>
 </template>
 
 <script>
-import ArrowIcon from "../../assets/images/icons/arrow";
+// components
+import Vote from "../Vote";
 
 export default {
 	name: "post",
-	components: {
-		ArrowIcon
-	},
 	props: {
-		title: {
-			type: String,
-			required: true
-		},
-		description: {
-			type: String,
-			default: ""
-		},
-		slug: {
-			type: String,
-			required: true
-		},
-		voters: {
-			type: Number,
-			default: 0
-		},
-		vote: {
-			type: Boolean,
-			default: false
+		post: {
+			type: Object,
+			required: true,
+			default: () => {}
 		}
 	},
+	components: {
+		Vote
+	},
 	computed: {
-		sliceDescription() {
-			return (
-				this.description.slice(0, 120) +
-				(this.description.length > 120 ? "..." : "")
-			);
+		sliceContentMarkdown() {
+			if (this.post.contentMarkdown) {
+				return (
+					this.post.contentMarkdown.slice(0, 120) +
+					(this.post.contentMarkdown.length > 120 ? "..." : "")
+				);
+			} else {
+				return "";
+			}
+		}
+	},
+	methods: {
+		updateVoters(voters) {
+			this.post.voters = voters;
 		}
 	}
 };
