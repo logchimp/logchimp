@@ -8,7 +8,7 @@ exports.filterPost = async (req, res) => {
 	const page = req.query.page - 1;
 	const limit = 10;
 
-	const posts = await database
+	const response = await database
 		.select("postId", "title", "slug", "contentMarkdown", "createdAt")
 		.from("posts")
 		.limit(limit)
@@ -21,6 +21,28 @@ exports.filterPost = async (req, res) => {
 		]);
 
 	try {
+		const posts = [];
+
+		for (let i = 0; i < response.length; i++) {
+			const postId = response[i].postId;
+
+			const voters = await database
+				.select()
+				.from("votes")
+				.where({
+					postId
+				});
+
+			try {
+				posts.push({
+					...response[i],
+					voters
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+
 		res.status(200).send({
 			status: {
 				code: 200,
