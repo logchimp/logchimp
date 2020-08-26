@@ -1,33 +1,44 @@
 <template>
 	<div class="view">
 		<div class="viewpost">
-			<h2 class="viewpost__title">
-				{{ post.title }}
-			</h2>
-			<div class="viewpost__meta">
-				<div class="viewpost__meta-author">
-					<avatar class="viewpost__author-avatar" :name="username" />
-					{{ username }}
-				</div>
-				<div class="viewpost__meta-divider">
-					|
-				</div>
-				<div class="viewpost__meta-date">
-					{{ post.createdAt | moment("MMMM DD, YYYY") }}
-				</div>
-				<div v-if="postAuthor" class="viewpost__menu">
-					<menu-icon
-						@click.native="toggleMenuDropdown"
-						class="viewpost__menu-icon"
+			<div class="viewpost__vote">
+				<div>
+					<Vote
+						:post-id="post.postId"
+						:voters="voters"
+						@update-voters="updateVoters"
 					/>
-					<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
-						<dropdown-item @click.native="editPost">
-							<template v-slot:icon>
-								<edit-icon />
-							</template>
-							Edit
-						</dropdown-item>
-					</dropdown>
+				</div>
+				<div class="viewpost__content">
+					<h2 class="viewpost__title">
+						{{ post.title }}
+					</h2>
+					<div class="viewpost__meta">
+						<div class="viewpost__meta-author">
+							<avatar class="viewpost__author-avatar" :name="username" />
+							{{ username }}
+						</div>
+						<div class="viewpost__meta-divider">
+							|
+						</div>
+						<div class="viewpost__meta-date">
+							{{ post.createdAt | moment("MMMM DD, YYYY") }}
+						</div>
+						<div v-if="postAuthor" class="viewpost__menu">
+							<menu-icon
+								@click.native="toggleMenuDropdown"
+								class="viewpost__menu-icon"
+							/>
+							<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
+								<dropdown-item @click.native="editPost">
+									<template v-slot:icon>
+										<edit-icon />
+									</template>
+									Edit
+								</dropdown-item>
+							</dropdown>
+						</div>
+					</div>
 				</div>
 			</div>
 			<p v-html="post.contentMarkdown" />
@@ -50,6 +61,7 @@
 import axios from "axios";
 
 // components
+import Vote from "../../components/Vote";
 import Dropdown from "../../components/ui/dropdown/DropdownGroup";
 import DropdownItem from "../../components/ui/dropdown/DropdownItem";
 import Avatar from "../../components/ui/Avatar";
@@ -68,6 +80,7 @@ export default {
 		};
 	},
 	components: {
+		Vote,
 		Dropdown,
 		DropdownItem,
 		Avatar,
@@ -112,6 +125,9 @@ export default {
 						this.$router.push("/");
 					}
 				});
+		},
+		updateVoters(voters) {
+			this.voters = voters;
 		},
 		editPost() {
 			this.$router.push(`/post/${this.post.slug}/edit`);
