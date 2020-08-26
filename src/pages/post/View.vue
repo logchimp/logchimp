@@ -33,7 +33,7 @@
 			<p v-html="post.contentMarkdown" />
 		</div>
 		<!-- todo: list of user who upvote the post -->
-		<div class="viewvoters">
+		<!-- <div class="viewvoters">
 			<div class="viewvoters__container">
 				<div class="viewvoters__users">
 					<h6 class="viewvoters__users-heading">
@@ -41,7 +41,7 @@
 					</h6>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </template>
 
