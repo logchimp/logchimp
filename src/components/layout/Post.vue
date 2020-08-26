@@ -3,6 +3,7 @@
 		<Vote
 			:post-id="post.postId"
 			:voters="post.voters"
+			@update-voters="updateVoters"
 		/>
 		<div class="post__content">
 			<router-link class="post__content-link" :to="`post/${post.slug}`">
@@ -42,6 +43,8 @@ export default {
 		}
 	},
 	methods: {
+		updateVoters(voters) {
+			this.post.voters = voters;
 		}
 	}
 };
