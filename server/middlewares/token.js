@@ -3,22 +3,19 @@ const jwt = require("jsonwebtoken");
 
 exports.validate = (req, res, next) => {
 	const headersToken = req.headers["authorization"];
+	// grab token from headers request
+	const token = headersToken.split(" ")[1];
 
-	if (headersToken) {
-		// grab token from headers request
-		const token = headersToken.split(" ")[1];
-
+	if (token) {
 		jwt.verify(token, "secretKey", (err, decoded) => {
 			if (err) {
-				console.error(err);
-
 				/**
 				 * sending response to client
 				 * only on if the token is missing
 				 */
-				res.status(401).send({
+				res.status(403).send({
 					status: {
-						code: 401,
+						code: 403,
 						type: "error"
 					},
 					error: {
