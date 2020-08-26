@@ -1,6 +1,6 @@
 <template>
 	<div class="post">
-		<div class="post__voters">
+		<div class="post__voters" @click="changeVote">
 			<arrow-icon
 				class="post__voters-arrow"
 				:class="{ 'post__voters-vote': isVoted }"
@@ -17,6 +17,10 @@
 </template>
 
 <script>
+// packages
+import axios from "axios";
+
+// icons
 import ArrowIcon from "../../assets/images/icons/arrow";
 
 export default {
@@ -52,6 +56,45 @@ export default {
 			});
 		}
 	},
+	methods: {
+		changeVote() {
+			const userId = this.$store.getters["user/getUserId"];
+			const postId = this.post.postId;
+			const token = this.$store.getters["user/getAuthToken"];
+
+			if (this.isVoted) {
+				const voteId = this.post.voters.find(item => {
+					return item.userId === userId;
+				});
+
+				axios({
+					method: "delete",
+					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/votes`,
+					data: {
+						voteId: voteId.voteId,
+						postId
+					},
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				})
+					.then(response => {
+						this.post.voters = response.data.voters;
+					})
+					.catch(error => {
+						const err = { ...error };
+
+						if (err.response.data.error.code === "token_invalid") {
+							this.$store.dispatch("alerts/add", {
+								title: "Hold on! ✋",
+								description: "You need to login to submit feature request.",
+								type: "error",
+								timeout: 5000
+							});
+							this.$router.push("/login");
+						}
+					});
+			}
 		}
 	}
 };
