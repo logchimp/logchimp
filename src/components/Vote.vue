@@ -72,6 +72,16 @@ export default {
 					.catch(error => {
 						const err = { ...error };
 
+						if (err.response.data.error.code === "token_missing") {
+							this.$store.dispatch("alerts/add", {
+								title: "Holy accounts!",
+								description: "You need to login to vote.",
+								type: "error",
+								timeout: 5000
+							});
+							this.$router.push("/login");
+						}
+
 						if (err.response.data.error.code === "token_invalid") {
 							this.$store.dispatch("alerts/add", {
 								title: "Hold on! ✋",
@@ -99,6 +109,16 @@ export default {
 					})
 					.catch(error => {
 						const err = { ...error };
+
+						if (err.response.data.error.code === "token_missing") {
+							this.$store.dispatch("alerts/add", {
+								title: "Holy accounts!",
+								description: "You need to login to vote.",
+								type: "error",
+								timeout: 5000
+							});
+							this.$router.push("/join");
+						}
 
 						if (err.response.data.error.code === "token_invalid") {
 							this.$store.dispatch("alerts/add", {
