@@ -63,7 +63,8 @@ export default {
 	data() {
 		return {
 			menuDropdown: false,
-			post: {}
+			post: {},
+			voters: []
 		};
 	},
 	components: {
@@ -95,6 +96,7 @@ export default {
 				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
 				.then(response => {
 					this.post = response.data.post;
+					this.voters = response.data.voters;
 				})
 				.catch(error => {
 					const err = { ...error };
