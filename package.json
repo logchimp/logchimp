@@ -4,11 +4,11 @@
 	"private": true,
 	"workspaces": ["server", "frontend"],
 	"scripts": {
-		"client-dev": "vue-cli-service serve",
-		"client-build": "vue-cli-service build",
-		"client-lint": "vue-cli-service lint",
-		"server-dev": "nodemon server/app.js",
-		"server-start": "node server/app.js",
+		"frontend:dev": "cd frontend && vue-cli-service serve",
+		"frontend:build": "cd frontend && vue-cli-service build",
+		"frontend:lint": "cd frontend && vue-cli-service lint",
+		"server:dev": "cd server && nodemon app.js",
+		"server:start": "cd server && node app.js",
 		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
 	},
 	"devDependencies": {
