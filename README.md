@@ -45,7 +45,7 @@ Stay up to date on the development of LogChimp you can star this repository, fol
 
 ### ⛏️ Built Using
 
-Contributing to Thermal project is fairly easy.
+Contributing to LogChimp project is fairly easy.
 
 - **Express** - Node.js web framework
 - **PostgreSQL** - Backend database
