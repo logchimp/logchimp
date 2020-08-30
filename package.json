@@ -2,49 +2,20 @@
 	"name": "logchimp",
 	"version": "0.1.0",
 	"private": true,
+	"workspaces": ["server", "frontend"],
 	"scripts": {
-		"client-dev": "vue-cli-service serve",
-		"client-build": "vue-cli-service build",
-		"client-lint": "vue-cli-service lint",
-		"server-dev": "nodemon server/app.js",
-		"server-start": "node server/app.js",
+		"frontend:dev": "cd frontend && vue-cli-service serve",
+		"frontend:build": "cd frontend && vue-cli-service build",
+		"frontend:lint": "cd frontend && vue-cli-service lint",
+		"server:dev": "cd server && nodemon app.js",
+		"server:start": "cd server && node app.js",
 		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
 	},
-	"dependencies": {
-		"@hapi/joi": "^17.1.0",
-		"axios": "^0.20.0",
-		"bcryptjs": "^2.4.3",
-		"core-js": "^3.4.4",
-		"cors": "^2.8.5",
-		"dotenv": "^8.2.0",
-		"express": "^4.17.1",
-		"jsonwebtoken": "^8.5.1",
-		"knex": "^0.20.8",
-		"nanoid": "^3.1.12",
-		"node-sass": "^4.13.1",
-		"pg": "^8.3.2",
-		"sass-loader": "^10.0.0",
-		"uuid": "^8.3.0",
-		"vue": "^2.6.12",
-		"vue-infinite-loading": "^2.4.5",
-		"vue-moment": "^4.1.0",
-		"vue-router": "^3.4.3",
-		"vuex": "^3.4.0"
-	},
 	"devDependencies": {
-		"@vue/cli-plugin-babel": "^4.5.4",
-		"@vue/cli-plugin-eslint": "^4.5.4",
-		"@vue/cli-service": "^4.5.4",
 		"babel-eslint": "^10.0.3",
 		"eslint": "^7.7.0",
 		"eslint-config-prettier": "^6.10.0",
 		"eslint-plugin-prettier": "^3.1.2",
-		"eslint-plugin-vue": "^6.2.2",
-		"nodemon": "^2.0.2",
-		"vue-template-compiler": "^2.6.12"
-	},
-	"browserslist": [
-		"> 1%",
-		"last 2 versions"
-	]
+		"eslint-plugin-vue": "^6.2.2"
+	}
 }
