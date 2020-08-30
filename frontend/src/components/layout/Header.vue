@@ -1,47 +1,44 @@
 <template>
-	<div class="header">
-		<header>
-			<div class="container header__container">
-				<router-link to="/" class="header__logo">
-					<img src="@/assets/images/logo_invert_color.svg" />
-				</router-link>
-				<nav class="header__nav">
-					<div class="nav__list">
-						<div v-if="isAuthenticated" class="nav__item">
-							<avatar
-								@click.native="toggleProfileDropdown"
-								class="nav__profile"
-								:name="username"
-							/>
-							<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
-								<dropdown-item @click.native="settings">
-									<template v-slot:icon>
-										<settings-icon />
-									</template>
-									Settings
-								</dropdown-item>
-								<dropdown-item @click.native="logout">
-									<template v-slot:icon>
-										<logout-icon />
-									</template>
-									Sign out
-								</dropdown-item>
-							</dropdown>
-						</div>
-						<div v-if="!isAuthenticated" class="nav__item nav__auth">
-							<Button @click.native="login" type="text">
-								Login
-							</Button>
-							<Button @click.native="join" type="outline">
-								Create an account
-							</Button>
-						</div>
+	<header class="header">
+		<div class="container header__container">
+			<router-link to="/" class="header__logo">
+				<img src="@/assets/images/logo_invert_color.svg" />
+			</router-link>
+			<nav class="header__nav">
+				<div class="nav__list">
+					<div v-if="isAuthenticated" class="nav__item">
+						<avatar
+							@click.native="toggleProfileDropdown"
+							class="nav__profile"
+							:name="username"
+						/>
+						<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
+							<dropdown-item @click.native="settings">
+								<template v-slot:icon>
+									<settings-icon />
+								</template>
+								Settings
+							</dropdown-item>
+							<dropdown-item @click.native="logout">
+								<template v-slot:icon>
+									<logout-icon />
+								</template>
+								Sign out
+							</dropdown-item>
+						</dropdown>
 					</div>
-				</nav>
-			</div>
-		</header>
-		<auth-modal v-if="authModal" />
-	</div>
+					<div v-if="!isAuthenticated" class="nav__item nav__auth">
+						<Button @click.native="login" type="text">
+							Login
+						</Button>
+						<Button @click.native="join" type="outline">
+							Create an account
+						</Button>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</header>
 </template>
 
 <script>
@@ -59,8 +56,7 @@ export default {
 	name: "Header",
 	data() {
 		return {
-			profileDropdown: false,
-			authModal: false
+			profileDropdown: false
 		};
 	},
 	components: {
