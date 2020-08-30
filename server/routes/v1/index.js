@@ -13,4 +13,8 @@ router.use("/api/v1", posts);
 router.use("/api/v1", votes);
 router.use("/api/v1", users);
 
+router.get("/api/", (req, res) => {
+	res.status(200).send("👍");
+});
+
 module.exports = router;
