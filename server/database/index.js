@@ -2,7 +2,7 @@
 const knex = require("knex")({
 	client: "pg",
 	// postgresql database version
-	version: "12.1",
+	version: "12.4",
 	connection: {
 		host: process.env.PG_HOST,
 		user: process.env.PG_USER,
