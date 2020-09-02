@@ -26,11 +26,11 @@
 						</div>
 						<div v-if="postAuthor" class="viewpost__menu">
 							<menu-icon
-								@click.native="toggleMenuDropdown"
+								@click="toggleMenuDropdown"
 								class="viewpost__menu-icon"
 							/>
 							<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
-								<dropdown-item @click.native="editPost">
+								<dropdown-item @click="editPost">
 									<template v-slot:icon>
 										<edit-icon />
 									</template>

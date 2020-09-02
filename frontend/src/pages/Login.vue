@@ -28,7 +28,7 @@
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="login"
 				/>
-				<Button @click.native="login" type="primary">
+				<Button @click="login" type="primary">
 					Login
 				</Button>
 			</div>

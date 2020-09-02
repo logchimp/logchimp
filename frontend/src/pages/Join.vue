@@ -28,7 +28,7 @@
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="join"
 				/>
-				<Button @click.native="join" type="primary">
+				<Button @click="join" type="primary">
 					Create account
 				</Button>
 			</div>

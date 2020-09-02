@@ -8,18 +8,18 @@
 				<div class="nav__list">
 					<div v-if="isAuthenticated" class="nav__item">
 						<avatar
-							@click.native="toggleProfileDropdown"
+							@click="toggleProfileDropdown"
 							class="nav__profile"
 							:name="username"
 						/>
 						<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
-							<dropdown-item @click.native="settings">
+							<dropdown-item @click="settings">
 								<template v-slot:icon>
 									<settings-icon />
 								</template>
 								Settings
 							</dropdown-item>
-							<dropdown-item @click.native="logout">
+							<dropdown-item @click="logout">
 								<template v-slot:icon>
 									<logout-icon />
 								</template>
@@ -28,10 +28,10 @@
 						</dropdown>
 					</div>
 					<div v-if="!isAuthenticated" class="nav__item nav__auth">
-						<Button @click.native="login" type="text">
+						<Button @click="login" type="text">
 							Login
 						</Button>
-						<Button @click.native="join" type="outline">
+						<Button @click="join" type="outline">
 							Create an account
 						</Button>
 					</div>
