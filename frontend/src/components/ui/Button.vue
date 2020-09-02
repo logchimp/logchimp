@@ -1,17 +1,30 @@
 <template>
 	<div class="button" :class="[`button__${type}`]">
 		<slot />
+		<div class="button__loader" v-if="loading">
+			<loader-icon />
+		</div>
 	</div>
 </template>
 
 <script>
+// icons
+import LoaderIcon from "../icons/Loader";
+
 export default {
 	name: "Button",
 	props: {
 		type: {
 			type: String,
 			required: true
+		},
+		loading: {
+			type: Boolean,
+			default: false
 		}
+	},
+	components: {
+		LoaderIcon
 	}
 };
 </script>
@@ -26,6 +39,37 @@ export default {
 	justify-content: center
 	cursor: pointer
 	user-select: none
+
+.button__loader
+	border-radius: $border-radius
+	display: flex
+	justify-content: center
+	align-items: center
+	width: 100%
+	height: 100%
+	position: absolute
+	top: 0
+	bottom: 0
+	left: 0
+	right: 0
+	background-color: $brand-color
+
+	svg
+		width: 1.5rem
+		height: 1.5rem
+		stroke: $white
+		animation-name: spinner
+		animation-duration: 1.1s
+		animation-direction: normal
+		animation-timing-function: linear
+		animation-iteration-count: infinite
+
+@keyframes spinner
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)
 
 .button__primary
 	background-color: $brand-color
