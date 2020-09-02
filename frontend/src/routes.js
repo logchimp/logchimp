@@ -53,6 +53,13 @@ const routes = [
 					console.error(error);
 					next({ path: "/" });
 				});
+		},
+		children: [
+			{
+				path: "welcome",
+				component: require("./pages/setup/Welcome").default
+			}
+		]
 		}
 	},
 	{
