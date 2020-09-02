@@ -1,6 +1,7 @@
 // packages
 import Vue from "vue";
 import VueRouter from "vue-router";
+import axios from "axios";
 
 Vue.use(VueRouter);
 
@@ -68,6 +69,23 @@ const routes = [
 				component: require("./pages/setup/Board").default
 			}
 		]
+	},
+	{
+		path: "/dashboard",
+		component: require("./pages/Dashboard").default,
+		beforeEnter: (to, from, next) => {
+			axios
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.then(response => {
+					if (response.data.isSetup) {
+						next();
+					} else {
+						next({ path: "/setup/welcome" });
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
 		}
 	},
 	{
