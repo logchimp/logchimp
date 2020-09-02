@@ -62,6 +62,10 @@ const routes = [
 			{
 				path: "create-account",
 				component: require("./pages/setup/Account").default
+			},
+			{
+				path: "create-board",
+				component: require("./pages/setup/Board").default
 			}
 		]
 		}
