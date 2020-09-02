@@ -37,6 +37,25 @@ const routes = [
 		]
 	},
 	{
+		path: "/setup",
+		component: require("./layout/Onboarding").default,
+		beforeEnter: (to, from, next) => {
+			axios
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.then(response => {
+					if (response.data.isSetup) {
+						next({ path: "/dashboard" });
+					} else {
+						next();
+					}
+				})
+				.catch(error => {
+					console.error(error);
+					next({ path: "/" });
+				});
+		}
+	},
+	{
 		path: "/login",
 		name: "Login",
 		component: require("./pages/Login").default
