@@ -30,8 +30,6 @@ services:
       PG_PASSWORD: "password"
       PG_PORT: "5000"
       PORT: "3000"
-    volumes:
-      - "./:/home/logchimp"
     networks:
       - backend
   frontend:
@@ -46,8 +44,6 @@ services:
     environment:
       NODE_ENV: "development"
       VUE_APP_SEVER_URL: "http://localhost:3000"
-    volumes:
-      - "./:/home/logchimp"
     networks:
       - frontend
 
