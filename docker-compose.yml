@@ -11,8 +11,6 @@ services:
       POSTGRES_DB: "logchimp_db"
       POSTGRES_USER: "logchimp_user"
       POSTGRES_PASSWORD: "password"
-    networks:
-      - backend
   backend:
     build:
       context: ./
@@ -30,8 +28,6 @@ services:
       PG_PASSWORD: "password"
       PG_PORT: "5000"
       PORT: "3000"
-    networks:
-      - backend
   frontend:
     build:
       context: ./
@@ -44,12 +40,6 @@ services:
     environment:
       NODE_ENV: "development"
       VUE_APP_SEVER_URL: "http://localhost:3000"
-    networks:
-      - frontend
 
 volumes:
   logchimp_db:
-
-networks:
-  frontend:
-  backend:
