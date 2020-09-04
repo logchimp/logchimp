@@ -16,7 +16,6 @@ services:
   backend:
     build:
       context: ./
-      target: backend
     container_name: backend
     entrypoint: npm run server:start
     ports:
@@ -38,7 +37,6 @@ services:
   frontend:
     build:
       context: ./
-      target: frontend
     container_name: frontend
     entrypoint: npm run frontend:build
     ports:
