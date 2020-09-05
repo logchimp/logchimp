@@ -4,13 +4,13 @@ services:
     image: "postgres:12.4"
     container_name: db
     ports:
-      - "5000:5432"
+      - "5432"
     volumes:
       - logchimp_db:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: "logchimp_db"
-      POSTGRES_USER: "logchimp_user"
-      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
   backend:
     build:
       context: ./
@@ -23,10 +23,9 @@ services:
     environment:
       NODE_ENV: "development"
       PG_DATABASE: "logchimp_db"
-      PG_HOST: "host.docker.internal"
-      PG_USER: "logchimp_user"
-      PG_PASSWORD: "password"
-      PG_PORT: "5000"
+      PG_HOST: db
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
       PORT: "3000"
   frontend:
     build:

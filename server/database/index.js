@@ -7,8 +7,7 @@ const knex = require("knex")({
 		host: process.env.PG_HOST,
 		user: process.env.PG_USER,
 		password: process.env.PG_PASSWORD,
-		database: process.env.PG_DATABASE,
-		port: process.env.PG_PORT
+		database: process.env.PG_DATABASE
 	},
 	afterCreate: (conn, done) => {
 		// in this example we use pg driver's connection API
