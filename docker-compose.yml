@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     environment:
-      NODE_ENV: "development"
+      NODE_ENV: ${NODE_ENV}
       PG_DATABASE: "logchimp_db"
       PG_HOST: db
       PG_USER: ${PG_USER}
@@ -37,7 +37,7 @@ services:
     depends_on:
       - backend
     environment:
-      NODE_ENV: "development"
+      NODE_ENV: ${NODE_ENV}
       VUE_APP_SEVER_URL: "http://localhost:3000"
 
 volumes:
