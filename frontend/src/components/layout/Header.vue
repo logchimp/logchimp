@@ -13,6 +13,12 @@
 							:name="username"
 						/>
 						<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
+							<dropdown-item v-if="userIsOwner" @click="openDashboard">
+								<template v-slot:icon>
+									<dashboard-icon />
+								</template>
+								Dashbaord
+							</dropdown-item>
 							<dropdown-item @click="settings">
 								<template v-slot:icon>
 									<settings-icon />
@@ -49,6 +55,7 @@ import Button from "../ui/Button";
 import Avatar from "../../components/ui/Avatar";
 
 // icons
+import DashboardIcon from "../icons/Dashboard";
 import SettingsIcon from "../../assets/images/icons/settings";
 import LogoutIcon from "../../assets/images/icons/logout";
 
@@ -64,10 +71,15 @@ export default {
 		DropdownItem,
 		Button,
 		Avatar,
+		DashboardIcon,
 		SettingsIcon,
 		LogoutIcon
 	},
 	computed: {
+		userIsOwner() {
+			const user = this.$store.getters["user/getUser"];
+			return user.isOwner;
+		},
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];
 			return !!token;
@@ -83,6 +95,10 @@ export default {
 	methods: {
 		toggleProfileDropdown() {
 			this.profileDropdown = !this.profileDropdown;
+		},
+		openDashboard() {
+			this.$router.push("/dashboard");
+			this.profileDropdown = false;
 		},
 		settings() {
 			this.$router.push("/settings");
