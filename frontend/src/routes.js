@@ -47,7 +47,11 @@ const routes = [
 					if (response.data.isSetup) {
 						next({ path: "/dashboard" });
 					} else {
-						next();
+						if (to.fullPath === "/setup/" || to.fullPath === "/setup") {
+							next({ path: "/setup/welcome" });
+						} else {
+							next();
+						}
 					}
 				})
 				.catch(error => {
