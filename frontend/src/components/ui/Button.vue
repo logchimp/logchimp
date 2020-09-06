@@ -53,6 +53,7 @@ export default {
 	left: 0
 	right: 0
 	background-color: $brand-color
+	cursor: default
 
 	svg
 		width: 1.5rem
