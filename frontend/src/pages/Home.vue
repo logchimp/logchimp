@@ -3,7 +3,7 @@
 		<tabs class="homepage__posts">
 			<tab-group>
 				<tab-item
-					@click.native="updateTab('latest')"
+					@click="updateTab('latest')"
 					:class="{
 						'tab__item-active': tab === 'latest'
 					}"
@@ -14,7 +14,7 @@
 					Latest
 				</tab-item>
 				<tab-item
-					@click.native="updateTab('oldest')"
+					@click="updateTab('oldest')"
 					:class="{
 						'tab__item-active': tab === 'oldest'
 					}"

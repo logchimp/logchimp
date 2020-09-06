@@ -16,7 +16,7 @@
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
-		<Button type="primary" @click.native="submitPost">
+		<Button type="primary" @click="submitPost">
 			Submit
 		</Button>
 	</div>

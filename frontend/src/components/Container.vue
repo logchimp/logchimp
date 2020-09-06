@@ -1,3 +1,16 @@
+<template>
+	<div class="container">
+		<slot />
+	</div>
+</template>
+
+<script>
+export default {
+	name: "Container"
+};
+</script>
+
+<style lang="sass">
 .container
 	width: 100%
 	padding-right: 15px
@@ -20,3 +33,4 @@
 @media (min-width: 1200px)
 	.container
 		max-width: 1140px
+</style>

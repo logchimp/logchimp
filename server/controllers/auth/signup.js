@@ -22,6 +22,14 @@ const signupSchema = Joi.object({
 exports.signup = (req, res) => {
 	const emailAddress = req.body.emailAddress;
 	const password = req.body.password;
+	const fullName = req.body.fullName || "";
+	const isOwner = req.body.isOwner || false;
+
+	// split first & last name
+	const name = fullName.split(" ");
+	const firstname = name[0];
+	name.shift();
+	const lastname = name.join(" ");
 
 	// validate user existance in database
 	database
@@ -64,6 +72,9 @@ exports.signup = (req, res) => {
 						emailAddress,
 						username,
 						password: hashPassword,
+						firstname,
+						lastname,
+						isOwner,
 						createdAt: new Date().toJSON(),
 						updatedAt: new Date().toJSON()
 					})

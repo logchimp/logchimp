@@ -28,7 +28,7 @@
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="login"
 				/>
-				<Button @click.native="login" type="primary">
+				<Button @click="login" type="primary">
 					Login
 				</Button>
 			</div>
@@ -109,7 +109,11 @@ export default {
 								createdAt: response.data.user.createdAt,
 								updatedAt: response.data.user.updatedAt
 							});
-							this.$router.push("/");
+							if (this.$route.query.redirect) {
+								this.$router.push(this.$route.query.redirect);
+							} else {
+								this.$router.push("/");
+							}
 						}
 					})
 					.catch(error => {

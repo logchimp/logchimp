@@ -1,5 +1,5 @@
 <template>
-	<div class="dropdown__item">
+	<div class="dropdown__item" @click="$emit('click')">
 		<div class="dropdown__item-icon">
 			<slot name="icon" />
 		</div>
