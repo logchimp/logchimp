@@ -62,30 +62,31 @@ export default {
 			this.boardName.error.show = false;
 		},
 		createBoard() {
-			console.log("heloo");
 			if (this.boardName.value) {
-				this.buttonLoading = true;
-				const token = this.$store.getters["user/getAuthToken"];
-				axios({
-					method: "post",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards`,
-					data: {
-						name: this.boardName.value
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
-					.then(response => {
-						if (response.status === 201) {
-							this.buttonLoading = false;
-							this.$router.push("/dashboard");
+				if (!this.buttonLoading) {
+					this.buttonLoading = true;
+					const token = this.$store.getters["user/getAuthToken"];
+					axios({
+						method: "post",
+						url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards`,
+						data: {
+							name: this.boardName.value
+						},
+						headers: {
+							Authorization: `Bearer ${token}`
 						}
 					})
-					.catch(error => {
-						console.log(error);
-						this.buttonLoading = false;
-					});
+						.then(response => {
+							if (response.status === 201) {
+								this.buttonLoading = false;
+								this.$router.push("/dashboard");
+							}
+						})
+						.catch(error => {
+							console.log(error);
+							this.buttonLoading = false;
+						});
+				}
 			} else {
 				this.boardName.error.show = true;
 			}
