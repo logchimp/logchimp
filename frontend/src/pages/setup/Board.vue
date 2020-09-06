@@ -5,12 +5,7 @@
 			A board is a place where people can post and vote on ideas for a specific
 			topic.
 		</p>
-		<Form
-			method="post"
-			class="form__container"
-			autocomplete="off"
-			id="logchimp-create-board-setup"
-		>
+		<Form class="form__container">
 			<l-text
 				v-model="boardName.value"
 				label="Name"
@@ -67,6 +62,7 @@ export default {
 			this.boardName.error.show = false;
 		},
 		createBoard() {
+			console.log("heloo");
 			if (this.boardName.value) {
 				this.buttonLoading = true;
 				const token = this.$store.getters["user/getAuthToken"];

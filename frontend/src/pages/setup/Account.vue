@@ -2,12 +2,7 @@
 	<container>
 		<div class="onboarding__content">
 			<h2 class="onboarding__heading">Create an account</h2>
-			<Form
-				method="post"
-				class="form__container"
-				autocomplete
-				id="logchimp-create-account-setup"
-			>
+			<Form>
 				<l-text
 					v-model="fullName.value"
 					label="Full name"

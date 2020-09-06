@@ -1,32 +1,12 @@
 <template>
-	<form
-		class="form__container"
-		:method="method"
-		:id="id"
-		:autocomplete="autocomplete"
-	>
+	<div class="form__container">
 		<slot />
-	</form>
+	</div>
 </template>
 
 <script>
 export default {
-	name: "Form",
-	props: {
-		method: {
-			type: String,
-			required: true
-		},
-		id: {
-			type: String,
-			required: true
-		},
-		autocomplete: {
-			type: String,
-			required: true,
-			default: "off"
-		}
-	}
+	name: "Form"
 };
 </script>
 
