@@ -125,4 +125,34 @@ knex.schema.hasTable("votes").then(exists => {
 	}
 });
 
+knex.schema.hasTable("boards").then(exists => {
+	if (!exists) {
+		return knex.schema
+			.createTable("boards", table => {
+				table
+					.uuid("boardId")
+					.notNullable()
+					.unique()
+					.primary();
+				table.string("name", 50).notNullable();
+				table
+					.string("url", 50)
+					.notNullable()
+					.unique();
+				table.string("color", 6).notNullable();
+				table.timestamp("createdAt", { useTz: true }).notNullable();
+				table.timestamp("updatedAt", { useTz: true }).notNullable();
+				table.comment("Storing boards data");
+			})
+			.then(() => {
+				console.log("Creating 'boards' table");
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	} else {
+		console.log("'boards' table already exist");
+	}
+});
+
 module.exports = knex;

@@ -36,7 +36,7 @@
 			placeholder="Email address"
 			:disabled="true"
 		/>
-		<Button type="primary" @click.native="updateSettings">
+		<Button type="primary" @click="updateSettings">
 			Update
 		</Button>
 	</div>

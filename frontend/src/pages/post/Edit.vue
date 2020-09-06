@@ -16,7 +16,7 @@
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
-		<Button type="primary" @click.native="savePost">
+		<Button type="primary" @click="savePost">
 			Update
 		</Button>
 	</div>

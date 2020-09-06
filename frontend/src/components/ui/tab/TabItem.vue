@@ -1,5 +1,5 @@
 <template>
-	<div class="tab__item">
+	<div class="tab__item" @click="$emit('click')">
 		<div class="tab__item-icon">
 			<slot name="icon" />
 		</div>

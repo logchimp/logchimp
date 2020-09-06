@@ -1,6 +1,7 @@
 // packages
 import Vue from "vue";
 import VueRouter from "vue-router";
+import axios from "axios";
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,61 @@ const routes = [
 				]
 			}
 		]
+	},
+	{
+		path: "/setup",
+		component: require("./layout/Onboarding").default,
+		beforeEnter: (to, from, next) => {
+			axios
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.then(response => {
+					if (response.data.isSetup) {
+						next({ path: "/dashboard" });
+					} else {
+						if (to.fullPath === "/setup/" || to.fullPath === "/setup") {
+							next({ path: "/setup/welcome" });
+						} else {
+							next();
+						}
+					}
+				})
+				.catch(error => {
+					console.error(error);
+					next({ path: "/" });
+				});
+		},
+		children: [
+			{
+				path: "welcome",
+				component: require("./pages/setup/Welcome").default
+			},
+			{
+				path: "create-account",
+				component: require("./pages/setup/Account").default
+			},
+			{
+				path: "create-board",
+				component: require("./pages/setup/Board").default
+			}
+		]
+	},
+	{
+		path: "/dashboard",
+		component: require("./pages/Dashboard").default,
+		beforeEnter: (to, from, next) => {
+			axios
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.then(response => {
+					if (response.data.isSetup) {
+						next();
+					} else {
+						next({ path: "/setup/welcome" });
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
+		}
 	},
 	{
 		path: "/login",
