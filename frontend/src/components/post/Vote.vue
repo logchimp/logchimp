@@ -13,7 +13,7 @@
 import axios from "axios";
 
 // icons
-import ArrowIcon from "../assets/images/icons/arrow";
+import ArrowIcon from "../icons/Arrow";
 
 export default {
 	name: "Vote",

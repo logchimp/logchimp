@@ -60,8 +60,8 @@ import axios from "axios";
 // components
 import Container from "../../components/Container";
 import Form from "../../components/Form";
-import LText from "../../components/ui/input/LText";
-import Button from "../../components/ui/Button";
+import LText from "../../components/input/LText";
+import Button from "../../components/Button";
 
 export default {
 	name: "SetupAccount",

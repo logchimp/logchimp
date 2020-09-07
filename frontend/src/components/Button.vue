@@ -9,7 +9,7 @@
 
 <script>
 // icons
-import LoaderIcon from "../icons/Loader";
+import LoaderIcon from "./icons/Loader";
 
 export default {
 	name: "Button",

@@ -27,9 +27,9 @@
 import axios from "axios";
 
 // components
-import LText from "../../components/ui/input/LText";
-import LTextarea from "../../components/ui/input/LTextarea";
-import Button from "../../components/ui/Button";
+import LText from "../../components/input/LText";
+import LTextarea from "../../components/input/LTextarea";
+import Button from "../../components/Button";
 
 export default {
 	name: "PostEdit",

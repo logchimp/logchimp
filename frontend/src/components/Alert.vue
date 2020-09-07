@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import Success from "../../assets/images/icons/success";
-import Warning from "../../assets/images/icons/warning";
-import Error from "../../assets/images/icons/error";
+import Success from "./icons/Success";
+import Warning from "./icons/Warning";
+import Error from "./icons/Error";
 
 export default {
 	name: "Alert",
