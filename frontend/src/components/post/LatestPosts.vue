@@ -5,6 +5,7 @@
 			<div class="loader-container" slot="spinner"><loader /></div>
 			<div slot="no-more"></div>
 			<div slot="no-results"></div>
+			<div slot="error"></div>
 		</infinite-loading>
 	</div>
 </template>
@@ -15,8 +16,8 @@ import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import Post from "../layout/Post";
-import Loader from "../Loader";
+import Post from "../post/Post";
+import Loader from "../icons/Loader";
 
 export default {
 	name: "LatestPosts",

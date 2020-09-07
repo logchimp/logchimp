@@ -27,9 +27,9 @@
 import axios from "axios";
 
 // components
-import LText from "../ui/input/LText";
-import LTextarea from "../ui/input/LTextarea";
-import Button from "../ui/Button";
+import LText from "../input/LText";
+import LTextarea from "../input/LTextarea";
+import Button from "../Button";
 
 export default {
 	name: "CreatePost",

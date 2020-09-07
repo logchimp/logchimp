@@ -49,15 +49,15 @@
 
 <script>
 // components
-import Dropdown from "../ui/dropdown/DropdownGroup";
-import DropdownItem from "../ui/dropdown/DropdownItem";
-import Button from "../ui/Button";
-import Avatar from "../../components/ui/Avatar";
+import Dropdown from "./dropdown/DropdownGroup";
+import DropdownItem from "./dropdown/DropdownItem";
+import Button from "./Button";
+import Avatar from "./Avatar";
 
 // icons
-import DashboardIcon from "../icons/Dashboard";
-import SettingsIcon from "../../assets/images/icons/settings";
-import LogoutIcon from "../../assets/images/icons/logout";
+import DashboardIcon from "./icons/Dashboard";
+import SettingsIcon from "./icons/Settings";
+import LogoutIcon from "./icons/Logout";
 
 export default {
 	name: "Header",
