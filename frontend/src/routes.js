@@ -90,7 +90,13 @@ const routes = [
 				.catch(error => {
 					console.error(error);
 				});
-		}
+		},
+		children: [
+			{
+				path: "",
+				component: require("./pages/dashboard/Overview").default
+			}
+		]
 	},
 	{
 		path: "/login",
