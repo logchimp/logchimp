@@ -33,7 +33,7 @@
 
 <script>
 // components
-import Avatar from "../../components/ui/Avatar";
+import Avatar from "../Avatar";
 
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";

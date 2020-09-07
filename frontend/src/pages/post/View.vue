@@ -25,7 +25,7 @@
 							{{ post.createdAt | moment("MMMM DD, YYYY") }}
 						</div>
 						<div v-if="postAuthor" class="viewpost__menu">
-							<menu-icon
+							<more-icon
 								@click="toggleMenuDropdown"
 								class="viewpost__menu-icon"
 							/>
@@ -61,14 +61,14 @@
 import axios from "axios";
 
 // components
-import Vote from "../../components/Vote";
-import Dropdown from "../../components/ui/dropdown/DropdownGroup";
-import DropdownItem from "../../components/ui/dropdown/DropdownItem";
-import Avatar from "../../components/ui/Avatar";
+import Vote from "../../components/post/Vote";
+import Dropdown from "../../components/dropdown/DropdownGroup";
+import DropdownItem from "../../components/dropdown/DropdownItem";
+import Avatar from "../../components/Avatar";
 
 // icons
-import MenuIcon from "../../assets/images/icons/menu";
-import EditIcon from "../../assets/images/icons/edit";
+import MoreIcon from "../../components/icons/More";
+import EditIcon from "../../components/icons/Edit";
 
 export default {
 	name: "PostView",
@@ -84,7 +84,7 @@ export default {
 		Dropdown,
 		DropdownItem,
 		Avatar,
-		MenuIcon,
+		MoreIcon,
 		EditIcon
 	},
 	computed: {
