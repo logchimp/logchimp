@@ -17,6 +17,10 @@ export default {
 </script>
 
 <style lang="sass">
+.loader-container
+	display: flex
+	justify-content: center
+
 .loader
 	display: flex
 
