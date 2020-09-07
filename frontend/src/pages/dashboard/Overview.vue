@@ -25,6 +25,11 @@
 						{{ post.voters.length }}
 					</div>
 				</div>
+				<infinite-loading @infinite="getPosts">
+					<div class="loader-container" slot="spinner"><loader /></div>
+					<div slot="no-more"></div>
+					<div slot="no-results"></div>
+				</infinite-loading>
 			</Table>
 		</div>
 		<div class="dashboard-overview-boards">
@@ -61,6 +66,11 @@
 						0
 					</div>
 				</div>
+				<infinite-loading @infinite="getBoards">
+					<div class="loader-container" slot="spinner"><loader /></div>
+					<div slot="no-more"></div>
+					<div slot="no-results"></div>
+				</infinite-loading>
 			</Table>
 		</div>
 	</div>
@@ -69,6 +79,7 @@
 <script>
 // packages
 import axios from "axios";
+import InfiniteLoading from "vue-infinite-loading";
 
 // components
 import Table from "../../components/Table";
@@ -89,53 +100,52 @@ export default {
 		};
 	},
 	components: {
+		// packages
+		InfiniteLoading,
+
 		// components
 		Table,
 		Loader
 	},
 	methods: {
-		getPosts() {
-			this.posts.loading = true;
+		getPosts($state) {
 			axios({
 				method: "get",
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts`,
 				params: {
 					page: 1,
+					limit: 4,
 					created: "desc"
 				}
 			})
 				.then(response => {
 					this.posts.data = response.data.posts;
-					this.posts.loading = false;
+					$state.complete();
 				})
 				.catch(error => {
 					console.log(error);
-					this.posts.loading = false;
+					$state.error();
 				});
 		},
-		getBoards() {
-			this.boards.loading = true;
+		getBoards($state) {
 			axios({
 				method: "get",
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards`,
 				params: {
 					page: 1,
+					limit: 4,
 					created: "desc"
 				}
 			})
 				.then(response => {
 					this.boards.data = response.data.boards;
-					this.boards.loading = false;
+					$state.complete();
 				})
 				.catch(error => {
 					console.log(error);
-					this.boards.loading = false;
+					$state.error();
 				});
 		}
-	},
-	created() {
-		this.getPosts();
-		this.getBoards();
 	}
 };
 </script>
