@@ -13,24 +13,64 @@
 				</div>
 			</router-link>
 		</nav>
+		<footer class="sidebar-footer">
+			<div class="sidebar-user-container">
+				<div class="sidebar-user">
+					<avatar class="sidebar-user-avatar" :name="username" />
+					<div class="sidebar-user-data">
+						<div class="sidebar-user-name">
+							{{ fullname }}
+						</div>
+						<div class="sidebar-user-email">
+							{{ emailAddress }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
 	</div>
 </template>
 
 <script>
+// components
+import Avatar from "../../components/ui/Avatar";
+
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
 
 export default {
 	name: "DashboardSidebar",
 	components: {
+		// components
+		Avatar,
+
 		// icons
 		DashboardIcon
+	},
+	computed: {
+		fullname() {
+			const name = this.$store.getters["user/getUser"];
+			return `${name.firstname}${name.lastname ? ` ${name.lastname}` : ""}`;
+		},
+		username() {
+			const name = this.$store.getters["user/getUser"];
+			if (name.firstname) {
+				return this.fullname;
+			}
+			return name.username;
+		},
+		emailAddress() {
+			const user = this.$store.getters["user/getUser"];
+			return user.emailAddress;
+		}
 	}
 };
 </script>
 
 <style lang="sass" scoped>
 .sidebar
+	display: flex
+	flex-direction: column
 	background-color: $brand-color
 	height: 100vh
 	padding: 1.125rem 1rem
@@ -69,4 +109,31 @@ export default {
 
 .navbar-content
 	color: $white
+
+// footer
+.sidebar-footer
+	margin-top: auto
+
+.sidebar-user-container
+	cursor: pointer
+	border-radius: $border-radius
+	padding: .625rem 1rem
+
+	&:hover
+		background-color: rgba($white, .1)
+
+.sidebar-user-container, .sidebar-user
+	display: flex
+	align-items: center
+
+.sidebar-user-avatar
+	margin-right: 0.625rem
+
+.sidebar-user-name
+	font-weight: 600
+	color: $white
+
+.sidebar-user-email
+	color: rgba($white, .5)
+	font-size: 0.875rem
 </style>
