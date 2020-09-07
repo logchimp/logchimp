@@ -3,6 +3,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import axios from "axios";
 
+import store from "./store";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -82,7 +84,26 @@ const routes = [
 				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
 				.then(response => {
 					if (response.data.isSetup) {
-						next();
+						const user = store.getters["user/getUser"];
+						if (user.userId) {
+							axios
+								.get(
+									`${process.env.VUE_APP_SEVER_URL}/api/v1/user/accessDashboard/${user.userId}`
+								)
+								.then(response => {
+									if (response.data.access) {
+										next();
+									} else {
+										next({ path: "/" });
+									}
+								})
+								.catch(error => {
+									console.error(error);
+									next({ path: "/" });
+								});
+						} else {
+							next({ path: "/login", query: { redirect: "/dashboard" } });
+						}
 					} else {
 						next({ path: "/setup/welcome" });
 					}
