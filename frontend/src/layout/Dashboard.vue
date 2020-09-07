@@ -1,5 +1,8 @@
 <template>
 	<div class="dashboard">
+		<aside>
+			<Sidebar />
+		</aside>
 		<main class="dashboard-main">
 			<router-view />
 		</main>
@@ -7,8 +10,14 @@
 </template>
 
 <script>
+// components
+import Sidebar from "../components/dashboard/Sidebar";
+
 export default {
-	name: "DashboardLayout"
+	name: "DashboardLayout",
+	components: {
+		Sidebar
+	}
 };
 </script>
 
