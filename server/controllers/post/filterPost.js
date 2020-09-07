@@ -6,7 +6,7 @@ exports.filterPost = async (req, res) => {
 	 */
 	const created = req.query.created;
 	const page = req.query.page - 1;
-	const limit = 10;
+	const limit = req.query.limit || 10;
 
 	const response = await database
 		.select("postId", "title", "slug", "contentMarkdown", "createdAt")
