@@ -2,7 +2,7 @@
 	<div class="latest__post">
 		<post v-for="post in posts" :post="post" :key="post.postId" />
 		<infinite-loading @infinite="getMorePosts">
-			<div slot="spinner"><loading /></div>
+			<div class="loader-container" slot="spinner"><loader /></div>
 			<div slot="no-more"></div>
 			<div slot="no-results"></div>
 		</infinite-loading>
@@ -12,10 +12,11 @@
 <script>
 // packages
 import axios from "axios";
+import InfiniteLoading from "vue-infinite-loading";
 
 // components
 import Post from "../layout/Post";
-import Loading from "../ui/Loading";
+import Loader from "../Loader";
 
 export default {
 	name: "OldestPosts",
@@ -26,8 +27,12 @@ export default {
 		};
 	},
 	components: {
+		// packages
+		InfiniteLoading,
+
+		// components
 		Post,
-		Loading
+		Loader
 	},
 	methods: {
 		getMorePosts($state) {
@@ -49,7 +54,7 @@ export default {
 				})
 				.catch(error => {
 					console.error(error);
-					$state.complete();
+					$state.error();
 				});
 		}
 	}
