@@ -9,7 +9,7 @@
 					}"
 				>
 					<template v-slot:icon>
-						<bar-icon />
+						<sort-desc-icon />
 					</template>
 					Latest
 				</tab-item>
@@ -20,7 +20,7 @@
 					}"
 				>
 					<template v-slot:icon>
-						<align-center-icon />
+						<sort-asc-icon />
 					</template>
 					Oldest
 				</tab-item>
@@ -36,16 +36,16 @@
 
 <script>
 // components
-import Tabs from "../components/ui/tab/Tabs";
-import TabGroup from "../components/ui/tab/TabGroup";
-import TabItem from "../components/ui/tab/TabItem";
-import LatestPosts from "../components/layout/LatestPosts";
-import OldestPosts from "../components/layout/OldestPosts";
-import CreatePost from "../components/layout/CreatePost";
+import Tabs from "../components/tab/Tabs";
+import TabGroup from "../components/tab/TabGroup";
+import TabItem from "../components/tab/TabItem";
+import LatestPosts from "../components/post/LatestPosts";
+import OldestPosts from "../components/post/OldestPosts";
+import CreatePost from "../components/post/CreatePost";
 
 // icons
-import BarIcon from "../assets/images/icons/bar";
-import AlignCenterIcon from "../assets/images/icons/alignCenter";
+import SortDescIcon from "../components/icons/SortDesc";
+import SortAscIcon from "../components/icons/SortAsc";
 
 export default {
 	name: "HomePage",
@@ -61,8 +61,8 @@ export default {
 		LatestPosts,
 		OldestPosts,
 		CreatePost,
-		BarIcon,
-		AlignCenterIcon
+		SortDescIcon,
+		SortAscIcon
 	},
 	computed: {
 		homeTab() {
