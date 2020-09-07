@@ -76,7 +76,7 @@ const routes = [
 	},
 	{
 		path: "/dashboard",
-		component: require("./pages/Dashboard").default,
+		component: require("./layout/Dashboard").default,
 		beforeEnter: (to, from, next) => {
 			axios
 				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
