@@ -1,11 +1,11 @@
 <template>
-	<div class="tab__item" @click="$emit('click')">
-		<div class="tab__item-icon">
+	<div class="tab-item" @click="$emit('click')">
+		<div class="tab-item-icon">
 			<slot name="icon" />
 		</div>
-		<div class="tab__item-content">
+		<h6 class="tab-item-content">
 			<slot />
-		</div>
+		</h6>
 	</div>
 </template>
 
