@@ -62,7 +62,7 @@ import axios from "axios";
 
 // components
 import Vote from "../../components/post/Vote";
-import Dropdown from "../../components/dropdown/DropdownGroup";
+import Dropdown from "../../components/dropdown/Dropdown";
 import DropdownItem from "../../components/dropdown/DropdownItem";
 import Avatar from "../../components/Avatar";
 

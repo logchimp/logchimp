@@ -50,8 +50,8 @@
 
 <script>
 // components
-import Dropdown from "./dropdown/DropdownGroup";
 import Navbar from "./Navbar";
+import Dropdown from "./dropdown/Dropdown";
 import DropdownItem from "./dropdown/DropdownItem";
 import Button from "./Button";
 import Avatar from "./Avatar";

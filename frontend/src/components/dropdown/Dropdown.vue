@@ -6,6 +6,6 @@
 
 <script>
 export default {
-	name: "DropdropGroup"
+	name: "Dropdown"
 };
 </script>
