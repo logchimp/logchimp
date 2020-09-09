@@ -32,27 +32,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass">
-.avatar-image, .avatar-initials
-	display: flex
-	max-width: 100%
-	max-height: 100%
-	height: 2rem
-	width: 2rem
-
-.avatar-image-img
-	width: 100%
-	max-width: 2rem
-	border-radius: 1rem
-
-.avatar-initials
-	align-items: center
-	justify-content: center
-	background-color: $brand-color
-	border-radius: 1rem
-	color: $white
-	border: 1px solid $white
-	font-weight: 500
-	text-transform: uppercase
-</style>
