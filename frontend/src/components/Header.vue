@@ -43,6 +43,7 @@
 					</div>
 				</nav>
 			</div>
+			<navbar />
 		</div>
 	</header>
 </template>
@@ -50,6 +51,7 @@
 <script>
 // components
 import Dropdown from "./dropdown/DropdownGroup";
+import Navbar from "./Navbar";
 import DropdownItem from "./dropdown/DropdownItem";
 import Button from "./Button";
 import Avatar from "./Avatar";
@@ -67,10 +69,14 @@ export default {
 		};
 	},
 	components: {
+		// components
+		Navbar,
 		Dropdown,
 		DropdownItem,
 		Button,
 		Avatar,
+
+		// icons
 		DashboardIcon,
 		SettingsIcon,
 		LogoutIcon
