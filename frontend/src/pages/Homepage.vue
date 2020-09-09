@@ -5,7 +5,7 @@
 				<tab-item
 					@click="updateTab('latest')"
 					:class="{
-						'tab__item-active': tab === 'latest'
+						'tab-item-active': tab === 'latest'
 					}"
 				>
 					<template v-slot:icon>
@@ -16,7 +16,7 @@
 				<tab-item
 					@click="updateTab('oldest')"
 					:class="{
-						'tab__item-active': tab === 'oldest'
+						'tab-item-active': tab === 'oldest'
 					}"
 				>
 					<template v-slot:icon>
