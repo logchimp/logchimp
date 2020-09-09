@@ -49,7 +49,7 @@ export default {
 .avatar-initials
 	align-items: center
 	justify-content: center
-	background-color: #484d7c
+	background-color: $brand-color
 	border-radius: 1rem
 	color: $white
 	border: 1px solid $white
