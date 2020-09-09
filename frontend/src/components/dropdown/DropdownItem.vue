@@ -1,9 +1,9 @@
 <template>
-	<div class="dropdown__item" @click="$emit('click')">
-		<div class="dropdown__item-icon">
+	<div class="dropdown-item" @click="$emit('click')">
+		<div class="dropdown-item-icon">
 			<slot name="icon" />
 		</div>
-		<div class="dropdown__item-content">
+		<div class="dropdown-item-content">
 			<slot />
 		</div>
 	</div>
@@ -11,6 +11,6 @@
 
 <script>
 export default {
-	name: "DropdropItem"
+	name: "DropdownItem"
 };
 </script>

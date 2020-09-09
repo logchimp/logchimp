@@ -1,36 +1,32 @@
 .dropdown
-	background: #ffffff
-	box-sizing: border-box
+	background-color: $white
 	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08)
 	position: absolute
-	animation: slide-up .2s ease
 	padding-top: .375rem
 	padding-bottom: .375rem
-	border:
-		width: 1px
-		style: solid
-		color: #dee5ed
-		radius: 6px
+	border: 1px solid #dee5ed
+	border-radius: 6px
 
-.dropdown__item
+// dropdown item
+.dropdown-item
 	padding: .75rem 1rem
 	display: flex
 	align-items: center
 	cursor: pointer
 
 	&:hover
-		background-color: rgba(#484D7C, .05)
+		background-color: rgba($brand-color, .05)
 
-.dropdown__item-content
-	color: #484d7c
+.dropdown-item-content
+	color: $brand-color
 	font-size: 1rem
 	width: 100%
 
-.dropdown__item-icon
+.dropdown-item-icon
 	margin-right: .75rem
 	display: flex
 
 	svg
 		width: 1.125rem
 		height: 1.125rem
-		stroke: #484D7C
+		stroke: $brand-color
