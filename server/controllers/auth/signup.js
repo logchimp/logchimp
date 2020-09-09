@@ -3,6 +3,7 @@ const Joi = require("@hapi/joi");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
+const md5 = require("md5");
 
 // database
 const database = require("../../database");
@@ -65,6 +66,9 @@ exports.signup = (req, res) => {
 				// get username from email address
 				const username = emailAddress.split("@")[0];
 
+				// user secretKey
+				const secretKey = md5(userId);
+
 				// save user to database
 				database
 					.insert({
@@ -75,6 +79,7 @@ exports.signup = (req, res) => {
 						firstname,
 						lastname,
 						isOwner,
+						secretKey,
 						createdAt: new Date().toJSON(),
 						updatedAt: new Date().toJSON()
 					})
