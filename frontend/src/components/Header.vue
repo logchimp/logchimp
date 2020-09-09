@@ -1,18 +1,18 @@
 <template>
 	<header class="header">
-		<div class="container header__container">
-			<router-link to="/" class="header__logo">
-				<img src="@/assets/images/logo_invert_color.svg" />
-			</router-link>
-			<nav class="header__nav">
-				<div class="nav__list">
-					<div v-if="isAuthenticated" class="nav__item">
+		<div class="container">
+			<div class="header-container">
+				<router-link to="/" class="header-logo">
+					<img src="@/assets/images/logo_invert_color.svg" />
+				</router-link>
+				<nav class="header-nav">
+					<div v-if="isAuthenticated" class="nav-item">
 						<avatar
 							@click="toggleProfileDropdown"
-							class="nav__profile"
+							class="nav-profile"
 							:name="username"
 						/>
-						<dropdown v-show="profileDropdown" class="nav__profile-dropdown">
+						<dropdown v-show="profileDropdown" class="nav-profile-dropdown">
 							<dropdown-item v-if="userIsOwner" @click="openDashboard">
 								<template v-slot:icon>
 									<dashboard-icon />
@@ -33,7 +33,7 @@
 							</dropdown-item>
 						</dropdown>
 					</div>
-					<div v-if="!isAuthenticated" class="nav__item nav__auth">
+					<div v-if="!isAuthenticated" class="nav-item nav-auth">
 						<Button @click="login" type="text">
 							Login
 						</Button>
@@ -41,8 +41,8 @@
 							Create an account
 						</Button>
 					</div>
-				</div>
-			</nav>
+				</nav>
+			</div>
 		</div>
 	</header>
 </template>
