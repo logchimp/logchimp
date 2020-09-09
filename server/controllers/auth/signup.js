@@ -91,13 +91,13 @@ exports.signup = (req, res) => {
 						/**
 						 * authToken sent via email will expire after 3 hr
 						 */
-						const emailValidationAuthToken = jwt.sign(user, "secretKey", {
+						const emailValidationAuthToken = jwt.sign(user, secretKey, {
 							expiresIn: "3h"
 						});
 						// todo: send email for account verification
 
 						// generate authToken
-						const authToken = jwt.sign(user, "secretKey", {
+						const authToken = jwt.sign(user, secretKey, {
 							expiresIn: "2d"
 						});
 
