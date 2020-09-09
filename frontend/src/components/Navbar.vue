@@ -1,27 +1,24 @@
 <template>
 	<div class="navbar">
-		<div class="container navbar__container">
-			<div class="navbar__list">
-				<router-link to="/" class="navbar__item">
-					<div class="navbar__item-icon">
-						<home-icon />
-					</div>
-					<div class="navbar__item-content">
-						Home
-					</div>
-				</router-link>
+		<router-link to="/" class="navbar-item">
+			<div class="navbar-item-icon">
+				<home-icon />
 			</div>
-		</div>
+			<div class="navbar-item-content">
+				Home
+			</div>
+		</router-link>
 	</div>
 </template>
 
 <script>
 // icons
-import HomeIcon from "../../assets/images/home";
+import HomeIcon from "./icons/Home";
 
 export default {
-	name: "AppNavbar",
+	name: "Navbar",
 	components: {
+		// icons
 		HomeIcon
 	}
 };
