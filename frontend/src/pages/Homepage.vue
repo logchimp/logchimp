@@ -1,7 +1,7 @@
 <template>
 	<div class="homepage">
-		<tabs class="homepage__posts">
-			<tab-group>
+		<div class="homepage-posts">
+			<tab>
 				<tab-item
 					@click="updateTab('latest')"
 					:class="{
@@ -24,11 +24,11 @@
 					</template>
 					Oldest
 				</tab-item>
-			</tab-group>
+			</tab>
 
 			<component :is="homeTab"></component>
-		</tabs>
-		<div class="homepage__createpost">
+		</div>
+		<div class="homepage-createpost">
 			<create-post />
 		</div>
 	</div>
@@ -36,8 +36,7 @@
 
 <script>
 // components
-import Tabs from "../components/tab/Tabs";
-import TabGroup from "../components/tab/TabGroup";
+import Tab from "../components/tab/Tab";
 import TabItem from "../components/tab/TabItem";
 import LatestPosts from "../components/post/LatestPosts";
 import OldestPosts from "../components/post/OldestPosts";
@@ -55,12 +54,14 @@ export default {
 		};
 	},
 	components: {
-		Tabs,
-		TabGroup,
+		// components
+		Tab,
 		TabItem,
 		LatestPosts,
 		OldestPosts,
 		CreatePost,
+
+		// icons
 		SortDescIcon,
 		SortAscIcon
 	},
