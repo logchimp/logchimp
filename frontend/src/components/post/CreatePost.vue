@@ -1,5 +1,5 @@
 <template>
-	<div class="createpost">
+	<Form>
 		<l-text
 			v-model="title.value"
 			label="Title"
@@ -16,10 +16,12 @@
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
-		<Button type="primary" @click="submitPost">
-			Submit
-		</Button>
-	</div>
+		<div style="display: flex; justify-content: center;">
+			<Button type="primary" :loading="buttonLoading" @click="submitPost">
+				Submit
+			</Button>
+		</div>
+	</Form>
 </template>
 
 <script>
@@ -27,6 +29,7 @@
 import axios from "axios";
 
 // components
+import Form from "../Form";
 import LText from "../input/LText";
 import LTextarea from "../input/LTextarea";
 import Button from "../Button";
@@ -44,10 +47,13 @@ export default {
 			},
 			description: {
 				value: ""
-			}
+			},
+			buttonLoading: false
 		};
 	},
 	components: {
+		// components
+		Form,
 		LText,
 		LTextarea,
 		Button
@@ -60,6 +66,7 @@ export default {
 			this.title.error.show = false;
 
 			if (this.title.value) {
+				this.buttonLoading = true;
 				const userId = this.$store.getters["user/getUserId"];
 				const token = this.$store.getters["user/getAuthToken"];
 				axios({
@@ -83,11 +90,13 @@ export default {
 								timeout: 5000
 							});
 
+							this.buttonLoading = false;
 							const slug = response.data.post.slug;
 							this.$router.push({ path: `post/${slug}` });
 						}
 					})
 					.catch(error => {
+						this.buttonLoading = false;
 						const err = { ...error };
 
 						if (err.response.data.error.code === "token_missing") {
