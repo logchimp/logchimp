@@ -5,11 +5,11 @@
 			:voters="post.voters"
 			@update-voters="updateVoters"
 		/>
-		<div class="post__content">
-			<router-link class="post__content-link" :to="`post/${post.slug}`">
-				<h5 class="post__content-title">{{ post.title }}</h5>
+		<div class="post-content">
+			<router-link class="post-content-link" :to="`post/${post.slug}`">
+				<h5 class="post-content-title">{{ post.title }}</h5>
 			</router-link>
-			<p class="post__content-description" v-html="sliceContentMarkdown" />
+			<p class="post-content-description" v-html="sliceContentMarkdown" />
 		</div>
 	</div>
 </template>
