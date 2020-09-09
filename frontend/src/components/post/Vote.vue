@@ -1,8 +1,8 @@
 <template>
-	<div class="post__voters" @click="changeVote">
+	<div class="post-voters" @click="changeVote">
 		<arrow-icon
-			class="post__voters-arrow"
-			:class="{ 'post__voters-vote': isVoted }"
+			class="post-voters-arrow"
+			:class="{ 'post-voters-vote': isVoted }"
 		/>
 		{{ voteCount }}
 	</div>
