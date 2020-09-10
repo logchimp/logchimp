@@ -29,6 +29,7 @@
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
 					<div slot="no-results"></div>
+					<div slot="error"></div>
 				</infinite-loading>
 			</Table>
 		</div>
@@ -70,6 +71,7 @@
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
 					<div slot="no-results"></div>
+					<div slot="error"></div>
 				</infinite-loading>
 			</Table>
 		</div>
