@@ -1,13 +1,13 @@
 <template>
 	<div class="auth">
-		<div class="authform">
-			<div class="authform__wrapper">
-				<router-link to="/" class="authform__logo">
+		<div class="auth-form-container">
+			<div class="auth-form-header">
+				<router-link to="/" class="auth-form-logo">
 					<img src="@/assets/images/logo.svg" />
 				</router-link>
-				<div class="authform__header">
-					<h3>Create your account</h3>
-				</div>
+				<h3 class="auth-form-heading">Create your account</h3>
+			</div>
+			<Form class="auth-form">
 				<l-text
 					v-model="emailAddress.value"
 					label="Email Address"
@@ -28,11 +28,13 @@
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="join"
 				/>
-				<Button @click="join" type="primary">
-					Create account
-				</Button>
-			</div>
-			<div class="authform__other">
+				<div style="display: flex; justify-content: center;">
+					<Button @click="join" type="primary">
+						Create account
+					</Button>
+				</div>
+			</Form>
+			<div class="auth-form-other">
 				Already have an account?
 				<router-link to="/login">Log in here</router-link>
 			</div>
@@ -45,6 +47,7 @@
 import axios from "axios";
 
 // component
+import Form from "../components/Form";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
 
@@ -69,6 +72,7 @@ export default {
 		};
 	},
 	components: {
+		Form,
 		LText,
 		Button
 	},
