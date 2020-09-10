@@ -1,35 +1,35 @@
 <template>
 	<div
-		class="alert__item"
+		class="alert-item"
 		:style="{
 			animationDuration: timeout / 1000 + 's'
 		}"
 	>
 		<div
-			class="alert__item-type"
+			class="alert-item-type"
 			:class="{
-				'alert__type-error': type === 'error',
-				'alert__type-success': type === 'success',
-				'alert__type-warning': type === 'warning'
+				'alert-type-error': type === 'error',
+				'alert-type-success': type === 'success',
+				'alert-type-warning': type === 'warning'
 			}"
 		></div>
-		<div class="alert__item-content">
-			<div class="alert__item-icon">
+		<div class="alert-item-content">
+			<div class="alert-item-icon">
 				<Success
-					class="alert__icon alert__icon-success"
+					class="alert-icon alert-icon-success"
 					v-if="type === 'success'"
 				/>
 				<Warning
-					class="alert__icon alert__icon-warning"
+					class="alert-icon alert-icon-warning"
 					v-if="type === 'warning'"
 				/>
-				<Error class="alert__icon alert__icon-error" v-if="type === 'error'" />
+				<Error class="alert-icon alert-icon-error" v-if="type === 'error'" />
 			</div>
 			<div>
-				<div class="alert__item-title">
+				<div class="alert-item-title">
 					{{ title }}
 				</div>
-				<div v-if="description" class="alert__item-description">
+				<div v-if="description" class="alert-item-description">
 					{{ description }}
 				</div>
 			</div>

@@ -4,10 +4,10 @@
 	right: 1.5rem
 	z-index: 10
 
-.alert__item
-	background-color: white
-	border-radius: 0.375rem
-	padding: 0.625rem 2rem 0.625rem 0.625rem
+.alert-item
+	background-color: $white
+	border-radius: $border-radius
+	padding: 0.625rem
 	display: flex
 	width: 100%
 	max-width: 480px
@@ -27,8 +27,7 @@
 
 	&-type
 		width: 4px
-		border-radius: 1rem
-		background: pink
+		border-radius: $border-radius
 		margin-right: 1rem
 
 	&-title
@@ -40,30 +39,30 @@
 		color: #93959A
 		flex-wrap: wrap
 
-.alert__type-success
-	background-color: #64B285
+.alert-type-success
+	background-color: $color-success
 
-.alert__type-warning
-	background-color: #E8BD43
+.alert-type-warning
+	background-color: $color-warning
 
-.alert__type-error
-	background-color: #DE544E
+.alert-type-error
+	background-color: $color-danger
 
-.alert__icon
+.alert-icon
 	width: 2rem
 	height: 2rem
 
 	&-success
-		fill: #64B285
-		stroke: #ffffff
+		fill: $color-success
+		stroke: $white
 
 	&-warning
-		fill: #E8BD43
-		stroke: #ffffff
+		fill: $color-warning
+		stroke: $white
 
 	&-error
-		fill: #DE544E
-		stroke: #ffffff
+		fill: $color-danger
+		stroke: $white
 
 @keyframes alertfade
 	0%
