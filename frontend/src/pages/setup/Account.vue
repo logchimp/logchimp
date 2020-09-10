@@ -36,14 +36,15 @@
 					@keyup.native.enter="createAccount"
 					class="account-form-item"
 				/>
-				<Button
-					:loading="buttonLoading"
-					@click="createAccount"
-					type="primary"
-					class="account-form-button"
-				>
-					Create an account
-				</Button>
+				<div style="display: flex; justify-content: center;">
+					<Button
+						:loading="buttonLoading"
+						@click="createAccount"
+						type="primary"
+					>
+						Create account
+					</Button>
+				</div>
 			</Form>
 			<p class="account-tos">
 				By continuing, you agree to LogChimp's <span>Terms</span> and
