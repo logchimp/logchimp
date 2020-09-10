@@ -6,11 +6,11 @@
 			products.
 		</p>
 		<img
-			class="welcome__image"
+			class="welcome-image"
 			src="@/assets/images/logchimp_homepage_preview.png"
 			alt="LogChimp homepage preview"
 		/>
-		<Button type="primary" @click="createAccount" class="welcome__button">
+		<Button type="primary" @click="createAccount" class="welcome-button">
 			Create an account
 		</Button>
 	</div>
@@ -32,13 +32,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.welcome__image
-	width: 100%
-	border-radius: $border-radius
-	border: 1px solid $gray-90
-
-.welcome__button
-	margin-top: 4rem
-</style>
