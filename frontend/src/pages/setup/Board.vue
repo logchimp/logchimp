@@ -1,7 +1,7 @@
 <template>
-	<div class="onboarding__content">
-		<h2 class="onboarding__heading">Create a new board</h2>
-		<p class="onboarding__label">
+	<div class="onboarding-content">
+		<h2 class="onboarding-heading">Create a new board</h2>
+		<p class="onboarding-label">
 			A board is a place where people can post and vote on ideas for a specific
 			topic.
 		</p>

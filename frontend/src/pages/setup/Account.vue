@@ -1,7 +1,7 @@
 <template>
 	<container>
-		<div class="onboarding__content">
-			<h2 class="onboarding__heading">Create an account</h2>
+		<div class="onboarding-content">
+			<h2 class="onboarding-heading">Create an account</h2>
 			<Form>
 				<l-text
 					v-model="fullName.value"
