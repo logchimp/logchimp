@@ -25,13 +25,8 @@
 				/>
 				<Error class="alert-icon alert-icon-error" v-if="type === 'error'" />
 			</div>
-			<div>
-				<div class="alert-item-title">
-					{{ title }}
-				</div>
-				<div v-if="description" class="alert-item-description">
-					{{ description }}
-				</div>
+			<div class="alert-item-title">
+				{{ title }}
 			</div>
 		</div>
 	</div>
