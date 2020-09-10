@@ -29,9 +29,7 @@
 				<div class="alert__item-title">
 					{{ title }}
 				</div>
-				<div v-if="description" class="alert__item-description">
-					{{ description }}
-				</div>
+				
 			</div>
 		</div>
 	</div>
