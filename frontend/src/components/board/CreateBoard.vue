@@ -45,6 +45,12 @@ export default {
 			buttonLoading: false
 		};
 	},
+	props: {
+		redirect: {
+			type: String,
+			required: true
+		}
+	},
 	components: {
 		Form,
 		LText,
@@ -71,7 +77,7 @@ export default {
 					})
 						.then(response => {
 							if (response.status === 201) {
-								this.$router.push("/dashboard/boards");
+								this.$router.push(this.redirect);
 								this.buttonLoading = false;
 							}
 						})

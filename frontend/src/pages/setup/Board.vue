@@ -5,7 +5,7 @@
 			A board is a place where people can post and vote on ideas for a specific
 			topic.
 		</p>
-		<create-board />
+		<create-board redirect="/dashboard" />
 	</div>
 </template>
 
