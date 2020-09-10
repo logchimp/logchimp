@@ -12,7 +12,7 @@
 					:error="fullName.error"
 					@keydown.native="fullNameHandler"
 					@keyup.native.enter="createAccount"
-					class="account__form-item"
+					class="account-form-item"
 				/>
 				<l-text
 					v-model="emailAddress.value"
@@ -23,7 +23,7 @@
 					:error="emailAddress.error"
 					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="createAccount"
-					class="account__form-item"
+					class="account-form-item"
 				/>
 				<l-text
 					v-model="password.value"
@@ -34,18 +34,18 @@
 					:error="password.error"
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="createAccount"
-					class="account__form-item"
+					class="account-form-item"
 				/>
 				<Button
 					:loading="buttonLoading"
 					@click="createAccount"
 					type="primary"
-					class="account__form-button"
+					class="account-form-button"
 				>
 					Create an account
 				</Button>
 			</Form>
-			<p class="account__tos">
+			<p class="account-tos">
 				By continuing, you agree to LogChimp's <span>Terms</span> and
 				<span>Privacy</span> policy.
 			</p>
@@ -163,24 +163,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.account__form-container
-	margin-top: 2rem
-
-.account__form-item
-	width: 350px
-
-.account__form-button
-	margin-top: 2rem
-
-.account__tos
-	color: $gray-70
-	font-size: 10px
-	line-height: 12px
-	font-weight: 400
-	margin-top: 1.5rem
-
-	span
-		font-weight: 500
-</style>
