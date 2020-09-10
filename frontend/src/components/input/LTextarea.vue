@@ -1,17 +1,17 @@
 <template>
 	<div class="input">
-		<p v-if="label" class="input__field-label">{{ label }}</p>
+		<p v-if="label" class="input-field-label">{{ label }}</p>
 		<textarea
 			:value="value"
-			class="input__field input__textarea"
+			class="input-field input-textarea"
 			:class="{
-				'input__field-disabled': disabled
+				'input-field-disabled': disabled
 			}"
 			@input="$emit('input', $event.target.value)"
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
-		<p v-if="error.show" class="input__error-message">{{ error.message }}</p>
+		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
 	</div>
 </template>
 

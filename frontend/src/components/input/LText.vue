@@ -1,12 +1,12 @@
 <template>
 	<div class="input">
-		<p v-if="label" class="input__field-label">{{ label }}</p>
+		<p v-if="label" class="input-field-label">{{ label }}</p>
 		<input
 			:type="type"
-			class="input__field input__text"
+			class="input-field input-text"
 			:class="{
-				'input__field-disabled': disabled,
-				'input__error': error.show
+				'input-field-disabled': disabled,
+				'input-error': error.show
 			}"
 			:value="value"
 			@input="$emit('input', $event.target.value)"
@@ -15,7 +15,7 @@
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
-		<p v-if="error.show" class="input__error-message">{{ error.message }}</p>
+		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
 	</div>
 </template>
 
