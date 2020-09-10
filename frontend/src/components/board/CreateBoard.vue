@@ -1,5 +1,5 @@
 <template>
-	<Form class="form__container">
+	<Form class="form-container">
 		<l-text
 			v-model="boardName.value"
 			label="Name"
@@ -9,13 +9,13 @@
 			:error="boardName.error"
 			@keydown.native="boardNameHandler"
 			@keyup.native.enter="createBoard"
-			class="board__form-item"
+			class="board-form-item"
 		/>
 		<Button
 			:loading="buttonLoading"
 			@click="createBoard"
 			type="primary"
-			class="board__form-button"
+			class="board-form-button"
 		>
 			Create
 		</Button>
@@ -87,14 +87,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.board__form-container
-	margin-top: 2rem
-
-.board__form-item
-	width: 350px
-
-.board__form-button
-	margin-top: 2rem
-</style>
