@@ -1,0 +1,68 @@
+.dashboard-sidebar
+	display: flex
+	flex-direction: column
+	background-color: $brand-color
+	height: 100vh
+	padding: 1.125rem 1rem
+	min-width: 200px
+
+.dashboard-sidebar-header
+	padding-left: 1rem
+	padding-right: 1rem
+	margin-bottom: 3rem
+
+.dashboard-sidebar-navbar
+	display: flex
+	flex-direction: column
+
+.dashboard-sidebar-navbar-item
+	display: flex
+	align-items: center
+	border-radius: $border-radius
+	margin-bottom: 0.625rem
+	padding: .625rem 1rem
+
+.dashboard-sidebar-navbar-item.router-link-exact-active
+	background-color: rgba($white, .1)
+
+	.navbar-content
+		font-weight: 500
+
+.dashboard-sidebar-navbar-icon
+	display: flex
+	margin-right: 0.5rem
+
+	svg
+		stroke: $white
+		width: 1rem
+		height: 1rem
+
+.dashboard-sidebar-navbar-content
+	color: $white
+
+// footer
+.dashboard-sidebar-footer
+	margin-top: auto
+
+.dashboard-sidebar-user-container
+	cursor: pointer
+	border-radius: $border-radius
+	padding: .625rem 1rem
+
+	&:hover
+		background-color: rgba($white, .1)
+
+.dashboard-sidebar-user-container, .dashboard-sidebar-user
+	display: flex
+	align-items: center
+
+.dashboard-sidebar-user-avatar
+	margin-right: 0.625rem
+
+.dashboard-sidebar-user-name
+	font-weight: 600
+	color: $white
+
+.dashboard-sidebar-user-email
+	color: rgba($white, .5)
+	font-size: 0.875rem
