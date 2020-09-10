@@ -1,0 +1,23 @@
+.loader-container
+	display: flex
+	justify-content: center
+
+.loader
+	display: flex
+
+	svg
+		width: 1.5rem
+		height: 1.5rem
+		stroke: $gray-80
+		animation-name: spinner
+		animation-duration: 1.1s
+		animation-direction: normal
+		animation-timing-function: linear
+		animation-iteration-count: infinite
+
+@keyframes spinner
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)
