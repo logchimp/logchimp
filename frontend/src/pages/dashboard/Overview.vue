@@ -13,15 +13,11 @@
 						votes
 					</div>
 				</template>
-				<div
-					v-for="post in posts.data"
-					:key="post.postId"
-					class="table-content-item"
-				>
-					<div class="posts-table-title">
+				<div v-for="post in posts.data" :key="post.postId" class="table-row">
+					<div class="table-data posts-table-title">
 						{{ post.title }}
 					</div>
-					<div class="posts-table-votes">
+					<div class="table-data posts-table-votes">
 						{{ post.voters.length }}
 					</div>
 				</div>
@@ -50,9 +46,9 @@
 				<div
 					v-for="board in boards.data"
 					:key="board.boardId"
-					class="table-content-item"
+					class="table-row"
 				>
-					<div class="boards-table-color">
+					<div class="table-data boards-table-color">
 						<div
 							class="board-color"
 							:style="{
@@ -60,10 +56,10 @@
 							}"
 						/>
 					</div>
-					<div class="boards-table-name">
+					<div class="table-data boards-table-name">
 						{{ board.name }}
 					</div>
-					<div class="boards-table-posts">
+					<div class="table-data boards-table-posts">
 						0
 					</div>
 				</div>
