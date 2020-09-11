@@ -25,6 +25,7 @@
 								</template>
 								Settings
 							</dropdown-item>
+							<dropdown-spacer />
 							<dropdown-item @click="logout">
 								<template v-slot:icon>
 									<logout-icon />
@@ -53,6 +54,7 @@
 import Navbar from "./Navbar";
 import Dropdown from "./dropdown/Dropdown";
 import DropdownItem from "./dropdown/DropdownItem";
+import DropdownSpacer from "./dropdown/DropdownSpacer";
 import Button from "./Button";
 import Avatar from "./Avatar";
 
@@ -73,6 +75,7 @@ export default {
 		Navbar,
 		Dropdown,
 		DropdownItem,
+		DropdownSpacer,
 		Button,
 		Avatar,
 
