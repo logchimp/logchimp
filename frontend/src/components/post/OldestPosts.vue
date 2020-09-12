@@ -17,7 +17,7 @@ import InfiniteLoading from "vue-infinite-loading";
 
 // components
 import Post from "../post/Post";
-import Loader from "../icons/Loader";
+import Loader from "../Loader";
 
 export default {
 	name: "OldestPosts",
