@@ -1,26 +1,31 @@
 <template>
 	<Form>
 		<h4 class="post-edit-heading">Edit post</h4>
-		<l-text
-			v-model="title.value"
-			label="Title"
-			type="text"
-			name="Post title"
-			placeholder="Name of the feature"
-			:error="title.error"
-			@keydown.native="titleHandler"
-			@keyup.native.enter="savePost"
-		/>
-		<l-textarea
-			v-model="contentMarkdown"
-			label="Description"
-			name="Post description"
-			placeholder="What would you use it for?"
-		/>
-		<div style="display: flex;">
-			<Button type="primary" @click="savePost">
-				Update
-			</Button>
+		<div v-if="!post.loading">
+			<l-text
+				v-model="post.title.value"
+				label="Title"
+				type="text"
+				name="Post title"
+				placeholder="Name of the feature"
+				:error="post.title.error"
+				@keydown.native="titleHandler"
+				@keyup.native.enter="savePost"
+			/>
+			<l-textarea
+				v-model="post.contentMarkdown"
+				label="Description"
+				name="Post description"
+				placeholder="What would you use it for?"
+			/>
+			<div style="display: flex;">
+				<Button type="primary" @click="savePost" :loading="buttonLoading">
+					Update
+				</Button>
+			</div>
+		</div>
+		<div v-else class="loader-container">
+			<loader />
 		</div>
 	</Form>
 </template>
@@ -31,6 +36,7 @@ import axios from "axios";
 
 // components
 import Form from "../../components/Form";
+import Loader from "../../components/Loader";
 import LText from "../../components/input/LText";
 import LTextarea from "../../components/input/LTextarea";
 import Button from "../../components/Button";
@@ -39,59 +45,68 @@ export default {
 	name: "PostEdit",
 	data() {
 		return {
-			title: {
-				value: "",
-				error: {
-					show: false,
-					message: "Required"
-				}
+			post: {
+				loading: false,
+				title: {
+					value: "",
+					error: {
+						show: false,
+						message: "Required"
+					}
+				},
+				contentMarkdown: "",
+				postId: "",
+				slugId: "",
+				userId: "",
+				slug: ""
 			},
-			contentMarkdown: "",
-			postId: "",
-			slugId: "",
-			userId: "",
-			slug: ""
+			buttonLoading: false
 		};
 	},
 	components: {
 		// components
 		Form,
+		Loader,
 		LText,
 		LTextarea,
 		Button
 	},
 	methods: {
 		titleHandler() {
-			this.title.error.show = false;
+			this.post.title.error.show = false;
 		},
 		getPost() {
+			this.post.loading = true;
 			const slug = this.$route.params.slug;
 
 			axios
 				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
 				.then(response => {
-					this.title.value = response.data.post.title;
-					this.contentMarkdown = response.data.post.contentMarkdown;
-					this.postId = response.data.post.postId;
-					this.slugId = response.data.post.slugId;
-					this.userId = response.data.post.userId;
+					this.post.title.value = response.data.post.title;
+					this.post.contentMarkdown = response.data.post.contentMarkdown;
+					this.post.postId = response.data.post.postId;
+					this.post.slugId = response.data.post.slugId;
+					this.post.userId = response.data.post.userId;
+					this.post.loading = false;
 				})
 				.catch(error => {
-					console.log(error);
+					this.post.loading = false;
+					console.error(error);
 				});
 		},
 		savePost() {
-			if (this.title.value) {
+			if (this.post.title.value) {
+				this.buttonLoading = true;
 				const token = this.$store.getters["user/getAuthToken"];
 
 				axios({
 					method: "patch",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${this.postId}`,
+					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${this.post.postId}`,
 					data: {
-						title: this.title.value,
-						contentMarkdown: this.contentMarkdown,
-						slugId: this.slugId,
-						userId: this.userId
+						title: this.post.title.value,
+						contentMarkdown: this.post.contentMarkdown,
+						slugId: this.post.slugId,
+						userId: this.post.userId
 					},
 					headers: {
 						Authorization: `Bearer ${token}`
@@ -106,13 +121,14 @@ export default {
 								timeout: 5000
 							});
 
-							this.title.value = response.data.post.title;
-							this.contentMarkdown = response.data.post.contentMarkdown;
-							this.slugId = response.data.post.slugId;
-							this.userId = response.data.post.userId;
-							this.slug = response.data.post.slug;
+							this.post.title.value = response.data.post.title;
+							this.post.contentMarkdown = response.data.post.contentMarkdown;
+							this.post.slugId = response.data.post.slugId;
+							this.post.userId = response.data.post.userId;
+							this.post.slug = response.data.post.slug;
 
-							this.$router.push(`/post/${this.slug}`);
+							this.buttonLoading = false;
+							this.$router.push(`/post/${this.post.slug}`);
 						}
 					})
 					.catch(error => {
@@ -128,7 +144,7 @@ export default {
 						}
 					});
 			} else {
-				this.title.error.show = true;
+				this.post.title.error.show = true;
 			}
 		}
 	},
