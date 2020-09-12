@@ -21,11 +21,3 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.dashboard
-	display: flex
-
-.dashboard-main
-	padding: 3rem
-	width: 100%
-</style>

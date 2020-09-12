@@ -1,45 +1,53 @@
 <template>
-	<div>
-		<div class="usersettings__name">
+	<Form>
+		<h4 class="user-settings-heading">Account settings</h4>
+		<div v-if="!user.loading">
+			<div class="user-settings-name">
+				<l-text
+					v-model="user.firstname.value"
+					label="First name"
+					type="text"
+					name="First name"
+					placeholder="First name"
+					class="user-settings-name-item"
+					@keyup.native.enter="updateSettings"
+				/>
+				<l-text
+					v-model="user.lastname.value"
+					label="Last name"
+					type="text"
+					name="Last name"
+					placeholder="Last name"
+					class="user-settings-name-item"
+					@keyup.native.enter="updateSettings"
+				/>
+			</div>
 			<l-text
-				v-model="firstname.value"
-				label="First name"
+				v-model="user.username.value"
+				label="Username"
 				type="text"
-				name="First name"
-				placeholder="First name"
-				class="usersettings__name-item"
-				@keyup.native.enter="updateSettings"
+				name="Username"
+				placeholder="Username"
+				:disabled="true"
 			/>
 			<l-text
-				v-model="lastname.value"
-				label="Last name"
+				v-model="user.emailAddress.value"
+				label="Email Address"
 				type="text"
-				name="Last name"
-				placeholder="Last name"
-				class="usersettings__name-item"
-				@keyup.native.enter="updateSettings"
+				name="Email Address"
+				placeholder="Email address"
+				:disabled="true"
 			/>
+			<div style="display: flex;">
+				<Button type="primary" @click="updateSettings" :loading="buttonLoading">
+					Update
+				</Button>
+			</div>
 		</div>
-		<l-text
-			v-model="username.value"
-			label="Username"
-			type="text"
-			name="Username"
-			placeholder="Username"
-			:disabled="true"
-		/>
-		<l-text
-			v-model="emailAddress.value"
-			label="Email Address"
-			type="text"
-			name="Email Address"
-			placeholder="Email address"
-			:disabled="true"
-		/>
-		<Button type="primary" @click="updateSettings">
-			Update
-		</Button>
-	</div>
+		<div v-else class="loader-container">
+			<loader />
+		</div>
+	</Form>
 </template>
 
 <script>
@@ -47,47 +55,59 @@
 import axios from "axios";
 
 // components
-import LText from "../../components/ui/input/LText";
-import Button from "../../components/ui/Button";
+import Loader from "../../components/Loader";
+import Form from "../../components/Form";
+import LText from "../../components/input/LText";
+import Button from "../../components/Button";
 
 export default {
 	name: "UserSettings",
 	data() {
 		return {
-			firstname: {
-				value: ""
+			user: {
+				loading: false,
+				firstname: {
+					value: ""
+				},
+				lastname: {
+					value: ""
+				},
+				username: {
+					value: ""
+				},
+				emailAddress: {
+					value: ""
+				}
 			},
-			lastname: {
-				value: ""
-			},
-			username: {
-				value: ""
-			},
-			emailAddress: {
-				value: ""
-			}
+			buttonLoading: false
 		};
 	},
 	components: {
+		// components
+		Loader,
+		Form,
 		LText,
 		Button
 	},
 	methods: {
-		user() {
+		getUser() {
 			const userId = this.$store.getters["user/getUserId"];
 
 			if (userId) {
+				this.user.loading = true;
 				axios({
 					method: "get",
 					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
 				})
 					.then(response => {
-						this.firstname.value = response.data.user.firstname || "";
-						this.lastname.value = response.data.user.lastname || "";
-						this.username.value = response.data.user.username || "";
-						this.emailAddress.value = response.data.user.emailAddress;
+						this.user.firstname.value = response.data.user.firstname || "";
+						this.user.lastname.value = response.data.user.lastname || "";
+						this.user.username.value = response.data.user.username || "";
+						this.user.emailAddress.value = response.data.user.emailAddress;
+						this.user.loading = false;
 					})
 					.catch(error => {
+						this.user.loading = false;
 						console.error(error);
 					});
 			} else {
@@ -101,6 +121,7 @@ export default {
 			}
 		},
 		updateSettings() {
+			this.buttonLoading = true;
 			const userId = this.$store.getters["user/getUserId"];
 
 			axios({
@@ -108,21 +129,23 @@ export default {
 				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/user`,
 				data: {
 					userId,
-					firstname: this.firstname.value,
-					lastname: this.lastname.value
+					firstname: this.user.firstname.value,
+					lastname: this.user.lastname.value
 				}
 			})
 				.then(response => {
-					this.firstname.value = response.data.user.firstname || "";
-					this.lastname.value = response.data.user.lastname || "";
+					this.user.firstname.value = response.data.user.firstname || "";
+					this.user.lastname.value = response.data.user.lastname || "";
+					this.buttonLoading = false;
 				})
 				.catch(error => {
+					this.buttonLoading = false;
 					console.error(error);
 				});
 		}
 	},
 	created() {
-		this.user();
+		this.getUser();
 	}
 };
 </script>

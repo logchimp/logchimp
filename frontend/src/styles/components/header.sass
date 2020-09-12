@@ -1,0 +1,38 @@
+.header
+	margin-bottom: 2rem
+	background-color: $brand-color
+
+.header-container, .header-logo, .nav-item
+	display: flex
+	align-items: center
+
+.header-container
+	padding: 1rem 0
+
+// nav
+.header-nav
+	margin-left: auto
+
+.nav-item
+	margin-left: 1.5rem
+	color: rgba(255, 255, 255, .5)
+	font-weight: 500
+	position: relative
+
+	&:first-child
+		margin-left: 0
+
+.nav-profile
+	width: 1.875rem
+	height: 1.875rem
+	border-radius: 1.875rem
+	cursor: pointer
+
+.nav-profile-dropdown
+	top: 2.4rem
+
+.nav-auth-link
+	cursor: pointer
+
+	&:hover
+		color: $white
