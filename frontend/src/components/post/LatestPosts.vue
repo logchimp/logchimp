@@ -1,5 +1,5 @@
 <template>
-	<div class="latest__post">
+	<div>
 		<post v-for="post in posts" :post="post" :key="post.postId" />
 		<infinite-loading @infinite="getMorePosts">
 			<div class="loader-container" slot="spinner"><loader /></div>
