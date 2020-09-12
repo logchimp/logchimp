@@ -7,7 +7,7 @@ exports.validate = (req, res, next) => {
 	const token = headersToken.split(" ")[1];
 
 	if (token) {
-		jwt.verify(token, "secretKey", (err, decoded) => {
+		jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
 			if (err) {
 				/**
 				 * sending response to client

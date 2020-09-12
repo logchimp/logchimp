@@ -27,7 +27,7 @@ exports.login = (req, res) => {
 					.then(validatePassword => {
 						if (validatePassword) {
 							// generate authToken
-							const authToken = jwt.sign(user, user.secretKey, {
+							const authToken = jwt.sign(user, process.env.SECRET_KEY, {
 								expiresIn: "2d"
 							});
 
