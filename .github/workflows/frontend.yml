@@ -25,7 +25,10 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: Build Vue app
+      - name: Lint
+        run: npm run frontend:lint
+
+      - name: Build
         run: npm run frontend:build
 
       - name: Install 'tree' command
