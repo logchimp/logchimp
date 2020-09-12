@@ -24,11 +24,13 @@
 						<div class="viewpost__meta-date">
 							{{ post.createdAt | moment("MMMM DD, YYYY") }}
 						</div>
-						<div v-if="postAuthor" class="viewpost__menu">
-							<more-icon
-								@click="toggleMenuDropdown"
-								class="viewpost__menu-icon"
-							/>
+						<div
+							v-if="postAuthor"
+							class="dropdown-menu-container viewpost__menu"
+						>
+							<div @click="toggleMenuDropdown" class="dropdown-menu-icon">
+								<more-icon />
+							</div>
 							<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
 								<dropdown-item @click="editPost">
 									<template v-slot:icon>
