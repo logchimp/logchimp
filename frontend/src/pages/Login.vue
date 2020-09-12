@@ -29,7 +29,7 @@
 					@keyup.native.enter="login"
 				/>
 				<div style="display: flex; justify-content: center;">
-					<Button @click="login" type="primary">
+					<Button @click="login" type="primary" :loading="buttonLoading">
 						Login
 					</Button>
 				</div>
@@ -68,7 +68,8 @@ export default {
 					show: false,
 					message: "Required"
 				}
-			}
+			},
+			buttonLoading: false
 		};
 	},
 	components: {
@@ -86,6 +87,8 @@ export default {
 		},
 		login() {
 			if (this.emailAddress.value && this.password.value) {
+				this.buttonLoading = true;
+
 				axios
 					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/login`, {
 						emailAddress: this.emailAddress.value,
@@ -114,6 +117,9 @@ export default {
 								createdAt: response.data.user.createdAt,
 								updatedAt: response.data.user.updatedAt
 							});
+
+							this.buttonLoading = false;
+
 							if (this.$route.query.redirect) {
 								this.$router.push(this.$route.query.redirect);
 							} else {
@@ -122,6 +128,7 @@ export default {
 						}
 					})
 					.catch(error => {
+						this.buttonLoading = false;
 						const err = { ...error };
 
 						if (err.response.data.error.code === "user_not_found") {
