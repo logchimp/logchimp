@@ -28,5 +28,8 @@ jobs:
       - name: Build Vue app
         run: npm run frontend:build
 
+      - name: Install 'tree' command
+        run: sudo apt-get install tree
+
       - name: Validate Vue build
-        run: ls frontend/dist
+        run: tree frontend/dist
