@@ -14,8 +14,8 @@ const routes = [
 		children: [
 			{
 				path: "",
-				name: "HomePage",
-				component: require("./pages/Home").default
+				name: "Homepage",
+				component: require("./pages/Homepage").default
 			},
 			{
 				path: "/settings",

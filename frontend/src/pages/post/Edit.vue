@@ -1,5 +1,6 @@
 <template>
-	<div class="editpost">
+	<Form>
+		<h4 class="post-edit-heading">Edit post</h4>
 		<l-text
 			v-model="title.value"
 			label="Title"
@@ -16,10 +17,12 @@
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
-		<Button type="primary" @click="savePost">
-			Update
-		</Button>
-	</div>
+		<div style="display: flex;">
+			<Button type="primary" @click="savePost">
+				Update
+			</Button>
+		</div>
+	</Form>
 </template>
 
 <script>
@@ -27,9 +30,10 @@
 import axios from "axios";
 
 // components
-import LText from "../../components/ui/input/LText";
-import LTextarea from "../../components/ui/input/LTextarea";
-import Button from "../../components/ui/Button";
+import Form from "../../components/Form";
+import LText from "../../components/input/LText";
+import LTextarea from "../../components/input/LTextarea";
+import Button from "../../components/Button";
 
 export default {
 	name: "PostEdit",
@@ -50,6 +54,8 @@ export default {
 		};
 	},
 	components: {
+		// components
+		Form,
 		LText,
 		LTextarea,
 		Button

@@ -1,7 +1,7 @@
 <template>
 	<container>
-		<div class="onboarding__content">
-			<h2 class="onboarding__heading">Create an account</h2>
+		<div class="onboarding-content">
+			<h2 class="onboarding-heading">Create an account</h2>
 			<Form>
 				<l-text
 					v-model="fullName.value"
@@ -12,7 +12,7 @@
 					:error="fullName.error"
 					@keydown.native="fullNameHandler"
 					@keyup.native.enter="createAccount"
-					class="account__form-item"
+					class="account-form-item"
 				/>
 				<l-text
 					v-model="emailAddress.value"
@@ -23,7 +23,7 @@
 					:error="emailAddress.error"
 					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="createAccount"
-					class="account__form-item"
+					class="account-form-item"
 				/>
 				<l-text
 					v-model="password.value"
@@ -34,18 +34,19 @@
 					:error="password.error"
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="createAccount"
-					class="account__form-item"
+					class="account-form-item"
 				/>
-				<Button
-					:loading="buttonLoading"
-					@click="createAccount"
-					type="primary"
-					class="account__form-button"
-				>
-					Create an account
-				</Button>
+				<div style="display: flex; justify-content: center;">
+					<Button
+						:loading="buttonLoading"
+						@click="createAccount"
+						type="primary"
+					>
+						Create account
+					</Button>
+				</div>
 			</Form>
-			<p class="account__tos">
+			<p class="account-tos">
 				By continuing, you agree to LogChimp's <span>Terms</span> and
 				<span>Privacy</span> policy.
 			</p>
@@ -60,8 +61,8 @@ import axios from "axios";
 // components
 import Container from "../../components/Container";
 import Form from "../../components/Form";
-import LText from "../../components/ui/input/LText";
-import Button from "../../components/ui/Button";
+import LText from "../../components/input/LText";
+import Button from "../../components/Button";
 
 export default {
 	name: "SetupAccount",
@@ -163,24 +164,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.account__form-container
-	margin-top: 2rem
-
-.account__form-item
-	width: 350px
-
-.account__form-button
-	margin-top: 2rem
-
-.account__tos
-	color: $gray-70
-	font-size: 10px
-	line-height: 12px
-	font-weight: 400
-	margin-top: 1.5rem
-
-	span
-		font-weight: 500
-</style>

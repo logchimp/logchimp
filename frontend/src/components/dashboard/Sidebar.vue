@@ -1,27 +1,27 @@
 <template>
-	<div class="sidebar">
-		<div class="sidebar-header">
+	<div class="dashboard-sidebar">
+		<div class="dashboard-sidebar-header">
 			<img src="@/assets/images/logo_invert_color.svg" />
 		</div>
-		<nav class="sidebar-navbar">
-			<router-link to="/dashboard" class="sidebar-navbar-item">
-				<div class="navbar-icon">
+		<nav class="dashboard-sidebar-navbar">
+			<router-link to="/dashboard" class="dashboard-sidebar-navbar-item">
+				<div class="dashboard-sidebar-navbar-icon">
 					<dashboard-icon />
 				</div>
-				<div class="navbar-content">
+				<div class="dashboard-sidebar-navbar-content">
 					Dashbaord
 				</div>
 			</router-link>
 		</nav>
-		<footer class="sidebar-footer">
-			<div class="sidebar-user-container">
-				<div class="sidebar-user">
-					<avatar class="sidebar-user-avatar" :name="username" />
-					<div class="sidebar-user-data">
-						<div class="sidebar-user-name">
+		<footer class="dashboard-sidebar-footer">
+			<div class="dashboard-sidebar-user-container">
+				<div class="dashboard-sidebar-user">
+					<avatar class="dashboard-sidebar-user-avatar" :name="username" />
+					<div class="dashboard-sidebar-user-data">
+						<div class="dashboard-sidebar-user-name">
 							{{ fullname }}
 						</div>
-						<div class="sidebar-user-email">
+						<div class="dashboard-sidebar-user-email">
 							{{ emailAddress }}
 						</div>
 					</div>
@@ -33,7 +33,7 @@
 
 <script>
 // components
-import Avatar from "../../components/ui/Avatar";
+import Avatar from "../Avatar";
 
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
@@ -66,74 +66,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.sidebar
-	display: flex
-	flex-direction: column
-	background-color: $brand-color
-	height: 100vh
-	padding: 1.125rem 1rem
-	min-width: 200px
-
-.sidebar-header
-	padding-left: 1rem
-	padding-right: 1rem
-	margin-bottom: 3rem
-
-.sidebar-navbar
-	display: flex
-	flex-direction: column
-
-.sidebar-navbar-item
-	display: flex
-	align-items: center
-	border-radius: $border-radius
-	margin-bottom: 0.625rem
-	padding: .625rem 1rem
-
-.sidebar-navbar-item.router-link-exact-active
-	background-color: rgba($white, .1)
-
-	.navbar-content
-		font-weight: 500
-
-.navbar-icon
-	display: flex
-	margin-right: 0.5rem
-
-	svg
-		stroke: $white
-		width: 1rem
-		height: 1rem
-
-.navbar-content
-	color: $white
-
-// footer
-.sidebar-footer
-	margin-top: auto
-
-.sidebar-user-container
-	cursor: pointer
-	border-radius: $border-radius
-	padding: .625rem 1rem
-
-	&:hover
-		background-color: rgba($white, .1)
-
-.sidebar-user-container, .sidebar-user
-	display: flex
-	align-items: center
-
-.sidebar-user-avatar
-	margin-right: 0.625rem
-
-.sidebar-user-name
-	font-weight: 600
-	color: $white
-
-.sidebar-user-email
-	color: rgba($white, .5)
-	font-size: 0.875rem
-</style>

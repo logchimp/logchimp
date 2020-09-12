@@ -1,16 +1,16 @@
 <template>
-	<div class="onboarding__content">
-		<h2 class="onboarding__heading">Welcome to <span>LogChimp</span>!</h2>
-		<p class="onboarding__label">
+	<div class="onboarding-content">
+		<h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
+		<p class="onboarding-label">
 			Let’s setup your LogChimp site to track user feedback for building better
 			products.
 		</p>
 		<img
-			class="welcome__image"
+			class="welcome-image"
 			src="@/assets/images/logchimp_homepage_preview.png"
 			alt="LogChimp homepage preview"
 		/>
-		<Button type="primary" @click="createAccount" class="welcome__button">
+		<Button type="primary" @click="createAccount" class="welcome-button">
 			Create an account
 		</Button>
 	</div>
@@ -18,7 +18,7 @@
 
 <script>
 // components
-import Button from "../../components/ui/Button";
+import Button from "../../components/Button";
 
 export default {
 	name: "OnboardingWelcome",
@@ -32,13 +32,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.welcome__image
-	width: 100%
-	border-radius: $border-radius
-	border: 1px solid $gray-90
-
-.welcome__button
-	margin-top: 4rem
-</style>

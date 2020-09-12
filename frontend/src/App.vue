@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Alert from "./components/ui/Alert";
+import Alert from "./components/Alert";
 
 export default {
 	name: "app",

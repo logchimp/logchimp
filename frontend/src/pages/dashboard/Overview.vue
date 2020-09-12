@@ -13,15 +13,11 @@
 						votes
 					</div>
 				</template>
-				<div
-					v-for="post in posts.data"
-					:key="post.postId"
-					class="table-content-item"
-				>
-					<div class="posts-table-title">
+				<div v-for="post in posts.data" :key="post.postId" class="table-row">
+					<div class="table-data posts-table-title">
 						{{ post.title }}
 					</div>
-					<div class="posts-table-votes">
+					<div class="table-data posts-table-votes">
 						{{ post.voters.length }}
 					</div>
 				</div>
@@ -29,6 +25,7 @@
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
 					<div slot="no-results"></div>
+					<div slot="error"></div>
 				</infinite-loading>
 			</Table>
 		</div>
@@ -49,9 +46,9 @@
 				<div
 					v-for="board in boards.data"
 					:key="board.boardId"
-					class="table-content-item"
+					class="table-row"
 				>
-					<div class="boards-table-color">
+					<div class="table-data boards-table-color">
 						<div
 							class="board-color"
 							:style="{
@@ -59,10 +56,10 @@
 							}"
 						/>
 					</div>
-					<div class="boards-table-name">
+					<div class="table-data boards-table-name">
 						{{ board.name }}
 					</div>
-					<div class="boards-table-posts">
+					<div class="table-data boards-table-posts">
 						0
 					</div>
 				</div>
@@ -70,6 +67,7 @@
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
 					<div slot="no-results"></div>
+					<div slot="error"></div>
 				</infinite-loading>
 			</Table>
 		</div>
@@ -83,7 +81,7 @@ import InfiniteLoading from "vue-infinite-loading";
 
 // components
 import Table from "../../components/Table";
-import Loader from "../../components/Loader";
+import Loader from "../../components/icons/Loader";
 
 export default {
 	name: "DashboardOverview",
@@ -149,52 +147,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="sass" scoped>
-.dashboard-overview-posts-and-boards
-	display: flex
-	align-items: flex-start
-
-.dashboard-overview-posts
-	flex: 2
-	margin-right: 1rem
-
-.dashboard-overview-boards
-	flex: 1
-	margin-left: 1rem
-
-.table-heading
-	color: $gray-40
-	font-size: .875rem
-	font-weight: 500
-	margin-left: 0.375rem
-	margin-bottom: 0.5rem
-</style>
-
-<style lang="sass">
-// posts
-.posts-table-title
-	flex: 6
-	font-weight: 500
-
-.posts-table-votes
-	flex: 1
-	text-align: right
-
-// boards
-.boards-table-color
-	flex: 1
-
-.boards-table-name
-	flex: 10
-	font-weight: 500
-
-.boards-table-posts
-	flex: 2
-	text-align: right
-
-.board-color
-	width: .75rem
-	height: .75rem
-	border-radius: 1rem
-</style>
