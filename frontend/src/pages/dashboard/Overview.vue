@@ -81,7 +81,7 @@ import InfiniteLoading from "vue-infinite-loading";
 
 // components
 import Table from "../../components/Table";
-import Loader from "../../components/icons/Loader";
+import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardOverview",
