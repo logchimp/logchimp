@@ -2,7 +2,10 @@
 	"name": "logchimp",
 	"version": "0.2.0",
 	"private": true,
-	"workspaces": ["server", "frontend"],
+	"workspaces": [
+		"server",
+		"frontend"
+	],
 	"scripts": {
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
@@ -16,6 +19,7 @@
 		"eslint": "^7.8.1",
 		"eslint-config-prettier": "^6.10.0",
 		"eslint-plugin-prettier": "^3.1.2",
-		"eslint-plugin-vue": "^6.2.2"
+		"eslint-plugin-vue": "^6.2.2",
+		"jest": "^26.4.2"
 	}
 }
