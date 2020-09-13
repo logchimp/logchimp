@@ -10,20 +10,29 @@ const { errorHandler, notFound } = require("./middlewares");
 
 const app = express();
 
-// start express server at SERVER_PORT
-app.listen(process.env.SERVER_PORT, () => {
-	// contains key-value pairs of data submitted in the request body
-	app.use(bodyParser.json());
+const database = require("./database");
 
-	// enable all CORS requests
-	app.use(cors());
+database
+	.raw("select 1+1 as result")
+	.then(() => {
+		// start express server at SERVER_PORT
+		app.listen(process.env.SERVER_PORT, () => {
+			// contains key-value pairs of data submitted in the request body
+			app.use(bodyParser.json());
 
-	// importing all routes modules
-	app.use(routes);
+			// enable all CORS requests
+			app.use(cors());
 
-	// Error handler middlewares
-	app.use(notFound);
-	app.use(errorHandler);
+			// importing all routes modules
+			app.use(routes);
 
-	console.log(`Listening at port: ${process.env.SERVER_PORT}`);
-});
+			// Error handler middlewares
+			app.use(notFound);
+			app.use(errorHandler);
+
+			console.log(`Listening at port: ${process.env.SERVER_PORT}`);
+		});
+	})
+	.catch(error => {
+		console.error(error);
+	});
