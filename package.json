@@ -12,6 +12,7 @@
 		"frontend:lint": "cd frontend && vue-cli-service lint",
 		"server:dev": "cd server && nodemon app.js",
 		"server:start": "cd server && node app.js",
+		"server:test": "jest --config ./server/jest.config.js",
 		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
 	},
 	"devDependencies": {
