@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  NODE_ENV: testing
+  PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
+  PG_HOST: ${{ secrets.TEST_DB_HOST }}
+  PG_USER: ${{ secrets.TEST_DB_USER }}
+  PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+  PG_PORT: 5432
+  SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        node: [10, 12, 14]
+
+    name: Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Turnstyle
+        uses: softprops/turnstyle@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Run 'server' tests
+        run: yarn run server:test
