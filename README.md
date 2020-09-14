@@ -15,22 +15,20 @@
   <a href="https://www.patreon.com/mittalyashu">
     <img src="https://img.shields.io/badge/become%20a-patron-blue.svg?style=flat&colorA=555555&colorB=F86754" alt="Become a Patreon" />
   </a>
-  <a href="https://discord.gg/A7mztcC">
-    <img src="https://img.shields.io/discord/556376419886825509.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" alt="Discord invite" />
-  </a>
-  <a href="https://logchimp.codecarrot.net/">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome!" />
-  </a>
   <a href="https://github.com/logchimp/logchimp/actions">
     <img src="https://github.com/logchimp/logchimp/workflows/Test/badge.svg" alt="CI Test Status" />
   </a>
-  <a href="https://twitter.com/intent/follow?screen_name=@logchimp">
-    <img src="https://img.shields.io/twitter/follow/logchimp.svg?label=Follow%20@logchimp" alt="Follow @logchimp" />
-  </a>
+	<a href="https://github.com/logchimp/logchimp/contributors/">
+		<img src="https://img.shields.io/github/contributors/logchimp/logchimp.svg" alt="GitHub LogChimp Contributors" />
+	</a>
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/logchimp/logchimp/issues">Issues</a>
+  <a href="https://logchimp.codecarrot.net/docs/">Docs</a>
+  <span> · </span>
+  <a href="https://logchimp.codecarrot.net/docs/roadmap/contributing">Contribute</a>
+  <span> · </span>
+  <a href="https://twitter.com/logchimp">Twitter</a>
   <span> · </span>
   <a href="https://discord.gg/A7mztcC">Discord</a>
 </h3>
