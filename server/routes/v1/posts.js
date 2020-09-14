@@ -9,13 +9,13 @@ const post = require("../../controllers/post");
 const token = require("../../middlewares/token");
 const authorizeUser = require("../../middlewares/authorizeUser");
 
-router.post("/posts", token.validate, post.create);
+router.post("/posts", token.userAuthToken, post.create);
 router.get("/posts", post.filterPost);
-router.delete("/post/delete", token.validate, post.deleteById);
+router.delete("/post/delete", token.userAuthToken, post.deleteById);
 router.get("/posts/:slug", post.postBySlug);
 router.patch(
 	"/posts/:postId",
-	token.validate,
+	token.userAuthToken,
 	authorizeUser.author,
 	post.updatePost
 );
