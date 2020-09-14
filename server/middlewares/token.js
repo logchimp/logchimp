@@ -1,7 +1,7 @@
 // modules
 const jwt = require("jsonwebtoken");
 
-exports.validate = (req, res, next) => {
+exports.userAuthToken = (req, res, next) => {
 	const headersToken = req.headers["authorization"];
 
 	if (headersToken) {
