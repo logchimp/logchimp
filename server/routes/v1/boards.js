@@ -9,6 +9,6 @@ const boards = require("../../controllers/boards");
 const token = require("../../middlewares/token");
 
 router.get("/boards", boards.filter);
-router.post("/boards", token.validate, boards.create);
+router.post("/boards", token.userAuthToken, boards.create);
 
 module.exports = router;
