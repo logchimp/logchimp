@@ -1,0 +1,20 @@
+"area:frontend"
+  - frontend/**
+
+"area:backend"
+  - server/**
+  all: ['!server/jest.config.js']
+
+"area:database"
+  - server/database/**
+  - server/knexfile.js
+
+"area:api"
+  - server/routes/**
+  - server/controllers/**
+  - server/services/**
+
+"area:test"
+  - server/**/*.test.js
+  - jest.config.js
+  - server/jest.config.js
