@@ -33,6 +33,10 @@
   <a href="https://discord.gg/A7mztcC">Discord</a>
 </h3>
 
+<a href="https://logchimp.codecarrot.net/">
+	<img src="https://logchimp.codecarrot.net/images/what-is-logchimp.gif" alt="What is LogChimp? " />
+</a>
+
 ### 🧐 About
 
 LogChimp is self-hosted platform for products makers to get feedback from their users and start building better version of your product.
