@@ -10,6 +10,10 @@ const knex = require("knex")({
 		database: process.env.PG_DATABASE,
 		port: process.env.PG_PORT
 	},
+	migrations: {
+		directory: "./database/migrations",
+		tableName: "migrations"
+	},
 	afterCreate: (conn, done) => {
 		// in this example we use pg driver's connection API
 		conn.query('SET timezone="UTC";', err => {
