@@ -15,4 +15,8 @@ router.use("/api/v1", votes);
 router.use("/api/v1", users);
 router.use("/api/v1", boards);
 
+router.get("/api", (req, res) => {
+	res.send("👍");
+});
+
 module.exports = router;
