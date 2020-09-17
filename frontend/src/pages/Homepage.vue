@@ -1,6 +1,6 @@
 <template>
 	<div class="homepage">
-		<div class="homepage-posts">
+		<main class="homepage-posts">
 			<tab>
 				<tab-item
 					@click="updateTab('latest')"
@@ -27,20 +27,23 @@
 			</tab>
 
 			<component :is="homeTab"></component>
-		</div>
-		<div class="homepage-createpost">
-			<create-post />
-		</div>
+		</main>
+		<aside class="homepage-sidebar">
+			<site-setup-card v-if="showSiteSetupCard" />
+		</aside>
 	</div>
 </template>
 
 <script>
+// packages
+import axios from "axios";
+
 // components
 import Tab from "../components/tab/Tab";
 import TabItem from "../components/tab/TabItem";
 import LatestPosts from "../components/post/LatestPosts";
 import OldestPosts from "../components/post/OldestPosts";
-import CreatePost from "../components/post/CreatePost";
+import SiteSetupCard from "../components/SiteSetupCard";
 
 // icons
 import SortDescIcon from "../components/icons/SortDesc";
@@ -50,7 +53,8 @@ export default {
 	name: "HomePage",
 	data() {
 		return {
-			tab: "latest"
+			tab: "latest",
+			showSiteSetupCard: false
 		};
 	},
 	components: {
@@ -59,7 +63,7 @@ export default {
 		TabItem,
 		LatestPosts,
 		OldestPosts,
-		CreatePost,
+		SiteSetupCard,
 
 		// icons
 		SortDescIcon,
@@ -79,7 +83,20 @@ export default {
 	methods: {
 		updateTab(tabValue) {
 			this.tab = tabValue;
+		},
+		isSetup() {
+			axios
+				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.then(response => {
+					this.showSiteSetupCard = !response.data.isSetup;
+				})
+				.catch(error => {
+					console.error(error);
+				});
 		}
+	},
+	created() {
+		this.isSetup();
 	}
 };
 </script>
