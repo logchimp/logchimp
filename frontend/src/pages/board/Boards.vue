@@ -13,7 +13,7 @@
 						{{ board.name }}
 					</div>
 					<div class="boards-item-posts">
-						0
+						{{ board.posts }}
 					</div>
 				</div>
 			</div>
