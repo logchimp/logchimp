@@ -8,6 +8,7 @@ exports.create = async (req, res) => {
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
 	const userId = req.body.userId;
+	const boardId = req.body.boardId;
 
 	// generate post unique indentification
 	const postId = uuidv4(title);
@@ -30,6 +31,7 @@ exports.create = async (req, res) => {
 			slugId,
 			contentMarkdown,
 			userId,
+			boardId,
 			createdAt: new Date().toJSON(),
 			updatedAt: new Date().toJSON()
 		})
