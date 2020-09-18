@@ -38,7 +38,7 @@
 				placeholder="Email address"
 				:disabled="true"
 			/>
-			<div style="display: flex;">
+			<div style="display: flex; justify-content: flex-start;">
 				<Button type="primary" @click="updateSettings" :loading="buttonLoading">
 					Update
 				</Button>
