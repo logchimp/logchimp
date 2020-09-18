@@ -10,9 +10,11 @@
 			@keydown.native="boardNameHandler"
 			@keyup.native.enter="createBoard"
 		/>
-		<Button :loading="buttonLoading" @click="createBoard" type="primary">
-			Create
-		</Button>
+		<div style="display: flex; justify-content: center;">
+			<Button :loading="buttonLoading" @click="createBoard" type="primary">
+				Create
+			</Button>
+		</div>
 	</Form>
 </template>
 

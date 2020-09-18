@@ -18,7 +18,7 @@
 				name="Post description"
 				placeholder="What would you use it for?"
 			/>
-			<div style="display: flex;">
+			<div style="display: flex; justify-content: flex-start;">
 				<Button type="primary" @click="savePost" :loading="buttonLoading">
 					Update
 				</Button>
