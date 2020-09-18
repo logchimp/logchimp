@@ -2,7 +2,7 @@
 	<container>
 		<div class="onboarding-content">
 			<h2 class="onboarding-heading">Create an account</h2>
-			<Form>
+			<Form class="onboarding-form account-form-container">
 				<l-text
 					v-model="fullName.value"
 					label="Full name"
@@ -12,7 +12,6 @@
 					:error="fullName.error"
 					@keydown.native="fullNameHandler"
 					@keyup.native.enter="createAccount"
-					class="account-form-item"
 				/>
 				<l-text
 					v-model="emailAddress.value"
@@ -23,7 +22,6 @@
 					:error="emailAddress.error"
 					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="createAccount"
-					class="account-form-item"
 				/>
 				<l-text
 					v-model="password.value"
@@ -34,7 +32,6 @@
 					:error="password.error"
 					@keydown.native="passwordHandler"
 					@keyup.native.enter="createAccount"
-					class="account-form-item"
 				/>
 				<div style="display: flex; justify-content: center;">
 					<Button
