@@ -2,6 +2,9 @@ name: Test
 
 on:
   push:
+    paths:
+      - "frontend/**"
+      - "server/**"
   workflow_dispatch:
 
 env:
