@@ -18,7 +18,27 @@ exports.filter = async (req, res) => {
 		]);
 
 	try {
-		const boards = response;
+		const boards = [];
+
+		for (let i = 0; i < response.length; i++) {
+			const boardId = response[i].boardId;
+
+			const postCount = await database
+				.count()
+				.from("posts")
+				.where({
+					boardId
+				});
+
+			try {
+				boards.push({
+					...response[i],
+					posts: postCount[0].count
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		}
 
 		res.status(200).send({
 			status: {

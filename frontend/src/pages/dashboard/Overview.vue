@@ -60,7 +60,7 @@
 						{{ board.name }}
 					</div>
 					<div class="table-data boards-table-posts">
-						0
+						{{ board.posts }}
 					</div>
 				</div>
 				<infinite-loading @infinite="getBoards">
