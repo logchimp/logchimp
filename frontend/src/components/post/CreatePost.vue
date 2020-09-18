@@ -51,6 +51,13 @@ export default {
 			buttonLoading: false
 		};
 	},
+	props: {
+		boardId: {
+			type: String,
+			default: "",
+			required: true
+		}
+	},
 	components: {
 		// components
 		Form,
@@ -69,13 +76,16 @@ export default {
 				this.buttonLoading = true;
 				const userId = this.$store.getters["user/getUserId"];
 				const token = this.$store.getters["user/getAuthToken"];
+				const boardId = this.boardId;
+
 				axios({
 					method: "post",
 					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts`,
 					data: {
 						title: this.title.value,
 						contentMarkdown: this.description.value,
-						userId
+						userId,
+						boardId
 					},
 					headers: {
 						Authorization: `Bearer ${token}`
@@ -92,7 +102,7 @@ export default {
 
 							this.buttonLoading = false;
 							const slug = response.data.post.slug;
-							this.$router.push({ path: `post/${slug}` });
+							this.$router.push({ path: `/post/${slug}` });
 						}
 					})
 					.catch(error => {

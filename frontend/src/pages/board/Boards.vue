@@ -1,7 +1,12 @@
 <template>
 	<div>
 		<div v-if="boards.length > 0" class="boards-lists">
-			<div v-for="board in boards" :key="board.boardId" class="boards-item">
+			<router-link
+				:to="`/board/${board.url}`"
+				v-for="board in boards"
+				:key="board.boardId"
+				class="boards-item"
+			>
 				<div
 					class="board-color boards-item-color"
 					:style="{
@@ -16,7 +21,7 @@
 						{{ board.posts }}
 					</div>
 				</div>
-			</div>
+			</router-link>
 		</div>
 		<infinite-loading @infinite="getBoards">
 			<div class="loader-container" slot="spinner"><loader /></div>
