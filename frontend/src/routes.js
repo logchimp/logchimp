@@ -22,6 +22,10 @@ const routes = [
 				component: require("./pages/board/Boards").default
 			},
 			{
+				path: "board/:slug",
+				component: require("./pages/board/Board").default
+			},
+			{
 				path: "/settings",
 				name: "UserSettings",
 				component: require("./pages/user/Settings").default

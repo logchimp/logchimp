@@ -37,13 +37,16 @@ export default {
 	},
 	methods: {
 		getMorePosts($state) {
-			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts`, {
-					params: {
-						page: this.page,
-						created: "desc"
-					}
-				})
+			const slug = this.$route.params.slug;
+
+			axios({
+				method: "post",
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards/${slug}/posts`,
+				params: {
+					page: this.page,
+					created: "desc"
+				}
+			})
 				.then(response => {
 					if (response.data.posts.length) {
 						this.posts.push(...response.data.posts);
