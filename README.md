@@ -59,3 +59,9 @@ Contributing to LogChimp project is fairly easy.
 ### 🙏🏻 Credits
 
 - Development is sponsored by [CodeCarrot](https://www.codecarrot.net/).
+
+&nbsp;
+
+# 🎁 LogChimp Sponsors
+
+Big shout-out to our [sponsors and partners](https://logchimp.codecarrot.net/partners). If you're interested in sponsoring LogChimp and supporting the project, please reach out to us on [LogChimp Discord server](https://discordapp.com/invite/A7mztcC/).
