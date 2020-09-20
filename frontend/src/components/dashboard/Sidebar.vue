@@ -1,8 +1,8 @@
 <template>
 	<div class="dashboard-sidebar">
-		<div class="dashboard-sidebar-header">
+		<router-link to="/dashboard" class="dashboard-sidebar-header">
 			<img src="@/assets/images/logo_invert_color.svg" />
-		</div>
+		</router-link>
 		<nav class="dashboard-sidebar-navbar">
 			<router-link to="/dashboard" class="dashboard-sidebar-navbar-item">
 				<div class="dashboard-sidebar-navbar-icon">
