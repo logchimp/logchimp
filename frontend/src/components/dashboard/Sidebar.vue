@@ -12,6 +12,14 @@
 					Dashbaord
 				</div>
 			</router-link>
+			<router-link to="/dashboard/boards" class="dashboard-sidebar-navbar-item">
+				<div class="dashboard-sidebar-navbar-icon">
+					<board-icon />
+				</div>
+				<div class="dashboard-sidebar-navbar-content">
+					Boards
+				</div>
+			</router-link>
 		</nav>
 		<footer class="dashboard-sidebar-footer">
 			<div class="dashboard-sidebar-user-container">
@@ -37,6 +45,7 @@ import Avatar from "../Avatar";
 
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
+import BoardIcon from "../../components/icons/Board";
 
 export default {
 	name: "DashboardSidebar",
@@ -45,7 +54,8 @@ export default {
 		Avatar,
 
 		// icons
-		DashboardIcon
+		DashboardIcon,
+		BoardIcon
 	},
 	computed: {
 		fullname() {

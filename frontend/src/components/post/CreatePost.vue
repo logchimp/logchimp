@@ -56,6 +56,10 @@ export default {
 			type: String,
 			default: "",
 			required: true
+		},
+		dashboard: {
+			type: Boolean,
+			default: false
 		}
 	},
 	components: {
@@ -64,6 +68,11 @@ export default {
 		LText,
 		LTextarea,
 		Button
+	},
+	computed: {
+		dashboardUrl() {
+			return this.dashboard ? "/dashboard" : "";
+		}
 	},
 	methods: {
 		titleHandler() {
@@ -102,7 +111,7 @@ export default {
 
 							this.buttonLoading = false;
 							const slug = response.data.post.slug;
-							this.$router.push({ path: `/post/${slug}` });
+							this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
 						}
 					})
 					.catch(error => {
