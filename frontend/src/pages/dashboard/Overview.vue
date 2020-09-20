@@ -13,14 +13,19 @@
 						votes
 					</div>
 				</template>
-				<div v-for="post in posts.data" :key="post.postId" class="table-row">
+				<router-link
+					:to="`/dashboard/post/${post.slug}`"
+					v-for="post in posts.data"
+					:key="post.postId"
+					class="table-row"
+				>
 					<div class="table-data posts-table-title">
 						{{ post.title }}
 					</div>
 					<div class="table-data posts-table-votes">
 						{{ post.voters.length }}
 					</div>
-				</div>
+				</router-link>
 				<infinite-loading @infinite="getPosts">
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
