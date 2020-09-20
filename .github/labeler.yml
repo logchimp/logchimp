@@ -1,10 +1,10 @@
 "area:frontend":
   - any: ['frontend/**']
-  all: ['!frontend/jest.config.js']
+  - all: ['!frontend/jest.config.js']
 
 "area:backend":
   - any: ['server/**']
-  all: ['!server/jest.config.js']
+  - all: ['!server/jest.config.js']
 
 "area:database":
   - server/database/**
