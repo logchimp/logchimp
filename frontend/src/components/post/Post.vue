@@ -13,6 +13,22 @@
 				<h5 class="post-content-title">{{ post.title }}</h5>
 			</router-link>
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
+			<router-link
+				:to="`${dashboardUrl}/board/${post.board.url}`"
+				v-if="post.board"
+			>
+				<div class="post-board">
+					<div
+						class="board-color"
+						:style="{
+							backgroundColor: `#${post.board.color}`
+						}"
+					/>
+					<div class="post-board-name">
+						<p>{{ post.board.name }}</p>
+					</div>
+				</div>
+			</router-link>
 		</div>
 	</div>
 </template>
