@@ -7,16 +7,16 @@
   - all: ['!server/jest.config.js']
 
 "area:database":
-  - server/database/**
+  - "server/database/**"
   - server/knexfile.js
 
 "area:api":
-  - server/routes/**
-  - server/controllers/**
-  - server/services/**
+  - "server/routes/**"
+  - "server/controllers/**"
+  - "server/services/**"
 
 "area:test":
-  - server/**/*.test.js
+  - "server/**/*.test.js"
   - jest.config.js
   - frontend/jest.config.js
   - server/jest.config.js
