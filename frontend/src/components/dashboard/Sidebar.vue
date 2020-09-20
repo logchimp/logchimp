@@ -45,6 +45,7 @@ import Avatar from "../Avatar";
 
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
+import BoardIcon from "../../components/icons/Board";
 
 export default {
 	name: "DashboardSidebar",
@@ -53,7 +54,8 @@ export default {
 		Avatar,
 
 		// icons
-		DashboardIcon
+		DashboardIcon,
+		BoardIcon
 	},
 	computed: {
 		fullname() {
