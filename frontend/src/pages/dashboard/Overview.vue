@@ -43,7 +43,8 @@
 						posts
 					</div>
 				</template>
-				<div
+				<router-link
+					:to="`/dashboard/board/${board.url}`"
 					v-for="board in boards.data"
 					:key="board.boardId"
 					class="table-row"
@@ -62,7 +63,7 @@
 					<div class="table-data boards-table-posts">
 						{{ board.posts }}
 					</div>
-				</div>
+				</router-link>
 				<infinite-loading @infinite="getBoards">
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
