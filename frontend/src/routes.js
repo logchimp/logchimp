@@ -139,6 +139,10 @@ const routes = [
 				component: require("./pages/dashboard/board/DashboardBoard").default
 			},
 			{
+				path: "posts",
+				component: require("./pages/dashboard/post/DashboardPosts").default
+			},
+			{
 				path: "post/:slug",
 				components: require("./pages/dashboard/post/DashboardPostView")
 			}
