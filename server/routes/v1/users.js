@@ -5,6 +5,7 @@ const router = express.Router();
 // controller
 const users = require("../../controllers/users");
 
+router.get("/users", users.filter);
 router.get("/users/:userId", users.userById);
 router.patch("/user", users.updateUser);
 router.get("/user/accessDashboard/:userId", users.accessDashboard);
