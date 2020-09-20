@@ -12,6 +12,14 @@
 					Dashbaord
 				</div>
 			</router-link>
+			<router-link to="/dashboard/boards" class="dashboard-sidebar-navbar-item">
+				<div class="dashboard-sidebar-navbar-icon">
+					<board-icon />
+				</div>
+				<div class="dashboard-sidebar-navbar-content">
+					Boards
+				</div>
+			</router-link>
 		</nav>
 		<footer class="dashboard-sidebar-footer">
 			<div class="dashboard-sidebar-user-container">

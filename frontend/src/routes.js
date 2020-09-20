@@ -124,6 +124,10 @@ const routes = [
 			{
 				path: "",
 				component: require("./pages/dashboard/Overview").default
+			},
+			{
+				path: "boards",
+				component: require("./pages/dashboard/board/DashboardBoards").default
 			}
 		]
 	},
