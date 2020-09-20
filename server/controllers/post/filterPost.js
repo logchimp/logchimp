@@ -1,5 +1,9 @@
 const database = require("../../database");
 
+// services
+const getBoardById = require("../../services/boards/getBoardById");
+const getVotes = require("../../services/votes/getVotes");
+
 exports.filterPost = async (req, res) => {
 	/**
 	 * top, latest, oldest, trending
@@ -9,7 +13,14 @@ exports.filterPost = async (req, res) => {
 	const limit = req.query.limit || 10;
 
 	const response = await database
-		.select("postId", "title", "slug", "contentMarkdown", "createdAt")
+		.select(
+			"postId",
+			"title",
+			"slug",
+			"boardId",
+			"contentMarkdown",
+			"createdAt"
+		)
 		.from("posts")
 		.limit(limit)
 		.offset(limit * page)
@@ -25,21 +36,19 @@ exports.filterPost = async (req, res) => {
 
 		for (let i = 0; i < response.length; i++) {
 			const postId = response[i].postId;
+			const boardId = response[i].boardId;
 
-			const voters = await database
-				.select()
-				.from("votes")
-				.where({
-					postId
-				});
+			const board = await getBoardById(boardId);
+			const voters = await getVotes(postId);
 
 			try {
 				posts.push({
 					...response[i],
+					board,
 					voters
 				});
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		}
 
