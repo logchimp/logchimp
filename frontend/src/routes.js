@@ -128,6 +128,11 @@ const routes = [
 			{
 				path: "boards",
 				component: require("./pages/dashboard/board/DashboardBoards").default
+			},
+			{
+				path: "create-board",
+				component: require("./pages/dashboard/board/DashboardCreateBoard")
+					.default
 			}
 		]
 	},
