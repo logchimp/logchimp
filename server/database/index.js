@@ -1,13 +1,13 @@
 // modules
 
 const ssl =
-	process.env.NODE_ENV === "development"
-		? {}
-		: {
+	process.env.NODE_ENV === "production"
+		? {
 				ssl: {
 					rejectUnauthorized: false
 				}
-		  };
+		  }
+		: {};
 
 const knex = require("knex")({
 	client: "pg",
