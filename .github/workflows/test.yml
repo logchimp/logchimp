@@ -28,7 +28,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    name: Node ${{ matrix.node }}
+    name: Node ${{ matrix.node }} - ${{ matrix.env.DB }}
     steps:
       - uses: actions/checkout@v2
 
