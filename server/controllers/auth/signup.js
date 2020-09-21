@@ -1,123 +1,85 @@
-// modules
-const Joi = require("@hapi/joi");
-const bcrypt = require("bcryptjs");
-const { v4: uuidv4 } = require("uuid");
-const jwt = require("jsonwebtoken");
+// services
+const getUser = require("../../services/auth/getUser");
+const createUser = require("../../services/auth/createUser");
 
-// database
-const database = require("../../database");
+// utils
+const { createToken } = require("../../utils/token");
 
-const signupSchema = Joi.object({
-	email: Joi.string()
-		.email()
-		.min(4)
-		.max(50)
-		.required(),
-	password: Joi.string()
-		.min(6)
-		.max(72)
-		.required()
-});
-
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
 	const emailAddress = req.body.emailAddress;
-	const password = req.body.password;
-	const fullName = req.body.fullName || "";
-	const isOwner = req.body.isOwner || false;
+	const getAuthUser = await getUser(emailAddress);
 
-	// split first & last name
-	const name = fullName.split(" ");
-	const firstname = name[0];
-	name.shift();
-	const lastname = name.join(" ");
+	try {
+		if (!getAuthUser) {
+			const password = req.body.password;
+			const fullName = req.body.fullName || "";
+			const isOwner = req.body.isOwner || false;
 
-	// validate user existance in database
-	database
-		.select("emailAddress")
-		.from("users")
-		.where({
-			emailAddress
-		})
-		.limit(1)
-		.then(response => {
-			const findUser = response[0];
+			// split first & last name
+			const name = fullName.split(" ");
+			const firstname = name[0];
+			name.shift();
+			const lastname = name.join(" ");
 
-			if (findUser) {
-				res.status(409).send({
-					status: {
-						code: 409,
-						type: "error"
-					},
-					error: {
-						code: "email_already_taken",
-						message: "Email address already taken"
-					}
-				});
-			} else {
-				// password hashing
-				const bcryptSaltRounds = 10;
-				const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
-				const hashPassword = bcrypt.hashSync(password, bcryptSalt);
+			const userData = await createUser({
+				emailAddress,
+				password,
+				firstname,
+				lastname,
+				isOwner
+			});
 
-				// generate user unique indentification
-				const userId = uuidv4(emailAddress);
+			try {
+				if (userData) {
+					/**
+					 * authToken sent via email will expire after 3 hr
+					 */
+					// todo: send email for account verification
 
-				// get username from email address
-				const username = emailAddress.split("@")[0];
-
-				// save user to database
-				database
-					.insert({
-						userId,
-						emailAddress,
-						username,
-						password: hashPassword,
-						firstname,
-						lastname,
-						isOwner,
-						createdAt: new Date().toJSON(),
-						updatedAt: new Date().toJSON()
-					})
-					.into("users")
-					.returning("*")
-					.then(response => {
-						const user = response[0];
-
-						/**
-						 * authToken sent via email will expire after 3 hr
-						 */
-						const emailValidationAuthToken = jwt.sign(
-							user,
-							process.env.SECRET_KEY,
-							{
-								expiresIn: "3h"
-							}
-						);
-						// todo: send email for account verification
-
-						// generate authToken
-						const authToken = jwt.sign(user, process.env.SECRET_KEY, {
-							expiresIn: "2d"
-						});
-
-						// send user data with authToken as response
-						res.status(201).send({
-							status: {
-								code: 201,
-								type: "success"
-							},
-							user: {
-								...user,
-								authToken
-							}
-						});
-					})
-					.catch(error => {
-						console.error(error);
+					// generate authToken
+					const authToken = createToken(userData, process.env.SECRET_KEY, {
+						expiresIn: "2d"
 					});
+
+					// send user data with authToken as response
+					res.status(201).send({
+						status: {
+							code: 201,
+							type: "success"
+						},
+						user: {
+							...userData,
+							authToken
+						}
+					});
+				} else {
+					res.status(500).send({
+						status: {
+							code: 500,
+							type: "error"
+						},
+						error: {
+							code: "account_not_created",
+							message: "Account not created"
+						}
+					});
+				}
+			} catch (error) {
+				console.error(error);
 			}
-		})
-		.catch(error => {
-			console.error(error);
-		});
+		} else {
+			res.status(409).send({
+				status: {
+					code: 409,
+					type: "error"
+				},
+				error: {
+					code: "email_already_taken",
+					message: "Email address already taken"
+				}
+			});
+		}
+	} catch (error) {
+		console.error(error);
+	}
 };
