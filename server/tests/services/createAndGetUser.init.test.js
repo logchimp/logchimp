@@ -102,20 +102,6 @@ describe("Create and get user account", () => {
 	});
 
 	afterAll(async () => {
-		const dbMigrateRollback = await database.migrate.rollback(
-			{
-				directory: "./server/database/migrations",
-				tableName: "migrations"
-			},
-			{
-				all: true
-			}
-		);
-
-		try {
-			return dbMigrateRollback;
-		} catch (error) {
-			console.error(error);
-		}
+		await database.destroy();
 	});
 });
