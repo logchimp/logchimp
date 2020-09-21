@@ -1,4 +1,14 @@
 // modules
+
+const ssl =
+	process.env.NODE_ENV === "production"
+		? {
+				ssl: {
+					rejectUnauthorized: false
+				}
+		  }
+		: {};
+
 const knex = require("knex")({
 	client: "pg",
 	// postgresql database version
@@ -8,7 +18,8 @@ const knex = require("knex")({
 		user: process.env.PG_USER,
 		password: process.env.PG_PASSWORD,
 		database: process.env.PG_DATABASE,
-		port: process.env.PG_PORT
+		port: process.env.PG_PORT,
+		...ssl
 	},
 	migrations: {
 		directory: "./database/migrations",

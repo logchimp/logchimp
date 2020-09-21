@@ -7,32 +7,33 @@ on:
       - "server/**"
   workflow_dispatch:
 
-env:
-  NODE_ENV: testing
-  PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
-  PG_HOST: ${{ secrets.TEST_DB_HOST }}
-  PG_USER: ${{ secrets.TEST_DB_USER }}
-  PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-  PG_PORT: 5432
-  SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
-
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
-      max-parallel: 1
       matrix:
         node: [10, 12, 14]
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
 
-    name: Node ${{ matrix.node }}
+    services:
+      postgres:
+        image: postgres:12.4
+        env:
+          POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    name: Node ${{ matrix.node }} - ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-
-      - name: Turnstyle
-        uses: softprops/turnstyle@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v1
@@ -44,3 +45,11 @@ jobs:
 
       - name: Run 'server' tests
         run: yarn run server:test
+        env:
+          NODE_ENV: "testing"
+          PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
+          PG_HOST: "localhost"
+          PG_USER: ${{ secrets.TEST_DB_USER }}
+          PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          PG_PORT: 5432
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
