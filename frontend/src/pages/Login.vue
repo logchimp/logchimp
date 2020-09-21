@@ -134,7 +134,6 @@ export default {
 						if (err.response.data.error.code === "user_not_found") {
 							this.$store.dispatch("alerts/add", {
 								title: "Huh! User not found",
-								description: "Account doesn't exist, check your email again.",
 								type: "error",
 								timeout: 8000
 							});
@@ -143,7 +142,6 @@ export default {
 						if (err.response.data.error.code === "invalid_password") {
 							this.$store.dispatch("alerts/add", {
 								title: "Whow! Password",
-								description: "Enter the correct password and try again.",
 								type: "warning",
 								timeout: 6000
 							});

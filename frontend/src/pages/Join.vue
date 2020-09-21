@@ -101,7 +101,6 @@ export default {
 							 */
 							this.$store.dispatch("alerts/add", {
 								title: "Yay! Welcome onboard!",
-								description: "Congrats on creating your account.",
 								type: "success",
 								timeout: 10000
 							});
@@ -138,7 +137,6 @@ export default {
 						if (err.response.data.error.code === "email_already_taken") {
 							this.$store.dispatch("alerts/add", {
 								title: "Bummer! Email exists",
-								description: "Try again with another email address.",
 								type: "error",
 								timeout: 4000
 							});

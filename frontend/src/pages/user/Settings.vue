@@ -113,7 +113,6 @@ export default {
 			} else {
 				this.$store.dispatch("alerts/add", {
 					title: "Unauthorized",
-					description: "You need to login to access 'User settings' page.",
 					type: "error",
 					timeout: 6000
 				});
