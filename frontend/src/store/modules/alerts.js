@@ -10,7 +10,6 @@ const mutations = {
 	add(state, payload) {
 		const alertObject = {
 			title: payload.title,
-			description: payload.description,
 			type: payload.type,
 			time: Date.now(),
 			timeout: payload.timeout
@@ -27,7 +26,6 @@ const actions = {
 	add: ({ commit }, payload) => {
 		commit("add", {
 			title: payload.title,
-			description: payload.description,
 			type: payload.type,
 			timeout: payload.timeout
 		});

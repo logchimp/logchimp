@@ -5,7 +5,6 @@
 				:key="alert.time"
 				v-for="(alert, index) in getAlerts"
 				:title="alert.title"
-				:description="alert.description"
 				:type="alert.type"
 				:timeout="alert.timeout"
 				@remove="removeAlert(index)"

@@ -75,7 +75,6 @@ export default {
 						if (err.response.data.error.code === "token_missing") {
 							this.$store.dispatch("alerts/add", {
 								title: "Holy accounts!",
-								description: "You need to login to vote.",
 								type: "error",
 								timeout: 5000
 							});
@@ -85,7 +84,6 @@ export default {
 						if (err.response.data.error.code === "token_invalid") {
 							this.$store.dispatch("alerts/add", {
 								title: "Hold on! ✋",
-								description: "You're not authorized to vote.",
 								type: "error",
 								timeout: 5000
 							});
@@ -113,7 +111,6 @@ export default {
 						if (err.response.data.error.code === "token_missing") {
 							this.$store.dispatch("alerts/add", {
 								title: "Holy accounts!",
-								description: "You need to login to vote.",
 								type: "error",
 								timeout: 5000
 							});
@@ -123,7 +120,6 @@ export default {
 						if (err.response.data.error.code === "token_invalid") {
 							this.$store.dispatch("alerts/add", {
 								title: "Hold on! ✋",
-								description: "You're not authorized to vote.",
 								type: "error",
 								timeout: 5000
 							});
