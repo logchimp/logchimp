@@ -4,15 +4,6 @@ on:
   push:
   workflow_dispatch:
 
-env:
-  NODE_ENV: testing
-  PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
-  PG_HOST: ${{ secrets.TEST_DB_HOST }}
-  PG_USER: ${{ secrets.TEST_DB_USER }}
-  PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-  PG_PORT: 5432
-  SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -21,6 +12,21 @@ jobs:
       max-parallel: 1
       matrix:
         node: [10, 12, 14]
+
+    services:
+      postgres:
+        image: postgres:12.4
+        env:
+          POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     name: Node ${{ matrix.node }}
     steps:
@@ -41,3 +47,11 @@ jobs:
 
       - name: Run 'server' tests
         run: yarn run server:test
+        env:
+          NODE_ENV: "testing"
+          PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
+          PG_HOST: "localhost"
+          PG_USER: ${{ secrets.TEST_DB_USER }}
+          PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          PG_PORT: 5432
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
