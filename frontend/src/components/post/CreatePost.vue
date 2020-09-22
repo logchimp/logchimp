@@ -104,7 +104,6 @@ export default {
 						if (response.data.status.code === 201) {
 							this.$store.dispatch("alerts/add", {
 								title: "🎉 Feature posted",
-								description: "You have successfully submitted feature request.",
 								type: "success",
 								timeout: 5000
 							});
@@ -121,7 +120,6 @@ export default {
 						if (err.response.data.error.code === "token_missing") {
 							this.$store.dispatch("alerts/add", {
 								title: "Holy accounts!",
-								description: "You need to login to submit feature request.",
 								type: "error",
 								timeout: 5000
 							});
@@ -130,7 +128,6 @@ export default {
 						if (err.response.data.error.code === "token_invalid") {
 							this.$store.dispatch("alerts/add", {
 								title: "Hold on! ✋",
-								description: "You're not authorized to submit feature request.",
 								type: "error",
 								timeout: 5000
 							});
