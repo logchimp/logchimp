@@ -116,7 +116,6 @@ export default {
 						if (response.data.status.code === 200) {
 							this.$store.dispatch("alerts/add", {
 								title: "Updated",
-								description: "The post have been updated successfully.",
 								type: "success",
 								timeout: 5000
 							});
@@ -137,7 +136,6 @@ export default {
 						if (err.response.data.error.code === "insufficient_premissions") {
 							this.$store.dispatch("alerts/add", {
 								title: "Insufficient premissions",
-								description: "You're not allowed to edit this post.",
 								type: "warning",
 								timeout: 6000
 							});
