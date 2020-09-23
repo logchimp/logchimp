@@ -40,14 +40,8 @@ exports.login = async (req, res) => {
 					});
 				} else {
 					res.status(403).send({
-						status: {
-							code: 403,
-							type: "error"
-						},
-						error: {
-							code: "invalid_password",
-							message: "Password is incorrect"
-						}
+						message: error.middleware.user.incorrectPassword,
+						code: "INCORRECT_PASSWORD"
 					});
 				}
 			} else {
@@ -58,14 +52,8 @@ exports.login = async (req, res) => {
 			}
 		} else {
 			res.status(404).send({
-				status: {
-					code: 404,
-					type: "error"
-				},
-				error: {
-					code: "user_not_found",
-					message: "User not found"
-				}
+				message: error.middleware.user.userNotFound,
+				code: "USER_NOT_FOUND"
 			});
 		}
 	} catch (error) {
