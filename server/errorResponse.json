@@ -4,10 +4,10 @@
 			"invalidAuthHeaderFormat": "Authorization header format is \"authorization: Bearer [token]\"",
 			"invalidAuthHeader": "Authorization header missing",
 			"invalidToken": "Invalid JWT token"
+		},
+		"user": {
+			"userNotFound": "User not found",
+			"userBlocked": "User is blocked"
 		}
-	},
-	"user": {
-		"userNotFound": "User not found",
-		"userBlocked": "User is blocked"
 	}
 }

@@ -53,7 +53,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 		} else {
 			// user is blocked
 			res.status(403).send({
-				message: error.user.userBlocked,
+				message: error.middleware.user.userBlocked,
 				code: "USER_BLOCKED"
 			});
 			return;
@@ -61,7 +61,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 	} else {
 		// user not found
 		res.status(401).send({
-			message: error.middluser.userNotFound,
+			message: error.middleware.user.userNotFound,
 			code: "USER_NOT_FOUND"
 		});
 		return;
