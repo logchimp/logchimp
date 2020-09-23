@@ -9,15 +9,10 @@ const post = require("../../controllers/post");
 const token = require("../../middlewares/token");
 const authorizeUser = require("../../middlewares/authorizeUser");
 
-router.post("/posts", token.userAuthToken, post.create);
+router.post("/posts", token, post.create);
 router.get("/posts", post.filterPost);
-router.delete("/post/delete", token.userAuthToken, post.deleteById);
+router.delete("/post/delete", token, post.deleteById);
 router.get("/posts/:slug", post.postBySlug);
-router.patch(
-	"/posts/:postId",
-	token.userAuthToken,
-	authorizeUser.author,
-	post.updatePost
-);
+router.patch("/posts/:postId", token, authorizeUser.author, post.updatePost);
 
 module.exports = router;

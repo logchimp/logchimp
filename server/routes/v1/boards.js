@@ -9,7 +9,7 @@ const boards = require("../../controllers/boards");
 const token = require("../../middlewares/token");
 
 router.get("/boards", boards.filter);
-router.post("/boards", token.userAuthToken, boards.create);
+router.post("/boards", token, boards.create);
 router.post("/boards/:slug", boards.boardBySlug);
 router.post("/boards/:slug/posts", boards.boardPosts);
 
