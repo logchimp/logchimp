@@ -16,7 +16,7 @@ const createUser = async user => {
 	const username = user.emailAddress.split("@")[0];
 
 	const userMd5Hash = md5(user.emailAddress);
-	const avatar = `https://www.gravatar.com/avatar/${userMd5Hash}`
+	const avatar = `https://www.gravatar.com/avatar/${userMd5Hash}`;
 
 	// password hashing
 	const hashedPassword = hashPassword(user.password);
