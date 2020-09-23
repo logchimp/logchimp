@@ -19,7 +19,10 @@
 			<div v-for="user in users" :key="user.userId" class="table-row">
 				<div class="table-data users-table-user">
 					<div class="users-table-user-avatar">
-						<avatar :name="user.firstname ? user.firstname : user.username" />
+						<avatar
+							:src="user.avatar"
+							:name="user.firstname ? user.firstname : user.username"
+						/>
 					</div>
 					<h6 class="users-table-user-name">
 						{{ user.firstname ? user.firstname : user.username }}
