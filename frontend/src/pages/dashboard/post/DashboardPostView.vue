@@ -15,8 +15,12 @@
 					</h2>
 					<div class="viewpost__meta">
 						<div class="viewpost__meta-author">
-							<avatar class="viewpost__author-avatar" :name="username" />
-							{{ username }}
+							<avatar
+								class="viewpost__author-avatar"
+								:src="userAvatar"
+								:name="fullname"
+							/>
+							{{ postAuthorName }}
 						</div>
 						<div class="viewpost__meta-divider">
 							|
@@ -40,6 +44,9 @@ import axios from "axios";
 import Vote from "../../../components/post/Vote";
 import Avatar from "../../../components/Avatar";
 
+// mixins
+import userAvatar from "../../../mixins/userAvatar";
+
 export default {
 	name: "DashboardPostView",
 	data() {
@@ -53,8 +60,9 @@ export default {
 		Vote,
 		Avatar
 	},
+	mixins: [userAvatar],
 	computed: {
-		username() {
+		postAuthorName() {
 			if (this.post.firstname) {
 				return `${this.post.firstname}${
 					this.post.lastname ? ` ${this.post.lastname}` : ""

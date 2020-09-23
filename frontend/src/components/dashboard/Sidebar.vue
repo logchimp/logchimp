@@ -40,7 +40,11 @@
 		<footer class="dashboard-sidebar-footer">
 			<div class="dashboard-sidebar-user-container">
 				<div class="dashboard-sidebar-user">
-					<avatar class="dashboard-sidebar-user-avatar" :name="username" />
+					<avatar
+						class="dashboard-sidebar-user-avatar"
+						:src="userAvatar"
+						:name="fullname"
+					/>
 					<div class="dashboard-sidebar-user-data">
 						<div class="dashboard-sidebar-user-name">
 							{{ fullname }}
@@ -58,6 +62,9 @@
 <script>
 // components
 import Avatar from "../Avatar";
+
+// mixins
+import userAvatar from "../../mixins/userAvatar";
 
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
@@ -77,18 +84,8 @@ export default {
 		PostIcon,
 		UsersIcon
 	},
+	mixins: [userAvatar],
 	computed: {
-		fullname() {
-			const name = this.$store.getters["user/getUser"];
-			return `${name.firstname}${name.lastname ? ` ${name.lastname}` : ""}`;
-		},
-		username() {
-			const name = this.$store.getters["user/getUser"];
-			if (name.firstname) {
-				return this.fullname;
-			}
-			return name.username;
-		},
 		emailAddress() {
 			const user = this.$store.getters["user/getUser"];
 			return user.emailAddress;
