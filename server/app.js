@@ -6,7 +6,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const routes = require("./routes/v1");
-const { errorHandler, notFound } = require("./middlewares");
 
 const app = express();
 
@@ -30,10 +29,6 @@ database
 
 					// importing all routes modules
 					app.use(routes);
-
-					// Error handler middlewares
-					app.use(notFound);
-					app.use(errorHandler);
 
 					console.log(`Listening at port: ${process.env.SERVER_PORT}`);
 				});
