@@ -10,7 +10,8 @@
 						<avatar
 							@click="toggleProfileDropdown"
 							class="nav-profile"
-							:name="username"
+							:src="userAvatar"
+							:name="fullname"
 						/>
 						<dropdown v-show="profileDropdown" class="nav-profile-dropdown">
 							<dropdown-item v-if="userIsOwner" @click="openDashboard">
@@ -58,6 +59,9 @@ import DropdownSpacer from "./dropdown/DropdownSpacer";
 import Button from "./Button";
 import Avatar from "./Avatar";
 
+// mixins
+import userAvatar from "../mixins/userAvatar";
+
 // icons
 import DashboardIcon from "./icons/Dashboard";
 import SettingsIcon from "./icons/Settings";
@@ -84,6 +88,7 @@ export default {
 		SettingsIcon,
 		LogoutIcon
 	},
+	mixins: [userAvatar],
 	computed: {
 		userIsOwner() {
 			const user = this.$store.getters["user/getUser"];
@@ -92,13 +97,6 @@ export default {
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];
 			return !!token;
-		},
-		username() {
-			const name = this.$store.getters["user/getUser"];
-			if (name.firstname) {
-				return `${name.firstname}${name.lastname ? ` ${name.lastname}` : ""}`;
-			}
-			return name.username;
 		}
 	},
 	methods: {
