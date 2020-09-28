@@ -15,7 +15,6 @@
 					name="email"
 					placeholder="Email address"
 					:error="emailAddress.error"
-					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="login"
 				/>
 				<l-text
@@ -25,7 +24,6 @@
 					name="password"
 					placeholder="Password"
 					:error="password.error"
-					@keydown.native="passwordHandler"
 					@keyup.native.enter="login"
 				/>
 				<div style="display: flex; justify-content: center;">
@@ -79,12 +77,6 @@ export default {
 		Button
 	},
 	methods: {
-		emailAddressHandler() {
-			this.emailAddress.error.show = false;
-		},
-		passwordHandler() {
-			this.password.error.show = false;
-		},
 		login() {
 			if (this.emailAddress.value && this.password.value) {
 				this.buttonLoading = true;

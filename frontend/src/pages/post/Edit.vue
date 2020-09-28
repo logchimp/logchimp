@@ -9,7 +9,6 @@
 				name="Post title"
 				placeholder="Name of the feature"
 				:error="post.title.error"
-				@keydown.native="titleHandler"
 				@keyup.native.enter="savePost"
 			/>
 			<l-textarea
@@ -72,9 +71,6 @@ export default {
 		Button
 	},
 	methods: {
-		titleHandler() {
-			this.post.title.error.show = false;
-		},
 		getPost() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;

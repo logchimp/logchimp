@@ -7,7 +7,6 @@
 			name="Post title"
 			placeholder="Name of the feature"
 			:error="title.error"
-			@keydown.native="titleHandler"
 			@keyup.native.enter="submitPost"
 		/>
 		<l-textarea
@@ -75,9 +74,6 @@ export default {
 		}
 	},
 	methods: {
-		titleHandler() {
-			this.title.error.show = false;
-		},
 		submitPost() {
 			this.title.error.show = false;
 

@@ -12,7 +12,6 @@
 					name="Full name"
 					placeholder="Mike M. Smit"
 					:error="fullName.error"
-					@keydown.native="fullNameHandler"
 					@keyup.native.enter="createAccount"
 				/>
 				<l-text
@@ -22,7 +21,6 @@
 					name="Email address"
 					placeholder="Eg. email@example.com"
 					:error="emailAddress.error"
-					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="createAccount"
 				/>
 				<l-text
@@ -32,7 +30,6 @@
 					name="Password"
 					placeholder="At least 10 character"
 					:error="password.error"
-					@keydown.native="passwordHandler"
 					@keyup.native.enter="createAccount"
 				/>
 				<div style="display: flex; justify-content: center;">
@@ -98,15 +95,6 @@ export default {
 		Button
 	},
 	methods: {
-		fullNameHandler() {
-			this.fullName.error.show = false;
-		},
-		emailAddressHandler() {
-			this.emailAddress.error.show = false;
-		},
-		passwordHandler() {
-			this.password.error.show = false;
-		},
 		createAccount() {
 			if (
 				this.fullName.value &&
