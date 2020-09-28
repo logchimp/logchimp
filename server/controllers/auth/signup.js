@@ -7,9 +7,10 @@ const { createToken } = require("../../utils/token");
 
 exports.signup = async (req, res) => {
 	const emailAddress = req.body.emailAddress;
-	const getAuthUser = await getUser(emailAddress);
 
 	try {
+		const getAuthUser = await getUser(emailAddress);
+
 		if (!getAuthUser) {
 			const password = req.body.password;
 			const fullName = req.body.fullName || "";
@@ -21,15 +22,15 @@ exports.signup = async (req, res) => {
 			name.shift();
 			const lastname = name.join(" ");
 
-			const userData = await createUser({
-				emailAddress,
-				password,
-				firstname,
-				lastname,
-				isOwner
-			});
-
 			try {
+				const userData = await createUser({
+					emailAddress,
+					password,
+					firstname,
+					lastname,
+					isOwner
+				});
+
 				if (userData) {
 					/**
 					 * authToken sent via email will expire after 3 hr
