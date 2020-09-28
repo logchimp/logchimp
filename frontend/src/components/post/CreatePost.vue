@@ -131,6 +131,7 @@ export default {
 					});
 			} else {
 				this.title.error.show = true;
+				this.title.error.message = "Required";
 			}
 		}
 	}

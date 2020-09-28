@@ -142,9 +142,11 @@ export default {
 			} else {
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
+					this.emailAddress.error.message = "Required";
 				}
 				if (!this.password.value) {
 					this.password.error.show = true;
+					this.password.error.message = "Required";
 				}
 			}
 		}

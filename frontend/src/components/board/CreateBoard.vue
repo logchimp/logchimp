@@ -80,6 +80,7 @@ export default {
 				}
 			} else {
 				this.boardName.error.show = true;
+				this.boardName.error.message = "Required";
 			}
 		}
 	}

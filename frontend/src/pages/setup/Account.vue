@@ -139,12 +139,15 @@ export default {
 			} else {
 				if (!this.fullName.value) {
 					this.fullName.error.show = true;
+					this.fullName.error.message = "Required";
 				}
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
+					this.emailAddress.error.message = "Required";
 				}
 				if (!this.password.value) {
 					this.password.error.show = true;
+					this.password.error.message = "Required";
 				}
 			}
 		}

@@ -139,6 +139,7 @@ export default {
 					});
 			} else {
 				this.post.title.error.show = true;
+				this.post.title.error.message = "Required";
 			}
 		}
 	},
