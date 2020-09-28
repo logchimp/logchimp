@@ -1,6 +1,7 @@
 {
 	"middleware": {
 		"auth": {
+			"internalServerError": "Internal server error",
 			"invalidAuthHeaderFormat": "Authorization header format is \"authorization: Bearer [token]\"",
 			"invalidAuthHeader": "Authorization header missing",
 			"invalidToken": "Invalid JWT token"
@@ -8,7 +9,8 @@
 		"user": {
 			"userNotFound": "User not found",
 			"userBlocked": "User is blocked",
-			"incorrectPassword": "Incorect password"
+			"incorrectPassword": "Incorect password",
+			"userExists": "User exists"
 		}
 	}
 }

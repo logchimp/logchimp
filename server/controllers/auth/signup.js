@@ -5,6 +5,8 @@ const createUser = require("../../services/auth/createUser");
 // utils
 const { createToken } = require("../../utils/token");
 
+const error = require("../../errorResponse.json");
+
 exports.signup = async (req, res) => {
 	const emailAddress = req.body.emailAddress;
 
@@ -54,30 +56,21 @@ exports.signup = async (req, res) => {
 						}
 					});
 				} else {
-					res.status(500).send({
-						status: {
-							code: 500,
-							type: "error"
-						},
-						error: {
-							code: "account_not_created",
-							message: "Account not created"
-						}
+					res.status(404).send({
+						message: error.middleware.user.userNotFound,
+						code: "USER_NOT_FOUND"
 					});
 				}
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				res.status(500).send({
+					message: error.middleware.auth.internalServerError,
+					code: "INTERNAL_SERVER_ERROR"
+				});
 			}
 		} else {
 			res.status(409).send({
-				status: {
-					code: 409,
-					type: "error"
-				},
-				error: {
-					code: "email_already_taken",
-					message: "Email address already taken"
-				}
+				message: error.middleware.user.userExists,
+				code: "USER_EXISTS"
 			});
 		}
 	} catch (error) {
