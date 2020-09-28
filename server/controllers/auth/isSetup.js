@@ -5,15 +5,15 @@ const database = require("../../database");
 const logger = require("../../utils/logger");
 
 exports.isSetup = async (req, res) => {
-	const isOwner = await database
-		.select()
-		.from("users")
-		.where({
-			isOwner: true
-		})
-		.limit(1);
-
 	try {
+		const isOwner = await database
+			.select()
+			.from("users")
+			.where({
+				isOwner: true
+			})
+			.limit(1);
+
 		const owner = isOwner[0];
 		if (owner) {
 			res.status(200).send({

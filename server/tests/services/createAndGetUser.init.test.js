@@ -13,12 +13,12 @@ const logger = require("../../utils/logger");
 
 describe("Create and get user account", () => {
 	beforeAll(async () => {
-		const dbMigrateLatest = await database.migrate.latest({
-			directory: "./server/database/migrations",
-			tableName: "migrations"
-		});
-
 		try {
+			const dbMigrateLatest = await database.migrate.latest({
+				directory: "./server/database/migrations",
+				tableName: "migrations"
+			});
+
 			return dbMigrateLatest;
 		} catch (err) {
 			logger.log({

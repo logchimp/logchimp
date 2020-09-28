@@ -23,20 +23,20 @@ const createUser = async user => {
 	const hashedPassword = hashPassword(user.password);
 	delete user.password;
 
-	const users = await database
-		.insert({
-			userId,
-			username,
-			password: hashedPassword,
-			avatar,
-			...user,
-			createdAt: new Date().toJSON(),
-			updatedAt: new Date().toJSON()
-		})
-		.into("users")
-		.returning("*");
-
 	try {
+		const users = await database
+			.insert({
+				userId,
+				username,
+				password: hashedPassword,
+				avatar,
+				...user,
+				createdAt: new Date().toJSON(),
+				updatedAt: new Date().toJSON()
+			})
+			.into("users")
+			.returning("*");
+
 		const user = users[0];
 		if (user) {
 			delete user.password;

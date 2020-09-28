@@ -9,7 +9,6 @@ const logger = require("../../utils/logger");
 
 exports.boardPosts = async (req, res) => {
 	const slug = req.params.slug;
-	const board = await getBoardBySlug(slug);
 
 	/**
 	 * top, latest, oldest, trending
@@ -17,31 +16,35 @@ exports.boardPosts = async (req, res) => {
 	const created = req.query.created;
 	const page = req.query.page - 1;
 	const limit = req.query.limit || 10;
-	try {
-		if (board) {
-			const posts = await database
-				.select("postId", "title", "slug", "contentMarkdown", "createdAt")
-				.from("posts")
-				.where({
-					boardId: board.boardId
-				})
-				.limit(limit)
-				.offset(limit * page)
-				.orderBy([
-					{
-						column: "createdAt",
-						order: created
-					}
-				]);
 
+	try {
+		const board = await getBoardBySlug(slug);
+
+		if (board) {
 			try {
+				const posts = await database
+					.select("postId", "title", "slug", "contentMarkdown", "createdAt")
+					.from("posts")
+					.where({
+						boardId: board.boardId
+					})
+					.limit(limit)
+					.offset(limit * page)
+					.orderBy([
+						{
+							column: "createdAt",
+							order: created
+						}
+					]);
+
 				const postVoters = [];
 
 				for (let i = 0; i < posts.length; i++) {
 					const postId = posts[i].postId;
-					const voters = await getVotes(postId);
 
 					try {
+						const voters = await getVotes(postId);
+
 						postVoters.push({
 							...posts[i],
 							voters

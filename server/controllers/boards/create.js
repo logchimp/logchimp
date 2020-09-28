@@ -20,19 +20,19 @@ exports.create = async (req, res) => {
 		.split(" ")
 		.join("-");
 
-	const createBoard = await database
-		.insert({
-			boardId,
-			name,
-			url,
-			color: createHex(),
-			createdAt: new Date().toJSON(),
-			updatedAt: new Date().toJSON()
-		})
-		.into("boards")
-		.returning("*");
-
 	try {
+		const createBoard = await database
+			.insert({
+				boardId,
+				name,
+				url,
+				color: createHex(),
+				createdAt: new Date().toJSON(),
+				updatedAt: new Date().toJSON()
+			})
+			.into("boards")
+			.returning("*");
+
 		const board = createBoard[0];
 
 		if (board) {

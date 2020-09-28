@@ -6,34 +6,34 @@ const logger = require("../../utils/logger");
 exports.postBySlug = async (req, res) => {
 	const slug = req.params.slug;
 
-	const posts = await database
-		.select(
-			"users.userId",
-			"users.firstname",
-			"users.lastname",
-			"users.username",
-			"users.avatar",
-			"posts.*"
-		)
-		.from("posts")
-		.innerJoin("users", "posts.userId", "users.userId")
-		.where({
-			slug
-		})
-		.limit(1);
-
 	try {
+		const posts = await database
+			.select(
+				"users.userId",
+				"users.firstname",
+				"users.lastname",
+				"users.username",
+				"users.avatar",
+				"posts.*"
+			)
+			.from("posts")
+			.innerJoin("users", "posts.userId", "users.userId")
+			.where({
+				slug
+			})
+			.limit(1);
+
 		const post = posts[0];
 
 		if (post) {
 			const postId = post.postId;
 
-			const voters = await database
-				.select()
-				.from("votes")
-				.where({ postId });
-
 			try {
+				const voters = await database
+					.select()
+					.from("votes")
+					.where({ postId });
+
 				res.status(200).send({
 					status: {
 						code: 200,

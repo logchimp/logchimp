@@ -26,51 +26,51 @@ exports.create = async (req, res) => {
 		.split(" ")
 		.join("-")}-${slugId}`;
 
-	const createPost = await database
-		.insert({
-			postId,
-			title,
-			slug,
-			slugId,
-			contentMarkdown,
-			userId,
-			boardId,
-			createdAt: new Date().toJSON(),
-			updatedAt: new Date().toJSON()
-		})
-		.into("posts")
-		.returning("*");
-
 	try {
+		const createPost = await database
+			.insert({
+				postId,
+				title,
+				slug,
+				slugId,
+				contentMarkdown,
+				userId,
+				boardId,
+				createdAt: new Date().toJSON(),
+				updatedAt: new Date().toJSON()
+			})
+			.into("posts")
+			.returning("*");
+
 		const post = createPost[0];
 
 		if (post) {
 			// generate post unique indentification
 			const voteId = uuidv4(post.postId);
 
-			const createVote = await database
-				.insert({
-					voteId,
-					userId: post.userId,
-					postId: post.postId,
-					createdAt: new Date().toJSON()
-				})
-				.into("votes")
-				.returning("*");
-
 			try {
+				const createVote = await database
+					.insert({
+						voteId,
+						userId: post.userId,
+						postId: post.postId,
+						createdAt: new Date().toJSON()
+					})
+					.into("votes")
+					.returning("*");
+
 				const vote = createVote[0];
 
 				if (vote) {
-					const findUser = await database
-						.select("firstname", "lastname", "username", "avatar")
-						.from("users")
-						.where({
-							userId
-						})
-						.limit(1);
-
 					try {
+						const findUser = await database
+							.select("firstname", "lastname", "username", "avatar")
+							.from("users")
+							.where({
+								userId
+							})
+							.limit(1);
+
 						const user = findUser[0];
 
 						if (user) {

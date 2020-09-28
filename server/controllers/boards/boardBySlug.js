@@ -6,9 +6,10 @@ const logger = require("../../utils/logger");
 
 exports.boardBySlug = async (req, res) => {
 	const slug = req.params.slug;
-	const board = await getBoardBySlug(slug);
 
 	try {
+		const board = await getBoardBySlug(slug);
+
 		if (board) {
 			res.status(200).send({
 				status: {

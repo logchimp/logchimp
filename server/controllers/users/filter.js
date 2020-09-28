@@ -12,24 +12,24 @@ exports.filter = async (req, res) => {
 	const page = req.query.page - 1;
 	const limit = req.query.limit || 10;
 
-	const userData = await getUsers(created, limit, page);
-
 	try {
+		const userData = await getUsers(created, limit, page);
+
 		const users = [];
 
 		for (let i = 0; i < userData.length; i++) {
 			const userId = userData[i].userId;
 
-			const postsCount = await database
-				.count()
-				.from("posts")
-				.where({ userId });
-			const votesCount = await database
-				.count()
-				.from("votes")
-				.where({ userId });
-
 			try {
+				const postsCount = await database
+					.count()
+					.from("posts")
+					.where({ userId });
+				const votesCount = await database
+					.count()
+					.from("votes")
+					.where({ userId });
+
 				users.push({
 					votes: votesCount[0].count,
 					posts: postsCount[0].count,

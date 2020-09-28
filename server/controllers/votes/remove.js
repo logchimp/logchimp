@@ -8,19 +8,19 @@ exports.remove = async (req, res) => {
 	const voteId = req.body.voteId;
 	const postId = req.body.postId;
 
-	const response = await database
-		.del()
-		.from("votes")
-		.where({ voteId });
-
 	try {
-		if (response) {
-			const voters = await database
-				.select()
-				.from("votes")
-				.where({ postId });
+		const response = await database
+			.del()
+			.from("votes")
+			.where({ voteId });
 
+		if (response) {
 			try {
+				const voters = await database
+					.select()
+					.from("votes")
+					.where({ postId });
+
 				res.status(200).send({
 					status: {
 						code: 200,

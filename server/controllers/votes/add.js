@@ -13,28 +13,28 @@ exports.add = async (req, res) => {
 	// generate post unique indentification
 	const voteId = uuidv4(postId);
 
-	const votes = await database
-		.insert({
-			voteId,
-			userId,
-			postId,
-			createdAt: new Date().toJSON()
-		})
-		.into("votes")
-		.returning("*");
-
 	try {
+		const votes = await database
+			.insert({
+				voteId,
+				userId,
+				postId,
+				createdAt: new Date().toJSON()
+			})
+			.into("votes")
+			.returning("*");
+
 		const vote = votes[0];
 
 		if (vote) {
-			const voters = await database
-				.select()
-				.from("votes")
-				.where({
-					postId
-				});
-
 			try {
+				const voters = await database
+					.select()
+					.from("votes")
+					.where({
+						postId
+					});
+
 				res.status(201).send({
 					status: {
 						code: 201,
