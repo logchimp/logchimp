@@ -15,39 +15,31 @@ exports.login = async (req, res) => {
 
 	try {
 		if (getAuthUser) {
-			// check is user blocked
-			if (!getAuthUser.isBlocked) {
-				const validateUserPassword = await validatePassword(
-					password,
-					getAuthUser.password
-				);
+			const validateUserPassword = await validatePassword(
+				password,
+				getAuthUser.password
+			);
 
-				if (validateUserPassword) {
-					delete getAuthUser.password;
-					const authToken = createToken(getAuthUser, process.env.SECRET_KEY, {
-						expiresIn: "2d"
-					});
+			if (validateUserPassword) {
+				delete getAuthUser.password;
+				const authToken = createToken(getAuthUser, process.env.SECRET_KEY, {
+					expiresIn: "2d"
+				});
 
-					res.status(200).send({
-						status: {
-							code: 200,
-							type: "success"
-						},
-						user: {
-							...getAuthUser,
-							authToken
-						}
-					});
-				} else {
-					res.status(403).send({
-						message: error.middleware.user.incorrectPassword,
-						code: "INCORRECT_PASSWORD"
-					});
-				}
+				res.status(200).send({
+					status: {
+						code: 200,
+						type: "success"
+					},
+					user: {
+						...getAuthUser,
+						authToken
+					}
+				});
 			} else {
 				res.status(403).send({
-					message: error.middleware.user.userBlocked,
-					code: "USER_BLOCKED"
+					message: error.middleware.user.incorrectPassword,
+					code: "INCORRECT_PASSWORD"
 				});
 			}
 		} else {
