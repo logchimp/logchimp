@@ -71,21 +71,21 @@ export default {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			emailAddress: {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			password: {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			buttonLoading: false
