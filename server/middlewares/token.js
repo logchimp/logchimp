@@ -3,7 +3,7 @@ const database = require("../database");
 const error = require("../errorResponse.json");
 
 // utils
-const logger = require("../../utils/logger");
+const logger = require("../utils/logger");
 
 const extractTokenFromHeader = header => {
 	const [scheme, token] = header.split(" ");
