@@ -29,8 +29,11 @@ const getUsers = async (created, limit, page) => {
 			]);
 
 		return users;
-	} catch (error) {
-		console.log(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
 

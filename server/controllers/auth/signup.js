@@ -4,6 +4,7 @@ const createUser = require("../../services/auth/createUser");
 
 // utils
 const { createToken } = require("../../utils/token");
+const logger = require("../../utils/logger");
 
 const error = require("../../errorResponse.json");
 
@@ -62,6 +63,12 @@ exports.signup = async (req, res) => {
 					});
 				}
 			} catch (err) {
+				logger.log({
+					level: "error",
+					code: "INTERNAL_SERVER_ERROR",
+					message: err
+				});
+
 				res.status(500).send({
 					message: error.middleware.auth.internalServerError,
 					code: "INTERNAL_SERVER_ERROR"
@@ -73,7 +80,10 @@ exports.signup = async (req, res) => {
 				code: "USER_EXISTS"
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

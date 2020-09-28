@@ -7,6 +7,7 @@ const database = require("../../database");
 
 // utils
 const { hashPassword } = require("../../utils/password");
+const logger = require("../../utils/logger");
 
 const createUser = async user => {
 	// generate user unique indentification
@@ -45,8 +46,11 @@ const createUser = async user => {
 			return user;
 		}
 		return null;
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
 
