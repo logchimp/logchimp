@@ -36,7 +36,7 @@
 			</Form>
 			<div class="auth-form-other">
 				Already have an account?
-				<router-link to="/login">Log in here</router-link>
+				<router-link to="/login">Log in</router-link>
 			</div>
 		</div>
 	</div>
