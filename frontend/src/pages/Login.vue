@@ -34,7 +34,7 @@
 			</Form>
 			<div class="auth-form-other">
 				Don't have an account yet?
-				<router-link to="/join">Sign up Here</router-link>
+				<router-link to="/join">Sign up</router-link>
 			</div>
 		</div>
 	</div>
