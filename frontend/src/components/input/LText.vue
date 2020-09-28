@@ -10,7 +10,7 @@
 			}"
 			:value="value"
 			@input="$emit('input', $event.target.value)"
-			@keydown="$emit('keydown')"
+			@click="$emit('click')"
 			@keyup.enter="$emit('keyup.enter')"
 			:placeholder="placeholder"
 			:disabled="disabled"
