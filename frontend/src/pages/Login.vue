@@ -120,24 +120,17 @@ export default {
 						}
 					})
 					.catch(error => {
+						if (error.response.data.code === "USER_NOT_FOUND") {
+							this.emailAddress.error.show = true;
+							this.emailAddress.error.message = "User not found";
+						}
+
+						if (error.response.data.code === "INCORRECT_PASSWORD") {
+							this.password.error.show = true;
+							this.password.error.message = "Incorrect password";
+						}
+
 						this.buttonLoading = false;
-						const err = { ...error };
-
-						if (err.response.data.error.code === "user_not_found") {
-							this.$store.dispatch("alerts/add", {
-								title: "Huh! User not found",
-								type: "error",
-								timeout: 8000
-							});
-						}
-
-						if (err.response.data.error.code === "invalid_password") {
-							this.$store.dispatch("alerts/add", {
-								title: "Whow! Password",
-								type: "warning",
-								timeout: 6000
-							});
-						}
 					});
 			} else {
 				if (!this.emailAddress.value) {
