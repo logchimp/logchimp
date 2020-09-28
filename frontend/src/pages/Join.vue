@@ -120,20 +120,16 @@ export default {
 							} else {
 								this.$router.push("/");
 							}
-						}
-					})
-					.catch(error => {
-						this.buttonLoading = false;
-						const err = { ...error };
+						})
+						.catch(error => {
+							if (error.response.data.code === "USER_EXISTS") {
+								this.emailAddress.error.show = true;
+								this.emailAddress.error.message = "Exists";
+							}
 
-						if (err.response.data.error.code === "email_already_taken") {
-							this.$store.dispatch("alerts/add", {
-								title: "Bummer! Email exists",
-								type: "error",
-								timeout: 4000
-							});
-						}
-					});
+							this.buttonLoading = false;
+						});
+				}
 			} else {
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
