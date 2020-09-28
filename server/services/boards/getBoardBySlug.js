@@ -1,5 +1,8 @@
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 const getBoardBySlug = async slug => {
 	const boards = await database
 		.select()
@@ -16,8 +19,11 @@ const getBoardBySlug = async slug => {
 		} else {
 			return null;
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
 

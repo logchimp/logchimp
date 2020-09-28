@@ -6,6 +6,7 @@ const database = require("../../database");
 
 // utils
 const createHex = require("../../utils/createHex");
+const logger = require("../../utils/logger");
 
 exports.create = async (req, res) => {
 	const name = req.body.name;
@@ -54,7 +55,10 @@ exports.create = async (req, res) => {
 				}
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

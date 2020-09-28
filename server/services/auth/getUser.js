@@ -1,6 +1,9 @@
 // database
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 const getUser = async emailAddress => {
 	const users = await database
 		.select()
@@ -19,8 +22,11 @@ const getUser = async emailAddress => {
 			return user;
 		}
 		return null;
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
 

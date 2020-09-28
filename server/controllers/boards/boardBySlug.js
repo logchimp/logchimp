@@ -1,6 +1,9 @@
 // services
 const getBoardBySlug = require("../../services/boards/getBoardBySlug");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.boardBySlug = async (req, res) => {
 	const slug = req.params.slug;
 	const board = await getBoardBySlug(slug);
@@ -26,7 +29,10 @@ exports.boardBySlug = async (req, res) => {
 				}
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

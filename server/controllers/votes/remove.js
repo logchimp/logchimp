@@ -1,6 +1,9 @@
 // database
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.remove = async (req, res) => {
 	const voteId = req.body.voteId;
 	const postId = req.body.postId;
@@ -25,11 +28,17 @@ exports.remove = async (req, res) => {
 					},
 					voters
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

@@ -4,6 +4,9 @@ const database = require("../../database");
 const getBoardById = require("../../services/boards/getBoardById");
 const getVotes = require("../../services/votes/getVotes");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.filterPost = async (req, res) => {
 	/**
 	 * top, latest, oldest, trending
@@ -47,8 +50,11 @@ exports.filterPost = async (req, res) => {
 					board,
 					voters
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		}
 
@@ -59,7 +65,10 @@ exports.filterPost = async (req, res) => {
 			},
 			posts
 		});
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

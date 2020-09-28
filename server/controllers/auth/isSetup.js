@@ -1,6 +1,9 @@
 // database
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.isSetup = async (req, res) => {
 	const isOwner = await database
 		.select()
@@ -29,7 +32,10 @@ exports.isSetup = async (req, res) => {
 				isSetup: false
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

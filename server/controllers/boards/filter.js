@@ -1,5 +1,8 @@
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.filter = async (req, res) => {
 	const created = req.query.created;
 	const page = req.query.page - 1;
@@ -35,8 +38,11 @@ exports.filter = async (req, res) => {
 					...response[i],
 					posts: postCount[0].count
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		}
 
@@ -47,7 +53,10 @@ exports.filter = async (req, res) => {
 			},
 			boards
 		});
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

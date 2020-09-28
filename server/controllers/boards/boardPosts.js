@@ -4,6 +4,9 @@ const database = require("../../database");
 const getBoardBySlug = require("../../services/boards/getBoardBySlug");
 const getVotes = require("../../services/votes/getVotes");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.boardPosts = async (req, res) => {
 	const slug = req.params.slug;
 	const board = await getBoardBySlug(slug);
@@ -43,8 +46,11 @@ exports.boardPosts = async (req, res) => {
 							...posts[i],
 							voters
 						});
-					} catch (error) {
-						console.error(error);
+					} catch (err) {
+						logger.log({
+							level: "error",
+							message: err
+						});
 					}
 				}
 
@@ -55,8 +61,11 @@ exports.boardPosts = async (req, res) => {
 					},
 					posts: postVoters
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		} else {
 			res.status(404).send({
@@ -70,7 +79,10 @@ exports.boardPosts = async (req, res) => {
 				}
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

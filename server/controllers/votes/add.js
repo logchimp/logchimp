@@ -3,6 +3,9 @@ const { v4: uuidv4 } = require("uuid");
 // database
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.add = async (req, res) => {
 	const userId = req.body.userId;
 	const postId = req.body.postId;
@@ -39,11 +42,17 @@ exports.add = async (req, res) => {
 					},
 					voters
 				});
-			} catch (error) {
-				console.log(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

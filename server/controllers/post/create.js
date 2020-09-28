@@ -4,6 +4,9 @@ const { v4: uuidv4 } = require("uuid");
 
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.create = async (req, res) => {
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
@@ -80,16 +83,25 @@ exports.create = async (req, res) => {
 								voters: user
 							});
 						}
-					} catch (error) {
-						console.error(error);
+					} catch (err) {
+						logger.log({
+							level: "error",
+							message: err
+						});
 					}
 				}
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 
 		res.status(500).send({
 			status: {

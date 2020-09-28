@@ -2,6 +2,9 @@ const jwt = require("jsonwebtoken");
 const database = require("../database");
 const error = require("../errorResponse.json");
 
+// utils
+const logger = require("../../utils/logger");
+
 const extractTokenFromHeader = header => {
 	const [scheme, token] = header.split(" ");
 
@@ -37,15 +40,20 @@ const authenticateWithToken = async (req, res, next, token) => {
 				// validate JWT auth token
 				jwt.verify(token, process.env.SECRET_KEY);
 				next();
-			} catch (error) {
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
+
 				if (
-					error.name === "TokenExpiredError" ||
-					error.name === "JsonWebTokenError"
+					err.name === "TokenExpiredError" ||
+					err.name === "JsonWebTokenError"
 				) {
 					res.status(401).send({
-						message: error.middleware.auth.invalidToken,
+						message: err.middleware.auth.invalidToken,
 						code: "INVALID_TOKEN",
-						error
+						err
 					});
 					return;
 				}

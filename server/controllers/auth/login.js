@@ -4,6 +4,7 @@ const getUser = require("../../services/auth/getUser");
 // utils
 const { validatePassword } = require("../../utils/password");
 const { createToken } = require("../../utils/token");
+const logger = require("../../utils/logger");
 
 const error = require("../../errorResponse.json");
 
@@ -48,7 +49,10 @@ exports.login = async (req, res) => {
 				code: "USER_NOT_FOUND"
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

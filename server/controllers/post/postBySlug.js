@@ -1,5 +1,8 @@
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.postBySlug = async (req, res) => {
 	const slug = req.params.slug;
 
@@ -39,8 +42,11 @@ exports.postBySlug = async (req, res) => {
 					post,
 					voters
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		} else {
 			res.status(404).send({
@@ -54,7 +60,10 @@ exports.postBySlug = async (req, res) => {
 				}
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
