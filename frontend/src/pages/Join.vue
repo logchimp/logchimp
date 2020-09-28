@@ -78,15 +78,15 @@ export default {
 	methods: {
 		join() {
 			if (this.emailAddress.value && this.password.value) {
-				this.buttonLoading = true;
+				if (!this.buttonLoading) {
+					this.buttonLoading = true;
 
-				axios
-					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
-						emailAddress: this.emailAddress.value,
-						password: this.password.value
-					})
-					.then(response => {
-						if (response.status === 201) {
+					axios
+						.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
+							emailAddress: this.emailAddress.value,
+							password: this.password.value
+						})
+						.then(response => {
 							/**
 							 * todo: show snackbar notification
 							 * check your inbox for email verification.
