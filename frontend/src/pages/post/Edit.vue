@@ -1,5 +1,5 @@
 <template>
-	<Form>
+	<Form v-if="isPostExist">
 		<h4 class="post-edit-heading">Edit post</h4>
 		<div v-if="!post.loading">
 			<l-text
@@ -27,6 +27,9 @@
 			<loader />
 		</div>
 	</Form>
+	<p v-else>
+		There is no such post.
+	</p>
 </template>
 
 <script>
@@ -44,6 +47,7 @@ export default {
 	name: "PostEdit",
 	data() {
 		return {
+			isPostExist: true,
 			post: {
 				loading: false,
 				title: {
@@ -86,8 +90,11 @@ export default {
 					this.post.loading = false;
 				})
 				.catch(error => {
+					if (error.response.data.code === "POST_NOT_FOUND") {
+						this.isPostExist = false;
+					}
+
 					this.post.loading = false;
-					console.error(error);
 				});
 		},
 		savePost() {
