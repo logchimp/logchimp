@@ -53,7 +53,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 						err.name === "JsonWebTokenError"
 					) {
 						res.status(401).send({
-							message: err.middleware.auth.invalidToken,
+							message: error.middleware.auth.invalidToken,
 							code: "INVALID_TOKEN",
 							err
 						});
