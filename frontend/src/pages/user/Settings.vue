@@ -97,13 +97,12 @@ export default {
 		getUser() {
 			const userId = this.$store.getters["user/getUserId"];
 
-			if (userId) {
-				this.user.loading = true;
-				axios({
-					method: "get",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
-				})
-					.then(response => {
+			this.user.loading = true;
+			axios({
+				method: "get",
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
+			})
+				.then(response => {
 					this.user.firstname.value = response.data.user.firstname;
 					this.user.lastname.value = response.data.user.lastname;
 					this.user.username.value = response.data.user.username;
@@ -114,15 +113,7 @@ export default {
 					this.userNotFound(error);
 
 					this.user.loading = false;
-					});
-			} else {
-				this.$store.dispatch("alerts/add", {
-					title: "Unauthorized",
-					type: "error",
-					timeout: 6000
 				});
-				this.$router.push("/login");
-			}
 		},
 		updateSettings() {
 			this.buttonLoading = true;
@@ -150,7 +141,18 @@ export default {
 		}
 	},
 	created() {
-		this.getUser();
+		const userId = this.$store.getters["user/getUserId"];
+
+		if (userId) {
+			this.getUser();
+		} else {
+			this.$router.push({
+				path: "/login",
+				query: {
+					redirect: "/settings"
+				}
+			});
+		}
 	}
 };
 </script>
