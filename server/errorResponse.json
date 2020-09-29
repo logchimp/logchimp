@@ -14,6 +14,9 @@
 		}
 	},
 	"api": {
+		"user": {
+			"userNotFound": "User not found"
+		},
 		"posts": {
 			"postNotFound": "Post not found."
 		}
