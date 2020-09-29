@@ -12,5 +12,10 @@
 			"incorrectPassword": "Incorect password",
 			"userExists": "User exists"
 		}
+	},
+	"api": {
+		"posts": {
+			"postNotFound": "Post not found."
+		}
 	}
 }

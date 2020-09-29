@@ -3,6 +3,8 @@ const database = require("../../database");
 // utils
 const logger = require("../../utils/logger");
 
+const error = require("../../errorResponse.json");
+
 exports.postBySlug = async (req, res) => {
 	const slug = req.params.slug;
 
@@ -50,14 +52,8 @@ exports.postBySlug = async (req, res) => {
 			}
 		} else {
 			res.status(404).send({
-				status: {
-					code: 404,
-					type: "error"
-				},
-				error: {
-					code: "post_not_found",
-					message: "Post not found"
-				}
+				message: error.api.posts.postNotFound,
+				code: "POST_NOT_FOUND"
 			});
 		}
 	} catch (err) {
