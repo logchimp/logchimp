@@ -88,12 +88,6 @@ export default {
 					})
 					.then(response => {
 						if (response.status === 200) {
-							this.$store.dispatch("alerts/add", {
-								title: `Welcome back, @${response.data.user.username}!`,
-								type: "success",
-								timeout: 4000
-							});
-
 							this.$store.dispatch("user/login", {
 								authToken: response.data.user.authToken,
 								userId: response.data.user.userId,

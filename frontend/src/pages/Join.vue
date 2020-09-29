@@ -91,12 +91,6 @@ export default {
 							 * todo: show snackbar notification
 							 * check your inbox for email verification.
 							 */
-							this.$store.dispatch("alerts/add", {
-								title: "Yay! Welcome onboard!",
-								type: "success",
-								timeout: 10000
-							});
-
 							this.$store.dispatch("user/login", {
 								authToken: response.data.user.authToken,
 								userId: response.data.user.userId,
