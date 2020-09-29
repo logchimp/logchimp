@@ -60,6 +60,9 @@ import Form from "../../components/Form";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
 
+// mixins
+import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+
 export default {
 	name: "UserSettings",
 	data() {
@@ -82,6 +85,7 @@ export default {
 			buttonLoading: false
 		};
 	},
+	mixins: [tokenErrorHandle],
 	components: {
 		// components
 		Loader,
@@ -100,15 +104,16 @@ export default {
 					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
 				})
 					.then(response => {
-						this.user.firstname.value = response.data.user.firstname || "";
-						this.user.lastname.value = response.data.user.lastname || "";
-						this.user.username.value = response.data.user.username || "";
-						this.user.emailAddress.value = response.data.user.emailAddress;
-						this.user.loading = false;
-					})
-					.catch(error => {
-						this.user.loading = false;
-						console.error(error);
+					this.user.firstname.value = response.data.user.firstname;
+					this.user.lastname.value = response.data.user.lastname;
+					this.user.username.value = response.data.user.username;
+					this.user.emailAddress.value = response.data.user.emailAddress;
+					this.user.loading = false;
+				})
+				.catch(error => {
+					this.userNotFound(error);
+
+					this.user.loading = false;
 					});
 			} else {
 				this.$store.dispatch("alerts/add", {
@@ -133,13 +138,14 @@ export default {
 				}
 			})
 				.then(response => {
-					this.user.firstname.value = response.data.user.firstname || "";
-					this.user.lastname.value = response.data.user.lastname || "";
+					this.user.firstname.value = response.data.user.firstname;
+					this.user.lastname.value = response.data.user.lastname;
 					this.buttonLoading = false;
 				})
 				.catch(error => {
+					this.userNotFound(error);
+
 					this.buttonLoading = false;
-					console.error(error);
 				});
 		}
 	},
