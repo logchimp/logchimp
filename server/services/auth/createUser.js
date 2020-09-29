@@ -9,6 +9,11 @@ const database = require("../../database");
 const { hashPassword } = require("../../utils/password");
 const logger = require("../../utils/logger");
 
+/**
+ * Add user to 'users' database table
+ *
+ * @param {user} object emailAddress, password, firstname, lastname, isOwner
+ */
 const createUser = async user => {
 	// generate user unique indentification
 	const userId = uuidv4(user.emailAddress);
@@ -24,7 +29,7 @@ const createUser = async user => {
 	delete user.password;
 
 	try {
-		const users = await database
+		const getCreateUser = await database
 			.insert({
 				userId,
 				username,
@@ -37,13 +42,13 @@ const createUser = async user => {
 			.into("users")
 			.returning("*");
 
-		const user = users[0];
-		if (user) {
-			delete user.password;
-			delete user.createdAt;
-			delete user.updatedAt;
+		const getFirstUser = getCreateUser[0];
+		if (getFirstUser) {
+			delete getFirstUser.password;
+			delete getFirstUser.createdAt;
+			delete getFirstUser.updatedAt;
 
-			return user;
+			return getFirstUser;
 		}
 		return null;
 	} catch (err) {
