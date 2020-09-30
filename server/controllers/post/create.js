@@ -102,16 +102,5 @@ exports.create = async (req, res) => {
 			level: "error",
 			message: err
 		});
-
-		res.status(500).send({
-			status: {
-				code: 500,
-				type: "error"
-			},
-			error: {
-				code: "post_not_created",
-				message: "Unable to create post"
-			}
-		});
 	}
 };
