@@ -33,6 +33,9 @@ import LText from "../input/LText";
 import LTextarea from "../input/LTextarea";
 import Button from "../Button";
 
+// mixins
+import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+
 export default {
 	name: "CreatePost",
 	data() {
@@ -61,6 +64,7 @@ export default {
 			default: false
 		}
 	},
+	mixins: [tokenErrorHandle],
 	components: {
 		// components
 		Form,
@@ -75,8 +79,6 @@ export default {
 	},
 	methods: {
 		submitPost() {
-			this.title.error.show = false;
-
 			if (this.title.value) {
 				this.buttonLoading = true;
 				const userId = this.$store.getters["user/getUserId"];
@@ -97,37 +99,17 @@ export default {
 					}
 				})
 					.then(response => {
-						if (response.data.status.code === 201) {
-							this.$store.dispatch("alerts/add", {
-								title: "🎉 Feature posted",
-								type: "success",
-								timeout: 5000
-							});
+						this.buttonLoading = false;
 
-							this.buttonLoading = false;
-							const slug = response.data.post.slug;
-							this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
-						}
+						// redirect to post
+						const slug = response.data.post.slug;
+						this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
 					})
 					.catch(error => {
+						this.userNotFound(error);
+						this.invalidToken(error);
+
 						this.buttonLoading = false;
-						const err = { ...error };
-
-						if (err.response.data.error.code === "token_missing") {
-							this.$store.dispatch("alerts/add", {
-								title: "Holy accounts!",
-								type: "error",
-								timeout: 5000
-							});
-						}
-
-						if (err.response.data.error.code === "token_invalid") {
-							this.$store.dispatch("alerts/add", {
-								title: "Hold on! ✋",
-								type: "error",
-								timeout: 5000
-							});
-						}
 					});
 			} else {
 				this.title.error.show = true;

@@ -15,11 +15,11 @@ import axios from "axios";
 // icons
 import ArrowIcon from "../icons/Arrow";
 
+// mixins
+import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+
 export default {
 	name: "Vote",
-	components: {
-		ArrowIcon
-	},
 	props: {
 		postId: {
 			type: String,
@@ -32,6 +32,10 @@ export default {
 			default: () => []
 		}
 	},
+	components: {
+		ArrowIcon
+	},
+	mixins: [tokenErrorHandle],
 	computed: {
 		voteCount() {
 			return this.voters.length;
@@ -66,28 +70,11 @@ export default {
 					}
 				})
 					.then(response => {
-						// this.voters = response.data.voters;
 						this.$emit("update-voters", response.data.voters);
 					})
 					.catch(error => {
-						const err = { ...error };
-
-						if (err.response.data.error.code === "token_missing") {
-							this.$store.dispatch("alerts/add", {
-								title: "Holy accounts!",
-								type: "error",
-								timeout: 5000
-							});
-							this.$router.push("/login");
-						}
-
-						if (err.response.data.error.code === "token_invalid") {
-							this.$store.dispatch("alerts/add", {
-								title: "Hold on! ✋",
-								type: "error",
-								timeout: 5000
-							});
-						}
+						this.userNotFound(error);
+						this.invalidToken(error);
 					});
 			} else {
 				axios({
@@ -102,28 +89,11 @@ export default {
 					}
 				})
 					.then(response => {
-						// this.voters = response.data.voters;
 						this.$emit("update-voters", response.data.voters);
 					})
 					.catch(error => {
-						const err = { ...error };
-
-						if (err.response.data.error.code === "token_missing") {
-							this.$store.dispatch("alerts/add", {
-								title: "Holy accounts!",
-								type: "error",
-								timeout: 5000
-							});
-							this.$router.push("/join");
-						}
-
-						if (err.response.data.error.code === "token_invalid") {
-							this.$store.dispatch("alerts/add", {
-								title: "Hold on! ✋",
-								type: "error",
-								timeout: 5000
-							});
-						}
+						this.userNotFound(error);
+						this.invalidToken(error);
 					});
 			}
 		}
