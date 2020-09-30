@@ -134,15 +134,12 @@ export default {
 						}
 					})
 					.catch(error => {
-						const err = { ...error };
-
-						if (err.response.data.error.code === "insufficient_premissions") {
-							this.$store.dispatch("alerts/add", {
-								title: "Insufficient premissions",
-								type: "warning",
-								timeout: 6000
-							});
+						if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
+							const slug = this.$route.params.slug;
+							this.$router.push(`/post/${slug}`);
 						}
+
+						this.buttonLoading = false;
 					});
 			} else {
 				this.post.title.error.show = true;
