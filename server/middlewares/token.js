@@ -36,11 +36,16 @@ const authenticateWithToken = async (req, res, next, token) => {
 
 		const user = users[0];
 
+		// remove password before passing user's data to next middleware
+		delete user.password;
+
 		if (user) {
 			if (!user.isBlocked) {
 				try {
 					// validate JWT auth token
 					jwt.verify(token, process.env.SECRET_KEY);
+
+					res.locals.user = user;
 					next();
 				} catch (err) {
 					logger.log({
