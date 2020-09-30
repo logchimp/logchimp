@@ -108,6 +108,7 @@ export default {
 					.catch(error => {
 						this.userNotFound(error);
 						this.invalidToken(error);
+						this.invalidAuthHeaderFormat(error);
 
 						this.buttonLoading = false;
 					});

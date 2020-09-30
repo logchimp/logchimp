@@ -75,6 +75,7 @@ export default {
 					.catch(error => {
 						this.userNotFound(error);
 						this.invalidToken(error);
+						this.invalidAuthHeaderFormat(error);
 					});
 			} else {
 				axios({
@@ -94,6 +95,7 @@ export default {
 					.catch(error => {
 						this.userNotFound(error);
 						this.invalidToken(error);
+						this.invalidAuthHeaderFormat(error);
 					});
 			}
 		}
