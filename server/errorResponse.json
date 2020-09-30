@@ -18,7 +18,8 @@
 			"userNotFound": "User not found"
 		},
 		"posts": {
-			"postNotFound": "Post not found."
+			"postNotFound": "Post not found.",
+			"notEnoughPermission": "You do not have permission to perform this action."
 		}
 	}
 }
