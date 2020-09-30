@@ -1,3 +1,6 @@
+// utils
+const logger = require("../../utils/logger");
+
 exports.up = function(knex) {
 	return knex.schema
 		.table("posts", table => {
@@ -7,10 +10,16 @@ exports.up = function(knex) {
 				.inTable("boards");
 		})
 		.then(() => {
-			console.log("Add 'boardId' column in 'posts' table.");
+			logger.log({
+				level: "info",
+				message: "Add 'boardId' column in 'posts' table"
+			});
 		})
-		.catch(error => {
-			console.error(error);
+		.catch(err => {
+			logger.log({
+				level: "error",
+				message: err
+			});
 		});
 };
 
@@ -25,9 +34,15 @@ exports.down = function(knex) {
 			}
 		})
 		.then(() => {
-			console.log("Remove 'boardId' column from 'posts' table.");
+			logger.log({
+				level: "info",
+				message: "Remove 'boardId' column from 'posts' table"
+			});
 		})
-		.catch(error => {
-			console.error(error);
+		.catch(err => {
+			logger.log({
+				level: "error",
+				message: err
+			});
 		});
 };

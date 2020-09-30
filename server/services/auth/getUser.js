@@ -1,16 +1,19 @@
 // database
 const database = require("../../database");
 
-const getUser = async emailAddress => {
-	const users = await database
-		.select()
-		.from("users")
-		.where({
-			emailAddress
-		})
-		.limit(1);
+// utils
+const logger = require("../../utils/logger");
 
+const getUser = async emailAddress => {
 	try {
+		const users = await database
+			.select()
+			.from("users")
+			.where({
+				emailAddress
+			})
+			.limit(1);
+
 		const user = users[0];
 		if (user) {
 			delete user.createdAt;
@@ -19,8 +22,11 @@ const getUser = async emailAddress => {
 			return user;
 		}
 		return null;
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
 

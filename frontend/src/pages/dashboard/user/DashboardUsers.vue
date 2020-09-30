@@ -99,7 +99,7 @@ export default {
 				})
 				.catch(error => {
 					$state.error();
-					console.log(error);
+					console.error(error);
 				});
 		}
 	}

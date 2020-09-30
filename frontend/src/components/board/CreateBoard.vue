@@ -7,7 +7,6 @@
 			name="Name"
 			placeholder="Name of the board"
 			:error="boardName.error"
-			@keydown.native="boardNameHandler"
 			@keyup.native.enter="createBoard"
 		/>
 		<div style="display: flex; justify-content: center;">
@@ -35,7 +34,7 @@ export default {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			buttonLoading: false
@@ -53,9 +52,6 @@ export default {
 		Button
 	},
 	methods: {
-		boardNameHandler() {
-			this.boardName.error.show = false;
-		},
 		createBoard() {
 			if (this.boardName.value) {
 				if (!this.buttonLoading) {
@@ -78,12 +74,13 @@ export default {
 							}
 						})
 						.catch(error => {
-							console.log(error);
+							console.error(error);
 							this.buttonLoading = false;
 						});
 				}
 			} else {
 				this.boardName.error.show = true;
+				this.boardName.error.message = "Required";
 			}
 		}
 	}

@@ -1,6 +1,9 @@
 const database = require("../../database");
 
-exports.updatePost = (req, res) => {
+// utils
+const logger = require("../../utils/logger");
+
+exports.updatePost = async (req, res) => {
 	const postId = req.params.postId;
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
@@ -13,30 +16,33 @@ exports.updatePost = (req, res) => {
 		.split(" ")
 		.join("-")}-${slugId}`;
 
-	database
-		.update({
-			title,
-			slug,
-			contentMarkdown,
-			updatedAt: new Date().toJSON()
-		})
-		.from("posts")
-		.where({
-			postId
-		})
-		.returning("*")
-		.then(response => {
-			const post = response[0];
+	try {
+		const posts = await database
+			.update({
+				title,
+				slug,
+				contentMarkdown,
+				updatedAt: new Date().toJSON()
+			})
+			.from("posts")
+			.where({
+				postId
+			})
+			.returning("*");
 
-			res.status(200).send({
-				status: {
-					code: 200,
-					type: "success"
-				},
-				post
-			});
-		})
-		.catch(error => {
-			console.error(error);
+		const post = posts[0];
+
+		res.status(200).send({
+			status: {
+				code: 200,
+				type: "success"
+			},
+			post
 		});
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
+	}
 };

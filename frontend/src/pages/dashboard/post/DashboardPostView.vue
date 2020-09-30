@@ -1,6 +1,6 @@
 <template>
 	<div class="view">
-		<div class="viewpost">
+		<div v-if="isPostExist" class="viewpost">
 			<div class="viewpost__vote">
 				<div>
 					<Vote
@@ -33,6 +33,9 @@
 			</div>
 			<p v-html="post.contentMarkdown" />
 		</div>
+		<p v-else>
+			There is no such post.
+		</p>
 	</div>
 </template>
 
@@ -52,7 +55,8 @@ export default {
 	data() {
 		return {
 			post: {},
-			voters: []
+			voters: [],
+			isPostExist: true
 		};
 	},
 	components: {
@@ -86,16 +90,8 @@ export default {
 					this.voters = response.data.voters;
 				})
 				.catch(error => {
-					const err = { ...error };
-
-					if (err.response.data.error.code === "post_not_found") {
-						this.$store.dispatch("alerts/add", {
-							title: "Post not found",
-							type: "error",
-							timeout: 5000
-						});
-
-						this.$router.push("/");
+					if (error.response.data.code === "POST_NOT_FOUND") {
+						this.isPostExist = false;
 					}
 				});
 		},

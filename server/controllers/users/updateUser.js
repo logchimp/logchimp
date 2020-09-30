@@ -1,46 +1,48 @@
 // database
 const database = require("../../database");
 
-exports.updateUser = (req, res) => {
+// utils
+const logger = require("../../utils/logger");
+
+const error = require("../../errorResponse.json");
+
+exports.updateUser = async (req, res) => {
 	const userId = req.body.userId;
 	const firstname = req.body.firstname;
 	const lastname = req.body.lastname;
 
-	database
-		.update({
-			firstname,
-			lastname
-		})
-		.from("users")
-		.where({
-			userId
-		})
-		.returning("*")
-		.then(response => {
-			const user = response[0];
+	try {
+		const users = await database
+			.update({
+				firstname,
+				lastname
+			})
+			.from("users")
+			.where({
+				userId
+			})
+			.returning("*");
 
-			if (user) {
-				res.status(200).send({
-					status: {
-						code: 200,
-						type: "success"
-					},
-					user
-				});
-			} else {
-				res.status(404).send({
-					status: {
-						code: 404,
-						type: "error"
-					},
-					error: {
-						code: "user_not_found",
-						message: "User not found"
-					}
-				});
-			}
-		})
-		.catch(error => {
-			console.error(error);
+		const user = users[0];
+
+		if (user) {
+			res.status(200).send({
+				status: {
+					code: 200,
+					type: "success"
+				},
+				user
+			});
+		} else {
+			res.status(404).send({
+				message: error.api.user.userNotFound,
+				code: "USER_NOT_FOUND"
+			});
+		}
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
 		});
+	}
 };

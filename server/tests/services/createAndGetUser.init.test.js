@@ -8,17 +8,23 @@ const createUser = require("../../services/auth/createUser");
 // database
 const database = require("../../database");
 
+// utils
+const logger = require("../../utils/logger");
+
 describe("Create and get user account", () => {
 	beforeAll(async () => {
-		const dbMigrateLatest = await database.migrate.latest({
-			directory: "./server/database/migrations",
-			tableName: "migrations"
-		});
-
 		try {
+			const dbMigrateLatest = await database.migrate.latest({
+				directory: "./server/database/migrations",
+				tableName: "migrations"
+			});
+
 			return dbMigrateLatest;
-		} catch (error) {
-			console.error(error);
+		} catch (err) {
+			logger.log({
+				level: "error",
+				message: err
+			});
 		}
 	});
 
