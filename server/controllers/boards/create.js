@@ -35,26 +35,13 @@ exports.create = async (req, res) => {
 
 		const board = createBoard[0];
 
-		if (board) {
-			res.status(201).send({
-				status: {
-					code: 201,
-					type: "success"
-				},
-				board
-			});
-		} else {
-			res.status(500).send({
-				status: {
-					code: 500,
-					type: "error"
-				},
-				error: {
-					code: "board_not_created",
-					message: "Unable to create board"
-				}
-			});
-		}
+		res.status(201).send({
+			status: {
+				code: 201,
+				type: "success"
+			},
+			board
+		});
 	} catch (err) {
 		logger.log({
 			level: "error",
