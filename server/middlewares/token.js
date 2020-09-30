@@ -50,6 +50,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 				} catch (err) {
 					logger.log({
 						level: "error",
+						code: "INVALID_TOKEN",
 						message: err
 					});
 
