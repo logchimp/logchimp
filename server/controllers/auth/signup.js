@@ -4,12 +4,16 @@ const createUser = require("../../services/auth/createUser");
 
 // utils
 const { createToken } = require("../../utils/token");
+const logger = require("../../utils/logger");
+
+const error = require("../../errorResponse.json");
 
 exports.signup = async (req, res) => {
 	const emailAddress = req.body.emailAddress;
-	const getAuthUser = await getUser(emailAddress);
 
 	try {
+		const getAuthUser = await getUser(emailAddress);
+
 		if (!getAuthUser) {
 			const password = req.body.password;
 			const fullName = req.body.fullName || "";
@@ -21,15 +25,15 @@ exports.signup = async (req, res) => {
 			name.shift();
 			const lastname = name.join(" ");
 
-			const userData = await createUser({
-				emailAddress,
-				password,
-				firstname,
-				lastname,
-				isOwner
-			});
-
 			try {
+				const userData = await createUser({
+					emailAddress,
+					password,
+					firstname,
+					lastname,
+					isOwner
+				});
+
 				if (userData) {
 					/**
 					 * authToken sent via email will expire after 3 hr
@@ -53,33 +57,33 @@ exports.signup = async (req, res) => {
 						}
 					});
 				} else {
-					res.status(500).send({
-						status: {
-							code: 500,
-							type: "error"
-						},
-						error: {
-							code: "account_not_created",
-							message: "Account not created"
-						}
+					res.status(404).send({
+						message: error.middleware.user.userNotFound,
+						code: "USER_NOT_FOUND"
 					});
 				}
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					code: "INTERNAL_SERVER_ERROR",
+					message: err
+				});
+
+				res.status(500).send({
+					message: error.middleware.auth.internalServerError,
+					code: "INTERNAL_SERVER_ERROR"
+				});
 			}
 		} else {
 			res.status(409).send({
-				status: {
-					code: 409,
-					type: "error"
-				},
-				error: {
-					code: "email_already_taken",
-					message: "Email address already taken"
-				}
+				message: error.middleware.user.userExists,
+				code: "USER_EXISTS"
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

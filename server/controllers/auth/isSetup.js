@@ -1,16 +1,19 @@
 // database
 const database = require("../../database");
 
-exports.isSetup = async (req, res) => {
-	const isOwner = await database
-		.select()
-		.from("users")
-		.where({
-			isOwner: true
-		})
-		.limit(1);
+// utils
+const logger = require("../../utils/logger");
 
+exports.isSetup = async (req, res) => {
 	try {
+		const isOwner = await database
+			.select()
+			.from("users")
+			.where({
+				isOwner: true
+			})
+			.limit(1);
+
 		const owner = isOwner[0];
 		if (owner) {
 			res.status(200).send({
@@ -29,7 +32,10 @@ exports.isSetup = async (req, res) => {
 				isSetup: false
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

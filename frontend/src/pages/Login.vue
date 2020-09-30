@@ -15,7 +15,6 @@
 					name="email"
 					placeholder="Email address"
 					:error="emailAddress.error"
-					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="login"
 				/>
 				<l-text
@@ -25,7 +24,6 @@
 					name="password"
 					placeholder="Password"
 					:error="password.error"
-					@keydown.native="passwordHandler"
 					@keyup.native.enter="login"
 				/>
 				<div style="display: flex; justify-content: center;">
@@ -36,7 +34,7 @@
 			</Form>
 			<div class="auth-form-other">
 				Don't have an account yet?
-				<router-link to="/join">Sign up Here</router-link>
+				<router-link to="/join">Sign up</router-link>
 			</div>
 		</div>
 	</div>
@@ -59,14 +57,14 @@ export default {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			password: {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			buttonLoading: false
@@ -79,12 +77,6 @@ export default {
 		Button
 	},
 	methods: {
-		emailAddressHandler() {
-			this.emailAddress.error.show = false;
-		},
-		passwordHandler() {
-			this.password.error.show = false;
-		},
 		login() {
 			if (this.emailAddress.value && this.password.value) {
 				this.buttonLoading = true;
@@ -96,12 +88,6 @@ export default {
 					})
 					.then(response => {
 						if (response.status === 200) {
-							this.$store.dispatch("alerts/add", {
-								title: `Welcome back, @${response.data.user.username}!`,
-								type: "success",
-								timeout: 4000
-							});
-
 							this.$store.dispatch("user/login", {
 								authToken: response.data.user.authToken,
 								userId: response.data.user.userId,
@@ -128,31 +114,26 @@ export default {
 						}
 					})
 					.catch(error => {
+						if (error.response.data.code === "USER_NOT_FOUND") {
+							this.emailAddress.error.show = true;
+							this.emailAddress.error.message = "User not found";
+						}
+
+						if (error.response.data.code === "INCORRECT_PASSWORD") {
+							this.password.error.show = true;
+							this.password.error.message = "Incorrect password";
+						}
+
 						this.buttonLoading = false;
-						const err = { ...error };
-
-						if (err.response.data.error.code === "user_not_found") {
-							this.$store.dispatch("alerts/add", {
-								title: "Huh! User not found",
-								type: "error",
-								timeout: 8000
-							});
-						}
-
-						if (err.response.data.error.code === "invalid_password") {
-							this.$store.dispatch("alerts/add", {
-								title: "Whow! Password",
-								type: "warning",
-								timeout: 6000
-							});
-						}
 					});
 			} else {
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
+					this.emailAddress.error.message = "Required";
 				}
 				if (!this.password.value) {
 					this.password.error.show = true;
+					this.password.error.message = "Required";
 				}
 			}
 		}

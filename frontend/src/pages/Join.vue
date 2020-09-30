@@ -15,7 +15,6 @@
 					name="email"
 					placeholder="Email address"
 					:error="emailAddress.error"
-					@keydown.native="emailAddressHandler"
 					@keyup.native.enter="join"
 				/>
 				<l-text
@@ -25,7 +24,6 @@
 					name="password"
 					placeholder="Password"
 					:error="password.error"
-					@keydown.native="passwordHandler"
 					@keyup.native.enter="join"
 				/>
 				<div style="display: flex; justify-content: center;">
@@ -36,7 +34,7 @@
 			</Form>
 			<div class="auth-form-other">
 				Already have an account?
-				<router-link to="/login">Log in here</router-link>
+				<router-link to="/login">Log in</router-link>
 			</div>
 		</div>
 	</div>
@@ -59,14 +57,14 @@ export default {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			password: {
 				value: "",
 				error: {
 					show: false,
-					message: "Required"
+					message: ""
 				}
 			},
 			buttonLoading: false
@@ -78,33 +76,21 @@ export default {
 		Button
 	},
 	methods: {
-		emailAddressHandler() {
-			this.emailAddress.error.show = false;
-		},
-		passwordHandler() {
-			this.password.error.show = false;
-		},
 		join() {
 			if (this.emailAddress.value && this.password.value) {
-				this.buttonLoading = true;
+				if (!this.buttonLoading) {
+					this.buttonLoading = true;
 
-				axios
-					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
-						emailAddress: this.emailAddress.value,
-						password: this.password.value
-					})
-					.then(response => {
-						if (response.status === 201) {
+					axios
+						.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/signup`, {
+							emailAddress: this.emailAddress.value,
+							password: this.password.value
+						})
+						.then(response => {
 							/**
 							 * todo: show snackbar notification
 							 * check your inbox for email verification.
 							 */
-							this.$store.dispatch("alerts/add", {
-								title: "Yay! Welcome onboard!",
-								type: "success",
-								timeout: 10000
-							});
-
 							this.$store.dispatch("user/login", {
 								authToken: response.data.user.authToken,
 								userId: response.data.user.userId,
@@ -128,26 +114,24 @@ export default {
 							} else {
 								this.$router.push("/");
 							}
-						}
-					})
-					.catch(error => {
-						this.buttonLoading = false;
-						const err = { ...error };
+						})
+						.catch(error => {
+							if (error.response.data.code === "USER_EXISTS") {
+								this.emailAddress.error.show = true;
+								this.emailAddress.error.message = "Exists";
+							}
 
-						if (err.response.data.error.code === "email_already_taken") {
-							this.$store.dispatch("alerts/add", {
-								title: "Bummer! Email exists",
-								type: "error",
-								timeout: 4000
-							});
-						}
-					});
+							this.buttonLoading = false;
+						});
+				}
 			} else {
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
+					this.emailAddress.error.message = "Required";
 				}
 				if (!this.password.value) {
 					this.password.error.show = true;
+					this.password.error.message = "Required";
 				}
 			}
 		}

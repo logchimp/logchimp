@@ -4,36 +4,42 @@ const database = require("../../database");
 // services
 const getUsers = require("../../services/users/getUsers");
 
+// utils
+const logger = require("../../utils/logger");
+
 exports.filter = async (req, res) => {
 	const created = req.query.created;
 	const page = req.query.page - 1;
 	const limit = req.query.limit || 10;
 
-	const userData = await getUsers(created, limit, page);
-
 	try {
+		const userData = await getUsers(created, limit, page);
+
 		const users = [];
 
 		for (let i = 0; i < userData.length; i++) {
 			const userId = userData[i].userId;
 
-			const postsCount = await database
-				.count()
-				.from("posts")
-				.where({ userId });
-			const votesCount = await database
-				.count()
-				.from("votes")
-				.where({ userId });
-
 			try {
+				const postsCount = await database
+					.count()
+					.from("posts")
+					.where({ userId });
+				const votesCount = await database
+					.count()
+					.from("votes")
+					.where({ userId });
+
 				users.push({
 					votes: votesCount[0].count,
 					posts: postsCount[0].count,
 					...userData[i]
 				});
-			} catch (error) {
-				console.log(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		}
 
@@ -44,7 +50,10 @@ exports.filter = async (req, res) => {
 			},
 			users
 		});
-	} catch (error) {
-		console.log(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

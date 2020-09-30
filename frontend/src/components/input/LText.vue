@@ -10,7 +10,7 @@
 			}"
 			:value="value"
 			@input="$emit('input', $event.target.value)"
-			@keydown="$emit('keydown')"
+			@click="hideError"
 			@keyup.enter="$emit('keyup.enter')"
 			:placeholder="placeholder"
 			:disabled="disabled"
@@ -51,6 +51,12 @@ export default {
 					message: ""
 				};
 			}
+		}
+	},
+	methods: {
+		hideError() {
+			this.error.show = false;
+			this.error.message = "";
 		}
 	}
 };

@@ -6,6 +6,7 @@ const database = require("../../database");
 
 // utils
 const createHex = require("../../utils/createHex");
+const logger = require("../../utils/logger");
 
 exports.create = async (req, res) => {
 	const name = req.body.name;
@@ -19,42 +20,32 @@ exports.create = async (req, res) => {
 		.split(" ")
 		.join("-");
 
-	const createBoard = await database
-		.insert({
-			boardId,
-			name,
-			url,
-			color: createHex(),
-			createdAt: new Date().toJSON(),
-			updatedAt: new Date().toJSON()
-		})
-		.into("boards")
-		.returning("*");
-
 	try {
+		const createBoard = await database
+			.insert({
+				boardId,
+				name,
+				url,
+				color: createHex(),
+				createdAt: new Date().toJSON(),
+				updatedAt: new Date().toJSON()
+			})
+			.into("boards")
+			.returning("*");
+
 		const board = createBoard[0];
 
-		if (board) {
-			res.status(201).send({
-				status: {
-					code: 201,
-					type: "success"
-				},
-				board
-			});
-		} else {
-			res.status(500).send({
-				status: {
-					code: 500,
-					type: "error"
-				},
-				error: {
-					code: "board_not_created",
-					message: "Unable to create board"
-				}
-			});
-		}
-	} catch (error) {
-		console.error(error);
+		res.status(201).send({
+			status: {
+				code: 201,
+				type: "success"
+			},
+			board
+		});
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

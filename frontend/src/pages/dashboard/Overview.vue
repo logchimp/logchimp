@@ -127,7 +127,7 @@ export default {
 					$state.complete();
 				})
 				.catch(error => {
-					console.log(error);
+					console.error(error);
 					$state.error();
 				});
 		},
@@ -146,7 +146,7 @@ export default {
 					$state.complete();
 				})
 				.catch(error => {
-					console.log(error);
+					console.error(error);
 					$state.error();
 				});
 		}

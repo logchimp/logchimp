@@ -60,6 +60,9 @@ import Form from "../../components/Form";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
 
+// mixins
+import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+
 export default {
 	name: "UserSettings",
 	data() {
@@ -82,6 +85,7 @@ export default {
 			buttonLoading: false
 		};
 	},
+	mixins: [tokenErrorHandle],
 	components: {
 		// components
 		Loader,
@@ -93,31 +97,23 @@ export default {
 		getUser() {
 			const userId = this.$store.getters["user/getUserId"];
 
-			if (userId) {
-				this.user.loading = true;
-				axios({
-					method: "get",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
+			this.user.loading = true;
+			axios({
+				method: "get",
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
+			})
+				.then(response => {
+					this.user.firstname.value = response.data.user.firstname;
+					this.user.lastname.value = response.data.user.lastname;
+					this.user.username.value = response.data.user.username;
+					this.user.emailAddress.value = response.data.user.emailAddress;
+					this.user.loading = false;
 				})
-					.then(response => {
-						this.user.firstname.value = response.data.user.firstname || "";
-						this.user.lastname.value = response.data.user.lastname || "";
-						this.user.username.value = response.data.user.username || "";
-						this.user.emailAddress.value = response.data.user.emailAddress;
-						this.user.loading = false;
-					})
-					.catch(error => {
-						this.user.loading = false;
-						console.error(error);
-					});
-			} else {
-				this.$store.dispatch("alerts/add", {
-					title: "Unauthorized",
-					type: "error",
-					timeout: 6000
+				.catch(error => {
+					this.userNotFound(error);
+
+					this.user.loading = false;
 				});
-				this.$router.push("/login");
-			}
 		},
 		updateSettings() {
 			this.buttonLoading = true;
@@ -133,18 +129,30 @@ export default {
 				}
 			})
 				.then(response => {
-					this.user.firstname.value = response.data.user.firstname || "";
-					this.user.lastname.value = response.data.user.lastname || "";
+					this.user.firstname.value = response.data.user.firstname;
+					this.user.lastname.value = response.data.user.lastname;
 					this.buttonLoading = false;
 				})
 				.catch(error => {
+					this.userNotFound(error);
+
 					this.buttonLoading = false;
-					console.error(error);
 				});
 		}
 	},
 	created() {
-		this.getUser();
+		const userId = this.$store.getters["user/getUserId"];
+
+		if (userId) {
+			this.getUser();
+		} else {
+			this.$router.push({
+				path: "/login",
+				query: {
+					redirect: "/settings"
+				}
+			});
+		}
 	}
 };
 </script>

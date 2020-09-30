@@ -4,9 +4,13 @@ const database = require("../../database");
 const getBoardBySlug = require("../../services/boards/getBoardBySlug");
 const getVotes = require("../../services/votes/getVotes");
 
+// utils
+const logger = require("../../utils/logger");
+
+const error = require("../../errorResponse.json");
+
 exports.boardPosts = async (req, res) => {
 	const slug = req.params.slug;
-	const board = await getBoardBySlug(slug);
 
 	/**
 	 * top, latest, oldest, trending
@@ -14,37 +18,44 @@ exports.boardPosts = async (req, res) => {
 	const created = req.query.created;
 	const page = req.query.page - 1;
 	const limit = req.query.limit || 10;
-	try {
-		if (board) {
-			const posts = await database
-				.select("postId", "title", "slug", "contentMarkdown", "createdAt")
-				.from("posts")
-				.where({
-					boardId: board.boardId
-				})
-				.limit(limit)
-				.offset(limit * page)
-				.orderBy([
-					{
-						column: "createdAt",
-						order: created
-					}
-				]);
 
+	try {
+		const board = await getBoardBySlug(slug);
+
+		if (board) {
 			try {
+				const posts = await database
+					.select("postId", "title", "slug", "contentMarkdown", "createdAt")
+					.from("posts")
+					.where({
+						boardId: board.boardId
+					})
+					.limit(limit)
+					.offset(limit * page)
+					.orderBy([
+						{
+							column: "createdAt",
+							order: created
+						}
+					]);
+
 				const postVoters = [];
 
 				for (let i = 0; i < posts.length; i++) {
 					const postId = posts[i].postId;
-					const voters = await getVotes(postId);
 
 					try {
+						const voters = await getVotes(postId);
+
 						postVoters.push({
 							...posts[i],
 							voters
 						});
-					} catch (error) {
-						console.error(error);
+					} catch (err) {
+						logger.log({
+							level: "error",
+							message: err
+						});
 					}
 				}
 
@@ -55,22 +66,28 @@ exports.boardPosts = async (req, res) => {
 					},
 					posts: postVoters
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				logger.log({
+					level: "error",
+					message: err
+				});
 			}
 		} else {
+			logger.log({
+				level: "error",
+				code: "BOARD_NOT_FOUND",
+				message: `'${slug}' board not found`
+			});
+
 			res.status(404).send({
-				status: {
-					code: 404,
-					type: "error"
-				},
-				error: {
-					code: "board_not_found",
-					message: "Board not found"
-				}
+				code: "BOARD_NOT_FOUND",
+				message: error.api.boards.boardNotFound
 			});
 		}
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };

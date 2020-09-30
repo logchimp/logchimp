@@ -7,7 +7,13 @@ const database = require("../../database");
 
 // utils
 const { hashPassword } = require("../../utils/password");
+const logger = require("../../utils/logger");
 
+/**
+ * Add user to 'users' database table
+ *
+ * @param {user} object emailAddress, password, firstname, lastname, isOwner
+ */
 const createUser = async user => {
 	// generate user unique indentification
 	const userId = uuidv4(user.emailAddress);
@@ -22,31 +28,34 @@ const createUser = async user => {
 	const hashedPassword = hashPassword(user.password);
 	delete user.password;
 
-	const users = await database
-		.insert({
-			userId,
-			username,
-			password: hashedPassword,
-			avatar,
-			...user,
-			createdAt: new Date().toJSON(),
-			updatedAt: new Date().toJSON()
-		})
-		.into("users")
-		.returning("*");
-
 	try {
-		const user = users[0];
-		if (user) {
-			delete user.password;
-			delete user.createdAt;
-			delete user.updatedAt;
+		const getCreateUser = await database
+			.insert({
+				userId,
+				username,
+				password: hashedPassword,
+				avatar,
+				...user,
+				createdAt: new Date().toJSON(),
+				updatedAt: new Date().toJSON()
+			})
+			.into("users")
+			.returning("*");
 
-			return user;
+		const getFirstUser = getCreateUser[0];
+		if (getFirstUser) {
+			delete getFirstUser.password;
+			delete getFirstUser.createdAt;
+			delete getFirstUser.updatedAt;
+
+			return getFirstUser;
 		}
 		return null;
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
+		});
 	}
 };
 

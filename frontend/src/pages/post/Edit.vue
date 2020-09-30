@@ -1,5 +1,5 @@
 <template>
-	<Form>
+	<Form v-if="isPostExist">
 		<h4 class="post-edit-heading">Edit post</h4>
 		<div v-if="!post.loading">
 			<l-text
@@ -9,7 +9,6 @@
 				name="Post title"
 				placeholder="Name of the feature"
 				:error="post.title.error"
-				@keydown.native="titleHandler"
 				@keyup.native.enter="savePost"
 			/>
 			<l-textarea
@@ -28,6 +27,9 @@
 			<loader />
 		</div>
 	</Form>
+	<p v-else>
+		There is no such post.
+	</p>
 </template>
 
 <script>
@@ -45,13 +47,14 @@ export default {
 	name: "PostEdit",
 	data() {
 		return {
+			isPostExist: true,
 			post: {
 				loading: false,
 				title: {
 					value: "",
 					error: {
 						show: false,
-						message: "Required"
+						message: ""
 					}
 				},
 				contentMarkdown: "",
@@ -72,9 +75,6 @@ export default {
 		Button
 	},
 	methods: {
-		titleHandler() {
-			this.post.title.error.show = false;
-		},
 		getPost() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;
@@ -90,8 +90,11 @@ export default {
 					this.post.loading = false;
 				})
 				.catch(error => {
+					if (error.response.data.code === "POST_NOT_FOUND") {
+						this.isPostExist = false;
+					}
+
 					this.post.loading = false;
-					console.error(error);
 				});
 		},
 		savePost() {
@@ -131,18 +134,16 @@ export default {
 						}
 					})
 					.catch(error => {
-						const err = { ...error };
-
-						if (err.response.data.error.code === "insufficient_premissions") {
-							this.$store.dispatch("alerts/add", {
-								title: "Insufficient premissions",
-								type: "warning",
-								timeout: 6000
-							});
+						if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
+							const slug = this.$route.params.slug;
+							this.$router.push(`/post/${slug}`);
 						}
+
+						this.buttonLoading = false;
 					});
 			} else {
 				this.post.title.error.show = true;
+				this.post.title.error.message = "Required";
 			}
 		}
 	},

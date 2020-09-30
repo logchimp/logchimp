@@ -2,6 +2,9 @@ const jwt = require("jsonwebtoken");
 const database = require("../database");
 const error = require("../errorResponse.json");
 
+// utils
+const logger = require("../utils/logger");
+
 const extractTokenFromHeader = header => {
 	const [scheme, token] = header.split(" ");
 
@@ -23,48 +26,67 @@ const authenticateWithToken = async (req, res, next, token) => {
 	}
 
 	const userId = decoded.payload.userId;
-	const users = await database
-		.select()
-		.from("users")
-		.where({ userId })
-		.limit(1);
 
-	const user = users[0];
+	try {
+		const users = await database
+			.select()
+			.from("users")
+			.where({ userId })
+			.limit(1);
 
-	if (user) {
-		if (!user.isBlocked) {
-			try {
-				// validate JWT auth token
-				jwt.verify(token, process.env.SECRET_KEY);
-				next();
-			} catch (error) {
-				if (
-					error.name === "TokenExpiredError" ||
-					error.name === "JsonWebTokenError"
-				) {
-					res.status(401).send({
-						message: error.middleware.auth.invalidToken,
+		const user = users[0];
+
+		// remove password before passing user's data to next middleware
+		delete user.password;
+
+		if (user) {
+			if (!user.isBlocked) {
+				try {
+					// validate JWT auth token
+					jwt.verify(token, process.env.SECRET_KEY);
+
+					res.locals.user = user;
+					next();
+				} catch (err) {
+					logger.log({
+						level: "error",
 						code: "INVALID_TOKEN",
-						error
+						message: err
 					});
-					return;
+
+					if (
+						err.name === "TokenExpiredError" ||
+						err.name === "JsonWebTokenError"
+					) {
+						res.status(401).send({
+							message: error.middleware.auth.invalidToken,
+							code: "INVALID_TOKEN",
+							err
+						});
+						return;
+					}
 				}
+			} else {
+				// user is blocked
+				res.status(403).send({
+					message: error.middleware.user.userBlocked,
+					code: "USER_BLOCKED"
+				});
+				return;
 			}
 		} else {
-			// user is blocked
-			res.status(403).send({
-				message: error.middleware.user.userBlocked,
-				code: "USER_BLOCKED"
+			// user not found
+			res.status(401).send({
+				message: error.middleware.user.userNotFound,
+				code: "USER_NOT_FOUND"
 			});
 			return;
 		}
-	} else {
-		// user not found
-		res.status(401).send({
-			message: error.middleware.user.userNotFound,
-			code: "USER_NOT_FOUND"
+	} catch (err) {
+		logger.log({
+			level: "error",
+			message: err
 		});
-		return;
 	}
 };
 
