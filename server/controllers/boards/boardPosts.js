@@ -7,6 +7,8 @@ const getVotes = require("../../services/votes/getVotes");
 // utils
 const logger = require("../../utils/logger");
 
+const error = require("../../errorResponse.json");
+
 exports.boardPosts = async (req, res) => {
 	const slug = req.params.slug;
 
@@ -71,15 +73,15 @@ exports.boardPosts = async (req, res) => {
 				});
 			}
 		} else {
+			logger.log({
+				level: "error",
+				code: "BOARD_NOT_FOUND",
+				message: `'${slug}' board not found`
+			});
+
 			res.status(404).send({
-				status: {
-					code: 404,
-					type: "error"
-				},
-				error: {
-					code: "board_not_found",
-					message: "Board not found"
-				}
+				code: "BOARD_NOT_FOUND",
+				message: error.api.boards.boardNotFound
 			});
 		}
 	} catch (err) {
