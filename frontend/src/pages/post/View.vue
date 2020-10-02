@@ -30,6 +30,7 @@
 						</div>
 						<div
 							v-if="postAuthor"
+							@mouseleave="addPostViewDropdownListener"
 							class="dropdown-menu-container viewpost__menu"
 						>
 							<div @click="toggleMenuDropdown" class="dropdown-menu-icon">
@@ -116,6 +117,20 @@ export default {
 		}
 	},
 	methods: {
+		// event listener to hide dropdown by clicking outside
+		addPostViewDropdownListener() {
+			document.addEventListener("click", this.removePostViewDropdownListener);
+		},
+		removePostViewDropdownListener() {
+			this.toggleMenuDropdown();
+			document.removeEventListener(
+				"click",
+				this.removePostViewDropdownListener
+			);
+		},
+		toggleMenuDropdown() {
+			this.menuDropdown = !this.menuDropdown;
+		},
 		postBySlug() {
 			const slug = this.$route.params.slug;
 
@@ -136,9 +151,6 @@ export default {
 		},
 		editPost() {
 			this.$router.push(`/post/${this.post.slug}/edit`);
-		},
-		toggleMenuDropdown() {
-			this.menuDropdown = !this.menuDropdown;
 		}
 	},
 	created() {
