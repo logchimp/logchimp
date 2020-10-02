@@ -6,7 +6,11 @@
 					<img src="@/assets/images/logo_invert_color.svg" />
 				</router-link>
 				<nav class="header-nav">
-					<div v-if="isAuthenticated" class="nav-item">
+					<div
+						v-if="isAuthenticated"
+						@mouseleave="addHeaderDropdownListener"
+						class="nav-item"
+					>
 						<avatar
 							@click="toggleProfileDropdown"
 							class="nav-profile"
@@ -100,6 +104,14 @@ export default {
 		}
 	},
 	methods: {
+		// event listener to hide dropdown by clicking outside
+		addHeaderDropdownListener() {
+			document.addEventListener("click", this.removeHeaderDropdownListener);
+		},
+		removeHeaderDropdownListener() {
+			this.toggleProfileDropdown();
+			document.removeEventListener("click", this.removeHeaderDropdownListener);
+		},
 		toggleProfileDropdown() {
 			this.profileDropdown = !this.profileDropdown;
 		},
