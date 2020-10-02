@@ -12,7 +12,7 @@
 					name="Full name"
 					placeholder="Mike M. Smit"
 					:error="fullName.error"
-					@keyup.native.enter="createAccount"
+					@keyup-enter="createAccount"
 					@hide-error="hideFullNameError"
 				/>
 				<l-text
@@ -22,7 +22,7 @@
 					name="Email address"
 					placeholder="Eg. email@example.com"
 					:error="emailAddress.error"
-					@keyup.native.enter="createAccount"
+					@keyup-enter="createAccount"
 					@hide-error="hideEmailAddressError"
 				/>
 				<l-text
@@ -32,7 +32,7 @@
 					name="Password"
 					placeholder="At least 10 character"
 					:error="password.error"
-					@keyup.native.enter="createAccount"
+					@keyup-enter="createAccount"
 					@hide-error="hidePasswordError"
 				/>
 				<div style="display: flex; justify-content: center;">

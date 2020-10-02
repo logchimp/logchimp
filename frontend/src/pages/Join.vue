@@ -15,7 +15,7 @@
 					name="email"
 					placeholder="Email address"
 					:error="emailAddress.error"
-					@keyup.native.enter="join"
+					@keyup-enter="join"
 					@hide-error="hideEmailAddressError"
 				/>
 				<l-text
@@ -25,7 +25,7 @@
 					name="password"
 					placeholder="Password"
 					:error="password.error"
-					@keyup.native.enter="join"
+					@keyup-enter="join"
 					@hide-error="hidePasswordError"
 				/>
 				<div style="display: flex; justify-content: center;">

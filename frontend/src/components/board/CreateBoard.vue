@@ -7,7 +7,7 @@
 			name="Name"
 			placeholder="Name of the board"
 			:error="boardName.error"
-			@keyup.native.enter="createBoard"
+			@keyup-enter="createBoard"
 			@hide-error="hideBoardNameError"
 		/>
 		<div style="display: flex; justify-content: center;">

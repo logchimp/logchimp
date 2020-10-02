@@ -7,7 +7,7 @@
 			name="Post title"
 			placeholder="Name of the feature"
 			:error="title.error"
-			@keyup.native.enter="submitPost"
+			@keyup-enter="submitPost"
 			@hide-error="hideTitleError"
 		/>
 		<l-textarea
