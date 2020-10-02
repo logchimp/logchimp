@@ -55,8 +55,10 @@ export default {
 	},
 	methods: {
 		hideError() {
-			this.error.show = false;
-			this.error.message = "";
+			this.$emit("hide-error", {
+				show: false,
+				message: ""
+			});
 		}
 	}
 };
