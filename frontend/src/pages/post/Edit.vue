@@ -10,6 +10,7 @@
 				placeholder="Name of the feature"
 				:error="post.title.error"
 				@keyup.native.enter="savePost"
+				@hide-error="hideTitleError"
 			/>
 			<l-textarea
 				v-model="post.contentMarkdown"
@@ -75,6 +76,9 @@ export default {
 		Button
 	},
 	methods: {
+		hideTitleError(event) {
+			this.post.title.error = event;
+		},
 		getPost() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;

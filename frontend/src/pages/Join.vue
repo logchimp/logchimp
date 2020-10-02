@@ -16,6 +16,7 @@
 					placeholder="Email address"
 					:error="emailAddress.error"
 					@keyup.native.enter="join"
+					@hide-error="hideEmailAddressError"
 				/>
 				<l-text
 					v-model="password.value"
@@ -25,6 +26,7 @@
 					placeholder="Password"
 					:error="password.error"
 					@keyup.native.enter="join"
+					@hide-error="hidePasswordError"
 				/>
 				<div style="display: flex; justify-content: center;">
 					<Button @click="join" type="primary" :loading="buttonLoading">
@@ -76,6 +78,12 @@ export default {
 		Button
 	},
 	methods: {
+		hideEmailAddressError(event) {
+			this.emailAddress.error = event;
+		},
+		hidePasswordError(event) {
+			this.password.error = event;
+		},
 		join() {
 			if (this.emailAddress.value && this.password.value) {
 				if (!this.buttonLoading) {

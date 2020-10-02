@@ -8,6 +8,7 @@
 			placeholder="Name of the board"
 			:error="boardName.error"
 			@keyup.native.enter="createBoard"
+			@hide-error="hideBoardNameError"
 		/>
 		<div style="display: flex; justify-content: center;">
 			<Button :loading="buttonLoading" @click="createBoard" type="primary">
@@ -52,6 +53,9 @@ export default {
 		Button
 	},
 	methods: {
+		hideBoardNameError(event) {
+			this.boardName.error = event;
+		},
 		createBoard() {
 			if (this.boardName.value) {
 				if (!this.buttonLoading) {
