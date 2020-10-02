@@ -2,7 +2,10 @@ name: frontend
 
 on:
   push:
-    paths: "frontend/**"
+    paths:
+      - "frontend/**"
+      - "package.json"
+      - "yarn.lock"
   workflow_dispatch:
 
 jobs:
