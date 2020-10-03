@@ -11,7 +11,7 @@
 			:value="value"
 			@input="$emit('input', $event.target.value)"
 			@click="hideError"
-			@keyup.enter="$emit('keyup.enter')"
+			@keyup.enter="$emit('keyup-enter')"
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
@@ -55,8 +55,10 @@ export default {
 	},
 	methods: {
 		hideError() {
-			this.error.show = false;
-			this.error.message = "";
+			this.$emit("hide-error", {
+				show: false,
+				message: ""
+			});
 		}
 	}
 };

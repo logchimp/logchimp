@@ -12,7 +12,8 @@
 					name="Full name"
 					placeholder="Mike M. Smit"
 					:error="fullName.error"
-					@keyup.native.enter="createAccount"
+					@keyup-enter="createAccount"
+					@hide-error="hideFullNameError"
 				/>
 				<l-text
 					v-model="emailAddress.value"
@@ -21,7 +22,8 @@
 					name="Email address"
 					placeholder="Eg. email@example.com"
 					:error="emailAddress.error"
-					@keyup.native.enter="createAccount"
+					@keyup-enter="createAccount"
+					@hide-error="hideEmailAddressError"
 				/>
 				<l-text
 					v-model="password.value"
@@ -30,7 +32,8 @@
 					name="Password"
 					placeholder="At least 10 character"
 					:error="password.error"
-					@keyup.native.enter="createAccount"
+					@keyup-enter="createAccount"
+					@hide-error="hidePasswordError"
 				/>
 				<div style="display: flex; justify-content: center;">
 					<Button
@@ -95,6 +98,15 @@ export default {
 		Button
 	},
 	methods: {
+		hideFullNameError(event) {
+			this.fullName.error = event;
+		},
+		hideEmailAddressError(event) {
+			this.emailAddress.error = event;
+		},
+		hidePasswordError(event) {
+			this.password.error = event;
+		},
 		createAccount() {
 			if (
 				this.fullName.value &&
