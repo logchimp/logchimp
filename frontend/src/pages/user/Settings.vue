@@ -10,7 +10,7 @@
 					name="First name"
 					placeholder="First name"
 					class="user-settings-name-item"
-					@keyup.native.enter="updateSettings"
+					@keyup-enter="updateSettings"
 				/>
 				<l-text
 					v-model="user.lastname.value"
@@ -19,7 +19,7 @@
 					name="Last name"
 					placeholder="Last name"
 					class="user-settings-name-item"
-					@keyup.native.enter="updateSettings"
+					@keyup-enter="updateSettings"
 				/>
 			</div>
 			<l-text

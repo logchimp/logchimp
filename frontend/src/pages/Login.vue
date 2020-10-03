@@ -15,7 +15,8 @@
 					name="email"
 					placeholder="Email address"
 					:error="emailAddress.error"
-					@keyup.native.enter="login"
+					@keyup-enter="login"
+					@hide-error="hideEmailAddressError"
 				/>
 				<l-text
 					v-model="password.value"
@@ -24,7 +25,8 @@
 					name="password"
 					placeholder="Password"
 					:error="password.error"
-					@keyup.native.enter="login"
+					@keyup-enter="login"
+					@hide-error="hidePasswordError"
 				/>
 				<div style="display: flex; justify-content: center;">
 					<Button @click="login" type="primary" :loading="buttonLoading">
@@ -77,6 +79,12 @@ export default {
 		Button
 	},
 	methods: {
+		hideEmailAddressError(event) {
+			this.emailAddress.error = event;
+		},
+		hidePasswordError(event) {
+			this.password.error = event;
+		},
 		login() {
 			if (this.emailAddress.value && this.password.value) {
 				this.buttonLoading = true;

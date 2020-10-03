@@ -7,7 +7,8 @@
 			name="Post title"
 			placeholder="Name of the feature"
 			:error="title.error"
-			@keyup.native.enter="submitPost"
+			@keyup-enter="submitPost"
+			@hide-error="hideTitleError"
 		/>
 		<l-textarea
 			v-model="description.value"
@@ -78,6 +79,9 @@ export default {
 		}
 	},
 	methods: {
+		hideTitleError(event) {
+			this.title.error = event;
+		},
 		submitPost() {
 			if (this.title.value) {
 				this.buttonLoading = true;
