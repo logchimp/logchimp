@@ -1,6 +1,6 @@
 {
 	"name": "server",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"dependencies": {
 		"@hapi/joi": "^17.1.0",
 		"bcryptjs": "^2.4.3",
