@@ -6,7 +6,9 @@
 		<div>
 			<div class="dashboard-settings-logo">
 				<label class="input-field-label" for="logo">Logo</label>
-				<img @click="selectFileHandler" :src="logo" :alt="siteName.value" />
+				<div class="dashboard-settings-logo-placeholder">
+					<img @click="selectFileHandler" :src="logo" :alt="siteName.value" />
+				</div>
 				<input
 					ref="fileSelector"
 					accept="image/jpg,image/jpeg,image/png,image/svg+xml"
