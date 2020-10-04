@@ -37,8 +37,38 @@
 				</div>
 			</router-link>
 		</nav>
-		<footer class="dashboard-sidebar-footer">
-			<div class="dashboard-sidebar-user-container">
+		<footer
+			@mouseleave="addDashboardSidebarFooterDropdownListener"
+			class="dashboard-sidebar-footer"
+		>
+			<dropdown
+				v-show="dashboardSidebarDropdown"
+				class="dashboard-sidebar-dropdown"
+			>
+				<dropdown-item @click="aboutLogChimp">
+					<template v-slot:icon>
+						<info-icon />
+					</template>
+					About LogChimp
+				</dropdown-item>
+				<dropdown-item @click="tweetLogChimp">
+					<template v-slot:icon>
+						<twitter-icon />
+					</template>
+					Tweet @LogChimp!
+				</dropdown-item>
+				<dropdown-spacer />
+				<dropdown-item @click="signOut">
+					<template v-slot:icon>
+						<logout-icon />
+					</template>
+					Sign Out
+				</dropdown-item>
+			</dropdown>
+			<div
+				@click="toggleDashboardSidebarDropdown"
+				class="dashboard-sidebar-user-container"
+			>
 				<div class="dashboard-sidebar-user">
 					<avatar
 						class="dashboard-sidebar-user-avatar"
@@ -62,6 +92,9 @@
 <script>
 // components
 import Avatar from "../Avatar";
+import Dropdown from "../dropdown/Dropdown";
+import DropdownItem from "../dropdown/DropdownItem";
+import DropdownSpacer from "../dropdown/DropdownSpacer";
 
 // mixins
 import userAvatar from "../../mixins/userAvatar";
@@ -71,24 +104,70 @@ import DashboardIcon from "../../components/icons/Dashboard";
 import BoardIcon from "../../components/icons/Board";
 import PostIcon from "../../components/icons/Post";
 import UsersIcon from "../../components/icons/Users";
+import InfoIcon from "../../components/icons/Info";
+import TwitterIcon from "../../components/icons/Twitter";
+import LogoutIcon from "../../components/icons/Logout";
 
 export default {
 	name: "DashboardSidebar",
+	data() {
+		return {
+			dashboardSidebarDropdown: false
+		};
+	},
 	components: {
 		// components
 		Avatar,
+		Dropdown,
+		DropdownItem,
+		DropdownSpacer,
 
 		// icons
 		DashboardIcon,
 		BoardIcon,
 		PostIcon,
-		UsersIcon
+		UsersIcon,
+		InfoIcon,
+		TwitterIcon,
+		LogoutIcon
 	},
 	mixins: [userAvatar],
 	computed: {
 		emailAddress() {
 			const user = this.$store.getters["user/getUser"];
 			return user.emailAddress;
+		}
+	},
+	methods: {
+		// event listener to hide dropdown by clicking outside
+		addDashboardSidebarFooterDropdownListener() {
+			document.addEventListener(
+				"click",
+				this.removeDashboardSidebarFooterDropdownListener
+			);
+		},
+		removeDashboardSidebarFooterDropdownListener() {
+			this.toggleDashboardSidebarDropdown();
+			document.removeEventListener(
+				"click",
+				this.removeDashboardSidebarFooterDropdownListener
+			);
+		},
+		toggleDashboardSidebarDropdown() {
+			this.dashboardSidebarDropdown = !this.dashboardSidebarDropdown;
+		},
+		aboutLogChimp() {
+			window.open("https://logchimp.codecarrot.net/");
+		},
+		tweetLogChimp() {
+			window.open(
+				"https://twitter.com/intent/tweet?text=%40LogChimp+Hi%21+Can+you+help+me+with+&related=LogChimp"
+			);
+		},
+		signOut() {
+			this.$store.dispatch("user/logout");
+			this.dashboardSidebarDropdown = false;
+			this.$router.push("/");
 		}
 	}
 };
