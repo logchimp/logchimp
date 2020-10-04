@@ -112,7 +112,7 @@ export default {
 
 				axios({
 					method: "patch",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/site`,
+					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/site`,
 					data: {
 						title: this.siteName.value,
 						description: this.description.value,
@@ -146,7 +146,7 @@ export default {
 		getSettings() {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/site`
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/site`
 			})
 				.then(response => {
 					this.siteName.value = response.data.settings.title;
