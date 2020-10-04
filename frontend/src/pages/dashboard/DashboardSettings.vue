@@ -6,7 +6,15 @@
 		<div>
 			<div class="dashboard-settings-logo">
 				<label class="input-field-label" for="logo">Logo</label>
-				<img :src="logo" :alt="siteName.value" />
+				<img @click="selectFileHandler" :src="logo" :alt="siteName.value" />
+				<input
+					ref="fileSelector"
+					accept="image/jpg,image/jpeg,image/png,image/svg+xml"
+					type="file"
+					name="logo"
+					style="display: none"
+					@change="uploadFile"
+				/>
 			</div>
 			<l-text
 				v-model="siteName.value"
@@ -105,6 +113,32 @@ export default {
 		},
 		hideAccentColorError(event) {
 			this.accentColor.error = event;
+		},
+		selectFileHandler() {
+			this.$refs.fileSelector.click();
+		},
+		uploadFile(event) {
+			const token = this.$store.getters["user/getAuthToken"];
+			const logo = event.target.files[0];
+
+			const formData = new FormData();
+			formData.append("logo", logo);
+
+			axios({
+				method: "post",
+				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/update-logo`,
+				data: formData,
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "multipart/form-data"
+				}
+			})
+				.then(response => {
+					this.logo = response.data.settings.logo;
+				})
+				.catch(error => {
+					console.log(error);
+				});
 		},
 		saveSettings() {
 			if (this.siteName.value && this.accentColor.value) {
