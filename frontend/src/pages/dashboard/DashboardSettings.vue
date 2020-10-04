@@ -23,6 +23,7 @@
 				name="Site name"
 				placeholder="My awesome site"
 				:error="siteName.error"
+				@keyup-enter="saveSettings"
 				@hide-error="hideSiteNameError"
 			/>
 			<l-text
@@ -32,6 +33,7 @@
 				name="Description"
 				placeholder="Site description"
 				:error="description.error"
+				@keyup-enter="saveSettings"
 				@hide-error="hideDescriptionError"
 			/>
 			<div style="display: flex; align-items: center;">
@@ -42,6 +44,7 @@
 					name="Color"
 					placeholder="484d7c"
 					:error="accentColor.error"
+					@keyup-enter="saveSettings"
 					@hide-error="hideAccentColorError"
 				/>
 				<div class="dashboard-settings-color-border">
