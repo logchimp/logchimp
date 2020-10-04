@@ -8,12 +8,14 @@ const posts = require("./posts");
 const votes = require("./votes");
 const users = require("./users");
 const boards = require("./boards");
+const settings = require("./settings");
 
 router.use("/api/v1", auth);
 router.use("/api/v1", posts);
 router.use("/api/v1", votes);
 router.use("/api/v1", users);
 router.use("/api/v1", boards);
+router.use("/api/v1", settings);
 
 router.get("/api", (req, res) => {
 	res.send("👍");
