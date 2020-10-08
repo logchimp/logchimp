@@ -70,6 +70,43 @@ export default {
 		if (user) {
 			this.$store.dispatch("user/login", JSON.parse(user));
 		}
+	},
+	metaInfo() {
+		return {
+			titleTemplate: `%s · ${this.getSiteSittings.title}`,
+			meta: [
+				{
+					name: "description",
+					content: `${this.getSiteSittings.description}. Powered By LogChimp.`
+				},
+				{
+					name: "robots",
+					content: "index, follow"
+				},
+				{
+					rel: "canonical",
+					href: this.$route.fullPath
+				},
+				{
+					name: "language",
+					content: "es"
+				},
+				{
+					name: "copyright",
+					content: this.getSiteSittings.title
+				},
+
+				// openGraph
+				{
+					name: "og:type",
+					content: "website"
+				},
+				{
+					name: "og:description",
+					content: `${this.getSiteSittings.description}. Powered By LogChimp.`
+				}
+			]
+		};
 	}
 };
 </script>
