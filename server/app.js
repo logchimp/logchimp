@@ -17,21 +17,28 @@ database
 		database.migrate
 			.latest()
 			.then(() => {
-				console.log("Database setup complete");
+				database.seed
+					.run()
+					.then(() => {
+						console.log("Database setup complete");
 
-				// start express server at SERVER_PORT
-				app.listen(process.env.SERVER_PORT, () => {
-					// contains key-value pairs of data submitted in the request body
-					app.use(bodyParser.json());
+						// start express server at SERVER_PORT
+						app.listen(process.env.SERVER_PORT, () => {
+							// contains key-value pairs of data submitted in the request body
+							app.use(bodyParser.json());
 
-					// enable all CORS requests
-					app.use(cors());
+							// enable all CORS requests
+							app.use(cors());
 
-					// importing all routes modules
-					app.use(routes);
+							// importing all routes modules
+							app.use(routes);
 
-					console.log(`Listening at port: ${process.env.SERVER_PORT}`);
-				});
+							console.log(`Listening at port: ${process.env.SERVER_PORT}`);
+						});
+					})
+					.catch(error => {
+						console.error(error);
+					});
 			})
 			.catch(error => {
 				console.error(error);

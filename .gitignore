@@ -1,7 +1,16 @@
 .DS_Store
 node_modules
 /dist
-logs
+
+# content
+content/images/*.png
+content/images/*.jpg
+content/images/*.jpeg
+content/images/*.svg
+content/logs/*.log
+
+# frontend
+frontend/dist
 
 # local env files
 .env

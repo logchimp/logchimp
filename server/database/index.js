@@ -25,6 +25,9 @@ const knex = require("knex")({
 		directory: "./database/migrations",
 		tableName: "migrations"
 	},
+	seeds: {
+		directory: "./database/seeds"
+	},
 	afterCreate: (conn, done) => {
 		// in this example we use pg driver's connection API
 		conn.query('SET timezone="UTC";', err => {
