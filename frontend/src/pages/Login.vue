@@ -92,6 +92,9 @@ export default {
 			this.password.error = event;
 		},
 		login() {
+			if (this.buttonLoading) {
+				return;
+			}
 			if (this.emailAddress.value && this.password.value) {
 				this.buttonLoading = true;
 

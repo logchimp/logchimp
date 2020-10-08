@@ -83,6 +83,9 @@ export default {
 			this.title.error = event;
 		},
 		submitPost() {
+			if (this.buttonLoading) {
+				return;
+			}
 			if (this.title.value) {
 				this.buttonLoading = true;
 				const userId = this.$store.getters["user/getUserId"];
