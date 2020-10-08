@@ -20,6 +20,11 @@ import tokenErrorHandle from "../../mixins/tokenErrorHandle";
 
 export default {
 	name: "Vote",
+	data() {
+		return {
+			loading: false
+		};
+	},
 	props: {
 		postId: {
 			type: String,
@@ -49,9 +54,13 @@ export default {
 	},
 	methods: {
 		changeVote() {
+			if (this.loading) {
+				return;
+			}
 			const userId = this.$store.getters["user/getUserId"];
 			const postId = this.postId;
 			const token = this.$store.getters["user/getAuthToken"];
+			this.loading = true;
 
 			if (this.isVoted) {
 				const voteId = this.voters.find(item => {
@@ -71,11 +80,15 @@ export default {
 				})
 					.then(response => {
 						this.$emit("update-voters", response.data.voters);
+
+						this.loading = false;
 					})
 					.catch(error => {
 						this.userNotFound(error);
 						this.invalidToken(error);
 						this.invalidAuthHeaderFormat(error);
+
+						this.loading = false;
 					});
 			} else {
 				axios({
@@ -91,11 +104,15 @@ export default {
 				})
 					.then(response => {
 						this.$emit("update-voters", response.data.voters);
+
+						this.loading = false;
 					})
 					.catch(error => {
 						this.userNotFound(error);
 						this.invalidToken(error);
 						this.invalidAuthHeaderFormat(error);
+
+						this.loading = false;
 					});
 			}
 		}
