@@ -150,6 +150,12 @@ export default {
 				}
 			}
 		}
+	},
+	created() {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			this.$router.push("/");
+		}
 	}
 };
 </script>
