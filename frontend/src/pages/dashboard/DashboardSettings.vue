@@ -140,6 +140,10 @@ export default {
 			})
 				.then(response => {
 					this.logo = response.data.settings.logo;
+
+					this.$store.dispatch("settings/updateLogo", {
+						logo: response.data.settings.logo
+					});
 				})
 				.catch(error => {
 					console.log(error);
@@ -166,6 +170,8 @@ export default {
 						this.logo = response.data.settings.logo;
 						this.description.value = response.data.settings.description;
 						this.accentColor.value = response.data.settings.accentColor;
+
+						this.$store.dispatch("settings/update", response.data.settings);
 					})
 					.catch(error => {
 						console.error(error);
