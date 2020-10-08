@@ -9,6 +9,9 @@ content/images/*.jpeg
 content/images/*.svg
 content/logs/*.log
 
+# frontend
+frontend/dist
+
 # local env files
 .env
 .env.local
