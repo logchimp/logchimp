@@ -116,6 +116,9 @@ export default {
 				});
 		},
 		updateSettings() {
+			if (this.buttonLoading) {
+				return;
+			}
 			this.buttonLoading = true;
 			const userId = this.$store.getters["user/getUserId"];
 

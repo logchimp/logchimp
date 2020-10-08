@@ -102,6 +102,9 @@ export default {
 				});
 		},
 		savePost() {
+			if (this.buttonLoading) {
+				return;
+			}
 			if (this.post.title.value) {
 				this.buttonLoading = true;
 				const token = this.$store.getters["user/getAuthToken"];

@@ -57,31 +57,31 @@ export default {
 			this.boardName.error = event;
 		},
 		createBoard() {
+			if (this.buttonLoading) {
+				return;
+			}
 			if (this.boardName.value) {
-				if (!this.buttonLoading) {
-					this.buttonLoading = true;
-					const token = this.$store.getters["user/getAuthToken"];
-					axios({
-						method: "post",
-						url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards`,
-						data: {
-							name: this.boardName.value
-						},
-						headers: {
-							Authorization: `Bearer ${token}`
-						}
+				this.buttonLoading = true;
+				const token = this.$store.getters["user/getAuthToken"];
+
+				axios({
+					method: "post",
+					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards`,
+					data: {
+						name: this.boardName.value
+					},
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				})
+					.then(() => {
+						this.$router.push(this.redirect);
+						this.buttonLoading = false;
 					})
-						.then(response => {
-							if (response.status === 201) {
-								this.$router.push(this.redirect);
-								this.buttonLoading = false;
-							}
-						})
-						.catch(error => {
-							console.error(error);
-							this.buttonLoading = false;
-						});
-				}
+					.catch(error => {
+						console.error(error);
+						this.buttonLoading = false;
+					});
 			} else {
 				this.boardName.error.show = true;
 				this.boardName.error.message = "Required";

@@ -1,5 +1,9 @@
 <template>
-	<div class="button" :class="[`button-${type}`]" @click="$emit('click')">
+	<div
+		class="button"
+		:class="[`button-${type}`, loading ? 'button-loading' : '']"
+		@click="$emit('click')"
+	>
 		<slot />
 		<div class="button-loader" v-if="loading">
 			<loader-icon />

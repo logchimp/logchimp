@@ -150,7 +150,11 @@ export default {
 				});
 		},
 		saveSettings() {
+			if (this.buttonLoading) {
+				return;
+			}
 			if (this.siteName.value && this.accentColor.value) {
+				this.buttonLoading = true;
 				const token = this.$store.getters["user/getAuthToken"];
 
 				axios({
@@ -172,9 +176,11 @@ export default {
 						this.accentColor.value = response.data.settings.accentColor;
 
 						this.$store.dispatch("settings/update", response.data.settings);
+						this.buttonLoading = false;
 					})
 					.catch(error => {
 						console.error(error);
+						this.buttonLoading = false;
 					});
 			} else {
 				if (!this.siteName.value) {
