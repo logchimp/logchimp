@@ -47,6 +47,12 @@ const actions = {
 	logout: ({ state, commit }) => {
 		commit("setUser", state);
 		localStorage.removeItem("user");
+	},
+	updateUserSettings: ({ state, commit }, payload) => {
+		commit("setUser", {
+			...state,
+			...payload
+		});
 	}
 };
 
