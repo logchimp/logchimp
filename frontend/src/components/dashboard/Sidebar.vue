@@ -1,7 +1,11 @@
 <template>
 	<div class="dashboard-sidebar">
 		<router-link to="/dashboard" class="site-info dashboard-sidebar-header">
-			<img class="site-logo" :src="getSiteSittings.logo" />
+			<img
+				class="site-logo"
+				:src="getSiteSittings.logo"
+				:alt="getSiteSittings.title"
+			/>
 			<h5 class="site-name">{{ getSiteSittings.title }}</h5>
 		</router-link>
 		<nav class="dashboard-sidebar-navbar">
