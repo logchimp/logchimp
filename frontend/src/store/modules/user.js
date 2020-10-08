@@ -36,63 +36,16 @@ const mutations = {
 		state.createdAt = payload.createdAt;
 		state.updatedAt = payload.updatedAt;
 
-		localStorage.setItem(
-			"user",
-			JSON.stringify({
-				authToken: payload.authToken,
-				userId: payload.userId,
-				firstname: payload.firstname,
-				lastname: payload.lastname,
-				emailAddress: payload.emailAddress,
-				username: payload.username,
-				avatar: payload.avatar,
-				isVerified: payload.isVerified,
-				isBlocked: payload.isBlocked,
-				isModerator: payload.isModerator,
-				isOwner: payload.isOwner,
-				createdAt: payload.createdAt,
-				updatedAt: payload.updatedAt
-			})
-		);
+		localStorage.setItem("user", JSON.stringify(payload));
 	}
 };
 
 const actions = {
 	login: ({ commit }, payload) => {
-		commit({
-			type: "setUser",
-			authToken: payload.authToken,
-			userId: payload.userId,
-			firstname: payload.firstname,
-			lastname: payload.lastname,
-			emailAddress: payload.emailAddress,
-			username: payload.username,
-			avatar: payload.avatar,
-			isVerified: payload.isVerified,
-			isBlocked: payload.isBlocked,
-			isModerator: payload.isModerator,
-			isOwner: payload.isOwner,
-			createdAt: payload.createdAt,
-			updatedAt: payload.updatedAt
-		});
+		commit("setUser", payload);
 	},
-	logout: ({ commit }) => {
-		commit({
-			type: "setUser",
-			authToken: "",
-			userId: "",
-			firstname: "",
-			lastname: "",
-			emailAddress: "",
-			username: "",
-			avatar: "",
-			isVerified: "",
-			isBlocked: "",
-			isModerator: "",
-			isOwner: "",
-			createdAt: "",
-			updatedAt: ""
-		});
+	logout: ({ state, commit }) => {
+		commit("setUser", state);
 		localStorage.removeItem("user");
 	}
 };
