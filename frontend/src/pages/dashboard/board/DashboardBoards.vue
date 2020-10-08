@@ -97,6 +97,11 @@ export default {
 		LinkIcon
 		// SettingsIcon
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		createBoard() {
 			this.$router.push("/dashboard/create-board");
@@ -124,6 +129,17 @@ export default {
 					$state.error();
 				});
 		}
+	},
+	metaInfo() {
+		return {
+			title: `Boards · Dashboard`,
+			meta: [
+				{
+					name: "og:title",
+					content: `Boards · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

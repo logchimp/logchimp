@@ -109,6 +109,11 @@ export default {
 		LText,
 		Button
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		hideSiteNameError(event) {
 			this.siteName.error = event;
@@ -212,6 +217,17 @@ export default {
 	},
 	created() {
 		this.getSettings();
+	},
+	metaInfo() {
+		return {
+			title: "Site settings · Dashboard",
+			meta: [
+				{
+					name: "og:title",
+					content: `Site settings · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

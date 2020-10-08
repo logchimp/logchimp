@@ -93,6 +93,11 @@ export default {
 		LText,
 		Button
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		getUser() {
 			const userId = this.$store.getters["user/getUserId"];
@@ -162,6 +167,17 @@ export default {
 				}
 			});
 		}
+	},
+	metaInfo() {
+		return {
+			title: "User settings",
+			meta: [
+				{
+					name: "og:title",
+					content: `User settings · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

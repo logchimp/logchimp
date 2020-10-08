@@ -19,6 +19,22 @@ export default {
 	name: "OnboardingWelcome",
 	components: {
 		CreateBoard
+	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
+	metaInfo() {
+		return {
+			title: "Create board · Onboarding",
+			meta: [
+				{
+					name: "og:title",
+					content: `Create board · Onboarding · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

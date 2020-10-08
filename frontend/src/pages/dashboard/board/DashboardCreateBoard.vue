@@ -15,6 +15,22 @@ export default {
 	name: "DashboardCreateBoard",
 	components: {
 		CreateBoard
+	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
+	metaInfo() {
+		return {
+			title: "Create board · Dashboard",
+			meta: [
+				{
+					name: "og:title",
+					content: `Create board · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

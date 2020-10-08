@@ -25,6 +25,11 @@ export default {
 		// components
 		SiteSetupCard
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		isSetup() {
 			axios
@@ -39,6 +44,17 @@ export default {
 	},
 	created() {
 		this.isSetup();
+	},
+	metaInfo() {
+		return {
+			title: "Home",
+			meta: [
+				{
+					name: "og:title",
+					content: `Home · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

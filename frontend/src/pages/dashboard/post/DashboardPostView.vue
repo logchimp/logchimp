@@ -86,6 +86,9 @@ export default {
 		postAuthor() {
 			const userId = this.$store.getters["user/getUserId"];
 			return userId === this.post.userId;
+		},
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
 		}
 	},
 	methods: {
@@ -115,6 +118,17 @@ export default {
 	},
 	created() {
 		this.postBySlug();
+	},
+	metaInfo() {
+		return {
+			title: `${this.post.title} · Post · Dashboard`,
+			meta: [
+				{
+					name: "og:title",
+					content: `${this.post.title} · Post · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

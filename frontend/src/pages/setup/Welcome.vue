@@ -27,10 +27,26 @@ export default {
 	components: {
 		Button
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		createAccount() {
 			this.$router.push("/setup/create-account");
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Welcome · Onboarding",
+			meta: [
+				{
+					name: "og:title",
+					content: `Welcome · Onboarding · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

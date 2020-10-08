@@ -7,6 +7,7 @@
 		"sass-loader": "^10.0.2",
 		"vue": "^2.6.12",
 		"vue-infinite-loading": "^2.4.5",
+		"vue-meta": "^2.4.0",
 		"vue-moment": "^4.1.0",
 		"vue-router": "^3.4.5",
 		"vuex": "^3.4.0"
