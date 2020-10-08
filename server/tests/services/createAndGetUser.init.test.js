@@ -14,10 +14,7 @@ const logger = require("../../utils/logger");
 describe("Create and get user account", () => {
 	beforeAll(async () => {
 		try {
-			const dbMigrateLatest = await database.migrate.latest({
-				directory: "./server/database/migrations",
-				tableName: "migrations"
-			});
+			const dbMigrateLatest = await database.migrate.latest();
 
 			return dbMigrateLatest;
 		} catch (err) {
