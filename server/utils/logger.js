@@ -16,10 +16,10 @@ const logger = createLogger({
 	),
 	transports: [
 		new transports.File({
-			filename: "../logs/logchimp-error.log",
+			filename: "../content/logs/logchimp-error.log",
 			level: "error"
 		}),
-		new transports.File({ filename: "../logs/logchimp-all.log" })
+		new transports.File({ filename: "../content/logs/logchimp-all.log" })
 	]
 });
 

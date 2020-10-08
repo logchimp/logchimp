@@ -2,8 +2,9 @@
 	<header class="header">
 		<div class="container">
 			<div class="header-container">
-				<router-link to="/" class="header-logo">
-					<img src="@/assets/images/logo_invert_color.svg" />
+				<router-link to="/" class="site-info">
+					<img class="site-logo" :src="getSiteSittings.logo" />
+					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
 				</router-link>
 				<nav class="header-nav">
 					<div
@@ -94,6 +95,9 @@ export default {
 	},
 	mixins: [userAvatar],
 	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		},
 		userIsOwner() {
 			const user = this.$store.getters["user/getUser"];
 			return user.isOwner;

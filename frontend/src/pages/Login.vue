@@ -2,8 +2,9 @@
 	<div class="auth">
 		<div class="auth-form-container">
 			<div class="auth-form-header">
-				<router-link to="/" class="auth-form-logo">
-					<img src="@/assets/images/logo.svg" />
+				<router-link to="/" class="auth-form-logo site-info">
+					<img class="site-logo" :src="getSiteSittings.logo" />
+					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
 				</router-link>
 				<h3 class="auth-form-heading">Welcome back!</h3>
 			</div>
@@ -77,6 +78,11 @@ export default {
 		Form,
 		LText,
 		Button
+	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
 	},
 	methods: {
 		hideEmailAddressError(event) {
