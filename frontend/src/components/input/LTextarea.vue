@@ -1,5 +1,5 @@
 <template>
-	<div class="input">
+	<label class="input">
 		<p v-if="label" class="input-field-label">{{ label }}</p>
 		<textarea
 			:value="value"
@@ -12,7 +12,7 @@
 			:disabled="disabled"
 		/>
 		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
-	</div>
+	</label>
 </template>
 
 <script>
