@@ -30,9 +30,9 @@ exports.up = function(knex) {
 			table.comment("Storing users data");
 		})
 		.then(() => {
-			logger.log({
-				level: "info",
-				message: "Create 'users' table"
+			logger.info({
+				code: "DATABASE_MIGRATIONS",
+				message: "Creating table: users"
 			});
 		})
 		.catch(err => {
@@ -54,7 +54,7 @@ exports.down = function(knex) {
 		.then(() => {
 			logger.log({
 				level: "info",
-				message: "Drop 'users' table"
+				message: "Dropping table: users"
 			});
 		})
 		.catch(err => {

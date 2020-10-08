@@ -10,9 +10,9 @@ exports.up = function(knex) {
 				.inTable("boards");
 		})
 		.then(() => {
-			logger.log({
-				level: "info",
-				message: "Add 'boardId' column in 'posts' table"
+			logger.info({
+				code: "DATABASE_MIGRATIONS",
+				message: "Adding column: boardId in posts"
 			});
 		})
 		.catch(err => {
@@ -36,7 +36,7 @@ exports.down = function(knex) {
 		.then(() => {
 			logger.log({
 				level: "info",
-				message: "Remove 'boardId' column from 'posts' table"
+				message: "Dropping column: boardId in posts"
 			});
 		})
 		.catch(err => {
