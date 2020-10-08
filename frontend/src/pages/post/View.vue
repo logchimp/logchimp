@@ -1,5 +1,5 @@
 <template>
-	<div class="view">
+	<div v-if="!post.loading">
 		<div v-if="isPostExist" class="viewpost">
 			<div class="viewpost__vote">
 				<div>
@@ -53,16 +53,9 @@
 		<p v-else>
 			There is no such post.
 		</p>
-		<!-- todo: list of user who upvote the post -->
-		<!-- <div class="viewvoters">
-			<div class="viewvoters__container">
-				<div class="viewvoters__users">
-					<h6 class="viewvoters__users-heading">
-						Voters
-					</h6>
-				</div>
-			</div>
-		</div> -->
+	</div>
+	<div v-else class="loader-container">
+		<loader />
 	</div>
 </template>
 
@@ -71,6 +64,7 @@
 import axios from "axios";
 
 // components
+import Loader from "../../components/Loader";
 import Vote from "../../components/post/Vote";
 import Dropdown from "../../components/dropdown/Dropdown";
 import DropdownItem from "../../components/dropdown/DropdownItem";
@@ -88,12 +82,16 @@ export default {
 	data() {
 		return {
 			menuDropdown: false,
-			post: {},
+			post: {
+				loading: false
+			},
 			voters: [],
 			isPostExist: true
 		};
 	},
 	components: {
+		// components
+		Loader,
 		Vote,
 		Dropdown,
 		DropdownItem,
@@ -132,6 +130,7 @@ export default {
 			this.menuDropdown = !this.menuDropdown;
 		},
 		postBySlug() {
+			this.post.loading = true;
 			const slug = this.$route.params.slug;
 
 			axios
@@ -139,11 +138,15 @@ export default {
 				.then(response => {
 					this.post = response.data.post;
 					this.voters = response.data.voters;
+
+					this.post.loading = false;
 				})
 				.catch(error => {
 					if (error.response.data.code === "POST_NOT_FOUND") {
 						this.isPostExist = false;
 					}
+
+					this.post.loading = false;
 				});
 		},
 		updateVoters(voters) {
