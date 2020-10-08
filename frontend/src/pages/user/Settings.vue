@@ -134,6 +134,12 @@ export default {
 				.then(response => {
 					this.user.firstname.value = response.data.user.firstname;
 					this.user.lastname.value = response.data.user.lastname;
+
+					this.$store.dispatch("user/updateUserSettings", {
+						firstname: response.data.user.firstname,
+						lastname: response.data.user.lastname
+					});
+
 					this.buttonLoading = false;
 				})
 				.catch(error => {
