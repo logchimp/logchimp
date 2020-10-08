@@ -111,6 +111,11 @@ export default {
 		Table,
 		Loader
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		getPosts($state) {
 			axios({
@@ -150,6 +155,17 @@ export default {
 					$state.error();
 				});
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Dashboard",
+			meta: [
+				{
+					name: "og:title",
+					content: `Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

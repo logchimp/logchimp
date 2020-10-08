@@ -46,6 +46,11 @@ export default {
 		Post,
 		Loader
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		getBoardPosts($state) {
 			axios({
@@ -70,6 +75,17 @@ export default {
 					$state.error();
 				});
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Posts · Dashboard",
+			meta: [
+				{
+					name: "og:title",
+					content: `Posts · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

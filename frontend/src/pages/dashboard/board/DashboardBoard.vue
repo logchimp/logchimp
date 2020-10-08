@@ -53,6 +53,11 @@ export default {
 		Loader,
 		CreatePost
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		getBoardPosts($state) {
 			const slug = this.$route.params.slug;
@@ -96,6 +101,17 @@ export default {
 	},
 	created() {
 		this.getBoardBySlug();
+	},
+	metaInfo() {
+		return {
+			title: `${this.board.name} · Board · Dashboard`,
+			meta: [
+				{
+					name: "og:title",
+					content: `${this.board.name} · Board · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

@@ -97,6 +97,11 @@ export default {
 		LText,
 		Button
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		hideFullNameError(event) {
 			this.fullName.error = event;
@@ -165,6 +170,17 @@ export default {
 				}
 			}
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Account · Onboarding",
+			meta: [
+				{
+					name: "og:title",
+					content: `Account · Onboarding · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>
