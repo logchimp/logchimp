@@ -76,6 +76,9 @@ export default {
 				}`;
 			}
 			return this.post.username;
+		},
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
 		}
 	},
 	methods: {
@@ -102,6 +105,17 @@ export default {
 					console.error(error);
 				});
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Users · Dashboard",
+			meta: [
+				{
+					name: "og:title",
+					content: `Users · Dashboard · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

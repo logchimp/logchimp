@@ -97,6 +97,9 @@ export default {
 				default:
 					return LatestPosts;
 			}
+		},
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
 		}
 	},
 	methods: {
@@ -127,6 +130,17 @@ export default {
 	},
 	created() {
 		this.getBoard();
+	},
+	metaInfo() {
+		return {
+			title: `${this.board.name} · Board`,
+			meta: [
+				{
+					name: "og:title",
+					content: `${this.board.name} · Board · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

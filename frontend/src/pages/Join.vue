@@ -156,6 +156,17 @@ export default {
 		if (user) {
 			this.$router.push("/");
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Join",
+			meta: [
+				{
+					name: "og:title",
+					content: `Join · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

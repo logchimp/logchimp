@@ -55,6 +55,11 @@ export default {
 		// components
 		Loader
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		getBoards($state) {
 			axios({
@@ -79,6 +84,17 @@ export default {
 					$state.error();
 				});
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Boards",
+			meta: [
+				{
+					name: "og:title",
+					content: `Boards · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

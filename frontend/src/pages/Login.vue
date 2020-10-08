@@ -160,6 +160,17 @@ export default {
 		if (user) {
 			this.$router.push("/");
 		}
+	},
+	metaInfo() {
+		return {
+			title: "Login",
+			meta: [
+				{
+					name: "og:title",
+					content: `Login · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>

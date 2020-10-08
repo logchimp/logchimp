@@ -75,6 +75,11 @@ export default {
 		LTextarea,
 		Button
 	},
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	methods: {
 		hideTitleError(event) {
 			this.post.title.error = event;
@@ -156,6 +161,17 @@ export default {
 	},
 	created() {
 		this.getPost();
+	},
+	metaInfo() {
+		return {
+			title: "Edit post",
+			meta: [
+				{
+					name: "og:title",
+					content: `Edit post · ${this.getSiteSittings.title}`
+				}
+			]
+		};
 	}
 };
 </script>
