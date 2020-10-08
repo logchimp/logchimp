@@ -1,5 +1,10 @@
 <template>
-	<div id="app">
+	<div
+		id="app"
+		:style="{
+			'--brand-color': `#${getSiteSittings.accentColor}`
+		}"
+	>
 		<div class="alerts">
 			<Alert
 				:key="alert.time"
@@ -23,6 +28,9 @@ export default {
 		Alert
 	},
 	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		},
 		getAlerts() {
 			const alerts = this.$store.getters["alerts/getAlerts"];
 			return alerts;
