@@ -1,7 +1,8 @@
 <template>
 	<div class="dashboard-sidebar">
-		<router-link to="/dashboard" class="dashboard-sidebar-header">
-			<img src="@/assets/images/logo_invert_color.svg" />
+		<router-link to="/dashboard" class="site-info dashboard-sidebar-header">
+			<img class="site-logo" :src="getSiteSittings.logo" />
+			<h5 class="site-name">{{ getSiteSittings.title }}</h5>
 		</router-link>
 		<nav class="dashboard-sidebar-navbar">
 			<router-link to="/dashboard" class="dashboard-sidebar-navbar-item">
@@ -136,6 +137,9 @@ export default {
 	},
 	mixins: [userAvatar],
 	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		},
 		emailAddress() {
 			const user = this.$store.getters["user/getUser"];
 			return user.emailAddress;
