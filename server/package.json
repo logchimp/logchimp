@@ -14,7 +14,7 @@
 		"multer": "^1.4.2",
 		"nanoid": "^3.1.12",
 		"pg": "^8.3.3",
-		"uuid": "^8.3.0",
+		"uuid": "^8.3.1",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
