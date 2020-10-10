@@ -2,7 +2,7 @@
 	<div class="homepage">
 		<main class="homepage-posts" />
 		<aside class="homepage-sidebar">
-			<site-setup-card v-if="showSiteSetupCard" />
+			<!-- <site-setup-card v-if="showSiteSetupCard" /> -->
 		</aside>
 	</div>
 </template>
@@ -12,7 +12,7 @@
 import axios from "axios";
 
 // components
-import SiteSetupCard from "../components/SiteSetupCard";
+// import SiteSetupCard from "../components/SiteSetupCard";
 
 export default {
 	name: "HomePage",
@@ -23,7 +23,7 @@ export default {
 	},
 	components: {
 		// components
-		SiteSetupCard
+		// SiteSetupCard
 	},
 	computed: {
 		getSiteSittings() {
@@ -45,7 +45,7 @@ export default {
 	created() {
 		this.isSetup();
 	},
-	metaInfo() {
+	head() {
 		return {
 			title: "Home",
 			meta: [
