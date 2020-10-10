@@ -1,22 +1,22 @@
 <template>
 	<div class="dashboard">
 		<aside>
-			<Sidebar />
+			<!-- <Sidebar /> -->
 		</aside>
 		<main class="dashboard-main">
-			<router-view />
+			<Nuxt />
 		</main>
 	</div>
 </template>
 
 <script>
 // components
-import Sidebar from "../components/dashboard/Sidebar";
+// import Sidebar from "../components/dashboard/Sidebar";
 
 export default {
 	name: "DashboardLayout",
 	components: {
-		Sidebar
+		// Sidebar
 	}
 };
 </script>

@@ -2,7 +2,7 @@
 	<div>
 		<!-- <Header /> -->
 		<div class="container">
-			<router-view />
+			<Nuxt />
 		</div>
 	</div>
 </template>
@@ -16,5 +16,5 @@ export default {
 	components: {
 		// Header
 	}
-}
+};
 </script>
