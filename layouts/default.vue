@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Header />
+		<!-- <Header /> -->
 		<div class="container">
 			<router-view />
 		</div>
@@ -9,12 +9,12 @@
 
 <script>
 // components
-import Header from "../components/Header";
+// import Header from "../components/Header";
 
 export default {
 	name: "HeaderFooter",
 	components: {
-		Header
+		// Header
 	}
 }
 </script>
