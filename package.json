@@ -1,35 +1,35 @@
 {
-	"name": "logchimp",
-	"version": "0.3.0",
-	"private": true,
-	"workspaces": [
-		"server",
-		"frontend"
-	],
-	"scripts": {
-		"dev": "nuxt",
-		"build": "nuxt build",
-		"generate": "nuxt generate",
-		"start": "nuxt start",
-		"frontend:dev": "cd frontend && vue-cli-service serve",
-		"frontend:build": "cd frontend && vue-cli-service build",
-		"frontend:lint": "cd frontend && vue-cli-service lint",
-		"server:dev": "cd server && nodemon app.js",
-		"server:start": "cd server && node app.js",
-		"server:test": "jest --config ./server/jest.config.js",
-		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
-	},
-	"dependencies": {
-		"nuxt": "^2.14.6"
-	},
-	"devDependencies": {
-		"babel-eslint": "^10.0.3",
-		"eslint": "^7.10.0",
-		"eslint-config-prettier": "^6.12.0",
-		"eslint-plugin-jest": "^24.1.0",
-		"eslint-plugin-prettier": "^3.1.2",
-		"eslint-plugin-vue": "^7.0.1",
-		"jest": "^26.5.2",
-		"omgopass": "^3.2.1"
-	}
+  "name": "logchimp",
+  "version": "0.3.0",
+  "private": true,
+  "workspaces": [
+    "server",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "start": "nuxt start",
+    "frontend:dev": "cd frontend && vue-cli-service serve",
+    "frontend:build": "cd frontend && vue-cli-service build",
+    "frontend:lint": "cd frontend && vue-cli-service lint",
+    "server:dev": "cd server && nodemon app.js",
+    "server:start": "cd server && node app.js",
+    "server:test": "jest --config ./server/jest.config.js",
+    "eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
+  },
+  "dependencies": {
+    "nuxt": "^2.14.6"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^7.10.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-vue": "^7.0.1",
+    "jest": "^26.5.2",
+    "omgopass": "^3.2.1"
+  }
 }
