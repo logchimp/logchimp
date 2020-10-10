@@ -7,6 +7,10 @@
 		"frontend"
 	],
 	"scripts": {
+		"dev": "nuxt",
+		"build": "nuxt build",
+		"generate": "nuxt generate",
+		"start": "nuxt start",
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
 		"frontend:lint": "cd frontend && vue-cli-service lint",
