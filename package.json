@@ -15,6 +15,9 @@
 		"server:test": "jest --config ./server/jest.config.js",
 		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
 	},
+	"dependencies": {
+		"nuxt": "^2.14.6"
+	},
 	"devDependencies": {
 		"babel-eslint": "^10.0.3",
 		"eslint": "^7.10.0",
