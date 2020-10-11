@@ -21,7 +21,7 @@
 
 <script>
 export default {
-	name: "LText",
+	name: "LInput",
 	props: {
 		label: {
 			type: String,

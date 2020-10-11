@@ -6,6 +6,6 @@
 
 <script>
 export default {
-	name: "Form"
+	name: "LForm"
 };
 </script>

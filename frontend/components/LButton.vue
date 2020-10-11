@@ -13,10 +13,10 @@
 
 <script>
 // icons
-import LoaderIcon from "./icons/Loader";
+import LoaderIcon from "@/components/icons/Loader";
 
 export default {
-	name: "Button",
+	name: "LButton",
 	props: {
 		type: {
 			type: String,
