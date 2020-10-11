@@ -1,4 +1,4 @@
-const state = {
+export const state = () => ({
 	authToken: "",
 	userId: "",
 	firstname: "",
@@ -9,18 +9,16 @@ const state = {
 	isVerified: false,
 	isBlocked: false,
 	isModerator: false,
-	isOwner: false,
-	createdAt: "",
-	updatedAt: ""
-};
+	isOwner: false
+});
 
-const getters = {
+export const getters = {
 	getUser: state => state,
 	getUserId: state => state.userId,
 	getAuthToken: state => state.authToken
 };
 
-const mutations = {
+export const mutations = {
 	setUser(state, payload) {
 		state.authToken = payload.authToken;
 		state.userId = payload.userId;
@@ -33,14 +31,12 @@ const mutations = {
 		state.isBlocked = payload.isBlocked;
 		state.isModerator = payload.isModerator;
 		state.isOwner = payload.isOwner;
-		state.createdAt = payload.createdAt;
-		state.updatedAt = payload.updatedAt;
 
 		localStorage.setItem("user", JSON.stringify(payload));
 	}
 };
 
-const actions = {
+export const actions = {
 	login: ({ commit }, payload) => {
 		commit("setUser", payload);
 	},
@@ -54,12 +50,4 @@ const actions = {
 			...payload
 		});
 	}
-};
-
-export default {
-	namespaced: true,
-	state,
-	getters,
-	mutations,
-	actions
 };
