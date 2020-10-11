@@ -1,5 +1,5 @@
 <template>
-	<Form>
+	<l-form>
 		<div class="site-setup-card-header">
 			<h4 class="site-setup-card-header-heading">Setup your LogChimp site</h4>
 			<p class="site-setup-card-header-label">
@@ -7,28 +7,28 @@
 			</p>
 		</div>
 		<div class="site-setup-card-button">
-			<Button type="primary" @click="setupSite">
+			<l-button type="primary" @click="setupSite">
 				Create owner account
-			</Button>
+			</l-button>
 		</div>
 		<img
 			class="site-setup-card-image"
 			src="@/assets/images/dashboard-loading-skeleton.png"
 			alt="Dashboard loading skeleton"
 		/>
-	</Form>
+	</l-form>
 </template>
 
 <script>
 // components
-import Form from "./Form";
-import Button from "./Button";
+import LForm from "./LForm";
+import LButton from "./LButton";
 
 export default {
 	name: "SiteSetupCard",
 	components: {
-		Form,
-		Button
+		LForm,
+		LButton
 	},
 	methods: {
 		setupSite() {
