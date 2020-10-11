@@ -1,4 +1,5 @@
 export default {
+	srcDir: "frontend/",
 	ssr: true,
 	target: "server",
 	server: {
