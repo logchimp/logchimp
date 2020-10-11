@@ -6,14 +6,14 @@
 			@update-voters="updateVoters"
 		/>
 		<div class="post-content">
-			<router-link
+			<nuxt-link
 				class="post-content-link"
 				:to="`${dashboardUrl}/post/${post.slug}`"
 			>
 				<h5 class="post-content-title">{{ post.title }}</h5>
-			</router-link>
+			</nuxt-link>
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
-			<router-link
+			<nuxt-link
 				:to="`${dashboardUrl}/board/${post.board.url}`"
 				v-if="post.board"
 			>
@@ -28,14 +28,14 @@
 						<p>{{ post.board.name }}</p>
 					</div>
 				</div>
-			</router-link>
+			</nuxt-link>
 		</div>
 	</div>
 </template>
 
 <script>
 // components
-import Vote from "./Vote";
+import Vote from "@/components/post/Vote";
 
 export default {
 	name: "post",
