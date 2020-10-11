@@ -20,7 +20,7 @@ export default {
 	],
 	serverMiddleware: [
 		{
-			path: "/server",
+			path: "/",
 			handler: "../server"
 		}
 	],
