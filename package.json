@@ -16,6 +16,7 @@
     "eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.12.2",
     "axios": "^0.20.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",

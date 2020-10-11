@@ -7,5 +7,9 @@ export default {
 		// default: localhost
 		host: "0.0.0.0",
 		timing: true
-	}
+	},
+	modules: [
+		// https://axios.nuxtjs.org
+		"@nuxtjs/axios"
+	]
 };
