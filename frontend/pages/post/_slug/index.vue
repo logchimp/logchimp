@@ -26,7 +26,7 @@
 							|
 						</div>
 						<div class="viewpost__meta-date">
-							{{ post.createdAt | moment("MMMM DD, YYYY") }}
+							{{ postDate }}
 						</div>
 						<div
 							v-if="postAuthor"
@@ -54,28 +54,29 @@
 			There is no such post.
 		</p>
 	</div>
-	<div v-else class="loader-container">
-		<loader />
+	<div v-else class="loader-container loader">
+		<loader-icon />
 	</div>
 </template>
 
 <script>
 // packages
-import axios from "axios";
+import { MoreHorizontal, Edit2 } from "lucide";
 
 // components
-import Loader from "../../components/Loader";
-import Vote from "../../components/post/Vote";
-import Dropdown from "../../components/dropdown/Dropdown";
-import DropdownItem from "../../components/dropdown/DropdownItem";
-import Avatar from "../../components/Avatar";
+import Vote from "@/components/post/Vote";
+import Dropdown from "@/components/dropdown/Dropdown";
+import DropdownItem from "@/components/dropdown/DropdownItem";
+import Avatar from "@/components/Avatar";
 
 // mixins
-import userAvatar from "../../mixins/userAvatar";
+import lucideIcon from "@/mixins/lucideIcon.js";
+import userAvatar from "@/mixins/userAvatar";
 
 // icons
-import MoreIcon from "../../components/icons/More";
-import EditIcon from "../../components/icons/Edit";
+import LoaderIcon from "@/components/icons/Loader";
+const MoreIcon = lucideIcon("MoreHorizontal", MoreHorizontal);
+const EditIcon = lucideIcon("Edit2", Edit2);
 
 export default {
 	name: "PostView",
@@ -91,11 +92,13 @@ export default {
 	},
 	components: {
 		// components
-		Loader,
 		Vote,
 		Dropdown,
 		DropdownItem,
 		Avatar,
+
+		// icons
+		LoaderIcon,
 		MoreIcon,
 		EditIcon
 	},
@@ -112,6 +115,9 @@ export default {
 		postAuthor() {
 			const userId = this.$store.getters["user/getUserId"];
 			return userId === this.post.userId;
+		},
+		postDate() {
+			return this.$moment(this.post.createdAt).format("MMMM DD, YYYY");
 		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
@@ -132,25 +138,24 @@ export default {
 		toggleMenuDropdown() {
 			this.menuDropdown = !this.menuDropdown;
 		},
-		postBySlug() {
+		async postBySlug() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;
 
-			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
-				.then(response => {
-					this.post = response.data.post;
-					this.voters = response.data.voters;
+			try {
+				const response = await this.$axios.$get(`/api/v1/posts/${slug}`);
 
-					this.post.loading = false;
-				})
-				.catch(error => {
-					if (error.response.data.code === "POST_NOT_FOUND") {
-						this.isPostExist = false;
-					}
+				this.post = response.post;
+				this.voters = response.voters;
 
-					this.post.loading = false;
-				});
+				this.post.loading = false;
+			} catch (error) {
+				if (error.response.data.code === "POST_NOT_FOUND") {
+					this.isPostExist = false;
+				}
+
+				this.post.loading = false;
+			}
 		},
 		updateVoters(voters) {
 			this.voters = voters;
