@@ -27,6 +27,7 @@ export default {
 	modules: [
 		// https://axios.nuxtjs.org
 		"@nuxtjs/axios",
+		"@nuxtjs/universal-storage",
 		"nuxt-moment"
 	]
 };
