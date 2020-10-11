@@ -12,6 +12,12 @@ export default {
 	styleResources: {
 		sass: "@/assets/styles/variables.sass"
 	},
+	plugins: [
+		{
+			src: "@/plugins/infiniteLoading.js",
+			ssr: false
+		}
+	],
 	serverMiddleware: [
 		{
 			path: "/server",
