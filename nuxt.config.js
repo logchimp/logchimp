@@ -15,7 +15,7 @@ export default {
 	plugins: [
 		{
 			src: "@/plugins/infiniteLoading.js",
-			ssr: false
+			mode: "client"
 		}
 	],
 	serverMiddleware: [
