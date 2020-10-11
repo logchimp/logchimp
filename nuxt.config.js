@@ -16,6 +16,10 @@ export default {
 		{
 			src: "@/plugins/infiniteLoading.js",
 			mode: "client"
+		},
+		{
+			src: "@/plugins/getUserFromLocalStorage.js",
+			mode: "client"
 		}
 	],
 	serverMiddleware: [
