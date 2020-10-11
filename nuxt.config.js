@@ -13,6 +13,12 @@ export default {
 	styleResources: {
 		sass: "@/assets/styles/variables.sass"
 	},
+	serverMiddleware: [
+		{
+			path: "/server",
+			handler: "../server"
+		}
+	],
 	modules: [
 		// https://axios.nuxtjs.org
 		"@nuxtjs/axios"
