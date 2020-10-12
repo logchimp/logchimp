@@ -12,6 +12,9 @@ content/logs/*.log
 # frontend
 frontend/dist
 
+# Server
+server/public
+
 # local env files
 .env
 .env.local
