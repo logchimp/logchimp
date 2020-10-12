@@ -6,6 +6,7 @@ const startTime = Date.now();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const routes = require("./routes/v1");
 
@@ -36,6 +37,13 @@ database
 						// importing all routes modules
 						app.use(routes);
 
+						// Serve vue app
+						if (process.env.NODE_ENV === "production") {
+							app.use(express.static(path.resolve(__dirname, "public")));
+							app.get(/.*/, (req, res) =>
+								res.sendFile(path.resolve(__dirname, "public/index.html"))
+							);
+						}
 
 						// start express server at SERVER_PORT
 						const port = process.env.PORT || 3000;
