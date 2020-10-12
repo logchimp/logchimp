@@ -55,7 +55,7 @@ export default {
 		getBoardPosts($state) {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts`,
+				url: "/api/v1/posts",
 				params: {
 					page: this.page,
 					created: "desc"

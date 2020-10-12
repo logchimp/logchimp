@@ -85,7 +85,7 @@ export default {
 		getUsers($state) {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users`,
+				url: "/api/v1/users",
 				params: {
 					page: this.page,
 					created: "desc"
