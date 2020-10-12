@@ -27,19 +27,21 @@ database
 					.then(() => {
 						logger.info("Database migration complete");
 
+						// contains key-value pairs of data submitted in the request body
+						app.use(bodyParser.json());
+
+						// enable all CORS requests
+						app.use(cors());
+
+						// importing all routes modules
+						app.use(routes);
+
+
 						// start express server at SERVER_PORT
-						app.listen(process.env.SERVER_PORT, () => {
-							// contains key-value pairs of data submitted in the request body
-							app.use(bodyParser.json());
-
-							// enable all CORS requests
-							app.use(cors());
-
-							// importing all routes modules
-							app.use(routes);
-
+						const port = process.env.PORT || 3000;
+						app.listen(port, () => {
 							logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
-							logger.info(`Listening on port: ${process.env.SERVER_PORT}`);
+							logger.info(`Listening on port: ${port}`);
 							logger.info("Ctrl+C to shut down");
 							logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
 						});
