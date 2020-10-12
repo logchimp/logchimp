@@ -3,7 +3,7 @@ const path = require("path");
 
 // utils
 const logger = require("../utils/logger");
-const logchimpConfig = require("../../utils/logchimpConfig");
+const logchimpConfig = require("../utils/logchimpConfig");
 const config = logchimpConfig();
 
 const ssl = config.database.ssl
