@@ -112,7 +112,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards/${slug}`
+				url: `/api/v1/boards/${slug}`
 			})
 				.then(response => {
 					this.board = response.data.board;

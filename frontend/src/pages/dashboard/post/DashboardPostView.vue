@@ -97,7 +97,7 @@ export default {
 			const slug = this.$route.params.slug;
 
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
+				.get(`/api/v1/posts/${slug}`)
 				.then(response => {
 					this.post = response.data.post;
 					this.voters = response.data.voters;

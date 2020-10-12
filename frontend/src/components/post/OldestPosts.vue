@@ -41,7 +41,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards/${slug}/posts`,
+				url: `/api/v1/boards/${slug}/posts`,
 				params: {
 					page: this.page,
 					created: "asc"

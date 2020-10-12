@@ -89,7 +89,7 @@ export default {
 			const slug = this.$route.params.slug;
 
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${slug}`)
+				.get(`/api/v1/posts/${slug}`)
 				.then(response => {
 					this.post.title.value = response.data.post.title;
 					this.post.contentMarkdown = response.data.post.contentMarkdown;
@@ -116,7 +116,7 @@ export default {
 
 				axios({
 					method: "patch",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts/${this.post.postId}`,
+					url: `/api/v1/posts/${this.post.postId}`,
 					data: {
 						title: this.post.title.value,
 						contentMarkdown: this.post.contentMarkdown,

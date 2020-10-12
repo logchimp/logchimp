@@ -103,7 +103,7 @@ export default {
 				this.buttonLoading = true;
 
 				axios
-					.post(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/login`, {
+					.post("/api/v1/auth/login", {
 						emailAddress: this.emailAddress.value,
 						password: this.password.value
 					})

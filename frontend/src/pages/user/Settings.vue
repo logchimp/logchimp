@@ -105,7 +105,7 @@ export default {
 			this.user.loading = true;
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/users/${userId}`
+				url: `/api/v1/users/${userId}`
 			})
 				.then(response => {
 					this.user.firstname.value = response.data.user.firstname;
@@ -129,7 +129,7 @@ export default {
 
 			axios({
 				method: "patch",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/user`,
+				url: "/api/v1/user",
 				data: {
 					userId,
 					firstname: this.user.firstname.value,

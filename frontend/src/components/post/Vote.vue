@@ -69,7 +69,7 @@ export default {
 
 				axios({
 					method: "delete",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/votes`,
+					url: "/api/v1/votes",
 					data: {
 						voteId: voteId.voteId,
 						postId
@@ -93,7 +93,7 @@ export default {
 			} else {
 				axios({
 					method: "post",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/votes`,
+					url: "/api/v1/votes",
 					data: {
 						userId,
 						postId
