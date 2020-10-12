@@ -6,6 +6,7 @@ const startTime = Date.now();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const routes = require("./routes/v1");
 
@@ -27,19 +28,28 @@ database
 					.then(() => {
 						logger.info("Database migration complete");
 
+						// contains key-value pairs of data submitted in the request body
+						app.use(bodyParser.json());
+
+						// enable all CORS requests
+						app.use(cors());
+
+						// importing all routes modules
+						app.use(routes);
+
+						// Serve vue app
+						if (process.env.NODE_ENV === "production") {
+							app.use(express.static(path.resolve(__dirname, "public")));
+							app.get(/.*/, (req, res) =>
+								res.sendFile(path.resolve(__dirname, "public/index.html"))
+							);
+						}
+
 						// start express server at SERVER_PORT
-						app.listen(process.env.SERVER_PORT, () => {
-							// contains key-value pairs of data submitted in the request body
-							app.use(bodyParser.json());
-
-							// enable all CORS requests
-							app.use(cors());
-
-							// importing all routes modules
-							app.use(routes);
-
+						const port = process.env.PORT || 3000;
+						app.listen(port, () => {
 							logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
-							logger.info(`Listening on port: ${process.env.SERVER_PORT}`);
+							logger.info(`Listening on port: ${port}`);
 							logger.info("Ctrl+C to shut down");
 							logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
 						});
