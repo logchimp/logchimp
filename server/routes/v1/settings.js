@@ -6,7 +6,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, path.join(__dirname, "../../../content/images"));
+		cb(null, path.resolve(__dirname, "../../../content/images"));
 	},
 	filename: (req, file, cb) => {
 		const fileExtension = file.originalname.split(".")[

@@ -1,4 +1,5 @@
 // modules
+const path = require("path");
 const { createLogger, format, transports } = require("winston");
 
 const oneLineForamt = format.printf(({ level, code, message, timestamp }) => {
@@ -16,10 +17,15 @@ const logger = createLogger({
 	),
 	transports: [
 		new transports.File({
-			filename: "../content/logs/logchimp-error.log",
+			filename: path.resolve(
+				__dirname,
+				"../../content/logs/logchimp-error.log"
+			),
 			level: "error"
 		}),
-		new transports.File({ filename: "../content/logs/logchimp-all.log" })
+		new transports.File({
+			filename: path.resolve(__dirname, "../../content/logs/logchimp-all.log")
+		})
 	]
 });
 
