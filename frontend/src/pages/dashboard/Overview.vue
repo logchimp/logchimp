@@ -120,7 +120,7 @@ export default {
 		getPosts($state) {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts`,
+				url: "/api/v1/posts",
 				params: {
 					page: 1,
 					limit: 4,
@@ -139,7 +139,7 @@ export default {
 		getBoards($state) {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/boards`,
+				url: "/api/v1/boards",
 				params: {
 					page: 1,
 					limit: 4,

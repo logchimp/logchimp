@@ -94,7 +94,7 @@ export default {
 
 				axios({
 					method: "post",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/posts`,
+					url: "/api/v1/posts",
 					data: {
 						title: this.title.value,
 						contentMarkdown: this.description.value,

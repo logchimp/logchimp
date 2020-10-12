@@ -51,7 +51,7 @@ export default {
 		getSiteSettings() {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/site`
+				url: "/api/v1/settings/site"
 			})
 				.then(response => {
 					this.$store.dispatch("settings/update", response.data.settings);

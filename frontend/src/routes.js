@@ -52,7 +52,7 @@ const routes = [
 		component: require("./layout/Onboarding").default,
 		beforeEnter: (to, from, next) => {
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.get("/api/v1/auth/isSetup")
 				.then(response => {
 					if (response.data.isSetup) {
 						next({ path: "/dashboard" });
@@ -89,14 +89,14 @@ const routes = [
 		component: require("./layout/Dashboard").default,
 		beforeEnter: (to, from, next) => {
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.get("/api/v1/auth/isSetup")
 				.then(response => {
 					if (response.data.isSetup) {
 						const user = store.getters["user/getUser"];
 						if (user.userId) {
 							axios
 								.get(
-									`${process.env.VUE_APP_SEVER_URL}/api/v1/user/accessDashboard/${user.userId}`
+									`/api/v1/user/accessDashboard/${user.userId}`
 								)
 								.then(response => {
 									if (response.data.access) {

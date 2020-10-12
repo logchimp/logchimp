@@ -136,7 +136,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/update-logo`,
+				url: "/api/v1/settings/update-logo",
 				data: formData,
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -164,7 +164,7 @@ export default {
 
 				axios({
 					method: "patch",
-					url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/site`,
+					url: "/api/v1/settings/site",
 					data: {
 						title: this.siteName.value,
 						description: this.description.value,
@@ -202,7 +202,7 @@ export default {
 		getSettings() {
 			axios({
 				method: "get",
-				url: `${process.env.VUE_APP_SEVER_URL}/api/v1/settings/site`
+				url: "/api/v1/settings/site"
 			})
 				.then(response => {
 					this.siteName.value = response.data.settings.title;

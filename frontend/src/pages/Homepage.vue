@@ -33,7 +33,7 @@ export default {
 	methods: {
 		isSetup() {
 			axios
-				.get(`${process.env.VUE_APP_SEVER_URL}/api/v1/auth/isSetup`)
+				.get("/api/v1/auth/isSetup")
 				.then(response => {
 					this.showSiteSetupCard = !response.data.isSetup;
 				})
