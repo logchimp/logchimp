@@ -2,10 +2,6 @@
 	"name": "logchimp",
 	"version": "0.3.0",
 	"private": true,
-	"workspaces": [
-		"server",
-		"frontend"
-	],
 	"scripts": {
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
