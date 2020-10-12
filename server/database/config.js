@@ -3,25 +3,26 @@ const path = require("path");
 
 // utils
 const logger = require("../utils/logger");
+const logchimpConfig = require("../../utils/logchimpConfig");
+const config = logchimpConfig();
 
-const ssl =
-	process.env.NODE_ENV === "production"
-		? {
-				ssl: {
-					rejectUnauthorized: false
-				}
-		  }
-		: {};
+const ssl = config.database.ssl
+	? {
+			ssl: {
+				rejectUnauthorized: false
+			}
+	  }
+	: {};
 
 module.exports = {
 	client: "pg",
 	version: "12.4",
 	connection: {
-		host: process.env.PG_HOST,
-		user: process.env.PG_USER,
-		password: process.env.PG_PASSWORD,
-		database: process.env.PG_DATABASE,
-		port: process.env.PG_PORT,
+		host: config.database.host,
+		user: config.database.user,
+		password: config.database.password,
+		database: config.database.name,
+		port: config.database.port,
 		...ssl
 	},
 	migrations: {
