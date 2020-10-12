@@ -1,5 +1,3 @@
-require("dotenv").config({ path: "../.env" });
-
 const startTime = Date.now();
 
 // modules
