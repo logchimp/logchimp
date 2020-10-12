@@ -1,8 +1,6 @@
 // modules
 const path = require("path");
 
-const packageJson = require("../package.json");
-
 // utils
 const logger = require("../utils/logger");
 
@@ -26,7 +24,6 @@ module.exports = {
 		port: process.env.PG_PORT,
 		...ssl
 	},
-	currentVersion: packageJson.version,
 	migrations: {
 		directory: path.resolve(__dirname, "migrations"),
 		tableName: "migrations"
