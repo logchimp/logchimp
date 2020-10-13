@@ -4,6 +4,8 @@ const error = require("../errorResponse.json");
 
 // utils
 const logger = require("../utils/logger");
+const logchimpConfig = require("../utils/logchimpConfig");
+const config = logchimpConfig();
 
 const extractTokenFromHeader = header => {
 	const [scheme, token] = header.split(" ");
@@ -43,7 +45,8 @@ const authenticateWithToken = async (req, res, next, token) => {
 			if (!user.isBlocked) {
 				try {
 					// validate JWT auth token
-					jwt.verify(token, process.env.SECRET_KEY);
+					const secretkey = config.server.secretkey;
+					jwt.verify(token, secretkey);
 
 					res.locals.user = user;
 					next();

@@ -5,6 +5,8 @@ const getUser = require("../../services/auth/getUser");
 const { validatePassword } = require("../../utils/password");
 const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
+const logchimpConfig = require("../../utils/logchimpConfig");
+const config = logchimpConfig();
 
 const error = require("../../errorResponse.json");
 
@@ -23,7 +25,10 @@ exports.login = async (req, res) => {
 
 			if (validateUserPassword) {
 				delete getAuthUser.password;
-				const authToken = createToken(getAuthUser, process.env.SECRET_KEY, {
+
+				// generate authToken
+				const secretkey = config.server.secretkey;
+				const authToken = createToken(getAuthUser, secretkey, {
 					expiresIn: "2d"
 				});
 

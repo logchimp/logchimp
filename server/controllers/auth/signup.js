@@ -5,6 +5,8 @@ const createUser = require("../../services/auth/createUser");
 // utils
 const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
+const logchimpConfig = require("../../utils/logchimpConfig");
+const config = logchimpConfig();
 
 const error = require("../../errorResponse.json");
 
@@ -41,7 +43,8 @@ exports.signup = async (req, res) => {
 					// todo: send email for account verification
 
 					// generate authToken
-					const authToken = createToken(userData, process.env.SECRET_KEY, {
+					const secretkey = config.server.secretkey;
+					const authToken = createToken(userData, secretkey, {
 						expiresIn: "2d"
 					});
 
