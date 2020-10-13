@@ -1,5 +1,3 @@
-require("dotenv").config({ path: "../.env" });
-
 const startTime = Date.now();
 
 // modules
@@ -16,6 +14,15 @@ const database = require("./database");
 
 // utils
 const logger = require("./utils/logger");
+const logchimpConfig = require("./utils/logchimpConfig");
+
+const config = logchimpConfig();
+if (!config) {
+	console.log(
+		"LogChimp configuration missing!\nTry running this command 'logchimp install' again."
+	);
+	process.exit(1);
+}
 
 database
 	.raw("select 1+1 as result")
@@ -46,7 +53,7 @@ database
 						}
 
 						// start express server at SERVER_PORT
-						const port = process.env.PORT || 3000;
+						const port = config.server.port || 3000;
 						app.listen(port, () => {
 							logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
 							logger.info(`Listening on port: ${port}`);

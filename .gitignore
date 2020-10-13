@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
-/dist
+
+logchimp.config.json
 
 # content
 content/images/*.png
