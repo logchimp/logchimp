@@ -4,8 +4,8 @@ const { createLogger, format, transports } = require("winston");
 
 const oneLineForamt = format.printf(({ level, code, message, timestamp }) => {
 	return `${timestamp} ${level.toUpperCase()}: ${
-		code ? `[${code}]` : ""
-	} ${message}`;
+		code ? `[${code}] ` : ""
+	}${message}`;
 });
 
 const logger = createLogger({
