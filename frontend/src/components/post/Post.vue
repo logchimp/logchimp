@@ -1,31 +1,31 @@
 <template>
 	<div class="post">
 		<Vote
-			:post-id="post.postId"
-			:voters="post.voters"
+			:post-id="postData.postId"
+			:voters="postData.voters"
 			@update-voters="updateVoters"
 		/>
 		<div class="post-content">
 			<router-link
 				class="post-content-link"
-				:to="`${dashboardUrl}/post/${post.slug}`"
+				:to="`${dashboardUrl}/post/${postData.slug}`"
 			>
-				<h5 class="post-content-title">{{ post.title }}</h5>
+				<h5 class="post-content-title">{{ postData.title }}</h5>
 			</router-link>
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
 			<router-link
-				:to="`${dashboardUrl}/board/${post.board.url}`"
+				:to="`${dashboardUrl}/board/${postData.board.url}`"
 				v-if="post.board"
 			>
 				<div class="post-board">
 					<div
 						class="board-color"
 						:style="{
-							backgroundColor: `#${post.board.color}`
+							backgroundColor: `#${postData.board.color}`
 						}"
 					/>
 					<div class="post-board-name">
-						<p>{{ post.board.name }}</p>
+						<p>{{ postData.board.name }}</p>
 					</div>
 				</div>
 			</router-link>
@@ -50,9 +50,21 @@ export default {
 			default: false
 		}
 	},
+	data() {
+		return {
+			postData: this.post,
+		}
+	},
 	components: {
 		Vote
 	},
+	watch: {
+    	post: {
+        	handler(newValue, oldValue) {
+        		this.postData = newValue;
+        	}
+      	}
+    },
 	computed: {
 		sliceContentMarkdown() {
 			if (this.post.contentMarkdown) {
@@ -71,7 +83,7 @@ export default {
 	methods: {
 		updateVoters(voters) {
 			// eslint-disable-next-line vue/no-mutating-props
-			this.post.voters = voters;
+			this.postData.voters = voters;
 		}
 	}
 };
