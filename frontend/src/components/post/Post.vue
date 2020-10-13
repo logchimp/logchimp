@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     updateVoters(voters) {
-      // other solultion is to emit data to parent component
+      // other solution is to emit data to parent component
       this.postData.voters = voters;
     }
   }
