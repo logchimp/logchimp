@@ -23,7 +23,11 @@ module.exports = {
 		password: config.database.password,
 		database: config.database.name,
 		port: config.database.port,
-		...ssl
+		...ssl,
+		pool: {
+			min: 2,
+			max: 10
+		}
 	},
 	migrations: {
 		directory: path.resolve(__dirname, "migrations"),
