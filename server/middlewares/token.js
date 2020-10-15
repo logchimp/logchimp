@@ -45,8 +45,8 @@ const authenticateWithToken = async (req, res, next, token) => {
 			if (!user.isBlocked) {
 				try {
 					// validate JWT auth token
-					const secretkey = config.server.secretkey;
-					jwt.verify(token, secretkey);
+					const secretKey = config.server.secretKey;
+					jwt.verify(token, secretKey);
 
 					res.locals.user = user;
 					next();

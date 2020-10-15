@@ -43,8 +43,8 @@ exports.signup = async (req, res) => {
 					// todo: send email for account verification
 
 					// generate authToken
-					const secretkey = config.server.secretkey;
-					const authToken = createToken(userData, secretkey, {
+					const secretKey = config.server.secretKey;
+					const authToken = createToken(userData, secretKey, {
 						expiresIn: "2d"
 					});
 
