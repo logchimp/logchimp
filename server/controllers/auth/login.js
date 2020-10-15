@@ -27,8 +27,8 @@ exports.login = async (req, res) => {
 				delete getAuthUser.password;
 
 				// generate authToken
-				const secretkey = config.server.secretkey;
-				const authToken = createToken(getAuthUser, secretkey, {
+				const secretKey = config.server.secretKey;
+				const authToken = createToken(getAuthUser, secretKey, {
 					expiresIn: "2d"
 				});
 
