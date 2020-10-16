@@ -21,6 +21,9 @@
 	<a href="https://github.com/logchimp/logchimp/contributors/">
 		<img src="https://img.shields.io/github/contributors/logchimp/logchimp.svg" alt="GitHub LogChimp Contributors" />
 	</a>
+	<a href="https://gitpod.io/#https://github.com/logchimp/logchimp">
+		<img src="https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod" alt="Gitpod ready-to-code" />
+	</a>
 </p>
 
 <h3 align="center">
