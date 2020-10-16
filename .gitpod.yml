@@ -9,7 +9,5 @@ ports:
 
 tasks:
   - init: yarn install
-  - name: Server
     command: yarn run server:dev
-  - name: Frontend
     command: yarn run frontend:dev --host 0.0.0.0
