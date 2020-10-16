@@ -1,5 +1,15 @@
 image:
   file: .gitpod.Dockerfile
 
+ports:
+  - port: 8080
+    onOpen: open-preview
+  - port: 3000
+    onOpen: ignore
+
 tasks:
   - init: yarn install
+  - name: Server
+    command: yarn run server:dev
+  - name: Frontend
+    command: yarn run frontend:dev --host 0.0.0.0
