@@ -8,7 +8,6 @@ ports:
     onOpen: ignore
 
 tasks:
-  - init: yarn install
-    command: psql -c "CREATE DATABASE logchimp"
+  - init: bash ./scripts/gitpod-init.sh
     command: yarn run server:dev
     command: yarn run frontend:dev --host 0.0.0.0
