@@ -1,13 +1,17 @@
 image:
   file: .gitpod.Dockerfile
 
+tasks:
+  - init: |
+      touch ./.wait
+      bash ./scripts/gitpod-init.sh
+      rm ./.wait
+    command: NODE_ENV="development" yarn run server:dev
+  - name: Frontend
+    init: sleep 1 && while [ -f ./.wait ]; do sleep 1; done
+    openMode: tab-after
+    command: yarn run frontend:dev --public="$GITPOD_WORKSPACE_URL"
+
 ports:
   - port: 8080
     onOpen: open-preview
-  - port: 3000
-    onOpen: ignore
-
-tasks:
-  - init: bash ./scripts/gitpod-init.sh
-    command: yarn run server:dev
-    command: yarn run frontend:dev --host 0.0.0.0
