@@ -3,6 +3,7 @@ name: frontend
 on:
   push:
     paths:
+      - ".github/workflows/frontend.yml"
       - "frontend/**"
       - "package.json"
       - "yarn.lock"
