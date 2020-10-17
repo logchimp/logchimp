@@ -52,19 +52,19 @@ export default {
 	},
 	data() {
 		return {
-			postData: this.post,
-		}
+			postData: this.post
+		};
 	},
 	components: {
 		Vote
 	},
 	watch: {
-    	post: {
-        	handler(newValue, oldValue) {
-        		this.postData = newValue;
-        	}
-      	}
-    },
+		post: {
+			handler(newValue, oldValue) {
+				this.postData = newValue;
+			}
+		}
+	},
 	computed: {
 		sliceContentMarkdown() {
 			if (this.post.contentMarkdown) {
