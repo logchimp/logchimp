@@ -2,6 +2,9 @@
 const getUser = require("../../services/auth/getUser");
 const createUser = require("../../services/auth/createUser");
 
+// services
+const mail = require("../../services/mail");
+
 // utils
 const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
@@ -37,28 +40,47 @@ exports.signup = async (req, res) => {
 				});
 
 				if (userData) {
-					/**
-					 * authToken sent via email will expire after 3 hr
-					 */
-					// todo: send email for account verification
-
-					// generate authToken
+					// secretKey
 					const secretKey = config.server.secretKey;
-					const authToken = createToken(userData, secretKey, {
-						expiresIn: "2d"
-					});
+					const host = req.headers.host;
+					try {
+						/**
+						 * authToken sent via email will expire after 1 hr
+						 */
+						const onboardingMailContent = await mail.generateContent("verify", {
+							siteUrl: host
+						});
 
-					// send user data with authToken as response
-					res.status(201).send({
-						status: {
-							code: 201,
-							type: "success"
-						},
-						user: {
-							...userData,
-							authToken
-						}
-					});
+						const emailVerification = new mail.Mail();
+						const noReplyEmail = `noreply@${host}`;
+
+						await emailVerification.send({
+							from: noReplyEmail,
+							to: emailAddress,
+							subject: "LogChimp - Please confirm your email",
+							text: onboardingMailContent.text,
+							html: onboardingMailContent.html
+						});
+
+						// generate authToken
+						const authToken = createToken(userData, secretKey, {
+							expiresIn: "2d"
+						});
+
+						// send user data with authToken as response
+						res.status(201).send({
+							status: {
+								code: 201,
+								type: "success"
+							},
+							user: {
+								...userData,
+								authToken
+							}
+						});
+					} catch (error) {
+						console.error(error);
+					}
 				} else {
 					res.status(404).send({
 						message: error.middleware.user.userNotFound,
