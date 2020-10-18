@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      a {
+        color: #484d7c;
+      }
+
+      .background_main {
+        background-color: white;
+        width: 100%;
+      }
+
+      .main {
+        max-width: 750px;
+        padding: 48px;
+        margin: 0 auto;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+      }
+
+      .content {
+        padding: 32px;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+      }
+
+      .content .text {
+        margin-bottom: 10px;
+      }
+
+      .content p:last-child {
+        margin-bottom: 0;
+      }
+
+      .button {
+        display: flex;
+      }
+
+      .primary_button {
+        padding: 0.875rem 1.5rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+        background-color: #484d7c;
+        color: #fff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="background_main">
+      <tbody>
+        <tr>
+          <td>
+            <table class="main">
+              <tbody>
+                <tr>
+                  <td>
+                    <img
+                      class="logo"
+                      src="https://logchimp.codecarrot.net/images/logchimp-logo_circle.png"
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <table class="content">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p class="text">Hello there!</p>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                            <p class="text">
+                              Thank you for creating an account. Please confirm
+                              your email address by clicking
+                              <strong>Confirm email</strong> button below:
+                            </p>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                            <p class="button">
+                              <a
+                                class="primary_button"
+                                href="{{ verificationLink }}"
+                                target="_blank"
+                              >
+                                Confirm email
+                              </a>
+                            </p>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                            <p class="text">
+                              Thanks
+                            </p>
+                            <p class="text">
+                              LogChimp
+                              <br />
+                              <a
+                                href="{{ siteUrl }}"
+                                target="_blank"
+                              >
+															{{ siteUrl }}</a
+                              >
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
