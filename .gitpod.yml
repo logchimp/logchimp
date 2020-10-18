@@ -1,0 +1,26 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: "Setup workspace"
+    init: |
+      bash ./scripts/gitpod-init.sh
+      gp sync-done yarn-install
+  - name: Server
+    openMode: tab-after
+    command: |
+      gp sync-await yarn-install
+      NODE_ENV="development" yarn run server:dev
+  - name: Frontend
+    openMode: tab-after
+    command: |
+      gp sync-await yarn-install
+      IS_GITPOD=true yarn run frontend:dev
+
+ports:
+  - port: 8080
+    onOpen: open-preview
+  - port: 3000
+    onOpen: ignore
+  - port: 5432
+    onOpen: ignore
