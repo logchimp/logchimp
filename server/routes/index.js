@@ -24,6 +24,7 @@ router.get("/api", (req, res) => {
 	res.send("👍");
 });
 
-router.use("/api/v1", v1);
+// v1 APIs
+router.use(v1);
 
 module.exports = router;
