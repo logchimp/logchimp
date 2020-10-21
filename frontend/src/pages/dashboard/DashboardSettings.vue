@@ -58,6 +58,16 @@
 					/>
 				</div>
 			</div>
+			<l-text
+				v-model="googleAnalyticsId.value"
+				label="Google Analytics"
+				type="text"
+				name="Google Analytics ID"
+				placeholder="UA-12345678-0"
+				:error="googleAnalyticsId.error"
+				@keyup-enter="saveSettings"
+				@hide-error="hideGoogleAnalyticsError"
+			/>
 			<div style="display: flex;">
 				<Button :loading="buttonLoading" @click="saveSettings" type="primary">
 					Save
@@ -101,6 +111,13 @@ export default {
 					message: ""
 				}
 			},
+			googleAnalyticsId: {
+				value: "",
+				error: {
+					show: false,
+					message: ""
+				}
+			},
 			buttonLoading: false
 		};
 	},
@@ -123,6 +140,9 @@ export default {
 		},
 		hideAccentColorError(event) {
 			this.accentColor.error = event;
+		},
+		hideGoogleAnalyticsError(event) {
+			this.googleAnalyticsId.error = event;
 		},
 		selectFileHandler() {
 			this.$refs.fileSelector.click();
@@ -168,7 +188,8 @@ export default {
 					data: {
 						title: this.siteName.value,
 						description: this.description.value,
-						accentColor: this.accentColor.value
+						accentColor: this.accentColor.value,
+						googleAnalyticsId: this.googleAnalyticsId.value
 					},
 					headers: {
 						Authorization: `Bearer ${token}`
@@ -179,6 +200,8 @@ export default {
 						this.logo = response.data.settings.logo;
 						this.description.value = response.data.settings.description;
 						this.accentColor.value = response.data.settings.accentColor;
+						this.googleAnalyticsId.value =
+							response.data.settings.googleAnalyticsId;
 
 						this.$store.dispatch("settings/update", response.data.settings);
 						this.buttonLoading = false;
@@ -209,6 +232,8 @@ export default {
 					this.logo = response.data.settings.logo;
 					this.description.value = response.data.settings.description;
 					this.accentColor.value = response.data.settings.accentColor;
+					this.googleAnalyticsId.value =
+						response.data.settings.googleAnalyticsId;
 				})
 				.catch(error => {
 					console.error(error);

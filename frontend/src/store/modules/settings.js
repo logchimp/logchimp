@@ -4,6 +4,7 @@ const state = {
 	logo: "",
 	icon: "",
 	accentColor: "",
+	googleAnalyticsId: "",
 	isPoweredBy: true
 };
 
@@ -19,6 +20,7 @@ const mutations = {
 		state.isPoweredBy = payload.isPoweredBy;
 		state.logo = payload.logo;
 		state.title = payload.title;
+		state.googleAnalyticsId = payload.googleAnalyticsId;
 
 		localStorage.setItem("settings", JSON.stringify(payload));
 	}
