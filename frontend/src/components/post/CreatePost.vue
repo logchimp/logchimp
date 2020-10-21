@@ -13,6 +13,7 @@
 		<l-textarea
 			v-model="description.value"
 			label="Description"
+			rows="4"
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
