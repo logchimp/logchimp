@@ -9,6 +9,7 @@
 			}"
 			@input="$emit('input', $event.target.value)"
 			:placeholder="placeholder"
+			:rows="rows"
 			:disabled="disabled"
 		/>
 		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
@@ -30,6 +31,10 @@ export default {
 		placeholder: {
 			type: String,
 			default: ""
+		},
+		rows: {
+			type: String,
+			default: "3"
 		},
 		disabled: {
 			type: Boolean,
