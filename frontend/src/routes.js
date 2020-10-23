@@ -170,6 +170,11 @@ const routes = [
 		path: "/forget",
 		name: "Forget",
 		component: require("./pages/forget").default
+	},
+	{
+		path: "/forget/password",
+		name: "SetNewPassword",
+		component: require("./pages/forget/password").default
 	}
 ];
 
