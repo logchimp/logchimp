@@ -14,8 +14,17 @@
 		}
 	},
 	"api": {
+		"authentication": {
+			"noEmailProvided": "No email provided",
+			"noPasswordProvided": "No password provided"
+		},
 		"user": {
 			"userNotFound": "User not found"
+		},
+		"passwordReset": {
+			"expired": "Your password reset link has expired",
+			"invalidToken": "Invalid password reset link",
+			"missingToken": "Password reset token is missing"
 		},
 		"posts": {
 			"postNotFound": "Post not found.",
