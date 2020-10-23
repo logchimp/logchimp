@@ -32,7 +32,7 @@ exports.down = knex => {
 		.then(() => {
 			logger.log({
 				level: "info",
-				message: "Dropping column: boardId in posts"
+				message: "Dropping column: googleAnalyticsId in settings"
 			});
 		})
 		.catch(err => {
