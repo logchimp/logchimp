@@ -8,5 +8,7 @@ const auth = require("../../controllers/auth");
 router.post("/auth/signup", auth.signup);
 router.post("/auth/login", auth.login);
 router.get("/auth/isSetup", auth.isSetup);
+router.post("/auth/password/reset", auth.password.reset);
+router.post("/auth/password/set", auth.password.set);
 
 module.exports = router;
