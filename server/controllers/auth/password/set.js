@@ -66,12 +66,34 @@ exports.set = async (req, res) => {
 					type: "success"
 				});
 			} else {
+				await database
+					.update({
+						resetPasswordToken: null,
+						resetPasswordExpires: null,
+						updatedAt: new Date().toJSON()
+					})
+					.from("users")
+					.where({
+						userId: resetPasswordUser.userId
+					});
+
 				res.status(410).send({
 					message: error.api.passwordReset.expired,
 					code: "PASSWORD_RESET_EXPIRED"
 				});
 			}
 		} else {
+			await database
+				.update({
+					resetPasswordToken: null,
+					resetPasswordExpires: null,
+					updatedAt: new Date().toJSON()
+				})
+				.from("users")
+				.where({
+					userId: resetPasswordUser.userId
+				});
+
 			res.status(403).send({
 				message: error.api.passwordReset.invalidToken,
 				code: "INVALID_PASSWORD_RESET_TOKEN"
