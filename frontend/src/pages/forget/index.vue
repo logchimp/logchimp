@@ -125,11 +125,11 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: "Password reset",
+			title: "Forget password",
 			meta: [
 				{
 					name: "og:title",
-					content: `Password reset · ${this.getSiteSittings.title}`
+					content: `Forget password · ${this.getSiteSittings.title}`
 				}
 			]
 		};

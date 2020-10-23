@@ -168,11 +168,11 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: "Password reset",
+			title: "Set new password",
 			meta: [
 				{
 					name: "og:title",
-					content: `Password reset · ${this.getSiteSittings.title}`
+					content: `Set new password · ${this.getSiteSittings.title}`
 				}
 			]
 		};
