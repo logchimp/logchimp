@@ -26,6 +26,18 @@ exports.reset = async (req, res) => {
 
 		if (getAuthUser) {
 			try {
+				// remove existing resetPasswordToken
+				await database
+					.update({
+						resetPasswordToken: null,
+						resetPasswordExpires: null,
+						updatedAt: new Date().toJSON()
+					})
+					.from("users")
+					.where({
+						userId: getAuthUser.userId
+					});
+
 				const cryptoBuffer = await crypto.randomBytes(100);
 
 				// convert cryptoBuffer to string
