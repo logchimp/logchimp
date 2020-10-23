@@ -165,6 +165,11 @@ const routes = [
 		path: "/join",
 		name: "Join",
 		component: require("./pages/Join").default
+	},
+	{
+		path: "/forget",
+		name: "Forget",
+		component: require("./pages/forget").default
 	}
 ];
 
