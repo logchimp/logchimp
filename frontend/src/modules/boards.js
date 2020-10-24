@@ -22,3 +22,21 @@ export const getBoardPosts = async (url, page = 1, sort) => {
 	});
 };
 
+/**
+ * Create new board
+ *
+ * @param {name} string Board name
+ */
+export const createBoard = async name => {
+	const token = store.getters["user/getAuthToken"];
+	return await axios({
+		method: "post",
+		url: "/api/v1/boards",
+		data: {
+			name
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
