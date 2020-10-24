@@ -38,7 +38,7 @@ import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import Loader from "../../components/Loader";
+import Loader from "../components/Loader";
 
 export default {
 	name: "Boards",

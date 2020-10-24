@@ -31,9 +31,9 @@ import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import Post from "../../../components/post/Post";
-import Loader from "../../../components/Loader";
-import CreatePost from "../../../components/post/CreatePost";
+import Post from "../../../../components/post/Post";
+import Loader from "../../../../components/Loader";
+import CreatePost from "../../../../components/post/CreatePost";
 
 export default {
 	name: "DashboardBoard",
@@ -60,11 +60,11 @@ export default {
 	},
 	methods: {
 		getBoardPosts($state) {
-			const slug = this.$route.params.slug;
+			const url = this.$route.params.url;
 
 			axios({
 				method: "post",
-				url: `/api/v1/boards/${slug}/posts`,
+				url: `/api/v1/boards/${url}/posts`,
 				params: {
 					page: this.page,
 					created: "desc"
@@ -84,12 +84,12 @@ export default {
 					$state.error();
 				});
 		},
-		getBoardBySlug() {
-			const slug = this.$route.params.slug;
+		getBoardByUrl() {
+			const url = this.$route.params.url;
 
 			axios({
 				method: "post",
-				url: `/api/v1/boards/${slug}`
+				url: `/api/v1/boards/${url}`
 			})
 				.then(response => {
 					this.board = response.data.board;
@@ -100,7 +100,7 @@ export default {
 		}
 	},
 	created() {
-		this.getBoardBySlug();
+		this.getBoardByUrl();
 	},
 	metaInfo() {
 		return {
