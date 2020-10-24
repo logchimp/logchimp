@@ -27,8 +27,8 @@ import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import Post from "../../../components/post/Post";
-import Loader from "../../../components/Loader";
+import Post from "../../components/post/Post";
+import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardPosts",

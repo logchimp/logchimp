@@ -55,13 +55,13 @@
 import axios from "axios";
 
 // components
-import Loader from "../../components/Loader";
-import Form from "../../components/Form";
-import LText from "../../components/input/LText";
-import Button from "../../components/Button";
+import Loader from "../components/Loader";
+import Form from "../components/Form";
+import LText from "../components/input/LText";
+import Button from "../components/Button";
 
 // mixins
-import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+import tokenErrorHandle from "../mixins/tokenErrorHandle";
 
 export default {
 	name: "UserSettings",
