@@ -5,6 +5,23 @@ import axios from "axios";
 import store from "../store";
 
 /**
+ *	Get all boards
+ *
+ * @param {page} integer page number default to 1
+ * @param {sort} string sort type asc or desc
+ */
+export const getAllBoards = async (page = 1, sort = "desc") => {
+	return await axios({
+		method: "get",
+		url: "/api/v1/boards",
+		params: {
+			page: page,
+			created: sort
+		}
+	});
+};
+
+/**
  * Get board posts
  *
  * @param {url} string board url posts

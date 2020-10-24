@@ -64,8 +64,10 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
+
+// modules
+import { getAllBoards } from "../../modules/boards";
 
 // components
 import Button from "../../components/Button";
@@ -106,28 +108,21 @@ export default {
 		createBoard() {
 			this.$router.push("/dashboard/boards/create");
 		},
-		getBoards($state) {
-			axios({
-				method: "get",
-				url: "/api/v1/boards",
-				params: {
-					page: this.page,
-					created: "desc"
+		async getBoards($state) {
+			try {
+				const response = await getAllBoards(this.page, "desc");
+
+				if (response.data.boards.length) {
+					this.boards.push(...response.data.boards);
+					this.page += 1;
+					$state.loaded();
+				} else {
+					$state.complete();
 				}
-			})
-				.then(response => {
-					if (response.data.boards.length) {
-						this.boards.push(...response.data.boards);
-						this.page += 1;
-						$state.loaded();
-					} else {
-						$state.complete();
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		}
 	},
 	metaInfo() {
