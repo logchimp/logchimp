@@ -60,7 +60,7 @@ export default {
 	},
 	watch: {
 		post: {
-			handler(newValue, oldValue) {
+			handler(newValue) {
 				this.postData = newValue;
 			}
 		}
