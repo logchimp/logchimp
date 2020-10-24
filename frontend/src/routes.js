@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import axios from "axios";
 
 import store from "./store";
+import { isSiteSetup } from "./modules/site";
 
 Vue.use(VueRouter);
 
@@ -50,20 +51,18 @@ const routes = [
 		redirect: {
 			name: "Setup welcome"
 		},
-		beforeEnter: (to, from, next) => {
-			axios
-				.get("/api/v1/auth/isSetup")
-				.then(response => {
-					if (response.data.isSetup) {
-						next({ path: "/dashboard" });
-					} else {
-						next();
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					next({ name: "Home" });
-				});
+		beforeEnter: async (to, from, next) => {
+			try {
+				const response = await isSiteSetup();
+				if (response.data.isSetup) {
+					next({ path: "/dashboard" });
+				} else {
+					next();
+				}
+			} catch (error) {
+				console.error(error);
+				next({ name: "Home" });
+			}
 		},
 		children: [
 			{
@@ -86,41 +85,39 @@ const routes = [
 	{
 		path: "/dashboard",
 		component: require("./layout/Dashboard").default,
-		beforeEnter: (to, from, next) => {
-			axios
-				.get("/api/v1/auth/isSetup")
-				.then(response => {
-					// Check for site setup
-					if (!response.data.isSetup) {
-						next({ name: "Setup welcome" });
-						return;
-					}
+		beforeEnter: async (to, from, next) => {
+			try {
+				const setup = await isSiteSetup();
+				// Check for site setup
+				if (!setup.data.isSetup) {
+					next({ name: "Setup welcome" });
+					return;
+				}
 
-					// Is user logged in
-					const user = store.getters["user/getUser"];
-					if (!user.userId) {
-						next({ name: "Login", query: { redirect: "/dashboard" } });
-						return;
-					}
+				// Is user logged in
+				const user = store.getters["user/getUser"];
+				if (!user.userId) {
+					next({ name: "Login", query: { redirect: "/dashboard" } });
+					return;
+				}
 
-					// Check user access to dashboard
-					axios
-						.get(`/api/v1/user/accessDashboard/${user.userId}`)
-						.then(response => {
-							if (response.data.access) {
-								next();
-							} else {
-								next({ name: "Home" });
-							}
-						})
-						.catch(error => {
-							console.error(error);
+				// Check user access to dashboard
+				axios
+					.get(`/api/v1/user/accessDashboard/${user.userId}`)
+					.then(response => {
+						if (response.data.access) {
+							next();
+						} else {
 							next({ name: "Home" });
-						});
-				})
-				.catch(error => {
-					console.error(error);
-				});
+						}
+					})
+					.catch(error => {
+						console.error(error);
+						next({ name: "Home" });
+					});
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		children: [
 			{

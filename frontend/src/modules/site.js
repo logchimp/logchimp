@@ -7,6 +7,16 @@ import store from "../store";
 /**
  * Get site settings
  */
+export const isSiteSetup = async () => {
+	return await axios({
+		method: "get",
+		url: "/api/v1/auth/isSetup"
+	});
+};
+
+/**
+ * Get site settings
+ */
 export const getSettings = async () => {
 	return await axios({
 		method: "get",
