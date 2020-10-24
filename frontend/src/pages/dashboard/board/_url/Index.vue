@@ -11,7 +11,7 @@
 					:key="post.postId"
 					:dashboard="true"
 				/>
-				<infinite-loading @infinite="getBoardPosts">
+				<infinite-loading @infinite="getPosts">
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
 					<div slot="no-results"></div>
@@ -27,11 +27,10 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getBoardByUrl } from "../../../../modules/boards";
+import { getBoardPosts, getBoardByUrl } from "../../../../modules/boards";
 
 // components
 import Post from "../../../../components/post/Post";
@@ -62,30 +61,23 @@ export default {
 		}
 	},
 	methods: {
-		getBoardPosts($state) {
+		async getPosts($state) {
 			const url = this.$route.params.url;
 
-			axios({
-				method: "post",
-				url: `/api/v1/boards/${url}/posts`,
-				params: {
-					page: this.page,
-					created: "desc"
+			try {
+				const response = await getBoardPosts(url, this.page, "desc");
+
+				if (response.data.posts.length) {
+					this.posts.push(...response.data.posts);
+					this.page += 1;
+					$state.loaded();
+				} else {
+					$state.complete();
 				}
-			})
-				.then(response => {
-					if (response.data.posts.length) {
-						this.posts.push(...response.data.posts);
-						this.page += 1;
-						$state.loaded();
-					} else {
-						$state.complete();
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		},
 		async getBoard() {
 			const url = this.$route.params.url;
