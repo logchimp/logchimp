@@ -82,7 +82,6 @@ export default {
 	},
 	methods: {
 		updateVoters(voters) {
-			// eslint-disable-next-line vue/no-mutating-props
 			this.postData.voters = voters;
 		}
 	}
