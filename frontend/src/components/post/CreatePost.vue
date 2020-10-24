@@ -93,19 +93,6 @@ export default {
 				const token = this.$store.getters["user/getAuthToken"];
 				const boardId = this.boardId;
 
-				axios({
-					method: "post",
-					url: "/api/v1/posts",
-					data: {
-						title: this.title.value,
-						contentMarkdown: this.description.value,
-						userId,
-						boardId
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
 					.then(response => {
 						this.buttonLoading = false;
 
