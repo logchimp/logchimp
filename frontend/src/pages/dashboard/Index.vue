@@ -82,8 +82,11 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
+
+// modules
+import { getPosts } from "../../modules/posts";
+import { getAllBoards } from "../../modules/boards";
 
 // components
 import Table from "../../components/Table";
@@ -117,43 +120,27 @@ export default {
 		}
 	},
 	methods: {
-		getPosts($state) {
-			axios({
-				method: "get",
-				url: "/api/v1/posts",
-				params: {
-					page: 1,
-					limit: 4,
-					created: "desc"
-				}
-			})
-				.then(response => {
-					this.posts.data = response.data.posts;
-					$state.complete();
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+		async getPosts($state) {
+			try {
+				const response = await getPosts(1, 4, "desc");
+
+				this.posts.data = response.data.posts;
+				$state.complete();
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		},
-		getBoards($state) {
-			axios({
-				method: "get",
-				url: "/api/v1/boards",
-				params: {
-					page: 1,
-					limit: 4,
-					created: "desc"
-				}
-			})
-				.then(response => {
-					this.boards.data = response.data.boards;
-					$state.complete();
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+		async getBoards($state) {
+			try {
+				const response = await getAllBoards(1, 4, "desc");
+
+				this.boards.data = response.data.boards;
+				$state.complete();
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		}
 	},
 	metaInfo() {
