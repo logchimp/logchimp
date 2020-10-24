@@ -1,9 +1,6 @@
 // packges
 import axios from "axios";
 
-// store
-import store from "../store";
-
 /**
  * Sign in to user account
  *
