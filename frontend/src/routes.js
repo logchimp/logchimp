@@ -1,10 +1,10 @@
 // packages
 import Vue from "vue";
 import VueRouter from "vue-router";
-import axios from "axios";
 
 import store from "./store";
 import { isSiteSetup } from "./modules/site";
+import { checkUserDashboardAccess } from "./modules/users";
 
 Vue.use(VueRouter);
 
@@ -102,19 +102,12 @@ const routes = [
 				}
 
 				// Check user access to dashboard
-				axios
-					.get(`/api/v1/user/accessDashboard/${user.userId}`)
-					.then(response => {
-						if (response.data.access) {
-							next();
-						} else {
-							next({ name: "Home" });
-						}
-					})
-					.catch(error => {
-						console.error(error);
-						next({ name: "Home" });
-					});
+				const access = await checkUserDashboardAccess(user.userId);
+				if (access.data.access) {
+					next();
+				} else {
+					next({ name: "Home" });
+				}
 			} catch (error) {
 				console.error(error);
 			}

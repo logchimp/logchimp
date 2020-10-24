@@ -53,3 +53,15 @@ export const getAllUsers = async (page, sort) => {
 		}
 	});
 };
+
+/**
+ *	Check if user have access to dashboard
+ *
+ * @param {userId} string user UUID
+ */
+export const checkUserDashboardAccess = async userId => {
+	return await axios({
+		method: "get",
+		url: `/api/v1/user/accessDashboard/${userId}`
+	});
+};
