@@ -47,6 +47,9 @@ const routes = [
 	{
 		path: "/setup",
 		component: require("./layout/Onboarding").default,
+		redirect: {
+			name: "Setup welcome"
+		},
 		beforeEnter: (to, from, next) => {
 			axios
 				.get("/api/v1/auth/isSetup")
@@ -54,11 +57,7 @@ const routes = [
 					if (response.data.isSetup) {
 						next({ path: "/dashboard" });
 					} else {
-						if (to.fullPath === "/setup/" || to.fullPath === "/setup") {
-							next({ path: "/setup/welcome" });
-						} else {
-							next();
-						}
+						next();
 					}
 				})
 				.catch(error => {
