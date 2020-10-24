@@ -15,7 +15,7 @@ export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 		method: "get",
 		url: "/api/v1/boards",
 		params: {
-			page: page,
+			page,
 			limit,
 			created: sort
 		}
@@ -34,7 +34,7 @@ export const getBoardPosts = async (url, page = 1, sort) => {
 		method: "post",
 		url: `/api/v1/boards/${url}/posts`,
 		params: {
-			page: page,
+			page,
 			created: sort
 		}
 	});

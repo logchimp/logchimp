@@ -40,7 +40,7 @@ export const getPosts = async (page = 1, limit, sort) => {
 		method: "get",
 		url: "/api/v1/posts",
 		params: {
-			page: page,
+			page,
 			limit,
 			created: sort
 		}
