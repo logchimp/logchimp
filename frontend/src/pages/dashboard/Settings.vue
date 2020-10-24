@@ -79,7 +79,7 @@
 
 <script>
 // modules
-import { updateSettings } from "../../modules/site";
+import { getSettings, updateSettings } from "../../modules/site";
 
 // components
 import LText from "../../components/input/LText";
@@ -216,22 +216,18 @@ export default {
 				this.buttonLoading = false;
 			}
 		},
-		getSettings() {
-			axios({
-				method: "get",
-				url: "/api/v1/settings/site"
-			})
-				.then(response => {
-					this.siteName.value = response.data.settings.title;
-					this.logo = response.data.settings.logo;
-					this.description.value = response.data.settings.description;
-					this.accentColor.value = response.data.settings.accentColor;
-					this.googleAnalyticsId.value =
-						response.data.settings.googleAnalyticsId;
-				})
-				.catch(error => {
-					console.error(error);
-				});
+		async getSettings() {
+			try {
+				const response = await getSettings();
+
+				this.siteName.value = response.data.settings.title;
+				this.logo = response.data.settings.logo;
+				this.description.value = response.data.settings.description;
+				this.accentColor.value = response.data.settings.accentColor;
+				this.googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	},
 	created() {

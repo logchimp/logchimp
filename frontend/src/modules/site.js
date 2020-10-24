@@ -5,6 +5,16 @@ import axios from "axios";
 import store from "../store";
 
 /**
+ * Get site settings
+ */
+export const getSettings = async () => {
+	return await axios({
+		method: "get",
+		url: "/api/v1/settings/site"
+	});
+};
+
+/**
  * Update site settings
  *
  * @param {site} object site data
