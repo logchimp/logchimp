@@ -79,7 +79,11 @@
 
 <script>
 // modules
-import { getSettings, updateSettings } from "../../modules/site";
+import {
+	getSettings,
+	updateSettings,
+	uploadSiteLogo
+} from "../../modules/site";
 
 // components
 import LText from "../../components/input/LText";
@@ -147,32 +151,23 @@ export default {
 		selectFileHandler() {
 			this.$refs.fileSelector.click();
 		},
-		uploadFile(event) {
-			const token = this.$store.getters["user/getAuthToken"];
+		async uploadFile(event) {
 			const logo = event.target.files[0];
 
 			const formData = new FormData();
 			formData.append("logo", logo);
 
-			axios({
-				method: "post",
-				url: "/api/v1/settings/update-logo",
-				data: formData,
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "multipart/form-data"
-				}
-			})
-				.then(response => {
-					this.logo = response.data.settings.logo;
+			try {
+				const response = await uploadSiteLogo(formData);
 
-					this.$store.dispatch("settings/updateLogo", {
-						logo: response.data.settings.logo
-					});
-				})
-				.catch(error => {
-					console.log(error);
+				this.logo = response.data.settings.logo;
+
+				this.$store.dispatch("settings/updateLogo", {
+					logo: response.data.settings.logo
 				});
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async saveSettings() {
 			if (this.buttonLoading) {

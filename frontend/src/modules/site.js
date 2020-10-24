@@ -33,3 +33,22 @@ export const updateSettings = async site => {
 		}
 	});
 };
+
+/**
+ * upload site logo
+ *
+ * @param {logo} FormData logo (image file)
+ */
+export const uploadSiteLogo = async logo => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "post",
+		url: "/api/v1/settings/update-logo",
+		data: logo,
+		headers: {
+			Authorization: `Bearer ${token}`,
+			"Content-Type": "multipart/form-data"
+		}
+	});
+};
