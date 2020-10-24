@@ -49,12 +49,12 @@
 import axios from "axios";
 
 // components
-import Loader from "../../../components/Loader";
-import Vote from "../../../components/post/Vote";
-import Avatar from "../../../components/Avatar";
+import Loader from "../../../../components/Loader";
+import Vote from "../../../../components/post/Vote";
+import Avatar from "../../../../components/Avatar";
 
 // mixins
-import userAvatar from "../../../mixins/userAvatar";
+import userAvatar from "../../../../mixins/userAvatar";
 
 export default {
 	name: "DashboardPostView",

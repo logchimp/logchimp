@@ -90,30 +90,33 @@ const routes = [
 			axios
 				.get("/api/v1/auth/isSetup")
 				.then(response => {
-					if (response.data.isSetup) {
-						const user = store.getters["user/getUser"];
-						if (user.userId) {
-							axios
-								.get(
-									`/api/v1/user/accessDashboard/${user.userId}`
-								)
-								.then(response => {
-									if (response.data.access) {
-										next();
-									} else {
-										next({ path: "/" });
-									}
-								})
-								.catch(error => {
-									console.error(error);
-									next({ path: "/" });
-								});
-						} else {
-							next({ path: "/login", query: { redirect: "/dashboard" } });
-						}
-					} else {
-						next({ path: "/setup/welcome" });
+					// Check for site setup
+					if (!response.data.isSetup) {
+						next({ name: "Setup welcome" });
+						return;
 					}
+
+					// Is user logged in
+					const user = store.getters["user/getUser"];
+					if (!user.userId) {
+						next({ name: "Login", query: { redirect: "/dashboard" } });
+						return;
+					}
+
+					// Check user access to dashboard
+					axios
+						.get(`/api/v1/user/accessDashboard/${user.userId}`)
+						.then(response => {
+							if (response.data.access) {
+								next();
+							} else {
+								next({ name: "Home" });
+							}
+						})
+						.catch(error => {
+							console.error(error);
+							next({ name: "Home" });
+						});
 				})
 				.catch(error => {
 					console.error(error);
@@ -122,36 +125,43 @@ const routes = [
 		children: [
 			{
 				path: "",
-				component: require("./pages/dashboard/Overview").default
+				name: "Dashboard overview",
+				component: require("./pages/dashboard/Index").default
 			},
 			{
 				path: "boards",
-				component: require("./pages/dashboard/board/DashboardBoards").default
+				name: "Dashboard boards",
+				component: require("./pages/dashboard/Boards").default
 			},
 			{
-				path: "create-board",
-				component: require("./pages/dashboard/board/DashboardCreateBoard")
-					.default
+				path: "boards/create",
+				name: "Dashboard board create",
+				component: require("./pages/dashboard/boards/Create").default
 			},
 			{
-				path: "board/:slug",
-				component: require("./pages/dashboard/board/DashboardBoard").default
+				path: "board/:url",
+				name: "Dashboard board view",
+				component: require("./pages/dashboard/board/_url/Index").default
 			},
 			{
 				path: "posts",
-				component: require("./pages/dashboard/post/DashboardPosts").default
+				name: "Dashboard posts",
+				component: require("./pages/dashboard/Posts").default
 			},
 			{
 				path: "post/:slug",
-				components: require("./pages/dashboard/post/DashboardPostView")
+				name: "Dashboard post view",
+				components: require("./pages/dashboard/post/_slug/Index")
 			},
 			{
 				path: "users",
-				component: require("./pages/dashboard/user/DashboardUsers").default
+				name: "Dashbord users",
+				component: require("./pages/dashboard/Users").default
 			},
 			{
 				path: "settings",
-				component: require("./pages/dashboard/DashboardSettings").default
+				name: "Dashboard settings",
+				component: require("./pages/dashboard/Settings").default
 			}
 		]
 	},
