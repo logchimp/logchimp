@@ -14,36 +14,33 @@ const routes = [
 		children: [
 			{
 				path: "",
-				name: "Homepage",
-				component: require("./pages/Homepage").default
+				name: "Home",
+				component: require("./pages/Index").default
 			},
 			{
 				path: "boards",
-				component: require("./pages/board/Boards").default
+				name: "Boards",
+				component: require("./pages/Boards").default
 			},
 			{
-				path: "board/:slug",
-				component: require("./pages/board/Board").default
+				path: "board/:url",
+				name: "Board view",
+				component: require("./pages/board/_url").default
 			},
 			{
-				path: "/settings",
-				name: "UserSettings",
-				component: require("./pages/user/Settings").default
+				path: "settings",
+				name: "User settings",
+				component: require("./pages/Settings").default
 			},
 			{
 				path: "/post/:slug",
-				component: require("./pages/post/Post").default,
-				children: [
-					{
-						path: "",
-						component: require("./pages/post/View").default
-					},
-					{
-						path: "edit",
-						name: "PostEdit",
-						component: require("./pages/post/Edit").default
-					}
-				]
+				name: "Post view",
+				component: require("./pages/post/_slug/Index").default
+			},
+			{
+				path: "/post/:slug/edit",
+				name: "Post edit",
+				component: require("./pages/post/_slug/Edit").default
 			}
 		]
 	},
