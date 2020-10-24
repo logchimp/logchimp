@@ -68,12 +68,12 @@ import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import Button from "../../../components/Button";
-import Table from "../../../components/Table";
-import Loader from "../../../components/Loader";
+import Button from "../../components/Button";
+import Table from "../../components/Table";
+import Loader from "../../components/Loader";
 
 // icons
-import LinkIcon from "../../../components/icons/Link";
+import LinkIcon from "../../components/icons/Link";
 // import SettingsIcon from "../../components/icons/Settings";
 
 export default {
@@ -104,7 +104,7 @@ export default {
 	},
 	methods: {
 		createBoard() {
-			this.$router.push("/dashboard/create-board");
+			this.$router.push("/dashboard/boards/create");
 		},
 		getBoards($state) {
 			axios({

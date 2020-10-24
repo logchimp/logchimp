@@ -15,7 +15,7 @@ import axios from "axios";
 import SiteSetupCard from "../components/SiteSetupCard";
 
 export default {
-	name: "HomePage",
+	name: "Homepage",
 	data() {
 		return {
 			showSiteSetupCard: false
