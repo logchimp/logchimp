@@ -35,12 +35,13 @@ export const createPost = async (boardId, post) => {
  * @param {page} integer page number default to 1
  * @param {sort} string sort type asc or desc
  */
-export const getPosts = async (page = 1, sort) => {
+export const getPosts = async (page = 1, limit, sort) => {
 	return await axios({
 		method: "get",
 		url: "/api/v1/posts",
 		params: {
 			page: page,
+			limit,
 			created: sort
 		}
 	});

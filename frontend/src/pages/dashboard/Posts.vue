@@ -56,7 +56,7 @@ export default {
 	methods: {
 		async getBoardPosts($state) {
 			try {
-				const response = await getPosts(this.page, "desc");
+				const response = await getPosts(this.page, null, "desc");
 
 				if (response.data.posts.length) {
 					this.posts.push(...response.data.posts);

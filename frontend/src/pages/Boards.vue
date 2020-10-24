@@ -65,7 +65,7 @@ export default {
 	methods: {
 		async getBoards($state) {
 			try {
-				const response = await getAllBoards(this.page, "desc");
+				const response = await getAllBoards(this.page, null, "desc");
 
 				if (response.data.boards.length) {
 					this.boards.push(...response.data.boards);

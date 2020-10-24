@@ -10,12 +10,13 @@ import store from "../store";
  * @param {page} integer page number default to 1
  * @param {sort} string sort type asc or desc
  */
-export const getAllBoards = async (page = 1, sort = "desc") => {
+export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 	return await axios({
 		method: "get",
 		url: "/api/v1/boards",
 		params: {
 			page: page,
+			limit,
 			created: sort
 		}
 	});
