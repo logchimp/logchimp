@@ -51,8 +51,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { getUserSettings } from "../modules/users";
 
 // components
 import Loader from "../components/Loader";
@@ -99,26 +99,22 @@ export default {
 		}
 	},
 	methods: {
-		getUser() {
-			const userId = this.$store.getters["user/getUserId"];
-
+		async getUser() {
 			this.user.loading = true;
-			axios({
-				method: "get",
-				url: `/api/v1/users/${userId}`
-			})
-				.then(response => {
-					this.user.firstname.value = response.data.user.firstname;
-					this.user.lastname.value = response.data.user.lastname;
-					this.user.username.value = response.data.user.username;
-					this.user.emailAddress.value = response.data.user.emailAddress;
-					this.user.loading = false;
-				})
-				.catch(error => {
-					this.userNotFound(error);
 
-					this.user.loading = false;
-				});
+			try {
+				const response = await getUserSettings();
+
+				this.user.firstname.value = response.data.user.firstname;
+				this.user.lastname.value = response.data.user.lastname;
+				this.user.username.value = response.data.user.username;
+				this.user.emailAddress.value = response.data.user.emailAddress;
+				this.user.loading = false;
+			} catch (error) {
+				this.userNotFound(error);
+
+				this.user.loading = false;
+			}
 		},
 		updateSettings() {
 			if (this.buttonLoading) {
