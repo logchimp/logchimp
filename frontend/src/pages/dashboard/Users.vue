@@ -47,9 +47,9 @@ import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import Table from "../../../components/Table";
-import Avatar from "../../../components/Avatar";
-import Loader from "../../../components/Loader";
+import Table from "../../components/Table";
+import Avatar from "../../components/Avatar";
+import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardUsers",

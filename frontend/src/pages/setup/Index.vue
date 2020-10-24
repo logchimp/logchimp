@@ -23,7 +23,7 @@
 import Button from "../../components/Button";
 
 export default {
-	name: "OnboardingWelcome",
+	name: "SetupWelcome",
 	components: {
 		Button
 	},

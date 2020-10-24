@@ -38,11 +38,11 @@
 import axios from "axios";
 
 // components
-import Form from "../../components/Form";
-import Loader from "../../components/Loader";
-import LText from "../../components/input/LText";
-import LTextarea from "../../components/input/LTextarea";
-import Button from "../../components/Button";
+import Form from "../../../components/Form";
+import Loader from "../../../components/Loader";
+import LText from "../../../components/input/LText";
+import LTextarea from "../../../components/input/LTextarea";
+import Button from "../../../components/Button";
 
 export default {
 	name: "PostEdit",
