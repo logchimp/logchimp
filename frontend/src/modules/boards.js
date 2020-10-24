@@ -40,6 +40,18 @@ export const getBoardPosts = async (url, page = 1, sort) => {
 };
 
 /**
+ *	Get board by URL
+ *
+ * @param {url} string url unqiue for each board
+ */
+export const getBoardByUrl = async url => {
+	return await axios({
+		method: "post",
+		url: `/api/v1/boards/${url}`
+	});
+};
+
+/**
  * Create new board
  *
  * @param {name} string Board name

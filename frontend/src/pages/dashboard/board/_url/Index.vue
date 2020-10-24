@@ -30,6 +30,9 @@
 import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
+// modules
+import { getBoardByUrl } from "../../../../modules/boards";
+
 // components
 import Post from "../../../../components/post/Post";
 import Loader from "../../../../components/Loader";
@@ -84,23 +87,20 @@ export default {
 					$state.error();
 				});
 		},
-		getBoardByUrl() {
+		async getBoard() {
 			const url = this.$route.params.url;
 
-			axios({
-				method: "post",
-				url: `/api/v1/boards/${url}`
-			})
-				.then(response => {
-					this.board = response.data.board;
-				})
-				.catch(error => {
-					console.error(error);
-				});
+			try {
+				const response = await getBoardByUrl(url);
+
+				this.board = response.data.board;
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	},
 	created() {
-		this.getBoardByUrl();
+		this.getBoard();
 	},
 	metaInfo() {
 		return {
