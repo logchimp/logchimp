@@ -34,8 +34,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { getPostBySlug } from "../../../modules/posts";
 
 // components
 import Form from "../../../components/Form";
@@ -84,27 +84,27 @@ export default {
 		hideTitleError(event) {
 			this.post.title.error = event;
 		},
-		getPost() {
+		async getPost() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;
 
-			axios
-				.get(`/api/v1/posts/${slug}`)
-				.then(response => {
-					this.post.title.value = response.data.post.title;
-					this.post.contentMarkdown = response.data.post.contentMarkdown;
-					this.post.postId = response.data.post.postId;
-					this.post.slugId = response.data.post.slugId;
-					this.post.userId = response.data.post.userId;
-					this.post.loading = false;
-				})
-				.catch(error => {
-					if (error.response.data.code === "POST_NOT_FOUND") {
-						this.isPostExist = false;
-					}
+			try {
+				const response = await getPostBySlug(slug);
 
-					this.post.loading = false;
-				});
+				this.post.title.value = response.data.post.title;
+				this.post.contentMarkdown = response.data.post.contentMarkdown;
+				this.post.postId = response.data.post.postId;
+				this.post.slugId = response.data.post.slugId;
+				this.post.userId = response.data.post.userId;
+
+				this.post.loading = false;
+			} catch (error) {
+				if (error.response.data.code === "POST_NOT_FOUND") {
+					this.isPostExist = false;
+				}
+
+				this.post.loading = false;
+			}
 		},
 		savePost() {
 			if (this.buttonLoading) {

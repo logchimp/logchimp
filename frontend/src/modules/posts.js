@@ -46,3 +46,15 @@ export const getPosts = async (page = 1, limit, sort) => {
 		}
 	});
 };
+
+/**
+ * Get post by slug
+ *
+ * @param {slug} string post slug
+ */
+export const getPostBySlug = async slug => {
+	return await axios({
+		method: "get",
+		url: `/api/v1/posts/${slug}`
+	});
+};
