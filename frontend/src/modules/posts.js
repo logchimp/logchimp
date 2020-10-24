@@ -58,3 +58,24 @@ export const getPostBySlug = async slug => {
 		url: `/api/v1/posts/${slug}`
 	});
 };
+
+/**
+ * Update post
+ *
+ * @param {postId} string post UUID
+ * @param {post} object post data
+ */
+export const updatePost = async (postId, post) => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "patch",
+		url: `/api/v1/posts/${postId}`,
+		data: {
+			...post
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};

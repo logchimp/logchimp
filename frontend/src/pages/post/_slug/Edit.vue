@@ -35,7 +35,7 @@
 
 <script>
 // modules
-import { getPostBySlug } from "../../../modules/posts";
+import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
 import Form from "../../../components/Form";
@@ -106,56 +106,45 @@ export default {
 				this.post.loading = false;
 			}
 		},
-		savePost() {
+		async savePost() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.post.title.value) {
-				this.buttonLoading = true;
-				const token = this.$store.getters["user/getAuthToken"];
 
-				axios({
-					method: "patch",
-					url: `/api/v1/posts/${this.post.postId}`,
-					data: {
-						title: this.post.title.value,
-						contentMarkdown: this.post.contentMarkdown,
-						slugId: this.post.slugId,
-						userId: this.post.userId
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
-					.then(response => {
-						if (response.data.status.code === 200) {
-							this.$store.dispatch("alerts/add", {
-								title: "Updated",
-								type: "success",
-								timeout: 5000
-							});
-
-							this.post.title.value = response.data.post.title;
-							this.post.contentMarkdown = response.data.post.contentMarkdown;
-							this.post.slugId = response.data.post.slugId;
-							this.post.userId = response.data.post.userId;
-							this.post.slug = response.data.post.slug;
-
-							this.buttonLoading = false;
-							this.$router.push(`/post/${this.post.slug}`);
-						}
-					})
-					.catch(error => {
-						if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
-							const slug = this.$route.params.slug;
-							this.$router.push(`/post/${slug}`);
-						}
-
-						this.buttonLoading = false;
-					});
-			} else {
+			if (!this.post.title.value) {
 				this.post.title.error.show = true;
 				this.post.title.error.message = "Required";
+				return;
+			}
+
+			this.buttonLoading = true;
+
+			const postData = {
+				title: this.post.title.value,
+				contentMarkdown: this.post.contentMarkdown,
+				slugId: this.post.slugId,
+				userId: this.post.userId
+			};
+
+			try {
+				const response = await updatePost(this.post.postId, postData);
+
+				this.post.title.value = response.data.post.title;
+				this.post.contentMarkdown = response.data.post.contentMarkdown;
+				this.post.slugId = response.data.post.slugId;
+				this.post.userId = response.data.post.userId;
+				this.post.slug = response.data.post.slug;
+
+				this.buttonLoading = false;
+
+				this.$router.push(`/post/${this.post.slug}`);
+			} catch (error) {
+				if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
+					const slug = this.$route.params.slug;
+					this.$router.push(`/post/${slug}`);
+				}
+
+				this.buttonLoading = false;
 			}
 		}
 	},
