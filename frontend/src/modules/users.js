@@ -36,3 +36,20 @@ export const updateUserSettings = async user => {
 		}
 	});
 };
+
+/**
+ *	Get all users
+ *
+ * @param {page} integer page number default to 1
+ * @param {sort} string sort type asc or desc
+ */
+export const getAllUsers = async (page, sort) => {
+	return await axios({
+		method: "get",
+		url: "/api/v1/users",
+		params: {
+			page,
+			created: sort
+		}
+	});
+};
