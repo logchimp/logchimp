@@ -28,3 +28,20 @@ export const createPost = async (boardId, post) => {
 		}
 	});
 };
+
+/**
+ * Get posts
+ *
+ * @param {page} integer page number default to 1
+ * @param {sort} string sort type asc or desc
+ */
+export const getPosts = async (page = 1, sort) => {
+	return await axios({
+		method: "get",
+		url: "/api/v1/posts",
+		params: {
+			page: page,
+			created: sort
+		}
+	});
+};
