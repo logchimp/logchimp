@@ -17,3 +17,22 @@ export const getUserSettings = async () => {
 		url: `/api/v1/users/${userId}`
 	});
 };
+
+/**
+ *	Update user settings
+ *
+ * @param {user} object user data object
+ */
+export const updateUserSettings = async user => {
+	const userId = store.getters["user/getUserId"];
+
+	return await axios({
+		method: "patch",
+		url: "/api/v1/user",
+		data: {
+			userId,
+			firstname: user.firstname,
+			lastname: user.lastname
+		}
+	});
+};

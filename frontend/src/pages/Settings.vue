@@ -52,7 +52,7 @@
 
 <script>
 // modules
-import { getUserSettings } from "../modules/users";
+import { getUserSettings, updateUserSettings } from "../modules/users";
 
 // components
 import Loader from "../components/Loader";
@@ -116,38 +116,33 @@ export default {
 				this.user.loading = false;
 			}
 		},
-		updateSettings() {
+		async updateSettings() {
 			if (this.buttonLoading) {
 				return;
 			}
 			this.buttonLoading = true;
-			const userId = this.$store.getters["user/getUserId"];
 
-			axios({
-				method: "patch",
-				url: "/api/v1/user",
-				data: {
-					userId,
-					firstname: this.user.firstname.value,
-					lastname: this.user.lastname.value
-				}
-			})
-				.then(response => {
-					this.user.firstname.value = response.data.user.firstname;
-					this.user.lastname.value = response.data.user.lastname;
+			const userData = {
+				firstname: this.user.firstname.value,
+				lastname: this.user.lastname.value
+			};
 
-					this.$store.dispatch("user/updateUserSettings", {
-						firstname: response.data.user.firstname,
-						lastname: response.data.user.lastname
-					});
+			try {
+				const response = await updateUserSettings(userData);
+				this.user.firstname.value = response.data.user.firstname;
+				this.user.lastname.value = response.data.user.lastname;
 
-					this.buttonLoading = false;
-				})
-				.catch(error => {
-					this.userNotFound(error);
-
-					this.buttonLoading = false;
+				this.$store.dispatch("user/updateUserSettings", {
+					firstname: response.data.user.firstname,
+					lastname: response.data.user.lastname
 				});
+
+				this.buttonLoading = false;
+			} catch (error) {
+				this.userNotFound(error);
+
+				this.buttonLoading = false;
+			}
 		}
 	},
 	created() {
