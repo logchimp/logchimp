@@ -62,20 +62,23 @@ const routes = [
 				})
 				.catch(error => {
 					console.error(error);
-					next({ path: "/" });
+					next({ name: "Home" });
 				});
 		},
 		children: [
 			{
 				path: "welcome",
-				component: require("./pages/setup/Welcome").default
+				name: "Setup welcome",
+				component: require("./pages/setup/Index").default
 			},
 			{
 				path: "create-account",
+				name: "Setup create account",
 				component: require("./pages/setup/Account").default
 			},
 			{
 				path: "create-board",
+				name: "Setup create board",
 				component: require("./pages/setup/Board").default
 			}
 		]
