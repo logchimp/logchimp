@@ -24,6 +24,8 @@ if (!config) {
 	process.exit(1);
 }
 
+
+
 // Set the default environment to be `development`
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
