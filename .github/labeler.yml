@@ -1,25 +1,24 @@
 "area:frontend":
-  - any: ['frontend/**/*']
+  - any: ["frontend/**/*", "!frontend/jest.config.js"]
 
-"area:backend":
-  - any: ['server/**/*']
-  # - '!server/jest.config.js'
+# "area:backend":
+#   - any: ["server/**/*", "!server/jest.config.js"]
 
-"area:database":
-  - 'server/database/**/*'
+# "area:database":
+#   - 'server/database/**/*'
 
-"area:database:migrations":
-  - 'server/database/migrations/**'
+# "area:database:migrations":
+#   - 'server/database/migrations/**'
 
-"area:database:seeds":
-  - 'server/database/seeds/**'
+# "area:database:seeds":
+#   - 'server/database/seeds/**'
 
-"area:api":
-  - 'server/routes/**'
-  - 'server/controllers/**'
+# "area:api":
+#   - 'server/routes/**'
+#   - 'server/controllers/**'
 
-"area:test":
-  - any: ['server/**/*.test.js']
-  - any: ['jest.config.js']
-  - any: ['frontend/jest.config.js']
-  - any: ['server/jest.config.js']
+# "area:test":
+#   - any: ['server/**/*.test.js']
+#   - any: ['jest.config.js']
+#   - any: ['frontend/jest.config.js']
+#   - any: ['server/jest.config.js']
