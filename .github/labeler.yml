@@ -18,8 +18,8 @@
 #   - 'server/routes/**'
 #   - 'server/controllers/**'
 
-# 'area:test':
+"area:test":
+  - any: ["frontend/jest.config.js"]
 #   - any: ['server/**/*.test.js']
 #   - any: ['jest.config.js']
-#   - any: ['frontend/jest.config.js']
 #   - any: ['server/jest.config.js']
