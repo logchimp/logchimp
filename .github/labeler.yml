@@ -1,19 +1,22 @@
 "area:frontend":
   - any: ["frontend/**/*"]
-    all: ["!frontend/jest.config.js"]
 
 "area:backend":
   - any: ["server/**/*"]
-  - "!server/jest.config.js"
+  # - "!server/jest.config.js"
 
 "area:database":
-  - "server/database/**"
-  - "server/knexfile.js"
+  - "server/database/**/*"
+
+"area:database:migrations":
+  - "server/database/migrations/**"
+
+"area:database:seeds":
+  - "server/database/seeds/**"
 
 "area:api":
   - "server/routes/**"
   - "server/controllers/**"
-  - "server/services/**"
 
 "area:test":
   - any: ["server/**/*.test.js"]
