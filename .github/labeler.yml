@@ -3,7 +3,7 @@
   - "!frontend/jest.config.js"
 
 "area:backend":
-  - "server/**",
+  - "server/**"
   - "!server/jest.config.js"
 
 "area:database":
