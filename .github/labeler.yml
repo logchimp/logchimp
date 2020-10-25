@@ -1,5 +1,5 @@
 "area:frontend":
-- any: ['frontend/**/*', '!frontend/jest.config.js']
+  - any: ["./frontend/**/*", "!./frontend/jest.config.js"]
 
 # 'area:backend':
 #   - any: ['server/**/*', '!server/jest.config.js']
