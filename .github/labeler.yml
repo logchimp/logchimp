@@ -1,9 +1,9 @@
 "area:frontend":
-  - "frontend/**"
-  - "!frontend/jest.config.js"
+  - any: ["frontend/**/*"]
+    all: ["!frontend/jest.config.js"]
 
 "area:backend":
-  - "server/**"
+  - any: ["server/**/*"]
   - "!server/jest.config.js"
 
 "area:database":
@@ -16,7 +16,7 @@
   - "server/services/**"
 
 "area:test":
-  - "server/**/*.test.js"
-  - "jest.config.js"
-  - "frontend/jest.config.js"
-  - "server/jest.config.js"
+  - any: ["server/**/*.test.js"]
+  - any: ["jest.config.js"]
+  - any: ["frontend/jest.config.js"]
+  - any: ["server/jest.config.js"]
