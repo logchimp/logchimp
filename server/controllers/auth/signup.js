@@ -3,7 +3,7 @@ const getUser = require("../../services/auth/getUser");
 const createUser = require("../../services/auth/createUser");
 
 // services
-const mail = require("../../services/mail");
+const verifyEmail = require("../../services/auth/verifyEmail");
 
 // utils
 const { createToken } = require("../../utils/token");
@@ -40,29 +40,11 @@ exports.signup = async (req, res) => {
 				});
 
 				if (userData) {
-					// secretKey
-					const secretKey = config.server.secretKey;
-					const host = req.headers.host;
 					try {
-						/**
-						 * authToken sent via email will expire after 1 hr
-						 */
-						const onboardingMailContent = await mail.generateContent("verify", {
-							siteUrl: host
-						});
+						const siteUrl = req.headers.host;
+						await verifyEmail(siteUrl, emailAddress);
 
-						const emailVerification = new mail.Mail();
-						const noReplyEmail = `noreply@${host}`;
-
-						await emailVerification.send({
-							from: noReplyEmail,
-							to: emailAddress,
-							subject: "LogChimp - Please confirm your email",
-							text: onboardingMailContent.text,
-							html: onboardingMailContent.html
-						});
-
-						// generate authToken
+						const secretKey = config.server.secretKey;
 						const authToken = createToken(userData, secretKey, {
 							expiresIn: "2d"
 						});
@@ -78,8 +60,8 @@ exports.signup = async (req, res) => {
 								authToken
 							}
 						});
-					} catch (error) {
-						console.error(error);
+					} catch (err) {
+						logger.error(err);
 					}
 				} else {
 					res.status(404).send({
