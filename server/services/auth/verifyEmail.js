@@ -17,6 +17,12 @@ const verifyEmail = async (siteUrl, emailAddress) => {
 	});
 
 	try {
+		await database
+			.delete()
+			.from("emailVerification")
+			.where({
+				emailAddress
+			});
 
 		const userEmailVerificationToken = await database
 			.insert({
