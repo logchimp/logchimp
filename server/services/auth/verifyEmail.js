@@ -27,6 +27,8 @@ const verifyEmail = async (siteUrl, emailAddress) => {
 		text: onboardingMailContent.text,
 		html: onboardingMailContent.html
 	});
+
+	return authToken;
 };
 
 module.exports = verifyEmail;
