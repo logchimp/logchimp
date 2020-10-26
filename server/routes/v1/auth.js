@@ -11,5 +11,6 @@ router.get("/auth/isSetup", auth.isSetup);
 
 // email
 router.post("/auth/email/verify", auth.email.verify);
+router.post("/auth/email/validate", auth.email.validate);
 
 module.exports = router;
