@@ -13,17 +13,11 @@ exports.boardBySlug = async (req, res) => {
 		const board = await getBoardBySlug(slug);
 
 		if (board) {
-			res.status(200).send({
-				status: {
-					code: 200,
-					type: "success"
-				},
-				board
-			});
+			res.status(200).send(board);
 		} else {
 			res.status(404).send({
-				code: "BOARD_NOT_FOUND",
-				message: error.api.boards.boardNotFound
+				message: error.api.boards.boardNotFound,
+				code: "BOARD_NOT_FOUND"
 			});
 		}
 	} catch (err) {
