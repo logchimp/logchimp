@@ -8,13 +8,15 @@ exports.update = async (req, res) => {
 	const title = req.body.title;
 	const description = req.body.description;
 	const accentColor = req.body.accentColor;
+	const googleAnalyticsId = req.body.googleAnalyticsId;
 
 	try {
 		const updateSettings = await database
 			.update({
 				title,
 				description,
-				accentColor
+				accentColor,
+				googleAnalyticsId
 			})
 			.from("settings")
 			.returning("*");

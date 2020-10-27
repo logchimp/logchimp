@@ -13,6 +13,7 @@
 		<l-textarea
 			v-model="description.value"
 			label="Description"
+			rows="4"
 			name="Post description"
 			placeholder="What would you use it for?"
 		/>
@@ -25,8 +26,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { createPost } from "../../modules/posts";
 
 // components
 import Form from "../Form";
@@ -82,46 +83,37 @@ export default {
 		hideTitleError(event) {
 			this.title.error = event;
 		},
-		submitPost() {
+		async submitPost() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.title.value) {
-				this.buttonLoading = true;
-				const userId = this.$store.getters["user/getUserId"];
-				const token = this.$store.getters["user/getAuthToken"];
-				const boardId = this.boardId;
 
-				axios({
-					method: "post",
-					url: "/api/v1/posts",
-					data: {
-						title: this.title.value,
-						contentMarkdown: this.description.value,
-						userId,
-						boardId
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
-					.then(response => {
-						this.buttonLoading = false;
-
-						// redirect to post
-						const slug = response.data.post.slug;
-						this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
-					})
-					.catch(error => {
-						this.userNotFound(error);
-						this.invalidToken(error);
-						this.invalidAuthHeaderFormat(error);
-
-						this.buttonLoading = false;
-					});
-			} else {
+			if (!this.title.value) {
 				this.title.error.show = true;
 				this.title.error.message = "Required";
+				return;
+			}
+
+			this.buttonLoading = true;
+			const postObject = {
+				title: this.title.value,
+				description: this.description.value
+			};
+
+			try {
+				const response = await createPost(this.boardId, postObject);
+
+				this.buttonLoading = false;
+
+				// redirect to post
+				const slug = response.data.post.slug;
+				this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
+			} catch (error) {
+				this.userNotFound(error);
+				this.invalidToken(error);
+				this.invalidAuthHeaderFormat(error);
+
+				this.buttonLoading = false;
 			}
 		}
 	}

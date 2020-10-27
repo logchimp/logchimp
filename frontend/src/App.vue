@@ -22,6 +22,7 @@
 <script>
 // packages
 import axios from "axios";
+import gtag, { setOptions, bootstrap } from "vue-gtag";
 import packageJson from "../../package.json";
 
 // components
@@ -68,6 +69,17 @@ export default {
 			this.$store.dispatch("settings/update", JSON.parse(settings));
 		} else {
 			this.getSiteSettings();
+		}
+
+		// set google analytics
+		if (this.getSiteSittings.googleAnalyticsId) {
+			setOptions({
+				config: {
+					id: this.getSiteSittings.googleAnalyticsId
+				}
+			});
+
+			bootstrap(gtag).then();
 		}
 
 		const user = localStorage.getItem("user");

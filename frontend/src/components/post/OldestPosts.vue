@@ -37,11 +37,11 @@ export default {
 	},
 	methods: {
 		getMorePosts($state) {
-			const slug = this.$route.params.slug;
+			const url = this.$route.params.url;
 
 			axios({
 				method: "post",
-				url: `/api/v1/boards/${slug}/posts`,
+				url: `/api/v1/boards/${url}/posts`,
 				params: {
 					page: this.page,
 					created: "asc"

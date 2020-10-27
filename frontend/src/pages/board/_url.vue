@@ -108,11 +108,11 @@ export default {
 		},
 		getBoard() {
 			this.board.loading = true;
-			const slug = this.$route.params.slug;
+			const url = this.$route.params.url;
 
 			axios({
 				method: "post",
-				url: `/api/v1/boards/${slug}`
+				url: `/api/v1/boards/${url}`
 			})
 				.then(response => {
 					this.board = response.data.board;

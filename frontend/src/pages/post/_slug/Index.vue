@@ -64,18 +64,18 @@
 import axios from "axios";
 
 // components
-import Loader from "../../components/Loader";
-import Vote from "../../components/post/Vote";
-import Dropdown from "../../components/dropdown/Dropdown";
-import DropdownItem from "../../components/dropdown/DropdownItem";
-import Avatar from "../../components/Avatar";
+import Loader from "../../../components/Loader";
+import Vote from "../../../components/post/Vote";
+import Dropdown from "../../../components/dropdown/Dropdown";
+import DropdownItem from "../../../components/dropdown/DropdownItem";
+import Avatar from "../../../components/Avatar";
 
 // mixins
-import userAvatar from "../../mixins/userAvatar";
+import userAvatar from "../../../mixins/userAvatar";
 
 // icons
-import MoreIcon from "../../components/icons/More";
-import EditIcon from "../../components/icons/Edit";
+import MoreIcon from "../../../components/icons/More";
+import EditIcon from "../../../components/icons/Edit";
 
 export default {
 	name: "PostView",
