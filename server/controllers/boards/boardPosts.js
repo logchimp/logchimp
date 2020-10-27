@@ -73,11 +73,6 @@ exports.boardPosts = async (req, res) => {
 				});
 			}
 		} else {
-			logger.log({
-				level: "error",
-				code: "BOARD_NOT_FOUND",
-				message: `'${slug}' board not found`
-			});
 
 			res.status(404).send({
 				code: "BOARD_NOT_FOUND",
