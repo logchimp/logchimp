@@ -1,130 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style type="text/css">
-      body {
-        margin: 0;
-        padding: 0;
-      }
 
-      a {
-        color: #484d7c;
-      }
+<head>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
 
-      .background_main {
-        background-color: white;
-        width: 100%;
-      }
+<body style="margin: 0;padding: 0;font-family: &quot;Inter&quot;, sans-serif;font-size: 16px;">
+	<table class="parent"
+		style="margin: 0;padding: 20px;width: 100%;max-width: 600px;margin-left: auto;margin-right: auto;background-color: white;">
+		<tbody style="margin: 0;padding: 0;">
+			<tr style="margin: 0;padding: 0;">
+				<td class="container" style="margin: 0;padding: 0;min-width: 100%;width: 100%;">
+					<div style="margin: 0;padding: 0;">
+						<p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+							<a href="https://logchimp.codecarrot.net/"
+								style="margin: 0;padding: 0;color: #484d7c;text-decoration: none;">
+								<img class="logo" src="https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png"
+									style="margin: 0;padding: 0;width: 40px;height: 40px;">
+							</a>
+						</p>
 
-      .main {
-        max-width: 750px;
-        padding: 48px;
-        margin: 0 auto;
-      }
+						<p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+							Thank you for creating an account.
+						</p>
 
-      .logo {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 12px;
-      }
+						<p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+							Please confirm your email address by clicking
+							<strong style="margin: 0;padding: 0;">Confirm email</strong>
+							button below:
+						</p>
 
-      .content {
-        padding: 32px;
-        border: 1px solid #e5e5e5;
-        border-radius: 6px;
-      }
+						<p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+							<a class="primary_button" href="{{ verificationLink }}" target="_blank"
+								style="margin: 0;padding: 0.875rem 1.5rem;color: #fff;text-decoration: none;display: inline-block;border-radius: 0.375rem;font-weight: 500;cursor: pointer;user-select: none;background-color: #484d7c;margin-top: 8px;margin-bottom: 8px;">
+								Confirm email
+							</a>
+						</p>
 
-      .content .text {
-        margin-bottom: 10px;
-      }
+						<p class="text" style="margin: 0;padding: 0;margin-bottom: 1rem;">
+							Thanks
+						</p>
 
-      .content p:last-child {
-        margin-bottom: 0;
-      }
+						<p class="text" style="margin: 0;padding: 0;margin-bottom: 0;">
+							LogChimp
+							<br style="margin: 0;padding: 0;">
+							<a href="{{ siteUrl }}" target="_blank"
+								style="margin: 0;padding: 0;color: #484d7c;text-decoration: none;"> {{ siteUrl }}</a>
+						</p>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
 
-      .button {
-        display: flex;
-      }
-
-      .primary_button {
-        padding: 0.875rem 1.5rem;
-        border-radius: 0.375rem;
-        font-weight: 500;
-        cursor: pointer;
-        user-select: none;
-        background-color: #484d7c;
-        color: #fff;
-        text-decoration: none;
-      }
-    </style>
-  </head>
-
-  <body style="margin: 0;padding: 0;">
-    <table class="background_main" style="background-color: white;width: 100%;">
-      <tbody>
-        <tr>
-          <td>
-            <table class="main" style="max-width: 750px;padding: 48px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td>
-                    <img class="logo" src="https://logchimp.codecarrot.net/images/logchimp-logo_circle.png" style="width: 40px;height: 40px;margin-bottom: 12px;">
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    <table class="content" style="padding: 32px;border: 1px solid #e5e5e5;border-radius: 6px;">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <p class="text" style="margin-bottom: 0;">Hello there!</p>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td>
-                            <p class="text" style="margin-bottom: 0;">
-                              Thank you for creating an account. Please confirm
-                              your email address by clicking
-                              <strong>Confirm email</strong> button below:
-                            </p>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td>
-                            <p class="button" style="display: flex;margin-bottom: 0;">
-                              <a class="primary_button" href="{{ verificationLink }}" target="_blank" style="color: #fff;padding: 0.875rem 1.5rem;border-radius: 0.375rem;font-weight: 500;cursor: pointer;user-select: none;background-color: #484d7c;text-decoration: none;">
-                                Confirm email
-                              </a>
-                            </p>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td>
-                            <p class="text" style="margin-bottom: 10px;">
-                              Thanks
-                            </p>
-                            <p class="text" style="margin-bottom: 0;">
-                              LogChimp
-                              <br>
-                              <a href="{{ siteUrl }}" target="_blank" style="color: #484d7c;">
-                                {{ siteUrl }}
-                            </a></p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </body>
 </html>
