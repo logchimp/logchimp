@@ -15,6 +15,7 @@
 	},
 	"api": {
 		"user": {
+			"userIdMissing": "User ID cannot be empty",
 			"userNotFound": "User not found"
 		},
 		"emailVerify": {
@@ -24,10 +25,18 @@
 			"verified": "Your email is already verified"
 		},
 		"posts": {
+			"postIdMissing": "Post ID cannot be empty",
+			"titleMissing": "Title cannot be empty",
 			"postNotFound": "Post not found.",
 			"notEnoughPermission": "You do not have permission to perform this action."
 		},
+		"votes": {
+			"voteIdMissing": "Vote ID cannot be empty",
+			"exists": "You have already voted this post",
+			"notExists": "There is no vote to remove"
+		},
 		"boards": {
+			"boardIdMissing": "Board ID cannot be empty",
 			"emptyName": "Board name cannot be empty",
 			"exists": "Board already exists",
 			"boardNotFound": "Board not found"
