@@ -79,7 +79,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 			}
 		} else {
 			// user not found
-			res.status(401).send({
+			res.status(404).send({
 				message: error.middleware.user.userNotFound,
 				code: "USER_NOT_FOUND"
 			});
