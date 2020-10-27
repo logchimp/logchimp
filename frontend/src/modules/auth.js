@@ -56,3 +56,20 @@ export const requestPasswordReset = async emailAddress => {
 		}
 	});
 };
+
+/**
+ * Set new password
+ *
+ * @param {token} string reset password token
+ * @param {password} string new password
+ */
+export const setNewPassword = async (token, password) => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/password/set",
+		data: {
+			resetPasswordToken: token,
+			password
+		}
+	});
+};

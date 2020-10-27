@@ -44,8 +44,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { setNewPassword } from "../../modules/auth";
 
 // component
 import Form from "../../components/Form";
@@ -91,56 +91,12 @@ export default {
 		hideConfirmPasswordError(event) {
 			this.confirmPassword.error = event;
 		},
-		setPassword() {
+		async setPassword() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.password.value && this.confirmPassword.value) {
-				// match password and confirm password
-				if (this.password.value !== this.confirmPassword.value) {
-					this.confirmPassword.error.show = true;
-					this.confirmPassword.error.message = "Password doesn't match";
-					return;
-				}
 
-				const resetPasswordToken = this.$route.query.resetPasswordToken;
-
-				this.buttonLoading = true;
-
-				axios
-					.post("/api/v1/auth/password/set", {
-						resetPasswordToken,
-						password: this.password.value
-					})
-					.then(response => {
-						if (response.data.type === "success") {
-							this.$route.push("/login");
-						}
-
-						this.buttonLoading = false;
-					})
-					.catch(error => {
-						console.error(error);
-
-						if (error.response.data.code === "INVALID_PASSWORD_RESET_TOKEN") {
-							this.$store.dispatch("alerts/add", {
-								title: "Request a new password reset",
-								type: "error",
-								timeout: 4000
-							});
-						}
-
-						if (error.response.data.code === "PASSWORD_RESET_EXPIRED") {
-							this.$store.dispatch("alerts/add", {
-								title: "Password reset request expired",
-								type: "warning",
-								timeout: 4000
-							});
-						}
-
-						this.buttonLoading = false;
-					});
-			} else {
+			if (!(this.password.value && this.confirmPassword.value)) {
 				if (!this.password.value) {
 					this.password.error.show = true;
 					this.password.error.message = "Required";
@@ -150,6 +106,51 @@ export default {
 					this.confirmPassword.error.show = true;
 					this.confirmPassword.error.message = "Required";
 				}
+				return;
+			}
+
+			// match password and confirm password
+			if (this.password.value !== this.confirmPassword.value) {
+				this.confirmPassword.error.show = true;
+				this.confirmPassword.error.message = "Password doesn't match";
+				return;
+			}
+
+			const resetPasswordToken = this.$route.params.token;
+
+			this.buttonLoading = true;
+
+			try {
+				const response = await setNewPassword(
+					resetPasswordToken,
+					this.password.value
+				);
+
+				if (response.data.type === "success") {
+					this.$route.push("/login");
+				}
+
+				this.buttonLoading = false;
+			} catch (err) {
+				console.error(err);
+
+				if (err.response.data.code === "INVALID_PASSWORD_RESET_TOKEN") {
+					this.$store.dispatch("alerts/add", {
+						title: "Request a new password reset",
+						type: "error",
+						timeout: 4000
+					});
+				}
+
+				if (err.response.data.code === "PASSWORD_RESET_EXPIRED") {
+					this.$store.dispatch("alerts/add", {
+						title: "Password reset request expired",
+						type: "warning",
+						timeout: 4000
+					});
+				}
+
+				this.buttonLoading = false;
 			}
 		}
 	},
