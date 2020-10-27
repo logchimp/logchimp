@@ -42,8 +42,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { requestPasswordReset } from "../../modules/auth";
 
 // component
 import Form from "../../components/Form";
@@ -80,40 +80,37 @@ export default {
 		hideEmailAddressError(event) {
 			this.emailAddress.error = event;
 		},
-		forgetPassword() {
+		async forgetPassword() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.emailAddress.value) {
-				this.buttonLoading = true;
 
-				axios
-					.post("/api/v1/auth/password/reset", {
-						emailAddress: this.emailAddress.value
-					})
-					.then(() => {
-						this.$store.dispatch("alerts/add", {
-							title: "Check your email for instructions",
-							type: "success",
-							timeout: 8000
-						});
-						this.emailAddress.value = "";
+			if (!this.emailAddress.value) {
+				this.emailAddress.error.show = true;
+				this.emailAddress.error.message = "Required";
+				return;
+			}
 
-						this.buttonLoading = false;
-					})
-					.catch(error => {
-						if (error.response.data.code === "USER_NOT_FOUND") {
-							this.emailAddress.error.show = true;
-							this.emailAddress.error.message = "User not found";
-						}
+			this.buttonLoading = true;
 
-						this.buttonLoading = false;
-					});
-			} else {
-				if (!this.emailAddress.value) {
+			try {
+				await requestPasswordReset(this.emailAddress.value);
+
+				this.$store.dispatch("alerts/add", {
+					title: "Check your email for instructions",
+					type: "success",
+					timeout: 8000
+				});
+				this.emailAddress.value = "";
+
+				this.buttonLoading = false;
+			} catch (error) {
+				if (error.response.data.code === "USER_NOT_FOUND") {
 					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "Required";
+					this.emailAddress.error.message = "User not found";
 				}
+
+				this.buttonLoading = false;
 			}
 		}
 	},

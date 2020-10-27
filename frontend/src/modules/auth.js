@@ -41,3 +41,18 @@ export const signup = async (
 		}
 	});
 };
+
+/**
+ * Request for password reset
+ *
+ * @param {emailAddress} string user email address
+ */
+export const requestPasswordReset = async emailAddress => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/password/reset",
+		data: {
+			emailAddress
+		}
+	});
+};
