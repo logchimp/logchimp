@@ -127,7 +127,7 @@ export default {
 				);
 
 				if (response.data.type === "success") {
-					this.$route.push("/login");
+					this.$router.push("/login");
 				}
 
 				this.buttonLoading = false;
