@@ -78,8 +78,12 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import {
+	getSettings,
+	updateSettings,
+	uploadSiteLogo
+} from "../../modules/site";
 
 // components
 import LText from "../../components/input/LText";
@@ -147,70 +151,30 @@ export default {
 		selectFileHandler() {
 			this.$refs.fileSelector.click();
 		},
-		uploadFile(event) {
-			const token = this.$store.getters["user/getAuthToken"];
+		async uploadFile(event) {
 			const logo = event.target.files[0];
 
 			const formData = new FormData();
 			formData.append("logo", logo);
 
-			axios({
-				method: "post",
-				url: "/api/v1/settings/update-logo",
-				data: formData,
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "multipart/form-data"
-				}
-			})
-				.then(response => {
-					this.logo = response.data.settings.logo;
+			try {
+				const response = await uploadSiteLogo(formData);
 
-					this.$store.dispatch("settings/updateLogo", {
-						logo: response.data.settings.logo
-					});
-				})
-				.catch(error => {
-					console.log(error);
+				this.logo = response.data.settings.logo;
+
+				this.$store.dispatch("settings/updateLogo", {
+					logo: response.data.settings.logo
 				});
+			} catch (error) {
+				console.error(error);
+			}
 		},
-		saveSettings() {
+		async saveSettings() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.siteName.value && this.accentColor.value) {
-				this.buttonLoading = true;
-				const token = this.$store.getters["user/getAuthToken"];
 
-				axios({
-					method: "patch",
-					url: "/api/v1/settings/site",
-					data: {
-						title: this.siteName.value,
-						description: this.description.value,
-						accentColor: this.accentColor.value,
-						googleAnalyticsId: this.googleAnalyticsId.value
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
-					.then(response => {
-						this.siteName.value = response.data.settings.title;
-						this.logo = response.data.settings.logo;
-						this.description.value = response.data.settings.description;
-						this.accentColor.value = response.data.settings.accentColor;
-						this.googleAnalyticsId.value =
-							response.data.settings.googleAnalyticsId;
-
-						this.$store.dispatch("settings/update", response.data.settings);
-						this.buttonLoading = false;
-					})
-					.catch(error => {
-						console.error(error);
-						this.buttonLoading = false;
-					});
-			} else {
+			if (!(this.siteName.value && this.accentColor.value)) {
 				if (!this.siteName.value) {
 					this.siteName.error.show = true;
 					this.siteName.error.message = "Required";
@@ -221,23 +185,44 @@ export default {
 					this.accentColor.error.message = "Required";
 				}
 			}
+
+			this.buttonLoading = true;
+
+			const siteData = {
+				title: this.siteName.value,
+				description: this.description.value,
+				accentColor: this.accentColor.value,
+				googleAnalyticsId: this.googleAnalyticsId.value
+			};
+
+			try {
+				const response = await updateSettings(siteData);
+
+				this.siteName.value = response.data.settings.title;
+				this.logo = response.data.settings.logo;
+				this.description.value = response.data.settings.description;
+				this.accentColor.value = response.data.settings.accentColor;
+				this.googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+
+				this.$store.dispatch("settings/update", response.data.settings);
+				this.buttonLoading = false;
+			} catch (error) {
+				console.error(error);
+				this.buttonLoading = false;
+			}
 		},
-		getSettings() {
-			axios({
-				method: "get",
-				url: "/api/v1/settings/site"
-			})
-				.then(response => {
-					this.siteName.value = response.data.settings.title;
-					this.logo = response.data.settings.logo;
-					this.description.value = response.data.settings.description;
-					this.accentColor.value = response.data.settings.accentColor;
-					this.googleAnalyticsId.value =
-						response.data.settings.googleAnalyticsId;
-				})
-				.catch(error => {
-					console.error(error);
-				});
+		async getSettings() {
+			try {
+				const response = await getSettings();
+
+				this.siteName.value = response.data.settings.title;
+				this.logo = response.data.settings.logo;
+				this.description.value = response.data.settings.description;
+				this.accentColor.value = response.data.settings.accentColor;
+				this.googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	},
 	created() {

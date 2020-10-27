@@ -54,8 +54,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { signup } from "../../modules/auth";
 
 // components
 import Container from "../../components/Container";
@@ -112,50 +112,14 @@ export default {
 		hidePasswordError(event) {
 			this.password.error = event;
 		},
-		createAccount() {
+		async createAccount() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (
-				this.fullName.value &&
-				this.emailAddress.value &&
-				this.password.value
-			) {
-				this.buttonLoading = true;
-				axios
-					.post("/api/v1/auth/signup", {
-						fullName: this.fullName.value,
-						emailAddress: this.emailAddress.value,
-						password: this.password.value,
-						isOwner: true
-					})
-					.then(response => {
-						if (response.status === 201) {
-							this.$store.dispatch("user/login", {
-								authToken: response.data.user.authToken,
-								userId: response.data.user.userId,
-								firstname: response.data.user.firstname,
-								lastname: response.data.user.lastname,
-								emailAddress: response.data.user.emailAddress,
-								username: response.data.user.username,
-								avatar: response.data.user.avatar,
-								isVerified: response.data.user.isVerified,
-								isBlocked: response.data.user.isBlocked,
-								isModerator: response.data.user.isModerator,
-								isOwner: response.data.user.isOwner,
-								createdAt: response.data.user.createdAt,
-								updatedAt: response.data.user.updatedAt
-							});
-						}
-						this.buttonLoading = false;
 
-						this.$router.push("/setup/create-board");
-					})
-					.catch(error => {
-						console.error(error);
-						this.buttonLoading = false;
-					});
-			} else {
+			if (
+				!(this.fullName.value && this.emailAddress.value && this.password.value)
+			) {
 				if (!this.fullName.value) {
 					this.fullName.error.show = true;
 					this.fullName.error.message = "Required";
@@ -168,6 +132,28 @@ export default {
 					this.password.error.show = true;
 					this.password.error.message = "Required";
 				}
+			}
+
+			this.buttonLoading = true;
+
+			try {
+				const response = await signup(
+					this.emailAddress.value,
+					this.password.value,
+					this.fullName.value,
+					true
+				);
+
+				this.$store.dispatch("user/login", {
+					...response.data.user
+				});
+
+				this.buttonLoading = false;
+
+				this.$router.push("/setup/create-board");
+			} catch (error) {
+				console.error(error);
+				this.buttonLoading = false;
 			}
 		}
 	},
