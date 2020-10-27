@@ -49,8 +49,6 @@ const verifyEmail = async (siteUrl, emailAddress) => {
 			html: onboardingMailContent.html
 		});
 
-		console.log(userEmailVerificationToken);
-
 		return userEmailVerificationToken[0];
 	} catch (err) {
 		logger.error(err.message);
