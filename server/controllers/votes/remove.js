@@ -3,42 +3,56 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.remove = async (req, res) => {
 	const voteId = req.body.voteId;
 	const postId = req.body.postId;
 
+	if (!voteId) {
+		res.status(400).send({
+			message: error.api.votes.voteIdMissing,
+			code: "MISSING_VOTE_ID"
+		});
+	}
+
+	if (!postId) {
+		res.status(400).send({
+			message: error.api.posts.postIdMissing,
+			code: "MISSING_POST_ID"
+		});
+	}
+
 	try {
-		const response = await database
+		const getExistingVote = await database
+			.select()
+			.from("votes")
+			.where({
+				voteId
+			});
+
+		const existingVote = getExistingVote[0];
+
+		if (!existingVote) {
+			res.status(404).send({
+				message: error.api.votes.notExists,
+				code: "VOTE_NOT_EXISTS"
+			});
+			return;
+		}
+
+		await database
 			.del()
 			.from("votes")
 			.where({ voteId });
 
-		if (response) {
-			try {
-				const voters = await database
-					.select()
-					.from("votes")
-					.where({ postId });
+		const voters = await database
+			.select()
+			.from("votes")
+			.where({ postId });
 
-				res.status(200).send({
-					status: {
-						code: 200,
-						type: "success"
-					},
-					voters
-				});
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		}
+		res.status(200).send(voters);
 	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
-		});
+		logger.error(err);
 	}
 };
