@@ -1,10 +1,9 @@
-const crypto = require("crypto");
-
 // database
 const database = require("../../../database");
 
 // services
 const getUser = require("../../../services/auth/getUser");
+const passwordResetEmail = require("../../../services/auth/passwordReset");
 
 // utils
 const logger = require("../../../utils/logger");
@@ -17,64 +16,40 @@ exports.reset = async (req, res) => {
 	if (!emailAddress) {
 		res.status(422).send({
 			message: error.api.authentication.noEmailProvided,
-			code: "NO_EMAIL_PROVIDED"
+			code: "EMAIL_ADDRESS_NOT_PROVIDED"
 		});
 	}
 
 	try {
 		const getAuthUser = await getUser(emailAddress);
 
-		if (getAuthUser) {
-			try {
-				// remove existing resetPasswordToken
-				await database
-					.update({
-						resetPasswordToken: null,
-						resetPasswordExpires: null,
-						updatedAt: new Date().toJSON()
-					})
-					.from("users")
-					.where({
-						userId: getAuthUser.userId
-					});
-
-				const cryptoBuffer = await crypto.randomBytes(100);
-
-				// convert cryptoBuffer to string
-				const cryptoBufferToken = cryptoBuffer.toString("hex");
-
-				const resetPasswordExpires = Date.now() + 3600000;
-
-				await database
-					.update({
-						resetPasswordToken: cryptoBufferToken,
-						// add 1 hour to current time
-						resetPasswordExpires,
-						updatedAt: new Date().toJSON()
-					})
-					.from("users")
-					.where({
-						userId: getAuthUser.userId
-					});
-
-				res.status(200).send({
-					type: "success"
-				});
-			} catch (err) {
-				logger.error({
-					err
-				});
-			}
-		} else {
+		if (!getAuthUser) {
 			res.status(404).send({
 				message: error.middleware.user.userNotFound,
 				code: "USER_NOT_FOUND"
 			});
 		}
-	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
+
+		// user blocked
+		if (getAuthUser.isBlocked) {
+			res.status(403).send({
+				message: error.middleware.user.userBlocked,
+				code: "USER_BLOCKED"
+			});
+		}
+
+		const tokenData = {
+			userId: getAuthUser.userId,
+			emailAddress: getAuthUser.emailAddress
+		};
+
+		const siteUrl = req.headers.origin;
+		await passwordResetEmail(siteUrl, tokenData);
+
+		res.status(200).send({
+			type: "success"
 		});
+	} catch (err) {
+		logger.error(err);
 	}
 };
