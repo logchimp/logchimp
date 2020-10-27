@@ -17,6 +17,12 @@
 		"user": {
 			"userNotFound": "User not found"
 		},
+		"emailVerify": {
+			"tokenMissing": "Email verification token missing",
+			"invalidToken": "Invalid email verification link",
+			"expired": "Email verification link is expired",
+			"verified": "Your email is already verified"
+		},
 		"posts": {
 			"postNotFound": "Post not found.",
 			"notEnoughPermission": "You do not have permission to perform this action."
