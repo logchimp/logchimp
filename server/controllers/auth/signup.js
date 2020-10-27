@@ -2,6 +2,9 @@
 const getUser = require("../../services/auth/getUser");
 const createUser = require("../../services/auth/createUser");
 
+// services
+const verifyEmail = require("../../services/auth/verifyEmail");
+
 // utils
 const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
@@ -37,28 +40,29 @@ exports.signup = async (req, res) => {
 				});
 
 				if (userData) {
-					/**
-					 * authToken sent via email will expire after 3 hr
-					 */
-					// todo: send email for account verification
+					try {
+						const siteUrl = req.headers.host;
+						await verifyEmail(siteUrl, emailAddress);
 
-					// generate authToken
-					const secretKey = config.server.secretKey;
-					const authToken = createToken(userData, secretKey, {
-						expiresIn: "2d"
-					});
+						const secretKey = config.server.secretKey;
+						const authToken = createToken(userData, secretKey, {
+							expiresIn: "2d"
+						});
 
-					// send user data with authToken as response
-					res.status(201).send({
-						status: {
-							code: 201,
-							type: "success"
-						},
-						user: {
-							...userData,
-							authToken
-						}
-					});
+						// send user data with authToken as response
+						res.status(201).send({
+							status: {
+								code: 201,
+								type: "success"
+							},
+							user: {
+								...userData,
+								authToken
+							}
+						});
+					} catch (err) {
+						logger.error(err);
+					}
 				} else {
 					res.status(404).send({
 						message: error.middleware.user.userNotFound,
