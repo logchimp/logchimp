@@ -28,6 +28,7 @@
 			"notEnoughPermission": "You do not have permission to perform this action."
 		},
 		"boards": {
+			"exists": "Board already exists",
 			"boardNotFound": "Board not found"
 		}
 	}
