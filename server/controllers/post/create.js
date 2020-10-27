@@ -17,6 +17,27 @@ exports.create = async (req, res) => {
 	const userId = req.body.userId;
 	const boardId = req.body.boardId;
 
+	if (!title) {
+		res.status(400).send({
+			message: error.api.posts.titleMissing,
+			code: "MISSING_POST_TITLE"
+		});
+	}
+
+	if (!userId) {
+		res.status(400).send({
+			message: error.api.user.userIdMissing,
+			code: "MISSING_USER_ID"
+		});
+	}
+
+	if (!boardId) {
+		res.status(400).send({
+			message: error.api.boards.boardIdMissing,
+			code: "MISSING_BOARD_ID"
+		});
+	}
+
 	// generate post unique indentification
 	const postId = uuidv4(title);
 
