@@ -7,11 +7,11 @@
 			name="Name"
 			placeholder="Name of the board"
 			:error="boardName.error"
-			@keyup-enter="createBoard"
+			@keyup-enter="create"
 			@hide-error="hideBoardNameError"
 		/>
 		<div style="display: flex; justify-content: center;">
-			<Button :loading="buttonLoading" @click="createBoard" type="primary">
+			<Button :loading="buttonLoading" @click="create" type="primary">
 				Create
 			</Button>
 		</div>
@@ -19,8 +19,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { createBoard } from "../../modules/boards";
 
 // components
 import Form from "../Form";
@@ -56,35 +56,26 @@ export default {
 		hideBoardNameError(event) {
 			this.boardName.error = event;
 		},
-		createBoard() {
+		async create() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.boardName.value) {
-				this.buttonLoading = true;
-				const token = this.$store.getters["user/getAuthToken"];
-
-				axios({
-					method: "post",
-					url: "/api/v1/boards",
-					data: {
-						name: this.boardName.value
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				})
-					.then(() => {
-						this.$router.push(this.redirect);
-						this.buttonLoading = false;
-					})
-					.catch(error => {
-						console.error(error);
-						this.buttonLoading = false;
-					});
-			} else {
+			if (!this.boardName.value) {
 				this.boardName.error.show = true;
 				this.boardName.error.message = "Required";
+				return;
+			}
+
+			this.buttonLoading = true;
+
+			try {
+				await createBoard(this.boardName.value);
+
+				this.$router.push(this.redirect);
+				this.buttonLoading = false;
+			} catch (error) {
+				console.error(error);
+				this.buttonLoading = false;
 			}
 		}
 	}

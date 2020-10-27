@@ -8,8 +8,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { isSiteSetup } from "../modules/site";
 
 // components
 import SiteSetupCard from "../components/SiteSetupCard";
@@ -31,15 +31,13 @@ export default {
 		}
 	},
 	methods: {
-		isSetup() {
-			axios
-				.get("/api/v1/auth/isSetup")
-				.then(response => {
-					this.showSiteSetupCard = !response.data.isSetup;
-				})
-				.catch(error => {
-					console.error(error);
-				});
+		async isSetup() {
+			try {
+				const response = await isSiteSetup();
+				this.showSiteSetupCard = !response.data.isSetup;
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	},
 	created() {

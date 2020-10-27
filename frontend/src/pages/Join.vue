@@ -48,8 +48,8 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { signup } from "../modules/auth";
 
 // component
 import Form from "../components/Form";
@@ -94,64 +94,51 @@ export default {
 		hidePasswordError(event) {
 			this.password.error = event;
 		},
-		join() {
+		async join() {
 			if (this.buttonLoading) {
 				return;
 			}
-			if (this.emailAddress.value && this.password.value) {
-				this.buttonLoading = true;
 
-				axios
-					.post("/api/v1/auth/signup", {
-						emailAddress: this.emailAddress.value,
-						password: this.password.value
-					})
-					.then(response => {
-						/**
-						 * todo: show snackbar notification
-						 * check your inbox for email verification.
-						 */
-						this.$store.dispatch("user/login", {
-							authToken: response.data.user.authToken,
-							userId: response.data.user.userId,
-							firstname: response.data.user.firstname,
-							lastname: response.data.user.lastname,
-							emailAddress: response.data.user.emailAddress,
-							username: response.data.user.username,
-							avatar: response.data.user.avatar,
-							isVerified: response.data.user.isVerified,
-							isBlocked: response.data.user.isBlocked,
-							isModerator: response.data.user.isModerator,
-							isOwner: response.data.user.isOwner,
-							createdAt: response.data.user.createdAt,
-							updatedAt: response.data.user.updatedAt
-						});
-
-						this.buttonLoading = false;
-
-						if (this.$route.query.redirect) {
-							this.$router.push(this.$route.query.redirect);
-						} else {
-							this.$router.push("/");
-						}
-					})
-					.catch(error => {
-						if (error.response.data.code === "USER_EXISTS") {
-							this.emailAddress.error.show = true;
-							this.emailAddress.error.message = "Exists";
-						}
-
-						this.buttonLoading = false;
-					});
-			} else {
+			if (!(this.emailAddress.value && this.password.value)) {
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
 					this.emailAddress.error.message = "Required";
 				}
+
 				if (!this.password.value) {
 					this.password.error.show = true;
 					this.password.error.message = "Required";
 				}
+
+				return;
+			}
+
+			this.buttonLoading = true;
+
+			try {
+				const response = await signup(
+					this.emailAddress.value,
+					this.password.value
+				);
+
+				this.$store.dispatch("user/login", {
+					...response.data.user
+				});
+
+				this.buttonLoading = false;
+
+				if (this.$route.query.redirect) {
+					this.$router.push(this.$route.query.redirect);
+				} else {
+					this.$router.push("/");
+				}
+			} catch (error) {
+				if (error.response.data.code === "USER_EXISTS") {
+					this.emailAddress.error.show = true;
+					this.emailAddress.error.message = "Exists";
+				}
+
+				this.buttonLoading = false;
 			}
 		}
 	},

@@ -12,8 +12,10 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
+
+// modules
+import { getBoardPosts } from "../../modules/boards";
 
 // components
 import Post from "../post/Post";
@@ -36,30 +38,22 @@ export default {
 		Loader
 	},
 	methods: {
-		getMorePosts($state) {
+		async getMorePosts($state) {
 			const url = this.$route.params.url;
 
-			axios({
-				method: "post",
-				url: `/api/v1/boards/${url}/posts`,
-				params: {
-					page: this.page,
-					created: "asc"
+			try {
+				const response = await getBoardPosts(url, this.page, "asc");
+				if (response.data.posts.length) {
+					this.posts.push(...response.data.posts);
+					this.page += 1;
+					$state.loaded();
+				} else {
+					$state.complete();
 				}
-			})
-				.then(response => {
-					if (response.data.posts.length) {
-						this.posts.push(...response.data.posts);
-						this.page += 1;
-						$state.loaded();
-					} else {
-						$state.complete();
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		}
 	}
 };
