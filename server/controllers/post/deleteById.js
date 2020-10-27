@@ -1,35 +1,30 @@
+// database
 const database = require("../../database");
 
-exports.deleteById = (req, res, next) => {
-	const postId = req.query.postId;
+// utils
+const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
-	database
-		.del()
-		.from("post")
-		.where({
-			post_id: postId
-		})
-		.then(post => {
-			// todo: improve the response output
-			res.status(200).send({
-				status: {
-					code: 200,
-					type: "success"
-				}
-			});
-		})
-		.catch(error => {
-			console.error(error);
+exports.deleteById = async (req, res) => {
+	const postId = req.params.postId;
 
-			res.status(500).send({
-				status: {
-					code: 500,
-					type: "error"
-				},
-				error: {
-					code: "post_not_deleted",
-					message: "Unable to delete post."
-				}
-			});
+	if (!postId) {
+		res.status(400).send({
+			message: error.api.posts.postIdMissing,
+			code: "MISSING_POST_ID"
 		});
+	}
+
+	try {
+		await database
+			.delete()
+			.from("posts")
+			.where({
+				postId
+			});
+
+		res.sendStatus(204);
+	} catch (err) {
+		logger.error(err);
+	}
 };

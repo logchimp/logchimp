@@ -11,7 +11,7 @@ const validateUserAccess = require("../../middlewares/validateUserAccess");
 
 router.post("/posts", token, post.create);
 router.get("/posts", post.filterPost);
-router.delete("/post/delete", token, post.deleteById);
+router.delete("/posts/:postId", token, post.deleteById);
 router.get("/posts/:slug", post.postBySlug);
 router.patch("/posts/:postId", token, validateUserAccess, post.updatePost);
 
