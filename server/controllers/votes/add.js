@@ -1,58 +1,35 @@
-const { v4: uuidv4 } = require("uuid");
-
-// database
-const database = require("../../database");
+// services
+const create = require("../../services/votes/create");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.add = async (req, res) => {
 	const userId = req.body.userId;
 	const postId = req.body.postId;
 
-	// generate post unique indentification
-	const voteId = uuidv4(postId);
+	if (!userId) {
+		res.status(400).send({
+			message: error.api.user.userIdMissing,
+			code: "MISSING_USER_ID"
+		});
+	}
+
+	if (!postId) {
+		res.status(400).send({
+			message: error.api.posts.postIdMissing,
+			code: "MISSING_POST_ID"
+		});
+	}
 
 	try {
-		const votes = await database
-			.insert({
-				voteId,
-				userId,
-				postId,
-				createdAt: new Date().toJSON()
-			})
-			.into("votes")
-			.returning("*");
+		const vote = await create(userId, postId);
 
-		const vote = votes[0];
-
-		if (vote) {
-			try {
-				const voters = await database
-					.select()
-					.from("votes")
-					.where({
-						postId
-					});
-
-				res.status(201).send({
-					status: {
-						code: 201,
-						type: "success"
-					},
-					voters
-				});
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		}
-	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
+		res.status(201).send({
+			...vote
 		});
+	} catch (err) {
+		logger.error(err);
 	}
 };

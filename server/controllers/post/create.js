@@ -4,8 +4,12 @@ const { v4: uuidv4 } = require("uuid");
 
 const database = require("../../database");
 
+// services
+const addVote = require("../../services/votes/create");
+
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.create = async (req, res) => {
 	const title = req.body.title;
@@ -44,59 +48,12 @@ exports.create = async (req, res) => {
 
 		const post = createPost[0];
 
-		if (post) {
-			// generate post unique indentification
-			const voteId = uuidv4(post.postId);
+		// add vote to post
+		await addVote(userId, postId);
 
-			try {
-				const createVote = await database
-					.insert({
-						voteId,
-						userId: post.userId,
-						postId: post.postId,
-						createdAt: new Date().toJSON()
-					})
-					.into("votes")
-					.returning("*");
-
-				const vote = createVote[0];
-
-				if (vote) {
-					try {
-						const findUser = await database
-							.select("firstname", "lastname", "username", "avatar")
-							.from("users")
-							.where({
-								userId
-							})
-							.limit(1);
-
-						const user = findUser[0];
-
-						if (user) {
-							res.status(201).send({
-								status: {
-									code: 201,
-									type: "success"
-								},
-								post,
-								voters: user
-							});
-						}
-					} catch (err) {
-						logger.log({
-							level: "error",
-							message: err
-						});
-					}
-				}
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		}
+		res.status(201).send({
+			...post
+		});
 	} catch (err) {
 		logger.log({
 			level: "error",
