@@ -26,6 +26,7 @@
 		},
 		"posts": {
 			"postIdMissing": "Post ID cannot be empty",
+			"slugMissing": "Post slug cannot be empty",
 			"titleMissing": "Title cannot be empty",
 			"postNotFound": "Post not found.",
 			"notEnoughPermission": "You do not have permission to perform this action."

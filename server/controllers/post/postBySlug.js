@@ -1,5 +1,9 @@
 const database = require("../../database");
 
+// services
+const getBoardById = require("../../services/boards/getBoardById");
+const getVotes = require("../../services/votes/getVotes");
+
 // utils
 const logger = require("../../utils/logger");
 
@@ -8,18 +12,17 @@ const error = require("../../errorResponse.json");
 exports.postBySlug = async (req, res) => {
 	const slug = req.params.slug;
 
+	if (!slug) {
+		res.status(400).send({
+			message: error.api.posts.slugMissing,
+			code: "MISSING_POST_SLUG"
+		});
+	}
+
 	try {
 		const posts = await database
-			.select(
-				"users.userId",
-				"users.firstname",
-				"users.lastname",
-				"users.username",
-				"users.avatar",
-				"posts.*"
-			)
+			.select()
 			.from("posts")
-			.innerJoin("users", "posts.userId", "users.userId")
 			.where({
 				slug
 			})
@@ -27,39 +30,47 @@ exports.postBySlug = async (req, res) => {
 
 		const post = posts[0];
 
-		if (post) {
-			const postId = post.postId;
-
-			try {
-				const voters = await database
-					.select()
-					.from("votes")
-					.where({ postId });
-
-				res.status(200).send({
-					status: {
-						code: 200,
-						type: "success"
-					},
-					post,
-					voters
-				});
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		} else {
+		if (!post) {
 			res.status(404).send({
 				message: error.api.posts.postNotFound,
 				code: "POST_NOT_FOUND"
 			});
+			return;
 		}
-	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
+
+		// get post users
+		const users = await database
+			.select()
+			.from("users")
+			.where({
+				userId: post.userId
+			})
+			.limit(1);
+
+		const user = users[0];
+		delete user.userId;
+		delete user.password;
+		delete user.isVerified;
+		delete user.isOwner;
+		delete user.isModerator;
+		delete user.isBlocked;
+
+		// get post boards
+		const board = await getBoardById(post.boardId);
+		delete post.boardId;
+
+		// get post votes
+		const voters = await getVotes(post.postId);
+
+		res.status(200).send({
+			post: {
+				...post,
+				board,
+				user
+			},
+			voters
 		});
+	} catch (err) {
+		logger.error(err);
 	}
 };
