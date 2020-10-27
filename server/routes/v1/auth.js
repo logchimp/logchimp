@@ -11,4 +11,8 @@ router.get("/auth/isSetup", auth.isSetup);
 router.post("/auth/password/reset", auth.password.reset);
 router.post("/auth/password/set", auth.password.set);
 
+// email
+router.post("/auth/email/verify", auth.email.verify);
+router.post("/auth/email/validate", auth.email.validate);
+
 module.exports = router;

@@ -16,7 +16,7 @@
 import CreateBoard from "../../components/board/CreateBoard";
 
 export default {
-	name: "OnboardingWelcome",
+	name: "SetupBoard",
 	components: {
 		CreateBoard
 	},

@@ -43,13 +43,15 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
+// modules
+import { getAllUsers } from "../../modules/users";
+
 // components
-import Table from "../../../components/Table";
-import Avatar from "../../../components/Avatar";
-import Loader from "../../../components/Loader";
+import Table from "../../components/Table";
+import Avatar from "../../components/Avatar";
+import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardUsers",
@@ -82,28 +84,21 @@ export default {
 		}
 	},
 	methods: {
-		getUsers($state) {
-			axios({
-				method: "get",
-				url: "/api/v1/users",
-				params: {
-					page: this.page,
-					created: "desc"
+		async getUsers($state) {
+			try {
+				const response = await getAllUsers(this.page, "desc");
+
+				if (response.data.users.length) {
+					this.users.push(...response.data.users);
+					this.page += 1;
+					$state.loaded();
+				} else {
+					$state.complete();
 				}
-			})
-				.then(response => {
-					if (response.data.users.length) {
-						this.users.push(...response.data.users);
-						this.page += 1;
-						$state.loaded();
-					} else {
-						$state.complete();
-					}
-				})
-				.catch(error => {
-					$state.error();
-					console.error(error);
-				});
+			} catch (error) {
+				$state.error();
+				console.error(error);
+			}
 		}
 	},
 	metaInfo() {

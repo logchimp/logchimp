@@ -64,16 +64,18 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
+// modules
+import { getAllBoards } from "../../modules/boards";
+
 // components
-import Button from "../../../components/Button";
-import Table from "../../../components/Table";
-import Loader from "../../../components/Loader";
+import Button from "../../components/Button";
+import Table from "../../components/Table";
+import Loader from "../../components/Loader";
 
 // icons
-import LinkIcon from "../../../components/icons/Link";
+import LinkIcon from "../../components/icons/Link";
 // import SettingsIcon from "../../components/icons/Settings";
 
 export default {
@@ -104,30 +106,23 @@ export default {
 	},
 	methods: {
 		createBoard() {
-			this.$router.push("/dashboard/create-board");
+			this.$router.push("/dashboard/boards/create");
 		},
-		getBoards($state) {
-			axios({
-				method: "get",
-				url: "/api/v1/boards",
-				params: {
-					page: this.page,
-					created: "desc"
+		async getBoards($state) {
+			try {
+				const response = await getAllBoards(this.page, null, "desc");
+
+				if (response.data.boards.length) {
+					this.boards.push(...response.data.boards);
+					this.page += 1;
+					$state.loaded();
+				} else {
+					$state.complete();
 				}
-			})
-				.then(response => {
-					if (response.data.boards.length) {
-						this.boards.push(...response.data.boards);
-						this.page += 1;
-						$state.loaded();
-					} else {
-						$state.complete();
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		}
 	},
 	metaInfo() {

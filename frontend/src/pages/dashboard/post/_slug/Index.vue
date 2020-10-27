@@ -45,16 +45,16 @@
 </template>
 
 <script>
-// packages
-import axios from "axios";
+// modules
+import { getPostBySlug } from "../../../../modules/posts";
 
 // components
-import Loader from "../../../components/Loader";
-import Vote from "../../../components/post/Vote";
-import Avatar from "../../../components/Avatar";
+import Loader from "../../../../components/Loader";
+import Vote from "../../../../components/post/Vote";
+import Avatar from "../../../../components/Avatar";
 
 // mixins
-import userAvatar from "../../../mixins/userAvatar";
+import userAvatar from "../../../../mixins/userAvatar";
 
 export default {
 	name: "DashboardPostView",
@@ -92,25 +92,24 @@ export default {
 		}
 	},
 	methods: {
-		postBySlug() {
+		async postBySlug() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;
 
-			axios
-				.get(`/api/v1/posts/${slug}`)
-				.then(response => {
-					this.post = response.data.post;
-					this.voters = response.data.voters;
+			try {
+				const response = await getPostBySlug(slug);
 
-					this.post.loading = false;
-				})
-				.catch(error => {
-					if (error.response.data.code === "POST_NOT_FOUND") {
-						this.isPostExist = false;
-					}
+				this.post = response.data.post;
+				this.voters = response.data.voters;
 
-					this.post.loading = false;
-				});
+				this.post.loading = false;
+			} catch (error) {
+				if (error.response.data.code === "POST_NOT_FOUND") {
+					this.isPostExist = false;
+				}
+
+				this.post.loading = false;
+			}
 		},
 		updateVoters(voters) {
 			this.voters = voters;

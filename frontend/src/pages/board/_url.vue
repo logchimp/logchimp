@@ -46,8 +46,10 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
+
+// modules
+import { getBoardByUrl } from "../../modules/boards";
 
 // components
 import Loader from "../../components/Loader";
@@ -106,26 +108,23 @@ export default {
 		updateTab(tabValue) {
 			this.tab = tabValue;
 		},
-		getBoard() {
+		async getBoard() {
 			this.board.loading = true;
-			const slug = this.$route.params.slug;
+			const url = this.$route.params.url;
 
-			axios({
-				method: "post",
-				url: `/api/v1/boards/${slug}`
-			})
-				.then(response => {
-					this.board = response.data.board;
+			try {
+				const response = await getBoardByUrl(url);
 
-					this.board.loading = false;
-				})
-				.catch(error => {
-					if (error.response.data.code === "BOARD_NOT_FOUND") {
-						this.isBoardExist = false;
-					}
+				this.board = response.data.board;
 
-					this.board.loading = false;
-				});
+				this.board.loading = false;
+			} catch (error) {
+				if (error.response.data.code === "BOARD_NOT_FOUND") {
+					this.isBoardExist = false;
+				}
+
+				this.board.loading = false;
+			}
 		}
 	},
 	created() {

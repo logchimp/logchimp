@@ -23,12 +23,14 @@
 
 <script>
 // packages
-import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
+// modules
+import { getPosts } from "../../modules/posts";
+
 // components
-import Post from "../../../components/post/Post";
-import Loader from "../../../components/Loader";
+import Post from "../../components/post/Post";
+import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardPosts",
@@ -52,28 +54,21 @@ export default {
 		}
 	},
 	methods: {
-		getBoardPosts($state) {
-			axios({
-				method: "get",
-				url: "/api/v1/posts",
-				params: {
-					page: this.page,
-					created: "desc"
+		async getBoardPosts($state) {
+			try {
+				const response = await getPosts(this.page, null, "desc");
+
+				if (response.data.posts.length) {
+					this.posts.push(...response.data.posts);
+					this.page += 1;
+					$state.loaded();
+				} else {
+					$state.complete();
 				}
-			})
-				.then(response => {
-					if (response.data.posts.length) {
-						this.posts.push(...response.data.posts);
-						this.page += 1;
-						$state.loaded();
-					} else {
-						$state.complete();
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					$state.error();
-				});
+			} catch (error) {
+				console.error(error);
+				$state.error();
+			}
 		}
 	},
 	metaInfo() {

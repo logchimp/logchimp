@@ -15,7 +15,8 @@ exports.updateUser = async (req, res) => {
 		const users = await database
 			.update({
 				firstname,
-				lastname
+				lastname,
+				updatedAt: new Date().toJSON()
 			})
 			.from("users")
 			.where({

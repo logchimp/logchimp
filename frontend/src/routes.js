@@ -1,9 +1,10 @@
 // packages
 import Vue from "vue";
 import VueRouter from "vue-router";
-import axios from "axios";
 
 import store from "./store";
+import { isSiteSetup } from "./modules/site";
+import { checkUserDashboardAccess } from "./modules/users";
 
 Vue.use(VueRouter);
 
@@ -14,72 +15,69 @@ const routes = [
 		children: [
 			{
 				path: "",
-				name: "Homepage",
-				component: require("./pages/Homepage").default
+				name: "Home",
+				component: require("./pages/Index").default
 			},
 			{
 				path: "boards",
-				component: require("./pages/board/Boards").default
+				name: "Boards",
+				component: require("./pages/Boards").default
 			},
 			{
-				path: "board/:slug",
-				component: require("./pages/board/Board").default
+				path: "board/:url",
+				name: "Board view",
+				component: require("./pages/board/_url").default
 			},
 			{
-				path: "/settings",
-				name: "UserSettings",
-				component: require("./pages/user/Settings").default
+				path: "settings",
+				name: "User settings",
+				component: require("./pages/Settings").default
 			},
 			{
 				path: "/post/:slug",
-				component: require("./pages/post/Post").default,
-				children: [
-					{
-						path: "",
-						component: require("./pages/post/View").default
-					},
-					{
-						path: "edit",
-						name: "PostEdit",
-						component: require("./pages/post/Edit").default
-					}
-				]
+				name: "Post view",
+				component: require("./pages/post/_slug/Index").default
+			},
+			{
+				path: "/post/:slug/edit",
+				name: "Post edit",
+				component: require("./pages/post/_slug/Edit").default
 			}
 		]
 	},
 	{
 		path: "/setup",
 		component: require("./layout/Onboarding").default,
-		beforeEnter: (to, from, next) => {
-			axios
-				.get("/api/v1/auth/isSetup")
-				.then(response => {
-					if (response.data.isSetup) {
-						next({ path: "/dashboard" });
-					} else {
-						if (to.fullPath === "/setup/" || to.fullPath === "/setup") {
-							next({ path: "/setup/welcome" });
-						} else {
-							next();
-						}
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					next({ path: "/" });
-				});
+		redirect: {
+			name: "Setup welcome"
+		},
+		beforeEnter: async (to, from, next) => {
+			try {
+				const response = await isSiteSetup();
+				if (response.data.isSetup) {
+					next({ path: "/dashboard" });
+				} else {
+					next();
+				}
+			} catch (error) {
+				console.error(error);
+				next({ name: "Home" });
+			}
 		},
 		children: [
 			{
 				path: "welcome",
-				component: require("./pages/setup/Welcome").default
+				name: "Setup welcome",
+				component: require("./pages/setup/Index").default
 			},
 			{
 				path: "create-account",
+				name: "Setup create account",
 				component: require("./pages/setup/Account").default
 			},
 			{
 				path: "create-board",
+				name: "Setup create board",
 				component: require("./pages/setup/Board").default
 			}
 		]
@@ -87,72 +85,73 @@ const routes = [
 	{
 		path: "/dashboard",
 		component: require("./layout/Dashboard").default,
-		beforeEnter: (to, from, next) => {
-			axios
-				.get("/api/v1/auth/isSetup")
-				.then(response => {
-					if (response.data.isSetup) {
-						const user = store.getters["user/getUser"];
-						if (user.userId) {
-							axios
-								.get(
-									`/api/v1/user/accessDashboard/${user.userId}`
-								)
-								.then(response => {
-									if (response.data.access) {
-										next();
-									} else {
-										next({ path: "/" });
-									}
-								})
-								.catch(error => {
-									console.error(error);
-									next({ path: "/" });
-								});
-						} else {
-							next({ path: "/login", query: { redirect: "/dashboard" } });
-						}
-					} else {
-						next({ path: "/setup/welcome" });
-					}
-				})
-				.catch(error => {
-					console.error(error);
-				});
+		beforeEnter: async (to, from, next) => {
+			try {
+				const setup = await isSiteSetup();
+				// Check for site setup
+				if (!setup.data.isSetup) {
+					next({ name: "Setup welcome" });
+					return;
+				}
+
+				// Is user logged in
+				const user = store.getters["user/getUser"];
+				if (!user.userId) {
+					next({ name: "Login", query: { redirect: "/dashboard" } });
+					return;
+				}
+
+				// Check user access to dashboard
+				const access = await checkUserDashboardAccess(user.userId);
+				if (access.data.access) {
+					next();
+				} else {
+					next({ name: "Home" });
+				}
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		children: [
 			{
 				path: "",
-				component: require("./pages/dashboard/Overview").default
+				name: "Dashboard overview",
+				component: require("./pages/dashboard/Index").default
 			},
 			{
 				path: "boards",
-				component: require("./pages/dashboard/board/DashboardBoards").default
+				name: "Dashboard boards",
+				component: require("./pages/dashboard/Boards").default
 			},
 			{
-				path: "create-board",
-				component: require("./pages/dashboard/board/DashboardCreateBoard")
-					.default
+				path: "boards/create",
+				name: "Dashboard board create",
+				component: require("./pages/dashboard/boards/Create").default
 			},
 			{
-				path: "board/:slug",
-				component: require("./pages/dashboard/board/DashboardBoard").default
+				path: "board/:url",
+				name: "Dashboard board view",
+				component: require("./pages/dashboard/board/_url/Index").default
 			},
 			{
 				path: "posts",
-				component: require("./pages/dashboard/post/DashboardPosts").default
+				name: "Dashboard posts",
+				component: require("./pages/dashboard/Posts").default
 			},
 			{
 				path: "post/:slug",
-				components: require("./pages/dashboard/post/DashboardPostView")
+				name: "Dashboard post view",
+				components: require("./pages/dashboard/post/_slug/Index")
 			},
 			{
 				path: "users",
-				component: require("./pages/dashboard/user/DashboardUsers").default
+				name: "Dashbord users",
+				component: require("./pages/dashboard/Users").default
 			},
 			{
 				path: "settings",
-				component: require("./pages/dashboard/DashboardSettings").default
+				name: "Dashboard settings",
+				component: require("./pages/dashboard/Settings").default
 			}
 		]
 	},
