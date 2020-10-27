@@ -161,8 +161,8 @@ export default {
 			this.$router.push("/");
 		}
 
-		// have reset password token && reset password expires in url
-		const resetPasswordToken = this.$route.query.resetPasswordToken;
+		// have reset password token
+		const resetPasswordToken = this.$route.params.token;
 		if (!resetPasswordToken) {
 			this.$router.push("/forget");
 		}
