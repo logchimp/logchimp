@@ -59,13 +59,7 @@ exports.filterPost = async (req, res) => {
 			}
 		}
 
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			posts
-		});
+		res.status(200).send(posts);
 	} catch (err) {
 		logger.log({
 			level: "error",
