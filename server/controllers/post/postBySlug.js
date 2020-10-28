@@ -48,7 +48,6 @@ exports.postBySlug = async (req, res) => {
 			.limit(1);
 
 		const user = users[0];
-		delete user.userId;
 		delete user.password;
 		delete user.isVerified;
 		delete user.isOwner;
@@ -57,6 +56,7 @@ exports.postBySlug = async (req, res) => {
 
 		// get post boards
 		const board = await getBoardById(post.boardId);
+		delete post.userId;
 		delete post.boardId;
 
 		// get post votes
