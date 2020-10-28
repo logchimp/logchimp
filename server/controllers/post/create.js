@@ -22,6 +22,7 @@ exports.create = async (req, res) => {
 			message: error.api.posts.titleMissing,
 			code: "MISSING_POST_TITLE"
 		});
+		return;
 	}
 
 	if (!userId) {
@@ -29,6 +30,7 @@ exports.create = async (req, res) => {
 			message: error.api.user.userIdMissing,
 			code: "MISSING_USER_ID"
 		});
+		return;
 	}
 
 	if (!boardId) {
@@ -36,6 +38,7 @@ exports.create = async (req, res) => {
 			message: error.api.boards.boardIdMissing,
 			code: "MISSING_BOARD_ID"
 		});
+		return;
 	}
 
 	// generate post unique indentification

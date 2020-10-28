@@ -14,6 +14,7 @@ exports.add = async (req, res) => {
 			message: error.api.user.userIdMissing,
 			code: "MISSING_USER_ID"
 		});
+		return;
 	}
 
 	if (!postId) {
@@ -21,6 +22,7 @@ exports.add = async (req, res) => {
 			message: error.api.posts.postIdMissing,
 			code: "MISSING_POST_ID"
 		});
+		return;
 	}
 
 	try {

@@ -14,6 +14,7 @@ exports.remove = async (req, res) => {
 			message: error.api.votes.voteIdMissing,
 			code: "MISSING_VOTE_ID"
 		});
+		return;
 	}
 
 	if (!postId) {
@@ -21,6 +22,7 @@ exports.remove = async (req, res) => {
 			message: error.api.posts.postIdMissing,
 			code: "MISSING_POST_ID"
 		});
+		return;
 	}
 
 	try {

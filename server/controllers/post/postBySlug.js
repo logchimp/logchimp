@@ -17,6 +17,7 @@ exports.postBySlug = async (req, res) => {
 			message: error.api.posts.slugMissing,
 			code: "MISSING_POST_SLUG"
 		});
+		return;
 	}
 
 	try {

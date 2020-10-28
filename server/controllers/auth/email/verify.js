@@ -22,6 +22,7 @@ exports.verify = async (req, res) => {
 				message: error.middleware.user.userNotFound,
 				code: "USER_NOT_FOUND"
 			});
+			return;
 		}
 
 		// user blocked
@@ -30,6 +31,7 @@ exports.verify = async (req, res) => {
 				message: error.middleware.user.userBlocked,
 				code: "USER_BLOCKED"
 			});
+			return;
 		}
 
 		// check email verify status of user

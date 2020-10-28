@@ -27,6 +27,7 @@ exports.boardPosts = async (req, res) => {
 				message: error.api.boards.boardNotFound,
 				code: "BOARD_NOT_FOUND"
 			});
+			return;
 		}
 
 		try {

@@ -17,6 +17,7 @@ exports.create = async (req, res) => {
 			message: error.api.boards.emptyName,
 			code: "MISSING_BOARD_NAME"
 		});
+		return;
 	}
 
 	const boardId = uuidv4(name);

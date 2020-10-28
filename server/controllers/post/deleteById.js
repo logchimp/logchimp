@@ -13,6 +13,7 @@ exports.deleteById = async (req, res) => {
 			message: error.api.posts.postIdMissing,
 			code: "MISSING_POST_ID"
 		});
+		return;
 	}
 
 	try {
