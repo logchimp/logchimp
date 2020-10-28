@@ -21,6 +21,7 @@ exports.filterPost = async (req, res) => {
 				"postId",
 				"title",
 				"slug",
+				"userId",
 				"boardId",
 				"contentMarkdown",
 				"createdAt"
