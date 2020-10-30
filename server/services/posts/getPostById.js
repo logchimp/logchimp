@@ -28,6 +28,10 @@ const getPostById = async postId => {
 
 		const post = posts[0];
 
+		if (!post) {
+			return null;
+		}
+
 		return post;
 	} catch (err) {
 		logger.error(err);

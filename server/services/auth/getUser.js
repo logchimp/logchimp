@@ -15,13 +15,12 @@ const getUser = async emailAddress => {
 			.limit(1);
 
 		const user = users[0];
-		if (user) {
-			delete user.createdAt;
-			delete user.updatedAt;
 
-			return user;
+		if (!user) {
+			return null;
 		}
-		return null;
+
+		return user;
 	} catch (err) {
 		logger.log({
 			level: "error",

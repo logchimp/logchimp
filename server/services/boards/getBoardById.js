@@ -14,11 +14,12 @@ const getBoardById = async boardId => {
 			.limit(1);
 
 		const board = boards[0];
-		if (board) {
-			return board;
-		} else {
+
+		if (!board) {
 			return null;
 		}
+
+		return board;
 	} catch (err) {
 		logger.log({
 			level: "error",
