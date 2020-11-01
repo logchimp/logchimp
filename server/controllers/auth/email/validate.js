@@ -79,7 +79,8 @@ exports.validate = async (req, res) => {
 
 			const userVerified = await database
 				.update({
-					isVerified: true
+					isVerified: true,
+					updatedAt: new Date().toJSON()
 				})
 				.from("users")
 				.where({
