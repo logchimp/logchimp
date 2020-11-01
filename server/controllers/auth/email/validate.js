@@ -87,6 +87,11 @@ exports.validate = async (req, res) => {
 				})
 				.returning("*");
 
+			await database
+				.delete()
+				.from("emailVerification")
+				.where({ token });
+
 			delete userVerified[0].password;
 			delete userVerified[0].createdAt;
 			delete userVerified[0].updatedAt;
