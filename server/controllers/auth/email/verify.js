@@ -44,8 +44,13 @@ exports.verify = async (req, res) => {
 		const user = isUserVerified[0];
 
 		if (!user.isVerified) {
-			const siteUrl = req.headers.host;
-			const emailVerification = await verifyEmail(siteUrl, emailAddress);
+			const domain = req.headers.origin;
+			const siteUrl = req.headers["x-forwarded-host"];
+			const emailVerification = await verifyEmail(
+				domain,
+				siteUrl,
+				emailAddress
+			);
 
 			res.status(200).send({
 				emailVerification

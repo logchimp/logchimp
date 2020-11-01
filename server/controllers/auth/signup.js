@@ -41,8 +41,9 @@ exports.signup = async (req, res) => {
 
 				if (userData) {
 					try {
-						const siteUrl = req.headers.host;
-						await verifyEmail(siteUrl, emailAddress);
+						const domain = req.headers.origin;
+						const siteUrl = req.headers["x-forwarded-host"];
+						await verifyEmail(domain, siteUrl, emailAddress);
 
 						const secretKey = config.server.secretKey;
 						const authToken = createToken(userData, secretKey, {
