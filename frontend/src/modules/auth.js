@@ -41,3 +41,18 @@ export const signup = async (
 		}
 	});
 };
+
+/**
+ * Verify user email address
+ *
+ * @param {string} token email address verification token
+ */
+export const verifyUserEmailAddress = async token => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/email/validate",
+		data: {
+			token
+		}
+	});
+};
