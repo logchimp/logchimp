@@ -4,7 +4,8 @@
 		width="24"
 		height="24"
 		viewBox="0 0 24 24"
-		fill="none"
+		:fill="fill"
+		:stroke="stroke"
 		stroke-width="2"
 		stroke-linecap="round"
 		stroke-linejoin="round"
@@ -13,3 +14,18 @@
 		<polyline points="22 4 12 14.01 9 11.01" />
 	</svg>
 </template>
+
+<script>
+export default {
+	props: {
+		fill: {
+			type: String,
+			default: "none"
+		},
+		stroke: {
+			type: String,
+			default: ""
+		}
+	}
+};
+</script>

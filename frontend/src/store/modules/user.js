@@ -6,7 +6,6 @@ const state = {
 	emailAddress: "",
 	username: "",
 	avatar: "",
-	isVerified: false,
 	isBlocked: false,
 	isModerator: false,
 	isOwner: false,
@@ -29,7 +28,6 @@ const mutations = {
 		state.emailAddress = payload.emailAddress;
 		state.username = payload.username;
 		state.avatar = payload.avatar;
-		state.isVerified = payload.isVerified;
 		state.isBlocked = payload.isBlocked;
 		state.isModerator = payload.isModerator;
 		state.isOwner = payload.isOwner;

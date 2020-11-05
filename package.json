@@ -26,7 +26,6 @@
 		"multer": "^1.4.2",
 		"nanoid": "^3.1.13",
 		"node-sass": "^4.14.1",
-		"nodemailer": "^6.4.14",
 		"pg": "^8.4.1",
 		"sass-loader": "^10.0.3",
 		"uuid": "^8.3.1",

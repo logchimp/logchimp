@@ -20,6 +20,7 @@ exports.validate = async (req, res) => {
 			message: error.api.emailVerify.tokenMissing,
 			code: "EMAIL_VERIFICATION_TOKEN_MISSING"
 		});
+		return;
 	}
 
 	try {
@@ -35,6 +36,7 @@ exports.validate = async (req, res) => {
 				message: error.api.emailVerify.invalidToken,
 				code: "EMAIL_VERIFICATION_TOKEN_INVALID"
 			});
+			return;
 		}
 
 		// validate JWT auth token
@@ -47,6 +49,7 @@ exports.validate = async (req, res) => {
 				message: error.api.emailVerify.expired,
 				code: "EMAIL_VERIFICATION_TOKEN_EXPIRED"
 			});
+			return;
 		}
 
 		const emailAddress = tokenFromDatabase.emailAddress;
@@ -60,6 +63,7 @@ exports.validate = async (req, res) => {
 					message: error.middleware.user.userNotFound,
 					code: "USER_NOT_FOUND"
 				});
+				return;
 			}
 
 			// user blocked
@@ -68,6 +72,7 @@ exports.validate = async (req, res) => {
 					message: error.middleware.user.userBlocked,
 					code: "USER_BLOCKED"
 				});
+				return;
 			}
 
 			if (authUser.isVerified) {
@@ -75,11 +80,13 @@ exports.validate = async (req, res) => {
 					message: error.api.emailVerify.verified,
 					code: "USER_ALREADY_VERIFIED"
 				});
+				return;
 			}
 
 			const userVerified = await database
 				.update({
-					isVerified: true
+					isVerified: true,
+					updatedAt: new Date().toJSON()
 				})
 				.from("users")
 				.where({
@@ -87,11 +94,18 @@ exports.validate = async (req, res) => {
 				})
 				.returning("*");
 
-			delete userVerified[0].password;
-			delete userVerified[0].createdAt;
-			delete userVerified[0].updatedAt;
+			const user = userVerified[0];
 
-			res.status(200).send(userVerified);
+			await database
+				.delete()
+				.from("emailVerification")
+				.where({ token });
+
+			delete user.password;
+			delete user.createdAt;
+			delete user.updatedAt;
+
+			res.status(200).send({ user });
 		} catch (err) {
 			logger.error(err);
 		}

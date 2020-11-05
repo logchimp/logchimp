@@ -2,6 +2,26 @@
 	<Form>
 		<h4 class="user-settings-heading">Account settings</h4>
 		<div v-if="!user.loading">
+			<div v-if="!userIsVerified" class="user-settings-verification">
+				<div class="user-settings-verification-content">
+					<alert-icon />
+					<div class="user-settings-verification-text">
+						<h6>Email verification</h6>
+						<p>
+							We’ve sent you an verification email. Please follow the
+							instructions in the email.
+						</p>
+					</div>
+				</div>
+
+				<Button
+					type="background"
+					@click="resendEmail"
+					:loading="resendVerificationEmailButtonLoading"
+				>
+					Resend
+				</Button>
+			</div>
 			<div class="user-settings-name">
 				<l-text
 					v-model="user.firstname.value"
@@ -39,7 +59,11 @@
 				:disabled="true"
 			/>
 			<div style="display: flex; justify-content: flex-start;">
-				<Button type="primary" @click="updateSettings" :loading="buttonLoading">
+				<Button
+					type="primary"
+					@click="updateSettings"
+					:loading="updateUserButtonLoading"
+				>
 					Update
 				</Button>
 			</div>
@@ -53,6 +77,7 @@
 <script>
 // modules
 import { getUserSettings, updateUserSettings } from "../modules/users";
+import { resendUserVerificationEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader";
@@ -62,6 +87,9 @@ import Button from "../components/Button";
 
 // mixins
 import tokenErrorHandle from "../mixins/tokenErrorHandle";
+
+// icons
+import AlertIcon from "../components/icons/Alert";
 
 export default {
 	name: "UserSettings",
@@ -80,9 +108,11 @@ export default {
 				},
 				emailAddress: {
 					value: ""
-				}
+				},
+				isVerified: false
 			},
-			buttonLoading: false
+			resendVerificationEmailButtonLoading: false,
+			updateUserButtonLoading: false
 		};
 	},
 	mixins: [tokenErrorHandle],
@@ -91,9 +121,15 @@ export default {
 		Loader,
 		Form,
 		LText,
-		Button
+		Button,
+
+		// icons
+		AlertIcon
 	},
 	computed: {
+		userIsVerified() {
+			return this.user.isVerified;
+		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
@@ -109,6 +145,8 @@ export default {
 				this.user.lastname.value = response.data.user.lastname;
 				this.user.username.value = response.data.user.username;
 				this.user.emailAddress.value = response.data.user.emailAddress;
+				this.user.isVerified = response.data.user.isVerified;
+
 				this.user.loading = false;
 			} catch (error) {
 				this.userNotFound(error);
@@ -117,10 +155,10 @@ export default {
 			}
 		},
 		async updateSettings() {
-			if (this.buttonLoading) {
+			if (this.updateUserButtonLoading) {
 				return;
 			}
-			this.buttonLoading = true;
+			this.updateUserButtonLoading = true;
 
 			const userData = {
 				firstname: this.user.firstname.value,
@@ -137,11 +175,27 @@ export default {
 					lastname: response.data.user.lastname
 				});
 
-				this.buttonLoading = false;
+				this.updateUserButtonLoading = false;
 			} catch (error) {
 				this.userNotFound(error);
 
-				this.buttonLoading = false;
+				this.updateUserButtonLoading = false;
+			}
+		},
+		async resendEmail() {
+			if (this.resendVerificationEmailButtonLoading) {
+				return;
+			}
+			this.resendVerificationEmailButtonLoading = true;
+
+			try {
+				const emailAddress = this.user.emailAddress.value;
+				await resendUserVerificationEmail(emailAddress);
+
+				this.resendVerificationEmailButtonLoading = false;
+			} catch (error) {
+				console.error(error);
+				this.resendVerificationEmailButtonLoading = false;
 			}
 		}
 	},

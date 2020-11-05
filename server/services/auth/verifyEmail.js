@@ -2,7 +2,7 @@
 const database = require("../../database");
 
 // services
-const mail = require("../../services/mail");
+const { mail, generateContent } = require("../../services/mail");
 
 // utils
 const { createToken } = require("../../utils/token");
@@ -10,7 +10,7 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
 const config = logchimpConfig();
 
-const verifyEmail = async (siteUrl, emailAddress) => {
+const verifyEmail = async (domain, siteUrl, emailAddress) => {
 	const secretKey = config.server.secretKey;
 	const token = createToken({ emailAddress }, secretKey, {
 		expiresIn: "2h"
@@ -33,15 +33,14 @@ const verifyEmail = async (siteUrl, emailAddress) => {
 			.into("emailVerification")
 			.returning("*");
 
-		const onboardingMailContent = await mail.generateContent("verify", {
+		const onboardingMailContent = await generateContent("verify", {
 			siteUrl,
-			verificationLink: `${siteUrl}/verify/email/${token}`
+			verificationLink: `${domain}/email-verify/?token=${token}`
 		});
 
-		const email = new mail.Mail();
 		const noReplyEmail = `noreply@${siteUrl}`;
 
-		await email.send({
+		await mail.send({
 			from: noReplyEmail,
 			to: emailAddress,
 			subject: "LogChimp - Please confirm your email",
