@@ -82,8 +82,6 @@ export default {
 
 				this.success = true;
 				this.loading = false;
-
-				this.$store.dispatch("user/logout");
 			} catch (error) {
 				this.loading = false;
 
