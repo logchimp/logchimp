@@ -55,7 +55,11 @@
 				:disabled="true"
 			/>
 			<div style="display: flex; justify-content: flex-start;">
-				<Button type="primary" @click="updateSettings" :loading="buttonLoading">
+				<Button
+					type="primary"
+					@click="updateSettings"
+					:loading="updateUserButtonLoading"
+				>
 					Update
 				</Button>
 			</div>
@@ -102,7 +106,7 @@ export default {
 					value: ""
 				}
 			},
-			buttonLoading: false
+			updateUserButtonLoading: false
 		};
 	},
 	mixins: [tokenErrorHandle],
@@ -144,10 +148,10 @@ export default {
 			}
 		},
 		async updateSettings() {
-			if (this.buttonLoading) {
+			if (this.updateUserButtonLoading) {
 				return;
 			}
-			this.buttonLoading = true;
+			this.updateUserButtonLoading = true;
 
 			const userData = {
 				firstname: this.user.firstname.value,
@@ -164,11 +168,11 @@ export default {
 					lastname: response.data.user.lastname
 				});
 
-				this.buttonLoading = false;
+				this.updateUserButtonLoading = false;
 			} catch (error) {
 				this.userNotFound(error);
 
-				this.buttonLoading = false;
+				this.updateUserButtonLoading = false;
 			}
 		},
 		async resendEmail() {
