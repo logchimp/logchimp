@@ -94,16 +94,18 @@ exports.validate = async (req, res) => {
 				})
 				.returning("*");
 
+			const user = userVerified[0];
+
 			await database
 				.delete()
 				.from("emailVerification")
 				.where({ token });
 
-			delete userVerified[0].password;
-			delete userVerified[0].createdAt;
-			delete userVerified[0].updatedAt;
+			delete user.password;
+			delete user.createdAt;
+			delete user.updatedAt;
 
-			res.status(200).send(userVerified);
+			res.status(200).send({ user });
 		} catch (err) {
 			logger.error(err);
 		}
