@@ -14,7 +14,11 @@
 					</div>
 				</div>
 
-				<Button type="background" @click="resendEmail">
+				<Button
+					type="background"
+					@click="resendEmail"
+					:loading="resendVerificationEmailButtonLoading"
+				>
 					Resend
 				</Button>
 			</div>
@@ -106,6 +110,7 @@ export default {
 					value: ""
 				}
 			},
+			resendVerificationEmailButtonLoading: false,
 			updateUserButtonLoading: false
 		};
 	},
@@ -176,11 +181,19 @@ export default {
 			}
 		},
 		async resendEmail() {
+			if (this.resendVerificationEmailButtonLoading) {
+				return;
+			}
+			this.resendVerificationEmailButtonLoading = true;
+
 			try {
 				const emailAddress = this.user.emailAddress.value;
 				await resendUserVerificationEmail(emailAddress);
+
+				this.resendVerificationEmailButtonLoading = false;
 			} catch (error) {
 				console.error(error);
+				this.resendVerificationEmailButtonLoading = false;
 			}
 		}
 	},
