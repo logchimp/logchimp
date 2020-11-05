@@ -108,7 +108,8 @@ export default {
 				},
 				emailAddress: {
 					value: ""
-				}
+				},
+				isVerified: false
 			},
 			resendVerificationEmailButtonLoading: false,
 			updateUserButtonLoading: false
@@ -127,8 +128,7 @@ export default {
 	},
 	computed: {
 		userIsVerified() {
-			const user = this.$store.getters["user/getUser"];
-			return user.isVerified;
+			return this.user.isVerified;
 		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
@@ -145,6 +145,8 @@ export default {
 				this.user.lastname.value = response.data.user.lastname;
 				this.user.username.value = response.data.user.username;
 				this.user.emailAddress.value = response.data.user.emailAddress;
+				this.user.isVerified = response.data.user.isVerified;
+
 				this.user.loading = false;
 			} catch (error) {
 				this.userNotFound(error);
