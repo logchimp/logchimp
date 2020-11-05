@@ -2,6 +2,22 @@
 	<Form>
 		<h4 class="user-settings-heading">Account settings</h4>
 		<div v-if="!user.loading">
+			<div v-if="!userIsVerified" class="user-settings-verification">
+				<div class="user-settings-verification-content">
+					<alert-icon />
+					<div class="user-settings-verification-text">
+						<h6>Email verification</h6>
+						<p>
+							We’ve sent you an verification email. Please follow the
+							instructions in the email.
+						</p>
+					</div>
+				</div>
+
+				<Button type="background" @click="resendEmail">
+					Resend
+				</Button>
+			</div>
 			<div class="user-settings-name">
 				<l-text
 					v-model="user.firstname.value"
@@ -53,6 +69,7 @@
 <script>
 // modules
 import { getUserSettings, updateUserSettings } from "../modules/users";
+import { resendUserVerificationEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader";
@@ -62,6 +79,9 @@ import Button from "../components/Button";
 
 // mixins
 import tokenErrorHandle from "../mixins/tokenErrorHandle";
+
+// icons
+import AlertIcon from "../components/icons/Alert";
 
 export default {
 	name: "UserSettings",
@@ -91,9 +111,16 @@ export default {
 		Loader,
 		Form,
 		LText,
-		Button
+		Button,
+
+		// icons
+		AlertIcon
 	},
 	computed: {
+		userIsVerified() {
+			const user = this.$store.getters["user/getUser"];
+			return user.isVerified;
+		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
@@ -142,6 +169,14 @@ export default {
 				this.userNotFound(error);
 
 				this.buttonLoading = false;
+			}
+		},
+		async resendEmail() {
+			try {
+				const emailAddress = this.user.emailAddress.value;
+				await resendUserVerificationEmail(emailAddress);
+			} catch (error) {
+				console.error(error);
 			}
 		}
 	},
