@@ -43,7 +43,22 @@ export const signup = async (
 };
 
 /**
- * Verify user email address
+ * Resend user verification
+ *
+ * @param {string} emailAddress email address
+ */
+export const resendUserVerificationEmail = async emailAddress => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/email/verify",
+		data: {
+			emailAddress
+		}
+	});
+};
+
+/**
+ * Validate user email address
  *
  * @param {string} token email address verification token
  */
