@@ -166,6 +166,11 @@ const routes = [
 		component: require("./pages/Join").default
 	},
 	{
+		path: "/email-verify",
+		name: "Email verification",
+		component: require("./pages/EmailVerify").default
+	},
+	{
 		path: "/forget",
 		name: "Forget",
 		component: require("./pages/forget").default

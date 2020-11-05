@@ -1,22 +1,13 @@
-const nodemailer = require("nodemailer");
+// utils
+const logchimpConfig = require("../../utils/logchimpConfig");
+const config = logchimpConfig();
+const logger = require("../../utils/logger");
 
-class Mail {
-	constructor() {
-		const transport = nodemailer.createTransport({
-			sendmail: true
-		});
+if (config.mail) {
+	const MailService = require(`@logchimp/${config.mail.service}`);
+	const mail = new MailService(config.mail.apiKey, config.mail.domain);
 
-		this.transport = transport;
-	}
-
-	async send(message) {
-		try {
-			const mail = await this.transport.sendMail(message);
-			return mail;
-		} catch (error) {
-			console.error(error);
-		}
-	}
+	module.exports = mail;
+} else {
+	logger.warn("Email adapter missing");
 }
-
-module.exports = Mail;
