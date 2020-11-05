@@ -2,7 +2,7 @@
 const database = require("../../database");
 
 // services
-const mail = require("../../services/mail");
+const { mail, generateContent } = require("../../services/mail");
 
 // utils
 const { createToken } = require("../../utils/token");
@@ -33,15 +33,14 @@ const verifyEmail = async (domain, siteUrl, emailAddress) => {
 			.into("emailVerification")
 			.returning("*");
 
-		const onboardingMailContent = await mail.generateContent("verify", {
+		const onboardingMailContent = await generateContent("verify", {
 			siteUrl,
 			verificationLink: `${domain}/email-verify/?token=${token}`
 		});
 
-		const email = new mail.Mail();
 		const noReplyEmail = `noreply@${siteUrl}`;
 
-		await email.send({
+		await mail.send({
 			from: noReplyEmail,
 			to: emailAddress,
 			subject: "LogChimp - Please confirm your email",

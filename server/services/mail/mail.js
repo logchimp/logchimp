@@ -1,22 +1,7 @@
-const nodemailer = require("nodemailer");
+const logchimpConfig = require("../../utils/logchimpConfig");
+const config = logchimpConfig();
 
-class Mail {
-	constructor() {
-		const transport = nodemailer.createTransport({
-			sendmail: true
-		});
+const MailService = require(`@logchimp/${config.mail.service}`);
+const mail = new MailService(config.mail.apiKey, config.mail.domain);
 
-		this.transport = transport;
-	}
-
-	async send(message) {
-		try {
-			const mail = await this.transport.sendMail(message);
-			return mail;
-		} catch (error) {
-			console.error(error);
-		}
-	}
-}
-
-module.exports = Mail;
+module.exports = mail;
