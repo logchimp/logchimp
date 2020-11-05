@@ -42,7 +42,7 @@ exports.signup = async (req, res) => {
 				if (userData) {
 					try {
 						const domain = req.headers.origin;
-						const siteUrl = req.headers["x-forwarded-host"];
+						const siteUrl = req.headers.origin.split("//")[1];
 						await verifyEmail(domain, siteUrl, emailAddress);
 
 						const secretKey = config.server.secretKey;
