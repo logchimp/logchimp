@@ -22,7 +22,7 @@
 					Resend
 				</Button>
 			</div>
-			<div class="user-settings-name">
+			<div class="user-settings-name" data-test="user-settings-form">
 				<l-text
 					v-model="user.firstname.value"
 					label="First name"
@@ -31,6 +31,7 @@
 					placeholder="First name"
 					class="user-settings-name-item"
 					@keyup-enter="updateSettings"
+					data-test="firstname-input"
 				/>
 				<l-text
 					v-model="user.lastname.value"
@@ -40,6 +41,7 @@
 					placeholder="Last name"
 					class="user-settings-name-item"
 					@keyup-enter="updateSettings"
+					data-test="lastname-input"
 				/>
 			</div>
 			<l-text
@@ -49,6 +51,7 @@
 				name="Username"
 				placeholder="Username"
 				:disabled="true"
+				data-test="username-input"
 			/>
 			<l-text
 				v-model="user.emailAddress.value"
@@ -57,12 +60,14 @@
 				name="Email Address"
 				placeholder="Email address"
 				:disabled="true"
+				data-test="email-input"
 			/>
 			<div style="display: flex; justify-content: flex-start;">
 				<Button
 					type="primary"
 					@click="updateSettings"
 					:loading="updateUserButtonLoading"
+					data-test="update-settings-button"
 				>
 					Update
 				</Button>
