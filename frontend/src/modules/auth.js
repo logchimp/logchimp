@@ -71,3 +71,50 @@ export const verifyUserEmailAddress = async token => {
 		}
 	});
 };
+
+/**
+ * Request for password reset
+ *
+ * @param {emailAddress} string user email address
+ */
+export const requestPasswordReset = async emailAddress => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/password/reset",
+		data: {
+			emailAddress
+		}
+	});
+};
+
+/**
+ * Validate reset password token
+ *
+ * @param {token} string reset password token
+ */
+export const validateResetPasswordToken = async token => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/password/validateToken",
+		data: {
+			token
+		}
+	});
+};
+
+/**
+ * Set new password
+ *
+ * @param {token} string reset password token
+ * @param {password} string new password
+ */
+export const setNewPassword = async (token, password) => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/password/set",
+		data: {
+			resetPasswordToken: token,
+			password
+		}
+	});
+};

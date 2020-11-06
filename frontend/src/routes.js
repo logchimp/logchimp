@@ -169,6 +169,16 @@ const routes = [
 		path: "/email-verify",
 		name: "Email verification",
 		component: require("./pages/EmailVerify").default
+	},
+	{
+		path: "/password-reset",
+		name: "Password reset",
+		component: require("./pages/passwordReset/Index").default
+	},
+	{
+		path: "/password-reset/confirm",
+		name: "Set new password",
+		component: require("./pages/passwordReset/Confirm").default
 	}
 ];
 
