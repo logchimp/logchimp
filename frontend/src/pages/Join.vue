@@ -22,6 +22,7 @@
 					:error="emailAddress.error"
 					@keyup-enter="join"
 					@hide-error="hideEmailAddressError"
+					data-test="email-input"
 				/>
 				<l-text
 					v-model="password.value"
@@ -32,9 +33,15 @@
 					:error="password.error"
 					@keyup-enter="join"
 					@hide-error="hidePasswordError"
+					data-test="password-input"
 				/>
 				<div style="display: flex; justify-content: center;">
-					<Button @click="join" type="primary" :loading="buttonLoading">
+					<Button
+						@click="join"
+						type="primary"
+						:loading="buttonLoading"
+						data-test="create-account-button"
+					>
 						Create account
 					</Button>
 				</div>
