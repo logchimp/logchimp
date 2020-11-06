@@ -1,6 +1,6 @@
 describe("Login", () => {
 	it("Visit login page", () => {
-		cy.visit("http://localhost:8080/login");
+		cy.visit("/login");
 	});
 
 	it("Greet with 'Welcome back!'", () => {
