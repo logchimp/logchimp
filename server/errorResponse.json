@@ -14,6 +14,10 @@
 		}
 	},
 	"api": {
+		"authentication": {
+			"noEmailProvided": "No email provided",
+			"noPasswordProvided": "No password provided"
+		},
 		"user": {
 			"userNotFound": "User not found"
 		},
@@ -23,6 +27,12 @@
 			"expired": "Email verification link is expired",
 			"verified": "Your email is already verified"
 		},
+		"passwordReset": {
+			"expired": "Your password reset link has expired",
+			"invalidToken": "Invalid password reset link",
+			"missingToken": "Password reset token is missing"
+
+    },
 		"posts": {
 			"postNotFound": "Post not found.",
 			"notEnoughPermission": "You do not have permission to perform this action."
