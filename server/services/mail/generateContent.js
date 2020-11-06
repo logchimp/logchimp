@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const path = require("path");
 const fs = require("fs-extra");
-const htmlToText = require("html-to-text");
+const { htmlToText } = require("html-to-text");
 
 const generateContent = async (templateName, options) => {
 	const mailTemplateFilePath = path.resolve(
@@ -20,7 +20,7 @@ const generateContent = async (templateName, options) => {
 		const compiled = _.template(mailTemplateFileContent);
 		const htmlMail = compiled(options);
 
-		const textMail = htmlToText.fromString(htmlMail);
+		const textMail = htmlToText(htmlMail);
 
 		return {
 			html: htmlMail,
