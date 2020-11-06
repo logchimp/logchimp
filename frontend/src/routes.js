@@ -171,14 +171,14 @@ const routes = [
 		component: require("./pages/EmailVerify").default
 	},
 	{
-		path: "/forget",
-		name: "Forget",
-		component: require("./pages/forget").default
+		path: "/password-reset",
+		name: "Password reset",
+		component: require("./pages/passwordReset/Index").default
 	},
 	{
-		path: "/forget/password/:token",
-		name: "SetNewPassword",
-		component: require("./pages/forget/password").default
+		path: "/password-reset/confirm",
+		name: "Set new password",
+		component: require("./pages/passwordReset/Confirm").default
 	}
 ];
 

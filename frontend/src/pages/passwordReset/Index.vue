@@ -12,7 +12,7 @@
 				</router-link>
 				<h3 class="auth-form-heading">Forget password</h3>
 			</div>
-			<Form class="auth-form">
+			<Form v-if="!emailAddress.hide" class="auth-form">
 				<l-text
 					v-model="emailAddress.value"
 					label="Email Address"
@@ -32,6 +32,11 @@
 						Continue
 					</Button>
 				</div>
+			</Form>
+			<Form v-else>
+				<p>You will receive a password reset email soon.</p>
+				<br />
+				<p>Follow the link in the email to reset your password.</p>
 			</Form>
 			<div class="auth-form-other">
 				Don't have an account yet?
@@ -59,7 +64,8 @@ export default {
 				error: {
 					show: false,
 					message: ""
-				}
+				},
+				hide: false
 			},
 			requestPassword: false,
 			buttonLoading: false
@@ -96,11 +102,7 @@ export default {
 			try {
 				await requestPasswordReset(this.emailAddress.value);
 
-				this.$store.dispatch("alerts/add", {
-					title: "Check your email for instructions",
-					type: "success",
-					timeout: 8000
-				});
+				this.emailAddress.hide = true;
 				this.emailAddress.value = "";
 
 				this.buttonLoading = false;
@@ -112,12 +114,6 @@ export default {
 
 				this.buttonLoading = false;
 			}
-		}
-	},
-	created() {
-		const user = JSON.parse(localStorage.getItem("user"));
-		if (user) {
-			this.$router.push("/");
 		}
 	},
 	metaInfo() {

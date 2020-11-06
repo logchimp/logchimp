@@ -36,7 +36,7 @@ const passwordReset = async (domain, siteUrl, tokenData) => {
 
 		const passwordResetMailContent = await generateContent("reset", {
 			siteUrl,
-			resetLink: `${siteUrl}/forget/password/${token}`
+			resetLink: `${domain}/password-reset/confirm/?token=${token}`
 		});
 
 		const noReplyEmail = `noreply@${siteUrl}`;
