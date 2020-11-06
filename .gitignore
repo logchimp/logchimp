@@ -26,6 +26,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# tests
+cypress/videos
+cypress/screenshots
+
 # Editor directories and files
 .idea
 .vscode
