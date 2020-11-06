@@ -18,7 +18,7 @@
 		"express": "^4.17.1",
 		"express-rate-limit": "^5.1.3",
 		"fs-extra": "^9.0.1",
-		"html-to-text": "^5.1.1",
+		"html-to-text": "^6.0.0",
 		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.21.12",
 		"lodash": "^4.17.20",
