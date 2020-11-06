@@ -2,7 +2,7 @@
 const database = require("../../database");
 
 // services
-const mail = require("../../services/mail");
+const { mail, generateContent } = require("../../services/mail");
 
 // utils
 const { createToken } = require("../../utils/token");
@@ -10,7 +10,7 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
 const config = logchimpConfig();
 
-const passwordReset = async (siteUrl, tokenData) => {
+const passwordReset = async (domain, siteUrl, tokenData) => {
 	const secretKey = config.server.secretKey;
 	const token = createToken(tokenData, secretKey, {
 		expiresIn: "1h"
@@ -34,15 +34,14 @@ const passwordReset = async (siteUrl, tokenData) => {
 			.into("resetPassword")
 			.returning("*");
 
-		const passwordResetMailContent = await mail.generateContent("reset", {
+		const passwordResetMailContent = await generateContent("reset", {
 			siteUrl,
 			resetLink: `${siteUrl}/forget/password/${token}`
 		});
 
-		const email = new mail.Mail();
 		const noReplyEmail = `noreply@${siteUrl}`;
 
-		await email.send({
+		await mail.send({
 			from: noReplyEmail,
 			to: tokenData.emailAddress,
 			subject: "Reset your LogChimp password",
