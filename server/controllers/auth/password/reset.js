@@ -1,6 +1,3 @@
-// database
-const database = require("../../../database");
-
 // services
 const getUser = require("../../../services/auth/getUser");
 const passwordResetEmail = require("../../../services/auth/passwordReset");
@@ -43,8 +40,9 @@ exports.reset = async (req, res) => {
 			emailAddress: getAuthUser.emailAddress
 		};
 
-		const siteUrl = req.headers.origin;
-		await passwordResetEmail(siteUrl, tokenData);
+		const domain = req.headers.origin;
+		const siteUrl = req.headers.origin.split("//")[1];
+		await passwordResetEmail(domain, siteUrl, tokenData);
 
 		res.status(200).send({
 			type: "success"
