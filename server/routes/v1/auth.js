@@ -15,6 +15,7 @@ router.post("/auth/email/validate", auth.email.validate);
 
 // password
 router.post("/auth/password/reset", auth.password.reset);
+router.post("/auth/password/validateToken", auth.password.validateToken);
 router.post("/auth/password/set", auth.password.set);
 
 module.exports = router;
