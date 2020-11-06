@@ -40,7 +40,7 @@
 				</div>
 			</Form>
 			<div class="auth-form-other">
-				<router-link to="/forget">Forget password?</router-link>
+				<router-link to="/password-reset">Forget password?</router-link>
 				· Don't have an account yet?
 				<router-link to="/join">Sign up</router-link>
 			</div>
