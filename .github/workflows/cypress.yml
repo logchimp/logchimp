@@ -54,11 +54,8 @@ jobs:
         run: |
           set -e
 
-          # build vue
-          yarn run frontend:build
-
-          # run backend server
-          NODE_ENV=production PORT=8080 node server/app.js
+          npm run server:start &
+          npm run frontend:dev &
 
           # run cypress test
           npm run cypress:run
