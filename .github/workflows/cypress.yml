@@ -52,10 +52,10 @@ jobs:
 
       - name: Cypress
         run: |
-          set -e
+          npm install -g wait-on
 
-          npm run server:start &
-          npm run frontend:dev &
+          npm run server:start & wait-on http://localhost:3000
+          npm run frontend:dev & wait-on http://localhost:8080
 
           # run cypress test
           npm run cypress:run
