@@ -59,3 +59,15 @@ jobs:
 
           # run cypress test
           npm run cypress:run
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: cypress/screenshots/*
+
+      - name: Upload videos
+        uses: actions/upload-artifact@v2
+        with:
+          name: videos
+          path: cypress/videos/*
