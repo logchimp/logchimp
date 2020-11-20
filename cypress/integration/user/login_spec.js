@@ -25,6 +25,20 @@ describe("Login", () => {
 		it("Show input field error", () => {
 			cy.contains("Login").click();
 		});
+
+		it("Email address is required", () => {
+			cy.get("[data-test=email-input] .input-error-message").should(
+				"contain",
+				"Required"
+			);
+		});
+
+		it("Password is required", () => {
+			cy.get("[data-test=password-input] .input-error-message").should(
+				"contain",
+				"Required"
+			);
+		});
 	});
 
 	describe("User not found", () => {
