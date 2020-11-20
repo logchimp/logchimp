@@ -51,14 +51,11 @@ jobs:
           sh ./scripts/create-config.sh
 
       - name: Cypress
-        run: |
-          npm install -g wait-on
-
-          npm run server:start & wait-on http://localhost:3000
-          npm run frontend:dev & wait-on http://localhost:8080
-
-          # run cypress test
-          npm run cypress:run
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run cypress:run
+          start: npm run server:start, npm run frontend:dev
+          wait-on: 'http://localhost:3000, http://localhost:8080'
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
