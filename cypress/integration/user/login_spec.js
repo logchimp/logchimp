@@ -63,12 +63,12 @@ describe("Login", () => {
 	describe("Incorrect password", () => {
 		it("Enter email address & password", () => {
 			cy.get("[data-test=email-input] input")
-				.type("{selectall}incorrectPassword@example.com")
-				.should("have.value", "incorrectPassword@example.com");
+				.type("{selectall}email@example.com")
+				.should("have.value", "email@example.com");
 
 			cy.get("[data-test=password-input] input")
-				.type("{selectall}sdfdsfsdfs{enter}")
-				.should("have.value", "sdfdsfsdfs");
+				.type("{selectall}incorrect password{enter}")
+				.should("have.value", "incorrect password");
 		});
 
 		it("Check 'Incorrect password' error message", () => {
@@ -92,7 +92,7 @@ describe("Login", () => {
 
 		it("Redirect to homepage after login", () => {
 			cy.url().then(() => {
-				cy.url().should("eq", 'http://localhost:8080/');
+				cy.url().should("eq", "http://localhost:8080/");
 			});
 		});
 	});
