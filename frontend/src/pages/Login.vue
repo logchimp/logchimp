@@ -24,6 +24,7 @@
 					:error="emailAddress.error"
 					@keyup-enter="login"
 					@hide-error="hideEmailAddressError"
+					data-test="email-input"
 				/>
 				<l-text
 					v-model="password.value"
@@ -34,6 +35,7 @@
 					:error="password.error"
 					@keyup-enter="login"
 					@hide-error="hidePasswordError"
+					data-test="password-input"
 				/>
 				<div style="display: flex; justify-content: center;">
 					<Button @click="login" type="primary" :loading="buttonLoading">

@@ -29,17 +29,19 @@ describe("Login", () => {
 
 	describe("User not found", () => {
 		it("Enter email address", () => {
-			cy.get(".auth-form label[name='email'] input")
+			cy.get("[data-test=email-input] input")
 				.type("usernotfound@example.com")
 				.should("have.value", "usernotfound@example.com");
 		});
 
 		it("Enter password", () => {
-			cy.get(".auth-form label[name='password'] input").type("password{enter}");
+			cy.get("[data-test=password-input] input")
+				.type("password{enter}")
+				.should("have.value", "password");
 		});
 
 		it("Check 'user not found' error message", () => {
-			cy.get(".auth-form label[name='email'] .input-error-message").should(
+			cy.get("[data-test=email-input] .input-error-message").should(
 				"contain",
 				"User not found"
 			);
@@ -48,19 +50,19 @@ describe("Login", () => {
 
 	describe("Incorrect password", () => {
 		it("Enter email address", () => {
-			cy.get(".auth-form label[name='email'] input")
+			cy.get("[data-test=email-input] input")
 				.type("{selectall}incorrectPassword@example.com")
 				.should("have.value", "incorrectPassword@example.com");
 		});
 
 		it("Enter password", () => {
-			cy.get(".auth-form label[name='password'] input").type(
-				"{selectall}sdfdsfsdfs{enter}"
-			);
+			cy.get("[data-test=password-input] input")
+				.type("{selectall}sdfdsfsdfs{enter}")
+				.should("have.value", "sdfdsfsdfs");
 		});
 
 		it("Check 'Incorrect password' error message", () => {
-			cy.get(".auth-form label[name='password'] .input-error-message").should(
+			cy.get("[data-test=password-input] .input-error-message").should(
 				"contain",
 				"Incorrect password"
 			);
@@ -69,15 +71,15 @@ describe("Login", () => {
 
 	describe("Login with existing user", () => {
 		it("Enter email address", () => {
-			cy.get(".auth-form label[name='email'] input")
+			cy.get("[data-test=email-input] input")
 				.type("{selectall}email@example.com")
 				.should("have.value", "email@example.com");
 		});
 
 		it("Enter password", () => {
-			cy.get(".auth-form label[name='password'] input").type(
-				"{selectall}password{enter}"
-			);
+			cy.get("[data-test=password-input] input")
+				.type("{selectall}password{enter}")
+				.should("have.value", "password");
 		});
 	});
 });
