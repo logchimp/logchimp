@@ -89,5 +89,11 @@ describe("Login", () => {
 				.type("{selectall}password{enter}")
 				.should("have.value", "password");
 		});
+
+		it("Redirect to homepage after login", () => {
+			cy.url().then(() => {
+				cy.url().should("eq", 'http://localhost:8080/');
+			});
+		});
 	});
 });
