@@ -28,13 +28,11 @@ describe("Sign up", () => {
 	});
 
 	describe("User exists", () => {
-		it("Enter email address", () => {
+		it("Enter email address & password", () => {
 			cy.get("[data-test=email-input] input")
 				.type("{selectall}email@example.com")
 				.should("have.value", "email@example.com");
-		});
 
-		it("Enter password", () => {
 			cy.get("[data-test=password-input] input")
 				.type("{selectall}password{enter}")
 				.should("have.value", "password");
