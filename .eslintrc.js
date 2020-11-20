@@ -10,10 +10,12 @@ module.exports = {
 		node: true,
 		"jest/globals": true
 	},
+	plugins: ["cypress"],
 	extends: [
 		"eslint:recommended",
 		"plugin:vue/essential",
 		"plugin:prettier/recommended",
+		"plugin:cypress/recommended",
 		"plugin:jest/recommended",
 		"plugin:jest/style"
 	],
