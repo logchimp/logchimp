@@ -41,7 +41,7 @@ const passwordReset = async (domain, siteUrl, tokenData) => {
 
 		const noReplyEmail = `noreply@${siteUrl}`;
 
-		await mail.send({
+		await mail.sendMail({
 			from: noReplyEmail,
 			to: tokenData.emailAddress,
 			subject: "Reset your LogChimp password",

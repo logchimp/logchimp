@@ -40,7 +40,7 @@ const verifyEmail = async (domain, siteUrl, emailAddress) => {
 
 		const noReplyEmail = `noreply@${siteUrl}`;
 
-		await mail.send({
+		await mail.sendMail({
 			from: noReplyEmail,
 			to: emailAddress,
 			subject: "LogChimp - Please confirm your email",
