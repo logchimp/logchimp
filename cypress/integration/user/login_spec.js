@@ -23,7 +23,7 @@ describe("Login", () => {
 
 	describe("'Required' error message", () => {
 		it("Show input field error", () => {
-			cy.contains("Login").click();
+			cy.get("[data-test=login-button]").click();
 		});
 
 		it("Email address is required", () => {

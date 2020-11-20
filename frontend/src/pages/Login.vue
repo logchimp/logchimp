@@ -38,7 +38,12 @@
 					data-test="password-input"
 				/>
 				<div style="display: flex; justify-content: center;">
-					<Button @click="login" type="primary" :loading="buttonLoading">
+					<Button
+						@click="login"
+						type="primary"
+						:loading="buttonLoading"
+						data-test="login-button"
+					>
 						Login
 					</Button>
 				</div>
