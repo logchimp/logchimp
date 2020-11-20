@@ -60,12 +60,14 @@ jobs:
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: screenshots
           path: cypress/screenshots/*
 
       - name: Upload videos
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: videos
           path: cypress/videos/*
