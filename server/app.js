@@ -33,44 +33,33 @@ database
 		database.migrate
 			.latest()
 			.then(() => {
-				database.seed
-					.run()
-					.then(() => {
-						logger.info("Database migration complete");
+				logger.info("Database migration complete");
 
-						// contains key-value pairs of data submitted in the request body
-						app.use(bodyParser.json());
+				// contains key-value pairs of data submitted in the request body
+				app.use(bodyParser.json());
 
-						// enable all CORS requests
-						app.use(cors());
+				// enable all CORS requests
+				app.use(cors());
 
-						// importing all routes modules
-						app.use(routes);
+				// importing all routes modules
+				app.use(routes);
 
-						// Serve vue app
-						if (process.env.NODE_ENV === "production") {
-							app.use(express.static(path.resolve(__dirname, "public")));
-							app.get(/.*/, (req, res) =>
-								res.sendFile(path.resolve(__dirname, "public/index.html"))
-							);
-						}
+				// Serve vue app
+				if (process.env.NODE_ENV === "production") {
+					app.use(express.static(path.resolve(__dirname, "public")));
+					app.get(/.*/, (req, res) =>
+						res.sendFile(path.resolve(__dirname, "public/index.html"))
+					);
+				}
 
-						// start express server at SERVER_PORT
-						const port = config.server.port || 3000;
-						app.listen(port, () => {
-							logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
-							logger.info(`Listening on port: ${port}`);
-							logger.info("Ctrl+C to shut down");
-							logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
-						});
-					})
-					.catch(err => {
-						logger.error({
-							code: "DATABASE_SEEDS",
-							message: "Seeding failed",
-							err
-						});
-					});
+				// start express server at SERVER_PORT
+				const port = config.server.port || 3000;
+				app.listen(port, () => {
+					logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
+					logger.info(`Listening on port: ${port}`);
+					logger.info("Ctrl+C to shut down");
+					logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
+				});
 			})
 			.catch(err => {
 				logger.error({
