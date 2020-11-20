@@ -4,7 +4,7 @@ describe("Login", () => {
 	});
 
 	it("Greet with 'Welcome back!'", () => {
-		cy.get(".auth-form-header > .auth-form-heading").contains("Welcome back!");
+		cy.get("[data-test=login-page-heading]").contains("Welcome back!");
 	});
 
 	describe("Auth form footer links", () => {

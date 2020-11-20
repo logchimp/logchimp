@@ -10,7 +10,9 @@
 					/>
 					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
 				</router-link>
-				<h3 class="auth-form-heading">Welcome back!</h3>
+				<h3 class="auth-form-heading" data-test="login-page-heading">
+					Welcome back!
+				</h3>
 			</div>
 			<Form class="auth-form">
 				<l-text
