@@ -54,8 +54,8 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           command: npm run cypress:run
-          start: npm run server:start
-          wait-on: 'http://localhost:3000'
+          start: npm run server:start, npm run frontend:dev
+          wait-on: 'http://localhost:3000/api, http://localhost:8080'
           wait-on-timeout: 180
 
       - name: Upload screenshots
