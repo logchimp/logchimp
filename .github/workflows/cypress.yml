@@ -56,7 +56,6 @@ jobs:
           command: npm run cypress:run
           start: npm run server:start, npm run frontend:dev
           wait-on: 'http://localhost:3000/api, http://localhost:8080'
-          wait-on-timeout: 180
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
