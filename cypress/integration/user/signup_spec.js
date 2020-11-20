@@ -3,6 +3,10 @@ describe("Sign up", () => {
 		cy.visit("/join");
 	});
 
+	it("Show 'Create your account' heading", () => {
+		cy.get("[data-test=join-page-heading]").contains("Create your account");
+	});
+
 	it("Link to login page", () => {
 		cy.contains("Log in").should("have.attr", "href", "/login");
 	});
