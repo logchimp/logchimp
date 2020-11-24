@@ -103,8 +103,6 @@ export default {
 			try {
 				const response = await createPost(this.boardId, postObject);
 
-				this.buttonLoading = false;
-
 				// redirect to post
 				const slug = response.data.post.slug;
 				this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
@@ -112,7 +110,7 @@ export default {
 				this.userNotFound(error);
 				this.invalidToken(error);
 				this.invalidAuthHeaderFormat(error);
-
+			} finally {
 				this.buttonLoading = false;
 			}
 		}

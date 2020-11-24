@@ -205,9 +205,9 @@ export default {
 				this.googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
 
 				this.$store.dispatch("settings/update", response.data.settings);
-				this.buttonLoading = false;
 			} catch (error) {
 				console.error(error);
+			} finally {
 				this.buttonLoading = false;
 			}
 		},

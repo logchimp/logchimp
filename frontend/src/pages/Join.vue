@@ -125,8 +125,6 @@ export default {
 					...response.data.user
 				});
 
-				this.buttonLoading = false;
-
 				if (this.$route.query.redirect) {
 					this.$router.push(this.$route.query.redirect);
 				} else {
@@ -137,7 +135,7 @@ export default {
 					this.emailAddress.error.show = true;
 					this.emailAddress.error.message = "Exists";
 				}
-
+			} finally {
 				this.buttonLoading = false;
 			}
 		}

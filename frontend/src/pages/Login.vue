@@ -123,8 +123,6 @@ export default {
 					...response.data.user
 				});
 
-				this.buttonLoading = false;
-
 				if (this.$route.query.redirect) {
 					this.$router.push(this.$route.query.redirect);
 				} else {
@@ -140,7 +138,7 @@ export default {
 					this.password.error.show = true;
 					this.password.error.message = "Incorrect password";
 				}
-
+			} finally {
 				this.buttonLoading = false;
 			}
 		}

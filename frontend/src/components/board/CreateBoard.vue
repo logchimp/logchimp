@@ -72,9 +72,9 @@ export default {
 				await createBoard(this.boardName.value);
 
 				this.$router.push(this.redirect);
-				this.buttonLoading = false;
 			} catch (error) {
 				console.error(error);
+			} finally {
 				this.buttonLoading = false;
 			}
 		}

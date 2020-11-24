@@ -148,11 +148,10 @@ export default {
 					...response.data.user
 				});
 
-				this.buttonLoading = false;
-
 				this.$router.push("/setup/create-board");
 			} catch (error) {
 				console.error(error);
+			} finally {
 				this.buttonLoading = false;
 			}
 		}

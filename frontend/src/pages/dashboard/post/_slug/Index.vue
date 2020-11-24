@@ -101,13 +101,11 @@ export default {
 
 				this.post = response.data.post;
 				this.voters = response.data.voters;
-
-				this.post.loading = false;
 			} catch (error) {
 				if (error.response.data.code === "POST_NOT_FOUND") {
 					this.isPostExist = false;
 				}
-
+			} finally {
 				this.post.loading = false;
 			}
 		},
