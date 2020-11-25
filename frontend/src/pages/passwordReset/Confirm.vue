@@ -133,11 +133,10 @@ export default {
 			try {
 				const token = this.$route.query.token;
 				await validateResetPasswordToken(token);
-
-				this.loading = false;
 			} catch (error) {
-				this.loading = false;
 				this.invalidRequest = true;
+			} finally {
+				this.loading = false;
 			}
 		},
 		async setPassword() {

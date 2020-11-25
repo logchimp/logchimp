@@ -116,13 +116,11 @@ export default {
 				const response = await getBoardByUrl(url);
 
 				this.board = response.data.board;
-
-				this.board.loading = false;
 			} catch (error) {
 				if (error.response.data.code === "BOARD_NOT_FOUND") {
 					this.isBoardExist = false;
 				}
-
+			} finally {
 				this.board.loading = false;
 			}
 		}

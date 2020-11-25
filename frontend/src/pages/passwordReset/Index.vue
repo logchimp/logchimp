@@ -104,14 +104,12 @@ export default {
 
 				this.emailAddress.hide = true;
 				this.emailAddress.value = "";
-
-				this.buttonLoading = false;
 			} catch (error) {
 				if (error.response.data.code === "USER_NOT_FOUND") {
 					this.emailAddress.error.show = true;
 					this.emailAddress.error.message = "User not found";
 				}
-
+			} finally {
 				this.buttonLoading = false;
 			}
 		}
