@@ -70,13 +70,11 @@ export default {
 					const response = await deleteVote(this.postId, userVote.voteId);
 
 					this.$emit("update-voters", response.data.voters);
-
-					this.loading = false;
 				} catch (error) {
 					this.userNotFound(error);
 					this.invalidToken(error);
 					this.invalidAuthHeaderFormat(error);
-
+				} finally {
 					this.loading = false;
 				}
 			} else {
@@ -84,13 +82,11 @@ export default {
 					const response = await addVote(this.postId);
 
 					this.$emit("update-voters", response.data.voters);
-
-					this.loading = false;
 				} catch (error) {
 					this.userNotFound(error);
 					this.invalidToken(error);
 					this.invalidAuthHeaderFormat(error);
-
+				} finally {
 					this.loading = false;
 				}
 			}

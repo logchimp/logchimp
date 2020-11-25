@@ -146,11 +146,9 @@ export default {
 				this.user.username.value = response.data.user.username;
 				this.user.emailAddress.value = response.data.user.emailAddress;
 				this.user.isVerified = response.data.user.isVerified;
-
-				this.user.loading = false;
 			} catch (error) {
 				this.userNotFound(error);
-
+			} finally {
 				this.user.loading = false;
 			}
 		},
@@ -174,11 +172,9 @@ export default {
 					firstname: response.data.user.firstname,
 					lastname: response.data.user.lastname
 				});
-
-				this.updateUserButtonLoading = false;
 			} catch (error) {
 				this.userNotFound(error);
-
+			} finally {
 				this.updateUserButtonLoading = false;
 			}
 		},
@@ -191,10 +187,9 @@ export default {
 			try {
 				const emailAddress = this.user.emailAddress.value;
 				await resendUserVerificationEmail(emailAddress);
-
-				this.resendVerificationEmailButtonLoading = false;
 			} catch (error) {
 				console.error(error);
+			} finally {
 				this.resendVerificationEmailButtonLoading = false;
 			}
 		}

@@ -81,16 +81,15 @@ export default {
 				await verifyUserEmailAddress(token);
 
 				this.success = true;
-				this.loading = false;
 			} catch (error) {
-				this.loading = false;
-
 				if (error.response.data.code === "USER_ALREADY_VERIFIED") {
 					this.$router.push("/");
 					return;
 				}
 
 				this.success = false;
+			} finally {
+				this.loading = false;
 			}
 		}
 	},

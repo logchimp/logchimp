@@ -96,13 +96,11 @@ export default {
 				this.post.postId = response.data.post.postId;
 				this.post.slugId = response.data.post.slugId;
 				this.post.userId = response.data.post.userId;
-
-				this.post.loading = false;
 			} catch (error) {
 				if (error.response.data.code === "POST_NOT_FOUND") {
 					this.isPostExist = false;
 				}
-
+			} finally {
 				this.post.loading = false;
 			}
 		},
@@ -135,15 +133,13 @@ export default {
 				this.post.userId = response.data.post.userId;
 				this.post.slug = response.data.post.slug;
 
-				this.buttonLoading = false;
-
 				this.$router.push(`/post/${this.post.slug}`);
 			} catch (error) {
 				if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
 					const slug = this.$route.params.slug;
 					this.$router.push(`/post/${slug}`);
 				}
-
+			} finally {
 				this.buttonLoading = false;
 			}
 		}
