@@ -1,6 +1,8 @@
 {
 	"middleware": {
 		"auth": {
+			"accessDenied": "Access denied",
+			"authorizationFailed": "Unable to determine the authenticated user",
 			"internalServerError": "Internal server error",
 			"invalidAuthHeaderFormat": "Authorization header format is \"authorization: Bearer [token]\"",
 			"invalidAuthHeader": "Authorization header missing",
@@ -9,6 +11,7 @@
 		"user": {
 			"userNotFound": "User not found",
 			"userBlocked": "User is blocked",
+			"userSpam": "User is marked as Spam",
 			"incorrectPassword": "Incorect password",
 			"userExists": "User exists"
 		}
