@@ -36,7 +36,7 @@
 		"vue-meta": "^2.4.0",
 		"vue-moment": "^4.1.0",
 		"vue-router": "^3.4.9",
-		"vuex": "^3.5.1",
+		"vuex": "^3.6.0",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
