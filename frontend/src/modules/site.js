@@ -5,6 +5,27 @@ import axios from "axios";
 import store from "../store";
 
 /**
+ * Create owner account while setting up LogChimp site.
+ *
+ * @param {string} siteTitle - site title
+ * @param {string} name - user name
+ * @param {string} email - user email address
+ * @param {string} password - user password
+ */
+export const siteSetup = async (siteTitle, name, email, password) => {
+	return await axios({
+		method: "post",
+		url: "/api/v1/auth/setup",
+		data: {
+			siteTitle,
+			name,
+			email,
+			password
+		}
+	});
+};
+
+/**
  * Get site settings
  */
 export const isSiteSetup = async () => {
