@@ -54,7 +54,7 @@ const routes = [
 		beforeEnter: async (to, from, next) => {
 			try {
 				const response = await isSiteSetup();
-				if (response.data.isSetup) {
+				if (response.data.is_setup) {
 					next({ path: "/dashboard" });
 				} else {
 					next();
@@ -89,7 +89,7 @@ const routes = [
 			try {
 				const setup = await isSiteSetup();
 				// Check for site setup
-				if (!setup.data.isSetup) {
+				if (!setup.data.is_setup) {
 					next({ name: "Setup welcome" });
 					return;
 				}
