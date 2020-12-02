@@ -9,8 +9,18 @@ exports.up = knex => {
 				.notNullable()
 				.unique()
 				.primary();
-			table.uuid("role_id").notNullable();
-			table.uuid("user_id").notNullable();
+			table
+				.uuid("role_id")
+				.notNullable()
+				.references("id")
+				.inTable("roles")
+				.onDelete("cascade");
+			table
+				.uuid("user_id")
+				.notNullable()
+				.references("userId")
+				.inTable("users")
+				.onDelete("cascade");
 		})
 		.then(() => {
 			logger.info({
