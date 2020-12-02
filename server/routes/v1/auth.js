@@ -8,6 +8,7 @@ const auth = require("../../controllers/auth");
 router.post("/auth/signup", auth.signup);
 router.post("/auth/login", auth.login);
 
+router.post("/auth/setup", auth.setup);
 router.get("/auth/setup", auth.isSiteSetup);
 
 // email
