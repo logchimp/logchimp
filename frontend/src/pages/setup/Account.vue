@@ -140,8 +140,6 @@ export default {
 				const response = await signup(
 					this.emailAddress.value,
 					this.password.value,
-					this.fullName.value,
-					true
 				);
 
 				this.$store.dispatch("user/login", {
