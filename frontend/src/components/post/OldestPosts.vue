@@ -15,7 +15,7 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getBoardPosts } from "../../modules/boards";
+import { getPosts } from "../../modules/posts";
 
 // components
 import Post from "../post/Post";
@@ -47,10 +47,13 @@ export default {
 	},
 	methods: {
 		async getMorePosts($state) {
-			const url = this.$route.params.url;
+			const boardId = this.board.boardId;
+			const userId = this.$store.getters["user/getUserId"];
 
 			try {
-				const response = await getBoardPosts(url, this.page, "asc");
+				const response = await getPosts(this.page, 10, "asc", userId, [
+					boardId
+				]);
 				if (response.data.posts.length) {
 					this.posts.push(...response.data.posts);
 					this.page += 1;
