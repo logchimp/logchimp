@@ -37,6 +37,14 @@ export default {
 		Post,
 		Loader
 	},
+	props: {
+		board: {
+			type: Object,
+			default: () => {
+				return {};
+			}
+		}
+	},
 	methods: {
 		async getMorePosts($state) {
 			const url = this.$route.params.url;
