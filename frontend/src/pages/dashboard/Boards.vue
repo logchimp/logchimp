@@ -20,12 +20,7 @@
 				</div>
 				<div class="table-header-item boards-table-icons"></div>
 			</template>
-			<router-link
-				:to="`/dashboard/board/${board.url}`"
-				v-for="board in boards"
-				:key="board.boardId"
-				class="table-row"
-			>
+			<div v-for="board in boards" :key="board.boardId" class="table-row">
 				<div class="table-data boards-table-color">
 					<div
 						class="board-color"
@@ -51,7 +46,7 @@
 						<settings-icon />
 					</div> -->
 				</div>
-			</router-link>
+			</div>
 			<infinite-loading @infinite="getBoards">
 				<div class="loader-container" slot="spinner"><loader /></div>
 				<div slot="no-more"></div>
