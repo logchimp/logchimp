@@ -31,7 +31,7 @@ export const siteSetup = async (siteTitle, name, email, password) => {
 export const isSiteSetup = async () => {
 	return await axios({
 		method: "get",
-		url: "/api/v1/auth/isSetup"
+		url: "/api/v1/auth/setup"
 	});
 };
 
