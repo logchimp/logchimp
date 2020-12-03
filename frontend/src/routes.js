@@ -129,11 +129,6 @@ const routes = [
 				component: require("./pages/dashboard/boards/Create").default
 			},
 			{
-				path: "board/:url",
-				name: "Dashboard board view",
-				component: require("./pages/dashboard/board/_url/Index").default
-			},
-			{
 				path: "posts",
 				name: "Dashboard posts",
 				component: require("./pages/dashboard/Posts").default

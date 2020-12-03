@@ -23,24 +23,6 @@ export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 };
 
 /**
- * Get board posts
- *
- * @param {url} string board url posts
- * @param {page} integer page number default to 1
- * @param {sort} string sort type asc or desc
- */
-export const getBoardPosts = async (url, page = 1, sort) => {
-	return await axios({
-		method: "post",
-		url: `/api/v1/boards/${url}/posts`,
-		params: {
-			page,
-			created: sort
-		}
-	});
-};
-
-/**
  *	Get board by URL
  *
  * @param {url} string url unqiue for each board
