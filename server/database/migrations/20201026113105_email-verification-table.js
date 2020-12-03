@@ -8,7 +8,10 @@ exports.up = knex => {
 				.string("emailAddress", 320)
 				.notNullable()
 				.unique()
-				.primary();
+				.primary()
+				.references("emailAddress")
+				.inTable("users")
+				.onDelete("cascade");
 			table
 				.string("token")
 				.notNullable()
