@@ -3,51 +3,70 @@ const { v4: uuidv4 } = require("uuid");
 // database
 const database = require("../../database");
 
+// services
+const getVotes = require("../../services/votes/getVotes");
+
 // utils
 const logger = require("../../utils/logger");
+
+const error = require("../../errorResponse.json");
 
 exports.add = async (req, res) => {
 	const userId = req.body.userId;
 	const postId = req.body.postId;
 
-	// generate post unique indentification
-	const voteId = uuidv4(postId);
-
 	try {
-		const votes = await database
-			.insert({
-				voteId,
-				userId,
+		const { rows } = await database.raw(
+			`
+				SELECT EXISTS (
+					SELECT
+						*
+					FROM
+						votes
+					WHERE
+							"postId" = :postId
+						AND
+							"userId" = :userId
+				);
+			`,
+			{
 				postId,
-				createdAt: new Date().toJSON()
-			})
-			.into("votes")
-			.returning("*");
+				userId
+			}
+		);
 
-		const vote = votes[0];
+		const voteExists = rows[0].exists;
 
-		if (vote) {
+		// Add vote to post
+		if (!voteExists) {
+			// generate post unique indentification
+			const voteId = uuidv4(postId);
+
 			try {
-				const voters = await database
-					.select()
-					.from("votes")
-					.where({
-						postId
-					});
+				await database
+					.insert({
+						voteId,
+						userId,
+						postId,
+						createdAt: new Date().toJSON()
+					})
+					.into("votes")
+					.returning("*");
 
-				res.status(201).send({
-					status: {
-						code: 201,
-						type: "success"
-					},
-					voters
-				});
+				const voters = await getVotes(postId, userId);
+
+				res.status(201).send(voters);
 			} catch (err) {
 				logger.log({
 					level: "error",
 					message: err
 				});
 			}
+		} else {
+			res.status(409).send({
+				message: error.api.votes.exists,
+				code: "VOTE_EXISTS"
+			});
 		}
 	} catch (err) {
 		logger.log({
