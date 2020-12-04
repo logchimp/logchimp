@@ -1,5 +1,8 @@
 const database = require("../../database");
 
+// services
+const getVotes = require("../../services/votes/getVotes");
+
 // utils
 const logger = require("../../utils/logger");
 
@@ -10,39 +13,33 @@ exports.postBySlug = async (req, res) => {
 
 	try {
 		const posts = await database
-			.select(
-				"users.userId",
-				"users.firstname",
-				"users.lastname",
-				"users.username",
-				"users.avatar",
-				"posts.*"
-			)
+			.select()
 			.from("posts")
-			.innerJoin("users", "posts.userId", "users.userId")
 			.where({
 				slug
-			})
-			.limit(1);
+			});
 
 		const post = posts[0];
 
 		if (post) {
-			const postId = post.postId;
-
 			try {
-				const voters = await database
-					.select()
-					.from("votes")
-					.where({ postId });
+				const authors = await database
+					.select("userId", "name", "username", "avatar")
+					.from("users")
+					.where({
+						userId: post.userId
+					});
+
+				const author = authors[0];
+
+				const voters = await getVotes(post.postId, post.userId);
 
 				res.status(200).send({
-					status: {
-						code: 200,
-						type: "success"
-					},
-					post,
-					voters
+					post: {
+						author,
+						...post,
+						voters
+					}
 				});
 			} catch (err) {
 				logger.log({
