@@ -10,7 +10,7 @@ exports.up = knex => {
 				.unique()
 				.primary();
 			table
-				.uuid("permissions_id")
+				.uuid("permission_id")
 				.notNullable()
 				.references("id")
 				.inTable("permissions")
