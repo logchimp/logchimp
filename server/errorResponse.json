@@ -39,6 +39,9 @@
 		},
 		"boards": {
 			"boardNotFound": "Board not found"
+		},
+		"votes": {
+			"voteNotFound": "Vote not found"
 		}
 	}
 }

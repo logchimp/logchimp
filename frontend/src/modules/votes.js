@@ -30,16 +30,16 @@ export const addVote = async postId => {
  * Delete vote from a post
  *
  * @param {postId} string post UUID
- * @param {voteId} string vote UUID
  */
-export const deleteVote = async (postId, voteId) => {
+export const deleteVote = async postId => {
+	const userId = store.getters["user/getUserId"];
 	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
 		method: "delete",
 		url: "/api/v1/votes",
 		data: {
-			voteId,
+			userId,
 			postId
 		},
 		headers: {
