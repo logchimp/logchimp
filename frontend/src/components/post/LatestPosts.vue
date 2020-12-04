@@ -60,8 +60,8 @@ export default {
 					boardId
 				]);
 
-				if (response.data.posts.length) {
-					this.posts.push(...response.data.posts);
+				if (response.data.length) {
+					this.posts.push(...response.data);
 					this.page += 1;
 					$state.loaded();
 				} else {

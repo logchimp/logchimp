@@ -23,7 +23,7 @@
 						{{ post.title }}
 					</div>
 					<div class="table-data posts-table-votes">
-						{{ post.voters.length }}
+						{{ post.voters.votesCount }}
 					</div>
 				</router-link>
 				<infinite-loading @infinite="getPosts">
@@ -124,7 +124,7 @@ export default {
 			try {
 				const response = await getPosts(1, 4, "desc");
 
-				this.posts.data = response.data.posts;
+				this.posts.data = response.data;
 				$state.complete();
 			} catch (error) {
 				console.error(error);
