@@ -1,6 +1,11 @@
 <template>
 	<div>
-		<post v-for="post in posts" :post="post" :key="post.postId" />
+		<post
+			v-for="post in posts"
+			:post="post"
+			:key="post.postId"
+			:showBoard="false"
+		/>
 		<infinite-loading @infinite="getMorePosts">
 			<div class="loader-container" slot="spinner"><loader /></div>
 			<div slot="no-more"></div>
@@ -54,6 +59,7 @@ export default {
 				const response = await getPosts(this.page, 10, "asc", userId, [
 					boardId
 				]);
+
 				if (response.data.posts.length) {
 					this.posts.push(...response.data.posts);
 					this.page += 1;
