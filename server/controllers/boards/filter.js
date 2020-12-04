@@ -10,7 +10,7 @@ exports.filter = async (req, res) => {
 
 	try {
 		const boards = await database
-			.select("boards.boardId", "boards.name", "boards.color")
+			.select("boards.boardId", "boards.name", "boards.color", "boards.url")
 			.count("posts", { as: "post_count" })
 			.from("boards")
 			.leftJoin("posts", "boards.boardId", "posts.boardId")
