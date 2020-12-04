@@ -20,12 +20,7 @@
 				</div>
 				<div class="table-header-item boards-table-icons"></div>
 			</template>
-			<router-link
-				:to="`/dashboard/board/${board.url}`"
-				v-for="board in boards"
-				:key="board.boardId"
-				class="table-row"
-			>
+			<div v-for="board in boards" :key="board.boardId" class="table-row">
 				<div class="table-data boards-table-color">
 					<div
 						class="board-color"
@@ -38,7 +33,7 @@
 					{{ board.name }}
 				</div>
 				<div class="table-data boards-table-posts">
-					{{ board.posts }}
+					{{ board.post_count }}
 				</div>
 				<div class="table-icon-group boards-table-icons">
 					<router-link
@@ -51,7 +46,7 @@
 						<settings-icon />
 					</div> -->
 				</div>
-			</router-link>
+			</div>
 			<infinite-loading @infinite="getBoards">
 				<div class="loader-container" slot="spinner"><loader /></div>
 				<div slot="no-more"></div>
@@ -112,8 +107,8 @@ export default {
 			try {
 				const response = await getAllBoards(this.page, null, "desc");
 
-				if (response.data.boards.length) {
-					this.boards.push(...response.data.boards);
+				if (response.data.length) {
+					this.boards.push(...response.data);
 					this.page += 1;
 					$state.loaded();
 				} else {

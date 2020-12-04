@@ -127,11 +127,11 @@ export default {
 			try {
 				const response = await updatePost(this.post.postId, postData);
 
-				this.post.title.value = response.data.post.title;
-				this.post.contentMarkdown = response.data.post.contentMarkdown;
-				this.post.slugId = response.data.post.slugId;
-				this.post.userId = response.data.post.userId;
-				this.post.slug = response.data.post.slug;
+				this.post.title.value = response.data.title;
+				this.post.contentMarkdown = response.data.contentMarkdown;
+				this.post.slugId = response.data.slugId;
+				this.post.userId = response.data.userId;
+				this.post.slug = response.data.slug;
 
 				this.$router.push(`/post/${this.post.slug}`);
 			} catch (error) {

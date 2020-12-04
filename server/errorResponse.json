@@ -42,6 +42,10 @@
 		},
 		"boards": {
 			"boardNotFound": "Board not found"
+		},
+		"votes": {
+			"exists": "Vote already exists",
+			"voteNotFound": "Vote not found"
 		}
 	}
 }

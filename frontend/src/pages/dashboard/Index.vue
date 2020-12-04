@@ -23,7 +23,7 @@
 						{{ post.title }}
 					</div>
 					<div class="table-data posts-table-votes">
-						{{ post.voters.length }}
+						{{ post.voters.votesCount }}
 					</div>
 				</router-link>
 				<infinite-loading @infinite="getPosts">
@@ -48,8 +48,7 @@
 						posts
 					</div>
 				</template>
-				<router-link
-					:to="`/dashboard/board/${board.url}`"
+				<div
 					v-for="board in boards.data"
 					:key="board.boardId"
 					class="table-row"
@@ -66,9 +65,9 @@
 						{{ board.name }}
 					</div>
 					<div class="table-data boards-table-posts">
-						{{ board.posts }}
+						{{ board.post_count }}
 					</div>
-				</router-link>
+				</div>
 				<infinite-loading @infinite="getBoards">
 					<div class="loader-container" slot="spinner"><loader /></div>
 					<div slot="no-more"></div>
@@ -124,7 +123,7 @@ export default {
 			try {
 				const response = await getPosts(1, 4, "desc");
 
-				this.posts.data = response.data.posts;
+				this.posts.data = response.data;
 				$state.complete();
 			} catch (error) {
 				console.error(error);
@@ -135,7 +134,7 @@ export default {
 			try {
 				const response = await getAllBoards(1, 4, "desc");
 
-				this.boards.data = response.data.boards;
+				this.boards.data = response.data;
 				$state.complete();
 			} catch (error) {
 				console.error(error);

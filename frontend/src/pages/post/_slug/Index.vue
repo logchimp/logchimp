@@ -5,7 +5,8 @@
 				<div>
 					<Vote
 						:post-id="post.postId"
-						:voters="voters"
+						:votes-count="post.voters.votesCount"
+						:is-voted="post.voters.viewerVote"
 						@update-voters="updateVoters"
 					/>
 				</div>
@@ -150,7 +151,8 @@ export default {
 			}
 		},
 		updateVoters(voters) {
-			this.voters = voters;
+			this.post.voters.votesCount = voters.votesCount;
+			this.post.voters.viewerVote = voters.viewerVote;
 		},
 		editPost() {
 			this.$router.push(`/post/${this.post.slug}/edit`);

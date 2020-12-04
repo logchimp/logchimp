@@ -28,5 +28,17 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-	return knex("settings").delete();
+	return knex("settings")
+		.delete()
+		.then(() => {
+			logger.info({
+				message: "Drop data: settings"
+			});
+		})
+		.catch(err => {
+			logger.error({
+				code: "DATABASE_SEEDS",
+				err
+			});
+		});
 };

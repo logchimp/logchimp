@@ -9,50 +9,17 @@ exports.filter = async (req, res) => {
 	const limit = req.query.limit || 10;
 
 	try {
-		const response = await database
-			.select()
+		const boards = await database
+			.select("boards.boardId", "boards.name", "boards.color")
+			.count("posts", { as: "post_count" })
 			.from("boards")
+			.leftJoin("posts", "boards.boardId", "posts.boardId")
+			.groupBy("boards.boardId")
+			.orderBy("boards.createdAt", created)
 			.limit(limit)
-			.offset(limit * page)
-			.orderBy([
-				{
-					column: "createdAt",
-					order: created
-				}
-			]);
+			.offset(limit * page);
 
-		const boards = [];
-
-		for (let i = 0; i < response.length; i++) {
-			const boardId = response[i].boardId;
-
-			try {
-				const postCount = await database
-					.count()
-					.from("posts")
-					.where({
-						boardId
-					});
-
-				boards.push({
-					...response[i],
-					posts: postCount[0].count
-				});
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		}
-
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			boards
-		});
+		res.status(200).send(boards);
 	} catch (err) {
 		logger.log({
 			level: "error",
