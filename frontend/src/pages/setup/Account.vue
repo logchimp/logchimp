@@ -6,6 +6,16 @@
 			</div>
 			<Form class="onboarding-form account-form-container">
 				<l-text
+					v-model="siteTitle.value"
+					label="Site title"
+					type="text"
+					name="Site title"
+					placeholder="My awesome site"
+					:error="siteTitle.error"
+					@keyup-enter="createAccount"
+					@hide-error="hideSiteTitleError"
+				/>
+				<l-text
 					v-model="fullName.value"
 					label="Full name"
 					type="text"
@@ -55,7 +65,7 @@
 
 <script>
 // modules
-import { signup } from "../../modules/auth";
+import { siteSetup } from "../../modules/site";
 
 // components
 import Container from "../../components/Container";
@@ -67,6 +77,13 @@ export default {
 	name: "SetupAccount",
 	data() {
 		return {
+			siteTitle: {
+				value: "",
+				error: {
+					show: false,
+					message: ""
+				}
+			},
 			fullName: {
 				value: "",
 				error: {
@@ -103,6 +120,9 @@ export default {
 		}
 	},
 	methods: {
+		hideSiteTitleError(event) {
+			this.siteTitle.error = event;
+		},
 		hideFullNameError(event) {
 			this.fullName.error = event;
 		},
@@ -118,12 +138,23 @@ export default {
 			}
 
 			if (
-				!(this.fullName.value && this.emailAddress.value && this.password.value)
+				!(
+					this.siteTitle.value &&
+					this.fullName.value &&
+					this.emailAddress.value &&
+					this.password.value
+				)
 			) {
+				if (!this.siteTitle.value) {
+					this.siteTitle.error.show = true;
+					this.siteTitle.error.message = "Required";
+				}
+
 				if (!this.fullName.value) {
 					this.fullName.error.show = true;
 					this.fullName.error.message = "Required";
 				}
+
 				if (!this.emailAddress.value) {
 					this.emailAddress.error.show = true;
 					this.emailAddress.error.message = "Required";
@@ -132,16 +163,17 @@ export default {
 					this.password.error.show = true;
 					this.password.error.message = "Required";
 				}
+				return;
 			}
 
 			this.buttonLoading = true;
 
 			try {
-				const response = await signup(
-					this.emailAddress.value,
-					this.password.value,
+				const response = await siteSetup(
+					this.siteTitle.value,
 					this.fullName.value,
-					true
+					this.emailAddress.value,
+					this.password.value
 				);
 
 				this.$store.dispatch("user/login", {
