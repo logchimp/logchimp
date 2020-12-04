@@ -7,10 +7,22 @@ const database = require("../../database");
 // utils
 const logger = require("../../utils/logger");
 
+const error = require("../../errorResponse.json");
+
 exports.create = async (req, res) => {
+	const permissions = req.user.permissions;
+
+	const createPostPermission = permissions.find(item => item === "post:create");
+	if (!createPostPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
+
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
-	const userId = req.body.userId;
+	const userId = req.user.userId;
 	const boardId = req.body.boardId;
 
 	// generate post unique indentification
