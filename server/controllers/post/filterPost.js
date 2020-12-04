@@ -8,32 +8,43 @@ const getVotes = require("../../services/votes/getVotes");
 const logger = require("../../utils/logger");
 
 exports.filterPost = async (req, res) => {
+	const userId = req.body.userId;
+	const boardId = req.body.boardId;
 	/**
 	 * top, latest, oldest, trending
 	 */
-	const created = req.query.created;
-	const page = req.query.page - 1;
-	const limit = req.query.limit || 10;
+	const created = req.body.created;
+	const page = req.body.page - 1;
+	const limit = req.body.limit || 10;
 
 	try {
-		const response = await database
-			.select(
-				"postId",
-				"title",
-				"slug",
-				"boardId",
-				"contentMarkdown",
-				"createdAt"
-			)
-			.from("posts")
-			.limit(limit)
-			.offset(limit * page)
-			.orderBy([
-				{
-					column: "createdAt",
-					order: created
+		const { rows: response } = await database.raw(
+			`
+				SELECT
+					"postId",
+					"title",
+					"slug",
+					"boardId",
+					"contentMarkdown",
+					"createdAt"
+				FROM
+					posts
+				${
+					boardId
+						? `WHERE "boardId" IN (${boardId.map(item => {
+								return `'${item}'`;
+						  })})`
+						: ""
 				}
-			]);
+				ORDER BY "createdAt" ${created}
+				LIMIT :limit
+				OFFSET :offset;
+		`,
+			{
+				limit,
+				offset: limit * page
+			}
+		);
 
 		const posts = [];
 
@@ -43,7 +54,9 @@ exports.filterPost = async (req, res) => {
 
 			try {
 				const board = await getBoardById(boardId);
-				const voters = await getVotes(postId);
+				const voters = await getVotes(postId, userId);
+
+				delete response[i].boardId;
 
 				posts.push({
 					...response[i],
@@ -58,13 +71,7 @@ exports.filterPost = async (req, res) => {
 			}
 		}
 
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			posts
-		});
+		res.status(200).send(posts);
 	} catch (err) {
 		logger.log({
 			level: "error",

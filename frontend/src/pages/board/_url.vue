@@ -28,7 +28,7 @@
 						</tab-item>
 					</tab>
 
-					<component :is="activeTab"></component>
+					<component :is="activeTab" :board="board"></component>
 				</main>
 				<aside class="homepage-sidebar">
 					<create-post :board-id="board.boardId" />

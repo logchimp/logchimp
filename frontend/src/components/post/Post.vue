@@ -15,7 +15,7 @@
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
 			<router-link
 				:to="`${dashboardUrl}/board/${postData.board.url}`"
-				v-if="post.board"
+				v-if="showBoard && post.board"
 			>
 				<div class="post-board">
 					<div
@@ -48,6 +48,10 @@ export default {
 		dashboard: {
 			type: Boolean,
 			default: false
+		},
+		showBoard: {
+			type: Boolean,
+			default: true
 		}
 	},
 	data() {

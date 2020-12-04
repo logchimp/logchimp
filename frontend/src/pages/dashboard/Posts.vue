@@ -55,11 +55,13 @@ export default {
 	},
 	methods: {
 		async getBoardPosts($state) {
-			try {
-				const response = await getPosts(this.page, null, "desc");
+			const userId = this.$store.getters["user/getUserId"];
 
-				if (response.data.posts.length) {
-					this.posts.push(...response.data.posts);
+			try {
+				const response = await getPosts(this.page, null, "desc", userId);
+
+				if (response.data.length) {
+					this.posts.push(...response.data);
 					this.page += 1;
 					$state.loaded();
 				} else {
