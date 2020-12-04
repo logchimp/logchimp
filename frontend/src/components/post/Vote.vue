@@ -4,7 +4,7 @@
 			class="post-voters-arrow"
 			:class="{ 'post-voters-vote': isVoted }"
 		/>
-		{{ voteCount }}
+		{{ votesCount }}
 	</div>
 </template>
 
@@ -28,44 +28,30 @@ export default {
 	props: {
 		postId: {
 			type: String,
-			required: true,
-			default: ""
+			required: true
 		},
-		voters: {
-			type: Array,
-			required: true,
-			default: () => []
+		votesCount: {
+			type: Number,
+			default: 0
+		},
+		isVoted: {
+			type: Boolean,
+			default: false
 		}
 	},
 	components: {
 		ArrowIcon
 	},
 	mixins: [tokenErrorHandle],
-	computed: {
-		voteCount() {
-			return this.voters.length;
-		},
-		isVoted() {
-			const userId = this.$store.getters["user/getUserId"];
-			return this.voters.find(item => {
-				return item.userId === userId;
-			});
-		}
-	},
 	methods: {
 		async changeVote() {
 			if (this.loading) {
 				return;
 			}
 
-			const userId = this.$store.getters["user/getUserId"];
 			this.loading = true;
 
 			if (this.isVoted) {
-				const userVote = this.voters.find(item => {
-					return item.userId === userId;
-				});
-
 				try {
 					const response = await deleteVote(this.postId, userVote.voteId);
 
