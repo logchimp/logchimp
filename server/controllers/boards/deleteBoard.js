@@ -14,22 +14,21 @@ exports.deleteBoard = async (req, res) => {
 	try {
 		const board = await getBoardBySlug(slug);
 
-		if (!board) {
+		if (board) {
+			await database
+				.delete()
+				.from("boards")
+				.where({
+					url: slug
+				});
+
+			res.sendStatus(204);
+		} else {
 			res.status(404).send({
 				message: error.api.boards.boardNotFound,
 				code: "BOARD_NOT_FOUND"
 			});
-			return;
 		}
-
-		await database
-			.delete()
-			.from("boards")
-			.where({
-				url: slug
-			});
-
-		res.sendStatus(204);
 	} catch (err) {
 		logger.error(err);
 	}
