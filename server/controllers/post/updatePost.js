@@ -32,13 +32,7 @@ exports.updatePost = async (req, res) => {
 
 		const post = posts[0];
 
-		res.status(200).send({
-			status: {
-				code: 200,
-				type: "success"
-			},
-			post
-		});
+		res.status(200).send(post);
 	} catch (err) {
 		logger.log({
 			level: "error",
