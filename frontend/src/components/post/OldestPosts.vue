@@ -1,6 +1,11 @@
 <template>
 	<div>
-		<post v-for="post in posts" :post="post" :key="post.postId" />
+		<post
+			v-for="post in posts"
+			:post="post"
+			:key="post.postId"
+			:showBoard="false"
+		/>
 		<infinite-loading @infinite="getMorePosts">
 			<div class="loader-container" slot="spinner"><loader /></div>
 			<div slot="no-more"></div>
@@ -15,7 +20,7 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getBoardPosts } from "../../modules/boards";
+import { getPosts } from "../../modules/posts";
 
 // components
 import Post from "../post/Post";
@@ -37,14 +42,26 @@ export default {
 		Post,
 		Loader
 	},
+	props: {
+		board: {
+			type: Object,
+			default: () => {
+				return {};
+			}
+		}
+	},
 	methods: {
 		async getMorePosts($state) {
-			const url = this.$route.params.url;
+			const boardId = this.board.boardId;
+			const userId = this.$store.getters["user/getUserId"];
 
 			try {
-				const response = await getBoardPosts(url, this.page, "asc");
-				if (response.data.posts.length) {
-					this.posts.push(...response.data.posts);
+				const response = await getPosts(this.page, 10, "asc", userId, [
+					boardId
+				]);
+
+				if (response.data.length) {
+					this.posts.push(...response.data);
 					this.page += 1;
 					$state.loaded();
 				} else {
