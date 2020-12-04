@@ -34,7 +34,7 @@ export default {
 		async isSetup() {
 			try {
 				const response = await isSiteSetup();
-				this.showSiteSetupCard = !response.data.isSetup;
+				this.showSiteSetupCard = !response.data.is_setup;
 			} catch (error) {
 				console.error(error);
 			}
