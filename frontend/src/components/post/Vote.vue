@@ -67,7 +67,7 @@ export default {
 				});
 
 				try {
-					const response = await deleteVote(this.postId, userVote.voteId);
+					const response = await deleteVote(this.postId);
 
 					this.$emit("update-voters", response.data.voters);
 				} catch (error) {

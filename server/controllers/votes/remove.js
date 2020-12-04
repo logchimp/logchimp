@@ -1,39 +1,64 @@
 // database
 const database = require("../../database");
 
+// services
+const getVotes = require("../../services/votes/getVotes");
+
 // utils
 const logger = require("../../utils/logger");
 
+const error = require("../../errorResponse.json");
+
 exports.remove = async (req, res) => {
-	const voteId = req.body.voteId;
+	const userId = req.body.userId;
 	const postId = req.body.postId;
 
 	try {
-		const response = await database
-			.del()
-			.from("votes")
-			.where({ voteId });
+		const { rows } = await database.raw(
+			`
+				SELECT EXISTS (
+					SELECT
+						*
+					FROM
+						votes
+					WHERE
+							"postId" = :postId
+						AND
+							"userId" = :userId
+				);
+			`,
+			{
+				postId,
+				userId
+			}
+		);
 
-		if (response) {
+		const voteExists = rows[0].exists;
+
+		if (voteExists) {
 			try {
-				const voters = await database
-					.select()
+				await database
+					.delete()
 					.from("votes")
-					.where({ postId });
+					.where({
+						postId,
+						userId
+					});
 
-				res.status(200).send({
-					status: {
-						code: 200,
-						type: "success"
-					},
-					voters
-				});
+				const voters = await getVotes(postId, userId);
+
+				res.status(201).send(voters);
 			} catch (err) {
 				logger.log({
 					level: "error",
 					message: err
 				});
 			}
+		} else {
+			res.status(409).send({
+				message: error.api.votes.voteNotFound,
+				code: "VOTE_NOT_FOUND"
+			});
 		}
 	} catch (err) {
 		logger.log({
