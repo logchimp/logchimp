@@ -18,7 +18,7 @@
 						{{ board.name }}
 					</div>
 					<div class="boards-item-posts">
-						{{ board.posts }}
+						{{ board.post_count }}
 					</div>
 				</div>
 			</router-link>
@@ -67,8 +67,8 @@ export default {
 			try {
 				const response = await getAllBoards(this.page, null, "desc");
 
-				if (response.data.boards.length) {
-					this.boards.push(...response.data.boards);
+				if (response.data.length) {
+					this.boards.push(...response.data);
 					this.page += 1;
 					$state.loaded();
 				} else {
