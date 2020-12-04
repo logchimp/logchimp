@@ -1,5 +1,4 @@
-// services
-const getUser = require("../../services/auth/getUser");
+const database = require("../../database");
 
 // utils
 const { validatePassword } = require("../../utils/password");
@@ -15,30 +14,34 @@ exports.login = async (req, res) => {
 	const password = req.body.password;
 
 	try {
-		const getAuthUser = await getUser(emailAddress);
+		const users = await database
+			.select("userId", "emailAddress", "password", "avatar")
+			.from("users")
+			.where({
+				emailAddress
+			})
+			.limit(1);
 
-		if (getAuthUser) {
+		const user = users[0];
+
+		if (user) {
 			const validateUserPassword = await validatePassword(
 				password,
-				getAuthUser.password
+				user.password
 			);
 
 			if (validateUserPassword) {
-				delete getAuthUser.password;
+				delete user.password;
 
 				// generate authToken
 				const secretKey = config.server.secretKey;
-				const authToken = createToken(getAuthUser, secretKey, {
+				const authToken = createToken(user, secretKey, {
 					expiresIn: "2d"
 				});
 
 				res.status(200).send({
-					status: {
-						code: 200,
-						type: "success"
-					},
 					user: {
-						...getAuthUser,
+						...user,
 						authToken
 					}
 				});
