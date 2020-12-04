@@ -16,7 +16,8 @@
 	"api": {
 		"authentication": {
 			"noEmailProvided": "No email provided",
-			"noPasswordProvided": "No password provided"
+			"noPasswordProvided": "No password provided",
+			"setupAlreadyCompleted": "Setup has already been completed."
 		},
 		"user": {
 			"userNotFound": "User not found"
