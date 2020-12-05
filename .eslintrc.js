@@ -12,11 +12,7 @@ module.exports = {
 		"plugin:prettier/recommended",
 	],
 	rules: {
-		"prettier/prettier": 1,
-		camelcase: 1,
-		"no-console": 1,
-		"vue/camelcase": "error"
-	}
+		"vue/html-indent": [1, "tab"],
 	},
 	overrides: [
 		{
