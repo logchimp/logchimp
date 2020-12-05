@@ -9,11 +9,11 @@ const authorize = (req, res, next) => {
 		if (hasRoles) {
 			const roles = req.user.roles[0];
 
-			// user is blocked
-			if (roles.name === "block") {
+			// user is ban
+			if (roles.name === "ban") {
 				return res.status(403).send({
 					message: error.middleware.user.userBlocked,
-					code: "USER_BLOCKED"
+					code: "USER_BAN"
 				});
 			}
 
