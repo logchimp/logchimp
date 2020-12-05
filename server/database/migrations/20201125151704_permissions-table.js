@@ -13,7 +13,7 @@ exports.up = knex => {
 			table.string("type", 20).notNullable();
 			table.string("action", 10).notNullable();
 			table
-				.timestamp("created_at", { useTz: true })
+				.timestamp("created_at")
 				.notNullable()
 				.defaultTo(knex.fn.now());
 		})
