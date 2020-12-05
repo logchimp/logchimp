@@ -9,8 +9,7 @@ const getUsers = async (created, limit, page) => {
 		const users = await database
 			.select(
 				"userId",
-				"firstname",
-				"lastname",
+				"name",
 				"username",
 				"avatar",
 				"isVerified",

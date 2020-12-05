@@ -8,14 +8,12 @@ const error = require("../../errorResponse.json");
 
 exports.updateUser = async (req, res) => {
 	const userId = req.body.userId;
-	const firstname = req.body.firstname;
-	const lastname = req.body.lastname;
+	const name = req.body.name;
 
 	try {
 		const users = await database
 			.update({
-				firstname,
-				lastname,
+				name,
 				updatedAt: new Date().toJSON()
 			})
 			.from("users")

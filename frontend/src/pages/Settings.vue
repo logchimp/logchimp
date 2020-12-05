@@ -22,26 +22,15 @@
 					Resend
 				</Button>
 			</div>
-			<div class="user-settings-name">
-				<l-text
-					v-model="user.firstname.value"
-					label="First name"
-					type="text"
-					name="First name"
-					placeholder="First name"
-					class="user-settings-name-item"
-					@keyup-enter="updateSettings"
-				/>
-				<l-text
-					v-model="user.lastname.value"
-					label="Last name"
-					type="text"
-					name="Last name"
-					placeholder="Last name"
-					class="user-settings-name-item"
-					@keyup-enter="updateSettings"
-				/>
-			</div>
+			<l-text
+				v-model="user.name.value"
+				label="Name"
+				type="text"
+				name="Name"
+				placeholder="Full name"
+				class="user-settings-name-item"
+				@keyup-enter="updateSettings"
+			/>
 			<l-text
 				v-model="user.username.value"
 				label="Username"
@@ -97,10 +86,7 @@ export default {
 		return {
 			user: {
 				loading: false,
-				firstname: {
-					value: ""
-				},
-				lastname: {
+				name: {
 					value: ""
 				},
 				username: {
@@ -141,8 +127,7 @@ export default {
 			try {
 				const response = await getUserSettings();
 
-				this.user.firstname.value = response.data.user.firstname;
-				this.user.lastname.value = response.data.user.lastname;
+				this.user.name.value = response.data.user.name;
 				this.user.username.value = response.data.user.username;
 				this.user.emailAddress.value = response.data.user.emailAddress;
 				this.user.isVerified = response.data.user.isVerified;
@@ -159,19 +144,12 @@ export default {
 			this.updateUserButtonLoading = true;
 
 			const userData = {
-				firstname: this.user.firstname.value,
-				lastname: this.user.lastname.value
+				name: this.user.name.value
 			};
 
 			try {
 				const response = await updateUserSettings(userData);
-				this.user.firstname.value = response.data.user.firstname;
-				this.user.lastname.value = response.data.user.lastname;
-
-				this.$store.dispatch("user/updateUserSettings", {
-					firstname: response.data.user.firstname,
-					lastname: response.data.user.lastname
-				});
+				this.user.name.value = response.data.user.name;
 			} catch (error) {
 				this.userNotFound(error);
 			} finally {

@@ -31,8 +31,7 @@ export const updateUserSettings = async user => {
 		url: "/api/v1/user",
 		data: {
 			userId,
-			firstname: user.firstname,
-			lastname: user.lastname
+			...user
 		}
 	});
 };
