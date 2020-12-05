@@ -11,6 +11,10 @@ const error = require("../../errorResponse.json");
 
 exports.create = async (req, res) => {
 	const permissions = req.user.permissions;
+	const title = req.body.title;
+	const contentMarkdown = req.body.contentMarkdown;
+	const boardId = req.body.boardId;
+	const userId = req.user.userId;
 
 	const createPostPermission = permissions.find(item => item === "post:create");
 	if (!createPostPermission) {
@@ -20,10 +24,24 @@ exports.create = async (req, res) => {
 		});
 	}
 
-	const title = req.body.title;
-	const contentMarkdown = req.body.contentMarkdown;
-	const userId = req.user.userId;
-	const boardId = req.body.boardId;
+	if (!title || !boardId) {
+		return res.status(400).send({
+			errors: [
+				!title
+					? {
+							message: error.api.posts.titleMissing,
+							code: "POST_TITLE_MISSING"
+					  }
+					: "",
+				!boardId
+					? {
+							message: error.api.boards.boardIdMissing,
+							code: "BOARD_ID_MISSING"
+					  }
+					: ""
+			]
+		});
+	}
 
 	// generate post unique indentification
 	const postId = uuidv4(title);

@@ -38,10 +38,12 @@
 
     },
 		"posts": {
+			"titleMissing": "Post title missing",
 			"postNotFound": "Post not found.",
 			"notEnoughPermission": "You do not have permission to perform this action."
 		},
 		"boards": {
+			"boardIdMissing": "Board ID missing",
 			"boardNotFound": "Board not found"
 		},
 		"votes": {
