@@ -62,6 +62,12 @@
 		"omgopass": "^3.2.1",
 		"vue-template-compiler": "^2.6.12"
 	},
+	"keywords": [
+		"logchimp",
+		"feedback",
+		"open-source",
+		"codecarrot"
+	],
 	"engines": {
 		"node": ">=12.18.4",
 		"yarn": ">=1.22.10"
