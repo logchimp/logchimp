@@ -3,14 +3,11 @@ module.exports = {
 	env: {
 		browser: true,
 		node: true,
-		"jest/globals": true
 	},
 	extends: [
 		"eslint:recommended",
 		"plugin:vue/essential",
 		"plugin:prettier/recommended",
-		"plugin:jest/recommended",
-		"plugin:jest/style"
 	],
 	rules: {
 		"prettier/prettier": 1,
@@ -18,4 +15,14 @@ module.exports = {
 		"no-console": 1,
 		"vue/camelcase": "error"
 	}
+	},
+	overrides: [
+		{
+			files: ["**/*.test.js"],
+			env: {
+				jest: true,
+			},
+			plugins: ["jest"],
+		},
+	],
 };
