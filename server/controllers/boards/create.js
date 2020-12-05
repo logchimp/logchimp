@@ -26,9 +26,7 @@ exports.create = async (req, res) => {
 				boardId,
 				name,
 				url,
-				color: createHex(),
-				createdAt: new Date().toJSON(),
-				updatedAt: new Date().toJSON()
+				color: createHex()
 			})
 			.into("boards")
 			.returning("*");

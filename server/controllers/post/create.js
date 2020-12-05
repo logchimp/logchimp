@@ -62,9 +62,7 @@ exports.create = async (req, res) => {
 				slugId,
 				contentMarkdown,
 				userId,
-				boardId,
-				createdAt: new Date().toJSON(),
-				updatedAt: new Date().toJSON()
+				boardId
 			})
 			.into("posts")
 			.returning("*");
@@ -75,8 +73,7 @@ exports.create = async (req, res) => {
 			.insert({
 				voteId: uuidv4(),
 				userId,
-				postId: post.postId,
-				createdAt: new Date().toJSON()
+				postId: post.postId
 			})
 			.into("votes");
 
