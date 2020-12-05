@@ -32,37 +32,36 @@ const authenticateWithToken = async (req, res, next, token) => {
 		const { rows: users } = await database.raw(
 			`
 				SELECT
-					users."userId",
-					users.name,
-					users.username,
-					users."emailAddress",
+					u."userId",
+					u.name,
+					u.username,
+					u."emailAddress",
 					(
 						SELECT
 							json_agg(roles)
 						FROM
 							roles
 						WHERE
-							roles."roleId" = roles_users.role_id
+							roles.id = ru.role_id
 					) AS "roles",
 					(
 						SELECT
 							ARRAY_AGG(CONCAT("type", ':', "action"))
 						FROM
 							permissions
-						LEFT JOIN
-							permissions_roles AS perm_role2 ON permissions."permissionId" = perm_role2.permissions_id
+						LEFT JOIN permissions_roles AS pr ON permissions.id = pr.permission_id
 						WHERE
-							perm_role2.role_id = roles_users.role_id
+							pr.role_id = ru.role_id
 					) AS permissions
 					FROM
-						users
-					LEFT JOIN roles_users ON users."userId" = roles_users.user_id
-					LEFT JOIN permissions_roles AS perm_role1 ON roles_users.role_id = perm_role1.role_id
+						users AS u
+					LEFT JOIN roles_users AS ru ON u."userId" = ru.user_id
+					LEFT JOIN permissions_roles AS pr ON ru.role_id = pr.role_id
 				WHERE
 					"userId" = :userId
 				GROUP BY
-					users. "userId",
-					roles_users.role_id;
+					u."userId",
+					ru.role_id;
 			`,
 			{
 				userId
