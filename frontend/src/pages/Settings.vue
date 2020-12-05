@@ -22,26 +22,15 @@
 					Resend
 				</Button>
 			</div>
-			<div class="user-settings-name">
-				<l-text
-					v-model="user.firstname.value"
-					label="First name"
-					type="text"
-					name="First name"
-					placeholder="First name"
-					class="user-settings-name-item"
-					@keyup-enter="updateSettings"
-				/>
-				<l-text
-					v-model="user.lastname.value"
-					label="Last name"
-					type="text"
-					name="Last name"
-					placeholder="Last name"
-					class="user-settings-name-item"
-					@keyup-enter="updateSettings"
-				/>
-			</div>
+			<l-text
+				v-model="user.name.value"
+				label="Name"
+				type="text"
+				name="Name"
+				placeholder="Full name"
+				class="user-settings-name-item"
+				@keyup-enter="updateSettings"
+			/>
 			<l-text
 				v-model="user.username.value"
 				label="Username"
