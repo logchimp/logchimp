@@ -18,8 +18,8 @@
 						<div class="viewpost__meta-author">
 							<avatar
 								class="viewpost__author-avatar"
-								:src="userAvatar"
-								:name="fullname"
+								:src="post.author.avatar"
+								:name="post.author.name"
 							/>
 							{{ postAuthorName }}
 						</div>
@@ -71,9 +71,6 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 import DropdownItem from "../../../components/dropdown/DropdownItem";
 import Avatar from "../../../components/Avatar";
 
-// mixins
-import userAvatar from "../../../mixins/userAvatar";
-
 // icons
 import MoreIcon from "../../../components/icons/More";
 import EditIcon from "../../../components/icons/Edit";
@@ -100,15 +97,11 @@ export default {
 		MoreIcon,
 		EditIcon
 	},
-	mixins: [userAvatar],
 	computed: {
 		postAuthorName() {
-			if (this.post.firstname) {
-				return `${this.post.firstname}${
-					this.post.lastname ? ` ${this.post.lastname}` : ""
-				}`;
-			}
-			return this.post.username;
+			return this.post.author.name
+				? this.post.author.name
+				: this.post.author.username;
 		},
 		postAuthor() {
 			const userId = this.$store.getters["user/getUserId"];

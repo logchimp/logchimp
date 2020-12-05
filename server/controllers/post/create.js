@@ -76,7 +76,7 @@ exports.create = async (req, res) => {
 				if (vote) {
 					try {
 						const findUser = await database
-							.select("firstname", "lastname", "username", "avatar")
+							.select("name", "username", "avatar")
 							.from("users")
 							.where({
 								userId

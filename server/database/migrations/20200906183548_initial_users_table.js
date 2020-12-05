@@ -9,8 +9,7 @@ exports.up = function(knex) {
 				.notNullable()
 				.unique()
 				.primary();
-			table.string("firstname", 30);
-			table.string("lastname", 30);
+			table.string("name", 30);
 			table
 				.string("emailAddress", 320)
 				.notNullable()
