@@ -10,7 +10,7 @@
 		},
 		"user": {
 			"userNotFound": "User not found",
-			"userBlocked": "User is blocked",
+			"userBan": "User is ban",
 			"userSpam": "User is marked as Spam",
 			"incorrectPassword": "Incorect password",
 			"userExists": "User exists"
