@@ -97,10 +97,7 @@ export default {
 		return {
 			user: {
 				loading: false,
-				firstname: {
-					value: ""
-				},
-				lastname: {
+				name: {
 					value: ""
 				},
 				username: {
@@ -141,8 +138,7 @@ export default {
 			try {
 				const response = await getUserSettings();
 
-				this.user.firstname.value = response.data.user.firstname;
-				this.user.lastname.value = response.data.user.lastname;
+				this.user.name.value = response.data.user.name;
 				this.user.username.value = response.data.user.username;
 				this.user.emailAddress.value = response.data.user.emailAddress;
 				this.user.isVerified = response.data.user.isVerified;
@@ -159,19 +155,12 @@ export default {
 			this.updateUserButtonLoading = true;
 
 			const userData = {
-				firstname: this.user.firstname.value,
-				lastname: this.user.lastname.value
+				name: this.user.name.value
 			};
 
 			try {
 				const response = await updateUserSettings(userData);
-				this.user.firstname.value = response.data.user.firstname;
-				this.user.lastname.value = response.data.user.lastname;
-
-				this.$store.dispatch("user/updateUserSettings", {
-					firstname: response.data.user.firstname,
-					lastname: response.data.user.lastname
-				});
+				this.user.name.value = response.data.user.name;
 			} catch (error) {
 				this.userNotFound(error);
 			} finally {

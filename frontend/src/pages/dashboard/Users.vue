@@ -21,11 +21,11 @@
 					<div class="users-table-user-avatar">
 						<avatar
 							:src="user.avatar"
-							:name="user.firstname ? user.firstname : user.username"
+							:name="user.name ? user.name : user.username"
 						/>
 					</div>
 					<h6 class="users-table-user-name">
-						{{ user.firstname ? user.firstname : user.username }}
+						{{ user.name ? user.name : user.username }}
 					</h6>
 				</div>
 				<div class="table-data users-table-posts">{{ user.posts }}</div>
@@ -71,14 +71,6 @@ export default {
 		Loader
 	},
 	computed: {
-		username() {
-			if (this.post.firstname) {
-				return `${this.post.firstname}${
-					this.post.lastname ? ` ${this.post.lastname}` : ""
-				}`;
-			}
-			return this.post.username;
-		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}

@@ -33,7 +33,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 			`
 				SELECT
 					users."userId",
-					TRIM(CONCAT(users.firstname, ' ', users.lastname)) AS name,
+					users.name,
 					users.username,
 					users."emailAddress",
 					(
