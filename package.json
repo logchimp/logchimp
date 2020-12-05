@@ -2,6 +2,13 @@
 	"name": "logchimp",
 	"version": "0.4.0",
 	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/logchimp/logchimp.git"
+	},
+	"bugs": {
+		"url": "https://github.com/logchimp/logchimp/issues"
+	},
 	"scripts": {
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
