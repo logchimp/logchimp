@@ -8,6 +8,11 @@ exports.up = knex => {
 		.insert([
 			{
 				id: uuidv4(),
+				name: "spam",
+				description: "Spam"
+			},
+			{
+				id: uuidv4(),
 				name: "ban",
 				description: "Ban"
 			},
