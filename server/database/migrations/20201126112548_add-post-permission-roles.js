@@ -19,7 +19,7 @@ exports.up = knex => {
 				type: "post",
 				action: "read"
 			},
-			["user", "moderator", "manager", "administrator", "owner"]
+			["ban", "user", "moderator", "manager", "administrator", "owner"]
 		),
 		addPermissionWithRoles(
 			knex,
