@@ -6,54 +6,40 @@ const getVotes = require("../../services/votes/getVotes");
 // utils
 const logger = require("../../utils/logger");
 
-const error = require("../../errorResponse.json");
-
 exports.postBySlug = async (req, res) => {
 	const userId = req.body.userId;
 	const post = req.post;
 
 	try {
-		const posts = await database
-			.select()
-			.from("posts")
+		const author = await database
+			.select("userId", "name", "username", "avatar")
+			.from("users")
 			.where({
-				slug
-			});
+				userId: post.userId
+			})
+			.first();
 
-		const post = posts[0];
+		const voters = await getVotes(post.postId, userId);
 
-		if (post) {
-			try {
-				const authors = await database
-					.select("userId", "name", "username", "avatar")
-					.from("users")
-					.where({
-						userId: post.userId
-					});
+		const board = await database
+			.select("boardId", "name", "url", "color")
+			.from("boards")
+			.where({
+				boardId: post.boardId
+			})
+			.first();
 
-				const author = authors[0];
+		delete post.boardId;
+		delete post.userId;
 
-				const voters = await getVotes(post.postId, post.userId);
-
-				res.status(200).send({
-					post: {
-						author,
-						...post,
-						voters
-					}
-				});
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
+		res.status(200).send({
+			post: {
+				board,
+				author,
+				...post,
+				voters
 			}
-		} else {
-			res.status(404).send({
-				message: error.api.posts.postNotFound,
-				code: "POST_NOT_FOUND"
-			});
-		}
+		});
 	} catch (err) {
 		logger.log({
 			level: "error",
