@@ -34,7 +34,7 @@
 
 <script>
 // modules
-import { verifyUserEmailAddress } from "../modules/auth";
+import { verifyUserEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader";
@@ -78,7 +78,7 @@ export default {
 			this.loading = true;
 
 			try {
-				await verifyUserEmailAddress(token);
+				await verifyUserEmail(token);
 
 				this.success = true;
 			} catch (error) {

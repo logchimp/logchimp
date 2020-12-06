@@ -11,7 +11,7 @@ exports.up = function(knex) {
 				.primary();
 			table.string("name", 30);
 			table
-				.string("emailAddress", 320)
+				.string("email", 320)
 				.notNullable()
 				.unique();
 			table.string("password", 72).notNullable();

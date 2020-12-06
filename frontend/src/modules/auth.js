@@ -4,15 +4,15 @@ import axios from "axios";
 /**
  * Sign in to user account
  *
- * @param {emailAddress} string user email address
- * @param {password} string user password
+ * @param {string} email - user email address
+ * @param {string} password - user password
  */
-export const signin = async (emailAddress, password) => {
+export const signin = async (email, password) => {
 	return await axios({
 		method: "post",
 		url: "/api/v1/auth/login",
 		data: {
-			emailAddress,
+			email,
 			password
 		}
 	});
@@ -21,15 +21,15 @@ export const signin = async (emailAddress, password) => {
 /**
  * Create user account
  *
- * @param {emailAddress} string user email address
- * @param {password} string user password
+ * @param {string} email - user email address
+ * @param {string} password - user password
  */
-export const signup = async (emailAddress, password) => {
+export const signup = async (email, password) => {
 	return await axios({
 		method: "post",
 		url: "/api/v1/auth/signup",
 		data: {
-			emailAddress,
+			email,
 			password
 		}
 	});
@@ -38,14 +38,14 @@ export const signup = async (emailAddress, password) => {
 /**
  * Resend user verification
  *
- * @param {string} emailAddress email address
+ * @param {string} email - email address
  */
-export const resendUserVerificationEmail = async emailAddress => {
+export const resendUserVerificationEmail = async email => {
 	return await axios({
 		method: "post",
 		url: "/api/v1/auth/email/verify",
 		data: {
-			emailAddress
+			email
 		}
 	});
 };
@@ -53,9 +53,9 @@ export const resendUserVerificationEmail = async emailAddress => {
 /**
  * Validate user email address
  *
- * @param {string} token email address verification token
+ * @param {string} token - email address verification token
  */
-export const verifyUserEmailAddress = async token => {
+export const verifyUserEmail = async token => {
 	return await axios({
 		method: "post",
 		url: "/api/v1/auth/email/validate",
@@ -68,14 +68,14 @@ export const verifyUserEmailAddress = async token => {
 /**
  * Request for password reset
  *
- * @param {emailAddress} string user email address
+ * @param {string} email - user email address
  */
-export const requestPasswordReset = async emailAddress => {
+export const requestPasswordReset = async email => {
 	return await axios({
 		method: "post",
 		url: "/api/v1/auth/password/reset",
 		data: {
-			emailAddress
+			email
 		}
 	});
 };

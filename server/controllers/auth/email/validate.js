@@ -52,10 +52,10 @@ exports.validate = async (req, res) => {
 			return;
 		}
 
-		const emailAddress = tokenFromDatabase.emailAddress;
+		const email = tokenFromDatabase.email;
 
 		try {
-			const authUser = await getUser(emailAddress);
+			const authUser = await getUser(email);
 
 			// user not found
 			if (!authUser) {
@@ -90,7 +90,7 @@ exports.validate = async (req, res) => {
 				})
 				.from("users")
 				.where({
-					emailAddress: decodedToken.emailAddress
+					email: decodedToken.email
 				})
 				.returning("*");
 

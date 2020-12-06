@@ -35,7 +35,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 					u."userId",
 					u.name,
 					u.username,
-					u."emailAddress",
+					u.email,
 					(
 						SELECT
 							json_agg(roles)

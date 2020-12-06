@@ -8,9 +8,9 @@ const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
 
 exports.reset = async (req, res) => {
-	const emailAddress = req.body.emailAddress;
+	const email = req.body.email;
 
-	if (!emailAddress) {
+	if (!email) {
 		res.status(422).send({
 			message: error.api.authentication.noEmailProvided,
 			code: "EMAIL_ADDRESS_NOT_PROVIDED"
@@ -18,7 +18,7 @@ exports.reset = async (req, res) => {
 	}
 
 	try {
-		const getAuthUser = await getUser(emailAddress);
+		const getAuthUser = await getUser(email);
 
 		if (!getAuthUser) {
 			res.status(404).send({
@@ -37,7 +37,7 @@ exports.reset = async (req, res) => {
 
 		const tokenData = {
 			userId: getAuthUser.userId,
-			emailAddress: getAuthUser.emailAddress
+			email: getAuthUser.email
 		};
 
 		const domain = req.headers.origin;

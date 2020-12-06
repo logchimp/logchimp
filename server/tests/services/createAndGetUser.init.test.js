@@ -29,11 +29,11 @@ describe("Create and get user account", () => {
 
 	describe("user1@email.com", () => {
 		const username = "user1";
-		const emailAddress = `${username}@email.com`;
+		const email = `${username}@email.com`;
 
-		test(`Create '${emailAddress}' user`, async () => {
+		test(`Create '${email}' user`, async () => {
 			const user = await createUser({
-				emailAddress,
+				email,
 				password,
 				firstname: "",
 				lastname: "",
@@ -42,7 +42,7 @@ describe("Create and get user account", () => {
 
 			expect(user.firstname).toBe("");
 			expect(user.lastname).toBe("");
-			expect(user.emailAddress).toBe(emailAddress);
+			expect(user.email).toBe(email);
 			expect(user.password).not.toBeNull();
 			expect(user.username).toBe(username);
 			expect(user.isOwner).toBeFalsy();
@@ -50,12 +50,12 @@ describe("Create and get user account", () => {
 			expect(user.isBlocked).toBeFalsy();
 		});
 
-		test(`Get '${emailAddress}' user`, async () => {
-			const user = await getUser(emailAddress);
+		test(`Get '${email}' user`, async () => {
+			const user = await getUser(email);
 
 			expect(user.firstname).toBe("");
 			expect(user.lastname).toBe("");
-			expect(user.emailAddress).toBe(emailAddress);
+			expect(user.email).toBe(email);
 			expect(user.password).not.toBeNull();
 			expect(user.username).toBe(username);
 			expect(user.isOwner).toBeFalsy();
@@ -66,13 +66,13 @@ describe("Create and get user account", () => {
 
 	describe("user2@email.com", () => {
 		const username = "user2";
-		const emailAddress = `${username}@email.com`;
+		const email = `${username}@email.com`;
 		const firstname = "Second";
 		const lastname = "User";
 
-		test(`Create '${emailAddress}' user`, async () => {
+		test(`Create '${email}' user`, async () => {
 			const user = await createUser({
-				emailAddress,
+				email,
 				password,
 				firstname,
 				lastname,
@@ -82,7 +82,7 @@ describe("Create and get user account", () => {
 
 			expect(user.firstname).toBe(firstname);
 			expect(user.lastname).toBe(lastname);
-			expect(user.emailAddress).toBe(emailAddress);
+			expect(user.email).toBe(email);
 			expect(user.password).not.toBeNull();
 			expect(user.username).toBe(username);
 			expect(user.isOwner).toBeTruthy();
@@ -90,12 +90,12 @@ describe("Create and get user account", () => {
 			expect(user.isBlocked).toBeFalsy();
 		});
 
-		test(`Get '${emailAddress}' user`, async () => {
-			const user = await getUser(emailAddress);
+		test(`Get '${email}' user`, async () => {
+			const user = await getUser(email);
 
 			expect(user.firstname).toBe(firstname);
 			expect(user.lastname).toBe(lastname);
-			expect(user.emailAddress).toBe(emailAddress);
+			expect(user.email).toBe(email);
 			expect(user.password).not.toBeNull();
 			expect(user.username).toBe(username);
 			expect(user.isOwner).toBeTruthy();

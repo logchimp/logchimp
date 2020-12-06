@@ -42,9 +42,9 @@ const validatePasswordResetToken = async (req, res, token) => {
 			return;
 		}
 
-		const emailAddress = tokenFromDatabase.emailAddress;
+		const email = tokenFromDatabase.email;
 
-		const authUser = await getUser(emailAddress);
+		const authUser = await getUser(email);
 
 		// user not found
 		if (!authUser) {

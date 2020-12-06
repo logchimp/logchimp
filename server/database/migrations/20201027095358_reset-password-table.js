@@ -5,11 +5,11 @@ exports.up = knex => {
 	return knex.schema
 		.createTable("resetPassword", table => {
 			table
-				.string("emailAddress", 320)
+				.string("email", 320)
 				.notNullable()
 				.unique()
 				.primary()
-				.references("emailAddress")
+				.references("email")
 				.inTable("users")
 				.onDelete("cascade");
 			table

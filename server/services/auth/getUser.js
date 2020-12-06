@@ -4,13 +4,13 @@ const database = require("../../database");
 // utils
 const logger = require("../../utils/logger");
 
-const getUser = async emailAddress => {
+const getUser = async email => {
 	try {
 		const users = await database
 			.select()
 			.from("users")
 			.where({
-				emailAddress
+				email
 			})
 			.limit(1);
 

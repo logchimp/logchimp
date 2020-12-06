@@ -11,10 +11,10 @@ const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
 
 exports.verify = async (req, res) => {
-	const emailAddress = req.body.emailAddress;
+	const email = req.body.email;
 
 	try {
-		const authUser = await getUser(emailAddress);
+		const authUser = await getUser(email);
 
 		// user not found
 		if (!authUser) {
@@ -37,7 +37,7 @@ exports.verify = async (req, res) => {
 			.select("isVerified")
 			.from("users")
 			.where({
-				emailAddress
+				email
 			})
 			.limit(1);
 
@@ -49,7 +49,7 @@ exports.verify = async (req, res) => {
 			const emailVerification = await verifyEmail(
 				domain,
 				siteUrl,
-				emailAddress
+				email
 			);
 
 			res.status(200).send({
