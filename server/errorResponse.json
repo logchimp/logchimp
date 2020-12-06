@@ -40,7 +40,8 @@
 		"posts": {
 			"titleMissing": "Post title missing",
 			"postNotFound": "Post not found",
-			"notEnoughPermission": "You do not have permission to perform this action."
+			"notEnoughPermission": "You do not have permission to perform this action.",
+			"notAnAuthor": "You are not the author of the post"
 		},
 		"boards": {
 			"boardIdMissing": "Board ID missing",
