@@ -20,7 +20,10 @@ exports.up = function(knex) {
 				.inTable("posts")
 				.onDelete("cascade")
 				.notNullable();
-			table.timestamp("createdAt", { useTz: true }).notNullable();
+			table
+				.timestamp("createdAt")
+				.defaultTo(knex.fn.now())
+				.notNullable();
 			table.comment("Storing post votes data");
 		})
 		.then(() => {

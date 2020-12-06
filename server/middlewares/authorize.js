@@ -12,7 +12,7 @@ const authorize = (req, res, next) => {
 			// user is ban
 			if (roles.name === "ban") {
 				return res.status(403).send({
-					message: error.middleware.user.userBlocked,
+					message: error.middleware.user.userBan,
 					code: "USER_BAN"
 				});
 			}

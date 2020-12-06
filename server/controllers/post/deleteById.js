@@ -1,35 +1,34 @@
 const database = require("../../database");
 
-exports.deleteById = (req, res, next) => {
-	const postId = req.query.postId;
+// utils
+const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
-	database
-		.del()
-		.from("post")
-		.where({
-			post_id: postId
-		})
-		.then(post => {
-			// todo: improve the response output
-			res.status(200).send({
-				status: {
-					code: 200,
-					type: "success"
-				}
-			});
-		})
-		.catch(error => {
-			console.error(error);
+exports.deleteById = async (req, res) => {
+	const permissions = req.user.permissions;
 
-			res.status(500).send({
-				status: {
-					code: 500,
-					type: "error"
-				},
-				error: {
-					code: "post_not_deleted",
-					message: "Unable to delete post."
-				}
-			});
+	const id = req.body.id;
+
+	const checkPermission = permissions.find(item => item === "post:destroy");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
 		});
+	}
+
+	try {
+		await database
+			.delete()
+			.from("posts")
+			.where({
+				postId: id
+			});
+
+		res.sendStatus(204);
+	} catch (err) {
+		logger.error({
+			message: err
+		});
+	}
 };

@@ -24,8 +24,14 @@ exports.up = function(knex) {
 			table.boolean("isOwner").defaultTo(false);
 			table.boolean("isModerator").defaultTo(false);
 			table.boolean("isBlocked").defaultTo(false);
-			table.timestamp("createdAt", { useTz: true }).notNullable();
-			table.timestamp("updatedAt", { useTz: true }).notNullable();
+			table
+				.timestamp("createdAt")
+				.defaultTo(knex.fn.now())
+				.notNullable();
+			table
+				.timestamp("updatedAt")
+				.defaultTo(knex.fn.now())
+				.notNullable();
 			table.comment("Storing users data");
 		})
 		.then(() => {

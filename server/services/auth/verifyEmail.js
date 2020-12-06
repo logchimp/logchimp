@@ -27,8 +27,7 @@ const verifyEmail = async (domain, siteUrl, emailAddress) => {
 		const userEmailVerificationToken = await database
 			.insert({
 				emailAddress,
-				token,
-				createdAt: new Date().toJSON()
+				token
 			})
 			.into("emailVerification")
 			.returning("*");

@@ -3,21 +3,15 @@ const database = require("../../database");
 // utils
 const logger = require("../../utils/logger");
 
-const getVotes = async (postId, userId) => {
+const getVotes = async (postId, userId = null) => {
 	try {
-		const { rows: votesCount } = await database.raw(
-			`
-				SELECT
-					COUNT("voteId")::INTEGER
-				FROM
-					votes
-				WHERE
-					"postId" = :postId;
-			`,
-			{
+		const votesCount = await database
+			.count("voteId")
+			.from("votes")
+			.where({
 				postId
-			}
-		);
+			})
+			.first();
 
 		const votes = await database
 			.select()
@@ -27,13 +21,22 @@ const getVotes = async (postId, userId) => {
 			})
 			.limit(10);
 
-		const viewerVote = votes.find(item => {
+		const viewerVote = await database
+			.select()
+			.from("votes")
+			.where({
+				postId,
+				userId
+			})
+			.first();
+
+		votes.find(item => {
 			return item.userId === userId;
 		});
 
 		return {
 			votes,
-			votesCount: votesCount[0].count,
+			votesCount: parseInt(votesCount.count),
 			viewerVote: !!viewerVote
 		};
 	} catch (err) {

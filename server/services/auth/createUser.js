@@ -77,9 +77,7 @@ const createUser = async (req, res, next, userData) => {
 				username,
 				emailAddress: userData.email,
 				password: hashedPassword,
-				avatar,
-				createdAt: new Date().toJSON(),
-				updatedAt: new Date().toJSON()
+				avatar
 			})
 			.into("users")
 			.returning(["userId", "emailAddress", "avatar"]);

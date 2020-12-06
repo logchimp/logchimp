@@ -47,8 +47,7 @@ exports.add = async (req, res) => {
 					.insert({
 						voteId,
 						userId,
-						postId,
-						createdAt: new Date().toJSON()
+						postId
 					})
 					.into("votes")
 					.returning("*");

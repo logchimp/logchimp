@@ -2,7 +2,8 @@
 	<div class="post">
 		<Vote
 			:post-id="postData.postId"
-			:voters="postData.voters"
+			:votes-count="postData.voters.votesCount"
+			:is-voted="postData.voters.viewerVote"
 			@update-voters="updateVoters"
 		/>
 		<div class="post-content">
@@ -86,8 +87,9 @@ export default {
 	},
 	methods: {
 		updateVoters(voters) {
-			this.postData.voters = voters;
-		}
-	}
+			this.postData.voters.votesCount = voters.votesCount;
+			this.postData.voters.viewerVote = voters.viewerVote;
+		},
+	},
 };
 </script>
