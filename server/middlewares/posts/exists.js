@@ -5,16 +5,16 @@ const error = require("../../errorResponse.json");
 
 module.exports = async (req, res, next) => {
 	const id = req.body.id;
-	const slug = req.params.slug;
+	const slug = req.body.slug;
 
 	const post = await database
 		.select()
 		.from("posts")
 		.where({
-			postId: id || ""
+			postId: id || null
 		})
 		.orWhere({
-			slug: slug || ""
+			slug: slug || null
 		})
 		.first();
 
