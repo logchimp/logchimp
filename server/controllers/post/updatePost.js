@@ -2,12 +2,23 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.updatePost = async (req, res) => {
 	const postId = req.params.postId;
+	const permissions = req.user.permissions;
+
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
 	const slugId = req.body.slugId;
+
+	const checkPermission = permissions.find(item => item === "post:update");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
 
 	const slug = `${title
 		.replace(/[^\w\s]/gi, "")
