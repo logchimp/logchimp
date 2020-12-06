@@ -64,9 +64,15 @@ export const getPosts = async (
  * @param {slug} string post slug
  */
 export const getPostBySlug = async slug => {
+	const userId = store.getters["user/getUserId"];
+
 	return await axios({
-		method: "get",
-		url: `/api/v1/posts/${slug}`
+		method: "post",
+		url: `/api/v1/posts/slug`,
+		data: {
+			slug,
+			userId
+		}
 	});
 };
 

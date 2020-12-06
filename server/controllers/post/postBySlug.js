@@ -9,7 +9,8 @@ const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 exports.postBySlug = async (req, res) => {
-	const slug = req.params.slug;
+	const userId = req.body.userId;
+	const post = req.post;
 
 	try {
 		const posts = await database

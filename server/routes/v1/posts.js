@@ -10,7 +10,7 @@ const middleware = require("../../middlewares");
 const exists = require("../../middlewares/posts/exists");
 
 router.post("/posts/get", post.filterPost);
-router.get("/posts/:slug", post.postBySlug);
+router.post("/posts/slug", exists, post.postBySlug);
 
 router.post("/posts", middleware.apiAuth, post.create);
 router.patch("/posts", middleware.apiAuth, exists, post.updatePost);
