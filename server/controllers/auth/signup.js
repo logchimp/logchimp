@@ -5,12 +5,12 @@ const createUser = require("../../services/auth/createUser");
 const logger = require("../../utils/logger");
 
 exports.signup = async (req, res, next) => {
-	const emailAddress = req.body.emailAddress;
+	const email = req.body.email;
 	const password = req.body.password;
 
 	try {
 		const user = await createUser(req, res, next, {
-			emailAddress,
+			email,
 			password
 		});
 

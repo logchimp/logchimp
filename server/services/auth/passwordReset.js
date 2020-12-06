@@ -22,12 +22,12 @@ const passwordReset = async (domain, siteUrl, tokenData) => {
 			.delete()
 			.from("resetPassword")
 			.where({
-				emailAddress: tokenData.emailAddress
+				email: tokenData.email
 			});
 
 		await database
 			.insert({
-				emailAddress: tokenData.emailAddress,
+				email: tokenData.email,
 				token
 			})
 			.into("resetPassword")
@@ -42,7 +42,7 @@ const passwordReset = async (domain, siteUrl, tokenData) => {
 
 		await mail.sendMail({
 			from: noReplyEmail,
-			to: tokenData.emailAddress,
+			to: tokenData.email,
 			subject: "Reset your LogChimp password",
 			text: passwordResetMailContent.text,
 			html: passwordResetMailContent.html

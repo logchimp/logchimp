@@ -14,14 +14,14 @@
 			</div>
 			<Form class="auth-form">
 				<l-text
-					v-model="emailAddress.value"
+					v-model="email.value"
 					label="Email Address"
 					type="email"
 					name="email"
 					placeholder="Email address"
-					:error="emailAddress.error"
+					:error="email.error"
 					@keyup-enter="login"
-					@hide-error="hideEmailAddressError"
+					@hide-error="hideEmailError"
 				/>
 				<l-text
 					v-model="password.value"
@@ -61,7 +61,7 @@ export default {
 	name: "Login",
 	data() {
 		return {
-			emailAddress: {
+			email: {
 				value: "",
 				error: {
 					show: false,
@@ -90,8 +90,8 @@ export default {
 		}
 	},
 	methods: {
-		hideEmailAddressError(event) {
-			this.emailAddress.error = event;
+		hideEmailError(event) {
+			this.email.error = event;
 		},
 		hidePasswordError(event) {
 			this.password.error = event;
@@ -101,10 +101,10 @@ export default {
 				return;
 			}
 
-			if (!(this.emailAddress.value && this.password.value)) {
-				if (!this.emailAddress.value) {
-					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "Required";
+			if (!(this.email.value && this.password.value)) {
+				if (!this.email.value) {
+					this.email.error.show = true;
+					this.email.error.message = "Required";
 				}
 				if (!this.password.value) {
 					this.password.error.show = true;
@@ -116,7 +116,7 @@ export default {
 
 			try {
 				const response = await signin(
-					this.emailAddress.value,
+					this.email.value,
 					this.password.value
 				);
 				this.$store.dispatch("user/login", {
@@ -130,8 +130,8 @@ export default {
 				}
 			} catch (error) {
 				if (error.response.data.code === "USER_NOT_FOUND") {
-					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "User not found";
+					this.email.error.show = true;
+					this.email.error.message = "User not found";
 				}
 
 				if (error.response.data.code === "INCORRECT_PASSWORD") {

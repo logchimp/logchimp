@@ -52,11 +52,11 @@ const createUser = async (req, res, next, userData) => {
 		} = await database.raw(
 			`
 				SELECT EXISTS (
-					SELECT * FROM users WHERE "emailAddress" = :emailAddress
+					SELECT * FROM users WHERE email = :email
 				)
 			`,
 			{
-				emailAddress: userData.email
+				email: userData.email
 			}
 		);
 
@@ -75,12 +75,12 @@ const createUser = async (req, res, next, userData) => {
 				userId,
 				name,
 				username,
-				emailAddress: userData.email,
+				email: userData.email,
 				password: hashedPassword,
 				avatar
 			})
 			.into("users")
-			.returning(["userId", "emailAddress", "avatar"]);
+			.returning(["userId", "email", "avatar"]);
 
 		if (newUser) {
 			// assign user role

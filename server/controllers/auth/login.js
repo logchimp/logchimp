@@ -10,15 +10,15 @@ const config = logchimpConfig();
 const error = require("../../errorResponse.json");
 
 exports.login = async (req, res) => {
-	const emailAddress = req.body.emailAddress;
+	const email = req.body.email;
 	const password = req.body.password;
 
 	try {
 		const users = await database
-			.select("userId", "emailAddress", "password", "avatar")
+			.select("userId", "email", "password", "avatar")
 			.from("users")
 			.where({
-				emailAddress
+				email
 			})
 			.limit(1);
 

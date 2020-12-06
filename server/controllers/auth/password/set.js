@@ -50,7 +50,7 @@ exports.set = async (req, res) => {
 			.delete()
 			.from("resetPassword")
 			.where({
-				emailAddress: authUser.emailAddress
+				email: authUser.email
 			});
 
 		res.status(200).send({

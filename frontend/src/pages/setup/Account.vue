@@ -26,14 +26,14 @@
 					@hide-error="hideFullNameError"
 				/>
 				<l-text
-					v-model="emailAddress.value"
+					v-model="email.value"
 					label="Email address"
 					type="text"
 					name="Email address"
 					placeholder="Eg. email@example.com"
-					:error="emailAddress.error"
+					:error="email.error"
 					@keyup-enter="createAccount"
-					@hide-error="hideEmailAddressError"
+					@hide-error="hideEmailError"
 				/>
 				<l-text
 					v-model="password.value"
@@ -91,7 +91,7 @@ export default {
 					message: ""
 				}
 			},
-			emailAddress: {
+			email: {
 				value: "",
 				error: {
 					show: false,
@@ -126,8 +126,8 @@ export default {
 		hideFullNameError(event) {
 			this.fullName.error = event;
 		},
-		hideEmailAddressError(event) {
-			this.emailAddress.error = event;
+		hideEmailError(event) {
+			this.email.error = event;
 		},
 		hidePasswordError(event) {
 			this.password.error = event;
@@ -141,7 +141,7 @@ export default {
 				!(
 					this.siteTitle.value &&
 					this.fullName.value &&
-					this.emailAddress.value &&
+					this.email.value &&
 					this.password.value
 				)
 			) {
@@ -155,9 +155,9 @@ export default {
 					this.fullName.error.message = "Required";
 				}
 
-				if (!this.emailAddress.value) {
-					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "Required";
+				if (!this.email.value) {
+					this.email.error.show = true;
+					this.email.error.message = "Required";
 				}
 				if (!this.password.value) {
 					this.password.error.show = true;
@@ -172,7 +172,7 @@ export default {
 				const response = await siteSetup(
 					this.siteTitle.value,
 					this.fullName.value,
-					this.emailAddress.value,
+					this.email.value,
 					this.password.value
 				);
 

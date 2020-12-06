@@ -86,7 +86,7 @@
 							{{ fullname }}
 						</div>
 						<div class="dashboard-sidebar-user-email">
-							{{ emailAddress }}
+							{{ email }}
 						</div>
 					</div>
 				</div>
@@ -144,9 +144,9 @@ export default {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		},
-		emailAddress() {
+		email() {
 			const user = this.$store.getters["user/getUser"];
-			return user.emailAddress;
+			return user.email;
 		}
 	},
 	methods: {

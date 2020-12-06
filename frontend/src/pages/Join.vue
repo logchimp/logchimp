@@ -14,14 +14,14 @@
 			</div>
 			<Form class="auth-form">
 				<l-text
-					v-model="emailAddress.value"
+					v-model="email.value"
 					label="Email Address"
 					type="email"
 					name="email"
 					placeholder="Email address"
-					:error="emailAddress.error"
+					:error="email.error"
 					@keyup-enter="join"
-					@hide-error="hideEmailAddressError"
+					@hide-error="hideEmailError"
 				/>
 				<l-text
 					v-model="password.value"
@@ -60,7 +60,7 @@ export default {
 	name: "Join",
 	data() {
 		return {
-			emailAddress: {
+			email: {
 				value: "",
 				error: {
 					show: false,
@@ -88,8 +88,8 @@ export default {
 		}
 	},
 	methods: {
-		hideEmailAddressError(event) {
-			this.emailAddress.error = event;
+		hideEmailError(event) {
+			this.email.error = event;
 		},
 		hidePasswordError(event) {
 			this.password.error = event;
@@ -99,10 +99,10 @@ export default {
 				return;
 			}
 
-			if (!(this.emailAddress.value && this.password.value)) {
-				if (!this.emailAddress.value) {
-					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "Required";
+			if (!(this.email.value && this.password.value)) {
+				if (!this.email.value) {
+					this.email.error.show = true;
+					this.email.error.message = "Required";
 				}
 
 				if (!this.password.value) {
@@ -116,10 +116,7 @@ export default {
 			this.buttonLoading = true;
 
 			try {
-				const response = await signup(
-					this.emailAddress.value,
-					this.password.value
-				);
+				const response = await signup(this.email.value, this.password.value);
 
 				this.$store.dispatch("user/login", {
 					...response.data.user
@@ -132,8 +129,8 @@ export default {
 				}
 			} catch (error) {
 				if (error.response.data.code === "USER_EXISTS") {
-					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "Exists";
+					this.email.error.show = true;
+					this.email.error.message = "Exists";
 				}
 			} finally {
 				this.buttonLoading = false;

@@ -40,7 +40,7 @@
 				:disabled="true"
 			/>
 			<l-text
-				v-model="user.emailAddress.value"
+				v-model="user.email.value"
 				label="Email Address"
 				type="text"
 				name="Email Address"
@@ -92,7 +92,7 @@ export default {
 				username: {
 					value: ""
 				},
-				emailAddress: {
+				email: {
 					value: ""
 				},
 				isVerified: false
@@ -129,7 +129,7 @@ export default {
 
 				this.user.name.value = response.data.user.name;
 				this.user.username.value = response.data.user.username;
-				this.user.emailAddress.value = response.data.user.emailAddress;
+				this.user.email.value = response.data.user.email;
 				this.user.isVerified = response.data.user.isVerified;
 			} catch (error) {
 				this.userNotFound(error);
@@ -163,8 +163,8 @@ export default {
 			this.resendVerificationEmailButtonLoading = true;
 
 			try {
-				const emailAddress = this.user.emailAddress.value;
-				await resendUserVerificationEmail(emailAddress);
+				const email = this.user.email.value;
+				await resendUserVerificationEmail(email);
 			} catch (error) {
 				console.error(error);
 			} finally {

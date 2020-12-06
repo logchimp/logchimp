@@ -12,16 +12,16 @@
 				</router-link>
 				<h3 class="auth-form-heading">Forget password</h3>
 			</div>
-			<Form v-if="!emailAddress.hide" class="auth-form">
+			<Form v-if="!email.hide" class="auth-form">
 				<l-text
-					v-model="emailAddress.value"
+					v-model="email.value"
 					label="Email Address"
 					type="email"
 					name="email"
 					placeholder="Email address"
-					:error="emailAddress.error"
+					:error="email.error"
 					@keyup-enter="forgetPassword"
-					@hide-error="hideEmailAddressError"
+					@hide-error="hideEmailError"
 				/>
 				<div style="display: flex; justify-content: center;">
 					<Button
@@ -59,7 +59,7 @@ export default {
 	name: "ForgetPassword",
 	data() {
 		return {
-			emailAddress: {
+			email: {
 				value: "",
 				error: {
 					show: false,
@@ -83,31 +83,31 @@ export default {
 		}
 	},
 	methods: {
-		hideEmailAddressError(event) {
-			this.emailAddress.error = event;
+		hideEmailError(event) {
+			this.email.error = event;
 		},
 		async forgetPassword() {
 			if (this.buttonLoading) {
 				return;
 			}
 
-			if (!this.emailAddress.value) {
-				this.emailAddress.error.show = true;
-				this.emailAddress.error.message = "Required";
+			if (!this.email.value) {
+				this.email.error.show = true;
+				this.email.error.message = "Required";
 				return;
 			}
 
 			this.buttonLoading = true;
 
 			try {
-				await requestPasswordReset(this.emailAddress.value);
+				await requestPasswordReset(this.email.value);
 
-				this.emailAddress.hide = true;
-				this.emailAddress.value = "";
+				this.email.hide = true;
+				this.email.value = "";
 			} catch (error) {
 				if (error.response.data.code === "USER_NOT_FOUND") {
-					this.emailAddress.error.show = true;
-					this.emailAddress.error.message = "User not found";
+					this.email.error.show = true;
+					this.email.error.message = "User not found";
 				}
 			} finally {
 				this.buttonLoading = false;
