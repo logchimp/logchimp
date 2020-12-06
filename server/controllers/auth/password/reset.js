@@ -40,9 +40,8 @@ exports.reset = async (req, res) => {
 			email: getAuthUser.email
 		};
 
-		const domain = req.headers.origin;
-		const siteUrl = req.headers.origin.split("//")[1];
-		await passwordResetEmail(domain, siteUrl, tokenData);
+		const url = req.headers.origin;
+		await passwordResetEmail(url, tokenData);
 
 		res.status(200).send({
 			type: "success"

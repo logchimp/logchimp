@@ -10,7 +10,7 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
 const config = logchimpConfig();
 
-const verifyEmail = async (domain, siteUrl, email) => {
+const verifyEmail = async (url, email) => {
 	const secretKey = config.server.secretKey;
 	const token = createToken({ email }, secretKey, {
 		expiresIn: "2h"
@@ -32,12 +32,14 @@ const verifyEmail = async (domain, siteUrl, email) => {
 			.into("emailVerification")
 			.returning("*");
 
+		const domain = new URL(url).host;
 		const onboardingMailContent = await generateContent("verify", {
-			siteUrl,
-			verificationLink: `${domain}/email-verify/?token=${token}`
+			url,
+			domain,
+			verificationLink: `${url}/email-verify/?token=${token}`
 		});
 
-		const noReplyEmail = `noreply@${siteUrl}`;
+		const noReplyEmail = `noreply@${domain}`;
 
 		await mail.sendMail({
 			from: noReplyEmail,
