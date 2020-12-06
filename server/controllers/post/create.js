@@ -10,11 +10,12 @@ const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 exports.create = async (req, res) => {
+	const userId = req.user.userId;
 	const permissions = req.user.permissions;
+
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
 	const boardId = req.body.boardId;
-	const userId = req.user.userId;
 
 	const createPostPermission = permissions.find(item => item === "post:create");
 	if (!createPostPermission) {
