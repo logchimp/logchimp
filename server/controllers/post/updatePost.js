@@ -5,13 +5,13 @@ const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 exports.updatePost = async (req, res) => {
-	const postId = req.params.postId;
 	const userId = req.user.userId;
 	const userRole = req.user.roles[0];
 	const permissions = req.user.permissions;
 	const authorId = req.post.userId;
 	const slugId = req.post.slugId;
 
+	const id = req.body.id;
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
 
@@ -47,13 +47,13 @@ exports.updatePost = async (req, res) => {
 			})
 			.from("posts")
 			.where({
-				postId
+				postId: id
 			})
 			.returning("*");
 
 		const post = posts[0];
 
-		res.status(200).send(post);
+		res.status(200).send({ post });
 	} catch (err) {
 		logger.log({
 			level: "error",
