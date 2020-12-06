@@ -28,8 +28,7 @@ const passwordReset = async (domain, siteUrl, tokenData) => {
 		await database
 			.insert({
 				emailAddress: tokenData.emailAddress,
-				token,
-				createdAt: new Date().toJSON()
+				token
 			})
 			.into("resetPassword")
 			.returning("*");

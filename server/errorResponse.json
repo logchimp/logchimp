@@ -10,7 +10,7 @@
 		},
 		"user": {
 			"userNotFound": "User not found",
-			"userBlocked": "User is blocked",
+			"userBan": "User is ban",
 			"userSpam": "User is marked as Spam",
 			"incorrectPassword": "Incorect password",
 			"userExists": "User exists"
@@ -38,10 +38,13 @@
 
     },
 		"posts": {
-			"postNotFound": "Post not found.",
-			"notEnoughPermission": "You do not have permission to perform this action."
+			"titleMissing": "Post title missing",
+			"postNotFound": "Post not found",
+			"notEnoughPermission": "You do not have permission to perform this action.",
+			"notAnAuthor": "You are not the author of the post"
 		},
 		"boards": {
+			"boardIdMissing": "Board ID missing",
 			"boardNotFound": "Board not found"
 		},
 		"votes": {

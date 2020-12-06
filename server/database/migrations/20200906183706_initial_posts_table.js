@@ -21,8 +21,14 @@ exports.up = function(knex) {
 				.references("userId")
 				.inTable("users")
 				.notNullable();
-			table.timestamp("createdAt", { useTz: true }).notNullable();
-			table.timestamp("updatedAt", { useTz: true }).notNullable();
+			table
+				.timestamp("createdAt")
+				.defaultTo(knex.fn.now())
+				.notNullable();
+			table
+				.timestamp("updatedAt")
+				.defaultTo(knex.fn.now())
+				.notNullable();
 			table.comment("Storing posts data");
 		})
 		.then(() => {
