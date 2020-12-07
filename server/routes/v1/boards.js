@@ -6,11 +6,16 @@ const router = express.Router();
 const boards = require("../../controllers/boards");
 
 // middleware
-const token = require("../../middlewares/token");
+const middleware = require("../../middlewares");
+const exists = require("../../middlewares/boardExists");
 
 router.get("/boards", boards.filter);
-router.post("/boards", token, boards.create);
-router.post("/boards/:slug", boards.boardBySlug);
-router.delete("/boards/:slug", boards.deleteBoard);
+router.get("/boards/:url", exists, boards.boardByUrl);
+
+router.post("/boards/check-name", middleware.apiAuth, boards.checkName);
+router.post("/boards", middleware.apiAuth, boards.create);
+router.patch("/boards", middleware.apiAuth, exists, boards.updateBoard);
+
+router.delete("/boards", middleware.apiAuth, exists, boards.deleteById);
 
 module.exports = router;

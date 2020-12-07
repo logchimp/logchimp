@@ -1,11 +1,15 @@
 const create = require("./create");
 const filter = require("./filter");
-const boardBySlug = require("./boardBySlug");
-const deleteBoard = require("./deleteBoard");
+const checkName = require("./checkName");
+const boardByUrl = require("./boardByUrl");
+const updateBoard = require("./updateBoard");
+const deleteById = require("./deleteById");
 
 module.exports = {
 	...create,
 	...filter,
-	...boardBySlug,
-	...deleteBoard
+	checkName,
+	boardByUrl,
+	updateBoard,
+	deleteById
 };
