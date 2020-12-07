@@ -8,65 +8,57 @@ const getVotes = require("../../services/votes/getVotes");
 
 // utils
 const logger = require("../../utils/logger");
-
 const error = require("../../errorResponse.json");
 
-exports.add = async (req, res) => {
-	const userId = req.body.userId;
+module.exports = async (req, res) => {
+	const userId = req.user.userId;
+	const permissions = req.user.permissions;
+
 	const postId = req.body.postId;
 
+	const checkPermission = permissions.find(item => item === "vote:create");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
+
 	try {
-		const { rows } = await database.raw(
-			`
-				SELECT EXISTS (
-					SELECT
-						*
-					FROM
-						votes
-					WHERE
-							"postId" = :postId
-						AND
-							"userId" = :userId
-				);
-			`,
-			{
-				postId,
+		const vote = await database
+			.select()
+			.from("votes")
+			.where({
+				postId: postId || null,
 				userId
-			}
-		);
+			})
+			.first();
 
-		const voteExists = rows[0].exists;
-
-		// Add vote to post
-		if (!voteExists) {
-			// generate post unique indentification
-			const voteId = uuidv4(postId);
-
-			try {
-				await database
-					.insert({
-						voteId,
-						userId,
-						postId
-					})
-					.into("votes")
-					.returning("*");
-
-				const voters = await getVotes(postId, userId);
-
-				res.status(201).send(voters);
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		} else {
-			res.status(409).send({
+		if (vote) {
+			console.log(vote);
+			console.log("vote");
+			return res.status(404).send({
 				message: error.api.votes.exists,
 				code: "VOTE_EXISTS"
 			});
 		}
+
+		console.log('somethig');
+
+		await database
+			.insert({
+				voteId: uuidv4(),
+				userId,
+				postId
+			})
+			.into("votes");
+
+		const voters = await getVotes(postId, userId);
+
+		console.log("voters");
+		console.log(voters);
+
+		res.status(201).send({ voters });
 	} catch (err) {
 		logger.log({
 			level: "error",
