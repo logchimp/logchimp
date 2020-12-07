@@ -1,15 +1,10 @@
-// modules
-const { v4: uuidv4 } = require("uuid");
-
-// database
 const database = require("../../database");
 
 // utils
-const createHex = require("../../utils/createHex");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
-exports.create = async (req, res) => {
+module.exports = async (req, res) => {
 	const permissions = req.user.permissions;
 
 	const name = req.body.name;
@@ -42,38 +37,18 @@ exports.create = async (req, res) => {
 		.split(" ")
 		.join("-");
 
-	const board = await database
-		.select()
-		.from("boards")
-		.where({
-			url
-		})
-		.first();
-
-	if (board) {
-		return res.status(404).send({
-			message: error.api.boards.exists,
-			code: "BOARD_EXISTS"
-		});
-	}
-
 	try {
-		const createBoard = await database
-			.insert({
-				boardId: uuidv4(),
-				name,
-				url,
-				color: createHex()
+		const board = await database
+			.select()
+			.from("boards")
+			.where({
+				url: url || null
 			})
-			.into("boards")
-			.returning("*");
+			.first();
 
-		const board = createBoard[0];
-
-		res.status(201).send({ board });
+		res.status(200).send({ available: !board });
 	} catch (err) {
-		logger.log({
-			level: "error",
+		logger.error({
 			message: err
 		});
 	}
