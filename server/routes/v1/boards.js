@@ -14,6 +14,7 @@ router.get("/boards/:url", exists, boards.boardByUrl);
 
 router.post("/boards/check-name", middleware.apiAuth, boards.checkName);
 router.post("/boards", middleware.apiAuth, boards.create);
+router.patch("/boards", middleware.apiAuth, exists, boards.updateBoard);
 
 router.delete("/boards", middleware.apiAuth, exists, boards.deleteById);
 
