@@ -44,6 +44,7 @@
 			"notAnAuthor": "You are not the author of the post"
 		},
 		"boards": {
+			"nameMissing": "Board name missing",
 			"boardIdMissing": "Board ID missing",
 			"boardNotFound": "Board not found"
 		},

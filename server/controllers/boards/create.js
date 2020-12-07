@@ -22,6 +22,18 @@ exports.create = async (req, res) => {
 		});
 	}
 
+	if (!name) {
+		return res.status(400).send({
+			errors: [
+				!name
+					? {
+							message: error.api.boards.nameMissing,
+							code: "BOARD_NAME_MISSING"
+					  }
+					: ""
+			]
+		});
+	}
 
 	const url = name
 		.replace(/[^\w\s]/gi, "")
