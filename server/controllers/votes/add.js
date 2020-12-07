@@ -35,15 +35,11 @@ module.exports = async (req, res) => {
 			.first();
 
 		if (vote) {
-			console.log(vote);
-			console.log("vote");
 			return res.status(404).send({
 				message: error.api.votes.exists,
 				code: "VOTE_EXISTS"
 			});
 		}
-
-		console.log('somethig');
 
 		await database
 			.insert({
@@ -54,9 +50,6 @@ module.exports = async (req, res) => {
 			.into("votes");
 
 		const voters = await getVotes(postId, userId);
-
-		console.log("voters");
-		console.log(voters);
 
 		res.status(201).send({ voters });
 	} catch (err) {
