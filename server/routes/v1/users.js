@@ -9,8 +9,8 @@ const users = require("../../controllers/users");
 const middleware = require("../../middlewares");
 
 router.get("/users", users.filter);
-router.patch("/user", users.updateUser);
 router.get("/users/profile", middleware.apiAuth, users.getProfile);
+router.patch("/users/profile", middleware.apiAuth, users.updateProfile);
 router.get("/user/accessDashboard/:userId", users.accessDashboard);
 
 module.exports = router;
