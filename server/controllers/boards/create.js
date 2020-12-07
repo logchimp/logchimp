@@ -7,11 +7,21 @@ const database = require("../../database");
 // utils
 const createHex = require("../../utils/createHex");
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.create = async (req, res) => {
+	const permissions = req.user.permissions;
+
 	const name = req.body.name;
 
-	const boardId = uuidv4(name);
+	const checkPermission = permissions.find(item => item === "board:create");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
+
 
 	const url = name
 		.replace(/[^\w\s]/gi, "")
@@ -23,7 +33,7 @@ exports.create = async (req, res) => {
 	try {
 		const createBoard = await database
 			.insert({
-				boardId,
+				boardId: uuidv4(),
 				name,
 				url,
 				color: createHex()
