@@ -6,9 +6,9 @@ const router = express.Router();
 const votes = require("../../controllers/votes");
 
 // middleware
-const token = require("../../middlewares/token");
+const middleware = require("../../middlewares");
 
-router.post("/votes", token, votes.add);
-router.delete("/votes", token, votes.remove);
+router.post("/votes", middleware.apiAuth, votes.add);
+router.delete("/votes", middleware.apiAuth, votes.remove);
 
 module.exports = router;
