@@ -10,7 +10,7 @@ const middleware = require("../../middlewares");
 const exists = require("../../middlewares/boardExists");
 
 router.get("/boards", boards.filter);
-router.post("/boards/:slug", boards.boardBySlug);
+router.get("/boards/:url", exists, boards.boardByUrl);
 
 router.post("/boards", middleware.apiAuth, boards.create);
 router.delete("/boards", middleware.apiAuth, exists, boards.deleteById);

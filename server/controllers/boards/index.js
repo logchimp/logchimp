@@ -1,11 +1,11 @@
 const create = require("./create");
 const filter = require("./filter");
-const boardBySlug = require("./boardBySlug");
+const boardByUrl = require("./boardByUrl");
 const deleteById = require("./deleteById");
 
 module.exports = {
 	...create,
 	...filter,
-	...boardBySlug,
+	boardByUrl,
 	deleteById
 };
