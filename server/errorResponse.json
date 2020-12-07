@@ -46,6 +46,7 @@
 		"boards": {
 			"nameMissing": "Board name missing",
 			"boardIdMissing": "Board ID missing",
+			"exists": "Board already exists",
 			"boardNotFound": "Board not found"
 		},
 		"votes": {

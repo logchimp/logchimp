@@ -42,6 +42,21 @@ exports.create = async (req, res) => {
 		.split(" ")
 		.join("-");
 
+	const board = await database
+		.select()
+		.from("boards")
+		.where({
+			url
+		})
+		.first();
+
+	if (board) {
+		return res.status(404).send({
+			message: error.api.boards.exists,
+			code: "BOARD_EXISTS"
+		});
+	}
+
 	try {
 		const createBoard = await database
 			.insert({
@@ -55,13 +70,7 @@ exports.create = async (req, res) => {
 
 		const board = createBoard[0];
 
-		res.status(201).send({
-			status: {
-				code: 201,
-				type: "success"
-			},
-			board
-		});
+		res.status(201).send({ board });
 	} catch (err) {
 		logger.log({
 			level: "error",
