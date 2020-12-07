@@ -1,7 +1,15 @@
 {
 	"name": "logchimp",
+	"description": "A open-source software to track user feedback",
 	"version": "0.4.0",
 	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/logchimp/logchimp.git"
+	},
+	"bugs": {
+		"url": "https://github.com/logchimp/logchimp/issues"
+	},
 	"scripts": {
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
@@ -54,5 +62,15 @@
 		"nodemon": "^2.0.6",
 		"omgopass": "^3.2.1",
 		"vue-template-compiler": "^2.6.12"
+	},
+	"keywords": [
+		"logchimp",
+		"feedback",
+		"open-source",
+		"codecarrot"
+	],
+	"engines": {
+		"node": ">=12.18.4",
+		"yarn": ">=1.22.10"
 	}
 }
