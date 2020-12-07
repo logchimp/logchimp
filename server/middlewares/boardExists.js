@@ -5,7 +5,7 @@ const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
 	const id = req.body.id;
-	const url = req.body.url;
+	const url = req.params.url;
 
 	const board = await database
 		.select()
