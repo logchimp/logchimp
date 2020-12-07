@@ -1,11 +1,11 @@
 const filter = require("./filter");
-const userById = require("./userById");
 const updateUser = require("./updateUser");
+const getProfile = require("./getProfile");
 const accessDashboard = require("./accessDashboard");
 
 module.exports = {
 	...filter,
-	...userById,
-	...updateUser,
+	updateUser,
+	getProfile,
 	...accessDashboard
 };
