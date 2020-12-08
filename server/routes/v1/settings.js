@@ -26,10 +26,10 @@ const upload = multer({
 const settings = require("../../controllers/settings");
 
 // middleware
-const token = require("../../middlewares/token");
+const middlewares = require("../../middlewares");
 
 router.get("/settings/site", settings.siteSettings);
-router.patch("/settings/site", token, settings.update);
+router.patch("/settings/site", middlewares.apiAuth, settings.update);
 router.post(
 	"/settings/update-logo",
 	token,

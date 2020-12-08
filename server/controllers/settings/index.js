@@ -4,6 +4,6 @@ const updateLogo = require("./updateLogo");
 
 module.exports = {
 	...siteSettings,
-	...update,
+	update,
 	...updateLogo
 };
