@@ -64,8 +64,7 @@ database
 			.catch(err => {
 				logger.error({
 					code: "DATABASE_MIGRATIONS",
-					message: "Migrations failed",
-					err
+					message: err
 				});
 			});
 	})
