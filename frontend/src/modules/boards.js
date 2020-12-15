@@ -29,7 +29,7 @@ export const getAllBoards = async (page = 1, limit, sort = "desc") => {
  */
 export const getBoardByUrl = async url => {
 	return await axios({
-		method: "post",
+		method: "GET",
 		url: `/api/v1/boards/${url}`
 	});
 };
