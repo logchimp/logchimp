@@ -7,16 +7,7 @@ const logger = require("../../utils/logger");
 const getUsers = async (created, limit, page) => {
 	try {
 		const users = await database
-			.select(
-				"userId",
-				"name",
-				"username",
-				"avatar",
-				"isVerified",
-				"isOwner",
-				"isModerator",
-				"isBlocked"
-			)
+			.select("userId", "name", "email", "username", "avatar", "isVerified")
 			.from("users")
 			.limit(limit)
 			.offset(limit * page)

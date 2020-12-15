@@ -12,11 +12,14 @@ import store from "../store";
  * @returns {object} response
  */
 export const getUserSettings = async () => {
-	const userId = store.getters["user/getUserId"];
+	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
 		method: "GET",
-		url: `/api/v1/users/${userId}`
+		url: `/api/v1/users/profile`,
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
 	});
 };
 
@@ -29,14 +32,16 @@ export const getUserSettings = async () => {
  * @returns {object} response
  */
 export const updateUserSettings = async user => {
-	const userId = store.getters["user/getUserId"];
+	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
 		method: "patch",
-		url: "/api/v1/user",
+		url: "/api/v1/users/profile",
 		data: {
-			userId,
 			...user
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
 		}
 	});
 };
