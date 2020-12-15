@@ -9,13 +9,15 @@ import store from "../store";
  *
  * @param {boardId} string board UUID
  * @param {post} object post title and description
+ *
+ * @returns {object} response
  */
 export const createPost = async (boardId, post) => {
 	const token = store.getters["user/getAuthToken"];
 	const userId = store.getters["user/getUserId"];
 
 	return await axios({
-		method: "post",
+		method: "POST",
 		url: "/api/v1/posts",
 		data: {
 			title: post.title,
@@ -32,11 +34,13 @@ export const createPost = async (boardId, post) => {
 /**
  * Get posts
  *
- * @param {integer} page - number default to 1
- * @param {integer} limit - number of posts to fetch
- * @param {string} sort - createdAt sort type ASC or DESC
- * @param {string} userId - logged in user ID
- * @param {string[]} boardId - array of board IDs
+ * @param {number} page number default to 1
+ * @param {number} limit number of posts to fetch
+ * @param {string} sort createdAt sort type ASC or DESC
+ * @param {string} userId logged in user UUID
+ * @param {string[]} boardId array of board UUIDs
+ *
+ * @returns {object} response
  */
 export const getPosts = async (
 	page = 1,
@@ -46,7 +50,7 @@ export const getPosts = async (
 	boardId
 ) => {
 	return await axios({
-		method: "post",
+		method: "POST",
 		url: "/api/v1/posts/get",
 		data: {
 			page,
@@ -62,12 +66,14 @@ export const getPosts = async (
  * Get post by slug
  *
  * @param {slug} string post slug
+ *
+ * @returns {object} response
  */
 export const getPostBySlug = async slug => {
 	const userId = store.getters["user/getUserId"];
 
 	return await axios({
-		method: "post",
+		method: "POST",
 		url: `/api/v1/posts/slug`,
 		data: {
 			slug,
@@ -79,14 +85,20 @@ export const getPostBySlug = async slug => {
 /**
  * Update post
  *
- * @param {postId} string post UUID
- * @param {post} object post data
+ * @param {string} postId post UUID
+ * @param {object} post update post data
+ * @param {string} post.title post title
+ * @param {string} post.contentMarkdown post body in markdown format
+ * @param {string} post.slugId post slug UUID
+ * @param {string} post.userId post author UUID
+ *
+ * @returns {object} response
  */
 export const updatePost = async (postId, post) => {
 	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
-		method: "patch",
+		method: "PATCH",
 		url: `/api/v1/posts/${postId}`,
 		data: {
 			...post
