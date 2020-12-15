@@ -140,7 +140,9 @@ export default {
 		logout() {
 			this.$store.dispatch("user/logout");
 			this.profileDropdown = false;
-			this.$router.push("/");
+			if (this.$route.path !== "/") {
+				this.$router.push("/");
+			}
 		}
 	}
 };
