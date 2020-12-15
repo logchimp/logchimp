@@ -19,11 +19,11 @@
 						<avatar
 							@click="toggleProfileDropdown"
 							class="nav-profile"
-							:src="userAvatar"
-							:name="fullname"
+							:src="user.avatar"
+							:name="user.name"
 						/>
 						<dropdown v-show="profileDropdown" class="nav-profile-dropdown">
-							<dropdown-item v-if="userIsOwner" @click="openDashboard">
+							<dropdown-item @click="openDashboard">
 								<template v-slot:icon>
 									<dashboard-icon />
 								</template>
@@ -68,9 +68,6 @@ import DropdownSpacer from "./dropdown/DropdownSpacer";
 import Button from "./Button";
 import Avatar from "./Avatar";
 
-// mixins
-import userAvatar from "../mixins/userAvatar";
-
 // icons
 import DashboardIcon from "./icons/Dashboard";
 import SettingsIcon from "./icons/Settings";
@@ -97,7 +94,6 @@ export default {
 		SettingsIcon,
 		LogoutIcon
 	},
-	mixins: [userAvatar],
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
@@ -109,6 +105,9 @@ export default {
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];
 			return !!token;
+		},
+		user() {
+			return this.$store.getters["user/getUser"];
 		}
 	},
 	methods: {

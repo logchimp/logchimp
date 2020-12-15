@@ -78,15 +78,15 @@
 				<div class="dashboard-sidebar-user">
 					<avatar
 						class="dashboard-sidebar-user-avatar"
-						:src="userAvatar"
-						:name="fullname"
+						:src="user.avatar"
+						:name="user.name"
 					/>
 					<div class="dashboard-sidebar-user-data">
 						<div class="dashboard-sidebar-user-name">
-							{{ fullname }}
+							{{ user.name }}
 						</div>
 						<div class="dashboard-sidebar-user-email">
-							{{ email }}
+							{{ user.email }}
 						</div>
 					</div>
 				</div>
@@ -101,9 +101,6 @@ import Avatar from "../Avatar";
 import Dropdown from "../dropdown/Dropdown";
 import DropdownItem from "../dropdown/DropdownItem";
 import DropdownSpacer from "../dropdown/DropdownSpacer";
-
-// mixins
-import userAvatar from "../../mixins/userAvatar";
 
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
@@ -139,14 +136,12 @@ export default {
 		TwitterIcon,
 		LogoutIcon
 	},
-	mixins: [userAvatar],
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		},
-		email() {
-			const user = this.$store.getters["user/getUser"];
-			return user.email;
+		user() {
+			return this.$store.getters["user/getUser"];
 		}
 	},
 	methods: {
