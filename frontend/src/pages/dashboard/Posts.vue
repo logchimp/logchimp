@@ -60,8 +60,8 @@ export default {
 			try {
 				const response = await getPosts(this.page, null, "desc", userId);
 
-				if (response.data.length) {
-					this.posts.push(...response.data);
+				if (response.data.posts.length) {
+					this.posts.push(...response.data.posts);
 					this.page += 1;
 					$state.loaded();
 				} else {
