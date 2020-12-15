@@ -3,7 +3,7 @@ const database = require("../../database");
 // utils
 const logger = require("../../utils/logger");
 
-const getVotes = async (postId, userId = null) => {
+const getVotes = async (postId, userId) => {
 	try {
 		const votesCount = await database
 			.count("voteId")
@@ -26,13 +26,9 @@ const getVotes = async (postId, userId = null) => {
 			.from("votes")
 			.where({
 				postId,
-				userId
+				userId: userId || null
 			})
 			.first();
-
-		votes.find(item => {
-			return item.userId === userId;
-		});
 
 		return {
 			votes,
