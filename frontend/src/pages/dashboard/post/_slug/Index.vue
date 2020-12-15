@@ -27,9 +27,13 @@
 							<div class="viewpost__meta-divider">
 								|
 							</div>
-							<div class="viewpost__meta-date">
-								{{ post.createdAt | moment("MMMM DD, YYYY") }}
-							</div>
+							<time
+								:datetime="post.createdAt"
+								:title="post.createdAt | moment('DD MMM YYYY, hh:mm:ss')"
+								class="viewpost__meta-date"
+							>
+								{{ post.createdAt | moment("from") }}
+							</time>
 						</div>
 					</div>
 				</div>
