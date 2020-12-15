@@ -15,7 +15,7 @@
 			</router-link>
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
 			<router-link
-				:to="`${dashboardUrl}/board/${postData.board.url}`"
+				:to="`/board/${postData.board.url}`"
 				v-if="showBoard && post.board"
 			>
 				<div class="post-board">
