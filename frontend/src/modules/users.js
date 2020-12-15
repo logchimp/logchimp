@@ -10,11 +10,14 @@ import store from "../store";
  * @param {userId} string user UUID
  */
 export const getUserSettings = async () => {
-	const userId = store.getters["user/getUserId"];
+	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
 		method: "get",
-		url: `/api/v1/users/${userId}`
+		url: `/api/v1/users/profile`,
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
 	});
 };
 
@@ -24,14 +27,16 @@ export const getUserSettings = async () => {
  * @param {user} object user data object
  */
 export const updateUserSettings = async user => {
-	const userId = store.getters["user/getUserId"];
+	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
 		method: "patch",
-		url: "/api/v1/user",
+		url: "/api/v1/users/profile",
 		data: {
-			userId,
 			...user
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
 		}
 	});
 };
