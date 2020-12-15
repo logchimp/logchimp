@@ -7,13 +7,15 @@ import store from "../store";
 /**
  * Get user settings
  *
- * @param {userId} string user UUID
+ * @param {string} userId user UUID
+ *
+ * @returns {object} response
  */
 export const getUserSettings = async () => {
 	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
-		method: "get",
+		method: "GET",
 		url: `/api/v1/users/profile`,
 		headers: {
 			Authorization: `Bearer ${token}`
@@ -24,7 +26,10 @@ export const getUserSettings = async () => {
 /**
  *	Update user settings
  *
- * @param {user} object user data object
+ * @param {object} user update user data
+ * @param {string} user.name user's name
+ *
+ * @returns {object} response
  */
 export const updateUserSettings = async user => {
 	const token = store.getters["user/getAuthToken"];
@@ -44,12 +49,14 @@ export const updateUserSettings = async user => {
 /**
  *	Get all users
  *
- * @param {page} integer page number default to 1
- * @param {sort} string sort type asc or desc
+ * @param {number} page page number default to 1
+ * @param {string} sort sort type asc or desc
+ *
+ * @returns {object} response
  */
 export const getAllUsers = async (page, sort) => {
 	return await axios({
-		method: "get",
+		method: "GET",
 		url: "/api/v1/users",
 		params: {
 			page,
@@ -61,11 +68,13 @@ export const getAllUsers = async (page, sort) => {
 /**
  *	Check if user have access to dashboard
  *
- * @param {userId} string user UUID
+ * @param {string} userId user UUID
+ *
+ * @returns {object} response
  */
 export const checkUserDashboardAccess = async userId => {
 	return await axios({
-		method: "get",
+		method: "GET",
 		url: `/api/v1/user/accessDashboard/${userId}`
 	});
 };

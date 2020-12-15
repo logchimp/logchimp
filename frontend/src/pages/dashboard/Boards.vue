@@ -107,8 +107,8 @@ export default {
 			try {
 				const response = await getAllBoards(this.page, null, "desc");
 
-				if (response.data.length) {
-					this.boards.push(...response.data);
+				if (response.data.boards.length) {
+					this.boards.push(...response.data.boards);
 					this.page += 1;
 					$state.loaded();
 				} else {

@@ -7,14 +7,16 @@ import store from "../store";
 /**
  * Add vote to a post
  *
- * @param {postId} string post UUID
+ * @param {string} postId post UUID
+ *
+ * @returns {object} response
  */
 export const addVote = async postId => {
 	const token = store.getters["user/getAuthToken"];
 	const userId = store.getters["user/getUserId"];
 
 	return await axios({
-		method: "post",
+		method: "POST",
 		url: "/api/v1/votes",
 		data: {
 			userId,
@@ -29,14 +31,16 @@ export const addVote = async postId => {
 /**
  * Delete vote from a post
  *
- * @param {postId} string post UUID
+ * @param {string} postId post UUID
+ *
+ * @returns {object} response
  */
 export const deleteVote = async postId => {
 	const userId = store.getters["user/getUserId"];
 	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
-		method: "delete",
+		method: "DELETE",
 		url: "/api/v1/votes",
 		data: {
 			userId,
