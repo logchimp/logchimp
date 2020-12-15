@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
 
 	try {
 		const users = await database
-			.select("userId", "email", "password", "avatar")
+			.select("userId", "name", "email", "password", "avatar")
 			.from("users")
 			.where({
 				email

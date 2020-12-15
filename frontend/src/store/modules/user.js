@@ -1,6 +1,7 @@
 const state = {
 	authToken: "",
 	userId: "",
+	name: "",
 	email: "",
 	avatar: ""
 };
@@ -15,6 +16,7 @@ const mutations = {
 	setUser(state, payload) {
 		state.authToken = payload.authToken;
 		state.userId = payload.userId;
+		state.name = payload.name;
 		state.email = payload.email;
 		state.avatar = payload.avatar;
 
