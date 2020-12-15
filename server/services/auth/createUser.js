@@ -101,10 +101,8 @@ const createUser = async (req, res, next, userData) => {
 				.into("roles_users");
 
 			// send email verification
-			const domain = req.headers.origin;
-			const siteUrl = req.headers.origin.split("//")[1];
-
-			await verifyEmail(domain, siteUrl, userData.email);
+			const url = req.headers.origin;
+			await verifyEmail(url, userData.email);
 
 			// create auth token
 			const secretKey = config.server.secretKey;
