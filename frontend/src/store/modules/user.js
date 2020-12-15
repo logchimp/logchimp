@@ -28,8 +28,8 @@ const actions = {
 	login: ({ commit }, payload) => {
 		commit("setUser", payload);
 	},
-	logout: ({ state, commit }) => {
-		commit("setUser", state);
+	logout: ({ commit }) => {
+		commit("setUser", {});
 		localStorage.removeItem("user");
 	},
 	updateUserSettings: ({ state, commit }, payload) => {
