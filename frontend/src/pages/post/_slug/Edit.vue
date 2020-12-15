@@ -118,6 +118,7 @@ export default {
 			this.buttonLoading = true;
 
 			const postData = {
+				id: this.post.postId,
 				title: this.post.title.value,
 				contentMarkdown: this.post.contentMarkdown,
 				slugId: this.post.slugId,
@@ -125,7 +126,7 @@ export default {
 			};
 
 			try {
-				const response = await updatePost(this.post.postId, postData);
+				const response = await updatePost(postData);
 
 				this.post.title.value = response.data.title;
 				this.post.contentMarkdown = response.data.contentMarkdown;

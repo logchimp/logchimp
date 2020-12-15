@@ -85,8 +85,8 @@ export const getPostBySlug = async slug => {
 /**
  * Update post
  *
- * @param {string} postId post UUID
  * @param {object} post update post data
+ * @param {string} post.id post UUID
  * @param {string} post.title post title
  * @param {string} post.contentMarkdown post body in markdown format
  * @param {string} post.slugId post slug UUID
@@ -94,12 +94,12 @@ export const getPostBySlug = async slug => {
  *
  * @returns {object} response
  */
-export const updatePost = async (postId, post) => {
+export const updatePost = async post => {
 	const token = store.getters["user/getAuthToken"];
 
 	return await axios({
 		method: "PATCH",
-		url: `/api/v1/posts/${postId}`,
+		url: "/api/v1/posts",
 		data: {
 			...post
 		},
