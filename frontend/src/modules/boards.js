@@ -7,8 +7,10 @@ import store from "../store";
 /**
  *	Get all boards
  *
- * @param {page} integer page number default to 1
- * @param {sort} string sort type asc or desc
+ * @param {number} page page number default to 1
+ * @param {string} sort sort type asc or desc
+ *
+ * @returns {object} response
  */
 export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 	return await axios({
@@ -25,7 +27,9 @@ export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 /**
  *	Get board by URL
  *
- * @param {url} string url unqiue for each board
+ * @param {string} url board url
+ *
+ * @returns {object} response
  */
 export const getBoardByUrl = async url => {
 	return await axios({
@@ -38,11 +42,13 @@ export const getBoardByUrl = async url => {
  * Create new board
  *
  * @param {name} string Board name
+ *
+ * @returns {object} response
  */
 export const createBoard = async name => {
 	const token = store.getters["user/getAuthToken"];
 	return await axios({
-		method: "post",
+		method: "POST",
 		url: "/api/v1/boards",
 		data: {
 			name
