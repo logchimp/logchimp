@@ -14,7 +14,7 @@ exports.signup = async (req, res, next) => {
 			password
 		});
 
-		res.status(201).send(user);
+		res.status(201).send({ user });
 	} catch (err) {
 		logger.log({
 			level: "error",

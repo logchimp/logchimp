@@ -71,7 +71,7 @@ exports.filterPost = async (req, res) => {
 			}
 		}
 
-		res.status(200).send(posts);
+		res.status(200).send({ posts });
 	} catch (err) {
 		logger.log({
 			level: "error",

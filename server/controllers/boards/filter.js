@@ -19,7 +19,7 @@ exports.filter = async (req, res) => {
 			.limit(limit)
 			.offset(limit * page);
 
-		res.status(200).send(boards);
+		res.status(200).send({ boards });
 	} catch (err) {
 		logger.log({
 			level: "error",

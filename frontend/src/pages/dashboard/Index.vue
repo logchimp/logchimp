@@ -123,7 +123,7 @@ export default {
 			try {
 				const response = await getPosts(1, 4, "desc");
 
-				this.posts.data = response.data;
+				this.posts.data = response.data.posts;
 				$state.complete();
 			} catch (error) {
 				console.error(error);
@@ -134,7 +134,7 @@ export default {
 			try {
 				const response = await getAllBoards(1, 4, "desc");
 
-				this.boards.data = response.data;
+				this.boards.data = response.data.boards;
 				$state.complete();
 			} catch (error) {
 				console.error(error);
