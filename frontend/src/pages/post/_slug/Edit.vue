@@ -128,13 +128,7 @@ export default {
 			try {
 				const response = await updatePost(postData);
 
-				this.post.title.value = response.data.title;
-				this.post.contentMarkdown = response.data.contentMarkdown;
-				this.post.slugId = response.data.slugId;
-				this.post.userId = response.data.userId;
-				this.post.slug = response.data.slug;
-
-				this.$router.push(`/post/${this.post.slug}`);
+				this.$router.push(`/post/${response.data.post.slug}`);
 			} catch (error) {
 				if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
 					const slug = this.$route.params.slug;
