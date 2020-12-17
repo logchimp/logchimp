@@ -11,7 +11,7 @@
 			:value="value"
 			@input="$emit('input', $event.target.value)"
 			@click="hideError"
-			@keyup.enter="$emit('keyup-enter')"
+			@keyup.enter="keyUpEnter"
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
@@ -59,6 +59,10 @@ export default {
 				show: false,
 				message: ""
 			});
+		},
+		keyUpEnter() {
+			if (this.disabled) return;
+			this.$emit("keyup-enter");
 		}
 	}
 };
