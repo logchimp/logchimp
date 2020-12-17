@@ -15,7 +15,8 @@ const getters = {
 	getUser: state => state,
 	getUserId: state => state.userId,
 	getAuthToken: state => state.authToken,
-	getPermissions: state => state.permissions
+	getPermissions: state => state.permissions,
+	getRoles: state => state.roles
 };
 
 const mutations = {
