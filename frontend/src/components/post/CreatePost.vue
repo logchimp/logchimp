@@ -18,7 +18,12 @@
 			placeholder="What would you use it for?"
 		/>
 		<div style="display: flex; justify-content: center;">
-			<Button type="primary" :loading="buttonLoading" @click="submitPost">
+			<Button
+				type="primary"
+				:loading="buttonLoading"
+				:disabled="createPostPermissionDisabled"
+				@click="submitPost"
+			>
 				Submit
 			</Button>
 		</div>
@@ -77,6 +82,14 @@ export default {
 	computed: {
 		dashboardUrl() {
 			return this.dashboard ? "/dashboard" : "";
+		},
+		createPostPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const createPostPermission = permissions.find(
+				item => item === "post:create"
+			);
+
+			return !createPostPermission;
 		}
 	},
 	methods: {
