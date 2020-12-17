@@ -108,8 +108,22 @@ export default {
 				: this.post.author.username;
 		},
 		postAuthor() {
-			const userId = this.$store.getters["user/getUserId"];
-			return userId === this.post.userId;
+			const permissions = this.$store.getters["user/getPermissions"];
+			const updatePostPermission = permissions.find(
+				item => item === "post:update"
+			);
+
+			if (!updatePostPermission) {
+				return false;
+			}
+
+			const roles = this.$store.getters["user/getRoles"];
+			const roleUser = roles.find(item => item.name === "user");
+
+			const authUserId = this.$store.getters["user/getUserId"];
+			if (roleUser && authUserId !== this.post.userId) return false;
+
+			return true;
 		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
