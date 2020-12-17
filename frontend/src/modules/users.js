@@ -47,6 +47,21 @@ export const updateUserSettings = async user => {
 };
 
 /**
+ * Get authenticated user permissions
+ */
+export const getPermissions = async () => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "GET",
+		url: "/api/v1/users/permissions",
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
+
+/**
  *	Get all users
  *
  * @param {number} page page number default to 1
