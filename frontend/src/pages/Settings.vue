@@ -138,9 +138,6 @@ export default {
 			}
 		},
 		async updateSettings() {
-			if (this.updateUserButtonLoading) {
-				return;
-			}
 			this.updateUserButtonLoading = true;
 
 			const userData = {

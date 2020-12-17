@@ -57,9 +57,6 @@ export default {
 			this.boardName.error = event;
 		},
 		async create() {
-			if (this.buttonLoading) {
-				return;
-			}
 			if (!this.boardName.value) {
 				this.boardName.error.show = true;
 				this.boardName.error.message = "Required";

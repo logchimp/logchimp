@@ -84,10 +84,6 @@ export default {
 			this.title.error = event;
 		},
 		async submitPost() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (!this.title.value) {
 				this.title.error.show = true;
 				this.title.error.message = "Required";
