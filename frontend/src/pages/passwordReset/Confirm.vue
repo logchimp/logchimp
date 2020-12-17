@@ -140,10 +140,6 @@ export default {
 			}
 		},
 		async setPassword() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (!(this.password.value && this.confirmPassword.value)) {
 				if (!this.password.value) {
 					this.password.error.show = true;

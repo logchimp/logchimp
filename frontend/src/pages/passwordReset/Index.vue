@@ -87,10 +87,6 @@ export default {
 			this.email.error = event;
 		},
 		async forgetPassword() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (!this.email.value) {
 				this.email.error.show = true;
 				this.email.error.message = "Required";

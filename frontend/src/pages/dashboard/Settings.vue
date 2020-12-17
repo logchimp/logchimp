@@ -170,10 +170,6 @@ export default {
 			}
 		},
 		async saveSettings() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (!(this.siteName.value && this.accentColor.value)) {
 				if (!this.siteName.value) {
 					this.siteName.error.show = true;

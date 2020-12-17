@@ -97,10 +97,6 @@ export default {
 			this.password.error = event;
 		},
 		async login() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (!(this.email.value && this.password.value)) {
 				if (!this.email.value) {
 					this.email.error.show = true;

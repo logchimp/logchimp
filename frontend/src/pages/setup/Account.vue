@@ -133,10 +133,6 @@ export default {
 			this.password.error = event;
 		},
 		async createAccount() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (
 				!(
 					this.siteTitle.value &&

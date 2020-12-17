@@ -105,10 +105,6 @@ export default {
 			}
 		},
 		async savePost() {
-			if (this.buttonLoading) {
-				return;
-			}
-
 			if (!this.post.title.value) {
 				this.post.title.error.show = true;
 				this.post.title.error.message = "Required";

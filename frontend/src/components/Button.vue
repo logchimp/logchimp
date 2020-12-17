@@ -2,7 +2,7 @@
 	<div
 		class="button"
 		:class="[`button-${type}`, loading ? 'button-loading' : '']"
-		@click="$emit('click')"
+		@click="click"
 	>
 		<slot />
 		<div class="button-loader" v-if="loading">
@@ -25,6 +25,11 @@ export default {
 		loading: {
 			type: Boolean,
 			default: false
+	},
+	methods: {
+		click() {
+			if (this.loading) return;
+			this.$emit("click");
 		}
 	},
 	components: {
