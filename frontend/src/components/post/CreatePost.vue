@@ -101,7 +101,7 @@ export default {
 		async submitPost() {
 			if (!this.title.value) {
 				this.title.error.show = true;
-				this.title.error.message = "Required";
+				this.title.error.message = "You forgot to enter a post title";
 				return;
 			}
 
