@@ -11,6 +11,8 @@ const middleware = require("../../middlewares");
 router.get("/users", users.filter);
 router.get("/users/profile", middleware.apiAuth, users.getProfile);
 router.patch("/users/profile", middleware.apiAuth, users.updateProfile);
+router.get("/users/permissions", middleware.apiAuth, users.getUserPermissions);
+
 router.get("/user/accessDashboard/:userId", users.accessDashboard);
 
 module.exports = router;
