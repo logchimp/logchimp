@@ -118,6 +118,8 @@ export default {
 					...response.data.user
 				});
 
+				this.$store.dispatch("user/updatePermissions");
+
 				if (this.$route.query.redirect) {
 					this.$router.push(this.$route.query.redirect);
 				} else {

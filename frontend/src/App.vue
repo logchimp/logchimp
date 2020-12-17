@@ -85,6 +85,7 @@ export default {
 		const user = localStorage.getItem("user");
 		if (user) {
 			this.$store.dispatch("user/login", JSON.parse(user));
+			this.$store.dispatch("user/updatePermissions");
 		}
 	},
 	metaInfo() {
