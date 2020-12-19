@@ -25,31 +25,11 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-	// validate JWT auth token
-	const secretKey = config.server.secretKey;
-	const decoded = await jwt.verify(token, secretKey);
-
-	/**
-	 * sending information about token expiration is for
-	 * development/testing/staging environment
-	 */
-	const __tokenExpired =
-		process.env.NODE_ENV !== "production"
-			? {
-					message: error.api.emailVerify.tokenExpired,
-					code: "TOKEN_EXPIRED"
-			  }
-			: {
-					message: error.api.emailVerify.invalidToken,
-					code: "INVALID_TOKEN"
-			  };
-
-	// check token expiration time
-	if (!(decoded.exp > decoded.iat)) {
-		return res.status(401).send({ __tokenExpired });
-	}
-
 	try {
+		// validate JWT token
+		const secretKey = config.server.secretKey;
+		const decoded = await jwt.verify(token, secretKey);
+
 		const tokenType = decoded.type;
 		const emailToken = await database
 			.select()
@@ -70,6 +50,16 @@ module.exports = async (req, res, next) => {
 		req.emailToken = emailToken;
 		next();
 	} catch (err) {
-		logger.error(err);
+		logger.error({
+			message: err
+		});
+
+		if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
+			return res.status(401).send({
+				message: error.middleware.auth.invalidToken,
+				code: "INVALID_TOKEN",
+				err
+			});
+		}
 	}
 };
