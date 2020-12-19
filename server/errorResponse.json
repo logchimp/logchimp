@@ -27,8 +27,8 @@
 		"emailVerify": {
 			"emailAlreadyVerified": "Your email has already been verified.",
 			"tokenMissing": "Email verification token missing",
-			"invalidToken": "Invalid email verification link",
-			"expired": "Email verification link is expired",
+			"invalidToken": "Email verification token is invalid",
+			"tokenExpired": "Email verification link is expired"
 		},
 		"passwordReset": {
 			"expired": "Your password reset link has expired",
