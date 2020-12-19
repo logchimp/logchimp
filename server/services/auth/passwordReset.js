@@ -33,14 +33,14 @@ const passwordReset = async (url, tokenPayload) => {
 			.into("resetPassword")
 			.returning("*");
 
-		const domain = new URL(url).host;
+		const urlObject = new URL(url);
 		const passwordResetMailContent = await generateContent("reset", {
-			url,
-			domain,
-			resetLink: `${domain}/password-reset/confirm/?token=${token}`
+			url: urlObject.origin,
+			domain: urlObject.host,
+			resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`
 		});
 
-		const noReplyEmail = `noreply@${domain}`;
+		const noReplyEmail = `noreply@${urlObject.host}`;
 
 		await mail.sendMail({
 			from: noReplyEmail,

@@ -32,14 +32,14 @@ const verifyEmail = async (url, tokenPayload) => {
 			.into("emailVerification")
 			.returning("*");
 
-		const domain = new URL(url).host;
+		const urlObject = new URL(url);
 		const onboardingMailContent = await generateContent("verify", {
-			url,
-			domain,
-			verificationLink: `${url}/email-verify/?token=${token}`
+			url: urlObject.origin,
+			domain: urlObject.host,
+			verificationLink: `${urlObject.origin}/email-verify/?token=${token}`
 		});
 
-		const noReplyEmail = `noreply@${domain}`;
+		const noReplyEmail = `noreply@${urlObject.host}`;
 
 		await mail.sendMail({
 			from: noReplyEmail,
