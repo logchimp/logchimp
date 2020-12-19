@@ -5,7 +5,21 @@ const logger = require("../utils/logger");
 const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
-	const email = req.body.email || req.user.email;
+	const email =
+		(req.body ? req.body.email : "") || (req.user ? req.user.email : "");
+
+	if (!email) {
+		return res.status(400).send({
+			errors: [
+				!email
+					? {
+							message: error.api.authentication.noEmailProvided,
+							code: "EMAIL_MISSING"
+					  }
+					: ""
+			]
+		});
+	}
 
 	try {
 		const user = await database
