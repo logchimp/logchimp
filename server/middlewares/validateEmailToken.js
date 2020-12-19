@@ -10,7 +10,7 @@ const config = logchimpConfig();
 const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
-	const token = req.query.token;
+	const token = req.query.token || req.body.token;
 
 	if (!token) {
 		return res.status(400).send({
@@ -25,48 +25,49 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
+	// validate JWT auth token
+	const secretKey = config.server.secretKey;
+	const decoded = await jwt.verify(token, secretKey);
+
+	/**
+	 * sending information about token expiration is for
+	 * development/testing/staging environment
+	 */
+	const __tokenExpired =
+		process.env.NODE_ENV !== "production"
+			? {
+					message: error.api.emailVerify.tokenExpired,
+					code: "TOKEN_EXPIRED"
+			  }
+			: {
+					message: error.api.emailVerify.invalidToken,
+					code: "INVALID_TOKEN"
+			  };
+
+	// check token expiration time
+	if (!(decoded.exp > decoded.iat)) {
+		return res.status(401).send({ __tokenExpired });
+	}
+
 	try {
-		const verificationToken = await database
+		const tokenType = decoded.type;
+		const emailToken = await database
 			.select()
-			.from("emailVerification")
+			.from(tokenType)
 			.where({ token })
 			.first();
 
-		if (!verificationToken) {
+		if (!emailToken) {
 			return res.status(404).send({
 				message: error.api.emailVerify.invalidToken,
 				code: "INVALID_TOKEN"
 			});
 		}
 
-		// validate JWT auth token
-		const secretKey = config.server.secretKey;
-		const decodedToken = await jwt.verify(verificationToken.token, secretKey);
-
-		/**
-		 * sending information about token expiration is for
-		 * development/testing/staging environment
-		 */
-		const __tokenExpired =
-			process.env.NODE_ENV !== "production"
-				? {
-						message: error.api.emailVerify.tokenExpired,
-						code: "TOKEN_EXPIRED"
-				  }
-				: {
-						message: error.api.emailVerify.invalidToken,
-						code: "INVALID_TOKEN"
-				  };
-
-		// check token expiration time
-		if (!(decodedToken.exp > decodedToken.iat)) {
-			return res.status(401).send({ __tokenExpired });
-		}
-
-		const user = { email: verificationToken.email };
+		const user = { email: emailToken.email };
 		req.user = user;
 
-		req.verificationToken = verificationToken;
+		req.emailToken = emailToken;
 		next();
 	} catch (err) {
 		logger.error(err);

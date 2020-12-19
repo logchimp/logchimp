@@ -7,7 +7,7 @@ const error = require("../../../errorResponse.json");
 
 exports.validate = async (req, res) => {
 	const { isVerified } = req.user;
-	const { email } = req.verificationToken;
+	const { email } = req.emailToken;
 
 	if (isVerified) {
 		return res.status(409).send({
