@@ -1,5 +1,9 @@
 <template>
-	<div class="post-voters" @click="changeVote">
+	<div
+		class="post-voters"
+		@click="changeVote"
+		:class="[disabled ? 'post-voters-disabled' : '']"
+	>
 		<arrow-icon
 			class="post-voters-arrow"
 			:class="{ 'post-voters-vote': isVoted }"
@@ -43,11 +47,20 @@ export default {
 		ArrowIcon
 	},
 	mixins: [tokenErrorHandle],
+	computed: {
+		disabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const changeVotePermission = permissions.find(
+				item => item === "vote:create"
+			);
+
+			return !changeVotePermission;
+		}
+	},
 	methods: {
 		async changeVote() {
-			if (this.loading) {
-				return;
-			}
+			if (this.loading) return;
+			if (this.disabled) return;
 
 			this.loading = true;
 
