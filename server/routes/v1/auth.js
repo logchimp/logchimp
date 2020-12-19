@@ -17,7 +17,7 @@ router.get("/auth/setup", auth.isSiteSetup);
 
 // email
 router.post("/auth/email/verify", exists, auth.email.verify);
-router.post(
+router.get(
 	"/auth/email/validate",
 	validateEmailToken,
 	exists,
