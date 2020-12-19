@@ -169,6 +169,8 @@ export default {
 				this.buttonLoading = false;
 			} catch (err) {
 				this.invalidRequest = true;
+			} finally {
+				this.$store.dispatch("user/logout");
 			}
 		}
 	},
