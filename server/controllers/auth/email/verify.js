@@ -6,9 +6,9 @@ const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
 
 exports.verify = async (req, res) => {
-	const user = req.user;
+	const { userId, email, isVerified } = req.user;
 
-	if (user.isVerified) {
+	if (isVerified) {
 		return res.status(409).send({
 			message: error.api.emailVerify.emailAlreadyVerified,
 			code: "EMAIL_VERIFIED"
@@ -16,8 +16,13 @@ exports.verify = async (req, res) => {
 	}
 
 	try {
+		const tokenPayload = {
+			userId,
+			email,
+			type: "emailVerification"
+		};
 		const url = req.headers.origin;
-		const emailVerification = await verifyEmail(url, user.email);
+		const emailVerification = await verifyEmail(url, tokenPayload);
 
 		/**
 		 * sending token as response is for

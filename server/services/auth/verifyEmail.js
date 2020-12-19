@@ -10,9 +10,9 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
 const config = logchimpConfig();
 
-const verifyEmail = async (url, email) => {
+const verifyEmail = async (url, tokenPayload) => {
 	const secretKey = config.server.secretKey;
-	const token = createToken({ email }, secretKey, {
+	const token = createToken(tokenPayload, secretKey, {
 		expiresIn: "2h"
 	});
 
@@ -21,12 +21,12 @@ const verifyEmail = async (url, email) => {
 			.delete()
 			.from("emailVerification")
 			.where({
-				email
+				email: tokenPayload.email
 			});
 
 		const userEmailVerificationToken = await database
 			.insert({
-				email,
+				email: tokenPayload.email,
 				token
 			})
 			.into("emailVerification")
@@ -43,7 +43,7 @@ const verifyEmail = async (url, email) => {
 
 		await mail.sendMail({
 			from: noReplyEmail,
-			to: email,
+			to: tokenPayload.email,
 			subject: "LogChimp - Please confirm your email",
 			text: onboardingMailContent.text,
 			html: onboardingMailContent.html
