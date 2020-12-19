@@ -25,13 +25,18 @@ router.post(
 );
 
 // password
-router.post("/auth/password/set", auth.password.set);
 router.post("/auth/password/reset", exists, auth.password.reset);
 router.get(
 	"/auth/password/validateToken",
 	validateEmailToken,
 	exists,
 	auth.password.validateToken
+);
+router.post(
+	"/auth/password/set",
+	validateEmailToken,
+	exists,
+	auth.password.set
 );
 
 module.exports = router;
