@@ -10,7 +10,7 @@ const config = logchimpConfig();
 const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
-	const token = req.query.token || req.body.token;
+	const token = req.body.token;
 
 	if (!token) {
 		return res.status(400).send({
