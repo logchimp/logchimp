@@ -1,64 +1,44 @@
-// database
-const database = require("../../../database");
-
 // services
-const getUser = require("../../../services/auth/getUser");
 const verifyEmail = require("../../../services/auth/verifyEmail");
 
 // utils
 const logger = require("../../../utils/logger");
-
 const error = require("../../../errorResponse.json");
 
 exports.verify = async (req, res) => {
-	const email = req.body.email;
+	const user = req.user;
+
+	if (user.isVerified) {
+		return res.status(409).send({
+			message: error.api.emailVerify.emailAlreadyVerified,
+			code: "EMAIL_VERIFIED"
+		});
+	}
 
 	try {
-		const authUser = await getUser(email);
+		const url = req.headers.origin;
+		const emailVerification = await verifyEmail(url, user.email);
 
-		// user not found
-		if (!authUser) {
-			res.status(404).send({
-				message: error.middleware.user.userNotFound,
-				code: "USER_NOT_FOUND"
-			});
-		}
+		/**
+		 * sending token as response is for
+		 * development/testing/staging environment
+		 */
+		const __token =
+			process.env.NODE_ENV !== "production"
+				? {
+						...emailVerification
+				  }
+				: "";
 
-		// user blocked
-		if (authUser.isBlocked) {
-			res.status(403).send({
-				message: error.middleware.user.userBlocked,
-				code: "USER_BLOCKED"
-			});
-		}
-
-		// check email verify status of user
-		const isUserVerified = await database
-			.select("isVerified")
-			.from("users")
-			.where({
-				email
-			})
-			.limit(1);
-
-		const user = isUserVerified[0];
-
-		if (!user.isVerified) {
-			const url = req.headers.origin;
-			const emailVerification = await verifyEmail(url, email);
-
-			res.status(200).send({
-				emailVerification
-			});
-		} else {
-			res.send(409).send({
-				message: error.api.mail.emailVerified,
-				code: "USER_EMAIL_VERIFIED"
-			});
-		}
+		res.status(200).send({
+			verify: {
+				success: !!emailVerification,
+				...__token
+			}
+		});
 	} catch (err) {
 		logger.error({
-			err
+			message: err
 		});
 	}
 };
