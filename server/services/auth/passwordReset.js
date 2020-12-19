@@ -10,10 +10,10 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
 const config = logchimpConfig();
 
-const passwordReset = async (url, tokenData) => {
+const passwordReset = async (url, tokenPayload) => {
 	const secretKey = config.server.secretKey;
-	const token = createToken(tokenData, secretKey, {
-		expiresIn: "1h"
+	const token = createToken(tokenPayload, secretKey, {
+		expiresIn: "2h"
 	});
 
 	try {
@@ -22,35 +22,35 @@ const passwordReset = async (url, tokenData) => {
 			.delete()
 			.from("resetPassword")
 			.where({
-				email: tokenData.email
+				email: tokenPayload.email
 			});
 
-		await database
+		const insertPasswordResetToken = await database
 			.insert({
-				email: tokenData.email,
+				email: tokenPayload.email,
 				token
 			})
 			.into("resetPassword")
 			.returning("*");
 
-		const domain = new URL(url).host;
+		const urlObject = new URL(url);
 		const passwordResetMailContent = await generateContent("reset", {
-			url,
-			domain,
-			resetLink: `${domain}/password-reset/confirm/?token=${token}`
+			url: urlObject.origin,
+			domain: urlObject.host,
+			resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`
 		});
 
-		const noReplyEmail = `noreply@${domain}`;
+		const noReplyEmail = `noreply@${urlObject.host}`;
 
 		await mail.sendMail({
 			from: noReplyEmail,
-			to: tokenData.email,
+			to: tokenPayload.email,
 			subject: "Reset your LogChimp password",
 			text: passwordResetMailContent.text,
 			html: passwordResetMailContent.html
 		});
 
-		return true;
+		return insertPasswordResetToken[0];
 	} catch (err) {
 		logger.error(err);
 	}

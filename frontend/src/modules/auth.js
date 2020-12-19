@@ -117,7 +117,7 @@ export const setNewPassword = async (token, password) => {
 		method: "POST",
 		url: "/api/v1/auth/password/set",
 		data: {
-			resetPasswordToken: token,
+			token,
 			password
 		}
 	});
