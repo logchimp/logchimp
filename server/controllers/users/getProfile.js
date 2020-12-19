@@ -1,12 +1,27 @@
-module.exports = async (req, res) => {
-	const user = req.user;
+// database
+const database = require("../../database");
 
-	res.status(200).send({
-		user: {
-			userId: user.userId,
-			name: user.name,
-			username: user.username,
-			email: user.email
-		}
-	});
+// utils
+const logger = require("../../utils/logger");
+
+module.exports = async (req, res) => {
+	const { userId } = req.user;
+
+	try {
+		const user = await database
+			.select("userId", "name", "username", "email", "isVerified")
+			.from("users")
+			.where({
+				userId
+			})
+			.first();
+
+		res.status(200).send({
+			user
+		});
+	} catch (err) {
+		logger.error({
+			message: err
+		});
+	}
 };

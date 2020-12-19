@@ -10,9 +10,9 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
 const config = logchimpConfig();
 
-const verifyEmail = async (url, email) => {
+const verifyEmail = async (url, tokenPayload) => {
 	const secretKey = config.server.secretKey;
-	const token = createToken({ email }, secretKey, {
+	const token = createToken(tokenPayload, secretKey, {
 		expiresIn: "2h"
 	});
 
@@ -21,29 +21,29 @@ const verifyEmail = async (url, email) => {
 			.delete()
 			.from("emailVerification")
 			.where({
-				email
+				email: tokenPayload.email
 			});
 
 		const userEmailVerificationToken = await database
 			.insert({
-				email,
+				email: tokenPayload.email,
 				token
 			})
 			.into("emailVerification")
 			.returning("*");
 
-		const domain = new URL(url).host;
+		const urlObject = new URL(url);
 		const onboardingMailContent = await generateContent("verify", {
-			url,
-			domain,
-			verificationLink: `${url}/email-verify/?token=${token}`
+			url: urlObject.origin,
+			domain: urlObject.host,
+			verificationLink: `${urlObject.origin}/email-verify/?token=${token}`
 		});
 
-		const noReplyEmail = `noreply@${domain}`;
+		const noReplyEmail = `noreply@${urlObject.host}`;
 
 		await mail.sendMail({
 			from: noReplyEmail,
-			to: email,
+			to: tokenPayload.email,
 			subject: "LogChimp - Please confirm your email",
 			text: onboardingMailContent.text,
 			html: onboardingMailContent.html

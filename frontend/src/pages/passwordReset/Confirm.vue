@@ -129,9 +129,8 @@ export default {
 		hideConfirmPasswordError(event) {
 			this.confirmPassword.error = event;
 		},
-		async validateToken() {
+		async validateToken(token) {
 			try {
-				const token = this.$route.query.token;
 				await validateResetPasswordToken(token);
 			} catch (error) {
 				this.invalidRequest = true;
@@ -170,6 +169,8 @@ export default {
 				this.buttonLoading = false;
 			} catch (err) {
 				this.invalidRequest = true;
+			} finally {
+				this.$store.dispatch("user/logout");
 			}
 		}
 	},
@@ -184,7 +185,7 @@ export default {
 		}
 
 		// validate reset password token
-		this.validateToken();
+		this.validateToken(token);
 	},
 	metaInfo() {
 		return {

@@ -154,9 +154,6 @@ export default {
 			}
 		},
 		async resendEmail() {
-			if (this.resendVerificationEmailButtonLoading) {
-				return;
-			}
 			this.resendVerificationEmailButtonLoading = true;
 
 			try {

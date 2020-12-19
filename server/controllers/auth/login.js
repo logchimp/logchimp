@@ -1,34 +1,29 @@
-const database = require("../../database");
-
 // utils
 const { validatePassword } = require("../../utils/password");
 const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
 const logchimpConfig = require("../../utils/logchimpConfig");
 const config = logchimpConfig();
-
 const error = require("../../errorResponse.json");
 
 exports.login = async (req, res) => {
-	const email = req.body.email;
+	const user = req.user;
 	const password = req.body.password;
 
+	if (!password) {
+		return res.status(400).send({
+			errors: [
+				!password
+					? {
+							message: error.api.authentication.noPasswordProvided,
+							code: "PASSWORD_MISSING"
+					  }
+					: ""
+			]
+		});
+	}
+
 	try {
-		const user = await database
-			.select("userId", "name", "email", "password", "avatar")
-			.from("users")
-			.where({
-				email
-			})
-			.first();
-
-		if (!user) {
-			return res.status(404).send({
-				message: error.middleware.user.userNotFound,
-				code: "USER_NOT_FOUND"
-			});
-		}
-
 		const validateUserPassword = await validatePassword(
 			password,
 			user.password
@@ -43,14 +38,21 @@ exports.login = async (req, res) => {
 		delete user.password;
 
 		// generate authToken
+		const tokenPayload = {
+			userId: user.userId,
+			name: user.name,
+			email: user.email,
+			password: user.password,
+			avatar: user.avatar
+		};
 		const secretKey = config.server.secretKey;
-		const authToken = createToken(user, secretKey, {
+		const authToken = createToken(tokenPayload, secretKey, {
 			expiresIn: "2d"
 		});
 
 		res.status(200).send({
 			user: {
-				...user,
+				...tokenPayload,
 				authToken
 			}
 		});

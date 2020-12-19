@@ -1,19 +1,21 @@
-// services
-const validatePasswordResetToken = require("../../../services/auth/validatePasswordResetToken");
-
-// utils
-const logger = require("../../../utils/logger");
-
 exports.validateToken = async (req, res) => {
-	const token = req.body.token;
+	const emailToken = req.emailToken;
 
-	try {
-		const response = await validatePasswordResetToken(req, res, token);
+	/**
+	 * sending token as response for
+	 * development/testing/staging environment
+	 */
+	const __token =
+		process.env.NODE_ENV !== "production"
+			? {
+					...emailToken
+			  }
+			: "";
 
-		if (response) {
-			res.sendStatus(200);
+	res.status(200).send({
+		reset: {
+			valid: !!emailToken,
+			...__token
 		}
-	} catch (err) {
-		logger.error(err);
-	}
+	});
 };

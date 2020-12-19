@@ -1,39 +1,29 @@
 // database
 const database = require("../../../database");
 
-// services
-const validatePasswordResetToken = require("../../../services/auth/validatePasswordResetToken");
-
 // utils
 const { hashPassword } = require("../../../utils/password");
 const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
 
 exports.set = async (req, res) => {
-	const resetPasswordToken = req.body.resetPasswordToken;
-	const password = req.body.password;
-
-	if (!resetPasswordToken) {
-		res.status(422).send({
-			message: error.api.passwordReset.missingToken,
-			code: "PASSWORD_RESET_TOKEN_MISSING"
-		});
-	}
+	const { userId, email } = req.user;
+	const { password } = req.body;
 
 	if (!password) {
-		res.status(422).send({
-			message: error.api.authentication.noPasswordProvided,
-			code: "NO_PASSWORD_PROVIDED"
+		return res.status(400).send({
+			errors: [
+				!password
+					? {
+							message: error.api.authentication.noPasswordProvided,
+							code: "PASSWORD_MISSING"
+					  }
+					: ""
+			]
 		});
 	}
 
 	try {
-		const authUser = await validatePasswordResetToken(
-			req,
-			res,
-			resetPasswordToken
-		);
-
 		const hashedPassword = hashPassword(password);
 
 		await database
@@ -43,18 +33,20 @@ exports.set = async (req, res) => {
 			})
 			.from("users")
 			.where({
-				userId: authUser.userId
+				userId
 			});
 
 		await database
 			.delete()
 			.from("resetPassword")
 			.where({
-				email: authUser.email
+				email
 			});
 
 		res.status(200).send({
-			type: "success"
+			reset: {
+				success: true
+			}
 		});
 	} catch (err) {
 		logger.error(err);

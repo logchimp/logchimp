@@ -13,7 +13,7 @@ exports.up = knex => {
 				.inTable("users")
 				.onDelete("cascade");
 			table
-				.string("token")
+				.string("token", 320)
 				.notNullable()
 				.unique();
 			table
