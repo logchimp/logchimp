@@ -10,7 +10,7 @@ const exists = require("../../middlewares/userExists");
 const validateEmailToken = require("../../middlewares/validateEmailToken");
 
 router.post("/auth/signup", auth.signup);
-router.post("/auth/login", auth.login);
+router.post("/auth/login", exists, auth.login);
 
 router.post("/auth/setup", auth.setup);
 router.get("/auth/setup", auth.isSiteSetup);
