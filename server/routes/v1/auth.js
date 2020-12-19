@@ -25,8 +25,8 @@ router.post(
 );
 
 // password
-router.post("/auth/password/reset", auth.password.reset);
 router.post("/auth/password/validateToken", auth.password.validateToken);
 router.post("/auth/password/set", auth.password.set);
+router.post("/auth/password/reset", exists, auth.password.reset);
 
 module.exports = router;
