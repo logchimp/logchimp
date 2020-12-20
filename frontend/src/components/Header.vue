@@ -23,7 +23,7 @@
 							:name="user.name"
 						/>
 						<dropdown v-show="profileDropdown" class="nav-profile-dropdown">
-							<dropdown-item @click="openDashboard">
+							<dropdown-item v-if="accessDashboard" @click="openDashboard">
 								<template v-slot:icon>
 									<dashboard-icon />
 								</template>
@@ -98,9 +98,13 @@ export default {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		},
-		userIsOwner() {
-			const user = this.$store.getters["user/getUser"];
-			return user.isOwner;
+		accessDashboard() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const acessDashboardPermission = permissions.find(
+				item => item === "dashboard:read"
+			);
+
+			return acessDashboardPermission;
 		},
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];
