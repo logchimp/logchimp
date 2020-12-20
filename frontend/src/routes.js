@@ -102,8 +102,8 @@ const routes = [
 				}
 
 				// Check user access to dashboard
-				const access = await checkUserDashboardAccess(user.userId);
-				if (access.data.access) {
+				const response = await checkUserDashboardAccess();
+				if (response.data.access) {
 					next();
 				} else {
 					next({ name: "Home" });

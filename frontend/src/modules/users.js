@@ -83,13 +83,16 @@ export const getAllUsers = async (page, sort) => {
 /**
  *	Check if user have access to dashboard
  *
- * @param {string} userId user UUID
- *
  * @returns {object} response
  */
-export const checkUserDashboardAccess = async userId => {
+export const checkUserDashboardAccess = async () => {
+	const token = store.getters["user/getAuthToken"];
+
 	return await axios({
 		method: "GET",
-		url: `/api/v1/user/accessDashboard/${userId}`
+		url: `/api/v1/users/dashboard`,
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
 	});
 };
