@@ -31,7 +31,8 @@
 					<component :is="activeTab" :board="board"></component>
 				</main>
 				<aside class="homepage-sidebar">
-					<create-post :board-id="board.boardId" />
+					<create-post v-if="isUserLoggedIn" :board-id="board.boardId" />
+					<login-card v-else />
 				</aside>
 			</div>
 		</div>
@@ -58,6 +59,7 @@ import TabItem from "../../components/tab/TabItem";
 import LatestPosts from "../../components/post/LatestPosts";
 import OldestPosts from "../../components/post/OldestPosts";
 import CreatePost from "../../components/post/CreatePost";
+import LoginCard from "../../components/LoginCard";
 
 // icons
 import SortDescIcon from "../../components/icons/SortDesc";
@@ -85,6 +87,7 @@ export default {
 		LatestPosts,
 		OldestPosts,
 		CreatePost,
+		LoginCard,
 
 		// icons
 		SortDescIcon,
@@ -102,6 +105,10 @@ export default {
 		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		},
+		isUserLoggedIn() {
+			const user = this.$store.getters["user/getUserId"];
+			return !!user;
 		}
 	},
 	methods: {

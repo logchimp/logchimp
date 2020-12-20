@@ -1,5 +1,5 @@
 <template>
-	<Form>
+	<div class="card">
 		<l-text
 			v-model="title.value"
 			label="Title"
@@ -22,7 +22,7 @@
 				Submit
 			</Button>
 		</div>
-	</Form>
+	</div>
 </template>
 
 <script>
