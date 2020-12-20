@@ -55,10 +55,10 @@ const routes = [
 			try {
 				const response = await isSiteSetup();
 				if (response.data.is_setup) {
-					next({ path: "/dashboard" });
-				} else {
-					next();
+					return next({ path: "/dashboard" });
 				}
+
+				next();
 			} catch (error) {
 				console.error(error);
 				next({ name: "Home" });
@@ -90,26 +90,25 @@ const routes = [
 				const setup = await isSiteSetup();
 				// Check for site setup
 				if (!setup.data.is_setup) {
-					next({ name: "Setup welcome" });
-					return;
+					return next({ name: "Setup welcome" });
 				}
 
 				// Is user logged in
 				const user = store.getters["user/getUser"];
 				if (!user.userId) {
-					next({ name: "Login", query: { redirect: "/dashboard" } });
-					return;
+					return next({ name: "Login", query: { redirect: "/dashboard" } });
 				}
 
 				// Check user access to dashboard
 				const response = await checkUserDashboardAccess();
 				if (response.data.access) {
-					next();
-				} else {
-					next({ name: "Home" });
+					return next();
 				}
+
+				next({ name: "Home" });
 			} catch (error) {
 				console.error(error);
+				next({ name: "Home" });
 			}
 		},
 		children: [
