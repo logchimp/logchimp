@@ -1,28 +1,26 @@
 <template>
-	<Form>
-		<div class="site-setup-card-header">
-			<h4 class="site-setup-card-header-heading">Login</h4>
-			<p class="site-setup-card-header-label">
+	<div class="card">
+		<div class="card-section card-header">
+			<h4 class="card-header-title">Login</h4>
+			<p class="card-header-label">
 				Log in to your account to give feedback
 			</p>
 		</div>
-		<div class="site-setup-card-button">
+		<div class="card-section">
 			<Button type="primary" @click="loginRedirect">
 				Login
 			</Button>
 		</div>
-	</Form>
+	</div>
 </template>
 
 <script>
 // components
-import Form from "./Form";
 import Button from "./Button";
 
 export default {
 	name: "LoginCard",
 	components: {
-		Form,
 		Button
 	},
 	methods: {
