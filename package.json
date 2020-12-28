@@ -14,6 +14,7 @@
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
 		"frontend:lint": "cd frontend && vue-cli-service lint",
+		"frontend:test": "jest --config ./frontend/jest.config.js",
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"server:dev": "cd server && nodemon app.js",
 		"server:start": "cd server && node app.js",
