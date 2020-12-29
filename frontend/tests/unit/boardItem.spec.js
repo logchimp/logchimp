@@ -1,5 +1,5 @@
 import BoardItem from "../../src/components/board/BoardItem.vue";
-import { mount } from "@vue/test-utils";
+import { mount, RouterLinkStub } from "@vue/test-utils";
 
 describe("board item", () => {
 	const wrapper = mount(BoardItem, {
@@ -9,7 +9,18 @@ describe("board item", () => {
 			url: "feature-requests",
 			postCount: 30
 		},
-		stubs: ["router-link"]
+		stubs: {
+			RouterLink: RouterLinkStub
+		}
+	});
+
+	it("link to '/feature-requests' board", () => {
+		expect(
+			wrapper
+				.find("[data-test=board-item]")
+				.findComponent(RouterLinkStub)
+				.props().to
+		).toBe("/board/feature-requests");
 	});
 
 	it("color is 'rgb(171, 202, 188)'", () => {
