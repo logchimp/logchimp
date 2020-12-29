@@ -55,7 +55,7 @@
 				>
 					<div class="table-data boards-table-color">
 						<div
-							class="board-color"
+							class="color-dot"
 							:style="{
 								backgroundColor: `#${board.color}`
 							}"

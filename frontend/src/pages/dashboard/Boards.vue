@@ -27,7 +27,7 @@
 			<div v-for="board in boards" :key="board.boardId" class="table-row">
 				<div class="table-data boards-table-color">
 					<div
-						class="board-color"
+						class="color-dot"
 						:style="{
 							backgroundColor: `#${board.color}`
 						}"
