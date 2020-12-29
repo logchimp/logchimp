@@ -1,14 +1,16 @@
 <template>
 	<div
 		class="post-voters"
+		data-test="vote"
 		@click="changeVote"
 		:class="[disabled ? 'post-voters-disabled' : '']"
 	>
 		<arrow-icon
 			class="post-voters-arrow"
+			data-test="vote-arrow"
 			:class="{ 'post-voters-vote': isVoted }"
 		/>
-		{{ votesCount }}
+		<span data-test="vote-count">{{ votesCount }}</span>
 	</div>
 </template>
 
