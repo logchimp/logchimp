@@ -14,7 +14,7 @@
 		<div class="card-section">
 			<img
 				style="width: 20rem"
-				src="@/assets/images/dashboard-loading-skeleton.png"
+				src="https://cdn.logchimp.codecarrot.net/dashboard-loading-skeleton.png"
 				alt="Dashboard loading skeleton"
 			/>
 		</div>
