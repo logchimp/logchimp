@@ -7,5 +7,6 @@ module.exports = {
 	transform: {
 		".*\\.(js)$": "babel-jest",
 		".*\\.(vue)$": "vue-jest"
-	}
+	},
+	setupFilesAfterEnv: ["./tests/setupTest.js"]
 };
