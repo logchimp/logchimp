@@ -15,7 +15,15 @@ const store = new Vuex.Store({
 });
 
 describe("vote", () => {
-	it("Disable vote without 'vote:create' permission from vuex", () => {
+	it("Disable vote without 'vote:create' permission", () => {
+		const store = new Vuex.Store({
+			state: {
+				permissions: []
+			},
+			getters: {
+				"user/getPermissions": state => state.permissions
+			}
+		});
 		const wrapper = mount(Vote, {
 			store,
 			localVue,
