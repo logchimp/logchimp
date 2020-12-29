@@ -14,22 +14,12 @@
 				<h5 class="post-content-title">{{ postData.title }}</h5>
 			</router-link>
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
-			<router-link
-				:to="`/board/${postData.board.url}`"
-				v-if="showBoard && post.board"
-			>
-				<div class="post-board">
-					<div
-						class="board-color"
-						:style="{
-							backgroundColor: `#${postData.board.color}`
-						}"
-					/>
-					<div class="post-board-name">
-						<p>{{ postData.board.name }}</p>
-					</div>
-				</div>
-			</router-link>
+			<board-badge
+				:show-board="showBoard"
+				:name="post.board.name"
+				:color="post.board.color"
+				:url="post.board.url"
+			/>
 		</div>
 	</div>
 </template>
@@ -37,6 +27,7 @@
 <script>
 // components
 import Vote from "./Vote";
+import BoardBadge from "../board/BoardBadge";
 
 export default {
 	name: "post",
@@ -61,7 +52,8 @@ export default {
 		};
 	},
 	components: {
-		Vote
+		Vote,
+		BoardBadge
 	},
 	watch: {
 		post: {
@@ -89,7 +81,7 @@ export default {
 		updateVoters(voters) {
 			this.postData.voters.votesCount = voters.votesCount;
 			this.postData.voters.viewerVote = voters.viewerVote;
-		},
-	},
+		}
+	}
 };
 </script>
