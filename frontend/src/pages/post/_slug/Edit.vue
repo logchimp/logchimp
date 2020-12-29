@@ -11,15 +11,22 @@
 				:error="post.title.error"
 				@keyup-enter="savePost"
 				@hide-error="hideTitleError"
+				:disabled="updatePostPermissionDisabled"
 			/>
 			<l-textarea
 				v-model="post.contentMarkdown"
 				label="Description"
 				name="Post description"
 				placeholder="What would you use it for?"
+				:disabled="updatePostPermissionDisabled"
 			/>
 			<div style="display: flex; justify-content: flex-start;">
-				<Button type="primary" @click="savePost" :loading="buttonLoading">
+				<Button
+					type="primary"
+					@click="savePost"
+					:loading="buttonLoading"
+					:disabled="updatePostPermissionDisabled"
+				>
 					Update
 				</Button>
 			</div>
@@ -78,6 +85,24 @@ export default {
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		},
+		updatePostPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const updatePostPermission = permissions.find(
+				item => item === "post:update"
+			);
+
+			if (!updatePostPermission) {
+				return true;
+			}
+
+			const roles = this.$store.getters["user/getRoles"];
+			const roleUser = roles.find(item => item.name === "user");
+
+			const authUserId = this.$store.getters["user/getUserId"];
+			if (roleUser && authUserId !== this.post.userId) return true;
+
+			return false;
 		}
 	},
 	methods: {
@@ -107,7 +132,7 @@ export default {
 		async savePost() {
 			if (!this.post.title.value) {
 				this.post.title.error.show = true;
-				this.post.title.error.message = "Required";
+				this.post.title.error.message = "Please enter a valid post title";
 				return;
 			}
 
@@ -126,10 +151,7 @@ export default {
 
 				this.$router.push(`/post/${response.data.post.slug}`);
 			} catch (error) {
-				if (error.response.data.code === "NOT_ENOUGH_PERMISSION") {
-					const slug = this.$route.params.slug;
-					this.$router.push(`/post/${slug}`);
-				}
+				console.log(error);
 			} finally {
 				this.buttonLoading = false;
 			}
