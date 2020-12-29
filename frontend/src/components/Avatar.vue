@@ -1,9 +1,9 @@
 <template>
 	<div class="avatar" @click="$emit('click')">
-		<div v-if="src" class="avatar-image">
+		<div v-if="src" data-test="avatar-image" class="avatar-image">
 			<img :src="src" :alt="name" class="avatar-image-img" />
 		</div>
-		<div v-else class="avatar-initials">
+		<div v-else data-test="avatar-initials" class="avatar-initials">
 			{{ initals }}
 		</div>
 	</div>
@@ -19,7 +19,7 @@ export default {
 		},
 		name: {
 			type: String,
-			default: ""
+			required: true
 		}
 	},
 	computed: {
