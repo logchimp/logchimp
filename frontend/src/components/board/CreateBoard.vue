@@ -11,7 +11,12 @@
 			@hide-error="hideBoardNameError"
 		/>
 		<div style="display: flex; justify-content: center;">
-			<Button :loading="buttonLoading" @click="create" type="primary">
+			<Button
+				:loading="buttonLoading"
+				:disabled="createBoardPermissionDisabled"
+				@click="create"
+				type="primary"
+			>
 				Create
 			</Button>
 		</div>
@@ -51,6 +56,16 @@ export default {
 		Form,
 		LText,
 		Button
+	},
+	computed: {
+		createBoardPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const createBoardPermission = permissions.find(
+				item => item === "board:create"
+			);
+
+			return !createBoardPermission;
+		}
 	},
 	methods: {
 		hideBoardNameError(event) {

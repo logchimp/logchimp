@@ -1,15 +1,22 @@
+// modules
+import { getPermissions } from "../../modules/users";
+
 const state = {
 	authToken: "",
 	userId: "",
 	name: "",
 	email: "",
-	avatar: ""
+	avatar: "",
+	roles: [],
+	permissions: []
 };
 
 const getters = {
 	getUser: state => state,
 	getUserId: state => state.userId,
-	getAuthToken: state => state.authToken
+	getAuthToken: state => state.authToken,
+	getPermissions: state => state.permissions,
+	getRoles: state => state.roles
 };
 
 const mutations = {
@@ -21,6 +28,10 @@ const mutations = {
 		state.avatar = payload.avatar;
 
 		localStorage.setItem("user", JSON.stringify(payload));
+	},
+	setPermissions(state, payload) {
+		state.roles = payload.roles;
+		state.permissions = payload.permissions;
 	}
 };
 
@@ -30,6 +41,12 @@ const actions = {
 	},
 	logout: ({ commit }) => {
 		commit("setUser", {});
+
+		// reset roles/permissions state
+		commit("setPermissions", {
+			roles: [],
+			permissions: []
+		});
 		localStorage.removeItem("user");
 	},
 	updateUserSettings: ({ state, commit }, payload) => {
@@ -37,6 +54,11 @@ const actions = {
 			...state,
 			...payload
 		});
+	},
+	updatePermissions: async ({ commit }) => {
+		const response = await getPermissions();
+
+		commit("setPermissions", response.data);
 	}
 };
 

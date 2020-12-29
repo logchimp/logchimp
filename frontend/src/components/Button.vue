@@ -1,7 +1,11 @@
 <template>
 	<div
 		class="button"
-		:class="[`button-${type}`, loading ? 'button-loading' : '']"
+		:class="[
+			`button-${type}`,
+			loading ? 'button-loading' : '',
+			disabled ? 'button-primary-disabled' : ''
+		]"
 		@click="click"
 	>
 		<slot />
@@ -25,10 +29,16 @@ export default {
 		loading: {
 			type: Boolean,
 			default: false
+		},
+		disabled: {
+			type: Boolean,
+			default: false
+		}
 	},
 	methods: {
 		click() {
 			if (this.loading) return;
+			if (this.disabled) return;
 			this.$emit("click");
 		}
 	},

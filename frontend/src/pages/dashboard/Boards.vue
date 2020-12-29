@@ -3,7 +3,11 @@
 		<div class="boards-page-header">
 			<h4 class="boards-page-header-heading">Boards</h4>
 			<div class="boards-page-header-button">
-				<Button type="primary" @click="createBoard">
+				<Button
+					type="primary"
+					:disabled="createBoardPermissionDisabled"
+					@click="createBoard"
+				>
 					Create board
 				</Button>
 			</div>
@@ -97,6 +101,14 @@ export default {
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		},
+		createBoardPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const createBoardPermission = permissions.find(
+				item => item === "board:create"
+			);
+
+			return !createBoardPermission;
 		}
 	},
 	methods: {

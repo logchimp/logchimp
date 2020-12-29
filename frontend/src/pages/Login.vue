@@ -111,13 +111,12 @@ export default {
 			this.buttonLoading = true;
 
 			try {
-				const response = await signin(
-					this.email.value,
-					this.password.value
-				);
+				const response = await signin(this.email.value, this.password.value);
 				this.$store.dispatch("user/login", {
 					...response.data.user
 				});
+
+				this.$store.dispatch("user/updatePermissions");
 
 				if (this.$route.query.redirect) {
 					this.$router.push(this.$route.query.redirect);
