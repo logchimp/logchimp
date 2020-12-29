@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  tests:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node: [10, 12]
+        node: [12, 14]
         os: [ubuntu-18.04, ubuntu-20.04]
 
     steps:
@@ -28,14 +28,5 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: Lint
-        run: npm run frontend:lint
-
-      - name: Build
-        run: npm run frontend:build
-
-      - name: Install 'tree' command
-        run: sudo apt-get install tree
-
-      - name: Validate Vue build
-        run: tree frontend/dist
+      - name: Unit tests
+        run: npm run frontend:test

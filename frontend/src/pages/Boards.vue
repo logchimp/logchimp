@@ -1,27 +1,14 @@
 <template>
 	<div>
 		<div v-if="boards.length > 0" class="boards-lists">
-			<router-link
-				:to="`/board/${board.url}`"
+			<board-item
 				v-for="board in boards"
 				:key="board.boardId"
-				class="boards-item"
-			>
-				<div
-					class="board-color boards-item-color"
-					:style="{
-						backgroundColor: `#${board.color}`
-					}"
-				/>
-				<div class="boards-item-name-and-posts">
-					<div class="boards-item-name">
-						{{ board.name }}
-					</div>
-					<div class="boards-item-posts">
-						{{ board.post_count }}
-					</div>
-				</div>
-			</router-link>
+				:name="board.name"
+				:color="board.color"
+				:url="board.url"
+				:postCount="Number(board.post_count)"
+			/>
 		</div>
 		<infinite-loading @infinite="getBoards">
 			<div class="loader-container" slot="spinner"><loader /></div>
@@ -40,6 +27,7 @@ import InfiniteLoading from "vue-infinite-loading";
 import { getAllBoards } from "../modules/boards";
 
 // components
+import BoardItem from "../components/board/BoardItem";
 import Loader from "../components/Loader";
 
 export default {
@@ -55,6 +43,7 @@ export default {
 		InfiniteLoading,
 
 		// components
+		BoardItem,
 		Loader
 	},
 	computed: {
