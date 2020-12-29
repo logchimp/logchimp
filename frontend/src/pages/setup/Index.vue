@@ -9,7 +9,7 @@
 		</div>
 		<img
 			class="welcome-image"
-			src="@/assets/images/logchimp_homepage_preview.png"
+			src="https://cdn.logchimp.codecarrot.net/logchimp-home-preview.png"
 			alt="LogChimp homepage preview"
 		/>
 		<Button type="primary" @click="createAccount" class="welcome-button">
