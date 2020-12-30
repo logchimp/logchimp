@@ -16,9 +16,9 @@
 			<p class="post-content-description" v-html="sliceContentMarkdown" />
 			<board-badge
 				:show-board="showBoard"
-				:name="post.board.name"
-				:color="post.board.color"
-				:url="post.board.url"
+				:name="postData.board.name"
+				:color="postData.board.color"
+				:url="postData.board.url"
 			/>
 		</div>
 	</div>
@@ -54,13 +54,6 @@ export default {
 	components: {
 		Vote,
 		BoardBadge
-	},
-	watch: {
-		post: {
-			handler(newValue) {
-				this.postData = newValue;
-			}
-		}
 	},
 	computed: {
 		sliceContentMarkdown() {
