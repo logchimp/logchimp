@@ -41,17 +41,10 @@
 			</div>
 		</div>
 		<div v-if="isExpanded" class="post-card-extra">
-			<div class="post-card-voters">
-				<img
-					v-for="voters in post.voters.votes"
-					:key="voters.userId"
-					:src="voters.avatar"
-					:alt="voters.username"
-				/>
-				<div v-if="moreVotersCount" class="more-voters">
-					{{ "+" + moreVotersCount }}
-				</div>
-			</div>
+			<avatar-stack
+				:avatars="post.voters.votes"
+				:totalCount="post.voters.votesCount"
+			/>
 			<board-badge
 				:show-board="true"
 				:name="post.board.name"
@@ -66,6 +59,7 @@
 // components
 import Vote from "./Vote";
 import BoardBadge from "../board/BoardBadge";
+import AvatarStack from "../AvatarStack";
 
 // icons
 import ArrowTop from "../icons/ArrowTop";
@@ -87,7 +81,8 @@ export default {
 	components: {
 		Vote,
 		BoardBadge,
-		ArrowTop
+		ArrowTop,
+		AvatarStack
 	},
 	computed: {
 		sliceContentMarkdown() {
@@ -95,11 +90,6 @@ export default {
 				this.post.contentMarkdown.slice(0, 120) +
 				(this.post.contentMarkdown.length > 120 ? "..." : "")
 			);
-		},
-		moreVotersCount() {
-			return this.post.voters.votesCount > 9
-				? this.post.voters.votesCount - 6
-				: 0;
 		}
 	},
 	methods: {
