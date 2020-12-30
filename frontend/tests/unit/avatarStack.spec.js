@@ -1,27 +1,30 @@
 import AvatarStack from "../../src/components/AvatarStack";
 import { mount } from "@vue/test-utils";
-import { exceptions } from "../../../server/utils/logger";
 
 describe("avatar stack", () => {
 	const wrapper = mount(AvatarStack, {
 		propsData: {
 			avatars: [
 				{
+					// random UUID
 					userId: "01982803-d099-4f03-8607-471f87d7c6e9",
 					avatar: "https://www.gravatar.com/avatar/1",
 					username: "peg-legge"
 				},
 				{
+					// random UUID
 					userId: "e1de47b3-7acb-4024-9635-1c7ebffc07c3",
 					avatar: "https://www.gravatar.com/avatar/2",
 					username: "baka"
 				},
 				{
+					// random UUID
 					userId: "0f3fd2a0-7d96-4b65-95b5-bf79bccda2c5",
 					avatar: "https://www.gravatar.com/avatar/3",
 					username: "kimiko"
 				},
 				{
+					// random UUID
 					userId: "71c3dea6-c848-4bba-85b4-d1766e461308",
 					avatar: "https://www.gravatar.com/avatar/4",
 					username: "neha"
