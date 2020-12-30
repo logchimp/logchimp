@@ -10,13 +10,17 @@
 			<div style="width: 100%">
 				<div class="post-card-section">
 					<div>
-						<router-link :to="`/post/${post.slug}`">
+						<router-link data-test="post-link" :to="`/post/${post.slug}`">
 							<h5>{{ post.title }}</h5>
 						</router-link>
-						<span v-if="!isExpanded" class="post-card-board">{{
-							post.board.name
-						}}</span>
+						<span
+							data-test="post-board-name"
+							v-if="!isExpanded"
+							class="post-card-board"
+							>{{ post.board.name }}</span
+						>
 						<time
+							data-test="post-date"
 							v-else
 							:datetime="post.createdAt"
 							:title="post.createdAt | moment('dddd, DD MMMM YYYY hh:mm')"
@@ -26,6 +30,7 @@
 						</time>
 					</div>
 					<div
+						data-test="post-card-toggle"
 						@click="isExpanded = !isExpanded"
 						:style="{
 							transform: isExpanded ? 'rotateX(180deg)' : ''
@@ -35,12 +40,16 @@
 						<arrow-top />
 					</div>
 				</div>
-				<p v-if="isExpanded" class="post-card-description">
+				<p
+					v-if="isExpanded"
+					data-test="post-card-description"
+					class="post-card-description"
+				>
 					{{ sliceContentMarkdown }}
 				</p>
 			</div>
 		</div>
-		<div v-if="isExpanded" class="post-card-extra">
+		<div data-test="post-card-extra" v-if="isExpanded" class="post-card-extra">
 			<avatar-stack
 				:avatars="post.voters.votes"
 				:totalCount="post.voters.votesCount"
