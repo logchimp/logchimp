@@ -6,14 +6,20 @@
 			:is-voted="postData.voters.viewerVote"
 			@update-voters="updateVoters"
 		/>
-		<div class="post-content">
+		<div>
 			<router-link
 				class="post-content-link"
 				:to="`${dashboardUrl}/post/${postData.slug}`"
 			>
-				<h5 class="post-content-title">{{ postData.title }}</h5>
+				<h5 data-test="post-title" class="post-content-title">
+					{{ postData.title }}
+				</h5>
 			</router-link>
-			<p class="post-content-description" v-html="sliceContentMarkdown" />
+			<p
+				data-test="post-description"
+				class="post-content-description"
+				v-html="sliceContentMarkdown"
+			/>
 			<board-badge
 				:show-board="showBoard"
 				:name="postData.board.name"
@@ -57,14 +63,10 @@ export default {
 	},
 	computed: {
 		sliceContentMarkdown() {
-			if (this.post.contentMarkdown) {
-				return (
-					this.post.contentMarkdown.slice(0, 120) +
-					(this.post.contentMarkdown.length > 120 ? "..." : "")
-				);
-			} else {
-				return "";
-			}
+			return (
+				this.post.contentMarkdown.slice(0, 120) +
+				(this.post.contentMarkdown.length > 120 ? "..." : "")
+			);
 		},
 		dashboardUrl() {
 			return this.dashboard ? "/dashboard" : "";
