@@ -8,6 +8,8 @@ describe("post", () => {
 				// random UUID
 				postId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
 				title: "Post title",
+				// random slug ID
+				slug: "post-title-qwJy9_3Sm9g3Qm3r9OQk",
 				contentMarkdown: "What's this feature is all about?",
 				voters: {
 					isVoted: true,
@@ -26,8 +28,17 @@ describe("post", () => {
 		}
 	});
 
+	it("link to post", () => {
+		expect(
+			wrapper
+				.find("[data-test=post-link]")
+				.findComponent(RouterLinkStub)
+				.props().to
+		).toBe("/post/post-title-qwJy9_3Sm9g3Qm3r9OQk");
+	});
+
 	it("title", () => {
-		expect(wrapper.find("[data-test=post-title]").text()).toBe("Post title");
+		expect(wrapper.find("[data-test=post-link] h5").text()).toBe("Post title");
 	});
 
 	it("description", () => {
