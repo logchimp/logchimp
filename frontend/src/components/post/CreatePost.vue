@@ -44,6 +44,7 @@ import LTextarea from "../input/LTextarea";
 import Button from "../Button";
 
 // mixins
+import validateUUID from "../../utils/validateUUID";
 import tokenErrorHandle from "../../mixins/tokenErrorHandle";
 
 export default {
@@ -66,8 +67,8 @@ export default {
 	props: {
 		boardId: {
 			type: String,
-			default: "",
-			required: true
+			required: true,
+			validator: validateUUID
 		},
 		dashboard: {
 			type: Boolean,

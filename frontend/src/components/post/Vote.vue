@@ -22,6 +22,7 @@ import { addVote, deleteVote } from "../../modules/votes";
 import ArrowIcon from "../icons/Arrow";
 
 // mixins
+import validateUUID from "../../utils/validateUUID";
 import tokenErrorHandle from "../../mixins/tokenErrorHandle";
 
 export default {
@@ -34,7 +35,8 @@ export default {
 	props: {
 		postId: {
 			type: String,
-			required: true
+			required: true,
+			validator: validateUUID
 		},
 		votesCount: {
 			type: Number,
