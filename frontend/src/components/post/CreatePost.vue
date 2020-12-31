@@ -5,6 +5,7 @@
 			label="Title"
 			type="text"
 			name="Post title"
+			data-test="post-title"
 			placeholder="Name of the feature"
 			:error="title.error"
 			@keyup-enter="submitPost"
@@ -22,6 +23,7 @@
 		<div style="display: flex; justify-content: center;">
 			<Button
 				type="primary"
+				data-test="create-post-button"
 				:loading="buttonLoading"
 				:disabled="createPostPermissionDisabled"
 				@click="submitPost"
@@ -37,7 +39,6 @@
 import { createPost } from "../../modules/posts";
 
 // components
-import Form from "../Form";
 import LText from "../input/LText";
 import LTextarea from "../input/LTextarea";
 import Button from "../Button";
@@ -76,7 +77,6 @@ export default {
 	mixins: [tokenErrorHandle],
 	components: {
 		// components
-		Form,
 		LText,
 		LTextarea,
 		Button
