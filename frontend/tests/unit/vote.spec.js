@@ -38,6 +38,21 @@ describe("vote", () => {
 		).toBe(true);
 	});
 
+	it("Enable vote with 'vote:create' permission", () => {
+		const wrapper = mount(Vote, {
+			store,
+			localVue,
+			propsData: {
+				// random UUID
+				postId: "69136892-b8c8-41c7-9e8f-a2eb212e5311"
+			}
+		});
+
+		expect(
+			wrapper.find("[data-test=vote]").classes("post-voters-disabled")
+		).toBe(false);
+	});
+
 	it("Vote is voted", () => {
 		const wrapper = mount(Vote, {
 			store,
