@@ -51,7 +51,7 @@ exports.create = async (req, res) => {
 		.first();
 
 	if (board) {
-		return res.status(404).send({
+		return res.status(409).send({
 			message: error.api.boards.exists,
 			code: "BOARD_EXISTS"
 		});
