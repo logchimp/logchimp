@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [10, 12, 14]
+        node: [12, 14]
         os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
 
     services:
