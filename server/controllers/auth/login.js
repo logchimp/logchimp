@@ -35,15 +35,10 @@ exports.login = async (req, res) => {
 			});
 		}
 
-		delete user.password;
-
 		// generate authToken
 		const tokenPayload = {
 			userId: user.userId,
-			name: user.name,
-			email: user.email,
-			password: user.password,
-			avatar: user.avatar
+			email: user.email
 		};
 		const secretKey = config.server.secretKey;
 		const authToken = createToken(tokenPayload, secretKey, {
@@ -52,8 +47,12 @@ exports.login = async (req, res) => {
 
 		res.status(200).send({
 			user: {
-				...tokenPayload,
-				authToken
+				authToken,
+				userId: user.userId,
+				name: user.name,
+				username: user.username,
+				email: user.email,
+				avatar: user.avatar
 			}
 		});
 	} catch (err) {
