@@ -79,11 +79,11 @@
 					<avatar
 						class="dashboard-sidebar-user-avatar"
 						:src="user.avatar"
-						:name="user.name"
+						:name="user.name || user.username"
 					/>
 					<div class="dashboard-sidebar-user-data">
 						<div class="dashboard-sidebar-user-name">
-							{{ user.name }}
+							{{ user.name || user.username }}
 						</div>
 						<div class="dashboard-sidebar-user-email">
 							{{ user.email }}

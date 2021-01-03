@@ -20,7 +20,7 @@
 							@click="toggleProfileDropdown"
 							class="nav-profile"
 							:src="user.avatar"
-							:name="user.name"
+							:name="user.name || user.username"
 						/>
 						<dropdown v-show="profileDropdown" class="nav-profile-dropdown">
 							<dropdown-item v-if="accessDashboard" @click="openDashboard">
