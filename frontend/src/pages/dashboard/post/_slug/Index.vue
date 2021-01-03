@@ -65,7 +65,6 @@ export default {
 			post: {
 				loading: false
 			},
-			voters: [],
 			isPostExist: true
 		};
 	},
@@ -98,7 +97,6 @@ export default {
 				const response = await getPostBySlug(slug);
 
 				this.post = response.data.post;
-				this.voters = response.data.voters;
 			} catch (error) {
 				if (error.response.data.code === "POST_NOT_FOUND") {
 					this.isPostExist = false;
