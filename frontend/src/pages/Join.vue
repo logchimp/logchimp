@@ -12,6 +12,7 @@
 				</router-link>
 				<h3 class="auth-form-heading">Create your account</h3>
 			</div>
+			<server-error v-if="serverError" @close="serverError = false" />
 			<Form class="auth-form">
 				<l-text
 					v-model="email.value"
@@ -52,6 +53,7 @@
 import { signup } from "../modules/auth";
 
 // component
+import ServerError from "../components/serverError";
 import Form from "../components/Form";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
@@ -74,10 +76,12 @@ export default {
 					message: ""
 				}
 			},
-			buttonLoading: false
+			buttonLoading: false,
+			serverError: false
 		};
 	},
 	components: {
+		ServerError,
 		Form,
 		LText,
 		Button
@@ -126,6 +130,10 @@ export default {
 					this.$router.push("/");
 				}
 			} catch (error) {
+				if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+					this.serverError = true;
+				}
+
 				if (error.response.data.code === "USER_EXISTS") {
 					this.email.error.show = true;
 					this.email.error.message = "Exists";
