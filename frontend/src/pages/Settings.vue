@@ -2,6 +2,7 @@
 	<Form>
 		<h4 class="user-settings-heading">Account settings</h4>
 		<div v-if="!user.loading">
+			<server-error v-if="serverError" @close="serverError = false" />
 			<div v-if="!userIsVerified" class="user-settings-verification">
 				<div class="user-settings-verification-content">
 					<alert-icon />
@@ -70,6 +71,7 @@ import { resendUserVerificationEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader";
+import ServerError from "../components/serverError";
 import Form from "../components/Form";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
@@ -97,6 +99,7 @@ export default {
 				},
 				isVerified: false
 			},
+			serverError: false,
 			resendVerificationEmailButtonLoading: false,
 			updateUserButtonLoading: false
 		};
@@ -104,6 +107,7 @@ export default {
 	components: {
 		// components
 		Loader,
+		ServerError,
 		Form,
 		LText,
 		Button,
@@ -159,6 +163,10 @@ export default {
 				const email = this.user.email.value;
 				await resendUserVerificationEmail(email);
 			} catch (error) {
+				if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+					this.serverError = true;
+				}
+
 				console.error(error);
 			} finally {
 				this.resendVerificationEmailButtonLoading = false;

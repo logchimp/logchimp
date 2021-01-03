@@ -4,6 +4,7 @@
 			<div class="onboarding-header">
 				<h2 class="onboarding-heading">Create an account</h2>
 			</div>
+			<server-error v-if="serverError" @close="serverError = false" />
 			<Form class="onboarding-form account-form-container">
 				<l-text
 					v-model="siteTitle.value"
@@ -69,6 +70,7 @@ import { siteSetup } from "../../modules/site";
 
 // components
 import Container from "../../components/Container";
+import ServerError from "../../components/serverError";
 import Form from "../../components/Form";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
@@ -105,11 +107,13 @@ export default {
 					message: ""
 				}
 			},
-			buttonLoading: false
+			buttonLoading: false,
+			serverError: false
 		};
 	},
 	components: {
 		Container,
+		ServerError,
 		Form,
 		LText,
 		Button
@@ -178,6 +182,11 @@ export default {
 
 				this.$router.push("/setup/create-board");
 			} catch (error) {
+				console.log(error.response.data);
+				if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+					this.serverError = true;
+				}
+
 				console.error(error);
 			} finally {
 				this.buttonLoading = false;
