@@ -80,46 +80,46 @@ const createUser = async (req, res, next, userData) => {
 				avatar
 			})
 			.into("users")
-			.returning(["userId", "email", "avatar"]);
+			.returning(["userId", "name", "email", "avatar"]);
 
-		if (newUser) {
-			// assign user role
-			const getRoles = await database
-				.select()
-				.from("roles")
-				.where({
-					name: "user"
-				});
-
-			const getUserRole = getRoles[0];
-			await database
-				.insert({
-					id: uuidv4(),
-					role_id: getUserRole.id,
-					user_id: newUser.userId
-				})
-				.into("roles_users");
-
-			// send email verification
-			const url = req.headers.origin;
-			await verifyEmail(url, {
-				id: userData.userId,
-				email: userData.email
-			});
-
-			// create auth token
-			const secretKey = config.server.secretKey;
-			const authToken = createToken(userData, secretKey, {
-				expiresIn: "2d"
-			});
-
-			return {
-				authToken,
-				...newUser
-			};
+		if (!newUser) {
+			return null;
 		}
 
-		return null;
+		// assign user role
+		const getRoles = await database
+			.select()
+			.from("roles")
+			.where({
+				name: "user"
+			});
+
+		const getUserRole = getRoles[0];
+		await database
+			.insert({
+				id: uuidv4(),
+				role_id: getUserRole.id,
+				user_id: newUser.userId
+			})
+			.into("roles_users");
+
+		// send email verification
+		const url = req.headers.origin;
+		await verifyEmail(url, {
+			id: newUser.userId,
+			email: newUser.email
+		});
+
+		// create auth token
+		const secretKey = config.server.secretKey;
+		const authToken = createToken(newUser, secretKey, {
+			expiresIn: "2d"
+		});
+
+		return {
+			authToken,
+			...newUser
+		};
 	} catch (err) {
 		logger.log({
 			level: "error",
