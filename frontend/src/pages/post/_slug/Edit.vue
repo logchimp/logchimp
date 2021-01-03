@@ -68,7 +68,7 @@ export default {
 				contentMarkdown: "",
 				postId: "",
 				slugId: "",
-				userId: "",
+				author: {},
 				slug: ""
 			},
 			buttonLoading: false
@@ -91,16 +91,13 @@ export default {
 			const updatePostPermission = permissions.find(
 				item => item === "post:update"
 			);
-
-			if (!updatePostPermission) {
-				return true;
-			}
+			if (!updatePostPermission) return true;
 
 			const roles = this.$store.getters["user/getRoles"];
 			const roleUser = roles.find(item => item.name === "user");
 
 			const authUserId = this.$store.getters["user/getUserId"];
-			if (roleUser && authUserId !== this.post.userId) return true;
+			if (roleUser && authUserId !== this.post.author.userId) return true;
 
 			return false;
 		}
@@ -120,7 +117,7 @@ export default {
 				this.post.contentMarkdown = response.data.post.contentMarkdown;
 				this.post.postId = response.data.post.postId;
 				this.post.slugId = response.data.post.slugId;
-				this.post.userId = response.data.post.userId;
+				this.post.author = response.data.post.author;
 			} catch (error) {
 				if (error.response.data.code === "POST_NOT_FOUND") {
 					this.isPostExist = false;
@@ -143,7 +140,7 @@ export default {
 				title: this.post.title.value,
 				contentMarkdown: this.post.contentMarkdown,
 				slugId: this.post.slugId,
-				userId: this.post.userId
+				userId: this.post.author.userId
 			};
 
 			try {

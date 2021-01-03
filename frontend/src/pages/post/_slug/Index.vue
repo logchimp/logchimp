@@ -87,7 +87,6 @@ export default {
 			post: {
 				loading: false
 			},
-			voters: [],
 			isPostExist: true
 		};
 	},
@@ -112,17 +111,13 @@ export default {
 			const updatePostPermission = permissions.find(
 				item => item === "post:update"
 			);
-
-			if (!updatePostPermission) {
-				return false;
-			}
+			if (!updatePostPermission) return false;
 
 			const roles = this.$store.getters["user/getRoles"];
 			const roleUser = roles.find(item => item.name === "user");
 
 			const authUserId = this.$store.getters["user/getUserId"];
-			if (roleUser && authUserId !== this.post.userId) return false;
-
+			if (roleUser && authUserId !== this.post.author.userId) return false;
 			return true;
 		},
 		getSiteSittings() {
@@ -152,7 +147,6 @@ export default {
 				const response = await getPostBySlug(slug);
 
 				this.post = response.data.post;
-				this.voters = response.data.voters;
 			} catch (error) {
 				if (error.response.data.code === "POST_NOT_FOUND") {
 					this.isPostExist = false;
