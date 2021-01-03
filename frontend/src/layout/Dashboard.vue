@@ -5,7 +5,7 @@
 		</aside>
 		<main class="dashboard-main">
 			<router-view />
-			<power-by />
+			<power-by v-if="getSiteSittings.isPoweredBy" />
 		</main>
 	</div>
 </template>
@@ -17,6 +17,11 @@ import PowerBy from "../components/PowerBy";
 
 export default {
 	name: "DashboardLayout",
+	computed: {
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
+		}
+	},
 	components: {
 		Sidebar,
 		PowerBy
