@@ -1,0 +1,31 @@
+{
+	"plugins": [
+		"stylelint-scss"
+	],
+	"rules": {
+		"at-rule-no-unknown": true,
+		"comment-no-empty": true,
+		"color-no-invalid-hex": true,
+		"color-hex-case": "upper",
+		"color-hex-length": "long",
+		"font-weight-notation": "numeric",
+		"function-name-case": "lower",
+		"function-comma-space-after": "always",
+		"function-parentheses-space-inside": "never",
+		"function-comma-newline-before": "never-multi-line",
+		"function-calc-no-invalid": true,
+		"function-calc-no-unspaced-operator": true,
+		"function-url-no-scheme-relative": true,
+		"length-zero-no-unit": true,
+		"number-leading-zero": "always",
+		"number-no-trailing-zeros": true,
+		"number-max-precision": 3,
+		"property-no-unknown": [true, {
+			"checkPrefixed": true
+		}],
+		"unit-no-unknown": true,
+		"unit-case": "lower",
+		"string-no-newline": true,
+		"string-quotes": "double"
+	}
+}
