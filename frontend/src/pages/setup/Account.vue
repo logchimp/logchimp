@@ -180,6 +180,7 @@ export default {
 					...response.data.user
 				});
 
+				this.$store.dispatch("user/updatePermissions");
 				this.$router.push("/setup/create-board");
 			} catch (error) {
 				console.log(error.response.data);
