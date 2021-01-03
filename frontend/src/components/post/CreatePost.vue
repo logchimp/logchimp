@@ -43,9 +43,9 @@ import LText from "../input/LText";
 import LTextarea from "../input/LTextarea";
 import Button from "../Button";
 
-// mixins
+// utils
 import validateUUID from "../../utils/validateUUID";
-import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+import tokenError from "../../utils/tokenError";
 
 export default {
 	name: "CreatePost",
@@ -75,7 +75,6 @@ export default {
 			default: false
 		}
 	},
-	mixins: [tokenErrorHandle],
 	components: {
 		// components
 		LText,
@@ -119,9 +118,7 @@ export default {
 				const slug = response.data.post.slug;
 				this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
 			} catch (error) {
-				this.userNotFound(error);
-				this.invalidToken(error);
-				this.invalidAuthHeaderFormat(error);
+				tokenError(error);
 			} finally {
 				this.buttonLoading = false;
 			}
