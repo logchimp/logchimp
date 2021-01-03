@@ -80,7 +80,7 @@ const createUser = async (req, res, next, userData) => {
 				avatar
 			})
 			.into("users")
-			.returning(["userId", "name", "email", "avatar"]);
+			.returning(["userId", "name", "username", "email", "avatar"]);
 
 		if (!newUser) {
 			return null;
@@ -103,16 +103,17 @@ const createUser = async (req, res, next, userData) => {
 			})
 			.into("roles_users");
 
+		const tokenPayload = {
+			userId: newUser.userId,
+			email: newUser.email
+		};
 		// send email verification
 		const url = req.headers.origin;
-		await verifyEmail(url, {
-			id: newUser.userId,
-			email: newUser.email
-		});
+		await verifyEmail(url, tokenPayload);
 
 		// create auth token
 		const secretKey = config.server.secretKey;
-		const authToken = createToken(newUser, secretKey, {
+		const authToken = createToken(tokenPayload, secretKey, {
 			expiresIn: "2d"
 		});
 
