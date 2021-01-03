@@ -13,7 +13,7 @@
 	"scripts": {
 		"frontend:dev": "cd frontend && vue-cli-service serve",
 		"frontend:build": "cd frontend && vue-cli-service build",
-		"frontend:lint": "cd frontend && vue-cli-service lint",
+		"frontend:stylelint": "stylelint --syntax sass './frontend/src/styles/**/*.sass'",
 		"frontend:test": "jest --config ./frontend/jest.config.js",
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"server:dev": "cd server && nodemon app.js",
