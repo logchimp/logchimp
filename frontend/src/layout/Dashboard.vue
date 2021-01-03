@@ -3,7 +3,7 @@
 		<aside>
 			<Sidebar />
 		</aside>
-		<main class="dashboard-main">
+		<main class="container-view">
 			<router-view />
 			<power-by v-if="getSiteSittings.isPoweredBy" />
 		</main>

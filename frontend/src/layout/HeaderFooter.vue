@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<Header />
-		<div class="container">
+		<div class="container container-view">
 			<router-view />
 			<power-by v-if="getSiteSittings.isPoweredBy" />
 		</div>
