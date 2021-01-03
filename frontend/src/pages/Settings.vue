@@ -74,8 +74,8 @@ import Form from "../components/Form";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
 
-// mixins
-import tokenErrorHandle from "../mixins/tokenErrorHandle";
+// utils
+import tokenError from "../utils/tokenError";
 
 // icons
 import AlertIcon from "../components/icons/Alert";
@@ -101,7 +101,6 @@ export default {
 			updateUserButtonLoading: false
 		};
 	},
-	mixins: [tokenErrorHandle],
 	components: {
 		// components
 		Loader,
@@ -132,7 +131,7 @@ export default {
 				this.user.email.value = response.data.user.email;
 				this.user.isVerified = response.data.user.isVerified;
 			} catch (error) {
-				this.userNotFound(error);
+				tokenError(error);
 			} finally {
 				this.user.loading = false;
 			}
@@ -148,7 +147,7 @@ export default {
 				const response = await updateUserSettings(userData);
 				this.user.name.value = response.data.user.name;
 			} catch (error) {
-				this.userNotFound(error);
+				tokenError(error);
 			} finally {
 				this.updateUserButtonLoading = false;
 			}
