@@ -30,3 +30,6 @@ jobs:
 
       - name: Unit tests
         run: npm run frontend:test
+
+      - name: Stylelint
+        run: npm run frontend:stylelint
