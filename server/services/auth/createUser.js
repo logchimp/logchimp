@@ -102,7 +102,10 @@ const createUser = async (req, res, next, userData) => {
 
 			// send email verification
 			const url = req.headers.origin;
-			await verifyEmail(url, userData.email);
+			await verifyEmail(url, {
+				id: userData.userId,
+				email: userData.email
+			});
 
 			// create auth token
 			const secretKey = config.server.secretKey;
