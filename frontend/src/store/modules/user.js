@@ -1,6 +1,9 @@
 // modules
 import { getPermissions } from "../../modules/users";
 
+// utils
+import tokenError from "../../utils/tokenError";
+
 const state = {
 	authToken: "",
 	userId: "",
@@ -56,9 +59,12 @@ const actions = {
 		});
 	},
 	updatePermissions: async ({ commit }) => {
-		const response = await getPermissions();
-
-		commit("setPermissions", response.data);
+		try {
+			const response = await getPermissions();
+			commit("setPermissions", response.data);
+		} catch (error) {
+			tokenError(error);
+		}
 	}
 };
 
