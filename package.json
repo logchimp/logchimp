@@ -16,8 +16,8 @@
 		"frontend:stylelint": "stylelint --syntax sass './frontend/src/styles/**/*.sass'",
 		"frontend:test": "jest --config ./frontend/jest.config.js",
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
-		"server:dev": "cd server && nodemon app.js",
-		"server:start": "cd server && node app.js",
+		"server:dev": "cd server && nodemon index.js",
+		"server:start": "cd server && node index.js",
 		"server:test": "jest --config ./server/jest.config.js",
 		"eslint:fix": "eslint --fix -c ./.eslintrc.js ./"
 	},
