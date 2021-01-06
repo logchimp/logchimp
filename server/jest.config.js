@@ -1,7 +1,8 @@
 const jestConfig = require("../jest.config.js");
 
 module.exports = {
+	...jestConfig,
 	displayName: "server",
 	testTimeout: 20000,
-	...jestConfig
+	setupFilesAfterEnv: ["./tests/setupTest.js"]
 };
