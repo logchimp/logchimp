@@ -1,10 +1,14 @@
 // modules
 import { getPermissions } from "../../modules/users";
 
+// utils
+import tokenError from "../../utils/tokenError";
+
 const state = {
 	authToken: "",
 	userId: "",
 	name: "",
+	username: "",
 	email: "",
 	avatar: "",
 	roles: [],
@@ -24,6 +28,7 @@ const mutations = {
 		state.authToken = payload.authToken;
 		state.userId = payload.userId;
 		state.name = payload.name;
+		state.username = payload.username;
 		state.email = payload.email;
 		state.avatar = payload.avatar;
 
@@ -56,9 +61,12 @@ const actions = {
 		});
 	},
 	updatePermissions: async ({ commit }) => {
-		const response = await getPermissions();
-
-		commit("setPermissions", response.data);
+		try {
+			const response = await getPermissions();
+			commit("setPermissions", response.data);
+		} catch (error) {
+			tokenError(error);
+		}
 	}
 };
 

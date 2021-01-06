@@ -5,6 +5,7 @@
 			label="Title"
 			type="text"
 			name="Post title"
+			data-test="post-title"
 			placeholder="Name of the feature"
 			:error="title.error"
 			@keyup-enter="submitPost"
@@ -22,6 +23,7 @@
 		<div style="display: flex; justify-content: center;">
 			<Button
 				type="primary"
+				data-test="create-post-button"
 				:loading="buttonLoading"
 				:disabled="createPostPermissionDisabled"
 				@click="submitPost"
@@ -37,13 +39,13 @@
 import { createPost } from "../../modules/posts";
 
 // components
-import Form from "../Form";
 import LText from "../input/LText";
 import LTextarea from "../input/LTextarea";
 import Button from "../Button";
 
-// mixins
-import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+// utils
+import validateUUID from "../../utils/validateUUID";
+import tokenError from "../../utils/tokenError";
 
 export default {
 	name: "CreatePost",
@@ -65,18 +67,16 @@ export default {
 	props: {
 		boardId: {
 			type: String,
-			default: "",
-			required: true
+			required: true,
+			validator: validateUUID
 		},
 		dashboard: {
 			type: Boolean,
 			default: false
 		}
 	},
-	mixins: [tokenErrorHandle],
 	components: {
 		// components
-		Form,
 		LText,
 		LTextarea,
 		Button
@@ -118,9 +118,7 @@ export default {
 				const slug = response.data.post.slug;
 				this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
 			} catch (error) {
-				this.userNotFound(error);
-				this.invalidToken(error);
-				this.invalidAuthHeaderFormat(error);
+				tokenError(error);
 			} finally {
 				this.buttonLoading = false;
 			}

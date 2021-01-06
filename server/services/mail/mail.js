@@ -19,4 +19,5 @@ if (config.mail) {
 	module.exports = mail;
 } else {
 	logger.warn("Email adapter missing");
+	module.exports = null;
 }

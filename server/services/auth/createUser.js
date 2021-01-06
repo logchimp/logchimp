@@ -80,43 +80,47 @@ const createUser = async (req, res, next, userData) => {
 				avatar
 			})
 			.into("users")
-			.returning(["userId", "email", "avatar"]);
+			.returning(["userId", "name", "username", "email", "avatar"]);
 
-		if (newUser) {
-			// assign user role
-			const getRoles = await database
-				.select()
-				.from("roles")
-				.where({
-					name: "user"
-				});
-
-			const getUserRole = getRoles[0];
-			await database
-				.insert({
-					id: uuidv4(),
-					role_id: getUserRole.id,
-					user_id: newUser.userId
-				})
-				.into("roles_users");
-
-			// send email verification
-			const url = req.headers.origin;
-			await verifyEmail(url, userData.email);
-
-			// create auth token
-			const secretKey = config.server.secretKey;
-			const authToken = createToken(userData, secretKey, {
-				expiresIn: "2d"
-			});
-
-			return {
-				authToken,
-				...newUser
-			};
+		if (!newUser) {
+			return null;
 		}
 
-		return null;
+		// assign user role
+		const getRoles = await database
+			.select()
+			.from("roles")
+			.where({
+				name: "user"
+			});
+
+		const getUserRole = getRoles[0];
+		await database
+			.insert({
+				id: uuidv4(),
+				role_id: getUserRole.id,
+				user_id: newUser.userId
+			})
+			.into("roles_users");
+
+		const tokenPayload = {
+			userId: newUser.userId,
+			email: newUser.email
+		};
+		// send email verification
+		const url = req.headers.origin;
+		await verifyEmail(url, tokenPayload);
+
+		// create auth token
+		const secretKey = config.server.secretKey;
+		const authToken = createToken(tokenPayload, secretKey, {
+			expiresIn: "2d"
+		});
+
+		return {
+			authToken,
+			...newUser
+		};
 	} catch (err) {
 		logger.log({
 			level: "error",

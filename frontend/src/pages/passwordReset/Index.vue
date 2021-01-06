@@ -12,6 +12,7 @@
 				</router-link>
 				<h3 class="auth-form-heading">Forget password</h3>
 			</div>
+			<server-error v-if="serverError" @close="serverError = false" />
 			<Form v-if="!email.hide" class="auth-form">
 				<l-text
 					v-model="email.value"
@@ -51,6 +52,7 @@
 import { requestPasswordReset } from "../../modules/auth";
 
 // component
+import ServerError from "../../components/serverError";
 import Form from "../../components/Form";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
@@ -68,14 +70,16 @@ export default {
 				hide: false
 			},
 			requestPassword: false,
-			buttonLoading: false
+			buttonLoading: false,
+			serverError: false
 		};
 	},
 	components: {
 		// component
 		Form,
 		LText,
-		Button
+		Button,
+		ServerError
 	},
 	computed: {
 		getSiteSittings() {
@@ -101,6 +105,10 @@ export default {
 				this.email.hide = true;
 				this.email.value = "";
 			} catch (error) {
+				if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+					this.serverError = true;
+				}
+
 				if (error.response.data.code === "USER_NOT_FOUND") {
 					this.email.error.show = true;
 					this.email.error.message = "User not found";

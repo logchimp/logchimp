@@ -21,8 +21,9 @@ import { addVote, deleteVote } from "../../modules/votes";
 // icons
 import ArrowIcon from "../icons/Arrow";
 
-// mixins
-import tokenErrorHandle from "../../mixins/tokenErrorHandle";
+// utils
+import validateUUID from "../../utils/validateUUID";
+import tokenError from "../../utils/tokenError";
 
 export default {
 	name: "Vote",
@@ -34,7 +35,8 @@ export default {
 	props: {
 		postId: {
 			type: String,
-			required: true
+			required: true,
+			validator: validateUUID
 		},
 		votesCount: {
 			type: Number,
@@ -48,7 +50,6 @@ export default {
 	components: {
 		ArrowIcon
 	},
-	mixins: [tokenErrorHandle],
 	computed: {
 		disabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
@@ -72,9 +73,7 @@ export default {
 
 					this.$emit("update-voters", response.data.voters);
 				} catch (error) {
-					this.userNotFound(error);
-					this.invalidToken(error);
-					this.invalidAuthHeaderFormat(error);
+					tokenError(error);
 				} finally {
 					this.loading = false;
 				}
@@ -84,9 +83,7 @@ export default {
 
 					this.$emit("update-voters", response.data.voters);
 				} catch (error) {
-					this.userNotFound(error);
-					this.invalidToken(error);
-					this.invalidAuthHeaderFormat(error);
+					tokenError(error);
 				} finally {
 					this.loading = false;
 				}

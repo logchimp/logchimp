@@ -3,6 +3,7 @@
 		<p v-if="label" class="input-field-label">{{ label }}</p>
 		<input
 			:type="type"
+			data-test="input-field"
 			class="input-field input-text"
 			:class="{
 				'input-field-disabled': disabled,
@@ -15,7 +16,13 @@
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
-		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
+		<p
+			data-test="input-error-message"
+			v-if="error.show"
+			class="input-error-message"
+		>
+			{{ error.message }}
+		</p>
 	</label>
 </template>
 

@@ -19,13 +19,10 @@
 			<div v-for="user in users" :key="user.userId" class="table-row">
 				<div class="table-data users-table-user">
 					<div class="users-table-user-avatar">
-						<avatar
-							:src="user.avatar"
-							:name="user.name ? user.name : user.username"
-						/>
+						<avatar :src="user.avatar" :name="user.name || user.username" />
 					</div>
 					<h6 class="users-table-user-name">
-						{{ user.name ? user.name : user.username }}
+						{{ user.name || user.username }}
 					</h6>
 				</div>
 				<div class="table-data users-table-posts">{{ user.posts }}</div>
