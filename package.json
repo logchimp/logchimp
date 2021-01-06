@@ -71,6 +71,7 @@
 		"regenerator-runtime": "^0.13.7",
 		"stylelint": "^13.8.0",
 		"stylelint-scss": "^3.18.0",
+		"supertest": "^6.0.1",
 		"vue-jest": "^3.0.7",
 		"vue-template-compiler": "^2.6.12"
 	},
