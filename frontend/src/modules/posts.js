@@ -39,6 +39,7 @@ export const createPost = async (boardId, post) => {
  * @param {string} sort createdAt sort type ASC or DESC
  * @param {string} userId logged in user UUID
  * @param {string[]} boardId array of board UUIDs
+ * @param {string} roadmapId array of roadmap UUIDs
  *
  * @returns {object} response
  */
@@ -46,9 +47,11 @@ export const getPosts = async (
 	page = 1,
 	limit = 10,
 	sort = "DESC",
-	userId,
-	boardId
+	boardId,
+	roadmapId
 ) => {
+	const userId = store.getters["user/getUserId"];
+
 	return await axios({
 		method: "POST",
 		url: "/api/v1/posts/get",
@@ -57,7 +60,8 @@ export const getPosts = async (
 			limit,
 			created: sort,
 			userId,
-			boardId
+			boardId,
+			roadmapId
 		}
 	});
 };

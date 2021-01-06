@@ -29,6 +29,11 @@ const routes = [
 				component: require("./pages/board/_url").default
 			},
 			{
+				path: "roadmaps",
+				name: "Roadmaps",
+				component: require("./pages/Roadmaps").default
+			},
+			{
 				path: "settings",
 				name: "User settings",
 				component: require("./pages/Settings").default

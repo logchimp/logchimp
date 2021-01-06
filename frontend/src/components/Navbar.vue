@@ -8,6 +8,14 @@
 				Home
 			</div>
 		</router-link>
+		<router-link to="/roadmaps" class="navbar-item">
+			<div class="navbar-item-icon">
+				<roadmap-icon />
+			</div>
+			<div class="navbar-item-content">
+				Roadmaps
+			</div>
+		</router-link>
 		<router-link to="/boards" class="navbar-item">
 			<div class="navbar-item-icon">
 				<board-icon />
@@ -22,6 +30,7 @@
 <script>
 // icons
 import HomeIcon from "./icons/Home";
+import RoadmapIcon from "./icons/Roadmap";
 import BoardIcon from "./icons/Board";
 
 export default {
@@ -29,6 +38,7 @@ export default {
 	components: {
 		// icons
 		HomeIcon,
+		RoadmapIcon,
 		BoardIcon
 	}
 };

@@ -14,12 +14,13 @@ const getVotes = async (postId, userId) => {
 			.first();
 
 		const votes = await database
-			.select()
+			.select("votes.*", "users.name", "users.username", "users.avatar")
 			.from("votes")
+			.innerJoin("users", "votes.userId", "users.userId")
 			.where({
 				postId
 			})
-			.limit(10);
+			.limit(6);
 
 		const viewerVote = await database
 			.select()
