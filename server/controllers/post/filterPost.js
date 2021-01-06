@@ -10,6 +10,7 @@ const logger = require("../../utils/logger");
 exports.filterPost = async (req, res) => {
 	const userId = req.body.userId;
 	const boardId = req.body.boardId;
+	const roadmapId = req.body.roadmapId;
 	/**
 	 * top, latest, oldest, trending
 	 */
@@ -36,13 +37,15 @@ exports.filterPost = async (req, res) => {
 						  })})`
 						: ""
 				}
+				${roadmapId ? `WHERE roadmap_id = :roadmapId` : ""}
 				ORDER BY "createdAt" ${created}
 				LIMIT :limit
 				OFFSET :offset;
 		`,
 			{
 				limit,
-				offset: limit * page
+				offset: limit * page,
+				roadmapId
 			}
 		);
 

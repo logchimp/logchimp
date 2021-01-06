@@ -53,12 +53,9 @@ export default {
 	methods: {
 		async getMorePosts($state) {
 			const boardId = this.board.boardId;
-			const userId = this.$store.getters["user/getUserId"];
 
 			try {
-				const response = await getPosts(this.page, 10, "desc", userId, [
-					boardId
-				]);
+				const response = await getPosts(this.page, 10, "desc", [boardId]);
 
 				if (response.data.posts.length) {
 					this.posts.push(...response.data.posts);
