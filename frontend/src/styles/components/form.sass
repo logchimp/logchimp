@@ -1,9 +1,21 @@
-.form-container
-	padding: 2rem
-	border: 1px solid $gray-90
-	border-radius: $border-radius
 .form-header
 	display: flex
 	justify-content: space-between
 	margin-bottom: 1rem
 
+.form-section
+	&:not(:first-child)
+		margin-top: 2.5rem
+
+.form-section-title
+	color: $gray-60
+	padding-bottom: 0.625rem
+	border-bottom: 1px solid $gray-90
+	margin-bottom: 2rem
+
+.form-columns
+	display: flex
+	justify-content: space-between
+
+.form-column
+	width: calc(50% - 1rem)
