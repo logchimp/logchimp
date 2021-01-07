@@ -1,8 +1,15 @@
 <template>
 	<div>
-		<div class="boards-page-header">
-			<h4 class="boards-page-header-heading">Create Board</h4>
-		</div>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<router-link to="/dashboard/boards" class="breadcrum-item">
+					Boards
+				</router-link>
+				<div class="breadcrum-divider">/</div>
+				<div class="breadcrum-item">
+					Create board
+				</div>
+			</div>
 
 		<create-board redirect="/dashboard/boards" />
 	</div>
