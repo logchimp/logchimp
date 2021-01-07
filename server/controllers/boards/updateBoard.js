@@ -19,12 +19,10 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	const url = name
-		.replace(/[^\w\s]/gi, "")
-		.replace(/\s\s+/gi, " ")
-		.toLowerCase()
-		.split(" ")
-		.join("-");
+	const slimUrl = (url || name)
+		.replace(/[^\w]+/gi, "-")
+		.trim()
+		.toLowerCase();
 
 	try {
 		const boards = await database

@@ -35,12 +35,10 @@ exports.create = async (req, res) => {
 		});
 	}
 
-	const url = name
-		.replace(/[^\w\s]/gi, "")
-		.replace(/\s\s+/gi, " ")
-		.toLowerCase()
-		.split(" ")
-		.join("-");
+	const slimUrl = (url || name)
+		.replace(/[^\w]+/gi, "-")
+		.trim()
+		.toLowerCase();
 
 	const board = await database
 		.select()
