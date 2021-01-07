@@ -8,8 +8,7 @@ module.exports = async (req, res) => {
 	const permissions = req.user.permissions;
 	const boardId = req.board.boardId;
 
-	const name = req.body.name;
-	const color = req.body.color;
+	const { name, url, color, view_voters } = req.body;
 
 	const checkPermission = permissions.find(item => item === "board:update");
 	if (!checkPermission) {
@@ -28,8 +27,9 @@ module.exports = async (req, res) => {
 		const boards = await database
 			.update({
 				name,
-				url,
+				url: slimUrl,
 				color,
+				view_voters,
 				updatedAt: new Date().toJSON()
 			})
 			.from("boards")
