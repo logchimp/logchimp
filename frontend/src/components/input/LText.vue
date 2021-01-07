@@ -16,6 +16,9 @@
 			:placeholder="placeholder"
 			:disabled="disabled"
 		/>
+		<p v-if="description" class="input-description">
+			{{ description }}
+		</p>
 		<p
 			data-test="input-error-message"
 			v-if="error.show"
@@ -43,6 +46,10 @@ export default {
 			default: ""
 		},
 		value: {
+			type: String,
+			default: ""
+		},
+		description: {
 			type: String,
 			default: ""
 		},
