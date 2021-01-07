@@ -1,6 +1,7 @@
 <template>
 	<div
 		class="toggle"
+		data-test="toggle"
 		:style="{
 			backgroundColor: checked ? `var(--brand-color)` : `#999`,
 			justifyContent: checked ? `flex-end` : ''
@@ -9,6 +10,7 @@
 		<div class="toggle-slider" />
 		<input
 			type="checkbox"
+			data-test="toggle-checkbox"
 			:checked="checked"
 			:disabled="disabled"
 			@input="click"
