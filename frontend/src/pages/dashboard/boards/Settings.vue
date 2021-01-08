@@ -6,18 +6,18 @@
 					Boards
 				</router-link>
 				<div class="breadcrum-divider">/</div>
-				<div class="breadcrum-item">
-					Create board
-				</div>
+				<h5 class="breadcrum-item">
+					{{ title }}
+				</h5>
 			</div>
 
 			<Button
-				@click="createBoard"
+				@click="update"
 				type="primary"
-				:loading="buttonLoading"
+				:loading="saveButtonLoading"
 				:disabled="disabled"
 			>
-				Create
+				Save
 			</Button>
 		</header>
 
@@ -36,63 +36,67 @@
 
 <script>
 // modules
-import { createBoard } from "../../../modules/boards";
+import { getBoardByUrl, updateBoard } from "../../../modules/boards";
 
 // components
-import BoardForm from "../../../components/board/BoardForm";
 import Button from "../../../components/Button";
+import BoardForm from "../../../components/board/BoardForm";
 
 export default {
-	name: "DashboardCreateBoard",
+	name: "BoardSettings",
 	data() {
 		return {
-			board: {
-				name: "",
-				url: "",
-				color: "",
-				view_voters: false
-			},
-			buttonLoading: false
+			title: "",
+			board: {},
+			saveButtonLoading: false
 		};
 	},
 	components: {
-		BoardForm,
-		Button
+		// Breadcrumbs,
+		Button,
+		BoardForm
 	},
 	computed: {
 		disabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
-			const checkPermission = permissions.find(item => item === "board:create");
+			const checkPermission = permissions.find(item => item === "board:update");
 
 			return !checkPermission;
-		},
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
 		}
 	},
 	methods: {
-		async createBoard() {
-			this.buttonLoading = true;
+		async update() {
+			this.saveButtonLoading = true;
 			try {
-				await createBoard(this.board);
+				await updateBoard({
+					id: this.board.boardId,
+					color: this.board.color,
+					name: this.board.name,
+					url: this.board.url,
+					view_voters: this.board.view_voters
+				});
+
 				this.$router.push("/dashboard/boards");
 			} catch (error) {
 				console.error(error);
 			} finally {
-				this.buttonLoading = false;
+				this.saveButtonLoading = false;
+			}
+		},
+		async getBoard() {
+			try {
+				const url = this.$route.params.url;
+				const response = await getBoardByUrl(url);
+
+				this.board = response.data.board;
+				this.title = response.data.board.name;
+			} catch (error) {
+				console.error(error);
 			}
 		}
 	},
-	metaInfo() {
-		return {
-			title: "Create board · Dashboard",
-			meta: [
-				{
-					name: "og:title",
-					content: `Create board · Dashboard · ${this.getSiteSittings.title}`
-				}
-			]
-		};
+	created() {
+		this.getBoard();
 	}
 };
 </script>

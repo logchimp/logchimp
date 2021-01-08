@@ -12,7 +12,7 @@ const error = require("../../errorResponse.json");
 exports.create = async (req, res) => {
 	const permissions = req.user.permissions;
 
-	const name = req.body.name;
+	const { name, url, color, view_voters } = req.body;
 
 	const checkPermission = permissions.find(item => item === "board:create");
 	if (!checkPermission) {
@@ -35,12 +35,10 @@ exports.create = async (req, res) => {
 		});
 	}
 
-	const url = name
-		.replace(/[^\w\s]/gi, "")
-		.replace(/\s\s+/gi, " ")
-		.toLowerCase()
-		.split(" ")
-		.join("-");
+	const slimUrl = (url || name)
+		.replace(/[^\w]+/gi, "-")
+		.trim()
+		.toLowerCase();
 
 	const board = await database
 		.select()
@@ -62,8 +60,9 @@ exports.create = async (req, res) => {
 			.insert({
 				boardId: uuidv4(),
 				name,
-				url,
-				color: createHex()
+				url: slimUrl,
+				color: color || createHex(),
+				view_voters
 			})
 			.into("boards")
 			.returning("*");
