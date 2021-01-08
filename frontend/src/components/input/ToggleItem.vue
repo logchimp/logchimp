@@ -1,7 +1,7 @@
 <template>
 	<div class="toggle-item">
 		<div class="toggle-item-row">
-			<label>{{ label }}</label>
+			<label data-test="toggle-item-label">{{ label }}</label>
 			<toggle
 				ref="toggleRefs"
 				:checked="check"
@@ -9,7 +9,7 @@
 				@input="emit"
 			/>
 		</div>
-		<p v-if="note" class="toggle-item-note">
+		<p v-if="note" data-test="toggle-item-note" class="toggle-item-note">
 			{{ note }}
 		</p>
 	</div>
