@@ -24,7 +24,13 @@
 				spellcheck="false"
 			/>
 		</div>
-		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
+		<p
+			v-if="error.show"
+			data-test="input-error-message"
+			class="input-error-message"
+		>
+			{{ error.message }}
+		</p>
 	</div>
 </template>
 
