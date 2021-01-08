@@ -52,6 +52,9 @@ export default {
 	},
 	computed: {
 		disabled() {
+			const getUserId = this.$store.getters["user/getUserId"];
+			if (!getUserId) return false;
+
 			const permissions = this.$store.getters["user/getPermissions"];
 			const changeVotePermission = permissions.find(
 				item => item === "vote:create"
