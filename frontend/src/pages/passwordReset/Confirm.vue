@@ -1,7 +1,7 @@
 <template>
 	<div class="auth">
 		<div class="auth-form-container">
-			<div v-if="!loading">
+			<div>
 				<div class="auth-form-header">
 					<router-link to="/" class="auth-form-logo site-info">
 						<img
@@ -13,8 +13,8 @@
 					</router-link>
 					<h3 class="auth-form-heading">Set new password</h3>
 				</div>
-				<div v-if="!invalidRequest">
-					<Form v-if="!isSuccess" class="auth-form">
+				<div v-if="validToken.success">
+					<div class="card" v-if="!changePassword.success">
 						<l-text
 							v-model="password.value"
 							label="New password"
@@ -44,22 +44,23 @@
 								Reset password
 							</Button>
 						</div>
-					</Form>
-					<Form v-else class="auth-form">
+					</div>
+					<div class="card" v-else>
 						<success-icon fill="#64B285" stroke="white" />
 						<div>
-							You've successful changed your password. You may close this window.
+							You've successful changed your password. You may close this
+							window.
 						</div>
-					</Form>
-				</div>
-				<Form v-else class="auth-form">
-					<error-icon fill="#DE544E" stroke="white" />
-					<div>
-						Invalid or expired password reset link.
 					</div>
-				</Form>
+				</div>
 			</div>
-			<div v-else>
+			<div class="card" v-if="validToken.error || changePassword.error">
+				<error-icon fill="#DE544E" stroke="white" />
+				<div>
+					Invalid or expired password reset link.
+				</div>
+			</div>
+			<div class="card" v-if="validToken.loading">
 				<div class="loader-container">
 					<loader />
 				</div>
@@ -74,7 +75,6 @@ import { validateResetPasswordToken, setNewPassword } from "../../modules/auth";
 
 // component
 import Loader from "../../components/Loader";
-import Form from "../../components/Form";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
 
@@ -100,16 +100,21 @@ export default {
 					message: ""
 				}
 			},
-			buttonLoading: false,
-			loading: true,
-			isSuccess: false,
-			invalidRequest: false
+			validToken: {
+				loading: true,
+				success: false,
+				error: false
+			},
+			changePassword: {
+				success: false,
+				error: false
+			},
+			buttonLoading: false
 		};
 	},
 	components: {
 		// component
 		Loader,
-		Form,
 		LText,
 		Button,
 
@@ -129,13 +134,26 @@ export default {
 		hideConfirmPasswordError(event) {
 			this.confirmPassword.error = event;
 		},
-		async validateToken(token) {
+		async validateToken() {
+			// have reset password token
+			const token = this.$route.query.token;
+
+			if (!token) {
+				this.validToken.loading = false;
+				this.validToken.error = true;
+				return;
+			}
+
 			try {
-				await validateResetPasswordToken(token);
+				const response = await validateResetPasswordToken(token);
+
+				if (response.data.reset.valid) {
+					this.validToken.loading = false;
+					this.validToken.success = true;
+				}
 			} catch (error) {
-				this.invalidRequest = true;
-			} finally {
-				this.loading = false;
+				this.validToken.loading = false;
+				this.validToken.error = true;
 			}
 		},
 		async setPassword() {
@@ -163,29 +181,22 @@ export default {
 			this.buttonLoading = true;
 
 			try {
-				await setNewPassword(token, this.password.value);
+				const response = await setNewPassword(token, this.password.value);
 
-				this.isSuccess = true;
-				this.buttonLoading = false;
+				if (response.data.reset.success) {
+					this.changePassword.success = true;
+				}
 			} catch (err) {
-				this.invalidRequest = true;
+				this.changePassword.error = true;
 			} finally {
-				this.$store.dispatch("user/logout");
+				this.buttonLoading = false;
+				// this.$store.dispatch("user/logout");
 			}
 		}
 	},
 	created() {
-		// have reset password token
-		const token = this.$route.query.token;
-
-		if (!token) {
-			this.loading = false;
-			this.invalidRequest = true;
-			return;
-		}
-
 		// validate reset password token
-		this.validateToken(token);
+		this.validateToken();
 	},
 	metaInfo() {
 		return {

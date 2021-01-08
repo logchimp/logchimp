@@ -13,7 +13,7 @@
 				<h3 class="auth-form-heading">Forget password</h3>
 			</div>
 			<server-error v-if="serverError" @close="serverError = false" />
-			<Form v-if="!email.hide" class="auth-form">
+			<div v-if="!hideForm" class="card auth-form">
 				<l-text
 					v-model="email.value"
 					label="Email Address"
@@ -33,12 +33,15 @@
 						Continue
 					</Button>
 				</div>
-			</Form>
-			<Form v-else>
+			</div>
+			<div class="card" v-if="requestSuccess">
 				<p>You will receive a password reset email soon.</p>
 				<br />
 				<p>Follow the link in the email to reset your password.</p>
-			</Form>
+			</div>
+			<div class="card" v-if="requestError">
+				<p>Something went wrong!</p>
+			</div>
 			<div class="auth-form-other">
 				Don't have an account yet?
 				<router-link to="/join">Sign up</router-link>
@@ -53,7 +56,6 @@ import { requestPasswordReset } from "../../modules/auth";
 
 // component
 import ServerError from "../../components/serverError";
-import Form from "../../components/Form";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
 
@@ -66,17 +68,17 @@ export default {
 				error: {
 					show: false,
 					message: ""
-				},
-				hide: false
+				}
 			},
-			requestPassword: false,
+			hideForm: false,
+			requestSuccess: false,
+			requestError: false,
 			buttonLoading: false,
 			serverError: false
 		};
 	},
 	components: {
 		// component
-		Form,
 		LText,
 		Button,
 		ServerError
@@ -100,10 +102,14 @@ export default {
 			this.buttonLoading = true;
 
 			try {
-				await requestPasswordReset(this.email.value);
+				const response = await requestPasswordReset(this.email.value);
 
-				this.email.hide = true;
-				this.email.value = "";
+				this.hideForm = true;
+				if (response.data.reset.success) {
+					this.requestSuccess = true;
+				} else {
+					this.requestError = true;
+				}
 			} catch (error) {
 				if (error.response.data.code === "MAIL_CONFIG_MISSING") {
 					this.serverError = true;
