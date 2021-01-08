@@ -1,6 +1,8 @@
 <template>
 	<label class="input">
-		<p v-if="label" class="input-field-label">{{ label }}</p>
+		<p v-if="label" data-test="input-field-label" class="input-field-label">
+			{{ label }}
+		</p>
 		<input
 			:type="type"
 			data-test="input-field"
