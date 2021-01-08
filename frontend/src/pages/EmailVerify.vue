@@ -1,6 +1,6 @@
 <template>
-	<div class="container">
-		<div v-if="!loading" class="email-verification">
+	<div class="auth-form-container">
+		<div class="container">
 			<div class="auth-form-header">
 				<router-link to="/" class="auth-form-logo site-info">
 					<img
@@ -11,20 +11,20 @@
 					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
 				</router-link>
 			</div>
-			<Form v-if="success" class="auth-form">
+			<div v-if="success" class="card">
 				<success-icon fill="#64B285" stroke="white" />
 				<div>
 					Thank you verifying your account. You may close this window.
 				</div>
-			</Form>
-			<Form v-else class="auth-form">
+			</div>
+			<div v-if="error" class="card">
 				<error-icon fill="#DE544E" stroke="white" />
 				<div>
 					Invalid or expired activation link.
 				</div>
-			</Form>
+			</div>
 		</div>
-		<div v-else class="email-verification">
+		<div v-if="loading" class="email-verification">
 			<div class="loader-container">
 				<loader />
 			</div>
@@ -38,7 +38,6 @@ import { verifyUserEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader";
-import Form from "../components/Form";
 
 // icons
 import SuccessIcon from "../components/icons/Success";
@@ -48,14 +47,14 @@ export default {
 	name: "EmailVerification",
 	data() {
 		return {
-			loading: false,
-			success: false
+			loading: true,
+			success: false,
+			error: false
 		};
 	},
 	components: {
 		// components
 		Loader,
-		Form,
 
 		// icons
 		SuccessIcon,
@@ -71,23 +70,20 @@ export default {
 			const token = this.$route.query.token;
 
 			if (!token) {
-				this.success = false;
+				this.loading = false;
+				this.error = true;
 				return;
 			}
 
-			this.loading = true;
-
 			try {
-				await verifyUserEmail(token);
-
-				this.success = true;
+				const response = await verifyUserEmail(token);
+				if (response.data.verify.success) this.success = true;
 			} catch (error) {
 				if (error.response.data.code === "USER_ALREADY_VERIFIED") {
-					this.$router.push("/");
-					return;
+					return this.$router.push("/");
 				}
 
-				this.success = false;
+				this.error = true;
 			} finally {
 				this.loading = false;
 			}
