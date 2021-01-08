@@ -41,20 +41,50 @@ export const getBoardByUrl = async url => {
 /**
  * Create new board
  *
- * @param {name} string Board name
+ * @param {object} board create board data
+ * @param {string} board.name board name
+ * @param {string} board.url board url
+ * @param {string} board.color board color
+ * @param {boolean} board.view_voters view voters in this board
  *
  * @returns {object} response
  */
-export const createBoard = async name => {
+export const createBoard = async board => {
 	const token = store.getters["user/getAuthToken"];
 	return await axios({
 		method: "POST",
 		url: "/api/v1/boards",
 		data: {
-			name
+			...board
 		},
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
 	});
 };
+
+/**
+ * Update board
+ *
+ * @param {object} board update board data
+ * @param {string} board.name board name
+ * @param {string} board.url board url
+ * @param {string} board.color board color
+ * @param {boolean} board.view_voters view voters in this board
+ *
+ * @returns {object} response
+ */
+export const updateBoard = async board => {
+	const token = store.getters["user/getAuthToken"];
+	return await axios({
+		method: "PATCH",
+		url: "/api/v1/boards",
+		data: {
+			...board
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
+

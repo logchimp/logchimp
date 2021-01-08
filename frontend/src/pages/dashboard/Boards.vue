@@ -46,9 +46,12 @@
 					>
 						<link-icon />
 					</router-link>
-					<!-- <div class="table-data table-data-icon boards-table-icon-settings">
+					<router-link
+						:to="`/dashboard/board/${board.url}/settings`"
+						class="table-data table-data-icon boards-table-icon-settings"
+					>
 						<settings-icon />
-					</div> -->
+					</router-link>
 				</div>
 			</div>
 			<infinite-loading @infinite="getBoards">
@@ -75,7 +78,7 @@ import Loader from "../../components/Loader";
 
 // icons
 import LinkIcon from "../../components/icons/Link";
-// import SettingsIcon from "../../components/icons/Settings";
+import SettingsIcon from "../../components/icons/Settings";
 
 export default {
 	name: "DashboardBoards",
@@ -95,8 +98,8 @@ export default {
 		Loader,
 
 		// icons
-		LinkIcon
-		// SettingsIcon
+		LinkIcon,
+		SettingsIcon
 	},
 	computed: {
 		getSiteSittings() {
