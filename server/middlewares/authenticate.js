@@ -78,11 +78,6 @@ const authenticateWithToken = async (req, res, next, token) => {
 				req.user = user;
 				next();
 			} catch (err) {
-				logger.error({
-					code: "INVALID_TOKEN",
-					message: err
-				});
-
 				if (
 					err.name === "TokenExpiredError" ||
 					err.name === "JsonWebTokenError"
