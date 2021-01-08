@@ -2,8 +2,23 @@ import LText from "../../src/components/input/LText";
 import { mount } from "@vue/test-utils";
 
 describe("text input", () => {
+	const wrapper = mount(LText);
+
+	it("should not have label", () => {
+		expect(wrapper.find("[data-test=input-field-label]").exists()).toBe(false);
+	});
+
+	it("should have label", async () => {
+		await wrapper.setProps({
+			label: "Input label"
+		});
+
+		expect(wrapper.find("[data-test=input-field-label]").text()).toBe(
+			"Input label"
+		);
+	});
+
 	it("Do not show any error message", () => {
-		const wrapper = mount(LText);
 		expect(wrapper.find("[data-test=input-error-message]").exists()).toBe(
 			false
 		);
