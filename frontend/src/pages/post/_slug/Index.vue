@@ -28,8 +28,8 @@
 						</div>
 						<time
 							:datetime="post.createdAt"
-							:title="post.createdAt | moment('DD MMM YYYY, hh:mm:ss')"
-							class="viewpost__meta-date"
+							:title="post.createdAt | moment('dddd, DD MMMM YYYY hh:mm:ss')"
+							class="post-date"
 						>
 							{{ post.createdAt | moment("from") }}
 						</time>
