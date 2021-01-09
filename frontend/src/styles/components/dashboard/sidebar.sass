@@ -14,34 +14,39 @@
 	padding-right: 1rem
 	margin-bottom: 3rem
 
-.dashboard-sidebar-navbar
-	display: flex
-	flex-direction: column
+.sidebar-list
+	margin-top: 2rem
 
-.dashboard-sidebar-navbar-item
+	h6
+		font-size: 0.75rem
+		text-transform: uppercase
+		color: $white
+		letter-spacing: 0.4px
+		margin-bottom: 0.625rem
+
+	li
+		list-style: none
+
+.sidebar-list-item
 	display: flex
 	align-items: center
-	border-radius: $border-radius
-	margin-bottom: 0.625rem
 	padding: 0.625rem 1rem
-
-.dashboard-sidebar-navbar-item.router-link-exact-active
-	background-color: rgba($white, 0.1)
-
-	.navbar-content
-		font-weight: 500
-
-.dashboard-sidebar-navbar-icon
-	display: flex
-	margin-right: 0.5rem
 
 	svg
 		stroke: $white
 		width: 1rem
 		height: 1rem
+		margin-right: 0.375rem
 
-.dashboard-sidebar-navbar-content
-	color: $white
+	p
+		color: $white
+
+.sidebar-list-item.router-link-exact-active
+	background-color: rgba($white, 0.1)
+	border-radius: $border-radius
+
+	p
+		font-weight: 600
 
 // footer
 .dashboard-sidebar-footer
