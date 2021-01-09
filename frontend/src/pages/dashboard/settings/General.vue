@@ -83,11 +83,11 @@ import {
 	getSettings,
 	updateSettings,
 	uploadSiteLogo
-} from "../../modules/site";
+} from "../../../modules/site";
 
 // components
-import LText from "../../components/input/LText";
-import Button from "../../components/Button";
+import LText from "../../../components/input/LText";
+import Button from "../../../components/Button";
 
 export default {
 	name: "DashboardSettings",
