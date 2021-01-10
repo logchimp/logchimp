@@ -4,7 +4,7 @@
 			<label data-test="toggle-item-label">{{ label }}</label>
 			<toggle
 				ref="toggleRefs"
-				:checked="check"
+				:checked="value"
 				:disabled="disabled"
 				@input="emit"
 			/>
@@ -21,11 +21,6 @@ import Toggle from "./Toggle";
 
 export default {
 	name: "ToggleItem",
-	data() {
-		return {
-			check: this.checked
-		};
-	},
 	components: {
 		Toggle
 	},
@@ -34,7 +29,7 @@ export default {
 			type: String,
 			required: true
 		},
-		checked: {
+		value: {
 			type: Boolean,
 			default: false
 		},
@@ -45,11 +40,6 @@ export default {
 		disabled: {
 			type: Boolean,
 			default: false
-		}
-	},
-	watch: {
-		checked: function(newValue) {
-			this.check = newValue;
 		}
 	},
 	methods: {
