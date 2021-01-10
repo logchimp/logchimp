@@ -153,9 +153,9 @@ const routes = [
 				component: require("./pages/dashboard/Users").default
 			},
 			{
-				path: "settings",
+				path: "settings/general",
 				name: "Dashboard settings",
-				component: require("./pages/dashboard/Settings").default
+				component: require("./pages/dashboard/settings/General").default
 			}
 		]
 	},

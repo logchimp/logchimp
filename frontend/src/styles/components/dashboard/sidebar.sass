@@ -1,4 +1,4 @@
-.dashboard-sidebar
+.sidebar
 	display: flex
 	flex-direction: column
 	position: sticky
@@ -6,47 +6,49 @@
 	bottom: 0
 	background-color: $brand-color
 	height: 100vh
-	padding: 1.125rem 1rem
+	padding: 1rem
 	min-width: 200px
 
-.dashboard-sidebar-header
-	padding-left: 1rem
-	padding-right: 1rem
-	margin-bottom: 3rem
+	header
+		margin-bottom: 1rem
 
-.dashboard-sidebar-navbar
-	display: flex
-	flex-direction: column
+	footer
+		position: relative
+		margin-top: auto
 
-.dashboard-sidebar-navbar-item
+.sidebar-list
+	margin-top: 2rem
+
+	h6
+		font-size: 0.75rem
+		text-transform: uppercase
+		color: $white
+		letter-spacing: 0.4px
+		margin-bottom: 0.625rem
+
+	li
+		list-style: none
+
+.sidebar-list-item
 	display: flex
 	align-items: center
-	border-radius: $border-radius
-	margin-bottom: 0.625rem
 	padding: 0.625rem 1rem
-
-.dashboard-sidebar-navbar-item.router-link-exact-active
-	background-color: rgba($white, 0.1)
-
-	.navbar-content
-		font-weight: 500
-
-.dashboard-sidebar-navbar-icon
-	display: flex
-	margin-right: 0.5rem
 
 	svg
 		stroke: $white
 		width: 1rem
 		height: 1rem
+		margin-right: 0.375rem
 
-.dashboard-sidebar-navbar-content
-	color: $white
+	p
+		color: $white
 
-// footer
-.dashboard-sidebar-footer
-	margin-top: auto
-	position: relative
+.sidebar-list-item.router-link-exact-active
+	background-color: rgba($white, 0.1)
+	border-radius: $border-radius
+
+	p
+		font-weight: 600
 
 .dashboard-sidebar-user-container
 	cursor: pointer
