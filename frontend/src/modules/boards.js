@@ -41,22 +41,14 @@ export const getBoardByUrl = async url => {
 /**
  * Create new board
  *
- * @param {object} board create board data
- * @param {string} board.name board name
- * @param {string} board.url board url
- * @param {string} board.color board color
- * @param {boolean} board.view_voters view voters in this board
- *
  * @returns {object} response
  */
-export const createBoard = async board => {
+export const createBoard = async () => {
 	const token = store.getters["user/getAuthToken"];
+
 	return await axios({
 		method: "POST",
 		url: "/api/v1/boards",
-		data: {
-			...board
-		},
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
