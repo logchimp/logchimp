@@ -1,52 +1,53 @@
 <template>
-	<div class="dashboard-sidebar">
-		<router-link to="/dashboard" class="site-info dashboard-sidebar-header">
-			<img
-				class="site-logo"
-				:src="getSiteSittings.logo"
-				:alt="getSiteSittings.title"
-			/>
-			<h5 class="site-name">{{ getSiteSittings.title }}</h5>
-		</router-link>
-		<nav class="dashboard-sidebar-navbar">
-			<router-link to="/dashboard" class="dashboard-sidebar-navbar-item">
-				<div class="dashboard-sidebar-navbar-icon">
+	<div class="sidebar">
+		<header>
+			<router-link to="/dashboard" class="site-info">
+				<img
+					class="site-logo"
+					:src="getSiteSittings.logo"
+					:alt="getSiteSittings.title"
+				/>
+				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+			</router-link>
+		</header>
+		<div class="sidebar-list">
+			<h6>Manage</h6>
+			<li>
+				<router-link to="/dashboard" class="sidebar-list-item">
 					<dashboard-icon />
-				</div>
-				<div class="dashboard-sidebar-navbar-content">Dashbaord</div>
-			</router-link>
-			<router-link to="/dashboard/boards" class="dashboard-sidebar-navbar-item">
-				<div class="dashboard-sidebar-navbar-icon">
+					<p>Dashbaord</p>
+				</router-link>
+			</li>
+			<li>
+				<router-link to="/dashboard/boards" class="sidebar-list-item">
 					<board-icon />
-				</div>
-				<div class="dashboard-sidebar-navbar-content">Boards</div>
-			</router-link>
-			<router-link to="/dashboard/posts" class="dashboard-sidebar-navbar-item">
-				<div class="dashboard-sidebar-navbar-icon">
+					<p>Boards</p>
+				</router-link>
+			</li>
+			<li>
+				<router-link to="/dashboard/posts" class="sidebar-list-item">
 					<post-icon />
-				</div>
-				<div class="dashboard-sidebar-navbar-content">Posts</div>
-			</router-link>
-			<router-link to="/dashboard/users" class="dashboard-sidebar-navbar-item">
-				<div class="dashboard-sidebar-navbar-icon">
+					<p>Posts</p>
+				</router-link>
+			</li>
+			<li>
+				<router-link to="/dashboard/users" class="sidebar-list-item">
 					<users-icon />
-				</div>
-				<div class="dashboard-sidebar-navbar-content">Users</div>
-			</router-link>
-			<router-link
-				to="/dashboard/settings"
-				class="dashboard-sidebar-navbar-item"
-			>
-				<div class="dashboard-sidebar-navbar-icon">
+					<p>Users</p>
+				</router-link>
+			</li>
+		</div>
+
+		<div class="sidebar-list">
+			<h6>Settings</h6>
+			<li>
+				<router-link to="/dashboard/settings/general" class="sidebar-list-item">
 					<settings-icon />
-				</div>
-				<div class="dashboard-sidebar-navbar-content">Settings</div>
-			</router-link>
-		</nav>
-		<footer
-			@mouseleave="addDashboardSidebarFooterDropdownListener"
-			class="dashboard-sidebar-footer"
-		>
+					<p>General</p>
+				</router-link>
+			</li>
+		</div>
+		<footer @mouseleave="addDashboardSidebarFooterDropdownListener">
 			<dropdown
 				v-show="dashboardSidebarDropdown"
 				class="dashboard-sidebar-dropdown"
