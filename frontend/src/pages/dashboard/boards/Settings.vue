@@ -21,16 +21,43 @@
 			</Button>
 		</header>
 
-		<board-form
-			:name="board.name"
-			:url="board.url"
-			:color="board.color"
-			:view-voters="board.view_voters"
-			@update-name="value => (board.name = value)"
-			@update-url="value => (board.url = value)"
-			@update-color="value => (board.color = value)"
-			@update-view-voters="value => (board.view_voters = value)"
-		/>
+		<div class="form-section">
+			<div class="form-columns">
+				<div class="form-column">
+					<l-text
+						label="Name"
+						placeholder="Enter board name"
+						v-model="board.name"
+					/>
+
+					<color-input v-model="board.color" />
+				</div>
+
+				<div class="form-column">
+					<l-text
+						label="Slug"
+						placeholder="Board slug url"
+						v-model="board.url"
+						:description="slimUrl"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<h6 class="form-section-title">
+				Privacy
+			</h6>
+			<div class="form-columns">
+				<div class="form-column">
+					<toggle-item
+						label="View voters"
+						v-model="board.view_voters"
+						note="Show people who vote the post"
+					/>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -40,21 +67,30 @@ import { getBoardByUrl, updateBoard } from "../../../modules/boards";
 
 // components
 import Button from "../../../components/Button";
-import BoardForm from "../../../components/board/BoardForm";
+import LText from "../../../components/input/LText";
+import ToggleItem from "../../../components/input/ToggleItem";
+import ColorInput from "../../../components/ColorInput";
 
 export default {
 	name: "BoardSettings",
 	data() {
 		return {
 			title: "",
-			board: {},
+			board: {
+				name: "",
+				url: "",
+				color: "",
+				view_voters: false
+			},
 			saveButtonLoading: false
 		};
 	},
 	components: {
 		// Breadcrumbs,
 		Button,
-		BoardForm
+		LText,
+		ToggleItem,
+		ColorInput
 	},
 	computed: {
 		disabled() {
@@ -62,6 +98,12 @@ export default {
 			const checkPermission = permissions.find(item => item === "board:update");
 
 			return !checkPermission;
+		},
+		slimUrl() {
+			return this.board.url
+				.replace(/[^\w]+/gi, "-")
+				.trim()
+				.toLowerCase();
 		}
 	},
 	methods: {
