@@ -44,6 +44,7 @@
 		},
 		"boards": {
 			"nameMissing": "Board name missing",
+			"urlMissing": "Board url cannot be empty",
 			"boardIdMissing": "Board ID missing",
 			"exists": "Board already exists",
 			"boardNotFound": "Board not found"

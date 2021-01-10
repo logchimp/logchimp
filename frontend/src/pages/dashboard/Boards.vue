@@ -6,6 +6,7 @@
 				<Button
 					type="primary"
 					:disabled="createBoardPermissionDisabled"
+					:loading="createBoardButtonLoading"
 					@click="createBoard"
 				>
 					Create board
@@ -69,7 +70,7 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getAllBoards } from "../../modules/boards";
+import { getAllBoards, createBoard } from "../../modules/boards";
 
 // components
 import Button from "../../components/Button";
@@ -84,6 +85,7 @@ export default {
 	name: "DashboardBoards",
 	data() {
 		return {
+			createBoardButtonLoading: false,
 			boards: [],
 			page: 1
 		};
@@ -115,8 +117,18 @@ export default {
 		}
 	},
 	methods: {
-		createBoard() {
-			this.$router.push("/dashboard/boards/create");
+		async createBoard() {
+			this.createBoardButtonLoading = true;
+			try {
+				const response = await createBoard();
+
+				const url = response.data.board.url;
+				this.$router.push(`/dashboard/board/${url}/settings`);
+			} catch (err) {
+				console.error(err);
+			} finally {
+				this.createBoardButtonLoading = false;
+			}
 		},
 		async getBoards($state) {
 			try {
