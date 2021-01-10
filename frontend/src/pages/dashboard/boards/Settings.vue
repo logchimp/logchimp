@@ -51,6 +51,14 @@
 			<div class="form-columns">
 				<div class="form-column">
 					<toggle-item
+						label="Display on site"
+						v-model="board.display"
+						note="Show this board on the site"
+					/>
+				</div>
+
+				<div class="form-column">
+					<toggle-item
 						label="View voters"
 						v-model="board.view_voters"
 						note="Show people who vote the post"
@@ -80,7 +88,8 @@ export default {
 				name: "",
 				url: "",
 				color: "",
-				view_voters: false
+				view_voters: false,
+				display: false
 			},
 			saveButtonLoading: false
 		};
@@ -115,7 +124,8 @@ export default {
 					color: this.board.color,
 					name: this.board.name,
 					url: this.board.url,
-					view_voters: this.board.view_voters
+					view_voters: this.board.view_voters,
+					display: this.board.display
 				});
 
 				this.$router.push("/dashboard/boards");
