@@ -1,4 +1,4 @@
-.dashboard-sidebar
+.sidebar
 	display: flex
 	flex-direction: column
 	position: sticky
@@ -6,13 +6,15 @@
 	bottom: 0
 	background-color: $brand-color
 	height: 100vh
-	padding: 1.125rem 1rem
+	padding: 1rem
 	min-width: 200px
 
-.dashboard-sidebar-header
-	padding-left: 1rem
-	padding-right: 1rem
-	margin-bottom: 3rem
+	header
+		margin-bottom: 1rem
+
+	footer
+		position: relative
+		margin-top: auto
 
 .sidebar-list
 	margin-top: 2rem
@@ -47,11 +49,6 @@
 
 	p
 		font-weight: 600
-
-// footer
-.dashboard-sidebar-footer
-	margin-top: auto
-	position: relative
 
 .dashboard-sidebar-user-container
 	cursor: pointer

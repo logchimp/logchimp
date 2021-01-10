@@ -1,13 +1,15 @@
 <template>
-	<div class="dashboard-sidebar">
-		<router-link to="/dashboard" class="site-info dashboard-sidebar-header">
-			<img
-				class="site-logo"
-				:src="getSiteSittings.logo"
-				:alt="getSiteSittings.title"
-			/>
-			<h5 class="site-name">{{ getSiteSittings.title }}</h5>
-		</router-link>
+	<div class="sidebar">
+		<header>
+			<router-link to="/dashboard" class="site-info">
+				<img
+					class="site-logo"
+					:src="getSiteSittings.logo"
+					:alt="getSiteSittings.title"
+				/>
+				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+			</router-link>
+		</header>
 		<div class="sidebar-list">
 			<h6>Manage</h6>
 			<li>
@@ -45,10 +47,7 @@
 				</router-link>
 			</li>
 		</div>
-		<footer
-			@mouseleave="addDashboardSidebarFooterDropdownListener"
-			class="dashboard-sidebar-footer"
-		>
+		<footer @mouseleave="addDashboardSidebarFooterDropdownListener">
 			<dropdown
 				v-show="dashboardSidebarDropdown"
 				class="dashboard-sidebar-dropdown"
