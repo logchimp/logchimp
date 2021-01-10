@@ -14,7 +14,7 @@ import store from "../store";
  */
 export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 	return await axios({
-		method: "get",
+		method: "GET",
 		url: "/api/v1/boards",
 		params: {
 			page,
@@ -63,6 +63,7 @@ export const createBoard = async () => {
  * @param {string} board.url board url
  * @param {string} board.color board color
  * @param {boolean} board.view_voters view voters in this board
+ * @param {boolean} board.display display board on the site
  *
  * @returns {object} response
  */
