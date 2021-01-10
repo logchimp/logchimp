@@ -18,7 +18,20 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	const slimUrl = (url || name)
+	if (!url) {
+		return res.status(400).send({
+			errors: [
+				!url
+					? {
+							message: error.api.boards.urlMissing,
+							code: "BOARD_URL_MISSING"
+					  }
+					: ""
+			]
+		});
+	}
+
+	const slimUrl = url
 		.replace(/[^\w]+/gi, "-")
 		.trim()
 		.toLowerCase();
