@@ -15,6 +15,7 @@ exports.up = function(knex) {
 				.notNullable()
 				.unique();
 			table.string("color", 6).notNullable();
+			table.boolean("display").defaultTo(false);
 			table.boolean("view_voters").defaultTo(true);
 			table
 				.timestamp("createdAt")
