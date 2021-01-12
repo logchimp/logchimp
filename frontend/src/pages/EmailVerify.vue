@@ -1,27 +1,25 @@
 <template>
-	<div class="auth-form-container">
-		<div class="container">
-			<div class="auth-form-header">
-				<router-link to="/" class="auth-form-logo site-info">
-					<img
-						class="site-logo"
-						:src="getSiteSittings.logo"
-						:alt="getSiteSittings.title"
-					/>
-					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
-				</router-link>
+	<div class="auth-form">
+		<div class="auth-form-header">
+			<router-link to="/" class="auth-form-logo site-info">
+				<img
+					class="site-logo"
+					:src="getSiteSittings.logo"
+					:alt="getSiteSittings.title"
+				/>
+				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+			</router-link>
+		</div>
+		<div v-if="success" class="card">
+			<success-icon fill="#64B285" stroke="white" />
+			<div>
+				Thank you verifying your account. You may close this window.
 			</div>
-			<div v-if="success" class="card">
-				<success-icon fill="#64B285" stroke="white" />
-				<div>
-					Thank you verifying your account. You may close this window.
-				</div>
-			</div>
-			<div v-if="error" class="card">
-				<error-icon fill="#DE544E" stroke="white" />
-				<div>
-					Invalid or expired activation link.
-				</div>
+		</div>
+		<div v-if="error" class="card">
+			<error-icon fill="#DE544E" stroke="white" />
+			<div>
+				Invalid or expired activation link.
 			</div>
 		</div>
 		<div v-if="loading" class="email-verification">

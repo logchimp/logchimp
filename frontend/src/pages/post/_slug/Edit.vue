@@ -1,5 +1,5 @@
 <template>
-	<Form v-if="isPostExist">
+	<div v-if="isPostExist">
 		<h4 class="post-edit-heading">Edit post</h4>
 		<div v-if="!post.loading">
 			<l-text
@@ -34,7 +34,7 @@
 		<div v-else class="loader-container">
 			<loader />
 		</div>
-	</Form>
+	</div>
 	<p v-else>
 		There is no such post.
 	</p>
@@ -45,7 +45,6 @@
 import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
-import Form from "../../../components/Form";
 import Loader from "../../../components/Loader";
 import LText from "../../../components/input/LText";
 import LTextarea from "../../../components/input/LTextarea";
@@ -76,7 +75,6 @@ export default {
 	},
 	components: {
 		// components
-		Form,
 		Loader,
 		LText,
 		LTextarea,
