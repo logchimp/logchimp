@@ -7,22 +7,92 @@
 				specific topic.
 			</p>
 		</div>
-		<create-board class="onboarding-form" redirect="/dashboard" />
+		<div class="card">
+			<l-text
+				v-model="boardName.value"
+				label="Name"
+				type="text"
+				name="Name"
+				placeholder="Name of the board"
+				:error="boardName.error"
+				@keyup-enter="create"
+				@hide-error="hideBoardNameError"
+			/>
+			<div style="display: flex; justify-content: center;">
+				<Button
+					:loading="buttonLoading"
+					:disabled="createBoardPermissionDisabled"
+					@click="create"
+					type="primary"
+				>
+					Create
+				</Button>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
+// modules
+import { createBoard } from "../../modules/boards";
+
 // components
-import CreateBoard from "../../components/board/CreateBoard";
+import LText from "../../components/input/LText";
+import Button from "../../components/Button";
 
 export default {
 	name: "SetupBoard",
+	data() {
+		return {
+			boardName: {
+				value: "",
+				error: {
+					show: false,
+					message: ""
+				}
+			},
+			buttonLoading: false
+		};
+	},
 	components: {
-		CreateBoard
+		LText,
+		Button
 	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		},
+		createBoardPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const createBoardPermission = permissions.find(
+				item => item === "board:create"
+			);
+
+			return !createBoardPermission;
+		}
+	},
+	methods: {
+		hideBoardNameError(event) {
+			this.boardName.error = event;
+		},
+		async create() {
+			if (!this.boardName.value) {
+				this.boardName.error.show = true;
+				this.boardName.error.message = "Required";
+				return;
+			}
+
+			this.buttonLoading = true;
+
+			try {
+				await createBoard(this.boardName.value);
+
+				this.$router.push("/dashboard");
+			} catch (error) {
+				console.error(error);
+			} finally {
+				this.buttonLoading = false;
+			}
 		}
 	},
 	metaInfo() {
