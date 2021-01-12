@@ -1,18 +1,21 @@
 <template>
 	<div>
-		<div class="boards-page-header">
-			<h4 class="boards-page-header-heading">Boards</h4>
-			<div class="boards-page-header-button">
-				<Button
-					type="primary"
-					:disabled="createBoardPermissionDisabled"
-					:loading="createBoardButtonLoading"
-					@click="createBoard"
-				>
-					Create board
-				</Button>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<router-link to="/dashboard/boards" class="breadcrum-item">
+					Boards
+				</router-link>
 			</div>
-		</div>
+
+			<Button
+				type="primary"
+				:disabled="createBoardPermissionDisabled"
+				:loading="createBoardButtonLoading"
+				@click="createBoard"
+			>
+				Create board
+			</Button>
+		</header>
 
 		<Table class="boards-table">
 			<template v-slot:header>
