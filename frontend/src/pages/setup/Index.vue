@@ -1,5 +1,5 @@
 <template>
-	<div class="onboarding-content">
+	<div class="onboarding onboarding-content">
 		<div class="onboarding-header">
 			<h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
 			<p class="onboarding-label">
