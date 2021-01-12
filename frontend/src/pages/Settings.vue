@@ -1,6 +1,6 @@
 <template>
-	<Form>
-		<h4 class="user-settings-heading">Account settings</h4>
+	<div>
+		<h4 class="form-header">Account settings</h4>
 		<div v-if="!user.loading">
 			<server-error v-if="serverError" @close="serverError = false" />
 			<div v-if="!userIsVerified" class="user-settings-verification">
@@ -61,7 +61,7 @@
 		<div v-else class="loader-container">
 			<loader />
 		</div>
-	</Form>
+	</div>
 </template>
 
 <script>
@@ -72,7 +72,6 @@ import { resendUserVerificationEmail } from "../modules/auth";
 // components
 import Loader from "../components/Loader";
 import ServerError from "../components/serverError";
-import Form from "../components/Form";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
 
@@ -108,7 +107,6 @@ export default {
 		// components
 		Loader,
 		ServerError,
-		Form,
 		LText,
 		Button,
 
