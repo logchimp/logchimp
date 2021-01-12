@@ -1,8 +1,12 @@
 <template>
 	<div>
-		<div class="boards-page-header">
-			<h4 class="boards-page-header-heading">Users</h4>
-		</div>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<h5 class="breadcrum-item">
+					Users
+				</h5>
+			</div>
+		</header>
 
 		<Table class="users-table">
 			<template v-slot:header>

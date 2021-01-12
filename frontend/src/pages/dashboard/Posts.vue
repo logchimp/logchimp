@@ -1,8 +1,12 @@
 <template>
 	<div>
-		<div class="boards-page-header">
-			<h4 class="boards-page-header-heading">Posts</h4>
-		</div>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<h5 class="breadcrum-item">
+					Posts
+				</h5>
+			</div>
+		</header>
 
 		<div>
 			<post
