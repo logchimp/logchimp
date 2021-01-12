@@ -1,19 +1,13 @@
 <template>
-	<container>
-		<div class="onboarding">
+	<div class="container">
+		<div class="">
 			<router-view />
 		</div>
-	</container>
+	</div>
 </template>
 
 <script>
-// components
-import Container from "../components/Container";
-
 export default {
-	name: "Onboarding",
-	components: {
-		Container
-	}
+	name: "Onboarding"
 };
 </script>
