@@ -51,9 +51,9 @@
 				</Button>
 			</div>
 		</div>
-		<p class="account-tos">
-			By continuing, you agree to LogChimp's <span>Terms</span> and
-			<span>Privacy</span> policy.
+		<p class="auth-form-other">
+			By continuing, you agree to LogChimp's <strong>Terms</strong> and
+			<strong>Privacy</strong> policy.
 		</p>
 	</div>
 </template>
