@@ -1,69 +1,66 @@
 <template>
-	<div class="auth">
-		<div class="auth-form-container">
+	<div class="auth-form">
+		<div>
+			<div class="auth-form-header">
+				<router-link to="/" class="auth-form-logo site-info">
+					<img
+						class="site-logo"
+						:src="getSiteSittings.logo"
+						:alt="getSiteSittings.title"
+					/>
+					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+				</router-link>
+				<h3 class="auth-form-heading">Set new password</h3>
+			</div>
+			<div v-if="validToken.success">
+				<div class="card" v-if="!changePassword.success">
+					<l-text
+						v-model="password.value"
+						label="New password"
+						type="password"
+						name="Password"
+						placeholder="Enter new password"
+						:error="password.error"
+						@keyup-enter="setPassword"
+						@hide-error="hidePasswordError"
+					/>
+					<l-text
+						v-model="confirmPassword.value"
+						label="Confirm password"
+						type="password"
+						name="Confirm password"
+						placeholder="Enter new password again"
+						:error="confirmPassword.error"
+						@keyup-enter="setPassword"
+						@hide-error="hideConfirmPasswordError"
+					/>
+					<div style="display: flex; justify-content: center;">
+						<Button
+							@click="setPassword"
+							type="primary"
+							:loading="buttonLoading"
+						>
+							Reset password
+						</Button>
+					</div>
+				</div>
+				<div class="card" v-else>
+					<success-icon fill="#64B285" stroke="white" />
+					<div>
+						You've successful changed your password. You may close this window.
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card" v-if="validToken.error || changePassword.error">
+			<error-icon fill="#DE544E" stroke="white" />
 			<div>
-				<div class="auth-form-header">
-					<router-link to="/" class="auth-form-logo site-info">
-						<img
-							class="site-logo"
-							:src="getSiteSittings.logo"
-							:alt="getSiteSittings.title"
-						/>
-						<h5 class="site-name">{{ getSiteSittings.title }}</h5>
-					</router-link>
-					<h3 class="auth-form-heading">Set new password</h3>
-				</div>
-				<div v-if="validToken.success">
-					<div class="card" v-if="!changePassword.success">
-						<l-text
-							v-model="password.value"
-							label="New password"
-							type="password"
-							name="Password"
-							placeholder="Enter new password"
-							:error="password.error"
-							@keyup-enter="setPassword"
-							@hide-error="hidePasswordError"
-						/>
-						<l-text
-							v-model="confirmPassword.value"
-							label="Confirm password"
-							type="password"
-							name="Confirm password"
-							placeholder="Enter new password again"
-							:error="confirmPassword.error"
-							@keyup-enter="setPassword"
-							@hide-error="hideConfirmPasswordError"
-						/>
-						<div style="display: flex; justify-content: center;">
-							<Button
-								@click="setPassword"
-								type="primary"
-								:loading="buttonLoading"
-							>
-								Reset password
-							</Button>
-						</div>
-					</div>
-					<div class="card" v-else>
-						<success-icon fill="#64B285" stroke="white" />
-						<div>
-							You've successful changed your password. You may close this
-							window.
-						</div>
-					</div>
-				</div>
+				Invalid or expired password reset link.
 			</div>
-			<div class="card" v-if="validToken.error || changePassword.error">
-				<error-icon fill="#DE544E" stroke="white" />
-				<div>
-					Invalid or expired password reset link.
-				</div>
-			</div>
-			<div class="card" v-if="validToken.loading">
-				<div class="loader-container">
-					<loader />
-				</div>
+		</div>
+		<div class="card" v-if="validToken.loading">
+			<div class="loader-container">
+				<loader />
 			</div>
 		</div>
 	</div>

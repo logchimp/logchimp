@@ -1,5 +1,5 @@
 <template>
-	<div class="onboarding-content">
+	<div class="auth-form">
 		<div class="onboarding-header">
 			<h2 class="onboarding-heading">Create a new board</h2>
 			<p class="onboarding-label">

@@ -1,51 +1,45 @@
 <template>
-	<div class="auth">
-		<div class="auth-form-container">
-			<div class="auth-form-header">
-				<router-link to="/" class="auth-form-logo site-info">
-					<img
-						class="site-logo"
-						:src="getSiteSittings.logo"
-						:alt="getSiteSittings.title"
-					/>
-					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
-				</router-link>
-				<h3 class="auth-form-heading">Forget password</h3>
-			</div>
-			<server-error v-if="serverError" @close="serverError = false" />
-			<div v-if="!hideForm" class="card auth-form">
-				<l-text
-					v-model="email.value"
-					label="Email Address"
-					type="email"
-					name="email"
-					placeholder="Email address"
-					:error="email.error"
-					@keyup-enter="forgetPassword"
-					@hide-error="hideEmailError"
+	<div class="auth-form">
+		<div class="auth-form-header">
+			<router-link to="/" class="auth-form-logo site-info">
+				<img
+					class="site-logo"
+					:src="getSiteSittings.logo"
+					:alt="getSiteSittings.title"
 				/>
-				<div style="display: flex; justify-content: center;">
-					<Button
-						@click="forgetPassword"
-						type="primary"
-						:loading="buttonLoading"
-					>
-						Continue
-					</Button>
-				</div>
+				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+			</router-link>
+			<h3 class="auth-form-heading">Forget password</h3>
+		</div>
+		<server-error v-if="serverError" @close="serverError = false" />
+		<div v-if="!hideForm" class="card">
+			<l-text
+				v-model="email.value"
+				label="Email Address"
+				type="email"
+				name="email"
+				placeholder="Email address"
+				:error="email.error"
+				@keyup-enter="forgetPassword"
+				@hide-error="hideEmailError"
+			/>
+			<div style="display: flex; justify-content: center;">
+				<Button @click="forgetPassword" type="primary" :loading="buttonLoading">
+					Continue
+				</Button>
 			</div>
-			<div class="card" v-if="requestSuccess">
-				<p>You will receive a password reset email soon.</p>
-				<br />
-				<p>Follow the link in the email to reset your password.</p>
-			</div>
-			<div class="card" v-if="requestError">
-				<p>Something went wrong!</p>
-			</div>
-			<div class="auth-form-other">
-				Don't have an account yet?
-				<router-link to="/join">Sign up</router-link>
-			</div>
+		</div>
+		<div class="card" v-if="requestSuccess">
+			<p>You will receive a password reset email soon.</p>
+			<br />
+			<p>Follow the link in the email to reset your password.</p>
+		</div>
+		<div class="card" v-if="requestError">
+			<p>Something went wrong!</p>
+		</div>
+		<div class="auth-form-other">
+			Don't have an account yet?
+			<router-link to="/join">Sign up</router-link>
 		</div>
 	</div>
 </template>

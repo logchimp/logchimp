@@ -1,49 +1,47 @@
 <template>
-	<div class="auth">
-		<div class="auth-form-container">
-			<div class="auth-form-header">
-				<router-link to="/" class="auth-form-logo site-info">
-					<img
-						class="site-logo"
-						:src="getSiteSittings.logo"
-						:alt="getSiteSittings.title"
-					/>
-					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
-				</router-link>
-				<h3 class="auth-form-heading">Welcome back!</h3>
-			</div>
-			<Form class="auth-form">
-				<l-text
-					v-model="email.value"
-					label="Email Address"
-					type="email"
-					name="email"
-					placeholder="Email address"
-					:error="email.error"
-					@keyup-enter="login"
-					@hide-error="hideEmailError"
+	<div class="auth-form">
+		<div class="auth-form-header">
+			<router-link to="/" class="auth-form-logo site-info">
+				<img
+					class="site-logo"
+					:src="getSiteSittings.logo"
+					:alt="getSiteSittings.title"
 				/>
-				<l-text
-					v-model="password.value"
-					label="Password"
-					type="password"
-					name="password"
-					placeholder="Password"
-					:error="password.error"
-					@keyup-enter="login"
-					@hide-error="hidePasswordError"
-				/>
-				<div style="display: flex; justify-content: center;">
-					<Button @click="login" type="primary" :loading="buttonLoading">
-						Login
-					</Button>
-				</div>
-			</Form>
-			<div class="auth-form-other">
-				<router-link to="/password-reset">Forget password?</router-link>
-				· Don't have an account yet?
-				<router-link to="/join">Sign up</router-link>
+				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+			</router-link>
+			<h3 class="auth-form-heading">Welcome back!</h3>
+		</div>
+		<div class="card">
+			<l-text
+				v-model="email.value"
+				label="Email Address"
+				type="email"
+				name="email"
+				placeholder="Email address"
+				:error="email.error"
+				@keyup-enter="login"
+				@hide-error="hideEmailError"
+			/>
+			<l-text
+				v-model="password.value"
+				label="Password"
+				type="password"
+				name="password"
+				placeholder="Password"
+				:error="password.error"
+				@keyup-enter="login"
+				@hide-error="hidePasswordError"
+			/>
+			<div style="display: flex; justify-content: center;">
+				<Button @click="login" type="primary" :loading="buttonLoading">
+					Login
+				</Button>
 			</div>
+		</div>
+		<div class="auth-form-other">
+			<router-link to="/password-reset">Forget password?</router-link>
+			· Don't have an account yet?
+			<router-link to="/join">Sign up</router-link>
 		</div>
 	</div>
 </template>
@@ -53,7 +51,6 @@
 import { signin } from "../modules/auth";
 
 // component
-import Form from "../components/Form";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
 
@@ -80,7 +77,6 @@ export default {
 	},
 	components: {
 		// component
-		Form,
 		LText,
 		Button
 	},
