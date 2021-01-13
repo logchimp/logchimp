@@ -24,7 +24,7 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getAllBoards } from "../modules/boards";
+import { getPublicBoards } from "../modules/boards";
 
 // components
 import BoardItem from "../components/board/BoardItem";
@@ -54,7 +54,7 @@ export default {
 	methods: {
 		async getBoards($state) {
 			try {
-				const response = await getAllBoards(this.page, null, "desc");
+				const response = await getPublicBoards(this.page, null, "desc");
 
 				if (response.data.boards.length) {
 					this.boards.push(...response.data.boards);
