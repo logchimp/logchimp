@@ -1,7 +1,9 @@
 <template>
 	<div class="auth-form">
 		<div class="onboarding-header">
-			<h2 class="onboarding-heading">Create a new board</h2>
+			<h2 class="onboarding-heading">
+				Create a new board
+			</h2>
 			<p class="onboarding-label">
 				A board is a place where people can post and vote on ideas for a
 				specific topic.
@@ -22,8 +24,8 @@
 				<Button
 					:loading="buttonLoading"
 					:disabled="createBoardPermissionDisabled"
-					@click="create"
 					type="primary"
+					@click="create"
 				>
 					Create
 				</Button>
@@ -42,6 +44,11 @@ import Button from "../../components/Button";
 
 export default {
 	name: "SetupBoard",
+	components: {
+		// components
+		LText,
+		Button
+	},
 	data() {
 		return {
 			boardName: {
@@ -53,10 +60,6 @@ export default {
 			},
 			buttonLoading: false
 		};
-	},
-	components: {
-		LText,
-		Button
 	},
 	computed: {
 		getSiteSittings() {

@@ -1,7 +1,9 @@
 <template>
 	<div class="card">
 		<div class="card-section card-header">
-			<h4 class="card-header-title">Login</h4>
+			<h4 class="card-header-title">
+				Login
+			</h4>
 			<p class="card-header-label">
 				Log in to your account to give feedback
 			</p>

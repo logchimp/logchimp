@@ -1,9 +1,9 @@
 <template>
 	<router-link
+		v-if="showBoard"
 		data-test="board-badge"
 		class="board-badge"
 		:to="`/board/${url}`"
-		v-if="showBoard"
 	>
 		<div class="post-board">
 			<div
@@ -13,7 +13,9 @@
 					backgroundColor: `#${color}`
 				}"
 			/>
-			<p class="post-board-name" data-test="board-badge-name">{{ name }}</p>
+			<p class="post-board-name" data-test="board-badge-name">
+				{{ name }}
+			</p>
 		</div>
 	</router-link>
 </template>

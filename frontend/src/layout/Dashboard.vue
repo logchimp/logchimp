@@ -17,14 +17,14 @@ import PowerBy from "../components/PowerBy";
 
 export default {
 	name: "DashboardLayout",
+	components: {
+		Sidebar,
+		PowerBy
+	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
-	},
-	components: {
-		Sidebar,
-		PowerBy
 	}
 };
 </script>

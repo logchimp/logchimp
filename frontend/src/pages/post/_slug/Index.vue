@@ -35,15 +35,15 @@
 						</time>
 						<div
 							v-if="postAuthor"
-							@mouseleave="addPostViewDropdownListener"
 							class="dropdown-menu-container viewpost__menu"
+							@mouseleave="addPostViewDropdownListener"
 						>
-							<div @click="toggleMenuDropdown" class="dropdown-menu-icon">
+							<div class="dropdown-menu-icon" @click="toggleMenuDropdown">
 								<more-icon />
 							</div>
 							<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
 								<dropdown-item @click="editPost">
-									<template v-slot:icon>
+									<template #icon>
 										<edit-icon />
 									</template>
 									Edit
@@ -81,15 +81,6 @@ import EditIcon from "../../../components/icons/Edit";
 
 export default {
 	name: "PostView",
-	data() {
-		return {
-			menuDropdown: false,
-			post: {
-				loading: false
-			},
-			isPostExist: true
-		};
-	},
 	components: {
 		// components
 		Loader,
@@ -99,6 +90,15 @@ export default {
 		Avatar,
 		MoreIcon,
 		EditIcon
+	},
+	data() {
+		return {
+			menuDropdown: false,
+			post: {
+				loading: false
+			},
+			isPostExist: true
+		};
 	},
 	computed: {
 		postAuthorName() {
@@ -123,6 +123,9 @@ export default {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.postBySlug();
 	},
 	methods: {
 		// event listener to hide dropdown by clicking outside
@@ -162,9 +165,6 @@ export default {
 		editPost() {
 			this.$router.push(`/post/${this.post.slug}/edit`);
 		}
-	},
-	created() {
-		this.postBySlug();
 	},
 	metaInfo() {
 		return {

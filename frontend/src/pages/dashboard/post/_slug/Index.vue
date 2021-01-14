@@ -60,6 +60,12 @@ import Avatar from "../../../../components/Avatar";
 
 export default {
 	name: "DashboardPostView",
+	components: {
+		// components
+		Loader,
+		Vote,
+		Avatar
+	},
 	data() {
 		return {
 			post: {
@@ -67,12 +73,6 @@ export default {
 			},
 			isPostExist: true
 		};
-	},
-	components: {
-		// components
-		Loader,
-		Vote,
-		Avatar
 	},
 	computed: {
 		postAuthorName() {
@@ -87,6 +87,9 @@ export default {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.postBySlug();
 	},
 	methods: {
 		async postBySlug() {
@@ -109,9 +112,6 @@ export default {
 			this.post.voters.votesCount = voters.votesCount;
 			this.post.voters.viewerVote = voters.viewerVote;
 		}
-	},
-	created() {
-		this.postBySlug();
 	},
 	metaInfo() {
 		return {

@@ -2,15 +2,17 @@
 	<div>
 		<post
 			v-for="post in posts"
-			:post="post"
 			:key="post.postId"
-			:showBoard="false"
+			:post="post"
+			:show-board="false"
 		/>
 		<infinite-loading @infinite="getMorePosts">
-			<div class="loader-container" slot="spinner"><loader /></div>
-			<div slot="no-more"></div>
-			<div slot="no-results"></div>
-			<div slot="error"></div>
+			<div slot="spinner" class="loader-container">
+				<loader />
+			</div>
+			<div slot="no-more" />
+			<div slot="no-results" />
+			<div slot="error" />
 		</infinite-loading>
 	</div>
 </template>
@@ -28,12 +30,6 @@ import Loader from "../Loader";
 
 export default {
 	name: "OldestPosts",
-	data() {
-		return {
-			posts: [],
-			page: 1
-		};
-	},
 	components: {
 		// packages
 		InfiniteLoading,
@@ -49,6 +45,12 @@ export default {
 				return {};
 			}
 		}
+	},
+	data() {
+		return {
+			posts: [],
+			page: 1
+		};
 	},
 	methods: {
 		async getMorePosts($state) {

@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require("path");
 
 const serverPort = process.env.VUE_APP_SERVER_PORT || 3000;
 
@@ -7,7 +7,7 @@ module.exports = {
 	devServer: {
 		disableHostCheck: process.env.IS_GITPOD ? true : false,
 		proxy: {
-			'/api': {
+			"/api": {
 				target: `http://localhost:${serverPort}`
 			}
 		}

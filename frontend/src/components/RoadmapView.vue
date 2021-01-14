@@ -10,7 +10,11 @@
 			<h6>{{ roadmap.name }}</h6>
 		</header>
 		<div data-test="roadmap-column" class="roadmap-column">
-			<post-card v-for="post in posts" :key="post.postId" :post="post" />
+			<post-card
+				v-for="post in posts"
+				:key="post.postId"
+				:post="post"
+			/>
 		</div>
 	</div>
 </template>
@@ -24,10 +28,8 @@ import PostCard from "../components/post/PostCard";
 
 export default {
 	name: "RoadmapView",
-	data() {
-		return {
-			posts: []
-		};
+	components: {
+		PostCard
 	},
 	props: {
 		roadmap: {
@@ -35,8 +37,13 @@ export default {
 			required: true
 		}
 	},
-	components: {
-		PostCard
+	data() {
+		return {
+			posts: []
+		};
+	},
+	created() {
+		this.getRoadmapPosts();
 	},
 	methods: {
 		async getRoadmapPosts() {
@@ -49,9 +56,6 @@ export default {
 				console.error(err);
 			}
 		}
-	},
-	created() {
-		this.getRoadmapPosts();
 	}
 };
 </script>

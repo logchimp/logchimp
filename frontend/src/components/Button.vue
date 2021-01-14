@@ -9,7 +9,7 @@
 		@click="click"
 	>
 		<slot />
-		<div class="button-loader" v-if="loading">
+		<div v-if="loading" class="button-loader">
 			<loader-icon />
 		</div>
 	</div>
@@ -21,6 +21,9 @@ import LoaderIcon from "./icons/Loader";
 
 export default {
 	name: "Button",
+	components: {
+		LoaderIcon
+	},
 	props: {
 		type: {
 			type: String,
@@ -41,9 +44,6 @@ export default {
 			if (this.disabled) return;
 			this.$emit("click");
 		}
-	},
-	components: {
-		LoaderIcon
 	}
 };
 </script>
