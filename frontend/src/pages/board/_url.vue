@@ -5,30 +5,30 @@
 				<main class="homepage-posts">
 					<tab>
 						<tab-item
-							@click="updateTab('latest')"
 							:class="{
 								'tab-item-active': tab === 'latest'
 							}"
+							@click="updateTab('latest')"
 						>
-							<template v-slot:icon>
+							<template #icon>
 								<sort-desc-icon />
 							</template>
 							Latest
 						</tab-item>
 						<tab-item
-							@click="updateTab('oldest')"
 							:class="{
 								'tab-item-active': tab === 'oldest'
 							}"
+							@click="updateTab('oldest')"
 						>
-							<template v-slot:icon>
+							<template #icon>
 								<sort-asc-icon />
 							</template>
 							Oldest
 						</tab-item>
 					</tab>
 
-					<component :is="activeTab" :board="board"></component>
+					<component :is="activeTab" :board="board" />
 				</main>
 				<aside class="homepage-sidebar">
 					<create-post v-if="isUserLoggedIn" :board-id="board.boardId" />
@@ -67,15 +67,6 @@ import SortAscIcon from "../../components/icons/SortAsc";
 
 export default {
 	name: "Board",
-	data() {
-		return {
-			tab: "latest",
-			board: {
-				loading: false
-			},
-			isBoardExist: true
-		};
-	},
 	components: {
 		// packages
 		InfiniteLoading,
@@ -92,6 +83,15 @@ export default {
 		// icons
 		SortDescIcon,
 		SortAscIcon
+	},
+	data() {
+		return {
+			tab: "latest",
+			board: {
+				loading: false
+			},
+			isBoardExist: true
+		};
 	},
 	computed: {
 		activeTab() {
@@ -110,6 +110,9 @@ export default {
 			const user = this.$store.getters["user/getUserId"];
 			return !!user;
 		}
+	},
+	created() {
+		this.getBoard();
 	},
 	methods: {
 		updateTab(tabValue) {
@@ -132,9 +135,6 @@ export default {
 			}
 		}
 	},
-	created() {
-		this.getBoard();
-	},
 	metaInfo() {
 		return {
 			title: `${this.board.name} · Board`,
@@ -147,7 +147,7 @@ export default {
 					? {
 							name: "robots",
 							content: "noindex"
-					  }
+						}
 					: ""
 			]
 		};

@@ -2,8 +2,8 @@
 	<div
 		class="post-voters"
 		data-test="vote"
-		@click="changeVote"
 		:class="[disabled ? 'post-voters-disabled' : '']"
+		@click="changeVote"
 	>
 		<arrow-icon
 			class="post-voters-arrow"
@@ -27,10 +27,8 @@ import tokenError from "../../utils/tokenError";
 
 export default {
 	name: "Vote",
-	data() {
-		return {
-			loading: false
-		};
+	components: {
+		ArrowIcon
 	},
 	props: {
 		postId: {
@@ -47,8 +45,10 @@ export default {
 			default: false
 		}
 	},
-	components: {
-		ArrowIcon
+	data() {
+		return {
+			loading: false
+		};
 	},
 	computed: {
 		disabled() {

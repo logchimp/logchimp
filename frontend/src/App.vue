@@ -7,8 +7,8 @@
 	>
 		<div class="alerts">
 			<Alert
-				:key="alert.time"
 				v-for="(alert, index) in getAlerts"
+				:key="alert.time"
 				:title="alert.title"
 				:type="alert.type"
 				:timeout="alert.timeout"
@@ -29,7 +29,7 @@ import packageJson from "../../package.json";
 import Alert from "./components/Alert";
 
 export default {
-	name: "app",
+	name: "App",
 	components: {
 		Alert
 	},
@@ -43,23 +43,6 @@ export default {
 		},
 		logchimpVersion() {
 			return packageJson.version;
-		}
-	},
-	methods: {
-		removeAlert(alert) {
-			this.$store.dispatch("alerts/remove", alert);
-		},
-		getSiteSettings() {
-			axios({
-				method: "get",
-				url: "/api/v1/settings/site"
-			})
-				.then(response => {
-					this.$store.dispatch("settings/update", response.data.settings);
-				})
-				.catch(error => {
-					console.error(error);
-				});
 		}
 	},
 	created() {
@@ -86,6 +69,23 @@ export default {
 		if (user) {
 			this.$store.dispatch("user/login", JSON.parse(user));
 			this.$store.dispatch("user/updatePermissions");
+		}
+	},
+	methods: {
+		removeAlert(alert) {
+			this.$store.dispatch("alerts/remove", alert);
+		},
+		getSiteSettings() {
+			axios({
+				method: "get",
+				url: "/api/v1/settings/site"
+			})
+				.then(response => {
+					this.$store.dispatch("settings/update", response.data.settings);
+				})
+				.catch(error => {
+					console.error(error);
+				});
 		}
 	},
 	metaInfo() {

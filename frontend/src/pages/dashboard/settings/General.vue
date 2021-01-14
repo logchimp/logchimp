@@ -1,13 +1,19 @@
 <template>
 	<div>
 		<div class="boards-page-header">
-			<h4 class="boards-page-header-heading">Settings</h4>
+			<h4 class="boards-page-header-heading">
+				Settings
+			</h4>
 		</div>
 		<div>
 			<div class="dashboard-settings-logo">
 				<label class="input-field-label" for="logo">Logo</label>
 				<div class="dashboard-settings-logo-placeholder">
-					<img @click="selectFileHandler" :src="logo" :alt="siteName.value" />
+					<img
+						:src="logo"
+						:alt="siteName.value"
+						@click="selectFileHandler"
+					>
 				</div>
 				<input
 					ref="fileSelector"
@@ -16,7 +22,7 @@
 					name="logo"
 					style="display: none"
 					@change="uploadFile"
-				/>
+				>
 			</div>
 			<l-text
 				v-model="siteName.value"
@@ -69,7 +75,11 @@
 				@hide-error="hideGoogleAnalyticsError"
 			/>
 			<div style="display: flex;">
-				<Button :loading="buttonLoading" @click="saveSettings" type="primary">
+				<Button
+					:loading="buttonLoading"
+					type="primary"
+					@click="saveSettings"
+				>
 					Save
 				</Button>
 			</div>
@@ -91,6 +101,11 @@ import Button from "../../../components/Button";
 
 export default {
 	name: "DashboardSettings",
+	components: {
+		// components
+		LText,
+		Button
+	},
 	data() {
 		return {
 			siteName: {
@@ -125,15 +140,13 @@ export default {
 			buttonLoading: false
 		};
 	},
-	components: {
-		// components
-		LText,
-		Button
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.getSettings();
 	},
 	methods: {
 		hideSiteNameError(event) {
@@ -220,9 +233,6 @@ export default {
 				console.error(error);
 			}
 		}
-	},
-	created() {
-		this.getSettings();
 	},
 	metaInfo() {
 		return {

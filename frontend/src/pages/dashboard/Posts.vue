@@ -11,15 +11,17 @@
 		<div>
 			<post
 				v-for="post in posts"
-				:post="post"
 				:key="post.postId"
+				:post="post"
 				:dashboard="true"
 			/>
 			<infinite-loading @infinite="getBoardPosts">
-				<div class="loader-container" slot="spinner"><loader /></div>
-				<div slot="no-more"></div>
-				<div slot="no-results"></div>
-				<div slot="error"></div>
+				<div slot="spinner" class="loader-container">
+					<loader />
+				</div>
+				<div slot="no-more" />
+				<div slot="no-results" />
+				<div slot="error" />
 			</infinite-loading>
 		</div>
 	</div>
@@ -38,12 +40,6 @@ import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardPosts",
-	data() {
-		return {
-			posts: [],
-			page: 1
-		};
-	},
 	components: {
 		// packages
 		InfiniteLoading,
@@ -51,6 +47,12 @@ export default {
 		// components
 		Post,
 		Loader
+	},
+	data() {
+		return {
+			posts: [],
+			page: 1
+		};
 	},
 	computed: {
 		getSiteSittings() {

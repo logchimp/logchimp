@@ -37,7 +37,11 @@ import Vote from "./Vote";
 import BoardBadge from "../board/BoardBadge";
 
 export default {
-	name: "post",
+	name: "Post",
+	components: {
+		Vote,
+		BoardBadge
+	},
 	props: {
 		post: {
 			type: Object,
@@ -57,10 +61,6 @@ export default {
 		return {
 			postData: this.post
 		};
-	},
-	components: {
-		Vote,
-		BoardBadge
 	},
 	computed: {
 		sliceContentMarkdown() {

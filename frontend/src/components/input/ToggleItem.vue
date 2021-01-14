@@ -9,7 +9,11 @@
 				@input="emit"
 			/>
 		</div>
-		<p v-if="note" data-test="toggle-item-note" class="toggle-item-note">
+		<p
+			v-if="note"
+			data-test="toggle-item-note"
+			class="toggle-item-note"
+		>
 			{{ note }}
 		</p>
 	</div>

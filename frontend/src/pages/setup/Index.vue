@@ -1,7 +1,9 @@
 <template>
 	<div class="onboarding onboarding-content">
 		<div class="onboarding-header">
-			<h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
+			<h2 class="onboarding-heading">
+				Welcome to <span>LogChimp</span>!
+			</h2>
 			<p class="onboarding-label">
 				Let’s setup your LogChimp site to track user feedback for building
 				better products.
@@ -11,8 +13,12 @@
 			class="welcome-image"
 			src="https://cdn.logchimp.codecarrot.net/logchimp-home-preview.png"
 			alt="LogChimp homepage preview"
-		/>
-		<Button type="primary" @click="createAccount" class="welcome-button">
+		>
+		<Button
+			type="primary"
+			class="welcome-button"
+			@click="createAccount"
+		>
 			Create an account
 		</Button>
 	</div>
@@ -25,6 +31,7 @@ import Button from "../../components/Button";
 export default {
 	name: "SetupWelcome",
 	components: {
+		// components
 		Button
 	},
 	computed: {

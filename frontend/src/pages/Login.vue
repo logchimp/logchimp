@@ -6,10 +6,14 @@
 					class="site-logo"
 					:src="getSiteSittings.logo"
 					:alt="getSiteSittings.title"
-				/>
-				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+				>
+				<h5 class="site-name">
+					{{ getSiteSittings.title }}
+				</h5>
 			</router-link>
-			<h3 class="auth-form-heading">Welcome back!</h3>
+			<h3 class="auth-form-heading">
+				Welcome back!
+			</h3>
 		</div>
 		<div class="card">
 			<l-text
@@ -32,16 +36,24 @@
 				@keyup-enter="login"
 				@hide-error="hidePasswordError"
 			/>
-			<div style="display: flex; justify-content: center;">
-				<Button @click="login" type="primary" :loading="buttonLoading">
+			<div style="display: flex; justify-content: center">
+				<Button
+					type="primary"
+					:loading="buttonLoading"
+					@click="login"
+				>
 					Login
 				</Button>
 			</div>
 		</div>
 		<div class="auth-form-other">
-			<router-link to="/password-reset">Forget password?</router-link>
+			<router-link to="/password-reset">
+				Forget password?
+			</router-link>
 			· Don't have an account yet?
-			<router-link to="/join">Sign up</router-link>
+			<router-link to="/join">
+				Sign up
+			</router-link>
 		</div>
 	</div>
 </template>
@@ -56,6 +68,11 @@ import Button from "../components/Button";
 
 export default {
 	name: "Login",
+	components: {
+		// component
+		LText,
+		Button
+	},
 	data() {
 		return {
 			email: {
@@ -75,14 +92,15 @@ export default {
 			buttonLoading: false
 		};
 	},
-	components: {
-		// component
-		LText,
-		Button
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		}
+	},
+	created() {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			this.$router.push("/");
 		}
 	},
 	methods: {
@@ -132,12 +150,6 @@ export default {
 			} finally {
 				this.buttonLoading = false;
 			}
-		}
-	},
-	created() {
-		const user = JSON.parse(localStorage.getItem("user"));
-		if (user) {
-			this.$router.push("/");
 		}
 	},
 	metaInfo() {

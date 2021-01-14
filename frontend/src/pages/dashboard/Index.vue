@@ -5,7 +5,7 @@
 				Posts
 			</div>
 			<Table>
-				<template v-slot:header>
+				<template #header>
 					<div class="table-header-item posts-table-title">
 						title
 					</div>
@@ -14,9 +14,9 @@
 					</div>
 				</template>
 				<router-link
-					:to="`/dashboard/post/${post.slug}`"
 					v-for="post in posts.data"
 					:key="post.postId"
+					:to="`/dashboard/post/${post.slug}`"
 					class="table-row"
 				>
 					<div class="table-data posts-table-title">
@@ -27,10 +27,12 @@
 					</div>
 				</router-link>
 				<infinite-loading @infinite="getPosts">
-					<div class="loader-container" slot="spinner"><loader /></div>
-					<div slot="no-more"></div>
-					<div slot="no-results"></div>
-					<div slot="error"></div>
+					<div slot="spinner" class="loader-container">
+						<loader />
+					</div>
+					<div slot="no-more" />
+					<div slot="no-results" />
+					<div slot="error" />
 				</infinite-loading>
 			</Table>
 		</div>
@@ -39,8 +41,8 @@
 				Boards
 			</div>
 			<Table>
-				<template v-slot:header>
-					<div class="table-header-item boards-table-color"></div>
+				<template #header>
+					<div class="table-header-item boards-table-color" />
 					<div class="table-header-item boards-table-name">
 						name
 					</div>
@@ -69,10 +71,12 @@
 					</div>
 				</div>
 				<infinite-loading @infinite="getBoards">
-					<div class="loader-container" slot="spinner"><loader /></div>
-					<div slot="no-more"></div>
-					<div slot="no-results"></div>
-					<div slot="error"></div>
+					<div slot="spinner" class="loader-container">
+						<loader />
+					</div>
+					<div slot="no-more" />
+					<div slot="no-results" />
+					<div slot="error" />
 				</infinite-loading>
 			</Table>
 		</div>
@@ -93,6 +97,14 @@ import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardOverview",
+	components: {
+		// packages
+		InfiniteLoading,
+
+		// components
+		Table,
+		Loader
+	},
 	data() {
 		return {
 			posts: {
@@ -104,14 +116,6 @@ export default {
 				loading: false
 			}
 		};
-	},
-	components: {
-		// packages
-		InfiniteLoading,
-
-		// components
-		Table,
-		Loader
 	},
 	computed: {
 		getSiteSittings() {

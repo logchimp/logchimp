@@ -1,13 +1,13 @@
 <template>
 	<div class="avatar-stack">
 		<img
-			data-test="avatar-stack-image"
-			class="avatar-stack-image"
 			v-for="avatar in avatars"
 			:key="avatar.userId"
+			data-test="avatar-stack-image"
+			class="avatar-stack-image"
 			:src="avatar.avatar"
 			:alt="avatar.username"
-		/>
+		>
 		<div
 			v-if="!hideMoreStack"
 			data-test="avatar-stack-more"

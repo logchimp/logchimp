@@ -2,10 +2,11 @@
 	<div class="logchimp-poweredby">
 		<a
 			:href="
-				`https://logchimp.codecarrot.net/?utm_source=${source}&utm_medium=powered&company=${this.getSiteSittings.title}`
+				`https://logchimp.codecarrot.net/?utm_source=${source}&utm_medium=powered&company=${getSiteSittings.title}`
 			"
-			>Powered by LogChimp</a
 		>
+			Powered by LogChimp
+		</a>
 	</div>
 </template>
 

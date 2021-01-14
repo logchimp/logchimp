@@ -6,8 +6,10 @@
 					class="site-logo"
 					:src="getSiteSittings.logo"
 					:alt="getSiteSittings.title"
-				/>
-				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+				>
+				<h5 class="site-name">
+					{{ getSiteSittings.title }}
+				</h5>
 			</router-link>
 		</header>
 		<div class="sidebar-list">
@@ -53,28 +55,28 @@
 				class="dashboard-sidebar-dropdown"
 			>
 				<dropdown-item @click="aboutLogChimp">
-					<template v-slot:icon>
+					<template #icon>
 						<info-icon />
 					</template>
 					About LogChimp
 				</dropdown-item>
 				<dropdown-item @click="tweetLogChimp">
-					<template v-slot:icon>
+					<template #icon>
 						<twitter-icon />
 					</template>
 					Tweet @LogChimp!
 				</dropdown-item>
 				<dropdown-spacer />
 				<dropdown-item @click="signOut">
-					<template v-slot:icon>
+					<template #icon>
 						<logout-icon />
 					</template>
 					Sign Out
 				</dropdown-item>
 			</dropdown>
 			<div
-				@click="toggleDashboardSidebarDropdown"
 				class="dashboard-sidebar-user-container"
+				@click="toggleDashboardSidebarDropdown"
 			>
 				<div class="dashboard-sidebar-user">
 					<avatar
@@ -115,11 +117,6 @@ import LogoutIcon from "../../components/icons/Logout";
 
 export default {
 	name: "DashboardSidebar",
-	data() {
-		return {
-			dashboardSidebarDropdown: false
-		};
-	},
 	components: {
 		// components
 		Avatar,
@@ -136,6 +133,11 @@ export default {
 		InfoIcon,
 		TwitterIcon,
 		LogoutIcon
+	},
+	data() {
+		return {
+			dashboardSidebarDropdown: false
+		};
 	},
 	computed: {
 		getSiteSittings() {
