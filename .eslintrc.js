@@ -3,24 +3,26 @@ module.exports = {
 	env: {
 		browser: true,
 		node: true,
-		es6: true,
+		es6: true
 	},
 	plugins: ["vue", "prettier"],
 	extends: [
 		"eslint:recommended",
-		"plugin:vue/recommended",
-		"plugin:prettier/recommended",
+		"plugin:vue/recommended"
 	],
 	rules: {
+		quotes: ["error", "double"],
+		"max-len": ["error", { code: 80 }],
+		"comma-dangle": [1, "never"],
 		"vue/html-indent": [1, "tab"],
 	},
 	overrides: [
 		{
 			files: ["**/*.test.js"],
 			env: {
-				jest: true,
+				jest: true
 			},
-			plugins: ["jest"],
-		},
-	],
+			plugins: ["jest"]
+		}
+	]
 };
