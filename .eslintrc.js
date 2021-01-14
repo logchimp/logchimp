@@ -1,26 +1,38 @@
 module.exports = {
 	root: true,
-	parserOptions: {
-		parser: "babel-eslint",
-		sourceType: "module",
-		ecmaVersion: 8
-	},
 	env: {
 		browser: true,
 		node: true,
-		"jest/globals": true
+		es6: true
 	},
+	plugins: ["vue", "prettier"],
 	extends: [
 		"eslint:recommended",
-		"plugin:vue/essential",
-		"plugin:prettier/recommended",
-		"plugin:jest/recommended",
-		"plugin:jest/style"
+		"plugin:vue/recommended"
 	],
 	rules: {
-		"prettier/prettier": 1,
-		camelcase: 1,
-		"no-console": 1,
-		"vue/camelcase": "error"
-	}
+		quotes: ["error", "double"],
+		"max-len": ["error", { code: 80 }],
+		"comma-dangle": [1, "never"],
+		"vue/html-indent": [1, "tab"],
+		"vue/max-attributes-per-line": [
+			2,
+			{
+				singleline: 2,
+				multiline: {
+					max: 1,
+					allowFirstLine: false
+				}
+			}
+		]
+	},
+	overrides: [
+		{
+			files: ["**/*.test.js", "**/*.spec.js"],
+			env: {
+				jest: true
+			},
+			plugins: ["jest"]
+		}
+	]
 };
