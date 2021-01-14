@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
 	const permissions = req.user.permissions;
 	const boardId = req.board.boardId;
 
-	const { name, url, color, view_voters } = req.body;
+	const { name, url, color, view_voters, display } = req.body;
 
 	const checkPermission = permissions.find(item => item === "board:update");
 	if (!checkPermission) {
@@ -43,6 +43,7 @@ module.exports = async (req, res) => {
 				url: slimUrl,
 				color,
 				view_voters,
+				display,
 				updatedAt: new Date().toJSON()
 			})
 			.from("boards")
