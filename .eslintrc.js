@@ -6,14 +6,8 @@ module.exports = {
 		es6: true
 	},
 	plugins: ["vue", "prettier"],
-	extends: [
-		"eslint:recommended",
-		"plugin:vue/recommended"
-	],
+	extends: ["eslint:recommended", "plugin:vue/recommended"],
 	rules: {
-		quotes: ["error", "double"],
-		"max-len": ["error", { code: 80 }],
-		"comma-dangle": [1, "never"],
 		"vue/html-indent": [1, "tab"],
 		"vue/max-attributes-per-line": [
 			2,
