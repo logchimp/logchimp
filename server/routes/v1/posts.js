@@ -7,7 +7,7 @@ const post = require("../../controllers/post");
 
 // middleware
 const middleware = require("../../middlewares");
-const exists = require("../../middlewares/posts/exists");
+const exists = require("../../middlewares/postExists");
 
 router.post("/posts/get", post.filterPost);
 router.post("/posts/slug", exists, post.postBySlug);

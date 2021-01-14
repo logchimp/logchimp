@@ -1,7 +1,7 @@
-const database = require("../../database");
+const database = require("../database");
 
 // utils
-const error = require("../../errorResponse.json");
+const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
 	const id = req.body.id;
