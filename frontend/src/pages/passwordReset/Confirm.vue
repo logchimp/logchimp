@@ -49,7 +49,7 @@
 					</div>
 				</div>
 				<div v-else class="card">
-					<success-icon fill="#64B285" stroke="white" />
+					<success-icon style="fill: #64B285; stroke: white" />
 					<div>
 						You've successful changed your password. You may close this window.
 					</div>
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		<div v-if="validToken.error || changePassword.error" class="card">
-			<error-icon fill="#DE544E" stroke="white" />
+			<error-icon style="fill: #DE544E; stroke: white" />
 			<div>
 				Invalid or expired password reset link.
 			</div>

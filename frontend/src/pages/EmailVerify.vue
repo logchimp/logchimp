@@ -13,13 +13,13 @@
 			</router-link>
 		</div>
 		<div v-if="success" class="card">
-			<success-icon fill="#64B285" stroke="white" />
+			<success-icon style="fill: #64B285; stroke: white" />
 			<div>
 				Thank you verifying your account. You may close this window.
 			</div>
 		</div>
 		<div v-if="error" class="card">
-			<error-icon fill="#DE544E" stroke="white" />
+			<error-icon style="fill: #DE544E; stroke: white" />
 			<div>
 				Invalid or expired activation link.
 			</div>
