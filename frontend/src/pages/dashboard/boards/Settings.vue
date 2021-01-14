@@ -104,6 +104,9 @@ export default {
 				.replace(/[^\w]+/gi, "-")
 				.trim()
 				.toLowerCase();
+		},
+		getSiteSittings() {
+			return this.$store.getters["settings/get"];
 		}
 	},
 	methods: {
@@ -139,6 +142,11 @@ export default {
 	},
 	created() {
 		this.getBoard();
+	},
+	metaInfo() {
+		return {
+			title: `${this.title} · Settings · Board · Dashboard`
+		};
 	}
 };
 </script>
