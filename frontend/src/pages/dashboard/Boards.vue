@@ -50,6 +50,10 @@
 					>
 						<link-icon />
 					</router-link>
+					<div class="table-data table-data-icon">
+						<eye-icon v-if="board.display" />
+						<eye-off-icon v-else />
+					</div>
 					<router-link
 						:to="`/dashboard/board/${board.url}/settings`"
 						class="table-data table-data-icon boards-table-icon-settings"
@@ -82,6 +86,8 @@ import Loader from "../../components/Loader";
 
 // icons
 import LinkIcon from "../../components/icons/Link";
+import EyeIcon from "../../components/icons/Eye";
+import EyeOffIcon from "../../components/icons/EyeOff";
 import SettingsIcon from "../../components/icons/Settings";
 
 export default {
@@ -104,6 +110,8 @@ export default {
 
 		// icons
 		LinkIcon,
+		EyeIcon,
+		EyeOffIcon,
 		SettingsIcon
 	},
 	computed: {

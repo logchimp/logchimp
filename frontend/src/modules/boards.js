@@ -5,6 +5,26 @@ import axios from "axios";
 import store from "../store";
 
 /**
+ *	Get public boards
+ *
+ * @param {number} page page number default to 1
+ * @param {string} sort sort type asc or desc
+ *
+ * @returns {object} response
+ */
+export const getPublicBoards = async (page = 1, limit, sort = "desc") => {
+	return await axios({
+		method: "GET",
+		url: "/api/v1/boards",
+		params: {
+			page,
+			limit,
+			created: sort
+		}
+	});
+};
+
+/**
  *	Get all boards
  *
  * @param {number} page page number default to 1
@@ -14,8 +34,8 @@ import store from "../store";
  */
 export const getAllBoards = async (page = 1, limit, sort = "desc") => {
 	return await axios({
-		method: "get",
-		url: "/api/v1/boards",
+		method: "GET",
+		url: "/api/v1/boards/get",
 		params: {
 			page,
 			limit,
@@ -63,6 +83,7 @@ export const createBoard = async () => {
  * @param {string} board.url board url
  * @param {string} board.color board color
  * @param {boolean} board.view_voters view voters in this board
+ * @param {boolean} board.display display board on the site
  *
  * @returns {object} response
  */

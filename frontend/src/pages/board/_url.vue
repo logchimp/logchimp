@@ -142,7 +142,13 @@ export default {
 				{
 					name: "og:title",
 					content: `${this.board.name} · Board · ${this.getSiteSittings.title}`
-				}
+				},
+				!this.board.display
+					? {
+							name: "robots",
+							content: "noindex"
+					  }
+					: ""
 			]
 		};
 	}
