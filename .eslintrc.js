@@ -15,6 +15,16 @@ module.exports = {
 		"max-len": ["error", { code: 80 }],
 		"comma-dangle": [1, "never"],
 		"vue/html-indent": [1, "tab"],
+		"vue/max-attributes-per-line": [
+			2,
+			{
+				singleline: 2,
+				multiline: {
+					max: 1,
+					allowFirstLine: false
+				}
+			}
+		]
 	},
 	overrides: [
 		{
