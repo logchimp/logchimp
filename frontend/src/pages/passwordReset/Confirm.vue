@@ -7,13 +7,17 @@
 						class="site-logo"
 						:src="getSiteSittings.logo"
 						:alt="getSiteSittings.title"
-					/>
-					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+					>
+					<h5 class="site-name">
+						{{ getSiteSittings.title }}
+					</h5>
 				</router-link>
-				<h3 class="auth-form-heading">Set new password</h3>
+				<h3 class="auth-form-heading">
+					Set new password
+				</h3>
 			</div>
 			<div v-if="validToken.success">
-				<div class="card" v-if="!changePassword.success">
+				<div v-if="!changePassword.success" class="card">
 					<l-text
 						v-model="password.value"
 						label="New password"
@@ -36,15 +40,15 @@
 					/>
 					<div style="display: flex; justify-content: center;">
 						<Button
-							@click="setPassword"
 							type="primary"
 							:loading="buttonLoading"
+							@click="setPassword"
 						>
 							Reset password
 						</Button>
 					</div>
 				</div>
-				<div class="card" v-else>
+				<div v-else class="card">
 					<success-icon fill="#64B285" stroke="white" />
 					<div>
 						You've successful changed your password. You may close this window.
@@ -52,13 +56,13 @@
 				</div>
 			</div>
 		</div>
-		<div class="card" v-if="validToken.error || changePassword.error">
+		<div v-if="validToken.error || changePassword.error" class="card">
 			<error-icon fill="#DE544E" stroke="white" />
 			<div>
 				Invalid or expired password reset link.
 			</div>
 		</div>
-		<div class="card" v-if="validToken.loading">
+		<div v-if="validToken.loading" class="card">
 			<div class="loader-container">
 				<loader />
 			</div>
@@ -81,6 +85,16 @@ import ErrorIcon from "../../components/icons/Error";
 
 export default {
 	name: "SetNewPassword",
+	components: {
+		// component
+		Loader,
+		LText,
+		Button,
+
+		// icons
+		SuccessIcon,
+		ErrorIcon
+	},
 	data() {
 		return {
 			password: {
@@ -109,20 +123,14 @@ export default {
 			buttonLoading: false
 		};
 	},
-	components: {
-		// component
-		Loader,
-		LText,
-		Button,
-
-		// icons
-		SuccessIcon,
-		ErrorIcon
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		// validate reset password token
+		this.validateToken();
 	},
 	methods: {
 		hidePasswordError(event) {
@@ -190,10 +198,6 @@ export default {
 				// this.$store.dispatch("user/logout");
 			}
 		}
-	},
-	created() {
-		// validate reset password token
-		this.validateToken();
 	},
 	metaInfo() {
 		return {

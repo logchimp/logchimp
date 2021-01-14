@@ -1,6 +1,8 @@
 <template>
 	<div v-if="isPostExist">
-		<h4 class="post-edit-heading">Edit post</h4>
+		<h4 class="post-edit-heading">
+			Edit post
+		</h4>
 		<div v-if="!post.loading">
 			<l-text
 				v-model="post.title.value"
@@ -9,9 +11,9 @@
 				name="Post title"
 				placeholder="Name of the feature"
 				:error="post.title.error"
+				:disabled="updatePostPermissionDisabled"
 				@keyup-enter="savePost"
 				@hide-error="hideTitleError"
-				:disabled="updatePostPermissionDisabled"
 			/>
 			<l-textarea
 				v-model="post.contentMarkdown"
@@ -23,9 +25,9 @@
 			<div style="display: flex; justify-content: flex-start;">
 				<Button
 					type="primary"
-					@click="savePost"
 					:loading="buttonLoading"
 					:disabled="updatePostPermissionDisabled"
+					@click="savePost"
 				>
 					Update
 				</Button>
@@ -52,6 +54,13 @@ import Button from "../../../components/Button";
 
 export default {
 	name: "PostEdit",
+	components: {
+		// components
+		Loader,
+		LText,
+		LTextarea,
+		Button
+	},
 	data() {
 		return {
 			isPostExist: true,
@@ -73,13 +82,6 @@ export default {
 			buttonLoading: false
 		};
 	},
-	components: {
-		// components
-		Loader,
-		LText,
-		LTextarea,
-		Button
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
@@ -99,6 +101,9 @@ export default {
 
 			return false;
 		}
+	},
+	created() {
+		this.getPost();
 	},
 	methods: {
 		hideTitleError(event) {
@@ -151,9 +156,6 @@ export default {
 				this.buttonLoading = false;
 			}
 		}
-	},
-	created() {
-		this.getPost();
 	},
 	metaInfo() {
 		return {

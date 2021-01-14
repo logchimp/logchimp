@@ -14,7 +14,7 @@
 			:checked="checked"
 			:disabled="disabled"
 			@input="click"
-		/>
+		>
 	</div>
 </template>
 

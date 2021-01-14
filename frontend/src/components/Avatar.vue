@@ -1,9 +1,21 @@
 <template>
 	<div class="avatar" @click="$emit('click')">
-		<div v-if="src" data-test="avatar-image" class="avatar-image">
-			<img :src="src" :alt="name" class="avatar-image-img" />
+		<div
+			v-if="src"
+			data-test="avatar-image"
+			class="avatar-image"
+		>
+			<img
+				:src="src"
+				:alt="name"
+				class="avatar-image-img"
+			>
 		</div>
-		<div v-else data-test="avatar-initials" class="avatar-initials">
+		<div
+			v-else
+			data-test="avatar-initials"
+			class="avatar-initials"
+		>
 			{{ initals }}
 		</div>
 	</div>

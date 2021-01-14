@@ -1,5 +1,9 @@
 <template>
-	<router-link data-test="board-item" :to="`/board/${url}`" class="board-item">
+	<router-link
+		data-test="board-item"
+		:to="`/board/${url}`"
+		class="board-item"
+	>
 		<div
 			class="color-dot"
 			data-test="board-item-color"

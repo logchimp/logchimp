@@ -6,10 +6,14 @@
 					class="site-logo"
 					:src="getSiteSittings.logo"
 					:alt="getSiteSittings.title"
-				/>
-				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+				>
+				<h5 class="site-name">
+					{{ getSiteSittings.title }}
+				</h5>
 			</router-link>
-			<h3 class="auth-form-heading">Create your account</h3>
+			<h3 class="auth-form-heading">
+				Create your account
+			</h3>
 		</div>
 		<server-error v-if="serverError" @close="serverError = false" />
 		<div class="card">
@@ -33,15 +37,21 @@
 				@keyup-enter="join"
 				@hide-error="hidePasswordError"
 			/>
-			<div style="display: flex; justify-content: center;">
-				<Button @click="join" type="primary" :loading="buttonLoading">
+			<div style="display: flex; justify-content: center">
+				<Button
+					type="primary"
+					:loading="buttonLoading"
+					@click="join"
+				>
 					Create account
 				</Button>
 			</div>
 		</div>
 		<div class="auth-form-other">
 			Already have an account?
-			<router-link to="/login">Log in</router-link>
+			<router-link to="/login">
+				Log in
+			</router-link>
 		</div>
 	</div>
 </template>
@@ -57,6 +67,12 @@ import Button from "../components/Button";
 
 export default {
 	name: "Join",
+	components: {
+		// components
+		ServerError,
+		LText,
+		Button
+	},
 	data() {
 		return {
 			email: {
@@ -77,14 +93,15 @@ export default {
 			serverError: false
 		};
 	},
-	components: {
-		ServerError,
-		LText,
-		Button
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		}
+	},
+	created() {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			this.$router.push("/");
 		}
 	},
 	methods: {
@@ -137,12 +154,6 @@ export default {
 			} finally {
 				this.buttonLoading = false;
 			}
-		}
-	},
-	created() {
-		const user = JSON.parse(localStorage.getItem("user"));
-		if (user) {
-			this.$router.push("/");
 		}
 	},
 	metaInfo() {

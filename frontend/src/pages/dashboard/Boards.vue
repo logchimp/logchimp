@@ -18,17 +18,21 @@
 		</header>
 
 		<Table class="boards-table">
-			<template v-slot:header>
-				<div class="table-header-item boards-table-color"></div>
+			<template #header>
+				<div class="table-header-item boards-table-color" />
 				<div class="table-header-item boards-table-name">
 					name
 				</div>
 				<div class="table-header-item boards-table-posts">
 					posts
 				</div>
-				<div class="table-header-item boards-table-icons"></div>
+				<div class="table-header-item boards-table-icons" />
 			</template>
-			<div v-for="board in boards" :key="board.boardId" class="table-row">
+			<div
+				v-for="board in boards"
+				:key="board.boardId"
+				class="table-row"
+			>
 				<div class="table-data boards-table-color">
 					<div
 						class="color-dot"
@@ -63,10 +67,12 @@
 				</div>
 			</div>
 			<infinite-loading @infinite="getBoards">
-				<div class="loader-container" slot="spinner"><loader /></div>
-				<div slot="no-more"></div>
-				<div slot="no-results"></div>
-				<div slot="error"></div>
+				<div slot="spinner" class="loader-container">
+					<loader />
+				</div>
+				<div slot="no-more" />
+				<div slot="no-results" />
+				<div slot="error" />
 			</infinite-loading>
 		</Table>
 	</div>
@@ -92,13 +98,6 @@ import SettingsIcon from "../../components/icons/Settings";
 
 export default {
 	name: "DashboardBoards",
-	data() {
-		return {
-			createBoardButtonLoading: false,
-			boards: [],
-			page: 1
-		};
-	},
 	components: {
 		// package
 		InfiniteLoading,
@@ -113,6 +112,13 @@ export default {
 		EyeIcon,
 		EyeOffIcon,
 		SettingsIcon
+	},
+	data() {
+		return {
+			createBoardButtonLoading: false,
+			boards: [],
+			page: 1
+		};
 	},
 	computed: {
 		getSiteSittings() {

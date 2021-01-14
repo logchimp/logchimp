@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<h4 class="form-header">Account settings</h4>
+		<h4 class="form-header">
+			Account settings
+		</h4>
 		<div v-if="!user.loading">
 			<server-error v-if="serverError" @close="serverError = false" />
 			<div v-if="!userIsVerified" class="user-settings-verification">
@@ -17,8 +19,8 @@
 
 				<Button
 					type="background"
-					@click="resendEmail"
 					:loading="resendVerificationEmailButtonLoading"
+					@click="resendEmail"
 				>
 					Resend
 				</Button>
@@ -48,11 +50,11 @@
 				placeholder="Email address"
 				:disabled="true"
 			/>
-			<div style="display: flex; justify-content: flex-start;">
+			<div style="display: flex; justify-content: flex-start">
 				<Button
 					type="primary"
-					@click="updateSettings"
 					:loading="updateUserButtonLoading"
+					@click="updateSettings"
 				>
 					Update
 				</Button>
@@ -83,6 +85,16 @@ import AlertIcon from "../components/icons/Alert";
 
 export default {
 	name: "UserSettings",
+	components: {
+		// components
+		Loader,
+		ServerError,
+		LText,
+		Button,
+
+		// icons
+		AlertIcon
+	},
 	data() {
 		return {
 			user: {
@@ -103,22 +115,26 @@ export default {
 			updateUserButtonLoading: false
 		};
 	},
-	components: {
-		// components
-		Loader,
-		ServerError,
-		LText,
-		Button,
-
-		// icons
-		AlertIcon
-	},
 	computed: {
 		userIsVerified() {
 			return this.user.isVerified;
 		},
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		}
+	},
+	created() {
+		const userId = this.$store.getters["user/getUserId"];
+
+		if (userId) {
+			this.getUser();
+		} else {
+			this.$router.push({
+				path: "/login",
+				query: {
+					redirect: "/settings"
+				}
+			});
 		}
 	},
 	methods: {
@@ -169,20 +185,6 @@ export default {
 			} finally {
 				this.resendVerificationEmailButtonLoading = false;
 			}
-		}
-	},
-	created() {
-		const userId = this.$store.getters["user/getUserId"];
-
-		if (userId) {
-			this.getUser();
-		} else {
-			this.$router.push({
-				path: "/login",
-				query: {
-					redirect: "/settings"
-				}
-			});
 		}
 	},
 	metaInfo() {

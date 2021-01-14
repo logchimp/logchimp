@@ -6,8 +6,10 @@
 					class="site-logo"
 					:src="getSiteSittings.logo"
 					:alt="getSiteSittings.title"
-				/>
-				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+				>
+				<h5 class="site-name">
+					{{ getSiteSittings.title }}
+				</h5>
 			</router-link>
 		</div>
 		<div v-if="success" class="card">
@@ -43,13 +45,6 @@ import ErrorIcon from "../components/icons/Error";
 
 export default {
 	name: "EmailVerification",
-	data() {
-		return {
-			loading: true,
-			success: false,
-			error: false
-		};
-	},
 	components: {
 		// components
 		Loader,
@@ -58,10 +53,20 @@ export default {
 		SuccessIcon,
 		ErrorIcon
 	},
+	data() {
+		return {
+			loading: true,
+			success: false,
+			error: false
+		};
+	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.verifyEmail();
 	},
 	methods: {
 		async verifyEmail() {
@@ -86,9 +91,6 @@ export default {
 				this.loading = false;
 			}
 		}
-	},
-	created() {
-		this.verifyEmail();
 	},
 	metaInfo() {
 		return {

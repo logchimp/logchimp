@@ -7,14 +7,16 @@
 				:name="board.name"
 				:color="board.color"
 				:url="board.url"
-				:postCount="Number(board.post_count)"
+				:post-count="Number(board.post_count)"
 			/>
 		</div>
 		<infinite-loading @infinite="getBoards">
-			<div class="loader-container" slot="spinner"><loader /></div>
-			<div slot="no-more"></div>
-			<div slot="no-results"></div>
-			<div slot="error"></div>
+			<div slot="spinner" class="loader-container">
+				<loader />
+			</div>
+			<div slot="no-more" />
+			<div slot="no-results" />
+			<div slot="error" />
 		</infinite-loading>
 	</div>
 </template>
@@ -32,12 +34,6 @@ import Loader from "../components/Loader";
 
 export default {
 	name: "Boards",
-	data() {
-		return {
-			boards: [],
-			page: 1
-		};
-	},
 	components: {
 		// packages
 		InfiniteLoading,
@@ -45,6 +41,12 @@ export default {
 		// components
 		BoardItem,
 		Loader
+	},
+	data() {
+		return {
+			boards: [],
+			page: 1
+		};
 	},
 	computed: {
 		getSiteSittings() {

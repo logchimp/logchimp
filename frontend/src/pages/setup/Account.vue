@@ -1,7 +1,9 @@
 <template>
 	<div class="auth-form">
 		<div class="onboarding-header">
-			<h2 class="onboarding-heading">Create an account</h2>
+			<h2 class="onboarding-heading">
+				Create an account
+			</h2>
 		</div>
 		<server-error v-if="serverError" @close="serverError = false" />
 		<div class="card">
@@ -46,7 +48,11 @@
 				@hide-error="hidePasswordError"
 			/>
 			<div style="display: flex; justify-content: center;">
-				<Button :loading="buttonLoading" @click="createAccount" type="primary">
+				<Button
+					:loading="buttonLoading"
+					type="primary"
+					@click="createAccount"
+				>
 					Create account
 				</Button>
 			</div>
@@ -69,6 +75,12 @@ import Button from "../../components/Button";
 
 export default {
 	name: "SetupAccount",
+	components: {
+		// components
+		ServerError,
+		LText,
+		Button
+	},
 	data() {
 		return {
 			siteTitle: {
@@ -102,11 +114,6 @@ export default {
 			buttonLoading: false,
 			serverError: false
 		};
-	},
-	components: {
-		ServerError,
-		LText,
-		Button
 	},
 	computed: {
 		getSiteSittings() {

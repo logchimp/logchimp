@@ -7,10 +7,10 @@
 			:class="{
 				'input-field-disabled': disabled
 			}"
-			@input="$emit('input', $event.target.value)"
 			:placeholder="placeholder"
 			:rows="rows"
 			:disabled="disabled"
+			@input="$emit('input', $event.target.value)"
 		/>
 		<p v-if="error.show" class="input-error-message">{{ error.message }}</p>
 	</label>

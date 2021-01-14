@@ -7,37 +7,39 @@
 						class="site-logo"
 						:src="getSiteSittings.logo"
 						:alt="getSiteSittings.title"
-					/>
-					<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+					>
+					<h5 class="site-name">
+						{{ getSiteSittings.title }}
+					</h5>
 				</router-link>
 				<nav class="header-nav">
 					<div
 						v-if="isAuthenticated"
-						@mouseleave="addHeaderDropdownListener"
 						class="nav-item"
+						@mouseleave="addHeaderDropdownListener"
 					>
 						<avatar
-							@click="toggleProfileDropdown"
 							class="nav-profile"
 							:src="user.avatar"
 							:name="user.name || user.username"
+							@click="toggleProfileDropdown"
 						/>
 						<dropdown v-show="profileDropdown" class="nav-profile-dropdown">
 							<dropdown-item v-if="accessDashboard" @click="openDashboard">
-								<template v-slot:icon>
+								<template #icon>
 									<dashboard-icon />
 								</template>
 								Dashbaord
 							</dropdown-item>
 							<dropdown-item @click="settings">
-								<template v-slot:icon>
+								<template #icon>
 									<settings-icon />
 								</template>
 								Settings
 							</dropdown-item>
 							<dropdown-spacer />
 							<dropdown-item @click="logout">
-								<template v-slot:icon>
+								<template #icon>
 									<logout-icon />
 								</template>
 								Sign out
@@ -45,10 +47,10 @@
 						</dropdown>
 					</div>
 					<div v-if="!isAuthenticated" class="nav-item nav-auth">
-						<Button @click="login" type="text">
+						<Button type="text" @click="login">
 							Login
 						</Button>
-						<Button @click="join" type="outline">
+						<Button type="outline" @click="join">
 							Create an account
 						</Button>
 					</div>
@@ -75,11 +77,6 @@ import LogoutIcon from "./icons/Logout";
 
 export default {
 	name: "Header",
-	data() {
-		return {
-			profileDropdown: false
-		};
-	},
 	components: {
 		// components
 		Navbar,
@@ -93,6 +90,11 @@ export default {
 		DashboardIcon,
 		SettingsIcon,
 		LogoutIcon
+	},
+	data() {
+		return {
+			profileDropdown: false
+		};
 	},
 	computed: {
 		getSiteSittings() {

@@ -5,17 +5,19 @@
 				<router-link to="/dashboard/boards" class="breadcrum-item">
 					Boards
 				</router-link>
-				<div class="breadcrum-divider">/</div>
+				<div class="breadcrum-divider">
+					/
+				</div>
 				<h5 class="breadcrum-item">
 					{{ title }}
 				</h5>
 			</div>
 
 			<Button
-				@click="update"
 				type="primary"
 				:loading="saveButtonLoading"
 				:disabled="disabled"
+				@click="update"
 			>
 				Save
 			</Button>
@@ -25,9 +27,9 @@
 			<div class="form-columns">
 				<div class="form-column">
 					<l-text
+						v-model="board.name"
 						label="Name"
 						placeholder="Enter board name"
-						v-model="board.name"
 					/>
 
 					<color-input v-model="board.color" />
@@ -35,9 +37,9 @@
 
 				<div class="form-column">
 					<l-text
+						v-model="board.url"
 						label="Slug"
 						placeholder="Board slug url"
-						v-model="board.url"
 						:description="slimUrl"
 					/>
 				</div>
@@ -51,16 +53,16 @@
 			<div class="form-columns">
 				<div class="form-column">
 					<toggle-item
-						label="Display on site"
 						v-model="board.display"
+						label="Display on site"
 						note="Show this board on the site"
 					/>
 				</div>
 
 				<div class="form-column">
 					<toggle-item
-						label="View voters"
 						v-model="board.view_voters"
+						label="View voters"
 						note="Show people who vote the post"
 					/>
 				</div>
@@ -81,6 +83,12 @@ import ColorInput from "../../../components/ColorInput";
 
 export default {
 	name: "BoardSettings",
+	components: {
+		Button,
+		LText,
+		ToggleItem,
+		ColorInput
+	},
 	data() {
 		return {
 			title: "",
@@ -93,13 +101,6 @@ export default {
 			},
 			saveButtonLoading: false
 		};
-	},
-	components: {
-		// Breadcrumbs,
-		Button,
-		LText,
-		ToggleItem,
-		ColorInput
 	},
 	computed: {
 		disabled() {
@@ -117,6 +118,9 @@ export default {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.getBoard();
 	},
 	methods: {
 		async update() {
@@ -149,9 +153,6 @@ export default {
 				console.error(error);
 			}
 		}
-	},
-	created() {
-		this.getBoard();
 	},
 	metaInfo() {
 		return {

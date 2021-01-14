@@ -8,9 +8,9 @@
 			data-test="post-title"
 			placeholder="Name of the feature"
 			:error="title.error"
+			:disabled="createPostPermissionDisabled"
 			@keyup-enter="submitPost"
 			@hide-error="hideTitleError"
-			:disabled="createPostPermissionDisabled"
 		/>
 		<l-textarea
 			v-model="description.value"
@@ -49,6 +49,23 @@ import tokenError from "../../utils/tokenError";
 
 export default {
 	name: "CreatePost",
+	components: {
+		// components
+		LText,
+		LTextarea,
+		Button
+	},
+	props: {
+		boardId: {
+			type: String,
+			required: true,
+			validator: validateUUID
+		},
+		dashboard: {
+			type: Boolean,
+			default: false
+		}
+	},
 	data() {
 		return {
 			title: {
@@ -63,23 +80,6 @@ export default {
 			},
 			buttonLoading: false
 		};
-	},
-	props: {
-		boardId: {
-			type: String,
-			required: true,
-			validator: validateUUID
-		},
-		dashboard: {
-			type: Boolean,
-			default: false
-		}
-	},
-	components: {
-		// components
-		LText,
-		LTextarea,
-		Button
 	},
 	computed: {
 		dashboardUrl() {

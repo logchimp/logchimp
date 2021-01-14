@@ -9,7 +9,7 @@
 		</header>
 
 		<Table class="users-table">
-			<template v-slot:header>
+			<template #header>
 				<div class="table-header-item users-table-user">
 					name
 				</div>
@@ -20,7 +20,11 @@
 					votes
 				</div>
 			</template>
-			<div v-for="user in users" :key="user.userId" class="table-row">
+			<div
+				v-for="user in users"
+				:key="user.userId"
+				class="table-row"
+			>
 				<div class="table-data users-table-user">
 					<div class="users-table-user-avatar">
 						<avatar :src="user.avatar" :name="user.name || user.username" />
@@ -29,14 +33,20 @@
 						{{ user.name || user.username }}
 					</h6>
 				</div>
-				<div class="table-data users-table-posts">{{ user.posts }}</div>
-				<div class="table-data users-table-votes">{{ user.votes }}</div>
+				<div class="table-data users-table-posts">
+					{{ user.posts }}
+				</div>
+				<div class="table-data users-table-votes">
+					{{ user.votes }}
+				</div>
 			</div>
 			<infinite-loading @infinite="getUsers">
-				<div class="loader-container" slot="spinner"><loader /></div>
-				<div slot="no-more"></div>
-				<div slot="no-results"></div>
-				<div slot="error"></div>
+				<div slot="spinner" class="loader-container">
+					<loader />
+				</div>
+				<div slot="no-more" />
+				<div slot="no-results" />
+				<div slot="error" />
 			</infinite-loading>
 		</Table>
 	</div>
@@ -56,12 +66,6 @@ import Loader from "../../components/Loader";
 
 export default {
 	name: "DashboardUsers",
-	data() {
-		return {
-			users: [],
-			page: 1
-		};
-	},
 	components: {
 		// package
 		InfiniteLoading,
@@ -70,6 +74,12 @@ export default {
 		Table,
 		Avatar,
 		Loader
+	},
+	data() {
+		return {
+			users: [],
+			page: 1
+		};
 	},
 	computed: {
 		getSiteSittings() {

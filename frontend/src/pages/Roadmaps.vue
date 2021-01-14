@@ -18,18 +18,22 @@ import RoadmapView from "../components/RoadmapView";
 
 export default {
 	name: "Roadmaps",
+	components: {
+		// components
+		RoadmapView
+	},
 	data() {
 		return {
 			roadmaps: []
 		};
 	},
-	components: {
-		RoadmapView
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.getRoadmaps();
 	},
 	methods: {
 		async getRoadmaps() {
@@ -40,9 +44,6 @@ export default {
 				console.error(err);
 			}
 		}
-	},
-	created() {
-		this.getRoadmaps();
 	},
 	metaInfo() {
 		return {

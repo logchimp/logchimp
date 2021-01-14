@@ -12,18 +12,18 @@
 				'alert-type-success': type === 'success',
 				'alert-type-warning': type === 'warning'
 			}"
-		></div>
+		/>
 		<div class="alert-item-content">
 			<div class="alert-item-icon">
 				<Success
-					class="alert-icon alert-icon-success"
 					v-if="type === 'success'"
+					class="alert-icon alert-icon-success"
 				/>
 				<Warning
-					class="alert-icon alert-icon-warning"
 					v-if="type === 'warning'"
+					class="alert-icon alert-icon-warning"
 				/>
-				<Error class="alert-icon alert-icon-error" v-if="type === 'error'" />
+				<Error v-if="type === 'error'" class="alert-icon alert-icon-error" />
 			</div>
 			<div class="alert-item-title">
 				{{ title }}

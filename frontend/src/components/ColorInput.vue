@@ -18,11 +18,11 @@
 					'input-error': error.show
 				}"
 				type="text"
-				@input="$emit('input', $event.target.value)"
-				@click="hideError"
 				placeholder="abcdef"
 				spellcheck="false"
-			/>
+				@input="$emit('input', $event.target.value)"
+				@click="hideError"
+			>
 		</div>
 		<p
 			v-if="error.show"
@@ -37,6 +37,12 @@
 <script>
 export default {
 	name: "ColorInput",
+	props: {
+		value: {
+			type: String,
+			default: ""
+		}
+	},
 	data() {
 		return {
 			error: {
@@ -44,12 +50,6 @@ export default {
 				message: "The color should be in valid hex format."
 			}
 		};
-	},
-	props: {
-		value: {
-			type: String,
-			default: ""
-		}
 	},
 	watch: {
 		value: function(newValue) {

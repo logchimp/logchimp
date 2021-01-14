@@ -16,19 +16,22 @@ import SiteSetupCard from "../components/SiteSetupCard";
 
 export default {
 	name: "Homepage",
+	components: {
+		// components
+		SiteSetupCard
+	},
 	data() {
 		return {
 			showSiteSetupCard: false
 		};
 	},
-	components: {
-		// components
-		SiteSetupCard
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
 		}
+	},
+	created() {
+		this.isSetup();
 	},
 	methods: {
 		async isSetup() {
@@ -39,9 +42,6 @@ export default {
 				console.error(error);
 			}
 		}
-	},
-	created() {
-		this.isSetup();
 	},
 	metaInfo() {
 		return {

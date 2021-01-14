@@ -6,10 +6,14 @@
 					class="site-logo"
 					:src="getSiteSittings.logo"
 					:alt="getSiteSittings.title"
-				/>
-				<h5 class="site-name">{{ getSiteSittings.title }}</h5>
+				>
+				<h5 class="site-name">
+					{{ getSiteSittings.title }}
+				</h5>
 			</router-link>
-			<h3 class="auth-form-heading">Forget password</h3>
+			<h3 class="auth-form-heading">
+				Forget password
+			</h3>
 		</div>
 		<server-error v-if="serverError" @close="serverError = false" />
 		<div v-if="!hideForm" class="card">
@@ -24,22 +28,28 @@
 				@hide-error="hideEmailError"
 			/>
 			<div style="display: flex; justify-content: center;">
-				<Button @click="forgetPassword" type="primary" :loading="buttonLoading">
+				<Button
+					type="primary"
+					:loading="buttonLoading"
+					@click="forgetPassword"
+				>
 					Continue
 				</Button>
 			</div>
 		</div>
-		<div class="card" v-if="requestSuccess">
+		<div v-if="requestSuccess" class="card">
 			<p>You will receive a password reset email soon.</p>
-			<br />
+			<br>
 			<p>Follow the link in the email to reset your password.</p>
 		</div>
-		<div class="card" v-if="requestError">
+		<div v-if="requestError" class="card">
 			<p>Something went wrong!</p>
 		</div>
 		<div class="auth-form-other">
 			Don't have an account yet?
-			<router-link to="/join">Sign up</router-link>
+			<router-link to="/join">
+				Sign up
+			</router-link>
 		</div>
 	</div>
 </template>
@@ -55,6 +65,12 @@ import Button from "../../components/Button";
 
 export default {
 	name: "ForgetPassword",
+	components: {
+		// component
+		LText,
+		Button,
+		ServerError
+	},
 	data() {
 		return {
 			email: {
@@ -70,12 +86,6 @@ export default {
 			buttonLoading: false,
 			serverError: false
 		};
-	},
-	components: {
-		// component
-		LText,
-		Button,
-		ServerError
 	},
 	computed: {
 		getSiteSittings() {

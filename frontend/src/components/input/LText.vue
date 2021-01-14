@@ -1,6 +1,10 @@
 <template>
 	<label class="input">
-		<p v-if="label" data-test="input-field-label" class="input-field-label">
+		<p
+			v-if="label"
+			data-test="input-field-label"
+			class="input-field-label"
+		>
 			{{ label }}
 		</p>
 		<input
@@ -12,18 +16,18 @@
 				'input-error': error.show
 			}"
 			:value="value"
+			:placeholder="placeholder"
+			:disabled="disabled"
 			@input="$emit('input', $event.target.value)"
 			@click="hideError"
 			@keyup.enter="keyUpEnter"
-			:placeholder="placeholder"
-			:disabled="disabled"
-		/>
+		>
 		<p v-if="description" class="input-description">
 			{{ description }}
 		</p>
 		<p
-			data-test="input-error-message"
 			v-if="error.show"
+			data-test="input-error-message"
 			class="input-error-message"
 		>
 			{{ error.message }}
