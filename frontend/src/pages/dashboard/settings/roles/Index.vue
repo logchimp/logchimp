@@ -21,10 +21,10 @@
 
 <script>
 // modules
-import { createRole } from "@/modules/roles";
+import { createRole } from "../../../../modules/roles";
 
 // components
-import Button from "@/components/Button";
+import Button from "../../../../components/Button";
 
 export default {
 	name: "SettingsRoles",
