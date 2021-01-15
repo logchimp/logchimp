@@ -16,24 +16,59 @@
 				Create
 			</Button>
 		</header>
+
+		<div class="table-container">
+			<div class="table-header">
+				<div class="table-header-item">
+					name
+				</div>
+				<div class="table-header-item" />
+			</div>
+			<div class="table-body">
+				<div
+					v-for="role in roles"
+					:key="role.id"
+					class="table-row"
+				>
+					<div class="table-data">
+						{{ role.name }}
+					</div>
+					<div class="table-icon-group boards-table-icons">
+						<router-link
+							:to="`/dashboard/settings/roles/${role.id}/settings`"
+							class="table-data table-data-icon"
+						>
+							<settings-icon />
+						</router-link>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
 // modules
-import { createRole } from "../../../../modules/roles";
+import { getAllRoles, createRole } from "../../../../modules/roles";
 
 // components
 import Button from "../../../../components/Button";
+
+// icons
+import SettingsIcon from "../../../../components/icons/Settings";
 
 export default {
 	name: "SettingsRoles",
 	components: {
 		// components
-		Button
+		Button,
+
+		// icons
+		SettingsIcon
 	},
 	data() {
 		return {
+			roles: [],
 			createRoleButtonLoading: false
 		};
 	},
@@ -57,6 +92,15 @@ export default {
 				console.error(error);
 			} finally {
 				this.createRoleButtonLoading = false;
+			}
+		},
+		async getRoles() {
+			try {
+				const response = await getAllRoles();
+
+				this.roles = response.data.roles;
+			} catch (error) {
+				console.error(error);
 			}
 		}
 	}
