@@ -56,3 +56,29 @@ export const createRole = async () => {
 		}
 	});
 };
+
+/**
+ * Updatae a role
+ *
+ * @param {object} role update role
+ * @param {string} role.id role id
+ * @param {string} role.name role name
+ * @param {string} role.description role description
+ * @param {string[]} role.permissions list of permission
+ *
+ * @returns {object} response
+ */
+export const updateRole = async role => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "PATCH",
+		url: "/api/v1/roles",
+		data: {
+			...role
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
