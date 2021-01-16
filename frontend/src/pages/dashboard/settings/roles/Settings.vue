@@ -12,6 +12,15 @@
 					{{ title }}
 				</h5>
 			</div>
+
+			<Button
+				type="primary"
+				:loading="updateRoleButtonLoading"
+				:disabled="updateRoleButtonDisabled"
+				@click="updateRole"
+			>
+				Save
+			</Button>
 		</header>
 
 		<div class="form-section">
@@ -117,9 +126,10 @@
 
 <script>
 // modules
-import { getRole } from "../../../../modules/roles";
+import { getRole, updateRole } from "../../../../modules/roles";
 
 // components
+import Button from "../../../../components/Button";
 import LText from "../../../../components/input/LText";
 import LTextarea from "../../../../components/input/LTextarea";
 import ToggleItem from "../../../../components/input/ToggleItem";
@@ -127,6 +137,7 @@ import ToggleItem from "../../../../components/input/ToggleItem";
 export default {
 	name: "RoleSettings",
 	components: {
+		Button,
 		LText,
 		LTextarea,
 		ToggleItem
@@ -161,13 +172,51 @@ export default {
 					read: false,
 					update: false
 				}
-			}
+			},
+			updateRoleButtonLoading: false
 		};
+	},
+	computed: {
+		updateRoleButtonDisabled() {
+			return false;
+		}
 	},
 	created() {
 		this.getRole();
 	},
 	methods: {
+		async updateRole() {
+			this.updateRoleButtonLoading = true;
+
+			const activePermissions = [];
+			for (let i in this.permissions) {
+				let type = i;
+
+				for (let j in this.permissions[i]) {
+					let action = j;
+					if (this.permissions[i][j]) {
+						activePermissions.push(`${type}:${action}`);
+					}
+				}
+			}
+
+			try {
+				const response = await updateRole({
+					id: this.role.id,
+					name: this.role.name,
+					description: this.role.description,
+					permissions: activePermissions
+				});
+
+				if (response.status === 200) {
+					this.$router.push("/dashboard/settings/roles");
+				}
+			} catch (err) {
+				console.error(err);
+			} finally {
+				this.updateRoleButtonLoading = false;
+			}
+		},
 		async getRole() {
 			try {
 				const id = this.$route.params.id;
