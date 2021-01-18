@@ -156,6 +156,11 @@ const routes = [
 				path: "settings/roles",
 				name: "Dashbord roles",
 				component: require("./pages/dashboard/settings/roles/Index").default
+			},
+			{
+				path: "settings/roles/:id/settings",
+				name: "Dashbord roles settings",
+				component: require("./pages/dashboard/settings/roles/Settings").default
 			}
 		]
 	},

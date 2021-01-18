@@ -21,6 +21,9 @@
 			"noPasswordProvided": "No password provided",
 			"setupAlreadyCompleted": "Setup has already been completed."
 		},
+		"roles": {
+			"roleNotFound": "Role not found"
+		},
 		"user": {
 			"userNotFound": "User not found"
 		},
