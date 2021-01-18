@@ -15,6 +15,10 @@ exports.up = knex => {
 				.timestamp("created_at")
 				.notNullable()
 				.defaultTo(knex.fn.now());
+			table
+				.timestamp("updated_at")
+				.defaultTo(knex.fn.now())
+				.notNullable();
 		})
 		.then(() => {
 			logger.info({
