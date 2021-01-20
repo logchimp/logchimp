@@ -4,10 +4,20 @@ const { v4: uuidv4 } = require("uuid");
 const database = require("../../database");
 
 // utils
+const error = require("../../errorResponse.json");
 const logger = require("../../utils/logger");
 
 module.exports = async (req, res) => {
 	const role = req.body;
+
+	const permissions = req.user.permissions;
+	const checkPermission = permissions.includes("role:update");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.roles.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
 
 	try {
 		const existingPermissions = await database.select().from("permissions");
