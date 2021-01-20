@@ -6,7 +6,6 @@ const error = require("../../errorResponse.json");
 
 exports.updatePost = async (req, res) => {
 	const userId = req.user.userId;
-	const userRole = req.user.roles[0];
 	const permissions = req.user.permissions;
 	const authorId = req.post.userId;
 	const slugId = req.post.slugId;
@@ -15,18 +14,11 @@ exports.updatePost = async (req, res) => {
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
 
-	const checkPermission = permissions.includes("post:create");
-	if (!checkPermission) {
+	const checkPermission = permissions.includes("post:update");
+	if (!checkPermission && userId !== authorId) {
 		return res.status(403).send({
 			message: error.api.roles.notEnoughPermission,
 			code: "NOT_ENOUGH_PERMISSION"
-		});
-	}
-
-	if (userRole.name === "user" && userId !== authorId) {
-		return res.status(403).send({
-			message: error.api.posts.notAnAuthor,
-			code: "POST_AUTHOR"
 		});
 	}
 
