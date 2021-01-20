@@ -8,6 +8,15 @@ const error = require("../../errorResponse.json");
 module.exports = async (req, res) => {
 	const { id } = req.params;
 
+	const permissions = req.user.permissions;
+	const checkPermission = permissions.includes("role:read");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.roles.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
+
 	try {
 		const role = await database
 			.select()
