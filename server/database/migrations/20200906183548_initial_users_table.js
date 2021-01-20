@@ -22,7 +22,6 @@ exports.up = function(knex) {
 			table.text("avatar");
 			table.boolean("isVerified").defaultTo(false);
 			table.boolean("isOwner").defaultTo(false);
-			table.boolean("isModerator").defaultTo(false);
 			table.boolean("isBlocked").defaultTo(false);
 			table
 				.timestamp("createdAt")
