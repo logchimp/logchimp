@@ -22,7 +22,8 @@
 			"setupAlreadyCompleted": "Setup has already been completed."
 		},
 		"roles": {
-			"roleNotFound": "Role not found"
+			"roleNotFound": "Role not found",
+			"notEnoughPermission": "You do not have permission to perform this action."
 		},
 		"user": {
 			"userNotFound": "User not found"
@@ -42,7 +43,6 @@
 		"posts": {
 			"titleMissing": "Post title missing",
 			"postNotFound": "Post not found",
-			"notEnoughPermission": "You do not have permission to perform this action.",
 			"notAnAuthor": "You are not the author of the post"
 		},
 		"boards": {
