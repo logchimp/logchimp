@@ -113,9 +113,6 @@ export default {
 				.replace(/[^\w]+/gi, "-")
 				.trim()
 				.toLowerCase();
-		},
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
 		}
 	},
 	created() {
