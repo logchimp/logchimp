@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
 			.select()
 			.from("boards")
 			.where({
-				url: url || null
+				url: slimUrl || null
 			})
 			.first();
 
