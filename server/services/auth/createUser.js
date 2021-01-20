@@ -86,19 +86,19 @@ const createUser = async (req, res, next, userData) => {
 			return null;
 		}
 
-		// assign user role
-		const getRoles = await database
+		// assign '@everyone' role
+		const getRole = await database
 			.select()
 			.from("roles")
 			.where({
-				name: "user"
-			});
+				name: "@everyone"
+			})
+			.first();
 
-		const getUserRole = getRoles[0];
 		await database
 			.insert({
 				id: uuidv4(),
-				role_id: getUserRole.id,
+				role_id: getRole.id,
 				user_id: newUser.userId
 			})
 			.into("roles_users");
