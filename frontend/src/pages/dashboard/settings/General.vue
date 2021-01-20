@@ -140,11 +140,6 @@ export default {
 			buttonLoading: false
 		};
 	},
-	computed: {
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
-		}
-	},
 	created() {
 		this.getSettings();
 	},
@@ -236,13 +231,7 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: "Site settings · Dashboard",
-			meta: [
-				{
-					name: "og:title",
-					content: `Site settings · Dashboard · ${this.getSiteSittings.title}`
-				}
-			]
+			title: "Site settings · Dashboard"
 		};
 	}
 };

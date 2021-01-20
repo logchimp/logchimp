@@ -121,9 +121,6 @@ export default {
 		};
 	},
 	computed: {
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
-		},
 		createBoardPermissionDisabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
 			const checkPermission = permissions.includes("board:create");
@@ -163,13 +160,7 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: `Boards · Dashboard`,
-			meta: [
-				{
-					name: "og:title",
-					content: `Boards · Dashboard · ${this.getSiteSittings.title}`
-				}
-			]
+			title: `Boards · Dashboard`
 		};
 	}
 };

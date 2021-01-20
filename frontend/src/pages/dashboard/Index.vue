@@ -117,11 +117,6 @@ export default {
 			}
 		};
 	},
-	computed: {
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
-		}
-	},
 	methods: {
 		async getPosts($state) {
 			try {
@@ -148,13 +143,7 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: "Dashboard",
-			meta: [
-				{
-					name: "og:title",
-					content: `Dashboard · ${this.getSiteSittings.title}`
-				}
-			]
+			title: "Dashboard"
 		};
 	}
 };

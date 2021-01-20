@@ -81,11 +81,6 @@ export default {
 			page: 1
 		};
 	},
-	computed: {
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
-		}
-	},
 	methods: {
 		async getUsers($state) {
 			try {
@@ -106,13 +101,7 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: "Users · Dashboard",
-			meta: [
-				{
-					name: "og:title",
-					content: `Users · Dashboard · ${this.getSiteSittings.title}`
-				}
-			]
+			title: "Users · Dashboard"
 		};
 	}
 };
