@@ -4,40 +4,21 @@ const database = require("../../database");
 // services
 const createUser = require("../../services/auth/createUser");
 
-const logger = require("../../utils/logger");
+// utils
 const error = require("../../errorResponse.json");
 
-async function checkIsSetup() {
-	try {
-		const {
-			rows: [checkOwnerExists]
-		} = await database.raw(`
-			SELECT
-				roles.id AS role_id,
-				roles_users.user_id
-			FROM
-				roles
-				LEFT JOIN roles_users ON roles_users.role_id = roles.id
-			WHERE
-				roles.name = 'owner'
-			LIMIT 1;
-		`);
-
-		return checkOwnerExists;
-	} catch (err) {
-		logger.error(err);
-	}
-}
-
 module.exports = async (req, res, next) => {
-	const siteTitle = req.body.siteTitle;
-	const name = req.body.name;
-	const email = req.body.email;
-	const password = req.body.password;
+	const { siteTitle, name, email, password } = req.body;
 
-	const isSetup = await checkIsSetup();
+	const isSetup = await database
+		.select()
+		.from("users")
+		.where({
+			isOwner: true
+		})
+		.first();
 
-	if (isSetup.user_id) {
+	if (isSetup) {
 		return res.status(403).send({
 			message: error.api.authentication.setupAlreadyCompleted,
 			code: "SETUP_COMPLETED"
@@ -50,11 +31,15 @@ module.exports = async (req, res, next) => {
 		name
 	});
 
+	// set user as owner
 	await database
 		.update({
-			role_id: isSetup.role_id
+			isOwner: true
 		})
-		.from("roles_users");
+		.from("users")
+		.where({
+			userId: user.userId
+		});
 
 	await database
 		.update({
