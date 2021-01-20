@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
 	const createPostPermission = permissions.find(item => item === "post:create");
 	if (!createPostPermission) {
 		return res.status(403).send({
-			message: error.api.posts.notEnoughPermission,
+			message: error.api.roles.notEnoughPermission,
 			code: "NOT_ENOUGH_PERMISSION"
 		});
 	}

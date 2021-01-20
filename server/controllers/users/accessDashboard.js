@@ -9,7 +9,7 @@ exports.accessDashboard = (req, res) => {
 	);
 	if (!accessDashboardPermission) {
 		return res.status(403).send({
-			message: error.api.posts.notEnoughPermission,
+			message: error.api.roles.notEnoughPermission,
 			code: "NOT_ENOUGH_PERMISSION"
 		});
 	}
