@@ -4,22 +4,20 @@ const authorize = (req, res, next) => {
 	const hasUser = req.user && req.user.userId;
 
 	if (hasUser) {
-		const hasRoles = req.user.roles;
+		// user is blocked
+		const isBlocked = req.user.isBlocked;
+		if (isBlocked) {
+			return res.status(403).send({
+				message: error.middleware.user.userBlocked,
+				code: "USER_BLOCK"
+			});
+		}
 
-		if (hasRoles) {
-			const roles = req.user.roles[0];
-
-			// user is spam
-			if (roles.name === "spam") {
-				return res.status(403).send({
-					message: error.middleware.user.userSpam,
-					code: "USER_SPAM"
-				});
-			}
-
+		const hasPermissions = req.user.permissions.length > 0;
+		if (hasPermissions) {
 			return next();
 		} else {
-			// In case user doesn't have any roles
+			// In case user doesn't have any permissions
 			return res.status(403).send({
 				message: error.middleware.auth.accessDenied,
 				code: "ACCESS_DENIED"
