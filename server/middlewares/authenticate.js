@@ -15,6 +15,38 @@ const extractTokenFromHeader = header => {
 	}
 };
 
+const computePermissions = async user => {
+	// return all permission for owner
+	if (user.isOwner) {
+		const perms = await database
+			.select(
+				database.raw(
+					"COALESCE( ARRAY_AGG(CONCAT(p.type, ':', p.action)), '{}') AS permissions"
+				)
+			)
+			.from("permissions AS p")
+			.first();
+
+		return perms.permissions;
+	}
+
+	// get permissions for roles
+	const roles = user.roles;
+	const perms = await database
+		.select(
+			database.raw(
+				"COALESCE( ARRAY_AGG( DISTINCT( CONCAT( p.type, ':', p.action))), '{}') AS permissions"
+			)
+		)
+		.from("roles")
+		.innerJoin("permissions_roles", "roles.id", "permissions_roles.role_id")
+		.innerJoin("permissions AS p", "permissions_roles.permission_id", "p.id")
+		.whereIn("roles.id", roles)
+		.first();
+
+	return perms.permissions;
+};
+
 const authenticateWithToken = async (req, res, next, token) => {
 	const decoded = jwt.decode(token, { complete: true });
 
@@ -29,53 +61,37 @@ const authenticateWithToken = async (req, res, next, token) => {
 	const userId = decoded.payload.userId;
 
 	try {
-		const { rows: users } = await database.raw(
-			`
-				SELECT
-					u."userId",
-					u.name,
-					u.username,
-					u.email,
-					(
-						SELECT
-							json_agg(roles)
-						FROM
-							roles
-						WHERE
-							roles.id = ru.role_id
-					) AS "roles",
-					(
-						SELECT
-							ARRAY_AGG(CONCAT("type", ':', "action"))
-						FROM
-							permissions
-						LEFT JOIN permissions_roles AS pr ON permissions.id = pr.permission_id
-						WHERE
-							pr.role_id = ru.role_id
-					) AS permissions
-					FROM
-						users AS u
-					LEFT JOIN roles_users AS ru ON u."userId" = ru.user_id
-					LEFT JOIN permissions_roles AS pr ON ru.role_id = pr.role_id
-				WHERE
-					"userId" = :userId
-				GROUP BY
-					u."userId",
-					ru.role_id;
-			`,
-			{
+		const user = await database
+			.select(
+				"u.userId",
+				"u.name",
+				"u.username",
+				"u.email",
+				"u.isOwner",
+				"u.isBlocked",
+				database.raw("ARRAY_AGG(r.id) AS roles")
+			)
+			.from("users AS u")
+			.leftJoin("roles_users AS ru", "u.userId", "ru.user_id")
+			.leftJoin("roles AS r", "ru.role_id", "r.id")
+			.groupBy("u.userId")
+			.where({
 				userId
-			}
-		);
+			})
+			.first();
 
-		const user = users[0];
+		const permissions = await computePermissions(user);
+
 		if (user) {
 			try {
 				// validate JWT auth token
 				const secretKey = config.server.secretKey;
 				jwt.verify(token, secretKey);
 
-				req.user = user;
+				req.user = {
+					...user,
+					permissions
+				};
 				next();
 			} catch (err) {
 				if (
