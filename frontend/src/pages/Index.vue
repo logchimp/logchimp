@@ -3,6 +3,7 @@
 		<main class="homepage-posts" />
 		<aside class="homepage-sidebar">
 			<site-setup-card v-if="showSiteSetupCard" />
+			<login-card v-if="!isUserLoggedIn && !showSiteSetupCard" />
 		</aside>
 	</div>
 </template>
@@ -13,12 +14,14 @@ import { isSiteSetup } from "../modules/site";
 
 // components
 import SiteSetupCard from "../components/SiteSetupCard";
+import LoginCard from "../components/LoginCard";
 
 export default {
 	name: "Homepage",
 	components: {
 		// components
-		SiteSetupCard
+		SiteSetupCard,
+		LoginCard
 	},
 	data() {
 		return {
@@ -28,6 +31,10 @@ export default {
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
+		},
+		isUserLoggedIn() {
+			const user = this.$store.getters["user/getUserId"];
+			return !!user;
 		}
 	},
 	created() {
