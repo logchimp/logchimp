@@ -102,11 +102,8 @@ export default {
 		},
 		accessDashboard() {
 			const permissions = this.$store.getters["user/getPermissions"];
-			const acessDashboardPermission = permissions.find(
-				item => item === "dashboard:read"
-			);
-
-			return acessDashboardPermission;
+			const checkPermission = permissions.includes("dashboard:read");
+			return checkPermission;
 		},
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];

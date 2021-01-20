@@ -105,8 +105,7 @@ export default {
 	computed: {
 		disabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
-			const checkPermission = permissions.find(item => item === "board:update");
-
+			const checkPermission = permissions.includes("board:update");
 			return !checkPermission;
 		},
 		slimUrl() {

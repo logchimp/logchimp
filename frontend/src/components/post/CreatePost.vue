@@ -87,11 +87,8 @@ export default {
 		},
 		createPostPermissionDisabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
-			const createPostPermission = permissions.find(
-				item => item === "post:create"
-			);
-
-			return !createPostPermission;
+			const checkPermission = permissions.includes("post:create");
+			return !checkPermission;
 		}
 	},
 	methods: {
