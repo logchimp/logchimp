@@ -67,11 +67,8 @@ export default {
 		},
 		createBoardPermissionDisabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
-			const createBoardPermission = permissions.find(
-				item => item === "board:create"
-			);
-
-			return !createBoardPermission;
+			const checkPermission = permissions.includes("board:create");
+			return !checkPermission;
 		}
 	},
 	methods: {

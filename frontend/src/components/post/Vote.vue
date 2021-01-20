@@ -56,11 +56,8 @@ export default {
 			if (!getUserId) return false;
 
 			const permissions = this.$store.getters["user/getPermissions"];
-			const changeVotePermission = permissions.find(
-				item => item === "vote:create"
-			);
-
-			return !changeVotePermission;
+			const checkPermission = permissions.includes("vote:create");
+			return !checkPermission;
 		}
 	},
 	methods: {
