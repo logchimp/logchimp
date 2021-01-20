@@ -9,7 +9,7 @@ exports.deleteById = async (req, res) => {
 
 	const id = req.body.id;
 
-	const checkPermission = permissions.find(item => item === "post:destroy");
+	const checkPermission = permissions.includes("post:destroy");
 	if (!checkPermission) {
 		return res.status(403).send({
 			message: error.api.roles.notEnoughPermission,

@@ -13,7 +13,7 @@ const error = require("../../errorResponse.json");
 exports.create = async (req, res) => {
 	const permissions = req.user.permissions;
 
-	const checkPermission = permissions.find(item => item === "board:create");
+	const checkPermission = permissions.includes("board:create");
 	if (!checkPermission) {
 		return res.status(403).send({
 			message: error.api.roles.notEnoughPermission,

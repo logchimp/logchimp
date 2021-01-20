@@ -15,7 +15,7 @@ exports.updatePost = async (req, res) => {
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
 
-	const checkPermission = permissions.find(item => item === "post:update");
+	const checkPermission = permissions.includes("post:create");
 	if (!checkPermission) {
 		return res.status(403).send({
 			message: error.api.roles.notEnoughPermission,

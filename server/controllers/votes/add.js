@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
 
 	const postId = req.body.postId;
 
-	const checkPermission = permissions.find(item => item === "vote:create");
+	const checkPermission = permissions.includes("vote:create");
 	if (!checkPermission) {
 		return res.status(403).send({
 			message: error.api.roles.notEnoughPermission,
