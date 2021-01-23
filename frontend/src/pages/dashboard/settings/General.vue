@@ -1,87 +1,90 @@
 <template>
 	<div>
-		<div class="boards-page-header">
-			<h4 class="boards-page-header-heading">
-				Settings
-			</h4>
-		</div>
-		<div>
-			<div class="dashboard-settings-logo">
-				<label class="input-field-label" for="logo">Logo</label>
-				<div class="dashboard-settings-logo-placeholder">
-					<img
-						:src="logo"
-						:alt="siteName.value"
-						@click="selectFileHandler"
-					>
-				</div>
-				<input
-					ref="fileSelector"
-					accept="image/jpg,image/jpeg,image/png,image/svg+xml"
-					type="file"
-					name="logo"
-					style="display: none"
-					@change="uploadFile"
-				>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<h5 class="breadcrum-item">
+					Settings
+				</h5>
 			</div>
-			<l-text
-				v-model="siteName.value"
-				label="Site name"
-				type="text"
-				name="Site name"
-				placeholder="My awesome site"
-				:error="siteName.error"
-				@keyup-enter="saveSettings"
-				@hide-error="hideSiteNameError"
-			/>
-			<l-text
-				v-model="description.value"
-				label="Description"
-				type="text"
-				name="Description"
-				placeholder="Site description"
-				:error="description.error"
-				@keyup-enter="saveSettings"
-				@hide-error="hideDescriptionError"
-			/>
-			<div style="display: flex; align-items: center;">
-				<l-text
-					v-model="accentColor.value"
-					label="Color"
-					type="text"
-					name="Color"
-					placeholder="484d7c"
-					:error="accentColor.error"
-					@keyup-enter="saveSettings"
-					@hide-error="hideAccentColorError"
-				/>
-				<div class="dashboard-settings-color-border">
-					<div
-						class="dashboard-settings-color-preview"
-						:style="{
-							backgroundColor: `#${accentColor.value}`
-						}"
+
+			<Button
+				type="primary"
+				:loading="updateSettingsButtonLoading"
+				:disabled="updateSettingsPermissionDisabled"
+				@click="updateSettings"
+			>
+				Save
+			</Button>
+		</header>
+
+		<div class="form-section">
+			<div class="form-columns">
+				<div class="form-column">
+					<l-text
+						v-model="siteName.value"
+						label="Site name"
+						placeholder="Enter board name"
+						:error="siteName.error"
+						@hide-error="hideSiteNameError"
+					/>
+
+					<l-text
+						v-model="description.value"
+						label="Description"
+						placeholder="Site description"
+						:error="description.error"
+						@hide-error="hideDescriptionError"
 					/>
 				</div>
+
+				<div class="form-column">
+					<div class="dashboard-settings-logo">
+						<label class="input-field-label" for="logo">Logo</label>
+						<div class="dashboard-settings-logo-placeholder">
+							<img
+								:src="logo"
+								:alt="siteName.value"
+								@click="selectFileHandler"
+							>
+						</div>
+						<input
+							ref="fileSelector"
+							accept="image/jpg,image/jpeg,image/png,image/svg+xml"
+							type="file"
+							name="logo"
+							style="display: none"
+							@change="uploadFile"
+						>
+					</div>
+				</div>
 			</div>
-			<l-text
-				v-model="googleAnalyticsId.value"
-				label="Google Analytics"
-				type="text"
-				name="Google Analytics ID"
-				placeholder="UA-12345678-0"
-				:error="googleAnalyticsId.error"
-				@keyup-enter="saveSettings"
-				@hide-error="hideGoogleAnalyticsError"
-			/>
-			<div style="display: flex;">
-				<Button
-					:loading="buttonLoading"
-					type="primary"
-					@click="saveSettings"
-				>
-					Save
-				</Button>
+		</div>
+
+		<div class="form-section">
+			<h6 class="form-section-title">
+				Apperences
+			</h6>
+			<div class="form-columns">
+				<div class="form-column">
+					<color-input v-model="accentColor.value" />
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<h6 class="form-section-title">
+				Meta
+			</h6>
+			<div class="form-columns">
+				<div class="form-column">
+					<l-text
+						v-model="googleAnalyticsId.value"
+						label="Google Analytics"
+						placeholder="UA-12345678-0"
+						:error="googleAnalyticsId.error"
+						@hide-error="hideGoogleAnalyticsError"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -98,13 +101,15 @@ import {
 // components
 import LText from "../../../components/input/LText";
 import Button from "../../../components/Button";
+import ColorInput from "../../../components/ColorInput";
 
 export default {
 	name: "DashboardSettings",
 	components: {
 		// components
 		LText,
-		Button
+		Button,
+		ColorInput
 	},
 	data() {
 		return {
@@ -137,8 +142,15 @@ export default {
 					message: ""
 				}
 			},
-			buttonLoading: false
+			updateSettingsButtonLoading: false
 		};
+	},
+	computed: {
+		updateSettingsPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const checkPermission = permissions.includes("setting:update");
+			return !checkPermission;
+		}
 	},
 	created() {
 		this.getSettings();
@@ -177,7 +189,7 @@ export default {
 				console.error(error);
 			}
 		},
-		async saveSettings() {
+		async updateSettings() {
 			if (!(this.siteName.value && this.accentColor.value)) {
 				if (!this.siteName.value) {
 					this.siteName.error.show = true;
@@ -190,7 +202,7 @@ export default {
 				}
 			}
 
-			this.buttonLoading = true;
+			this.updateSettingsButtonLoading = true;
 
 			const siteData = {
 				title: this.siteName.value,
@@ -212,7 +224,7 @@ export default {
 			} catch (error) {
 				console.error(error);
 			} finally {
-				this.buttonLoading = false;
+				this.updateSettingsButtonLoading = false;
 			}
 		},
 		async getSettings() {
