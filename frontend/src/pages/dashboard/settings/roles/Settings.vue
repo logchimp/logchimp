@@ -81,6 +81,28 @@
 
 		<div class="form-section">
 			<p class="form-section-title">
+				Roadmaps permissions
+			</p>
+			<div class="form-columns">
+				<div class="form-column">
+					<toggle-item v-model="permissions.roadmap.read" label="Read" />
+					<toggle-item v-model="permissions.roadmap.update" label="Update" />
+					<toggle-item v-model="permissions.roadmap.assign" label="Assign" />
+				</div>
+
+				<div class="form-column">
+					<toggle-item v-model="permissions.roadmap.create" label="Create" />
+					<toggle-item v-model="permissions.roadmap.destroy" label="Delete" />
+					<toggle-item
+						v-model="permissions.roadmap.unassign"
+						label="Unassign"
+					/>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<p class="form-section-title">
 				Vote permissions
 			</p>
 			<div class="form-columns">
@@ -158,6 +180,14 @@ export default {
 					read: false,
 					update: false,
 					destroy: false
+				},
+				roadmap: {
+					create: false,
+					read: false,
+					update: false,
+					destroy: false,
+					assign: false,
+					unassign: false
 				},
 				vote: {
 					create: false,
