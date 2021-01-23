@@ -7,7 +7,10 @@ const roadmaps = require("../../controllers/roadmaps");
 
 // middleware
 const middleware = require("../../middlewares");
+const exists = require("../../middlewares/roadmapExists");
+
 router.get("/roadmaps", roadmaps.filter);
+router.get("/roadmaps/:url", exists, roadmaps.roadmapByUrl);
 
 router.post("/roadmaps", middleware.apiAuth, roadmaps.create);
 
