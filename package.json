@@ -68,7 +68,7 @@
 		"nodemon": "^2.0.7",
 		"omgopass": "^3.2.1",
 		"regenerator-runtime": "^0.13.7",
-		"stylelint": "^13.8.0",
+		"stylelint": "^13.9.0",
 		"stylelint-scss": "^3.18.0",
 		"vue-jest": "^3.0.7",
 		"vue-template-compiler": "^2.6.12"
