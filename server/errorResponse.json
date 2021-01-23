@@ -52,6 +52,10 @@
 			"exists": "Board already exists",
 			"boardNotFound": "Board not found"
 		},
+		"roadmaps": {
+			"urlMissing": "Roadmap url cannot be empty",
+			"roadmapNotFound": "Roadmap not found"
+		},
 		"votes": {
 			"exists": "Vote already exists",
 			"voteNotFound": "Vote not found"
