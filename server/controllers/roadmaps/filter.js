@@ -6,7 +6,7 @@ const logger = require("../../utils/logger");
 module.exports = async (req, res) => {
 	try {
 		const roadmaps = await database
-			.select("id", "name", "color")
+			.select("id", "name", "url", "color", "display", "index")
 			.from("roadmaps")
 			.orderBy("index", "asc");
 
