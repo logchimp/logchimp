@@ -101,3 +101,24 @@ export const updateBoard = async board => {
 	});
 };
 
+/**
+ * Check board name
+ *
+ * @param {string} name board name
+ *
+ * @returns {object} response
+ */
+export const checkBoardName = async name => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "POST",
+		url: "/api/v1/boards/check-name",
+		data: {
+			name
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};

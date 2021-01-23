@@ -21,6 +21,7 @@
 			@input="$emit('input', $event.target.value)"
 			@click="hideError"
 			@keyup.enter="keyUpEnter"
+			@keyup="keyup"
 		>
 		<p v-if="description" class="input-description">
 			{{ description }}
@@ -83,6 +84,10 @@ export default {
 		keyUpEnter() {
 			if (this.disabled) return;
 			this.$emit("keyup-enter");
+		},
+		keyup(event) {
+			if (this.disabled) return;
+			this.$emit("keyup", event);
 		}
 	}
 };
