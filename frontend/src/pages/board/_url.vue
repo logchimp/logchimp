@@ -147,7 +147,7 @@ export default {
 					? {
 							name: "robots",
 							content: "noindex"
-						}
+					  }
 					: ""
 			]
 		};

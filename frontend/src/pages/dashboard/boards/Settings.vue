@@ -16,7 +16,7 @@
 			<Button
 				type="primary"
 				:loading="saveButtonLoading"
-				:disabled="disabled"
+				:disabled="createBoardPermissionDisabled"
 				@click="update"
 			>
 				Save
@@ -37,10 +37,14 @@
 
 				<div class="form-column">
 					<l-text
-						v-model="board.url"
+						v-model="slimUrl"
 						label="Slug"
 						placeholder="Board slug url"
-						:description="slimUrl"
+						:error="{
+							show: urlAvailableError,
+							message: 'Not available'
+						}"
+						@keyup="validateBoardUrl"
 					/>
 				</div>
 			</div>
@@ -73,7 +77,11 @@
 
 <script>
 // modules
-import { getBoardByUrl, updateBoard } from "../../../modules/boards";
+import {
+	getBoardByUrl,
+	updateBoard,
+	checkBoardName
+} from "../../../modules/boards";
 
 // components
 import Button from "../../../components/Button";
@@ -99,26 +107,57 @@ export default {
 				view_voters: false,
 				display: false
 			},
+			urlAvailableError: false,
 			saveButtonLoading: false
 		};
 	},
 	computed: {
-		disabled() {
+		createBoardPermissionDisabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
 			const checkPermission = permissions.includes("board:update");
 			return !checkPermission;
 		},
-		slimUrl() {
-			return this.board.url
-				.replace(/[^\w]+/gi, "-")
-				.trim()
-				.toLowerCase();
+		slimUrl: {
+			get() {
+				return this.board.url;
+			},
+			set(value) {
+				this.board.url = value
+					.trim()
+					.replace(/[^\w]+/gi, "-")
+					.toLowerCase();
+			}
 		}
 	},
 	created() {
 		this.getBoard();
 	},
 	methods: {
+		async validateBoardUrl(event) {
+			const keyCode = event.keyCode;
+
+			// only accept letters, numbers, & numpad numbers
+			if (
+				!(
+					(keyCode > 65 && keyCode < 90) ||
+					(keyCode > 45 && keyCode < 57) ||
+					(keyCode > 96 && keyCode < 105) ||
+					keyCode === 8
+				)
+			)
+				return false;
+
+			this.urlAvailableError = false;
+
+			try {
+				const response = await checkBoardName(this.board.url);
+				if (!response.data.available) {
+					this.urlAvailableError = true;
+				}
+			} catch (err) {
+				console.error(err);
+			}
+		},
 		async update() {
 			this.saveButtonLoading = true;
 			try {
