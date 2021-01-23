@@ -14,6 +14,7 @@ router.get("/roadmaps/:url", exists, roadmaps.roadmapByUrl);
 
 router.post("/roadmaps", middleware.apiAuth, roadmaps.create);
 
+router.patch("/roadmaps", middleware.apiAuth, exists, roadmaps.updateRoadmap);
 router.patch("/roadmaps/sort", middleware.apiAuth, roadmaps.sort);
 
 module.exports = router;
