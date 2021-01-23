@@ -6,7 +6,11 @@ module.exports = {
 		es6: true
 	},
 	plugins: ["vue", "prettier"],
-	extends: ["eslint:recommended", "plugin:vue/recommended"],
+	extends: [
+		"eslint:recommended",
+		"plugin:prettier/recommended",
+		"plugin:vue/recommended"
+	],
 	rules: {
 		"vue/html-indent": [1, "tab"],
 		"vue/max-attributes-per-line": [
