@@ -131,6 +131,25 @@
 
 		<div class="form-section">
 			<p class="form-section-title">
+				Roles permissions
+			</p>
+			<div class="form-columns">
+				<div class="form-column">
+					<toggle-item v-model="permissions.role.read" label="Read" />
+					<toggle-item v-model="permissions.role.update" label="Update" />
+					<toggle-item v-model="permissions.role.assign" label="Assign" />
+				</div>
+
+				<div class="form-column">
+					<toggle-item v-model="permissions.role.create" label="Create" />
+					<toggle-item v-model="permissions.role.destroy" label="Delete" />
+					<toggle-item v-model="permissions.role.unassign" label="Unassign" />
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<p class="form-section-title">
 				Settings permissions
 			</p>
 			<div class="form-columns">
@@ -197,6 +216,14 @@ export default {
 				},
 				dashboard: {
 					read: false
+				},
+				role: {
+					create: false,
+					read: false,
+					update: false,
+					destroy: false,
+					assign: false,
+					unassign: false
 				},
 				setting: {
 					read: false,
