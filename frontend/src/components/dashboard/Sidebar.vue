@@ -27,6 +27,12 @@
 				</router-link>
 			</li>
 			<li>
+				<router-link to="/dashboard/roadmaps" class="sidebar-list-item">
+					<roadmap-icon />
+					<p>Roadmaps</p>
+				</router-link>
+			</li>
+			<li>
 				<router-link to="/dashboard/posts" class="sidebar-list-item">
 					<post-icon />
 					<p>Posts</p>
@@ -108,6 +114,7 @@ import DropdownSpacer from "../dropdown/DropdownSpacer";
 // icons
 import DashboardIcon from "../../components/icons/Dashboard";
 import BoardIcon from "../../components/icons/Board";
+import RoadmapIcon from "../../components/icons/Roadmap";
 import PostIcon from "../../components/icons/Post";
 import UsersIcon from "../../components/icons/Users";
 import SettingsIcon from "../../components/icons/Settings";
@@ -127,6 +134,7 @@ export default {
 		// icons
 		DashboardIcon,
 		BoardIcon,
+		RoadmapIcon,
 		PostIcon,
 		UsersIcon,
 		SettingsIcon,
