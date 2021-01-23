@@ -17,6 +17,20 @@ export const getAllRoadmaps = async () => {
 };
 
 /**
+ *	Get board by URL
+ *
+ * @param {string} url board url
+ *
+ * @returns {object} response
+ */
+export const getRoadmapByUrl = async url => {
+	return await axios({
+		method: "GET",
+		url: `/api/v1/roadmaps/${url}`
+	});
+};
+
+/**
  * Create new roadmap
  *
  * @returns {object} response
@@ -27,6 +41,32 @@ export const createRoadmap = async () => {
 	return await axios({
 		method: "POST",
 		url: "/api/v1/roadmaps",
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
+
+/**
+ * Update roadmap
+ *
+ * @param {object} roadmap update roadmap data
+ * @param {string} roadmap.name roadmap name
+ * @param {string} roadmap.url roadmap url
+ * @param {string} roadmap.color roadmap color
+ * @param {boolean} roadmap.display display roadmap on the site
+ *
+ * @returns {object} response
+ */
+export const updateRoadmap = async roadmap => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "PATCH",
+		url: "/api/v1/roadmaps",
+		data: {
+			...roadmap
+		},
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
