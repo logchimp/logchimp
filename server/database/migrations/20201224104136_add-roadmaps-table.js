@@ -14,11 +14,9 @@ exports.up = knex => {
 				.string("url", 50)
 				.notNullable()
 				.unique();
-			table
-				.integer("index")
-				.notNullable()
-				.unique();
+			table.integer("index").notNullable();
 			table.string("color", 6).notNullable();
+			table.boolean("display").defaultTo(false);
 			table
 				.timestamp("created_at")
 				.defaultTo(knex.fn.now())
