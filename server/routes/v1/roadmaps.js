@@ -11,4 +11,6 @@ router.get("/roadmaps", roadmaps.filter);
 
 router.post("/roadmaps", middleware.apiAuth, roadmaps.create);
 
+router.patch("/roadmaps/sort", middleware.apiAuth, roadmaps.sort);
+
 module.exports = router;

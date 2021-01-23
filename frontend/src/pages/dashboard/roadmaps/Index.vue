@@ -30,7 +30,9 @@
 					v-model="roadmaps"
 					group="roadmap"
 					handle=".grip-handler"
-					@end="dragEnd"
+					:move="moveItem"
+					@start="drag = true"
+					@end="initialiseSort"
 				>
 					<div
 						v-for="roadmap in roadmaps"
@@ -67,7 +69,11 @@
 import draggable from "vuedraggable";
 
 // modules
-import { getAllRoadmaps, createRoadmap } from "../../../modules/roadmaps";
+import {
+	getAllRoadmaps,
+	createRoadmap,
+	sortRoadmap
+} from "../../../modules/roadmaps";
 
 // components
 import Button from "../../../components/Button";
@@ -91,7 +97,8 @@ export default {
 	data() {
 		return {
 			roadmaps: [],
-			createRoadmapButtonLoading: false
+			createRoadmapButtonLoading: false,
+			sort: {}
 		};
 	},
 	computed: {
@@ -115,9 +122,31 @@ export default {
 				console.error(err);
 			}
 		},
-		async dragEnd() {
-			console.log("Drag end");
-			this.drag = false;
+		moveItem(event) {
+			// current
+			this.sort.to = {
+				id: event.draggedContext.element.id,
+				index: event.draggedContext.futureIndex + 1
+			};
+
+			// replaced with
+			this.sort.from = {
+				id: event.relatedContext.element.id,
+				index: event.draggedContext.index + 1
+			};
+		},
+		async initialiseSort() {
+			try {
+				const response = await sortRoadmap(this.sort);
+
+				if (response.status == 200) {
+					this.getRoadmaps();
+				}
+			} catch (err) {
+				console.error(err);
+			} finally {
+				this.drag = false;
+			}
 		},
 		async getRoadmaps() {
 			try {
