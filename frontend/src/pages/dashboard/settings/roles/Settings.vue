@@ -70,11 +70,13 @@
 				<div class="form-column">
 					<toggle-item v-model="permissions.board.read" label="Read" />
 					<toggle-item v-model="permissions.board.update" label="Update" />
+					<toggle-item v-model="permissions.board.assign" label="Assign" />
 				</div>
 
 				<div class="form-column">
 					<toggle-item v-model="permissions.board.create" label="Create" />
 					<toggle-item v-model="permissions.board.destroy" label="Delete" />
+					<toggle-item v-model="permissions.board.unassign" label="Unassign" />
 				</div>
 			</div>
 		</div>
@@ -198,7 +200,9 @@ export default {
 					create: false,
 					read: false,
 					update: false,
-					destroy: false
+					destroy: false,
+					assign: false,
+					unassign: false
 				},
 				roadmap: {
 					create: false,
