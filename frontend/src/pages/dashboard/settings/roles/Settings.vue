@@ -235,7 +235,9 @@ export default {
 	},
 	computed: {
 		updateRoleButtonDisabled() {
-			return false;
+			const permissions = this.$store.getters["user/getPermissions"];
+			const checkPermission = permissions.includes("role:update");
+			return !checkPermission;
 		}
 	},
 	created() {
