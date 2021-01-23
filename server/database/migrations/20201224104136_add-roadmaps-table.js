@@ -19,6 +19,7 @@ exports.up = knex => {
 				.notNullable()
 				.unique();
 			table.string("color", 6).notNullable();
+			table.boolean("display").defaultTo(false);
 			table
 				.timestamp("created_at")
 				.defaultTo(knex.fn.now())
