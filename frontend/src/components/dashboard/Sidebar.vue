@@ -54,6 +54,12 @@
 					<p>General</p>
 				</router-link>
 			</li>
+			<li>
+				<router-link to="/dashboard/settings/roles" class="sidebar-list-item">
+					<shield-icon />
+					<p>Roles</p>
+				</router-link>
+			</li>
 		</div>
 		<footer @mouseleave="addDashboardSidebarFooterDropdownListener">
 			<dropdown
@@ -121,6 +127,7 @@ import SettingsIcon from "../../components/icons/Settings";
 import InfoIcon from "../../components/icons/Info";
 import TwitterIcon from "../../components/icons/Twitter";
 import LogoutIcon from "../../components/icons/Logout";
+import ShieldIcon from "../../components/icons/Shield";
 
 export default {
 	name: "DashboardSidebar",
@@ -140,7 +147,8 @@ export default {
 		SettingsIcon,
 		InfoIcon,
 		TwitterIcon,
-		LogoutIcon
+		LogoutIcon,
+		ShieldIcon
 	},
 	data() {
 		return {
