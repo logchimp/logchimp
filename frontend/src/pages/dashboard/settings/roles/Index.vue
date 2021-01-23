@@ -74,7 +74,9 @@ export default {
 	},
 	computed: {
 		createRoleButtonDisabled() {
-			return false;
+			const permissions = this.$store.getters["user/getPermissions"];
+			const checkPermission = permissions.includes("role:create");
+			return !checkPermission;
 		}
 	},
 	created() {
