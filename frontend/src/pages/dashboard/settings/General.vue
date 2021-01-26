@@ -243,7 +243,7 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: "Site settings · Dashboard"
+			title: "General · Settings · Dashboard"
 		};
 	}
 };
