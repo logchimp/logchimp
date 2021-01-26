@@ -32,12 +32,14 @@ export default {
 		},
 		color: {
 			type: String,
+			required: true,
 			validator: value => {
 				return value.length === 6;
 			}
 		},
 		url: {
-			type: String
+			type: String,
+			required: true
 		},
 		postCount: {
 			type: Number,
