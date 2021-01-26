@@ -149,7 +149,7 @@ const routes = [
 			},
 			{
 				path: "post/:slug",
-				name: "Dashboard post view",
+				name: "Dashboard post settings",
 				components: require("./pages/dashboard/post/_slug/Index")
 			},
 			{
