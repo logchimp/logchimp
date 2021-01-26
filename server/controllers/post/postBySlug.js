@@ -29,13 +29,23 @@ exports.postBySlug = async (req, res) => {
 			})
 			.first();
 
+		const roadmap = await database
+			.select("id", "name", "url", "color")
+			.from("roadmaps")
+			.where({
+				id: post.roadmap_id
+			})
+			.first();
+
 		delete post.boardId;
 		delete post.userId;
+		delete post.roadmap_id;
 
 		res.status(200).send({
 			post: {
 				board,
 				author,
+				roadmap,
 				...post,
 				voters
 			}
