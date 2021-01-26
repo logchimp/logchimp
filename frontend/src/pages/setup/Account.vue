@@ -180,7 +180,6 @@ export default {
 				this.$store.dispatch("user/updatePermissions");
 				this.$router.push("/setup/create-board");
 			} catch (error) {
-				console.log(error.response.data);
 				if (error.response.data.code === "MAIL_CONFIG_MISSING") {
 					this.serverError = true;
 				}
