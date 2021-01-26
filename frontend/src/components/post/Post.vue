@@ -31,6 +31,7 @@
 				v-html="sliceContentMarkdown"
 			/>
 			<board-badge
+				v-if="postData.board"
 				:show-board="showBoard"
 				:name="postData.board.name"
 				:color="postData.board.color"
