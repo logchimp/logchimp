@@ -52,6 +52,19 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="form-section">
+			<h6 class="form-section-title">
+				Other
+			</h6>
+			<div class="form-columns">
+				<div class="form-column">
+				</div>
+
+				<div class="form-column">
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
