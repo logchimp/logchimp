@@ -171,6 +171,11 @@ const routes = [
 				path: "settings/roles/:id/settings",
 				name: "Dashbord roles settings",
 				component: require("./pages/dashboard/settings/roles/Settings").default
+			},
+			{
+				path: "/dashboard/*",
+				name: "Dashboard page not found",
+				component: require("./pages/pageNotFound").default
 			}
 		]
 	},
@@ -198,6 +203,11 @@ const routes = [
 		path: "/password-reset/confirm",
 		name: "Set new password",
 		component: require("./pages/passwordReset/Confirm").default
+	},
+	{
+		path: "*",
+		name: "Page not found",
+		component: require("./pages/pageNotFound").default
 	}
 ];
 
