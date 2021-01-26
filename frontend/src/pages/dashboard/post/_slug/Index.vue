@@ -1,50 +1,56 @@
 <template>
-	<div class="view">
-		<div v-if="!post.loading">
-			<div v-if="isPostExist" class="viewpost">
-				<div class="viewpost__vote">
+	<div>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<router-link to="/dashboard/posts" class="breadcrum-item">
+					Posts
+				</router-link>
+				<div class="breadcrum-divider">
+					/
+				</div>
+				<h5 class="breadcrum-item">
+					{{ title }}
+				</h5>
+			</div>
+
+			<Button
+				type="primary"
+				:loading="loading.updatePostButton"
+				:disabled="updatePostPermissionDisabled"
+				@click="updatePost"
+			>
+				Save
+			</Button>
+		</header>
+
+		<div class="form-section">
+			<div class="form-columns">
+				<div class="form-column">
+					<l-text
+						v-model="post.title"
+						label="Title"
+						placeholder="Name of the feature"
+					/>
+
+					<l-textarea
+						v-model="post.contentMarkdown"
+						label="Description"
+						rows="4"
+						placeholder="What would you use it for?"
+					/>
+				</div>
+
+				<div class="form-column">
 					<div>
-						<Vote
-							:post-id="post.postId"
-							:votes-count="post.voters.votesCount"
-							:is-voted="post.voters.viewerVote"
-							@update-voters="updateVoters"
-						/>
-					</div>
-					<div class="viewpost__content">
-						<h2 class="viewpost__title">
-							{{ post.title }}
-						</h2>
-						<div class="viewpost__meta">
-							<div class="viewpost__meta-author">
-								<avatar
-									class="viewpost__author-avatar"
-									:src="post.author.avatar"
-									:name="post.author.name"
-								/>
-								{{ postAuthorName }}
-							</div>
-							<div class="viewpost__meta-divider">
-								|
-							</div>
-							<time
-								:datetime="post.createdAt"
-								:title="post.createdAt | moment('dddd, DD MMMM YYYY hh:mm:ss')"
-								class="post-date"
-							>
-								{{ post.createdAt | moment("from") }}
-							</time>
+						<p class="input-field-label">
+							Preview
+						</p>
+						<div class="card">
+							<post v-if="!loading.post" :post="post" />
 						</div>
 					</div>
 				</div>
-				<p v-html="post.contentMarkdown" />
 			</div>
-			<p v-else>
-				There is no such post.
-			</p>
-		</div>
-		<div v-else class="loader-container">
-			<loader />
 		</div>
 	</div>
 </template>
@@ -54,27 +60,36 @@
 import { getPostBySlug } from "../../../../modules/posts";
 
 // components
-import Loader from "../../../../components/Loader";
-import Vote from "../../../../components/post/Vote";
-import Avatar from "../../../../components/Avatar";
+import Button from "../../../../components/Button";
+import LText from "../../../../components/input/LText";
+import LTextarea from "../../../../components/input/LTextarea";
+import Post from "../../../../components/post/Post";
 
 export default {
 	name: "DashboardPostView",
 	components: {
 		// components
-		Loader,
-		Vote,
-		Avatar
+		Button,
+		LText,
+		LTextarea,
+		Post
 	},
 	data() {
 		return {
-			post: {
-				loading: false
+			title: "",
+			loading: {
+				post: false,
+				updatePostButton: false
 			},
-			isPostExist: true
+			post: {}
 		};
 	},
 	computed: {
+		updatePostPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const checkPermission = permissions.includes("post:update");
+			return !checkPermission;
+		},
 		postAuthorName() {
 			return this.post.author.name
 				? this.post.author.name
@@ -89,20 +104,20 @@ export default {
 		this.postBySlug();
 	},
 	methods: {
+		async updatePost() {},
 		async postBySlug() {
-			this.post.loading = true;
+			this.loading.post = true;
 			const slug = this.$route.params.slug;
 
 			try {
 				const response = await getPostBySlug(slug);
 
+				this.title = response.data.post.title;
 				this.post = response.data.post;
-			} catch (error) {
-				if (error.response.data.code === "POST_NOT_FOUND") {
-					this.isPostExist = false;
-				}
+			} catch (err) {
+				console.error(err);
 			} finally {
-				this.post.loading = false;
+				this.loading.post = false;
 			}
 		},
 		updateVoters(voters) {
@@ -112,7 +127,7 @@ export default {
 	},
 	metaInfo() {
 		return {
-			title: `${this.post.title} · Post · Dashboard`
+			title: `${this.title} · Post · Dashboard`
 		};
 	}
 };
