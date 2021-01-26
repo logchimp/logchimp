@@ -2,9 +2,9 @@
 	<div>
 		<header class="form-header">
 			<div class="breadcrumbs">
-				<router-link to="/dashboard/boards" class="breadcrum-item">
+				<h5 class="breadcrum-item">
 					Boards
-				</router-link>
+				</h5>
 			</div>
 
 			<Button
