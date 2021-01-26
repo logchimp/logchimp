@@ -124,9 +124,6 @@ export default {
 		},
 		logout() {
 			this.$store.dispatch("user/logout");
-			if (this.$route.path !== "/") {
-				this.$router.push("/");
-			}
 		}
 	}
 };
