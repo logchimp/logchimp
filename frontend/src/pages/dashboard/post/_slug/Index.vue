@@ -59,6 +59,30 @@
 			</h6>
 			<div class="form-columns">
 				<div class="form-column">
+					<dropdown-wrapper>
+						<template #toggle>
+							<l-text
+								v-model="boards.search"
+								label="Board"
+								placeholder="Search board"
+								@input="suggestBoard"
+							/>
+						</template>
+
+						<template #default="dropdown">
+							<dropdown
+								v-if="dropdown.active && boards.suggestions.length"
+								:height="300"
+							>
+								<board-suggestion
+									v-for="(item, index) in boards.suggestions"
+									:key="item.boardId"
+									:board="item"
+									@click="selectBoard(index)"
+								/>
+							</dropdown>
+						</template>
+					</dropdown-wrapper>
 				</div>
 
 				<div class="form-column">
@@ -71,12 +95,16 @@
 <script>
 // modules
 import { getPostBySlug } from "../../../../modules/posts";
+import { searchBoard } from "../../../../modules/boards";
 
 // components
 import Button from "../../../../components/Button";
 import LText from "../../../../components/input/LText";
 import LTextarea from "../../../../components/input/LTextarea";
 import Post from "../../../../components/post/Post";
+import Dropdown from "../../../../components/dropdown/Dropdown";
+import DropdownWrapper from "../../../../components/dropdown/DropdownWrapper";
+import BoardSuggestion from "../../../../components/board/BoardSuggestion";
 
 export default {
 	name: "DashboardPostView",
@@ -85,7 +113,10 @@ export default {
 		Button,
 		LText,
 		LTextarea,
-		Post
+		Post,
+		Dropdown,
+		DropdownWrapper,
+		BoardSuggestion
 	},
 	data() {
 		return {
@@ -94,7 +125,11 @@ export default {
 				post: false,
 				updatePostButton: false
 			},
-			post: {}
+			post: {},
+			boards: {
+				search: "",
+				suggestions: []
+			}
 		};
 	},
 	computed: {
@@ -136,6 +171,27 @@ export default {
 		updateVoters(voters) {
 			this.post.voters.votesCount = voters.votesCount;
 			this.post.voters.viewerVote = voters.viewerVote;
+		},
+		async suggestBoard(name) {
+			if (!name) {
+				return this.clearBoardSuggestion();
+			}
+
+			try {
+				const response = await searchBoard(name);
+				this.boards.suggestions = response.data.boards;
+			} catch (err) {
+				console.error(err);
+			}
+		},
+		selectBoard(index) {
+			const item = this.boards.suggestions[index];
+			this.post.board = item;
+			this.clearBoardSuggestion();
+		},
+		clearBoardSuggestion() {
+			this.boards.search = "";
+			this.boards.suggestions = [];
 		}
 	},
 	metaInfo() {
