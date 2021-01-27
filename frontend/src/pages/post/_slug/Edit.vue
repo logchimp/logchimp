@@ -88,17 +88,10 @@ export default {
 		},
 		updatePostPermissionDisabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
-			const updatePostPermission = permissions.find(
-				item => item === "post:update"
-			);
-			if (!updatePostPermission) return true;
-
-			const roles = this.$store.getters["user/getRoles"];
-			const roleUser = roles.find(item => item.name === "user");
-
-			const authUserId = this.$store.getters["user/getUserId"];
-			if (roleUser && authUserId !== this.post.author.userId) return true;
-
+			const checkPermission = permissions.includes("post:update");
+			const userId = this.$store.getters["user/getUserId"];
+			const authorId = this.post.author.userId;
+			if (!checkPermission && userId !== authorId) return true;
 			return false;
 		}
 	},
