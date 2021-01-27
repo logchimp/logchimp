@@ -52,7 +52,11 @@
 			<div class="form-columns">
 				<div class="form-column">
 					<toggle-item v-model="permissions.post.read" label="Read" />
-					<toggle-item v-model="permissions.post.update" label="Update" />
+					<toggle-item
+						v-model="permissions.post.update"
+						label="Update"
+						note="Allows users to edit post submitted by other users."
+					/>
 				</div>
 
 				<div class="form-column">
