@@ -95,6 +95,8 @@ export const getPostBySlug = async slug => {
  * @param {string} post.contentMarkdown post body in markdown format
  * @param {string} post.slugId post slug UUID
  * @param {string} post.userId post author UUID
+ * @param {string} post.boardId post board UUID
+ * @param {string} post.roadmapId post roadmap UUID
  *
  * @returns {object} response
  */
