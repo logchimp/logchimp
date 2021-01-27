@@ -1,0 +1,28 @@
+.board-suggestion
+	display: flex
+	align-items: center
+	border-bottom: 1px solid $gray-90
+	padding: 0.75rem 1rem
+	background-color: $white
+	cursor: pointer
+
+	&:first-child
+		border-top-left-radius: $border-radius
+		border-top-right-radius: $border-radius
+
+	&:last-child
+		border-bottom-left-radius: $border-radius
+		border-bottom-right-radius: $border-radius
+		border-bottom: none
+
+	&:hover
+		background-color: $gray-97
+
+.board-suggestion-content
+	margin-left: 1.5rem
+
+	h5
+		margin-bottom: 0
+
+	span
+		color: $gray-60
