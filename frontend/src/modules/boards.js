@@ -59,6 +59,25 @@ export const getBoardByUrl = async url => {
 };
 
 /**
+ * Search board by name
+ *
+ * @param {string} name board name
+ *
+ * @returns {object} response
+ */
+export const searchBoard = async name => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "GET",
+		url: `/api/v1/boards/search/${name}`,
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
+
+/**
  * Create new board
  *
  * @returns {object} response
