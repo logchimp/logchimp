@@ -94,7 +94,7 @@
 
 <script>
 // modules
-import { getPostBySlug } from "../../../../modules/posts";
+import { getPostBySlug, updatePost } from "../../../../modules/posts";
 import { searchBoard } from "../../../../modules/boards";
 
 // components
@@ -152,7 +152,29 @@ export default {
 		this.postBySlug();
 	},
 	methods: {
-		async updatePost() {},
+		async updatePost() {
+			this.loading.updatePostButton = true;
+			try {
+				const postData = {
+					id: this.post.postId,
+					title: this.post.title,
+					contentMarkdown: this.post.contentMarkdown,
+					slugId: this.post.slugId,
+					userId: this.post.author.userId,
+					boardId: this.post.board ? this.post.board.boardId : null,
+					roadmapId: this.post.roadmap ? this.post.roadmap.id : null
+				};
+
+				const response = await updatePost(postData);
+				if (response.status === 200) {
+					this.$router.push("/dashboard/posts");
+				}
+			} catch (err) {
+				console.error(err);
+			} finally {
+				this.loading.updatePostButton = false;
+			}
+		},
 		async postBySlug() {
 			this.loading.post = true;
 			const slug = this.$route.params.slug;
