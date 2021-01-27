@@ -8360,6 +8360,13 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lucide-vue@^0.12.0-alpha.3:
+  version "0.12.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/lucide-vue/-/lucide-vue-0.12.0-alpha.3.tgz#1970ee21ebd84622cb1a605ed478b55f6200dab2"
+  integrity sha512-PQCSdIvkdC59jmR/tTzNK+AvASC85hUEQb/1fHHXaDdrd0fe2374iN4PuIrf7PLljxhUUf/Kb+7gBsOgJRCLqg==
+  dependencies:
+    vue "^2.6.12"
+
 make-dir@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
