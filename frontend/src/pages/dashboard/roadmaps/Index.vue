@@ -66,6 +66,12 @@
 
 <script>
 // packages
+import {
+	GripVertical as GripIcon,
+	Eye as EyeIcon,
+	EyeOff as EyeOffIcon,
+	Settings as SettingsIcon
+} from "lucide-vue";
 import draggable from "vuedraggable";
 
 // modules
@@ -77,12 +83,6 @@ import {
 
 // components
 import Button from "../../../components/Button";
-
-// icons
-import GripIcon from "../../../components/icons/Grip";
-import EyeIcon from "../../../components/icons/Eye";
-import EyeOffIcon from "../../../components/icons/EyeOff";
-import SettingsIcon from "../../../components/icons/Settings";
 
 export default {
 	name: "Roadmaps",

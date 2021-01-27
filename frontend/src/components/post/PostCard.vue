@@ -70,13 +70,13 @@
 </template>
 
 <script>
+// pacakges
+import { ChevronUp as ArrowTop } from "lucide-vue";
+
 // components
 import Vote from "./Vote";
 import BoardBadge from "../board/BoardBadge";
 import AvatarStack from "../AvatarStack";
-
-// icons
-import ArrowTop from "../icons/ArrowTop";
 
 export default {
 	name: "PostCard",

@@ -47,6 +47,7 @@
 
 <script>
 // packages
+import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
@@ -60,10 +61,6 @@ import LatestPosts from "../../components/post/LatestPosts";
 import OldestPosts from "../../components/post/OldestPosts";
 import CreatePost from "../../components/post/CreatePost";
 import LoginCard from "../../components/LoginCard";
-
-// icons
-import SortDescIcon from "../../components/icons/SortDesc";
-import SortAscIcon from "../../components/icons/SortAsc";
 
 export default {
 	name: "Board",

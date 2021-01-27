@@ -65,6 +65,9 @@
 </template>
 
 <script>
+// packages
+import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
+
 // modules
 import { getPostBySlug } from "../../../modules/posts";
 
@@ -74,10 +77,6 @@ import Vote from "../../../components/post/Vote";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import DropdownItem from "../../../components/dropdown/DropdownItem";
 import Avatar from "../../../components/Avatar";
-
-// icons
-import MoreIcon from "../../../components/icons/More";
-import EditIcon from "../../../components/icons/Edit";
 
 export default {
 	name: "PostView",

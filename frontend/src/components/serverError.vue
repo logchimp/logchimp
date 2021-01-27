@@ -8,8 +8,8 @@
 </template>
 
 <script>
-// icons
-import CloseIcon from "./icons/Close";
+// packages
+import { X as CloseIcon } from "lucide-vue";
 
 export default {
 	name: "ServerError",
