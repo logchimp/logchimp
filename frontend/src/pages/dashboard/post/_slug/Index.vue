@@ -86,6 +86,30 @@
 				</div>
 
 				<div class="form-column">
+					<dropdown-wrapper>
+						<template #toggle>
+							<l-text
+								v-model="roadmaps.search"
+								label="Roadmap"
+								placeholder="Search roadmap"
+								@input="suggestRoadmap"
+							/>
+						</template>
+
+						<template #default="dropdown">
+							<dropdown
+								v-if="dropdown.active && roadmaps.suggestions.length"
+								:height="300"
+							>
+								<board-suggestion
+									v-for="(item, index) in roadmaps.suggestions"
+									:key="item.id"
+									:board="item"
+									@click="selectRoadmap(index)"
+								/>
+							</dropdown>
+						</template>
+					</dropdown-wrapper>
 				</div>
 			</div>
 		</div>
@@ -96,6 +120,7 @@
 // modules
 import { getPostBySlug, updatePost } from "../../../../modules/posts";
 import { searchBoard } from "../../../../modules/boards";
+import { searchRoadmap } from "../../../../modules/roadmaps";
 
 // components
 import Button from "../../../../components/Button";
@@ -127,6 +152,10 @@ export default {
 			},
 			post: {},
 			boards: {
+				search: "",
+				suggestions: []
+			},
+			roadmaps: {
 				search: "",
 				suggestions: []
 			}
@@ -183,7 +212,7 @@ export default {
 		},
 		async suggestBoard(name) {
 			if (!name) {
-				return this.clearBoardSuggestion();
+				return this.clearSuggestion("boards");
 			}
 
 			try {
@@ -193,14 +222,31 @@ export default {
 				console.error(err);
 			}
 		},
+		async suggestRoadmap(name) {
+			if (!name) {
+				return this.clearSuggestion("roadmaps");
+			}
+
+			try {
+				const response = await searchRoadmap(name);
+				this.roadmaps.suggestions = response.data.roadmaps;
+			} catch (err) {
+				console.error(err);
+			}
+		},
 		selectBoard(index) {
 			const item = this.boards.suggestions[index];
 			this.post.board = item;
-			this.clearBoardSuggestion();
+			this.clearSuggestion("boards");
 		},
-		clearBoardSuggestion() {
-			this.boards.search = "";
-			this.boards.suggestions = [];
+		selectRoadmap(index) {
+			const item = this.roadmaps.suggestions[index];
+			this.post.roadmap = item;
+			this.clearSuggestion("roadmaps");
+		},
+		clearSuggestion(type) {
+			this[type].search = "";
+			this[type].suggestions = [];
 		}
 	},
 	metaInfo() {
