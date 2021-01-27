@@ -137,15 +137,6 @@ export default {
 			const permissions = this.$store.getters["user/getPermissions"];
 			const checkPermission = permissions.includes("post:update");
 			return !checkPermission;
-		},
-		postAuthorName() {
-			return this.post.author.name
-				? this.post.author.name
-				: this.post.author.username;
-		},
-		postAuthor() {
-			const userId = this.$store.getters["user/getUserId"];
-			return userId === this.post.userId;
 		}
 	},
 	created() {
@@ -189,10 +180,6 @@ export default {
 			} finally {
 				this.loading.post = false;
 			}
-		},
-		updateVoters(voters) {
-			this.post.voters.votesCount = voters.votesCount;
-			this.post.voters.viewerVote = voters.viewerVote;
 		},
 		async suggestBoard(name) {
 			if (!name) {
