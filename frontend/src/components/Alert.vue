@@ -14,7 +14,7 @@
 			}"
 		/>
 		<div class="alert-item-content">
-			<div class="alert-item-icon">
+			<!-- <div class="alert-item-icon">
 				<Success
 					v-if="type === 'success'"
 					class="alert-icon alert-icon-success"
@@ -24,7 +24,7 @@
 					class="alert-icon alert-icon-warning"
 				/>
 				<Error v-if="type === 'error'" class="alert-icon alert-icon-error" />
-			</div>
+			</div> -->
 			<div class="alert-item-title">
 				{{ title }}
 			</div>
@@ -33,17 +33,17 @@
 </template>
 
 <script>
-import Success from "./icons/Success";
-import Warning from "./icons/Warning";
-import Error from "./icons/Error";
+// import Success from "./icons/Success";
+// import Warning from "./icons/Warning";
+// import Error from "./icons/Error";
 
 export default {
 	name: "Alert",
-	components: {
-		Success,
-		Warning,
-		Error
-	},
+	// components: {
+	// 	Success,
+	// 	Warning,
+	// 	Error
+	// },
 	props: {
 		title: {
 			type: String,
