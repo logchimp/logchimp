@@ -14,6 +14,7 @@ import { X as CloseIcon } from "lucide-vue";
 export default {
 	name: "ServerError",
 	components: {
+		// icons
 		CloseIcon
 	}
 };

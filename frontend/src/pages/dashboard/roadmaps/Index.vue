@@ -89,6 +89,8 @@ export default {
 	components: {
 		draggable,
 		Button,
+
+		// icons
 		GripIcon,
 		EyeIcon,
 		EyeOffIcon,

@@ -83,8 +83,10 @@ export default {
 	components: {
 		Vote,
 		BoardBadge,
-		ArrowTop,
-		AvatarStack
+		AvatarStack,
+
+		// icons
+		ArrowTop
 	},
 	props: {
 		post: {

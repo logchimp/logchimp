@@ -87,6 +87,8 @@ export default {
 		Dropdown,
 		DropdownItem,
 		Avatar,
+
+		// icons
 		MoreIcon,
 		EditIcon
 	},
