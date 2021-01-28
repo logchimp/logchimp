@@ -26,6 +26,7 @@ exports.filterPost = async (req, res) => {
 					"title",
 					"slug",
 					"boardId",
+					"roadmap_id",
 					"contentMarkdown",
 					"createdAt"
 				FROM
@@ -54,16 +55,26 @@ exports.filterPost = async (req, res) => {
 		for (let i = 0; i < response.length; i++) {
 			const postId = response[i].postId;
 			const boardId = response[i].boardId;
+			const roadmapId = response[i].roadmap_id;
 
 			try {
 				const board = await getBoardById(boardId);
 				const voters = await getVotes(postId, userId);
+				const roadmap = await database
+					.select("id", "name", "url", "color")
+					.from("roadmaps")
+					.where({
+						id: roadmapId
+					})
+					.first();
 
 				delete response[i].boardId;
+				delete response[i].roadmap_id;
 
 				posts.push({
 					...response[i],
 					board,
+					roadmap,
 					voters
 				});
 			} catch (err) {

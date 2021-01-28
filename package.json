@@ -40,6 +40,7 @@
 		"sass-loader": "^10.1.1",
 		"uuid": "^8.3.2",
 		"vue": "^2.6.12",
+		"vue-clickaway": "^2.2.2",
 		"vue-gtag": "^1.10.0",
 		"vue-infinite-loading": "^2.4.5",
 		"vue-meta": "^2.4.0",

@@ -31,6 +31,25 @@ export const getRoadmapByUrl = async url => {
 };
 
 /**
+ * Search roadmap by name
+ *
+ * @param {string} name roadmap name
+ *
+ * @returns {object} response
+ */
+export const searchRoadmap = async name => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "GET",
+		url: `/api/v1/roadmaps/search/${name}`,
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
+
+/**
  * Create new roadmap
  *
  * @returns {object} response
