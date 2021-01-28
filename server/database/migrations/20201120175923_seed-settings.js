@@ -1,7 +1,7 @@
 // utils
 const logger = require("../../utils/logger");
 
-exports.up = function(knex) {
+exports.up = knex => {
 	return knex("settings")
 		.insert([
 			{
@@ -27,7 +27,7 @@ exports.up = function(knex) {
 		});
 };
 
-exports.down = function(knex) {
+exports.down = knex => {
 	return knex("settings")
 		.delete()
 		.then(() => {

@@ -1,7 +1,7 @@
 // utils
 const logger = require("../../utils/logger");
 
-exports.up = function(knex) {
+exports.up = knex => {
 	return knex.schema
 		.createTable("users", table => {
 			table
@@ -47,7 +47,7 @@ exports.up = function(knex) {
 		});
 };
 
-exports.down = function(knex) {
+exports.down = knex => {
 	return knex.schema
 		.hasTable("users")
 		.then(exists => {
