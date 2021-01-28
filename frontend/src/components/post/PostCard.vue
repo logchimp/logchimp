@@ -38,7 +38,7 @@
 						class="post-card-toggle"
 						@click="isExpanded = !isExpanded"
 					>
-						<arrow-top />
+						<arrow-top-icon />
 					</div>
 				</div>
 				<p
@@ -70,21 +70,23 @@
 </template>
 
 <script>
+// pacakges
+import { ChevronUp as ArrowTopIcon } from "lucide-vue";
+
 // components
 import Vote from "./Vote";
 import BoardBadge from "../board/BoardBadge";
 import AvatarStack from "../AvatarStack";
-
-// icons
-import ArrowTop from "../icons/ArrowTop";
 
 export default {
 	name: "PostCard",
 	components: {
 		Vote,
 		BoardBadge,
-		ArrowTop,
-		AvatarStack
+		AvatarStack,
+
+		// icons
+		ArrowTopIcon
 	},
 	props: {
 		post: {

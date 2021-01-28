@@ -111,6 +111,19 @@
 </template>
 
 <script>
+// packages
+import {
+	LayoutDashboard as DashboardIcon,
+	Columns as BoardIcon,
+	File as PostIcon,
+	Users as UsersIcon,
+	Settings as SettingsIcon,
+	Shield as ShieldIcon,
+	Info as InfoIcon,
+	Twitter as TwitterIcon,
+	LogOut as LogoutIcon
+} from "lucide-vue";
+
 // components
 import Avatar from "../Avatar";
 import DropdownWrapper from "../dropdown/DropdownWrapper";
@@ -119,16 +132,7 @@ import DropdownItem from "../dropdown/DropdownItem";
 import DropdownSpacer from "../dropdown/DropdownSpacer";
 
 // icons
-import DashboardIcon from "../../components/icons/Dashboard";
-import BoardIcon from "../../components/icons/Board";
 import RoadmapIcon from "../../components/icons/Roadmap";
-import PostIcon from "../../components/icons/Post";
-import UsersIcon from "../../components/icons/Users";
-import SettingsIcon from "../../components/icons/Settings";
-import InfoIcon from "../../components/icons/Info";
-import TwitterIcon from "../../components/icons/Twitter";
-import LogoutIcon from "../../components/icons/Logout";
-import ShieldIcon from "../../components/icons/Shield";
 
 export default {
 	name: "DashboardSidebar",

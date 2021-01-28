@@ -48,14 +48,14 @@
 </template>
 
 <script>
+// packages
+import { Settings as SettingsIcon } from "lucide-vue";
+
 // modules
 import { getAllRoles, createRole } from "../../../../modules/roles";
 
 // components
 import Button from "../../../../components/Button";
-
-// icons
-import SettingsIcon from "../../../../components/icons/Settings";
 
 export default {
 	name: "SettingsRoles",

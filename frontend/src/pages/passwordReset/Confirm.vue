@@ -49,7 +49,7 @@
 					</div>
 				</div>
 				<div v-else class="card">
-					<success-icon style="fill: #64B285; stroke: white" />
+					<success-icon color="#64B285" />
 					<div>
 						You've successful changed your password. You may close this window.
 					</div>
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		<div v-if="validToken.error || changePassword.error" class="card">
-			<error-icon style="fill: #DE544E; stroke: white" />
+			<error-icon color="#DE544E" />
 			<div>
 				Invalid or expired password reset link.
 			</div>
@@ -71,6 +71,9 @@
 </template>
 
 <script>
+// packages
+import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
+
 // modules
 import { validateResetPasswordToken, setNewPassword } from "../../modules/auth";
 
@@ -78,10 +81,6 @@ import { validateResetPasswordToken, setNewPassword } from "../../modules/auth";
 import Loader from "../../components/Loader";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
-
-// icons
-import SuccessIcon from "../../components/icons/Success";
-import ErrorIcon from "../../components/icons/Error";
 
 export default {
 	name: "SetNewPassword",

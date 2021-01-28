@@ -28,10 +28,11 @@
 </template>
 
 <script>
+// packages
+import { Home as HomeIcon, Columns as BoardIcon } from "lucide-vue";
+
 // icons
-import HomeIcon from "./icons/Home";
 import RoadmapIcon from "./icons/Roadmap";
-import BoardIcon from "./icons/Board";
 
 export default {
 	name: "Navbar",

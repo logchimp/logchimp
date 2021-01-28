@@ -80,6 +80,12 @@
 
 <script>
 // packages
+import {
+	Link as LinkIcon,
+	Eye as EyeIcon,
+	EyeOff as EyeOffIcon,
+	Settings as SettingsIcon
+} from "lucide-vue";
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
@@ -89,12 +95,6 @@ import { getAllBoards, createBoard } from "../../modules/boards";
 import Button from "../../components/Button";
 import Table from "../../components/Table";
 import Loader from "../../components/Loader";
-
-// icons
-import LinkIcon from "../../components/icons/Link";
-import EyeIcon from "../../components/icons/Eye";
-import EyeOffIcon from "../../components/icons/EyeOff";
-import SettingsIcon from "../../components/icons/Settings";
 
 export default {
 	name: "DashboardBoards",

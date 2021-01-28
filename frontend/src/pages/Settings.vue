@@ -67,6 +67,9 @@
 </template>
 
 <script>
+// packages
+import { AlertTriangle as AlertIcon } from "lucide-vue";
+
 // modules
 import { getUserSettings, updateUserSettings } from "../modules/users";
 import { resendUserVerificationEmail } from "../modules/auth";
@@ -79,9 +82,6 @@ import Button from "../components/Button";
 
 // utils
 import tokenError from "../utils/tokenError";
-
-// icons
-import AlertIcon from "../components/icons/Alert";
 
 export default {
 	name: "UserSettings",
