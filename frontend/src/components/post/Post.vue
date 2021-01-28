@@ -17,11 +17,21 @@
 				</h5>
 			</router-link>
 			<p
+				v-if="postData.roadmap"
+				class="post-roadmap"
+				:style="{
+					color: `#${postData.roadmap.color}`
+				}"
+			>
+				{{ postData.roadmap.name }}
+			</p>
+			<p
 				data-test="post-description"
 				class="post-content-description"
 				v-html="sliceContentMarkdown"
 			/>
 			<board-badge
+				v-if="postData.board"
 				:show-board="showBoard"
 				:name="postData.board.name"
 				:color="postData.board.color"

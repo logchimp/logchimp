@@ -61,51 +61,51 @@
 				</router-link>
 			</li>
 		</div>
-		<footer @mouseleave="addDashboardSidebarFooterDropdownListener">
-			<dropdown
-				v-show="dashboardSidebarDropdown"
-				class="dashboard-sidebar-dropdown"
-			>
-				<dropdown-item @click="aboutLogChimp">
-					<template #icon>
-						<info-icon />
-					</template>
-					About LogChimp
-				</dropdown-item>
-				<dropdown-item @click="tweetLogChimp">
-					<template #icon>
-						<twitter-icon />
-					</template>
-					Tweet @LogChimp!
-				</dropdown-item>
-				<dropdown-spacer />
-				<dropdown-item @click="signOut">
-					<template #icon>
-						<logout-icon />
-					</template>
-					Sign Out
-				</dropdown-item>
-			</dropdown>
-			<div
-				class="dashboard-sidebar-user-container"
-				@click="toggleDashboardSidebarDropdown"
-			>
-				<div class="dashboard-sidebar-user">
-					<avatar
-						class="dashboard-sidebar-user-avatar"
-						:src="user.avatar"
-						:name="user.name || user.username"
-					/>
-					<div class="dashboard-sidebar-user-data">
-						<div class="dashboard-sidebar-user-name">
-							{{ user.name || user.username }}
-						</div>
-						<div class="dashboard-sidebar-user-email">
-							{{ user.email }}
+		<footer>
+			<dropdown-wrapper>
+				<template #default="dropdown">
+					<dropdown v-if="dropdown.active" class="dashboard-sidebar-dropdown">
+						<dropdown-item @click="aboutLogChimp">
+							<template #icon>
+								<info-icon />
+							</template>
+							About LogChimp
+						</dropdown-item>
+						<dropdown-item @click="tweetLogChimp">
+							<template #icon>
+								<twitter-icon />
+							</template>
+							Tweet @LogChimp!
+						</dropdown-item>
+						<dropdown-spacer />
+						<dropdown-item @click="signOut">
+							<template #icon>
+								<logout-icon />
+							</template>
+							Sign Out
+						</dropdown-item>
+					</dropdown>
+				</template>
+				<template #toggle>
+					<div class="dashboard-sidebar-user-container">
+						<div class="dashboard-sidebar-user">
+							<avatar
+								class="dashboard-sidebar-user-avatar"
+								:src="user.avatar"
+								:name="user.name || user.username"
+							/>
+							<div class="dashboard-sidebar-user-data">
+								<div class="dashboard-sidebar-user-name">
+									{{ user.name || user.username }}
+								</div>
+								<div class="dashboard-sidebar-user-email">
+									{{ user.email }}
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+				</template>
+			</dropdown-wrapper>
 		</footer>
 	</div>
 </template>
@@ -113,6 +113,7 @@
 <script>
 // components
 import Avatar from "../Avatar";
+import DropdownWrapper from "../dropdown/DropdownWrapper";
 import Dropdown from "../dropdown/Dropdown";
 import DropdownItem from "../dropdown/DropdownItem";
 import DropdownSpacer from "../dropdown/DropdownSpacer";
@@ -134,6 +135,7 @@ export default {
 	components: {
 		// components
 		Avatar,
+		DropdownWrapper,
 		Dropdown,
 		DropdownItem,
 		DropdownSpacer,
@@ -150,11 +152,6 @@ export default {
 		LogoutIcon,
 		ShieldIcon
 	},
-	data() {
-		return {
-			dashboardSidebarDropdown: false
-		};
-	},
 	computed: {
 		getSiteSittings() {
 			return this.$store.getters["settings/get"];
@@ -164,23 +161,6 @@ export default {
 		}
 	},
 	methods: {
-		// event listener to hide dropdown by clicking outside
-		addDashboardSidebarFooterDropdownListener() {
-			document.addEventListener(
-				"click",
-				this.removeDashboardSidebarFooterDropdownListener
-			);
-		},
-		removeDashboardSidebarFooterDropdownListener() {
-			this.toggleDashboardSidebarDropdown();
-			document.removeEventListener(
-				"click",
-				this.removeDashboardSidebarFooterDropdownListener
-			);
-		},
-		toggleDashboardSidebarDropdown() {
-			this.dashboardSidebarDropdown = !this.dashboardSidebarDropdown;
-		},
 		aboutLogChimp() {
 			window.open("https://logchimp.codecarrot.net/");
 		},
@@ -191,8 +171,6 @@ export default {
 		},
 		signOut() {
 			this.$store.dispatch("user/logout");
-			this.dashboardSidebarDropdown = false;
-			this.$router.push("/");
 		}
 	}
 };

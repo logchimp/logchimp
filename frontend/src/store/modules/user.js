@@ -1,3 +1,5 @@
+import router from "../../routes";
+
 // modules
 import { getPermissions } from "../../modules/users";
 
@@ -49,6 +51,7 @@ const actions = {
 			permissions: []
 		});
 		localStorage.removeItem("user");
+		if (router.currentRoute.fullPath !== "/") router.push("/");
 	},
 	updateUserSettings: ({ state, commit }, payload) => {
 		commit("setUser", {

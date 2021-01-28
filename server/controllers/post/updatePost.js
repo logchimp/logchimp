@@ -10,9 +10,7 @@ exports.updatePost = async (req, res) => {
 	const authorId = req.post.userId;
 	const slugId = req.post.slugId;
 
-	const id = req.body.id;
-	const title = req.body.title;
-	const contentMarkdown = req.body.contentMarkdown;
+	const { id, title, contentMarkdown, boardId, roadmapId } = req.body;
 
 	const checkPermission = permissions.includes("post:update");
 	if (!checkPermission && userId !== authorId) {
@@ -35,6 +33,8 @@ exports.updatePost = async (req, res) => {
 				title,
 				slug,
 				contentMarkdown,
+				boardId,
+				roadmap_id: roadmapId,
 				updatedAt: new Date().toJSON()
 			})
 			.from("posts")

@@ -1,5 +1,5 @@
 <template>
-	<div class="dropdown-item" @click="$emit('click')">
+	<div class="dropdown-item" @click="click">
 		<div class="dropdown-item-icon">
 			<slot name="icon" />
 		</div>
@@ -11,6 +11,18 @@
 
 <script>
 export default {
-	name: "DropdownItem"
+	name: "DropdownItem",
+	props: {
+		disabled: {
+			type: Boolean,
+			default: false
+		}
+	},
+	methods: {
+		click() {
+			if (this.disabled) return;
+			this.$emit("click");
+		}
+	}
 };
 </script>

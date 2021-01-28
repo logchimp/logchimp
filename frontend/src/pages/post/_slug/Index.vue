@@ -33,23 +33,29 @@
 						>
 							{{ post.createdAt | moment("from") }}
 						</time>
-						<div
+						<dropdown-wrapper
 							v-if="postAuthor"
 							class="dropdown-menu-container viewpost__menu"
-							@mouseleave="addPostViewDropdownListener"
 						>
-							<div class="dropdown-menu-icon" @click="toggleMenuDropdown">
-								<more-icon />
-							</div>
-							<dropdown v-if="menuDropdown" class="viewpost__menu-dropdown">
-								<dropdown-item @click="editPost">
-									<template #icon>
-										<edit-icon />
-									</template>
-									Edit
-								</dropdown-item>
-							</dropdown>
-						</div>
+							<template #toggle>
+								<div class="dropdown-menu-icon">
+									<more-icon />
+								</div>
+							</template>
+							<template #default="dropdown">
+								<dropdown
+									v-if="dropdown.active"
+									class="viewpost__menu-dropdown"
+								>
+									<dropdown-item @click="editPost">
+										<template #icon>
+											<edit-icon />
+										</template>
+										Edit
+									</dropdown-item>
+								</dropdown>
+							</template>
+						</dropdown-wrapper>
 					</div>
 				</div>
 			</div>
@@ -71,6 +77,7 @@ import { getPostBySlug } from "../../../modules/posts";
 // components
 import Loader from "../../../components/Loader";
 import Vote from "../../../components/post/Vote";
+import DropdownWrapper from "../../../components/dropdown/DropdownWrapper";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import DropdownItem from "../../../components/dropdown/DropdownItem";
 import Avatar from "../../../components/Avatar";
@@ -85,6 +92,7 @@ export default {
 		// components
 		Loader,
 		Vote,
+		DropdownWrapper,
 		Dropdown,
 		DropdownItem,
 		Avatar,
@@ -93,7 +101,6 @@ export default {
 	},
 	data() {
 		return {
-			menuDropdown: false,
 			post: {
 				loading: false
 			},
@@ -123,20 +130,6 @@ export default {
 		this.postBySlug();
 	},
 	methods: {
-		// event listener to hide dropdown by clicking outside
-		addPostViewDropdownListener() {
-			document.addEventListener("click", this.removePostViewDropdownListener);
-		},
-		removePostViewDropdownListener() {
-			this.toggleMenuDropdown();
-			document.removeEventListener(
-				"click",
-				this.removePostViewDropdownListener
-			);
-		},
-		toggleMenuDropdown() {
-			this.menuDropdown = !this.menuDropdown;
-		},
 		async postBySlug() {
 			this.post.loading = true;
 			const slug = this.$route.params.slug;
