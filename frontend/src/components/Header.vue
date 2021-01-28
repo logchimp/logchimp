@@ -61,6 +61,13 @@
 </template>
 
 <script>
+// packages
+import {
+	LayoutDashboard as DashboardIcon,
+	Settings as SettingsIcon,
+	LogOut as LogoutIcon
+} from "lucide-vue";
+
 // components
 import Navbar from "./Navbar";
 import DropdownWrapper from "./dropdown/DropdownWrapper";
@@ -69,11 +76,6 @@ import DropdownItem from "./dropdown/DropdownItem";
 import DropdownSpacer from "./dropdown/DropdownSpacer";
 import Button from "./Button";
 import Avatar from "./Avatar";
-
-// icons
-import DashboardIcon from "./icons/Dashboard";
-import SettingsIcon from "./icons/Settings";
-import LogoutIcon from "./icons/Logout";
 
 export default {
 	name: "Header",

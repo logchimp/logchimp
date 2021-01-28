@@ -13,13 +13,13 @@
 			</router-link>
 		</div>
 		<div v-if="success" class="card">
-			<success-icon style="fill: #64B285; stroke: white" />
+			<success-icon color="#64B285" />
 			<div>
 				Thank you verifying your account. You may close this window.
 			</div>
 		</div>
 		<div v-if="error" class="card">
-			<error-icon style="fill: #DE544E; stroke: white" />
+			<error-icon color="#DE544E" />
 			<div>
 				Invalid or expired activation link.
 			</div>
@@ -33,15 +33,14 @@
 </template>
 
 <script>
+// packages
+import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
+
 // modules
 import { verifyUserEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader";
-
-// icons
-import SuccessIcon from "../components/icons/Success";
-import ErrorIcon from "../components/icons/Error";
 
 export default {
 	name: "EmailVerification",
