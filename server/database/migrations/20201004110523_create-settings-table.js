@@ -9,6 +9,7 @@ exports.up = knex => {
 			table.string("logo");
 			table.string("icon");
 			table.string("accentColor", 6);
+			table.string("googleAnalyticsId");
 			table.boolean("isPoweredBy").defaultTo(true);
 		})
 		.then(() => {
