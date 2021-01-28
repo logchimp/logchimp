@@ -8360,10 +8360,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lucide-vue@^0.12.0-alpha.3:
-  version "0.12.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/lucide-vue/-/lucide-vue-0.12.0-alpha.3.tgz#1970ee21ebd84622cb1a605ed478b55f6200dab2"
-  integrity sha512-PQCSdIvkdC59jmR/tTzNK+AvASC85hUEQb/1fHHXaDdrd0fe2374iN4PuIrf7PLljxhUUf/Kb+7gBsOgJRCLqg==
+lucide-vue@^0.12.0-alpha.5:
+  version "0.12.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/lucide-vue/-/lucide-vue-0.12.0-alpha.5.tgz#df5f775e12af6e584605c9bcdbc7bdccd57abf4a"
+  integrity sha512-qFJwhMY8rhWOEkRVm5OwON2RYyO3PFrS1u0hmUojszPUkfbh848dpt3MgUyU/uehgrOOQtsId+0Q/+TJDIUe8w==
   dependencies:
     vue "^2.6.12"
 
