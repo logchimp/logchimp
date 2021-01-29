@@ -46,7 +46,7 @@
 		"vue-infinite-loading": "^2.4.5",
 		"vue-meta": "^2.4.0",
 		"vue-moment": "^4.1.0",
-		"vue-router": "^3.4.9",
+		"vue-router": "^3.5.1",
 		"vuedraggable": "^2.24.3",
 		"vuex": "^3.6.0",
 		"winston": "^3.3.3"
