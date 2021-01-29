@@ -125,10 +125,10 @@ const routes = [
 			{
 				path: "boards",
 				name: "Dashboard boards",
-				component: require("./pages/dashboard/Boards").default
+				component: require("./pages/dashboard/boards/Index").default
 			},
 			{
-				path: "board/:url/settings",
+				path: "boards/:url/settings",
 				name: "Dashboard board settings",
 				component: require("./pages/dashboard/boards/Settings").default
 			},
