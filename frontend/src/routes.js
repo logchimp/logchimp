@@ -21,12 +21,12 @@ const routes = [
 			{
 				path: "boards",
 				name: "Boards",
-				component: require("./pages/Boards").default
+				component: require("./pages/boards/Index").default
 			},
 			{
-				path: "board/:url",
+				path: "boards/:url",
 				name: "Board view",
-				component: require("./pages/board/_url").default
+				component: require("./pages/boards/_url").default
 			},
 			{
 				path: "roadmaps",
