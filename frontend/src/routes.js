@@ -138,7 +138,7 @@ const routes = [
 				component: require("./pages/dashboard/roadmaps/Index").default
 			},
 			{
-				path: "roadmap/:url/settings",
+				path: "roadmaps/:url/settings",
 				name: "Dashboard roadmap settings",
 				component: require("./pages/dashboard/roadmaps/Settings").default
 			},
