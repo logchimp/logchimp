@@ -16,7 +16,7 @@
 				<router-link
 					v-for="post in posts.data"
 					:key="post.postId"
-					:to="`/dashboard/post/${post.slug}`"
+					:to="`/dashboard/posts/${post.slug}`"
 					class="table-row"
 				>
 					<div class="table-data posts-table-title">

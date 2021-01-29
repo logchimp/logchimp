@@ -39,14 +39,14 @@ const routes = [
 				component: require("./pages/Settings").default
 			},
 			{
-				path: "/post/:slug",
+				path: "posts/:slug",
 				name: "Post view",
-				component: require("./pages/post/_slug/Index").default
+				component: require("./pages/posts/_slug/Index").default
 			},
 			{
-				path: "/post/:slug/edit",
+				path: "posts/:slug/edit",
 				name: "Post edit",
-				component: require("./pages/post/_slug/Edit").default
+				component: require("./pages/posts/_slug/Edit").default
 			}
 		]
 	},
