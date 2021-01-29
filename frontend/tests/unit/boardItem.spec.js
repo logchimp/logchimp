@@ -20,7 +20,7 @@ describe("board item", () => {
 				.find("[data-test=board-item]")
 				.findComponent(RouterLinkStub)
 				.props().to
-		).toBe("/board/feature-requests");
+		).toBe("/boards/feature-requests");
 	});
 
 	it("color is 'rgb(171, 202, 188)'", () => {

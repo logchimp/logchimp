@@ -152,7 +152,7 @@ export default {
 			this.post.voters.viewerVote = voters.viewerVote;
 		},
 		editPost() {
-			this.$router.push(`/post/${this.post.slug}/edit`);
+			this.$router.push(`/posts/${this.post.slug}/edit`);
 		}
 	},
 	metaInfo() {

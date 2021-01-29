@@ -51,7 +51,7 @@
 								<eye-off-icon v-else />
 							</div>
 							<router-link
-								:to="`/dashboard/roadmap/${roadmap.url}/settings`"
+								:to="`/dashboard/roadmaps/${roadmap.url}/settings`"
 								class="table-data table-data-icon"
 							>
 								<settings-icon />

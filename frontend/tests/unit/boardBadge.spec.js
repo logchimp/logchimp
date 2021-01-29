@@ -32,6 +32,6 @@ describe("board badge", () => {
 				.find("[data-test=board-badge]")
 				.findComponent(RouterLinkStub)
 				.props().to
-		).toBe("/board/feature-requests");
+		).toBe("/boards/feature-requests");
 	});
 });

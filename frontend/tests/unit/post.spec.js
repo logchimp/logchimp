@@ -34,7 +34,7 @@ describe("post", () => {
 				.find("[data-test=post-link]")
 				.findComponent(RouterLinkStub)
 				.props().to
-		).toBe("/post/post-title-qwJy9_3Sm9g3Qm3r9OQk");
+		).toBe("/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk");
 	});
 
 	it("title", () => {

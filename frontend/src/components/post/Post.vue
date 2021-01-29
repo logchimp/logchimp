@@ -10,7 +10,7 @@
 			<router-link
 				class="post-content-link"
 				data-test="post-link"
-				:to="`${dashboardUrl}/post/${postData.slug}`"
+				:to="`${dashboardUrl}/posts/${postData.slug}`"
 			>
 				<h5 class="post-content-title">
 					{{ postData.title }}

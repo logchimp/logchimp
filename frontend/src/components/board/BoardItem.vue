@@ -1,7 +1,7 @@
 <template>
 	<router-link
 		data-test="board-item"
-		:to="`/board/${url}`"
+		:to="`/boards/${url}`"
 		class="board-item"
 	>
 		<div

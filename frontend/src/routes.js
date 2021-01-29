@@ -21,12 +21,12 @@ const routes = [
 			{
 				path: "boards",
 				name: "Boards",
-				component: require("./pages/Boards").default
+				component: require("./pages/boards/Index").default
 			},
 			{
-				path: "board/:url",
+				path: "boards/:url",
 				name: "Board view",
-				component: require("./pages/board/_url").default
+				component: require("./pages/boards/_url").default
 			},
 			{
 				path: "roadmaps",
@@ -39,14 +39,14 @@ const routes = [
 				component: require("./pages/Settings").default
 			},
 			{
-				path: "/post/:slug",
-				name: "Post view",
-				component: require("./pages/post/_slug/Index").default
+				path: "posts/:slug",
+				name: "Posts view",
+				component: require("./pages/posts/_slug/Index").default
 			},
 			{
-				path: "/post/:slug/edit",
-				name: "Post edit",
-				component: require("./pages/post/_slug/Edit").default
+				path: "posts/:slug/edit",
+				name: "Posts edit",
+				component: require("./pages/posts/_slug/Edit").default
 			}
 		]
 	},
@@ -125,11 +125,11 @@ const routes = [
 			{
 				path: "boards",
 				name: "Dashboard boards",
-				component: require("./pages/dashboard/Boards").default
+				component: require("./pages/dashboard/boards/Index").default
 			},
 			{
-				path: "board/:url/settings",
-				name: "Dashboard board settings",
+				path: "boards/:url/settings",
+				name: "Dashboard boards settings",
 				component: require("./pages/dashboard/boards/Settings").default
 			},
 			{
@@ -138,19 +138,19 @@ const routes = [
 				component: require("./pages/dashboard/roadmaps/Index").default
 			},
 			{
-				path: "roadmap/:url/settings",
-				name: "Dashboard roadmap settings",
+				path: "roadmaps/:url/settings",
+				name: "Dashboard roadmaps settings",
 				component: require("./pages/dashboard/roadmaps/Settings").default
 			},
 			{
 				path: "posts",
 				name: "Dashboard posts",
-				component: require("./pages/dashboard/Posts").default
+				component: require("./pages/dashboard/posts/Index").default
 			},
 			{
-				path: "post/:slug",
-				name: "Dashboard post settings",
-				components: require("./pages/dashboard/post/_slug/Index")
+				path: "posts/:slug",
+				name: "Dashboard posts settings",
+				components: require("./pages/dashboard/posts/_slug/Index")
 			},
 			{
 				path: "users",

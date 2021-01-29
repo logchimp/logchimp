@@ -49,7 +49,7 @@
 				</div>
 				<div class="table-icon-group boards-table-icons">
 					<router-link
-						:to="`/board/${board.url}`"
+						:to="`/boards/${board.url}`"
 						class="table-data table-data-icon boards-table-icon-link"
 					>
 						<link-icon />
@@ -59,7 +59,7 @@
 						<eye-off-icon v-else />
 					</div>
 					<router-link
-						:to="`/dashboard/board/${board.url}/settings`"
+						:to="`/dashboard/boards/${board.url}/settings`"
 						class="table-data table-data-icon boards-table-icon-settings"
 					>
 						<settings-icon />
@@ -89,12 +89,12 @@ import {
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getAllBoards, createBoard } from "../../modules/boards";
+import { getAllBoards, createBoard } from "../../../modules/boards";
 
 // components
-import Button from "../../components/Button";
-import Table from "../../components/Table";
-import Loader from "../../components/Loader";
+import Button from "../../../components/Button";
+import Table from "../../../components/Table";
+import Loader from "../../../components/Loader";
 
 export default {
 	name: "DashboardBoards",
