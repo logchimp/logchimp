@@ -32,11 +32,11 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getPosts } from "../../modules/posts";
+import { getPosts } from "../../../modules/posts";
 
 // components
-import Post from "../../components/post/Post";
-import Loader from "../../components/Loader";
+import Post from "../../../components/post/Post";
+import Loader from "../../../components/Loader";
 
 export default {
 	name: "DashboardPosts",

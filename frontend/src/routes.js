@@ -145,12 +145,12 @@ const routes = [
 			{
 				path: "posts",
 				name: "Dashboard posts",
-				component: require("./pages/dashboard/Posts").default
+				component: require("./pages/dashboard/posts/Index").default
 			},
 			{
-				path: "post/:slug",
+				path: "posts/:slug",
 				name: "Dashboard post settings",
-				components: require("./pages/dashboard/post/_slug/Index")
+				components: require("./pages/dashboard/posts/_slug/Index")
 			},
 			{
 				path: "users",
