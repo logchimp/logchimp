@@ -26,11 +26,11 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getPublicBoards } from "../modules/boards";
+import { getPublicBoards } from "../../modules/boards";
 
 // components
-import BoardItem from "../components/board/BoardItem";
-import Loader from "../components/Loader";
+import BoardItem from "../../components/board/BoardItem";
+import Loader from "../../components/Loader";
 
 export default {
 	name: "Boards",

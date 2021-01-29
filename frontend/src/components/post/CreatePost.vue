@@ -113,7 +113,7 @@ export default {
 
 				// redirect to post
 				const slug = response.data.post.slug;
-				this.$router.push({ path: `${this.dashboardUrl}/post/${slug}` });
+				this.$router.push({ path: `${this.dashboardUrl}/posts/${slug}` });
 			} catch (error) {
 				tokenError(error);
 			} finally {
