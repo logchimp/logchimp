@@ -40,12 +40,12 @@ const routes = [
 			},
 			{
 				path: "posts/:slug",
-				name: "Post view",
+				name: "Posts view",
 				component: require("./pages/posts/_slug/Index").default
 			},
 			{
 				path: "posts/:slug/edit",
-				name: "Post edit",
+				name: "Posts edit",
 				component: require("./pages/posts/_slug/Edit").default
 			}
 		]
@@ -129,7 +129,7 @@ const routes = [
 			},
 			{
 				path: "boards/:url/settings",
-				name: "Dashboard board settings",
+				name: "Dashboard boards settings",
 				component: require("./pages/dashboard/boards/Settings").default
 			},
 			{
@@ -139,7 +139,7 @@ const routes = [
 			},
 			{
 				path: "roadmaps/:url/settings",
-				name: "Dashboard roadmap settings",
+				name: "Dashboard roadmaps settings",
 				component: require("./pages/dashboard/roadmaps/Settings").default
 			},
 			{
@@ -149,7 +149,7 @@ const routes = [
 			},
 			{
 				path: "posts/:slug",
-				name: "Dashboard post settings",
+				name: "Dashboard posts settings",
 				components: require("./pages/dashboard/posts/_slug/Index")
 			},
 			{
