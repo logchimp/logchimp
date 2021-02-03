@@ -50,3 +50,21 @@
 .dropdown-item-disabled
 	opacity: 0.7
 	cursor: not-allowed
+
+// dopdown item danger
+.dropdown-item.color-danger
+
+	&:hover
+		background-color: $color-danger
+
+		.dropdown-item-content
+			color: $white
+
+		.dropdown-item-icon svg
+			stroke: $white
+
+	.dropdown-item-content
+		color: $color-danger
+
+	.dropdown-item-icon svg
+		stroke: $color-danger
