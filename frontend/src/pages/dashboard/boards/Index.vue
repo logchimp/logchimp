@@ -29,7 +29,7 @@
 				<div class="table-header-item boards-table-icons" />
 			</template>
 			<div
-				v-for="board in boards"
+				v-for="(board, index) in boards"
 				:key="board.boardId"
 				class="table-row"
 			>
@@ -58,12 +58,40 @@
 						<eye-icon v-if="board.display" />
 						<eye-off-icon v-else />
 					</div>
-					<router-link
-						:to="`/dashboard/boards/${board.url}/settings`"
-						class="table-data table-data-icon boards-table-icon-settings"
-					>
-						<settings-icon />
-					</router-link>
+					<dropdown-wrapper>
+						<template #toggle>
+							<div
+								class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
+							>
+								<more-icon />
+							</div>
+						</template>
+						<template #default="dropdown">
+							<dropdown v-if="dropdown.active">
+								<dropdown-item
+									@click="
+										$router.push(`/dashboard/boards/${board.url}/settings`)
+									"
+								>
+									<template #icon>
+										<settings-icon />
+									</template>
+									Settings
+								</dropdown-item>
+								<dropdown-spacer />
+								<dropdown-item
+									:disabled="deleteBoardPermissionDisabled"
+									class="color-danger"
+									@click="deleteBoard(board.boardId, index)"
+								>
+									<template #icon>
+										<delete-icon />
+									</template>
+									Delete
+								</dropdown-item>
+							</dropdown>
+						</template>
+					</dropdown-wrapper>
 				</div>
 			</div>
 			<infinite-loading @infinite="getBoards">
@@ -84,16 +112,26 @@ import {
 	Link as LinkIcon,
 	Eye as EyeIcon,
 	EyeOff as EyeOffIcon,
+	MoreHorizontal as MoreIcon,
+	Trash2 as DeleteIcon,
 	Settings as SettingsIcon
 } from "lucide-vue";
 import InfiniteLoading from "vue-infinite-loading";
 
 // modules
-import { getAllBoards, createBoard } from "../../../modules/boards";
+import {
+	getAllBoards,
+	createBoard,
+	deleteBoard
+} from "../../../modules/boards";
 
 // components
 import Button from "../../../components/Button";
 import Table from "../../../components/Table";
+import DropdownWrapper from "../../../components/dropdown/DropdownWrapper";
+import Dropdown from "../../../components/dropdown/Dropdown";
+import DropdownItem from "../../../components/dropdown/DropdownItem";
+import DropdownSpacer from "../../../components/dropdown/DropdownSpacer";
 import Loader from "../../../components/Loader";
 
 export default {
@@ -105,13 +143,19 @@ export default {
 		// component
 		Button,
 		Table,
+		DropdownWrapper,
+		Dropdown,
+		DropdownItem,
+		DropdownSpacer,
 		Loader,
 
 		// icons
 		LinkIcon,
 		EyeIcon,
 		EyeOffIcon,
-		SettingsIcon
+		MoreIcon,
+		SettingsIcon,
+		DeleteIcon
 	},
 	data() {
 		return {
@@ -124,6 +168,11 @@ export default {
 		createBoardPermissionDisabled() {
 			const permissions = this.$store.getters["user/getPermissions"];
 			const checkPermission = permissions.includes("board:create");
+			return !checkPermission;
+		},
+		deleteBoardPermissionDisabled() {
+			const permissions = this.$store.getters["user/getPermissions"];
+			const checkPermission = permissions.includes("board:destroy");
 			return !checkPermission;
 		}
 	},
@@ -155,6 +204,18 @@ export default {
 			} catch (error) {
 				console.error(error);
 				$state.error();
+			}
+		},
+		async deleteBoard(id, index) {
+			try {
+				const response = await deleteBoard(id);
+
+				if (response.status === 204) {
+					this.boards.splice(index, 1);
+					console.log(`[Dashboard] Delete board (${id})`);
+				}
+			} catch (error) {
+				console.error(error);
 			}
 		}
 	},
