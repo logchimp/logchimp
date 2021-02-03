@@ -121,6 +121,28 @@ export const updateBoard = async board => {
 };
 
 /**
+ * delete board
+ *
+ * @param {string} id board id
+ *
+ * @returns {object} response
+ */
+export const deleteBoard = async id => {
+	const token = store.getters["user/getAuthToken"];
+
+	return await axios({
+		method: "DELETE",
+		url: "/api/v1/boards",
+		data: {
+			id
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
+};
+
+/**
  * Check board name
  *
  * @param {string} name board name
