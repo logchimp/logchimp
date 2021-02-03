@@ -33,10 +33,7 @@
 						>
 							{{ post.createdAt | moment("from") }}
 						</time>
-						<dropdown-wrapper
-							v-if="postAuthor"
-							class="dropdown-menu-container viewpost__menu"
-						>
+						<dropdown-wrapper v-if="postAuthor" class="viewpost__menu">
 							<template #toggle>
 								<div class="dropdown-menu-icon">
 									<more-icon />
