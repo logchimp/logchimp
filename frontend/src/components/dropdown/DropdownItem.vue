@@ -1,5 +1,11 @@
 <template>
-	<div class="dropdown-item" @click="click">
+	<div
+		class="dropdown-item"
+		:class="{
+			'dropdown-item-disabled': disabled
+		}"
+		@click="click"
+	>
 		<div class="dropdown-item-icon">
 			<slot name="icon" />
 		</div>
