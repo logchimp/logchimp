@@ -53,7 +53,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.10",
-		"@babel/preset-env": "^7.12.11",
+		"@babel/preset-env": "^7.12.13",
 		"@vue/cli-plugin-babel": "^4.5.11",
 		"@vue/cli-plugin-eslint": "^4.5.7",
 		"@vue/cli-service": "^4.5.11",
