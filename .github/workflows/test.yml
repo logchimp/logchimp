@@ -2,11 +2,9 @@ name: Test
 
 on:
   push:
-    paths:
-      - "frontend/**"
-      - "server/**"
-      - "package.json"
-      - "yarn.lock"
+    - "server/**"
+    - "package.json"
+    - "yarn.lock"
   workflow_dispatch:
 
 jobs:
