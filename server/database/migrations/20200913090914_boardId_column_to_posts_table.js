@@ -7,7 +7,8 @@ exports.up = knex => {
 			table
 				.uuid("boardId")
 				.references("boardId")
-				.inTable("boards");
+				.inTable("boards")
+				.onDelete("set null");
 		})
 		.then(() => {
 			logger.info({
