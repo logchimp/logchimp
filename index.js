@@ -3,7 +3,7 @@ const startTime = Date.now();
 const path = require("path");
 const express = require("express");
 
-const app = require("./server/app");
+const app = require("./server");
 
 // utils
 const logger = require("./server/utils/logger");
