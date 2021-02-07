@@ -3,14 +3,11 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const routes = require("./routes");
-const database = require("./database");
 
 const app = express();
 
 // utils
-const logger = require("./utils/logger");
 const logchimpConfig = require("./utils/logchimpConfig");
-
 const config = logchimpConfig();
 if (!config) {
 	console.log(
@@ -30,30 +27,5 @@ app.use(cors());
 
 // import all routes
 app.use(routes);
-
-database.migrate
-	.latest()
-	.then(() => {
-		logger.info("Database migration complete");
-	})
-	.catch(err => {
-		logger.error({
-			code: "DATABASE_MIGRATIONS",
-			message: err
-		});
-
-		if (err.message === "SSL/TLS required") {
-			logger.error({
-				code: "DATABASE_CONNECTION",
-				message: "Enable SSL/TLS on your database connection"
-			});
-
-			logger.error({
-				code: "DATABASE_CONNECTION",
-				message: `Connecting to database at ${err.address}:${err.port}`,
-				err
-			});
-		}
-	});
 
 module.exports = app;
