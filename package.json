@@ -18,7 +18,7 @@
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"server:dev": "nodemon index.js",
 		"server:start": "node index.js",
-		"server:test": "jest --config ./jest.config.js"
+		"server:test": "jest --config ./jest.config.js --forceExit --detectOpenHandles"
 	},
 	"dependencies": {
 		"axios": "^0.21.1",
