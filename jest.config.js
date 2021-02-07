@@ -1,3 +1,5 @@
 module.exports = {
-	verbose: true
+	displayName: "server",
+	verbose: true,
+	setupFilesAfterEnv: ["./tests/setupTest.js"]
 };
