@@ -18,7 +18,7 @@
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"server:dev": "nodemon index.js",
 		"server:start": "node index.js",
-		"server:test": "jest --config ./server/jest.config.js"
+		"server:test": "jest --config ./jest.config.js --forceExit --detectOpenHandles"
 	},
 	"dependencies": {
 		"axios": "^0.21.1",
@@ -39,6 +39,7 @@
 		"nodemailer": "^6.4.17",
 		"pg": "^8.5.1",
 		"sass-loader": "^10.1.1",
+		"supertest": "^6.1.3",
 		"uuid": "^8.3.2",
 		"vue": "^2.6.12",
 		"vue-clickaway": "^2.2.2",
