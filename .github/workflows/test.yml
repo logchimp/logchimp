@@ -5,6 +5,7 @@ on:
     paths:
       - "frontend/**"
       - "server/**"
+      - "tests/**"
       - "package.json"
       - "yarn.lock"
   workflow_dispatch:
