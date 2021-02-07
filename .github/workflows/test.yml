@@ -61,4 +61,5 @@ jobs:
           NODE_ENV: "testing"
 
       - name: Output logs
+        if: always()
         run: cat ./content/logs/logchimp-all.log
