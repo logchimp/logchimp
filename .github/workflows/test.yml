@@ -3,7 +3,6 @@ name: Test
 on:
   push:
     paths:
-      - "frontend/**"
       - "server/**"
       - "tests/**"
       - "package.json"
@@ -57,7 +56,7 @@ jobs:
           sh ./scripts/create-config.sh
 
       - name: Run 'server' tests
-        run: yarn run server:test
+        run: yarn run test
         env:
           NODE_ENV: "testing"
 
