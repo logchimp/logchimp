@@ -16,6 +16,9 @@ tasks:
     openMode: tab-after
     command: |
       gp sync-await setup
+      git clone https://github.com/logchimp/theme.git
+      cd theme
+      yarn
       IS_GITPOD=true yarn run dev
 
 ports:
