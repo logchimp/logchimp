@@ -3,9 +3,6 @@
 # Create postgresql database
 psql -c "CREATE DATABASE logchimp"
 
-# Install packages
-yarn install
-
 # Create logchimp.config.json file
 PG_DATABASE="logchimp" \
 PG_HOST="localhost" \
