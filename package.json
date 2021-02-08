@@ -12,9 +12,9 @@
 	},
 	"scripts": {
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
-		"dev": "cd server && nodemon app.js",
-		"start": "cd server && node app.js",
-		"test": "jest --config ./server/jest.config.js"
+		"dev": "nodemon index.js",
+		"start": "node index.js",
+		"test": "jest --config ./jest.config.js --forceExit --detectOpenHandles"
 	},
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
@@ -24,18 +24,19 @@
 		"fs-extra": "^9.1.0",
 		"html-to-text": "^6.0.0",
 		"jsonwebtoken": "^8.5.1",
-		"knex": "^0.21.16",
+		"knex": "^0.21.17",
 		"lodash": "^4.17.20",
 		"md5": "^2.3.0",
 		"multer": "^1.4.2",
 		"nanoid": "^3.1.20",
 		"nodemailer": "^6.4.17",
 		"pg": "^8.5.1",
+		"supertest": "^6.1.3",
 		"uuid": "^8.3.2",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
-		"eslint": "^7.18.0",
+		"eslint": "^7.19.0",
 		"eslint-config-prettier": "^7.2.0",
 		"eslint-plugin-jest": "^24.1.3",
 		"eslint-plugin-prettier": "^3.3.1",
