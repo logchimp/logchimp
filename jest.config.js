@@ -1,6 +1,5 @@
 module.exports = {
 	displayName: "server",
 	verbose: true,
-	setupFilesAfterEnv: ["./tests/setupTest.js"],
-	testPathIgnorePatterns: ["./frontend"]
+	setupFilesAfterEnv: ["./tests/setupTest.js"]
 };
