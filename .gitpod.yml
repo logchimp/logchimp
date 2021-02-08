@@ -10,7 +10,7 @@ tasks:
     openMode: tab-after
     command: |
       gp sync-await setup
-      yarn
+      yarn --production=false
       NODE_ENV="development" yarn run dev
   - name: Client
     openMode: tab-after
@@ -18,7 +18,7 @@ tasks:
       gp sync-await setup
       git clone https://github.com/logchimp/theme.git
       cd theme
-      yarn
+      yarn --production=false
       IS_GITPOD=true yarn run dev
 
 ports:
