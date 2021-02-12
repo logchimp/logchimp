@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"middleware": {
 		"auth": {
 			"accessDenied": "Access denied",
