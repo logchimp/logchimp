@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "allowJs": true,
+		"outDir": "./dist",
+    "removeComments": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true
+  },
+	"include": ["./server/**/*"]
+}
