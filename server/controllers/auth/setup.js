@@ -5,7 +5,7 @@ const database = require("../../database");
 const createUser = require("../../services/auth/createUser");
 
 // utils
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 
 module.exports = async (req, res, next) => {
 	const { siteTitle, name, email, password } = req.body;

@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const database = require("../../database");
 
 // utils
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 const logger = require("../../utils/logger");
 
 module.exports = async (req, res) => {

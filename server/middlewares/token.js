@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const database = require("../database");
-const error = require("../errorResponse.json");
+const error = require("../errorResponse");
 
 // utils
 const logger = require("../utils/logger");

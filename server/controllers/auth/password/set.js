@@ -4,7 +4,7 @@ const database = require("../../../database");
 // utils
 const { hashPassword } = require("../../../utils/password");
 const logger = require("../../../utils/logger");
-const error = require("../../../errorResponse.json");
+const error = require("../../../errorResponse");
 
 exports.set = async (req, res) => {
 	const { userId, email } = req.user;

@@ -4,7 +4,7 @@ const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
 const logchimpConfig = require("../../utils/logchimpConfig");
 const config = logchimpConfig();
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 
 exports.login = async (req, res) => {
 	const user = req.user;

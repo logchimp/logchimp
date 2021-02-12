@@ -7,7 +7,7 @@ const database = require("../../database");
 // utils
 const logger = require("../../utils/logger");
 
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 
 exports.create = async (req, res) => {
 	const userId = req.user.userId;

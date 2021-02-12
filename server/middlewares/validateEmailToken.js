@@ -7,7 +7,7 @@ const database = require("../database");
 const logger = require("../utils/logger");
 const logchimpConfig = require("../utils/logchimpConfig");
 const config = logchimpConfig();
-const error = require("../errorResponse.json");
+const error = require("../errorResponse");
 
 module.exports = async (req, res, next) => {
 	const token = req.body.token;

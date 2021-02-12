@@ -1,5 +1,5 @@
 // utils
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 
 exports.accessDashboard = (req, res) => {
 	const permissions = req.user.permissions;

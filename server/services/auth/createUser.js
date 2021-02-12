@@ -12,7 +12,7 @@ const verifyEmail = require("../../services/auth/verifyEmail");
 const { createToken } = require("../../utils/token");
 const { hashPassword } = require("../../utils/password");
 const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 
 // configuration
 const logchimpConfig = require("../../utils/logchimpConfig");

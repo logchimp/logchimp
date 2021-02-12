@@ -3,7 +3,7 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+const error = require("../../errorResponse");
 
 module.exports = async (req, res) => {
 	const permissions = req.user.permissions;

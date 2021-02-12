@@ -3,7 +3,7 @@ const verifyEmail = require("../../../services/auth/verifyEmail");
 
 // utils
 const logger = require("../../../utils/logger");
-const error = require("../../../errorResponse.json");
+const error = require("../../../errorResponse");
 
 exports.verify = async (req, res) => {
 	const { userId, email, isVerified } = req.user;
