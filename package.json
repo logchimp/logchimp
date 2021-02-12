@@ -1,7 +1,7 @@
 {
 	"name": "logchimp",
 	"description": "A open-source software to track user feedback",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"private": true,
 	"repository": {
 		"type": "git",
