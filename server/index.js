@@ -3,12 +3,12 @@ const startTime = Date.now();
 const path = require("path");
 const express = require("express");
 
-const app = require("./server");
-const database = require("./server/database");
+const app = require("./app");
+const database = require("./database");
 
 // utils
-const logger = require("./server/utils/logger");
-const logchimpConfig = require("./server/utils/logchimpConfig");
+const logger = require("./utils/logger");
+const logchimpConfig = require("./utils/logchimpConfig");
 const config = logchimpConfig();
 
 // Serve vue app
