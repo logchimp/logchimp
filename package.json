@@ -20,7 +20,7 @@
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
-		"express-rate-limit": "^5.2.5",
+		"express-rate-limit": "^5.2.6",
 		"fs-extra": "^9.1.0",
 		"html-to-text": "^7.0.0",
 		"jsonwebtoken": "^8.5.1",
