@@ -11,10 +11,12 @@
 		"url": "https://github.com/logchimp/logchimp/issues"
 	},
 	"scripts": {
+		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"server:dev": "pnpm --filter @logchimp/api dev",
 		"server:start": "pnpm --filter @logchimp/api start",
 		"build:theme": "pnpm --filter @logchimp/theme build",
-		"biome:format": "biome format --write ."
+		"biome:format": "biome format --write .",
+		"docker:build": "docker build --build-arg NODE_VERSION=$NODE_VERSION -t logchimp-core ."
 	},
 	"devDependencies": {
 		"nodemon": "3.0.2",
