@@ -11,6 +11,7 @@ exports.up = knex => {
 			table.string("accentColor", 6);
 			table.string("googleAnalyticsId");
 			table.boolean("isPoweredBy").defaultTo(true);
+			table.boolean("allowSignup").defaultTo(true);
 		})
 		.then(() => {
 			logger.info({
