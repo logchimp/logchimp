@@ -10,6 +10,20 @@ const error = require("../../errorResponse.json");
 module.exports = async (req, res, next) => {
 	const { siteTitle, name, email, password } = req.body;
 
+	if (!email) {
+		return res.status(400).send({
+			message: error.api.authentication.noEmailProvided,
+			code: "EMAIL_MISSING"
+		});
+	}
+
+	if (!password) {
+		return res.status(400).send({
+			message: error.api.authentication.noPasswordProvided,
+			code: "PASSWORD_MISSING"
+		});
+	}
+
 	const isSetup = await database
 		.select()
 		.from("users")

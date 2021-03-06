@@ -5,8 +5,21 @@ const createUser = require("../../services/auth/createUser");
 const logger = require("../../utils/logger");
 
 exports.signup = async (req, res, next) => {
-	const email = req.body.email;
-	const password = req.body.password;
+	const { email, password } = req.body;
+
+	if (!email) {
+		return res.status(400).send({
+			message: error.api.authentication.noEmailProvided,
+			code: "EMAIL_MISSING"
+		});
+	}
+
+	if (!password) {
+		return res.status(400).send({
+			message: error.api.authentication.noPasswordProvided,
+			code: "PASSWORD_MISSING"
+		});
+	}
 
 	try {
 		const user = await createUser(req, res, next, {
