@@ -1,8 +1,5 @@
 const startTime = Date.now();
 
-const path = require("path");
-const express = require("express");
-
 const app = require("./server");
 const database = require("./server/database");
 
@@ -11,20 +8,12 @@ const logger = require("./server/utils/logger");
 const logchimpConfig = require("./server/utils/logchimpConfig");
 const config = logchimpConfig();
 
-// Serve vue app
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.resolve(__dirname, "public")));
-	app.get(/.*/, (req, res) =>
-		res.sendFile(path.resolve(__dirname, "public/index.html"))
-	);
-}
-
 database.migrate
 	.latest()
 	.then(() => {
 		logger.info("Database migration complete");
 	})
-	.catch(err => {
+	.catch((err) => {
 		logger.error({
 			code: "DATABASE_MIGRATIONS",
 			message: err
