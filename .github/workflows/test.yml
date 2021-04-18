@@ -50,6 +50,8 @@ jobs:
           SECRET_KEY=${{ secrets.TEST_SECRET_KEY }} \
           sh ./scripts/create-config.sh
 
+          find ./logchimp.config.json
+
       - name: Run 'server' tests
         run: yarn run server:test
         env:
