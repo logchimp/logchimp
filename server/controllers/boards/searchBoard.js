@@ -9,16 +9,16 @@ module.exports = async (req, res) => {
 
 	try {
 		let boards
-			if(name == "" | !name | name == null) {
-				boards = await database
-					.select("boardId", "name", "url", "color")
-					.from("boards").whereNotNull('boardId')
-			} else {
-				boards = await database
-					.select("boardId", "name", "url", "color")
-					.from("boards")
-					.where("name", "ILIKE", `${name}%`);
-			}
+		if(name == "" | !name | name == null) {
+			boards = await database
+				.select("boardId", "name", "url", "color")
+				.from("boards").whereNotNull('boardId')
+		} else {
+			boards = await database
+				.select("boardId", "name", "url", "color")
+				.from("boards")
+				.where("name", "ILIKE", `${name}%`);
+		}
 
 		res.status(200).send({
 			boards

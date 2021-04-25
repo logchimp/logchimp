@@ -11,7 +11,7 @@ const exists = require("../../middlewares/boardExists");
 
 router.get("/boards", boards.filter);
 router.get("/boards/get", boards.get);
-router.get("/boards/search/:name?", boards.searchBoard);
+router.get("/boards/search/:name?", middleware.apiAuth, boards.searchBoard);
 router.get("/boards/:url", exists, boards.boardByUrl);
 
 router.post("/boards/check-name", middleware.apiAuth, boards.checkName);

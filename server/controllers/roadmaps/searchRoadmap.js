@@ -17,10 +17,18 @@ module.exports = async (req, res) => {
 	}
 
 	try {
-		const roadmaps = await database
-			.select("id", "name", "url", "color")
-			.from("roadmaps")
-			.where("name", "ILIKE", `${name}%`);
+		let roadmaps
+		
+		if(name == "" | !name | name == null) {
+			roadmaps = await database
+				.select("id", "name", "url", "color")
+				.from("roadmaps").whereNotNull('id')
+		} else {
+			roadmaps = await database
+				.select("id", "name", "url", "color")
+				.from("roadmaps")
+				.where("name", "ILIKE", `${name}%`);
+		}
 
 		res.status(200).send({
 			roadmaps
