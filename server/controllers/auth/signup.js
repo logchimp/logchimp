@@ -8,8 +8,21 @@ const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 exports.signup = async (req, res, next) => {
-	const email = req.body.email;
-	const password = req.body.password;
+	const { email, password } = req.body;
+
+	if (!email) {
+		return res.status(400).send({
+			message: error.api.authentication.noEmailProvided,
+			code: "EMAIL_MISSING"
+		});
+	}
+
+	if (!password) {
+		return res.status(400).send({
+			message: error.api.authentication.noPasswordProvided,
+			code: "PASSWORD_MISSING"
+		});
+	}
 
 	try {
 		const settings = await database.select().from("settings").first();
