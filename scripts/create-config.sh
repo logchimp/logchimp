@@ -7,16 +7,16 @@ FILE="{\n"
 ##########
 
 # set default postgresql port
-if [[ $PG_PORT = "" ]]; then
+if [ -z "$PG_PORT" ]; then
 	PG_PORT=5432
 fi
 
 # set ssl default to false
-if [[ $PG_SSL = "" ]]; then
+if [ -z "$PG_SSL" ]; then
 	PG_SSL=false
 fi
 
-if [[ $PG_HOST != "" ]] && [[ $PG_USER != "" ]] && [[ $PG_DATABASE != "" ]] && [[ $PG_PORT != "" ]] && [[ $PG_SSL != "" ]]; then
+if [ -n "$PG_HOST" ] && [ -n "$PG_USER" ] && [ -n "$PG_DATABASE" ] && [ $PG_PORT -ne 0 ] && [ -n "$PG_SSL" ]; then
 	FILE="$FILE
 	\t\"database\": {\n
     \t\t\"host\": \"$PG_HOST\",\n
@@ -25,7 +25,7 @@ if [[ $PG_HOST != "" ]] && [[ $PG_USER != "" ]] && [[ $PG_DATABASE != "" ]] && [
     \t\t\"name\": \"$PG_DATABASE\",\n
     \t\t\"port\": $PG_PORT,\n
     \t\t\"ssl\": $PG_SSL\n
-  \t},"
+  \t}"
 fi
 
 ##########
@@ -33,16 +33,16 @@ fi
 ##########
 
 # set default server port
-if [[ $SERVER_PORT = "" ]]; then
+if [ -z "$SERVER_PORT" ]; then
 	SERVER_PORT=3000
 fi
 
-if [[ $SERVER_PORT != "" ]] && [[ $SECRET_KEY != "" ]]; then
-	FILE="$FILE\n
+if [ $SERVER_PORT -ne 0 ] && [ -n "$SECRET_KEY" ]; then
+	FILE="$FILE,\n
   \t\"server\": {\n
 		\t\t\"port\": $SERVER_PORT,\n
     \t\t\"secretKey\": \"$SECRET_KEY\"\n
-  \t},"
+  \t}"
 fi
 
 ##########
@@ -50,12 +50,12 @@ fi
 ##########
 
 # set default mail server port
-if [[ $MAIL_PORT = "" ]]; then
+if [ -z "$MAIL_PORT" ]; then
 	MAIL_PORT=587
 fi
 
-if [[ $MAIL_SERVICE != "" ]] && [[ $MAIL_HOST != "" ]] && [[ $MAIL_USER != "" ]] && [[ $MAIL_PORT != "" ]]; then
-	FILE="$FILE\n
+if [ -n "$MAIL_SERVICE" ] && [ -n "$MAIL_HOST" ] && [ -n "$MAIL_USER" ] && [ $MAIL_PORT -ne 0 ]; then
+	FILE="$FILE,\n
 	\t\"mail\": {\n
 		\t\t\"service\": \"$MAIL_SERVICE\",\n
 		\t\t\"host\": \"$MAIL_HOST\",\n
