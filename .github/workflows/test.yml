@@ -54,7 +54,6 @@ jobs:
           PG_PASSWORD=${{ secrets.TEST_DB_PASSWORD }} \
           PG_PORT=5432 \
           SECRET_KEY=${{ secrets.TEST_SECRET_KEY }} \
-          # dummy value for mail configuration
           MAIL_SERVICE="logchimp" \
           MAIL_HOST="smtp.example.com" \
           MAIL_USER="logchimp@example.com" \
