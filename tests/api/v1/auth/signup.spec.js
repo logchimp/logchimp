@@ -29,5 +29,21 @@ describe("signup", () => {
 		expect(response.status).toBe(400);
 		expect(response.body.code).toBe("PASSWORD_MISSING");
 	});
+
+	it("should not be allowed", async () => {
+		// set allowSignup to false in settings table
+		await database.instance.update({
+			allowSignup: false,
+		})
+		.from("settings");
+
+		const response = await supertest(app).post("/api/v1/auth/signup").send({
+			email: "user@example.com",
+			password: "password"
+		});
+
+		expect(response.status).toBe(400);
+		expect(response.body.code).toBe("SIGNUP_NOT_ALLOWED");
+	})
 });
 
