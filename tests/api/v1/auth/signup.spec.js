@@ -30,6 +30,21 @@ describe("signup", () => {
 		expect(response.body.code).toBe("PASSWORD_MISSING");
 	});
 
+	it("should create new user", async () => {
+		const response = await supertest(app).post("/api/v1/auth/signup").send({
+			email: "user@example.com",
+			password: "password"
+		});
+
+		const user = response.body.user;
+		expect(response.status).toBe(201);
+		expect(user).toMatchObject({
+      name: null,
+      username: 'user',
+      email: 'user@example.com',
+    })
+	})
+
 	it("should not be allowed", async () => {
 		// set allowSignup to false in settings table
 		await database.instance.update({
