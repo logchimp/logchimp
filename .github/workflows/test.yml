@@ -3,6 +3,7 @@ name: Test
 on:
   push:
     paths:
+      - ".github/workflows/test.yml"
       - "server/**"
       - "tests/**"
       - "package.json"
@@ -53,6 +54,9 @@ jobs:
           PG_PASSWORD=${{ secrets.TEST_DB_PASSWORD }} \
           PG_PORT=5432 \
           SECRET_KEY=${{ secrets.TEST_SECRET_KEY }} \
+          MAIL_SERVICE="logchimp" \
+          MAIL_HOST="smtp.example.com" \
+          MAIL_USER="logchimp@example.com" \
           sh ./scripts/create-config.sh
 
       - name: Run 'server' tests
