@@ -5,17 +5,18 @@ tasks:
   - name: "Setup workspace"
     init: |
       bash ./scripts/gitpod-init.sh
-      gp sync-done yarn-install
+      gp sync-done setup
   - name: Server
     openMode: tab-after
     command: |
-      gp sync-await yarn-install
-      NODE_ENV="development" yarn run server:dev
-  - name: Frontend
+      gp sync-await setup
+      NODE_ENV="development" yarn run dev
+  - name: Client
     openMode: tab-after
     command: |
-      gp sync-await yarn-install
-      IS_GITPOD=true yarn run frontend:dev
+      gp sync-await setup
+      cd theme
+      IS_GITPOD=true yarn run dev
 
 ports:
   - port: 8080

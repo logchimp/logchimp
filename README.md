@@ -8,7 +8,7 @@
 </h1>
 
 <p align="center">
-	Track user feedback to build better products
+	Track your customers feedback to build better products with LogChimp
 </p>
 
 <p align="center">
@@ -24,12 +24,15 @@
 	<a href="https://gitpod.io/#https://github.com/logchimp/logchimp">
 		<img src="https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod" alt="Gitpod ready-to-code" />
 	</a>
+	<a href="https://opencollective.com/logchimp">
+		<img src="https://img.shields.io/badge/contribute-Open%20Collective-7FADF2?logo=open-collective" alt="Contribute on Open Collective" />
+	</a>
 </p>
 
 <h3 align="center">
   <a href="https://logchimp.codecarrot.net/docs/">Docs</a>
   <span> · </span>
-  <a href="https://logchimp.codecarrot.net/docs/roadmap/contributing">Contribute</a>
+  <a href="https://logchimp.codecarrot.net/docs/contributing">Contribute</a>
   <span> · </span>
   <a href="https://twitter.com/logchimp">Twitter</a>
   <span> · </span>
@@ -42,7 +45,7 @@
 
 ### 🧐 About
 
-LogChimp is self-hosted platform for products makers to get feedback from their users and start building better version of your product.
+LogChimp is an open source software to capture your customers feedback and inform your product decisions.
 
 ### 🤝🏻 Community
 
@@ -56,15 +59,15 @@ Stay up to date on the development of LogChimp you can star this repository, fol
 Contributing to LogChimp project is fairly easy.
 
 - **Express** - Node.js web framework
-- **PostgreSQL** - Backend database
-- **Vue.js** - Front end
-
-### 🙏🏻 Credits
-
-- Development is sponsored by [CodeCarrot](https://www.codecarrot.net/).
+- **PostgreSQL** - Database
+- **Vue.js** - [LogChimp default theme](https://github.com/logchimp/theme)
 
 &nbsp;
 
 # 🎁 LogChimp Sponsors
 
 Big shout-out to our [sponsors and partners](https://logchimp.codecarrot.net/partners). If you're interested in sponsoring LogChimp and supporting the project, please reach out to us on [LogChimp Discord server](https://discordapp.com/invite/A7mztcC/).
+
+<a href="https://codecarrot.net/?utm_source=github&utm_medium=referral&utm_campaign=logchimp-sponsorship">
+	<img width="200" src="https://codecarrot.net/images/codecarrot_logo.svg" alt="CodeCarrot logo">
+</a>

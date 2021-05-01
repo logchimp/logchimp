@@ -2,6 +2,11 @@ name: Test
 
 on:
   push:
+    paths:
+      - "server/**"
+      - "tests/**"
+      - "package.json"
+      - "yarn.lock"
   workflow_dispatch:
 
 jobs:
@@ -11,7 +16,7 @@ jobs:
     strategy:
       matrix:
         node: [12, 14]
-        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-18.04, ubuntu-20.04]
 
     services:
       postgres:
@@ -28,7 +33,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    name: Node ${{ matrix.node }} - ${{ matrix.os }}
+    name: OS ${{ matrix.os }} - Node v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
 
@@ -50,12 +55,11 @@ jobs:
           SECRET_KEY=${{ secrets.TEST_SECRET_KEY }} \
           sh ./scripts/create-config.sh
 
-          find ./logchimp.config.json
-
       - name: Run 'server' tests
-        run: yarn run server:test
+        run: yarn run test
         env:
           NODE_ENV: "testing"
 
       - name: Output logs
+        if: always()
         run: cat ./content/logs/logchimp-all.log
