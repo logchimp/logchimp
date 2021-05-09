@@ -11,6 +11,6 @@ router.get("/webhooks/:id", webhooks.getOne);
 router.post("/webhooks", webhooks.create);
 
 router.put("/webhooks/:id", webhooks.update);
-router.delete("/webhooks/:id", webhooks.destory);
+router.delete("/webhooks/:id", webhooks.destroy);
 
 module.exports = router;
