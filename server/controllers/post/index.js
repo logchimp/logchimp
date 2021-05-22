@@ -4,10 +4,14 @@ const postBySlug = require("./postBySlug");
 const updatePost = require("./updatePost");
 const deleteById = require("./deleteById");
 
+// activity
+const activity = require("./activity");
+
 module.exports = {
 	...create,
 	...filterPost,
 	...postBySlug,
 	...updatePost,
-	...deleteById
+	...deleteById,
+	activity
 };

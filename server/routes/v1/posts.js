@@ -17,4 +17,7 @@ router.patch("/posts", middleware.apiAuth, exists, post.updatePost);
 
 router.delete("/posts", middleware.apiAuth, exists, post.deleteById);
 
+// post activity
+router.get("/posts/:post_id/activity", post.activity.get)
+
 module.exports = router;
