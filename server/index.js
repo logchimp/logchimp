@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const routes = require("./routes");
 
 const app = express();
+app.disable("x-powered-by");
 
 // utils
 const logchimpConfig = require("./utils/logchimpConfig");
