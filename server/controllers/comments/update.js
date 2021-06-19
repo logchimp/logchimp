@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
 				created_at: new Date().toJSON(),
 				updated_at: new Date().toJSON()
 			})
-			.from("post_activity")
+			.from("posts_comments")
 			.where({ id: comment_id })
 			.returning("*");
 

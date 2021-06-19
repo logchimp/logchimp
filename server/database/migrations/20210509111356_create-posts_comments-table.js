@@ -3,9 +3,9 @@ const logger = require("../../utils/logger");
 
 exports.up = (knex) => {
 	return knex.schema
-		.createTable("post_activity", (table) => {
+		.createTable("posts_comments", (table) => {
 			table.uuid("id").notNullable().primary();
-			table.uuid("parent_id").references("id").inTable("post_activity");
+			table.uuid("parent_id").references("id").inTable("posts_comments");
 			table.string("body", 1000).notNullable();
 			table.string("type", 50).notNullable();
 			table
@@ -27,7 +27,7 @@ exports.up = (knex) => {
 		.then(() => {
 			logger.info({
 				code: "DATABASE_MIGRATIONS",
-				message: "Creating table: post_activity"
+				message: "Creating table: posts_comments"
 			});
 		})
 		.catch((err) => {
@@ -37,15 +37,15 @@ exports.up = (knex) => {
 
 exports.down = (knex) => {
 	return knex.schema
-		.hasTable("post_activity")
+		.hasTable("posts_comments")
 		.then((exists) => {
 			if (exists) {
-				return knex.schema.dropTable("post_activity");
+				return knex.schema.dropTable("posts_comments");
 			}
 		})
 		.then(() => {
 			logger.info({
-				message: "Dropping table: post_activity"
+				message: "Dropping table: posts_comments"
 			});
 		})
 		.catch((err) => {

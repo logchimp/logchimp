@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
 				created_at: new Date().toJSON(),
 				updated_at: new Date().toJSON()
 			})
-			.into("post_activity")
+			.into("posts_comments")
 			.returning("*");
 
 		res.status(201).send({

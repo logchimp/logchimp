@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
 	const { comment_id } = req.params;
 
 	try {
-		await database.delete().from("post_activity").where({ id: comment_id });
+		await database.delete().from("posts_comments").where({ id: comment_id });
 
 		res.status(204);
 	} catch (err) {

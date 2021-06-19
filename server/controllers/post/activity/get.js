@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 	try {
 		const activity = await database
 			.select()
-			.from("post_activity")
+			.from("posts_comments")
 			.where({
 				post_id
 			})
