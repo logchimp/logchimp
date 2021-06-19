@@ -11,6 +11,7 @@ const boards = require("./boards");
 const settings = require("./settings");
 const roadmaps = require("./roadmaps");
 const roles = require("./roles");
+const comments = require("./comments");
 
 router.use(
 	"/api/v1",
@@ -21,7 +22,8 @@ router.use(
 	boards,
 	settings,
 	roadmaps,
-	roles
+	roles,
+	comments
 );
 
 module.exports = router;
