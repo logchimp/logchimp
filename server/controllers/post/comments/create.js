@@ -1,9 +1,9 @@
 const { v4: uuid } = require("uuid");
 
-const database = require("../../database");
+const database = require("../../../database");
 
 // utils
-const logger = require("../../utils/logger");
+const logger = require("../../../utils/logger");
 
 module.exports = async (req, res) => {
 	const userId = req.user.userId;

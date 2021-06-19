@@ -4,8 +4,8 @@ const postBySlug = require("./postBySlug");
 const updatePost = require("./updatePost");
 const deleteById = require("./deleteById");
 
-// activity
 const activity = require("./activity");
+const comments = require("./comments");
 
 module.exports = {
 	...create,
@@ -13,5 +13,6 @@ module.exports = {
 	...postBySlug,
 	...updatePost,
 	...deleteById,
-	activity
+	activity,
+	comments
 };
