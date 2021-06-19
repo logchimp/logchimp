@@ -7,7 +7,6 @@ exports.up = (knex) => {
 			table.uuid("id").notNullable().primary();
 			table.uuid("parent_id").references("id").inTable("posts_comments");
 			table.string("body", 1000).notNullable();
-			table.string("type", 50).notNullable();
 			table
 				.uuid("author_id")
 				.references("userId")
