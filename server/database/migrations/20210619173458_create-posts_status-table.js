@@ -3,25 +3,10 @@ const logger = require("../../utils/logger");
 
 exports.up = (knex) => {
 	return knex.schema
-		.createTable("posts_comments", (table) => {
+		.createTable("posts_status", (table) => {
 			table.uuid("id").notNullable().primary();
-			table.uuid("parent_id").references("id").inTable("posts_comments");
-			table.string("body", 1000).notNullable();
-			table
-				.uuid("author_id")
-				.references("userId")
-				.inTable("users")
-				.notNullable();
-			table
-				.uuid("post_id")
-				.references("postId")
-				.inTable("posts")
-				.notNullable();
-			table.boolean("is_edited").defaultTo(false);
-			table.boolean("is_spam").defaultTo(false);
-			table.boolean("is_internal").defaultTo(false);
+			table.uuid("activity_id").notNullable();
 			table.timestamp("created_at").notNullable();
-			table.timestamp("updated_at").notNullable();
 		})
 		.then(() => {
 			logger.info({
