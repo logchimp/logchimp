@@ -7,7 +7,8 @@ const logger = require("../../../utils/logger");
 
 module.exports = async (req, res) => {
 	const userId = req.user.userId;
-	const { post_id, parent_id, is_internal, body } = req.body;
+	const { post_id } = req.params;
+	const { parent_id, is_internal, body } = req.body;
 
 	// check auth user has required permission to set comment as internal
 	// check the auth user has permission to comment
@@ -18,7 +19,6 @@ module.exports = async (req, res) => {
 				id: uuid(),
 				parent_id,
 				body,
-				type: "comment",
 				author_id: userId,
 				post_id,
 				is_internal,
