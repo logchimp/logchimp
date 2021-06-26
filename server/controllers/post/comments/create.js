@@ -28,11 +28,20 @@ module.exports = async (req, res) => {
 					created_at: new Date().toJSON(),
 					updated_at: new Date().toJSON()
 				},
-				"*"
+				[
+					"id",
+					"parent_id",
+					"body",
+					"is_internal",
+					"is_edited",
+					"is_spam",
+					"created_at"
+				]
 			);
 
 			const comment = comments[0];
-			await database("posts_activity")
+
+			const activities = await trx("posts_activity")
 				.insert({
 					id: postActivityId,
 					type: "comment",
@@ -41,18 +50,20 @@ module.exports = async (req, res) => {
 					author_id: userId,
 					created_at: new Date().toJSON()
 				})
-				.transacting(trx);
+				.returning(["id", "type", "created_at"]);
 
-			const author = await database
+			const activity = activities[0];
+
+			const author = await trx("users")
 				.select("userId", "name", "username", "avatar")
-				.from("users")
 				.where({ userId })
 				.first();
 
 			return {
-				...comment,
+				...activity,
+				comment,
 				author
-			}
+			};
 		});
 
 		res.status(201).send({
