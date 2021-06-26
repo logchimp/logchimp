@@ -6,7 +6,7 @@ exports.up = (knex) => {
 		.createTable("posts_activity", (table) => {
 			table.uuid("id").notNullable().primary();
 			table.string("type", 50).notNullable();
-			table.uuid("posts_commens_id").references("id").inTable("posts_comments");
+			table.uuid("posts_comments_id").references("id").inTable("posts_comments");
 			table.uuid("posts_status_id").references("id").inTable("posts_status");
 			table
 				.uuid("post_id")
