@@ -80,6 +80,13 @@ const authenticateWithToken = async (req, res, next, token) => {
 			})
 			.first();
 
+		if (!user) {
+			return res.status(404).send({
+				message: error.middleware.user.userNotFound,
+				code: "USER_NOT_FOUND"
+			});
+		}
+
 		const permissions = await computePermissions(user);
 
 		if (user) {
