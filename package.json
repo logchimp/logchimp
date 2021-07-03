@@ -41,7 +41,7 @@
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-jest": "^24.3.6",
 		"eslint-plugin-prettier": "^3.4.0",
-		"jest": "^27.0.5",
+		"jest": "^27.0.6",
 		"nodemon": "^2.0.9",
 		"omgopass": "^3.2.1"
 	},
