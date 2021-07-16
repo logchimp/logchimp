@@ -42,7 +42,7 @@
 		"eslint-plugin-jest": "^24.3.6",
 		"eslint-plugin-prettier": "^3.4.0",
 		"jest": "^27.0.6",
-		"nodemon": "^2.0.10",
+		"nodemon": "^2.0.12",
 		"omgopass": "^3.2.1"
 	},
 	"keywords": [
