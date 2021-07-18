@@ -13,8 +13,8 @@ module.exports = async (req, res, next) => {
 
 	if (!validEmail(email)) {
 		return res.status(400).send({
-			message: error.api.authentication.noEmailProvided,
-			code: "EMAIL_MISSING"
+			message: error.api.authentication.invalidEmail,
+			code: "EMAIL_INVALID"
 		});
 	}
 
