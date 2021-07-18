@@ -11,6 +11,32 @@ on:
   workflow_dispatch:
 
 jobs:
+  unit:
+    name: Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node: [12, 14]
+        os: [ubuntu-18.04, ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Testing
+        run: yarn test:unit
+
   test:
     runs-on: ${{ matrix.os }}
 
