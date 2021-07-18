@@ -5,12 +5,13 @@ const database = require("../../database");
 const createUser = require("../../services/auth/createUser");
 
 // utils
+const { validEmail } = require("../../helpers");
 const error = require("../../errorResponse.json");
 
 module.exports = async (req, res, next) => {
 	const { siteTitle, name, email, password } = req.body;
 
-	if (!email) {
+	if (!validEmail(email)) {
 		return res.status(400).send({
 			message: error.api.authentication.noEmailProvided,
 			code: "EMAIL_MISSING"

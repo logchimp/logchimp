@@ -1,6 +1,7 @@
 const database = require("../database");
 
 // utils
+const { validEmail } = require("../helpers");
 const logger = require("../utils/logger");
 const error = require("../errorResponse.json");
 
@@ -8,7 +9,7 @@ module.exports = async (req, res, next) => {
 	const email =
 		(req.body ? req.body.email : "") || (req.user ? req.user.email : "");
 
-	if (!email) {
+	if (!validEmail(email)) {
 		return res.status(400).send({
 			errors: [
 				!email
