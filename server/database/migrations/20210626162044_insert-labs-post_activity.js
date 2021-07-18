@@ -1,9 +1,9 @@
 // utils
 const logger = require("../../utils/logger");
 
-exports.up = (knex) => {
+exports.up = knex => {
 	return knex.schema
-		.table("settings", (table) => {
+		.table("settings", table => {
 			table.text("labs").defaultTo("{}");
 		})
 		.then(() => {
@@ -23,14 +23,14 @@ exports.up = (knex) => {
 				message: "Insert 'comments' into labs column"
 			});
 		})
-		.catch((err) => {
+		.catch(err => {
 			logger.error(err);
 		});
 };
 
-exports.down = (knex) => {
+exports.down = knex => {
 	return knex.schema
-		.table("settings", (table) => {
+		.table("settings", table => {
 			table.dropColumn("labs");
 		})
 		.then(() => {
@@ -38,7 +38,7 @@ exports.down = (knex) => {
 				message: "Dropping column 'labs' from settings"
 			});
 		})
-		.catch((err) => {
+		.catch(err => {
 			logger.error(err);
 		});
 };

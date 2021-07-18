@@ -1,10 +1,13 @@
 // utils
 const logger = require("../../utils/logger");
 
-exports.up = (knex) => {
+exports.up = knex => {
 	return knex.schema
-		.createTable("posts_status", (table) => {
-			table.uuid("id").notNullable().primary();
+		.createTable("posts_status", table => {
+			table
+				.uuid("id")
+				.notNullable()
+				.primary();
 			table.uuid("activity_id").notNullable();
 			table.timestamp("created_at").notNullable();
 		})
@@ -14,15 +17,15 @@ exports.up = (knex) => {
 				message: "Creating table: posts_comments"
 			});
 		})
-		.catch((err) => {
+		.catch(err => {
 			logger.error(err);
 		});
 };
 
-exports.down = (knex) => {
+exports.down = knex => {
 	return knex.schema
 		.hasTable("posts_comments")
-		.then((exists) => {
+		.then(exists => {
 			if (exists) {
 				return knex.schema.dropTable("posts_comments");
 			}
@@ -32,7 +35,7 @@ exports.down = (knex) => {
 				message: "Dropping table: posts_comments"
 			});
 		})
-		.catch((err) => {
+		.catch(err => {
 			logger.error(err);
 		});
 };

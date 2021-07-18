@@ -1,13 +1,22 @@
 // utils
 const logger = require("../../utils/logger");
 
-exports.up = (knex) => {
+exports.up = knex => {
 	return knex.schema
-		.createTable("posts_activity", (table) => {
-			table.uuid("id").notNullable().primary();
+		.createTable("posts_activity", table => {
+			table
+				.uuid("id")
+				.notNullable()
+				.primary();
 			table.string("type", 50).notNullable();
-			table.uuid("posts_comments_id").references("id").inTable("posts_comments");
-			table.uuid("posts_status_id").references("id").inTable("posts_status");
+			table
+				.uuid("posts_comments_id")
+				.references("id")
+				.inTable("posts_comments");
+			table
+				.uuid("posts_status_id")
+				.references("id")
+				.inTable("posts_status");
 			table
 				.uuid("post_id")
 				.references("postId")
@@ -26,15 +35,15 @@ exports.up = (knex) => {
 				message: "Creating table: posts_activity"
 			});
 		})
-		.catch((err) => {
+		.catch(err => {
 			logger.error(err);
 		});
 };
 
-exports.down = (knex) => {
+exports.down = knex => {
 	return knex.schema
 		.hasTable("posts_activity")
-		.then((exists) => {
+		.then(exists => {
 			if (exists) {
 				return knex.schema.dropTable("posts_activity");
 			}
@@ -44,7 +53,7 @@ exports.down = (knex) => {
 				message: "Dropping table: posts_activity"
 			});
 		})
-		.catch((err) => {
+		.catch(err => {
 			logger.error(err);
 		});
 };
