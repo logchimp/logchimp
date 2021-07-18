@@ -89,8 +89,8 @@ jobs:
           MAIL_USER="logchimp@example.com" \
           sh ./scripts/create-config.sh
 
-      - name: Run 'server' tests
-        run: yarn run test
+      - name: Testing
+        run: yarn test:integration
         env:
           NODE_ENV: "testing"
 
