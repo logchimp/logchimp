@@ -59,7 +59,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./node_modules
-          restore-keys: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install packages
         run: yarn install
@@ -107,7 +107,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./node_modules
-          restore-keys: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install packages
         run: yarn install
