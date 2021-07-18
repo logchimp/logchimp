@@ -5,12 +5,13 @@ const getBoardById = require("../../services/boards/getBoardById");
 const getVotes = require("../../services/votes/getVotes");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 
 exports.filterPost = async (req, res) => {
-	const userId = req.body.userId;
-	const boardId = req.body.boardId;
-	const roadmapId = req.body.roadmapId;
+	const userId = validUUID(req.body.userId);
+	const boardId = validUUID(req.body.boardId);
+	const roadmapId = validUUID(req.body.roadmapId);
 	/**
 	 * top, latest, oldest, trending
 	 */

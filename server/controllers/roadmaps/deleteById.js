@@ -2,13 +2,14 @@
 const database = require("../../database");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 module.exports = async (req, res) => {
 	const permissions = req.user.permissions;
 
-	const id = req.body.id;
+	const id = validUUID(req.body.id);
 
 	const checkPermission = permissions.includes("roadmap:destroy");
 	if (!checkPermission) {
