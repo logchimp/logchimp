@@ -1,14 +1,14 @@
-const app = require("../../../../server");
 const supertest = require("supertest");
 
-const database = require("../../../utils/setupDatabase");
+const app = require("../../../../server");
+const database = require("../../../../server/database");
 
 beforeAll(async () => {
-	return await database.latest();
+	return await database.migrate.latest();
 });
 
 afterAll(async () => {
-	return await database.rollback();
+	return await database.migrate.rollback();
 });
 
 describe("signup", () => {
@@ -47,7 +47,7 @@ describe("signup", () => {
 
 	it("should not be allowed", async () => {
 		// set allowSignup to false in settings table
-		await database.instance.update({
+		await database.update({
 			allowSignup: false,
 		})
 		.from("settings");

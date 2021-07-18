@@ -1,16 +1,16 @@
-const app = require("../../../../server");
 const supertest = require("supertest");
 const { v4: uuidv4 } = require("uuid");
 
-const database = require("../../../utils/setupDatabase");
+const app = require("../../../../server");
+const database = require("../../../../server/database");
 const { hashPassword } = require("../../../../server/utils/password");
 
 beforeAll(async () => {
-	return await database.latest();
+	return await database.migrate.latest();
 });
 
 afterAll(async () => {
-	return await database.rollback();
+	return await database.migrate.rollback();
 });
 
 describe("login", () => {
@@ -53,7 +53,7 @@ describe("login", () => {
 			// seed a user
 			const password = hashPassword("strongPassword");
 
-			return await database.instance
+			return await database
 				.insert({
 					userId: uuidv4(),
 					email: "userExists@example.com",
