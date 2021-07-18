@@ -64,12 +64,10 @@ describe("login", () => {
 		});
 
 		it("error: password missing", async () => {
-			const response = await supertest(app)
-				.post("/api/v1/auth/login")
-				.send({
-					email: "userExists@example.com",
-					password: ""
-				});
+			const response = await supertest(app).post("/api/v1/auth/login").send({
+				email: "userExists@example.com",
+				password: ""
+			});
 
 			expect(response.headers["content-type"]).toContain("application/json");
 			expect(response.status).toBe(400);
@@ -77,12 +75,10 @@ describe("login", () => {
 		});
 
 		it("error: incorrect password", async () => {
-			const response = await supertest(app)
-				.post("/api/v1/auth/login")
-				.send({
-					email: "userExists@example.com",
-					password: "incorrect_password"
-				});
+			const response = await supertest(app).post("/api/v1/auth/login").send({
+				email: "userExists@example.com",
+				password: "incorrect_password"
+			});
 
 			expect(response.headers["content-type"]).toContain("application/json");
 			expect(response.status).toBe(403);
@@ -91,12 +87,10 @@ describe("login", () => {
 	});
 
 	it("get user data", async () => {
-		const response = await supertest(app)
-			.post("/api/v1/auth/login")
-			.send({
-				email: "userExists@example.com",
-				password: "strongPassword"
-			});
+		const response = await supertest(app).post("/api/v1/auth/login").send({
+			email: "userExists@example.com",
+			password: "strongPassword"
+		});
 
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(200);

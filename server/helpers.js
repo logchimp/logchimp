@@ -7,7 +7,7 @@ const { validate: validateUUID } = require("uuid");
  * @param {string} email
  * @returns boolean
  */
-const validEmail = (email) =>
+const validEmail = email =>
 	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi.test(
 		email
 	);
@@ -18,13 +18,13 @@ const validEmail = (email) =>
  * @param {*} value The value to check
  * @returns {*} Returns valid UUID
  */
-const validUUID = (value) => {
+const validUUID = value => {
 	if (value == null) {
 		return "";
 	}
 
 	if (_.isArray(value)) {
-		const arr = value.map((item) => (validateUUID(item) ? item : ""));
+		const arr = value.map(item => (validateUUID(item) ? item : ""));
 		const newArr = _.filter(arr);
 		return _.isEmpty(newArr) ? "" : newArr;
 	}
