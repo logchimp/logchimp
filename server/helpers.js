@@ -2,6 +2,17 @@ const _ = require("lodash");
 const { validate: validateUUID } = require("uuid");
 
 /**
+ * Check value is valid email
+ *
+ * @param {string} email
+ * @returns boolean
+ */
+const validEmail = (email) =>
+	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi.test(
+		email
+	);
+
+/**
  * Check value is valid UUID or not
  *
  * @param {*} value The value to check
@@ -24,5 +35,6 @@ const validUUID = (value) => {
 };
 
 module.exports = {
+	validEmail,
 	validUUID
 };
