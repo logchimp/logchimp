@@ -14,10 +14,6 @@ exports.up = knex => {
 				.references("id")
 				.inTable("posts_comments");
 			table
-				.uuid("posts_status_id")
-				.references("id")
-				.inTable("posts_status");
-			table
 				.uuid("post_id")
 				.references("postId")
 				.inTable("posts")
