@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 const routes = require("./routes");
 
@@ -21,7 +20,7 @@ if (!config) {
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
 // contains key-value pairs of data submitted in the request body
-app.use(bodyParser.json());
+app.use(express.json());
 
 // enable all CORS requests
 app.use(cors());
