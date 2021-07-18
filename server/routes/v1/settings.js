@@ -36,7 +36,7 @@ router.post(
 	upload.single("logo", 1),
 	settings.updateLogo
 );
-router.get("/settings/labs", settings.getLabs)
-router.patch("/settings/labs", settings.updateLabs)
+router.get("/settings/labs", settings.getLabs);
+router.patch("/settings/labs", middlewares.apiAuth, settings.updateLabs);
 
 module.exports = router;

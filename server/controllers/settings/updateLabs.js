@@ -5,14 +5,25 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 /**
  * This API doesn't update the existing labs value
  * instead overrides the existing value with req.body.labs
  */
 exports.updateLabs = async (req, res) => {
+	const permissions = req.user.permissions;
+
 	const labs = req.body;
 	const stringify = JSON.stringify(labs);
+
+	const checkPermission = permissions.find(item => item === "settings:update");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
 
 	try {
 		const response = await database
