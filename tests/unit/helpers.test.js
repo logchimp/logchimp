@@ -1,6 +1,68 @@
 const _ = require("lodash");
 
-const { validUUID } = require("../../server/helpers");
+const { validEmail, validUUID } = require("../../server/helpers");
+
+describe("validate email", () => {
+	it('should be a valid email "yashu@codecarrot.net"', () => {
+		const response = validEmail("yashu@codecarrot.net");
+		expect(response).toBeTruthy();
+	});
+
+	it('should be a valid email "ya___u@codecarrot.net"', () => {
+		const response = validEmail("ya___u@codecarrot.net");
+		expect(response).toBeTruthy();
+	});
+
+	it('should be a valid email "ya___u@codecarrot.nt"', () => {
+		const response = validEmail("ya___u@codecarrot.nt");
+		expect(response).toBeTruthy();
+	});
+
+	it('should be a valid email "y@codecarrot.nt"', () => {
+		const response = validEmail("y@codecarrot.nt");
+		expect(response).toBeTruthy();
+	});
+
+	it('should be a valid email "y@codecarr.otn"', () => {
+		const response = validEmail("y@codecar.rotn");
+		expect(response).toBeTruthy();
+	});
+
+	it('should not be a valid email "y@codecarrot.n"', () => {
+		const response = validEmail("y@codecarrot.n");
+		expect(response).toBeFalsy();
+	});
+
+	it('should not be a valid email "y@codecarrotn"', () => {
+		const response = validEmail("y@codecarrotn");
+		expect(response).toBeFalsy();
+	});
+
+	it('should not be a valid email "y@codecarrotn@"', () => {
+		const response = validEmail("y@codecarrotn@");
+		expect(response).toBeFalsy();
+	});
+
+	it('should not be a valid email "y@codecarr.otn@"', () => {
+		const response = validEmail("y@codecar.rotn@");
+		expect(response).toBeFalsy();
+	});
+
+	it('should not be a valid email "y@code$%&$%carrot.n"', () => {
+		const response = validEmail("y@code$%&$%carrot.n");
+		expect(response).toBeFalsy();
+	});
+
+	it('should not be a valid email "^#^3y@code$%&$%carrot.n"', () => {
+		const response = validEmail("^#^3y@code$%&$%carrot.n");
+		expect(response).toBeFalsy();
+	});
+
+	it('should not be a valid email "___yashu@carrot.n"', () => {
+		const response = validEmail("___yashu@carrot.n");
+		expect(response).toBeFalsy();
+	});
+});
 
 describe("validate UUID", () => {
 	it("should return empty string with empty string", () => {
