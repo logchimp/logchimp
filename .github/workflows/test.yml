@@ -37,6 +37,7 @@ jobs:
   integration:
     name: Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
+    needs: unit
 
     strategy:
       matrix:
