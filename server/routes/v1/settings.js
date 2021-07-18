@@ -36,5 +36,7 @@ router.post(
 	upload.single("logo", 1),
 	settings.updateLogo
 );
+router.get("/settings/labs", settings.getLabs)
+router.patch("/settings/labs", settings.updateLabs)
 
 module.exports = router;
