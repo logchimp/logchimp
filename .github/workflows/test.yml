@@ -37,7 +37,8 @@ jobs:
       - name: Testing
         run: yarn test:unit
 
-  test:
+  integration:
+    name: Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -60,7 +61,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    name: OS ${{ matrix.os }} - Node v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
 
