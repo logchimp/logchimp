@@ -13,39 +13,23 @@ afterAll(async () => {
 	return await database.migrate.rollback();
 });
 
-describe("login", () => {
-	describe("email error", () => {
-		it("error: no email provided", async () => {
-			const response = await supertest(app).post("/api/v1/auth/login");
+describe("POST /api/v1/auth/login", () => {
+	it('should throw error "EMAIL_INVALID"', async () => {
+		const response = await supertest(app).post("/api/v1/auth/login");
 
-			expect(response.headers["content-type"]).toContain("application/json");
-			expect(response.status).toBe(400);
-			expect(response.body.code).toBe("EMAIL_INVALID");
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(400);
+		expect(response.body.code).toBe("EMAIL_INVALID");
+	});
+
+	it('should throw error "USER_NOT_FOUND"', async () => {
+		const response = await supertest(app).post("/api/v1/auth/login").send({
+			email: "user_not_found@example.com"
 		});
 
-		it("error: email missing", async () => {
-			const response = await supertest(app)
-				.post("/api/v1/auth/login")
-				.send({
-					email: ""
-				});
-
-			expect(response.headers["content-type"]).toContain("application/json");
-			expect(response.status).toBe(400);
-			expect(response.body.code).toBe("EMAIL_INVALID");
-		});
-
-		it("error: user not found", async () => {
-			const response = await supertest(app)
-				.post("/api/v1/auth/login")
-				.send({
-					email: "user_not_found@example.com"
-				});
-
-			expect(response.headers["content-type"]).toContain("application/json");
-			expect(response.status).toBe(404);
-			expect(response.body.code).toBe("USER_NOT_FOUND");
-		});
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(404);
+		expect(response.body.code).toBe("USER_NOT_FOUND");
 	});
 
 	describe("password error", () => {
