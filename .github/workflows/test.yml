@@ -31,12 +31,6 @@ jobs:
       - name: Install packages
         run: yarn --frozen-lockfile
 
-      - name: Audit
-        run: yarn audit
-
-      - name: Lint
-        run: yarn lint
-
       - name: Cache node_modules
         uses: actions/cache@v2
         with:
