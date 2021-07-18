@@ -11,13 +11,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  unit:
+    name: Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         node: [12, 14]
-        os: [ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install packages
+        run: yarn --frozen-lockfile
+
+      - name: Testing
+        run: yarn test:unit
+
+  integration:
+    name: Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    needs: unit
+
+    strategy:
+      matrix:
+        node: [12, 14]
+        os: [ubuntu-20.04]
 
     services:
       postgres:
@@ -34,7 +59,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    name: OS ${{ matrix.os }} - Node v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
 
@@ -43,8 +67,14 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install packages
-        run: yarn install
+        run: yarn --frozen-lockfile
 
       - name: Create logchimp config file
         run: |

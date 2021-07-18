@@ -4,10 +4,11 @@ const database = require("../../database");
 const getVotes = require("../../services/votes/getVotes");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 
 exports.postBySlug = async (req, res) => {
-	const userId = req.body.userId;
+	const userId = validUUID(req.body.userId);
 	const post = req.post;
 
 	try {

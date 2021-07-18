@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const database = require("../../database");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 
 const error = require("../../errorResponse.json");
@@ -15,7 +16,7 @@ exports.create = async (req, res) => {
 
 	const title = req.body.title;
 	const contentMarkdown = req.body.contentMarkdown;
-	const boardId = req.body.boardId;
+	const boardId = validUUID(req.body.boardId);
 
 	const checkPermission = permissions.includes("post:create");
 	if (!checkPermission) {
