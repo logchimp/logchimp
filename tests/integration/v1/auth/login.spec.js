@@ -20,7 +20,7 @@ describe("login", () => {
 
 			expect(response.headers["content-type"]).toContain("application/json");
 			expect(response.status).toBe(400);
-			expect(response.body.errors[0].code).toBe("EMAIL_MISSING");
+			expect(response.body.code).toBe("EMAIL_INVALID");
 		});
 
 		it("error: email missing", async () => {
@@ -32,7 +32,7 @@ describe("login", () => {
 
 			expect(response.headers["content-type"]).toContain("application/json");
 			expect(response.status).toBe(400);
-			expect(response.body.errors[0].code).toBe("EMAIL_MISSING");
+			expect(response.body.code).toBe("EMAIL_INVALID");
 		});
 
 		it("error: user not found", async () => {
