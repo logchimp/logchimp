@@ -1,13 +1,14 @@
 const database = require("../../database");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 exports.deleteById = async (req, res) => {
 	const permissions = req.user.permissions;
 
-	const id = req.body.id;
+	const id = validUUID(req.body.id);
 
 	const checkPermission = permissions.includes("post:destroy");
 	if (!checkPermission) {

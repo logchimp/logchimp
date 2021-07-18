@@ -1,6 +1,7 @@
 const database = require("../../database");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
@@ -10,7 +11,11 @@ exports.updatePost = async (req, res) => {
 	const authorId = req.post.userId;
 	const slugId = req.post.slugId;
 
-	const { id, title, contentMarkdown, boardId, roadmapId } = req.body;
+	const id = validUUID(req.body.id);
+	const title = req.body.title;
+	const contentMarkdown = req.body.contentMarkdown;
+	const boardId = validUUID(req.body.boardId);
+	const roadmapId = validUUID(req.body.roadmapId);
 
 	const checkPermission = permissions.includes("post:update");
 	if (!checkPermission && userId !== authorId) {

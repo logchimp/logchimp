@@ -1,10 +1,11 @@
 const database = require("../database");
 
 // utils
+const { validUUID } = require("../helpers");
 const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
-	const id = req.body.id;
+	const id = validUUID(req.body.id);
 	const url = req.params.url;
 
 	const roadmap = await database

@@ -7,6 +7,7 @@ const database = require("../../database");
 const getVotes = require("../../services/votes/getVotes");
 
 // utils
+const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
@@ -14,7 +15,7 @@ module.exports = async (req, res) => {
 	const userId = req.user.userId;
 	const permissions = req.user.permissions;
 
-	const postId = req.body.postId;
+	const postId = validUUID(req.body.postId);
 
 	const checkPermission = permissions.includes("vote:create");
 	if (!checkPermission) {
