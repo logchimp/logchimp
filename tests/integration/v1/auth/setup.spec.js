@@ -17,7 +17,7 @@ describe("setup", () => {
 
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(400);
-		expect(response.body.code).toBe("EMAIL_MISSING");
+		expect(response.body.code).toBe("EMAIL_INVALID");
 	});
 
 	it("error: password missing", async () => {
