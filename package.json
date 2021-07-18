@@ -15,8 +15,8 @@
 		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make",
 		"dev": "nodemon index.js",
 		"start": "node index.js",
-		"test": "jest --config ./jest.config.js --forceExit --detectOpenHandles",
-		"test:unit": "jest ./tests/unit"
+		"test:unit": "jest ./tests/unit",
+		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
 	},
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
