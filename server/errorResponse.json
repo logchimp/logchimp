@@ -59,6 +59,9 @@
 		"votes": {
 			"exists": "Vote already exists",
 			"voteNotFound": "Vote not found"
+		},
+		"labs": {
+			"disabled": "This feature is disabled"
 		}
 	}
 }
