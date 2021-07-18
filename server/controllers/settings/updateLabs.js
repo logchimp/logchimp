@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 // database
 const database = require("../../database");
 
@@ -5,8 +7,15 @@ const database = require("../../database");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
-exports.update = async (req, res) => {
+/**
+ * This API doesn't update the existing labs value
+ * instead overrides the existing value with req.body.labs
+ */
+exports.updateLabs = async (req, res) => {
 	const permissions = req.user.permissions;
+
+	const labs = req.body;
+	const stringify = JSON.stringify(labs);
 
 	const checkPermission = permissions.find(item => item === "settings:update");
 	if (!checkPermission) {
@@ -16,30 +25,17 @@ exports.update = async (req, res) => {
 		});
 	}
 
-	const {
-		title,
-		description,
-		allowSignup,
-		accentColor,
-		googleAnalyticsId
-	} = req.body;
-
 	try {
-		const updateSettings = await database
+		const response = await database
 			.update({
-				title,
-				description,
-				allowSignup,
-				accentColor,
-				googleAnalyticsId
+				labs: database.raw(`labs::jsonb || '${stringify}'`)
 			})
 			.from("settings")
-			.returning("*");
+			.returning(database.raw("labs::json"));
 
-		const settings = updateSettings[0];
-
+		const labs = response[0];
 		res.status(200).send({
-			settings
+			labs
 		});
 	} catch (err) {
 		logger.log({
