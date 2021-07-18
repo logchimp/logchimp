@@ -3,8 +3,19 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.update = async (req, res) => {
+	const permissions = req.user.permissions;
+
+	const checkPermission = permissions.find(item => item === "settings:update");
+	if (!checkPermission) {
+		return res.status(403).send({
+			message: error.api.posts.notEnoughPermission,
+			code: "NOT_ENOUGH_PERMISSION"
+		});
+	}
+
 	const {
 		title,
 		description,
