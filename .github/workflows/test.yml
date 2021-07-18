@@ -29,7 +29,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install packages
-        run: yarn install
+        run: yarn --frozen-lockfile
 
       - name: Testing
         run: yarn test:unit
@@ -73,7 +73,7 @@ jobs:
           key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install packages
-        run: yarn install
+        run: yarn --frozen-lockfile
 
       - name: Create logchimp config file
         run: |
