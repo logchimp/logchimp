@@ -14,13 +14,13 @@ exports.up = (knex) => {
 		})
 		.then(() => {
 			return knex("settings").update({
-				labs: knex.raw("labs::jsonb || '{\"posts_activity\": false}'")
+				labs: knex.raw("labs::jsonb || '{\"comments\": false}'")
 			});
 		})
 		.then(() => {
 			logger.info({
 				code: "DATABASE_MIGRATIONS",
-				message: "Insert 'posts_activity' into labs column"
+				message: "Insert 'comments' into labs column"
 			});
 		})
 		.catch((err) => {
