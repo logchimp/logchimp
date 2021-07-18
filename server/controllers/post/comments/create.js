@@ -4,6 +4,7 @@ const database = require("../../../database");
 
 // utils
 const logger = require("../../../utils/logger");
+const error = require("../../../errorResponse.json");
 
 module.exports = async (req, res) => {
 	const userId = req.user.userId;
@@ -14,6 +15,18 @@ module.exports = async (req, res) => {
 	// check the auth user has permission to comment
 
 	try {
+		const labSettings = await database
+			.select(database.raw("labs::json"))
+			.from("settings")
+			.first();
+
+		if (!labSettings.labs.comments) {
+			return res.status(403).send({
+				message: error.api.labs.disabled,
+				code: "LABS_DISABLED"
+			});
+		}
+
 		const results = await database.transaction(async (trx) => {
 			// postActivityId will be shared b/w "posts_comments" and "posts_activity" table
 			const postActivityId = uuid();
