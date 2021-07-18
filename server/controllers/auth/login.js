@@ -1,9 +1,9 @@
+// service
+const { createToken } = require('../../services/token.service')
+
 // utils
 const { validatePassword } = require("../../utils/password");
-const { createToken } = require("../../utils/token");
 const logger = require("../../utils/logger");
-const logchimpConfig = require("../../utils/logchimpConfig");
-const config = logchimpConfig();
 const error = require("../../errorResponse.json");
 
 exports.login = async (req, res) => {
@@ -40,8 +40,7 @@ exports.login = async (req, res) => {
 			userId: user.userId,
 			email: user.email
 		};
-		const secretKey = config.server.secretKey;
-		const authToken = createToken(tokenPayload, secretKey, {
+		const authToken = createToken(tokenPayload, {
 			expiresIn: "2d"
 		});
 

@@ -7,16 +7,12 @@ const database = require("../../database");
 
 // services
 const verifyEmail = require("../../services/auth/verifyEmail");
+const { createToken } = require("../../services/token.service");
 
 // utils
-const { createToken } = require("../../utils/token");
 const { hashPassword } = require("../../utils/password");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
-
-// configuration
-const logchimpConfig = require("../../utils/logchimpConfig");
-const config = logchimpConfig();
 
 /**
  * Add user to 'users' database table
@@ -112,8 +108,7 @@ const createUser = async (req, res, next, userData) => {
 		await verifyEmail(url, tokenPayload);
 
 		// create auth token
-		const secretKey = config.server.secretKey;
-		const authToken = createToken(tokenPayload, secretKey, {
+		const authToken = createToken(tokenPayload, {
 			expiresIn: "2d"
 		});
 
