@@ -11,36 +11,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  cache:
-    name: Cache - OS ${{ matrix.os }} - Node v${{ matrix.node }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        node: [12, 14]
-        os: [ubuntu-20.04]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Install packages
-        run: yarn --frozen-lockfile
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
   unit:
     name: Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: cache
 
     strategy:
       matrix:
@@ -54,15 +27,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install packages
-        run: yarn install
 
       - name: Install packages
         run: yarn install
@@ -73,7 +37,6 @@ jobs:
   integration:
     name: Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: cache
 
     strategy:
       matrix:
