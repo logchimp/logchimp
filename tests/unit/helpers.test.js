@@ -1,6 +1,10 @@
 const _ = require("lodash");
 
-const { validEmail, validUUID } = require("../../server/helpers");
+const {
+	validEmail,
+	validUUID,
+	generateHexColor
+} = require("../../server/helpers");
 
 describe("validate email", () => {
 	it('should be a valid email "yashu@codecarrot.net"', () => {
@@ -137,5 +141,14 @@ describe("validate UUID", () => {
 
 		expect(res).toEqual("1A3578E2-9594-4DDD-8D98-ACC55B1D6F99");
 		expect(typeof res).toEqual("string");
+	});
+});
+
+describe("generateHexColor", () => {
+	it("should generate 6 digit HEX color code", () => {
+		const color = generateHexColor();
+		const result = /^#([a-fA-F0-9]){3}$|[a-fA-F0-9]{6}$/gi.test(color);
+
+		expect(result).toBeTruthy();
 	});
 });

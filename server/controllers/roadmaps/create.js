@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const database = require("../../database");
 
 // utils
-const createHex = require("../../utils/createHex");
+const { generateHexColor } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
 				id: uuidv4(),
 				name: "new roadmap",
 				url: `new-roadmap-${nanoid(10)}`,
-				color: createHex(),
+				color: generateHexColor(),
 				index: roadmapIndex.max + 1
 			})
 			.into("roadmaps")

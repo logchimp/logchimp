@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const database = require("../../database");
 
 // utils
-const createHex = require("../../utils/createHex");
+const { generateHexColor } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
 				boardId: uuidv4(),
 				name: "new board",
 				url: `new-board-${nanoid(10)}`,
-				color: createHex()
+				color: generateHexColor()
 			})
 			.into("boards")
 			.returning("*");
