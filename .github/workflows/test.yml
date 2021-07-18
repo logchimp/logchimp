@@ -11,8 +11,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit:
-    name: Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+  cache:
+    name: Cache - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -29,6 +29,45 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install packages
+        run: yarn --frozen-lockfile
+
+      - name: Audit
+        run: yarn audit
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+  unit:
+    name: Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    needs: cache
+
+    strategy:
+      matrix:
+        node: [12, 14]
+        os: [ubuntu-18.04, ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          restore-keys: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-
+
+      - name: Install packages
         run: yarn install
 
       - name: Install packages
@@ -40,6 +79,7 @@ jobs:
   integration:
     name: Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
+    needs: cache
 
     strategy:
       matrix:
@@ -68,6 +108,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          restore-keys: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-
 
       - name: Install packages
         run: yarn install
