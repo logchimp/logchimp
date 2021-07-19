@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 
 const config = require("../utils/logchimpConfig")();
@@ -17,6 +18,22 @@ const createToken = (data, payload) => {
 	return token;
 };
 
+/**
+ * Verify JWT token
+ *
+ * @param {string} token
+ * @returns
+ */
+const verifyToken = (token) => {
+	if (!_.isString(token)) {
+		return null;
+	}
+
+	const secretKey = config.server.secretKey;
+	return jwt.verify(token, secretKey);
+}
+
 module.exports = {
-	createToken
+	createToken,
+	verifyToken
 };
