@@ -12,14 +12,8 @@ exports.login = async (req, res) => {
 
 	if (!password) {
 		return res.status(400).send({
-			errors: [
-				!password
-					? {
-							message: error.api.authentication.noPasswordProvided,
-							code: "PASSWORD_MISSING"
-					  }
-					: ""
-			]
+			message: error.api.authentication.noPasswordProvided,
+			code: "PASSWORD_MISSING"
 		});
 	}
 
