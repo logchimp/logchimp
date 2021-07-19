@@ -13,9 +13,9 @@ beforeAll(async () => {
 		.insert([
 			{
 				userId: uuid(),
-				email: "userExists@example.com",
+				email: "user_exists@example.com",
 				password: hashPassword("strongPassword"),
-				username: "userExists"
+				username: "user_exists"
 			}
 		])
 		.into("users");
@@ -46,7 +46,7 @@ describe("POST /api/v1/auth/login", () => {
 
 	it("should throw error \"PASSWORD_MISSING\"", async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
-			email: "userExists@example.com",
+			email: "user_exists@example.com",
 			password: ""
 		});
 
@@ -57,7 +57,7 @@ describe("POST /api/v1/auth/login", () => {
 
 	it("should throw error \"INCORRECT_PASSWORD\"", async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
-			email: "userExists@example.com",
+			email: "user_exists@example.com",
 			password: "incorrect_password"
 		});
 
@@ -66,9 +66,9 @@ describe("POST /api/v1/auth/login", () => {
 		expect(response.body.code).toBe("INCORRECT_PASSWORD");
 	});
 
-	it("should get user data", async () => {
+	it("should get \"user_exists\" user", async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
-			email: "userExists@example.com",
+			email: "user_exists@example.com",
 			password: "strongPassword"
 		});
 
@@ -79,10 +79,11 @@ describe("POST /api/v1/auth/login", () => {
 		const token = verifyToken(user.authToken);
 
 		// check auth token
-		expect(token.email).toEqual("userExists@example.com");
+		expect(token.email).toEqual("user_exists@example.com");
 		expect(token.userId).toEqual(user.userId);
 
-		expect(user.email).toEqual("userExists@example.com");
+		expect(user.email).toEqual("user_exists@example.com");
+		expect(user.username).toEqual("user_exists");
 		expect(user.avatar).toBeNull();
 		expect(user.name).toBeNull();
 		expect(user.password).toBeUndefined();
