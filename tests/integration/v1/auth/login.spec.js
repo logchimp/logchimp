@@ -16,7 +16,14 @@ beforeAll(async () => {
 				email: "user_exists@example.com",
 				password: hashPassword("strongPassword"),
 				username: "user_exists"
-			}
+			},
+			{
+				userId: uuid(),
+				email: "user_blocked@example.com",
+				password: hashPassword("strongPassword"),
+				username: "user_blocked",
+				isBlocked: true,
+			},
 		])
 		.into("users");
 });
@@ -88,4 +95,14 @@ describe("POST /api/v1/auth/login", () => {
 		expect(user.name).toBeNull();
 		expect(user.password).toBeUndefined();
 	});
+
+	it("should throw error \"USER_BLOCKED\"", async () => {
+		const response = await supertest(app).post("/api/v1/auth/login").send({
+			email: "user_blocked@example.com",
+			password: "strongPassword"
+		});
+
+		expect(response.statusCode).toEqual(403);
+		expect(response.body.code).toEqual("USER_BLOCKED");
+	})
 });

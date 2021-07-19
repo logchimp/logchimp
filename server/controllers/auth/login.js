@@ -10,6 +10,13 @@ exports.login = async (req, res) => {
 	const user = req.user;
 	const password = req.body.password;
 
+	if (user.isBlocked) {
+		return res.status(403).send({
+			message: error.middleware.user.userBlocked,
+			code: "USER_BLOCKED"
+		});
+	}
+
 	if (!password) {
 		return res.status(400).send({
 			message: error.api.authentication.noPasswordProvided,
