@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const { validate: validateUUID } = require("uuid");
+const bcrypt = require("bcryptjs");
 
 /**
  * Check value is valid email
@@ -47,8 +48,47 @@ const generateHexColor = () => {
 	return (~~(random * (1 << 24))).toString(16);
 };
 
+/**
+ * Generate hased password
+ *
+ * @param {string} value password to be hashed
+ * @returns Return hash password
+ */
+const hashPassword = value => {
+	if (_.isEmpty(value)) {
+		return null;
+	}
+
+	const bcryptSaltRounds = 10;
+	const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
+	const hashPassword = bcrypt.hashSync(value, bcryptSalt);
+	return hashPassword;
+}
+
+/**
+ * Validate hashed pasword
+ *
+ * @param {string} password string password
+ * @param {string} hash hashed password
+ * @returns {boolean} Return boolean value
+ */
+const validatePassword = (password, hash) => {
+	if (_.isEmpty(password && hash)) {
+		return null;
+	}
+
+ 	if (!_.isString(password && hash)) {
+		return null;
+	}
+
+	return bcrypt.compareSync(password, hash);
+};
+
+
 module.exports = {
 	validEmail,
 	validUUID,
-	generateHexColor
+	generateHexColor,
+	hashPassword,
+	validatePassword
 };
