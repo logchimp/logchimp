@@ -1,6 +1,5 @@
 const supertest = require("supertest");
 const { v4: uuid } = require("uuid");
-const jwt = require('jsonwebtoken');
 
 const app = require("../../../../server");
 const database = require("../../../../server/database");
@@ -9,6 +8,8 @@ const { verifyToken } = require('../../../../server/services/token.service');
 
 beforeAll(async () => {
 	await database.migrate.latest();
+
+	// seed users data
 	await database
 		.insert([
 			{
