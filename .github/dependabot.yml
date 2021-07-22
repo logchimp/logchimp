@@ -11,3 +11,4 @@ updates:
       - "mittalyashu"
     commit-message:
       prefix: "npm: "
+    open-pull-requests-limit: 10
