@@ -15,6 +15,7 @@
 		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make",
 		"dev": "nodemon index.js",
 		"start": "node index.js",
+		"format": "prettier --write \"**/*.{js}\"",
 		"test:unit": "jest ./tests/unit",
 		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
 	},
@@ -44,7 +45,8 @@
 		"eslint-plugin-prettier": "^3.4.0",
 		"jest": "^27.0.6",
 		"nodemon": "^2.0.12",
-		"omgopass": "^3.2.1"
+		"omgopass": "^3.2.1",
+		"prettier": "^2.3.2"
 	},
 	"keywords": [
 		"logchimp",
