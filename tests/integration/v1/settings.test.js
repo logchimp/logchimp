@@ -1,6 +1,8 @@
 const app = require('../../../server');
 const supertest = require('supertest');
 
+const database = require("../../utils/setupDatabase");
+
 beforeAll(async () => {
 	return await database.latest();
 });
