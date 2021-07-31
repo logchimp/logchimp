@@ -13,7 +13,7 @@ afterAll(async () => {
 
 describe("GET /api/v1/settings/site", () => {
 	it("should get all settings", async () => {
-		const response = await supertest(app).post("/api/v1/settings/site");
+		const response = await supertest(app).get("/api/v1/settings/site");
 
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(200);
