@@ -36,7 +36,7 @@ exports.update = async (req, res) => {
 				developer_mode
 			})
 			.from("settings")
-			.returning("*");
+			.returning(["*", database.raw("labs::json")]);
 
 		const settings = updateSettings[0];
 
