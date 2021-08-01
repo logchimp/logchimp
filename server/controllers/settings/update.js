@@ -21,7 +21,8 @@ exports.update = async (req, res) => {
 		description,
 		allowSignup,
 		accentColor,
-		googleAnalyticsId
+		googleAnalyticsId,
+		developer_mode
 	} = req.body;
 
 	try {
@@ -31,7 +32,8 @@ exports.update = async (req, res) => {
 				description,
 				allowSignup,
 				accentColor,
-				googleAnalyticsId
+				googleAnalyticsId,
+				developer_mode
 			})
 			.from("settings")
 			.returning("*");
