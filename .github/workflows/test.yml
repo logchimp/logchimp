@@ -100,6 +100,6 @@ jobs:
 
       - name: Store Code Coverage
         uses: actions/upload-artifact@v2
-          with:
-            name: coverage
-            path: ./coverage
+        with:
+          name: coverage
+          path: ./coverage
