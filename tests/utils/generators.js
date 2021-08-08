@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const { v4: uuid } = require("uuid");
 const generatePassword = require("omgopass");
 const faker = require("faker");
@@ -7,6 +8,7 @@ const {
 	generateHexColor,
 	sanitiseUsername,
 	sanitiseURL,
+	toSlug,
 } = require("../../server/helpers");
 
 const user = () => {
@@ -40,6 +42,27 @@ const roadmap = () => {
 	};
 };
 
+const post = () => {
+	const title = faker.name.title;
+
+	// generate slug unique indentification
+	const slugId = nanoid(20);
+	const slug = `${toSlug(title)}-${slugId}`;
+
+	return {
+		postId: uuid(),
+		title: faker.name.title(),
+		slug: slug,
+		slugId: slugId,
+		contentMarkdown: faker.lorem.text,
+		userId: uuid(),
+		boardId: uuid(),
+		roadmap_id: uuid(),
+		createdAt: new Date().toJSON(),
+		updatedAt: new Date().toJSON(),
+	};
+};
+
 const board = () => {
 	const name = faker.name.title();
 
@@ -58,5 +81,6 @@ const board = () => {
 module.exports = {
 	user,
 	roadmap,
+	post,
 	board,
 };
