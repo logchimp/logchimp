@@ -11,8 +11,8 @@ afterAll(async () => {
 	return await database.migrate.rollback();
 });
 
-describe("signup", () => {
-	it("error: email missing", async () => {
+describe("POST /api/v1/auth/signup", () => {
+	it("should throw error \"EMAIL_INVALID\"", async () => {
 		const response = await supertest(app).post("/api/v1/auth/signup");
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -20,7 +20,7 @@ describe("signup", () => {
 		expect(response.body.code).toBe("EMAIL_INVALID");
 	});
 
-	it("error: password missing", async () => {
+	it("should throw error \"PASSWORD_MISSING\"", async () => {
 		const response = await supertest(app).post("/api/v1/auth/signup").send({
 			email: "signup_email@example.com"
 		});
@@ -45,7 +45,7 @@ describe("signup", () => {
     })
 	})
 
-	it("should not be allowed", async () => {
+	it("should not be allow to create account", async () => {
 		// set allowSignup to false in settings table
 		await database.update({
 			allowSignup: false,
