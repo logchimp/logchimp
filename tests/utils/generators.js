@@ -3,7 +3,11 @@ const generatePassword = require("omgopass");
 const faker = require("faker");
 const { nanoid } = require("nanoid");
 
-const { generateHexColor, sanitiseUsername } = require("../../server/helpers");
+const {
+	generateHexColor,
+	sanitiseUsername,
+	sanitiseURL,
+} = require("../../server/helpers");
 
 const user = () => {
 	return {
@@ -27,7 +31,7 @@ const roadmap = () => {
 	return {
 		id: uuid(),
 		name,
-		url: `${name}-${nanoid(10)}`,
+		url: `${sanitiseURL(name)}-${nanoid(10)}`,
 		index: faker.datatype.number(),
 		color: generateHexColor(),
 		display: faker.datatype.boolean(),
@@ -36,7 +40,23 @@ const roadmap = () => {
 	};
 };
 
+const board = () => {
+	const name = faker.name.title();
+
+	return {
+		boardId: uuid(),
+		name,
+		url: `${sanitiseURL(name)}-${nanoid(10)}`,
+		color: generateHexColor(),
+		display: faker.datatype.boolean(),
+		view_voters: faker.datatype.boolean(),
+		createdAt: new Date().toJSON(),
+		updatedAt: new Date().toJSON(),
+	};
+};
+
 module.exports = {
 	user,
 	roadmap,
+	board,
 };

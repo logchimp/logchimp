@@ -98,6 +98,23 @@ const sanitiseUsername = (value) => {
 	return value.replace(/^_+|\W+|[^\w]|\s/g, "");
 };
 
+/**
+ * Sanitise URL
+ *
+ * @param {string} value url
+ * @returns {string} Return sanitised url
+ */
+const sanitiseURL = (value) => {
+	if (value == null || !_.isString(value)) {
+		return "";
+	}
+
+	return value
+		.trim()
+		.toLocaleLowerCase()
+		.replace(/^_+|\W+|[^\w]|\s/g, "-");
+};
+
 module.exports = {
 	validEmail,
 	validUUID,
@@ -105,4 +122,5 @@ module.exports = {
 	hashPassword,
 	validatePassword,
 	sanitiseUsername,
+	sanitiseURL,
 };
