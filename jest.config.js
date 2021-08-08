@@ -1,4 +1,4 @@
 module.exports = {
 	displayName: "server",
-	verbose: true
+	verbose: true,
 };

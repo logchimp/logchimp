@@ -16,7 +16,7 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"test:unit": "jest ./tests/unit",
-		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
+		"test:integration": "jest --forceExit --detectOpenHandles --collect-coverage ./tests/integration"
 	},
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
