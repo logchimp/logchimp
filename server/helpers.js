@@ -115,6 +115,25 @@ const sanitiseURL = (value) => {
 		.replace(/^_+|\W+|[^\w]|\s/g, "-");
 };
 
+/**
+ * Convert string to slug
+ *
+ * @param {string} value
+ * @returns {string} slug
+ */
+const toSlug = (value) => {
+	if (value == null || !_.isString(value)) {
+		return "";
+	}
+
+	return value
+		.replace(/[^\w\s]/gi, "")
+		.replace(/\s\s+/gi, " ")
+		.toLowerCase()
+		.split(" ")
+		.join("-");
+};
+
 module.exports = {
 	validEmail,
 	validUUID,
@@ -123,4 +142,5 @@ module.exports = {
 	validatePassword,
 	sanitiseUsername,
 	sanitiseURL,
+	toSlug,
 };
