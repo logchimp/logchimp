@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
  * @param {string} email
  * @returns boolean
  */
-const validEmail = email =>
+const validEmail = (email) =>
 	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi.test(
 		email
 	);
@@ -19,13 +19,13 @@ const validEmail = email =>
  * @param {*} value The value to check
  * @returns {*} Returns valid UUID
  */
-const validUUID = value => {
+const validUUID = (value) => {
 	if (value == null) {
 		return "";
 	}
 
 	if (_.isArray(value)) {
-		const arr = value.map(item => (validateUUID(item) ? item : ""));
+		const arr = value.map((item) => (validateUUID(item) ? item : ""));
 		const newArr = _.filter(arr);
 		return _.isEmpty(newArr) ? "" : newArr;
 	}
@@ -54,7 +54,7 @@ const generateHexColor = () => {
  * @param {string} value password to be hashed
  * @returns Return hash password
  */
-const hashPassword = value => {
+const hashPassword = (value) => {
 	if (_.isEmpty(value)) {
 		return null;
 	}
@@ -63,7 +63,7 @@ const hashPassword = value => {
 	const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
 	const hashPassword = bcrypt.hashSync(value, bcryptSalt);
 	return hashPassword;
-}
+};
 
 /**
  * Validate hashed pasword
@@ -77,18 +77,32 @@ const validatePassword = (password, hash) => {
 		return null;
 	}
 
- 	if (!_.isString(password && hash)) {
+	if (!_.isString(password && hash)) {
 		return null;
 	}
 
 	return bcrypt.compareSync(password, hash);
 };
 
+/**
+ * Sanitise username
+ *
+ * @param {string} value username
+ * @returns {string} Return username without any special character
+ */
+const sanitiseUsername = (value) => {
+	if (value == null || !_.isString(value)) {
+		return "";
+	}
+
+	return value.replace(/^_+|\W+|[^\w]|\s/g, "");
+};
 
 module.exports = {
 	validEmail,
 	validUUID,
 	generateHexColor,
 	hashPassword,
-	validatePassword
+	validatePassword,
+	sanitiseUsername,
 };
