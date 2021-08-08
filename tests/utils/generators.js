@@ -1,8 +1,9 @@
 const { v4: uuid } = require("uuid");
 const generatePassword = require("omgopass");
 const faker = require("faker");
+const { nanoid } = require("nanoid");
 
-const { sanitiseUsername } = require("../../server/helpers");
+const { generateHexColor, sanitiseUsername } = require("../../server/helpers");
 
 const user = () => {
 	return {
@@ -20,6 +21,22 @@ const user = () => {
 	};
 };
 
+const roadmap = () => {
+	const name = faker.commerce.productName();
+
+	return {
+		id: uuid(),
+		name,
+		url: `${name}-${nanoid(10)}`,
+		index: faker.datatype.number(),
+		color: generateHexColor(),
+		display: faker.datatype.boolean(),
+		created_at: new Date().toJSON(),
+		updated_at: new Date().toJSON(),
+	};
+};
+
 module.exports = {
 	user,
+	roadmap,
 };
