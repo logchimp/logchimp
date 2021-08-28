@@ -4,7 +4,7 @@ const { v4: uuid } = require("uuid");
 const app = require("../../../../server");
 const database = require("../../../../server/database");
 const { hashPassword } = require("../../../../server/helpers");
-const { verifyToken } = require('../../../../server/services/token.service');
+const { verifyToken } = require("../../../../server/services/token.service");
 
 beforeAll(async () => {
 	await database.migrate.latest();
@@ -16,7 +16,7 @@ beforeAll(async () => {
 				userId: uuid(),
 				email: "user_exists@example.com",
 				password: hashPassword("strongPassword"),
-				username: "user_exists"
+				username: "user_exists",
 			},
 			{
 				userId: uuid(),
@@ -34,7 +34,7 @@ afterAll(async () => {
 });
 
 describe("POST /api/v1/auth/login", () => {
-	it("should throw error \"EMAIL_INVALID\"", async () => {
+	it('should throw error "EMAIL_INVALID"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/login");
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -42,9 +42,9 @@ describe("POST /api/v1/auth/login", () => {
 		expect(response.body.code).toBe("EMAIL_INVALID");
 	});
 
-	it("should throw error \"USER_NOT_FOUND\"", async () => {
+	it('should throw error "USER_NOT_FOUND"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
-			email: "user_not_found@example.com"
+			email: "user_not_found@example.com",
 		});
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -52,10 +52,10 @@ describe("POST /api/v1/auth/login", () => {
 		expect(response.body.code).toBe("USER_NOT_FOUND");
 	});
 
-	it("should throw error \"PASSWORD_MISSING\"", async () => {
+	it('should throw error "PASSWORD_MISSING"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
 			email: "user_exists@example.com",
-			password: ""
+			password: "",
 		});
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -63,10 +63,10 @@ describe("POST /api/v1/auth/login", () => {
 		expect(response.body.code).toBe("PASSWORD_MISSING");
 	});
 
-	it("should throw error \"INCORRECT_PASSWORD\"", async () => {
+	it('should throw error "INCORRECT_PASSWORD"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
 			email: "user_exists@example.com",
-			password: "incorrect_password"
+			password: "incorrect_password",
 		});
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -74,10 +74,10 @@ describe("POST /api/v1/auth/login", () => {
 		expect(response.body.code).toBe("INCORRECT_PASSWORD");
 	});
 
-	it("should get \"user_exists\" user", async () => {
+	it('should get "user_exists" user', async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
 			email: "user_exists@example.com",
-			password: "strongPassword"
+			password: "strongPassword",
 		});
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -97,13 +97,13 @@ describe("POST /api/v1/auth/login", () => {
 		expect(user.password).toBeUndefined();
 	});
 
-	it("should throw error \"USER_BLOCKED\"", async () => {
+	it('should throw error "USER_BLOCKED"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/login").send({
 			email: "user_blocked@example.com",
-			password: "strongPassword"
+			password: "strongPassword",
 		});
 
 		expect(response.statusCode).toEqual(403);
 		expect(response.body.code).toEqual("USER_BLOCKED");
-	})
+	});
 });
