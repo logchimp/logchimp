@@ -73,7 +73,7 @@ describe("GET /boards/:url", () => {
 });
 
 // Search board by name
-describe.only("GET /boards/search/:name", () => {
+describe("GET /boards/search/:name", () => {
 	it('should throw error "INVALID_AUTH_HEADER"', async () => {
 		const response = await supertest(app).get("/api/v1/boards/search/name");
 
@@ -104,6 +104,8 @@ describe.only("GET /boards/search/:name", () => {
 			.get("/api/v1/boards/search/name")
 			.set("Authorization", `Bearer ${user.body.user.authToken}`);
 
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(400);
 		expect(response.body.code).toEqual("ACCESS_DENIED");
 	});
 });
