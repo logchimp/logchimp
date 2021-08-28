@@ -35,7 +35,9 @@ database.migrate
 
 // start express server at SERVER_PORT
 const port = config.server.port || 3000;
-app.listen(port, () => {
+const host = config.server.host || "127.0.0.1";
+
+app.listen(port, host, () => {
 	logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
 	logger.info(`Listening on port: ${port}`);
 	logger.info("Ctrl+C to shut down");
