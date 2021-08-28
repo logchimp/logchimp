@@ -1,8 +1,11 @@
 const supertest = require("supertest");
+const { v4: uuid } = require("uuid");
 
 const app = require("../../../server");
 const database = require("../../../server/database");
-const { board: generateBoards } = require('../../utils/generators')
+const { hashPassword } = require("../../../server/helpers");
+const { board: generateBoards } = require('../../utils/generators');
+const { getUser } = require("../../utils/getUser");
 
 beforeAll(async () => {
 	return await database.migrate.latest();
@@ -66,6 +69,40 @@ describe("GET /boards/:url", () => {
 		expect(response.body.board).toStrictEqual(board);
 	})
 });
+
+// Search board by name
+describe.only("GET /boards/search/:name", () => {
+	it("should throw error \"INVALID_AUTH_HEADER\"", async () => {
+		const response = await supertest(app).get("/api/v1/boards/search/name");
+
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(400);
+		expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+	})
+
+	it("should throw error not having \'board:read\' permission", async () => {
+		// seed users with no "board:read permission"
+		await database
+		.insert([
+			{
+				userId: uuid(),
+				email: "no-permission@example.com",
+				password: hashPassword("strongPassword"),
+				username: "no-permission"
+			}
+		])
+		.into("users");
+
+		const user = await getUser({
+			email: "no-permission@example.com",
+			password: "strongPassword"
+		})
+
+		const response = await supertest(app).get("/api/v1/boards/search/name").set('Authorization', `Bearer ${user.body.user.authToken}`)
+
+		expect(response.body.code).toEqual("ACCESS_DENIED");
+	});
+})
 
 // Create new boards
 describe("POST /api/v1/boards", () => {
