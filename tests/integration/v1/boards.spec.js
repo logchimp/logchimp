@@ -90,7 +90,7 @@ describe("GET /boards/search/:name", () => {
 
 	it("should throw error not having 'board:read' permission", async () => {
 		// seed users with no "board:read permission"
-		const createdUser = await database
+		const createUser = await database
 			.insert([
 				{
 					userId: uuid(),
