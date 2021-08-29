@@ -56,7 +56,7 @@ const createUser = async (req, res, next, userData) => {
 				)
 			`,
 			{
-				email: userData.email
+				email: userData.email.toLowerCase()
 			}
 		);
 
