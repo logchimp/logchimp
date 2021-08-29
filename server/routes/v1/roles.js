@@ -21,4 +21,9 @@ router.patch("/roles", middleware.apiAuth, roleExists, roles.update);
 // todo: add roleExists middleware
 router.put("/roles/:role_id/users/:user_id", middleware.apiAuth, roles.addRoleToUser);
 
+// BETA: Unassign role from a user
+// todo: add userExists middleware
+// todo: add roleExists middleware
+router.delete("/roles/:role_id/users/:user_id", middleware.apiAuth, roles.deleteRoleFromUser);
+
 module.exports = router;
