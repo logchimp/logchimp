@@ -6,7 +6,7 @@ const database = require("../../database");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 	const permissions = req.user.permissions;
 	const { role_id, user_id } = req.params;
 
@@ -33,7 +33,6 @@ module.exports = async (req, res, next) => {
 			success: !!response.rowCount,
 		});
 	} catch (err) {
-		console.log(err);
 		logger.error({
 			message: err,
 		});

@@ -16,7 +16,7 @@ router.post("/roles", middleware.apiAuth, roles.create);
 
 router.patch("/roles", middleware.apiAuth, roleExists, roles.update);
 
-// Assign role to a user
+// BETA: Assign role to a user
 // todo: add userExists middleware
 // todo: add roleExists middleware
 router.put("/roles/:role_id/users/:user_id", middleware.apiAuth, roles.addRoleToUser);
