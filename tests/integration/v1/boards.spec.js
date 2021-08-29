@@ -7,12 +7,18 @@ const { hashPassword } = require("../../../server/helpers");
 const { board: generateBoards } = require("../../utils/generators");
 const { getUser } = require("../../utils/getUser");
 
-beforeAll(async () => {
-	return await database.migrate.latest();
+beforeEach(() => {
+	return database.migrate
+		.latest()
+		.then()
+		.catch((err) => console.log(err));
 });
 
-afterAll(async () => {
-	return await database.migrate.rollback();
+afterEach(() => {
+	return database.migrate
+		.rollback()
+		.then()
+		.catch((err) => console.log(err));
 });
 
 // Get all boards
