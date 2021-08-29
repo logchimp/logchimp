@@ -99,7 +99,8 @@ describe("GET /boards/search/:name", () => {
 					username: "no-permission",
 				},
 			])
-			.into("users");
+			.into("users")
+			.returning(["userId"]);
 
 		// assign '@everyone' role to user
 		await database.raw(
