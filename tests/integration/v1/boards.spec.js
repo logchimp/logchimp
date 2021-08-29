@@ -31,24 +31,13 @@ describe("GET /api/v1/boards", () => {
 		expect(response.body.boards).toHaveLength(0);
 	});
 
-	// it("should get all boards", async () => {
-	// 	// generate & add board
-	// 	const board = generateBoards();
-	// 	console.log(board);
+	it.only("should get 0 boards", async () => {
+		const response = await supertest(app).get("/api/v1/boards");
 
-	// 	await database.insert(board).into("boards");
-
-	// 	const response = await supertest(app).get("/api/v1/boards");
-
-	// 	expect(response.headers["content-type"]).toContain("application/json");
-	// 	expect(response.status).toBe(200);
-
-	// 	console.log(response.body);
-	// 	const boards = response.body.boards;
-
-	// 	delete boards[0].boardId;
-	// 	expect(boards[0]).toStrictEqual(boards);
-	// })
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(200);
+		expect(response.body.boards).toHaveLength(0);
+	});
 });
 
 // Get boards by URL
