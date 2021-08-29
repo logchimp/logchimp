@@ -90,7 +90,7 @@ describe("GET /boards/search/:name", () => {
 
 	it("should throw error not having 'board:read' permission", async () => {
 		// seed users with no "board:read permission"
-		await database
+		const createdUser = await database
 			.insert([
 				{
 					userId: uuid(),
@@ -101,18 +101,35 @@ describe("GET /boards/search/:name", () => {
 			])
 			.into("users");
 
-		const user = await getUser({
+		// assign '@everyone' role to user
+		await database.raw(
+			`
+			INSERT INTO roles_users (id, role_id, user_id)
+			VALUES(:uuid, (
+					SELECT
+						id FROM roles
+					WHERE
+						name = '@everyone'
+					), :userId)
+		`,
+			{
+				uuid: uuid(),
+				userId: createUser[0].userId,
+			}
+		);
+
+		const authUser = await getUser({
 			email: "no-permission@example.com",
 			password: "strongPassword",
 		});
 
 		const response = await supertest(app)
 			.get("/api/v1/boards/search/name")
-			.set("Authorization", `Bearer ${user.body.user.authToken}`);
+			.set("Authorization", `Bearer ${authUser.body.user.authToken}`);
 
 		expect(response.headers["content-type"]).toContain("application/json");
-		expect(response.status).toBe(400);
-		expect(response.body.code).toEqual("ACCESS_DENIED");
+		expect(response.status).toBe(403);
+		expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
 	});
 });
 
