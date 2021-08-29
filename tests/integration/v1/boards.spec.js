@@ -132,4 +132,47 @@ describe("POST /api/v1/boards", () => {
 		expect(response.status).toBe(400);
 		expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
 	});
+
+	it("should throw error not having 'board:create' permission", async () => {
+		// seed users with no "board:create permission"
+		const createUser = await database
+			.insert([
+				{
+					userId: uuid(),
+					email: "no-permission@example.com",
+					password: hashPassword("strongPassword"),
+					username: "no-permission",
+				},
+			])
+			.into("users")
+			.returning(["userId"]);
+
+		// assign '@everyone' role to user
+		await database.raw(
+			`
+			INSERT INTO roles_users (id, role_id, user_id)
+			VALUES(:uuid, (
+					SELECT
+						id FROM roles
+					WHERE
+						name = '@everyone'
+					), :userId)
+		`,
+			{
+				uuid: uuid(),
+				userId: createUser[0].userId,
+			}
+		);
+
+		const authUser = await getUser({
+			email: "no-permission@example.com",
+			password: "strongPassword",
+		});
+
+		const response = await supertest(app).post("/api/v1/boards");
+
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(403);
+		expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+	});
 });
