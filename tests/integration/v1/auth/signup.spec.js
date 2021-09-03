@@ -44,6 +44,20 @@ describe("signup", () => {
       email: 'user@example.com',
     })
 	})
+	it("should not create new user", async () => {
+		await supertest(app).post("/api/v1/auth/signup").send({
+			email: "user@example.com",
+			password: "password"
+		});
+
+		const response = await supertest(app).post("/api/v1/auth/signup").send({
+			email: "USER@example.com",
+			password: "password"
+		});
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(409);
+		expect(response.body.code).toBe("USER_EXISTS");
+	})
 
 	it("should not be allowed", async () => {
 		// set allowSignup to false in settings table
