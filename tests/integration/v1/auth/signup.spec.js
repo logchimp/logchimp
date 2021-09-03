@@ -44,14 +44,14 @@ describe("signup", () => {
       email: 'user@example.com',
     })
 	})
-	it("should not create new user", async () => {
+	it("should not create new user with different casing in email", async () => {
 		await supertest(app).post("/api/v1/auth/signup").send({
-			email: "user@example.com",
+			email: "user1@example.com",
 			password: "password"
 		});
 
 		const response = await supertest(app).post("/api/v1/auth/signup").send({
-			email: "USER@example.com",
+			email: "USER1@example.com",
 			password: "password"
 		});
 		expect(response.headers["content-type"]).toContain("application/json");
