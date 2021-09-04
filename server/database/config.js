@@ -40,25 +40,25 @@ module.exports = {
 		warn(err) {
 			logger.warn({
 				code: "DATABASE",
-				err
+				message: err.toString()
 			});
 		},
 		error(err) {
 			logger.error({
 				code: "DATABASE",
-				err
+				message: err.toString()
 			});
 		},
 		deprecate(err) {
 			logger.info({
 				code: "DATABASE",
-				err
+				message: err.toString()
 			});
 		},
 		debug(err) {
 			logger.debug({
 				code: "DATABASE",
-				err
+				message: err.toString()
 			});
 		}
 	}
