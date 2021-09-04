@@ -169,7 +169,9 @@ describe("POST /api/v1/boards", () => {
 			password: "strongPassword",
 		});
 
-		const response = await supertest(app).post("/api/v1/boards");
+		const response = await supertest(app)
+			.post("/api/v1/boards")
+			.set("Authorization", `Bearer ${authUser.body.user.authToken}`);
 
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(403);
