@@ -4,6 +4,7 @@ const updateProfile = require("./updateProfile");
 const accessDashboard = require("./accessDashboard");
 const getUserPermissions = require("./getUserPermissions");
 const getUserInfo = require('./getUserInfo')
+const updateUserInfo = require('./updateUserInfo')
 
 module.exports = {
 	...filter,
@@ -11,5 +12,6 @@ module.exports = {
 	updateProfile,
 	...accessDashboard,
 	getUserPermissions,
-	getUserInfo
+	getUserInfo,
+	updateUserInfo
 };

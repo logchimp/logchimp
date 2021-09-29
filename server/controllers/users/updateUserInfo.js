@@ -3,26 +3,19 @@ const logger = require('../../utils/logger')
 
 const getUserInfo = async (req, res) => {
 	const { user_id } = req.params
+	const { username, name, notes } = req.body
 
 	try {
 		const user = await database
-			.select(
-				'userId',
-				'name',
-				'username',
-				'email',
-				'avatar',
-				'isVerified',
-				'isBlocked',
-				'isOwner',
-				'notes',
-				'createdAt'
-			)
+			.update({
+				username,
+				name,
+				notes
+			})
 			.from('users')
 			.where({
 				userId: user_id
 			})
-			.first()
 
 		res.status(200).send({
 			user
