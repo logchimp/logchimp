@@ -1,0 +1,3 @@
+#! /bin/bash
+
+npx logchimp-cli config:generate --env
