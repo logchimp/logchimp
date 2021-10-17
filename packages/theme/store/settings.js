@@ -28,8 +28,6 @@ export const mutations = {
 		state.allowSignup = payload.allowSignup;
 		state.developer_mode = payload.developer_mode;
 		state.labs = payload.labs;
-
-		localStorage.setItem("settings", JSON.stringify(payload));
 	}
 };
 
