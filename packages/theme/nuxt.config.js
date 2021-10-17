@@ -2,7 +2,7 @@ module.exports = {
 	srcDir: "packages/theme/",
 	modules: ["@nuxtjs/axios"],
 	router: {
-		middleware: ["siteSettings"]
+		middleware: ["siteSettings", "isAuthenticated"]
 	},
 	css: [
 		// main SASS file for importing all shared styles
