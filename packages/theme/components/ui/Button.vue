@@ -104,7 +104,7 @@ export default {
 			stroke: var(--color-white)
 
 .button-outline
-	border: 1px solid rgba(var(--color-white), 0.5)
+	border: 1px solid var(--color-white-light)
 
 	&:hover
 		border-color: var(--color-white)
