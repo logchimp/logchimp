@@ -39,6 +39,7 @@
 		"pg": "^8.7.1",
 		"supertest": "^6.1.6",
 		"uuid": "^8.3.2",
+		"vue-clickaway": "^2.2.2",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
