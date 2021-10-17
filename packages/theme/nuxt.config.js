@@ -1,5 +1,6 @@
 module.exports = {
 	srcDir: "packages/theme/",
+	modules: ["@nuxtjs/axios"],
 	router: {
 		middleware: ["siteSettings"]
 	},
