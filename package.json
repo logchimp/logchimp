@@ -20,6 +20,7 @@
 		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
 	},
 	"dependencies": {
+		"@nuxt/http": "^0.6.4",
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
@@ -33,6 +34,7 @@
 		"multer": "^1.4.3",
 		"nanoid": "^3.1.29",
 		"nodemailer": "^6.6.5",
+		"nuxt": "^2.15.8",
 		"pg": "^8.7.1",
 		"supertest": "^6.1.6",
 		"uuid": "^8.3.2",
@@ -46,7 +48,9 @@
 		"jest": "^27.2.4",
 		"nodemon": "^2.0.13",
 		"omgopass": "^3.2.1",
-		"prettier": "^2.4.1"
+		"prettier": "^2.4.1",
+		"sass": "^1.43.2",
+		"sass-loader": "10"
 	},
 	"keywords": [
 		"logchimp",
