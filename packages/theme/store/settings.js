@@ -1,4 +1,4 @@
-export const state = {
+export const state = () => ({
 	title: "",
 	description: "",
 	logo: "",
@@ -9,7 +9,7 @@ export const state = {
 	allowSignup: true,
 	developer_mode: false,
 	labs: {}
-};
+});
 
 export const getters = {
 	get: (state) => state,
