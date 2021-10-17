@@ -31,3 +31,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# theme
+packages/theme/.out

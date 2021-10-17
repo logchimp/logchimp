@@ -27,9 +27,4 @@ router.get("/api", (req, res) => {
 // v1 APIs
 router.use(v1);
 
-router.use((req, res, next) => {
-	if (!req.route) return res.status(404).send({ code: "ROUTE_NOT_FOUND" });
-	next();
-});
-
 module.exports = router;
