@@ -1,23 +1,23 @@
 <template>
 	<div class="navbar">
-		<router-link to="/" class="navbar-item">
+		<nuxt-link to="/" class="navbar-item">
 			<div class="navbar-item-icon">
 				<home-icon />
 			</div>
 			<div class="navbar-item-content">Home</div>
-		</router-link>
-		<router-link to="/roadmaps" class="navbar-item">
+		</nuxt-link>
+		<nuxt-link to="/roadmaps" class="navbar-item">
 			<div class="navbar-item-icon">
 				<roadmap-icon />
 			</div>
 			<div class="navbar-item-content">Roadmaps</div>
-		</router-link>
-		<router-link to="/boards" class="navbar-item">
+		</nuxt-link>
+		<nuxt-link to="/boards" class="navbar-item">
 			<div class="navbar-item-icon">
 				<board-icon />
 			</div>
 			<div class="navbar-item-content">Boards</div>
-		</router-link>
+		</nuxt-link>
 	</div>
 </template>
 
@@ -66,7 +66,7 @@ export default {
 	color: var(--color-white-light)
 	font-weight: 500
 
-.navbar-item.router-link-exact-active
+.navbar-item.nuxt-link-exact-active
 	border-color: var(--color-white)
 
 	.navbar-item-icon svg

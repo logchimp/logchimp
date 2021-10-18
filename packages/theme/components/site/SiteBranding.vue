@@ -1,12 +1,12 @@
 <template>
-	<router-link :to="link" class="site-info">
+	<nuxt-link :to="link" class="site-info">
 		<div class="logo-placeholder">
 			<img class="site-logo" :src="settings.logo" :alt="settings.title" />
 		</div>
 		<h5 v-if="settings.title" class="site-name">
 			{{ settings.title }}
 		</h5>
-	</router-link>
+	</nuxt-link>
 </template>
 
 <script>

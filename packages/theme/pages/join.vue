@@ -39,7 +39,7 @@
 		</div>
 		<div class="auth-form-other">
 			Already have an account?
-			<router-link to="/login"> Log in </router-link>
+			<nuxt-link to="/login">Log in</nuxt-link>
 		</div>
 	</div>
 </template>
