@@ -97,7 +97,7 @@ export default {
 			permissions: "getPermissions"
 		}),
 		accessDashboard() {
-			return permissions.includes("dashboard:read");
+			return this.permissions.includes("dashboard:read");
 		},
 		isAuthenticated() {
 			const token = this.$store.getters["user/getAuthToken"];
