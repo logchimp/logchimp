@@ -1,4 +1,5 @@
 {
   "name": "@logchimp/theme",
-  "description": "LogChimp default theme"
+  "description": "LogChimp default theme",
+	"version": "0.7.0-beta.0"
 }
