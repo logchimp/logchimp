@@ -1,5 +1,9 @@
 <template>
-	<div>
+	<div
+		:style="{
+			'--color-brand-color': `#${settings.accentColor}`
+		}"
+	>
 		<Header />
 		<div class="container container-view">
 			<Nuxt />
@@ -9,6 +13,10 @@
 </template>
 
 <script>
+// packages
+import { mapGetters } from "vuex";
+
+// components
 import Header from "../components/Header.vue";
 import PowerBy from "../components/PowerBy.vue";
 
@@ -18,6 +26,11 @@ export default {
 		// components
 		Header,
 		PowerBy
+	},
+	computed: {
+		...mapGetters("settings", {
+			settings: "get"
+		})
 	},
 	mounted() {
 		if (!process.server) {
