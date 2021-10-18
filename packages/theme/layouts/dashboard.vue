@@ -17,6 +17,7 @@ import PowerBy from "../components/PowerBy.vue";
 
 export default {
 	name: "DashboardLayout",
+	middleware: "dashboardAccess",
 	components: {
 		Sidebar,
 		PowerBy
