@@ -32,13 +32,23 @@ export default {
 			settings: "get"
 		})
 	},
-	mounted() {
+	async mounted() {
 		if (!process.server) {
 			const user = localStorage.getItem("user");
 
 			if (user) {
 				this.$store.dispatch("user/login", JSON.parse(user));
-				this.$store.dispatch("user/updatePermissions");
+
+				const token = this.$store.getters["user/getAuthToken"];
+				const response = await this.$axios({
+					method: "GET",
+					url: "/api/v1/users/permissions",
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				});
+
+				this.$store.commit("user/setPermissions", response.data);
 			}
 		}
 	}

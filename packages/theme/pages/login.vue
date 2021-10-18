@@ -122,8 +122,6 @@ export default {
 					...user
 				});
 
-				this.$store.dispatch("user/updatePermissions");
-
 				// redirect to "?redirect" query path if exists
 				if (this.$route.query.redirect) {
 					this.$router.push(this.$route.query.redirect);

@@ -48,13 +48,5 @@ export const actions = {
 			...state,
 			...payload
 		});
-	},
-	updatePermissions: async ({ commit }) => {
-		try {
-			const response = await getPermissions();
-			commit("setPermissions", response.data);
-		} catch (error) {
-			// tokenError(error);
-		}
 	}
 };
