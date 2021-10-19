@@ -28,8 +28,25 @@ export default {
 
 			if (user) {
 				this.$store.dispatch("user/login", JSON.parse(user));
-
 				const token = this.$store.getters["user/getAuthToken"];
+
+				// Check user access to dashboard
+				const userAccess = await this.$axios({
+					method: "GET",
+					url: "/api/v1/users/dashboard",
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				});
+
+				// Redirect for not having access
+				if (!userAccess.data.access) {
+					console.log("redirect");
+					redirect({
+						path: "/"
+					});
+				}
+
 				const response = await this.$axios({
 					method: "GET",
 					url: "/api/v1/users/permissions",
@@ -39,6 +56,12 @@ export default {
 				});
 
 				this.$store.commit("user/setPermissions", response.data);
+			} else {
+				// user is not logged in
+				redirect({
+					path: "/",
+					query: { redirect: "/dashboard" }
+				});
 			}
 		}
 	}
