@@ -42,7 +42,7 @@ export default {
 				// Redirect for not having access
 				if (!userAccess.data.access) {
 					console.log("redirect");
-					redirect({
+					this.$router.push({
 						path: "/"
 					});
 				}
@@ -58,7 +58,7 @@ export default {
 				this.$store.commit("user/setPermissions", response.data);
 			} else {
 				// user is not logged in
-				redirect({
+				this.$router.push({
 					path: "/",
 					query: { redirect: "/dashboard" }
 				});
