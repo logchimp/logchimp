@@ -202,9 +202,9 @@ export default {
 
 				const url = response.data.board.url;
 				this.$router.push(`/dashboard/boards/${url}/settings`);
+				this.createBoardButtonLoading = false;
 			} catch (err) {
 				console.error(err);
-			} finally {
 				this.createBoardButtonLoading = false;
 			}
 		},

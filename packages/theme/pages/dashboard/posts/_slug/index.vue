@@ -192,9 +192,9 @@ export default {
 				if (response.status === 200) {
 					this.$router.push("/dashboard/posts");
 				}
+				this.loading.updatePostButton = false;
 			} catch (err) {
 				console.error(err);
-			} finally {
 				this.loading.updatePostButton = false;
 			}
 		},
@@ -216,9 +216,9 @@ export default {
 
 				this.title = response.data.post.title;
 				this.post = response.data.post;
+				this.loading.post = false;
 			} catch (err) {
 				console.error(err);
-			} finally {
 				this.loading.post = false;
 			}
 		},

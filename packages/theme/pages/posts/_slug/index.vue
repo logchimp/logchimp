@@ -236,9 +236,9 @@ export default {
 				});
 
 				this.activity.data = response.data.activity;
+				this.activity.loading = false;
 			} catch (error) {
 				console.log(error);
-			} finally {
 				this.activity.loading = false;
 			}
 		},

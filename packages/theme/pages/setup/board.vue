@@ -94,9 +94,9 @@ export default {
 				});
 
 				this.$router.push("/dashboard");
+				this.buttonLoading = false;
 			} catch (error) {
 				console.error(error);
-			} finally {
 				this.buttonLoading = false;
 			}
 		}
