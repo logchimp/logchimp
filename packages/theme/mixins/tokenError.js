@@ -8,7 +8,7 @@ export default {
 				localStorage.removeItem("user");
 			}
 
-			if (error.response.data.code === "USER_NOT_FOUND") {
+			if (error?.response?.data.code === "USER_NOT_FOUND") {
 				if (this.$router.currentRoute.fullPath !== "/") this.$router.push("/");
 			}
 
@@ -18,11 +18,11 @@ export default {
 			}
 
 			// invalid auth header format
-			if (error.response.data.code === "INVALID_AUTH_HEADER_FORMAT") {
+			if (error?.response?.data.code === "INVALID_AUTH_HEADER_FORMAT") {
 				this.$router.push({
 					path: "/login",
 					query: {
-						redirect: router.currentRoute.fullPath
+						redirect: this.$router.currentRoute.fullPath
 					}
 				});
 			}
