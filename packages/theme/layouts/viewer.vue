@@ -6,8 +6,8 @@
 	>
 		<Header />
 		<div class="container container-view">
-			<Nuxt />
-			<power-by />
+			<nuxt />
+			<power-by v-if="settings.isPoweredBy" />
 		</div>
 	</div>
 </template>
@@ -51,6 +51,28 @@ export default {
 				this.$store.commit("user/setPermissions", response.data);
 			}
 		}
+	},
+	head() {
+		return {
+			htmlAttrs: {
+				lang: "en",
+				hreflang: "en"
+			},
+			meta: [
+				{
+					name: "generator",
+					content: `LogChimp v${process.env.version}`
+				},
+				{
+					name: "theme-color",
+					content: this.settings.accentColor
+				},
+				{
+					name: "msapplication-TileColor",
+					content: this.settings.accentColor
+				}
+			]
+		};
 	}
 };
 </script>
