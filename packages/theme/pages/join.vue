@@ -121,7 +121,7 @@ export default {
 			this.buttonLoading = true;
 
 			try {
-				const user = await this.$axios.$post("/api/v1/auth/signup", {
+				const { user } = await this.$axios.$post("/api/v1/auth/signup", {
 					email: this.email.value,
 					password: this.password.value
 				});
