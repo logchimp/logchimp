@@ -279,7 +279,7 @@ export default {
 			this[type].suggestions = [];
 		}
 	},
-	metaInfo() {
+	head() {
 		return {
 			title: `${this.title} • Post • Dashboard • ${this.settings.title}`
 		};
