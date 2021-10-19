@@ -182,9 +182,6 @@ export default {
 		showPostActivity() {
 			return this.$store.getters["settings/labs"].comments;
 		},
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
-		}
 	},
 	watch: {
 		// Get post activity on changing sort

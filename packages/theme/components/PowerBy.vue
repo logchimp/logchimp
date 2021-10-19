@@ -1,7 +1,7 @@
 <template>
 	<div class="logchimp-poweredby">
 		<a
-			:href="`https://logchimp.codecarrot.net/?utm_source=${source}&utm_medium=powered&company=${getSiteSittings.title}`"
+			:href="`https://logchimp.codecarrot.net/?utm_source=${source}&utm_medium=powered&company=${settings.title}`"
 		>
 			Powered by LogChimp
 		</a>
@@ -9,12 +9,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
 	name: "PowerBy",
 	computed: {
-		getSiteSittings() {
-			return this.$store.getters["settings/get"];
-		},
+		...mapGetters("settings", {
+			settings: "get"
+		}),
 		source() {
 			return this.$route.name;
 		}
