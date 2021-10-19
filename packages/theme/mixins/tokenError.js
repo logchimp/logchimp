@@ -3,6 +3,11 @@ export default {
 		tokenError(error) {
 			this.$store.dispatch("user/logout");
 
+			// remove user from localStorage on client-side
+			if (!process.server) {
+				localStorage.removeItem("user");
+			}
+
 			if (error.response.data.code === "USER_NOT_FOUND") {
 				if (this.$router.currentRoute.fullPath !== "/") this.$router.push("/");
 			}
