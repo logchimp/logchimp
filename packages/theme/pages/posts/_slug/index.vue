@@ -280,7 +280,7 @@ export default {
 	},
 	head() {
 		return {
-			title: `${this.post.title} · Post · ${this.settings.title}`,
+			title: `${this.post.title} • Post • ${this.settings.title}`,
 			meta: [
 				{
 					name: "description",
@@ -290,7 +290,7 @@ export default {
 				// openGraph
 				{
 					name: "og:title",
-					content: `${this.post.title} · Post · ${this.settings.title}`
+					content: `${this.post.title} • Post • ${this.settings.title}`
 				},
 				{
 					name: "og:description",

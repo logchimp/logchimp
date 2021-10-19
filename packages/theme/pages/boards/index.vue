@@ -80,11 +80,11 @@ export default {
 	},
 	head() {
 		return {
-			title: `Boards · ${this.settings.title}`,
+			title: `Boards • ${this.settings.title}`,
 			meta: [
 				{
 					name: "og:title",
-					content: `Boards · ${this.settings.title}`
+					content: `Boards • ${this.settings.title}`
 				}
 			]
 		};

@@ -213,11 +213,11 @@ export default {
 	},
 	head() {
 		return {
-			title: `Settings · ${this.settings.title}`,
+			title: `Settings • ${this.settings.title}`,
 			meta: [
 				{
 					name: "og:title",
-					content: `Settings · ${this.settings.title}`
+					content: `Settings • ${this.settings.title}`
 				}
 			]
 		};

@@ -154,11 +154,11 @@ export default {
 	},
 	head() {
 		return {
-			title: `Join · ${this.settings.title}`,
+			title: `Join • ${this.settings.title}`,
 			meta: [
 				{
 					name: "og:title",
-					content: `Join · ${this.settings.title}`
+					content: `Join • ${this.settings.title}`
 				}
 			]
 		};

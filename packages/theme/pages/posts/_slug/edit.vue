@@ -141,11 +141,11 @@ export default {
 	},
 	head() {
 		return {
-			title: `Edit post · ${this.settings.title}`,
+			title: `Edit post • ${this.settings.title}`,
 			meta: [
 				{
 					name: "og:title",
-					content: `Edit post · ${this.settings.title}`
+					content: `Edit post • ${this.settings.title}`
 				}
 			]
 		};

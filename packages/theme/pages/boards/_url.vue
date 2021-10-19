@@ -119,11 +119,11 @@ export default {
 	},
 	head() {
 		return {
-			title: `${this.board.name} · Board · ${this.settings.title}`,
+			title: `${this.board.name} • Board • ${this.settings.title}`,
 			meta: [
 				{
 					name: "og:title",
-					content: `${this.board.name} · Board · ${this.settings.title}`
+					content: `${this.board.name} • Board • ${this.settings.title}`
 				},
 				{
 					name: "robots",

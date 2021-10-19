@@ -157,7 +157,7 @@ export default {
 	},
 	head() {
 		return {
-			title: `Dashboard · ${this.settings.title}`
+			title: `Dashboard • ${this.settings.title}`
 		};
 	}
 };
