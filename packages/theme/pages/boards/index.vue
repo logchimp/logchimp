@@ -27,8 +27,8 @@ import { mapGetters } from "vuex";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
-import BoardItem from "../components/board/BoardItem.vue";
-import Loader from "../components/ui/Loader.vue";
+import BoardItem from "../../components/board/BoardItem.vue";
+import Loader from "../../components/ui/Loader.vue";
 
 export default {
 	name: "Boards",
