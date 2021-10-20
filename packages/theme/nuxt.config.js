@@ -3,6 +3,8 @@ import "dayjs/plugin/relativeTime";
 import packageJSON from "./package.json";
 
 export default {
+	srcDir:
+		process.env.LOGCHIMP_THEME_STANDALONE === "true" ? "./" : "packages/theme",
 	buildDir: ".out",
 	modules: ["@nuxtjs/axios", "@nuxtjs/dayjs"],
 	router: {
@@ -18,10 +20,12 @@ export default {
 
 	// Axios https://axios.nuxtjs.org/setup
 	axios: {
-		baseURL:
-			process.env.LOGCHIMP_THEME_STANDALONE === "true"
-				? `http://localhost:${process.env.LOGCHIMP_SERVER_PORT || 80}`
-				: ""
+		// NOTE: a hackish way to set baseUrl only for standalone theme deployment
+		...(process.env.LOGCHIMP_THEME_STANDALONE === "true" && {
+			baseURL: `http://${process.env.LOGCHIMP_SERVER_HOST || "localhost"}:${
+				process.env.LOGCHIMP_SERVER_PORT || 80
+			}`
+		})
 	},
 
 	// DayJS https://www.npmjs.com/package/@nuxtjs/dayjs
