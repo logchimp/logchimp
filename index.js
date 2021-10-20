@@ -1,8 +1,8 @@
 const startTime = Date.now();
 
+const ssr = require("@logchimp/theme");
 const app = require("./server");
 const database = require("./server/database");
-// const ssr = require("./packages/theme/theme.ssr");
 
 // utils
 const logger = require("./server/utils/logger");

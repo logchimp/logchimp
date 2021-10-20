@@ -7,9 +7,9 @@ const ssr = async () => {
 	// Get a ready to use Nuxt instance
 	const nuxt = await loadNuxt({
 		for: isDev ? "dev" : "start",
-		configFile: path.join(__dirname, "packages/theme/nuxt.config.js"),
+		configFile: path.join(__dirname, "nuxt.config.js"),
 		configOverrides: {
-			buildDir: path.join(__dirname, "packages/theme/.out")
+			buildDir: path.join(__dirname, ".out")
 		}
 	});
 
