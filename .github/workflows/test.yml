@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/test.yml"
+      - "packages/**"
       - "server/**"
       - "tests/**"
       - "package.json"
