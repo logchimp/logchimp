@@ -11,9 +11,65 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit:
-    name: Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+  cache:
+    name: Cache node_modules directory
+
+    strategy:
+      matrix:
+        node: [16]
+        os: [ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: yarn --frozen-lockfile
+
+  theme/unit:
+    name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
+    needs: cache
+
+    strategy:
+      matrix:
+        node: [16]
+        os: [ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: yarn --frozen-lockfile
+
+      - name: Testing
+        run: yarn workspace @logchimp/theme test:unit
+
+  api/unit:
+    name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    needs: cache
 
     strategy:
       matrix:
@@ -34,10 +90,10 @@ jobs:
       - name: Testing
         run: yarn test:unit
 
-  integration:
-    name: Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+  api/integration:
+    name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: unit
+    needs: [api/unit, cache]
 
     strategy:
       matrix:

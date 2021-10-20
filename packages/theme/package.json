@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "nuxt",
 		"start": "nuxt start",
-		"test": "jest --config ./jest.config.js"
+		"test:unit": "jest"
 	},
 	"engines": {
 		"node": ">= 16"
