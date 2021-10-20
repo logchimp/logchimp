@@ -64,9 +64,9 @@ describe("GET /boards/search/:name", () => {
 			.insert([
 				{
 					userId: uuid(),
-					email: "no-permission@example.com",
+					email: "serchBoard@example.com",
 					password: hashPassword("strongPassword"),
-					username: "no-permission"
+					username: "serchBoard"
 				}
 			])
 			.into("users")
@@ -90,7 +90,7 @@ describe("GET /boards/search/:name", () => {
 		);
 
 		const authUser = await getUser({
-			email: "no-permission@example.com",
+			email: "serchBoard@example.com",
 			password: "strongPassword"
 		});
 
@@ -109,7 +109,7 @@ describe("GET /boards/search/:name", () => {
 			.insert([
 				{
 					userId: uuid(),
-					email: "permission@example.com",
+					email: "serchBoard_board-read-permission@example.com",
 					password: hashPassword("strongPassword"),
 					username: "permission"
 				}
@@ -156,7 +156,7 @@ describe("GET /boards/search/:name", () => {
 			.into("roles_users");
 
 		const authUser = await getUser({
-			email: "permission-zero-boards@example.com",
+			email: "serchBoard_board-read-permission@example.com",
 			password: "strongPassword"
 		});
 
@@ -186,9 +186,9 @@ describe("POST /api/v1/boards", () => {
 			.insert([
 				{
 					userId: uuid(),
-					email: "no-permission@example.com",
+					email: "boards_createBoard@example.com",
 					password: hashPassword("strongPassword"),
-					username: "no-permission"
+					username: "boards_createBoard"
 				}
 			])
 			.into("users")
@@ -212,7 +212,7 @@ describe("POST /api/v1/boards", () => {
 		);
 
 		const authUser = await getUser({
-			email: "no-permission@example.com",
+			email: "boards_createBoard@example.com",
 			password: "strongPassword"
 		});
 
