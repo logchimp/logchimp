@@ -7,7 +7,7 @@
 			@update-voters="updateVoters"
 		/>
 		<div>
-			<router-link
+			<nuxt-link
 				class="post-content-link"
 				data-test="post-link"
 				:to="`${dashboardUrl}/posts/${postData.slug}`"
@@ -15,7 +15,7 @@
 				<h5 class="post-content-title">
 					{{ postData.title }}
 				</h5>
-			</router-link>
+			</nuxt-link>
 			<p
 				v-if="postData.roadmap"
 				class="post-roadmap"

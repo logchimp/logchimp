@@ -6,56 +6,56 @@
 		<div class="sidebar-list">
 			<h6>Manage</h6>
 			<li>
-				<router-link to="/dashboard" class="sidebar-list-item">
+				<nuxt-link to="/dashboard" class="sidebar-list-item">
 					<dashboard-icon />
 					<p>Dashbaord</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 			<li>
-				<router-link to="/dashboard/boards" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/boards" class="sidebar-list-item">
 					<board-icon />
 					<p>Boards</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 			<li>
-				<router-link to="/dashboard/roadmaps" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/roadmaps" class="sidebar-list-item">
 					<roadmap-icon />
 					<p>Roadmaps</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 			<li>
-				<router-link to="/dashboard/posts" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/posts" class="sidebar-list-item">
 					<post-icon />
 					<p>Posts</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 			<li>
-				<router-link to="/dashboard/users" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/users" class="sidebar-list-item">
 					<users-icon />
 					<p>Users</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 		</div>
 
 		<div class="sidebar-list">
 			<h6>Settings</h6>
 			<li>
-				<router-link to="/dashboard/settings/general" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/settings/general" class="sidebar-list-item">
 					<settings-icon />
 					<p>General</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 			<li>
-				<router-link to="/dashboard/settings/roles" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/settings/roles" class="sidebar-list-item">
 					<shield-icon />
 					<p>Roles</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 			<li>
-				<router-link to="/dashboard/settings/labs" class="sidebar-list-item">
+				<nuxt-link to="/dashboard/settings/labs" class="sidebar-list-item">
 					<lab-icon />
 					<p>Labs</p>
-				</router-link>
+				</nuxt-link>
 			</li>
 		</div>
 		<footer>

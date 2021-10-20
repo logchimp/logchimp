@@ -7,7 +7,7 @@
 					<div class="table-header-item posts-table-title">title</div>
 					<div class="table-header-item posts-table-votes">votes</div>
 				</template>
-				<router-link
+				<nuxt-link
 					v-for="post in posts.data"
 					:key="post.postId"
 					:to="`/dashboard/posts/${post.slug}`"
@@ -19,7 +19,7 @@
 					<div class="table-data posts-table-votes">
 						{{ post.voters.votesCount }}
 					</div>
-				</router-link>
+				</nuxt-link>
 				<infinite-loading @infinite="getPosts">
 					<div slot="spinner" class="loader-container">
 						<loader />

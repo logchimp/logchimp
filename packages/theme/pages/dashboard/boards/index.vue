@@ -42,12 +42,12 @@
 					{{ board.post_count }}
 				</div>
 				<div class="table-icon-group boards-table-icons">
-					<router-link
+					<nuxt-link
 						:to="`/boards/${board.url}`"
 						class="table-data table-data-icon boards-table-icon-link"
 					>
 						<link-icon />
-					</router-link>
+					</nuxt-link>
 					<div class="table-data table-data-icon">
 						<eye-icon v-if="board.display" />
 						<eye-off-icon v-else />

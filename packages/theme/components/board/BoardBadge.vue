@@ -1,5 +1,5 @@
 <template>
-	<router-link
+	<nuxt-link
 		v-if="showBoard"
 		data-test="board-badge"
 		class="board-badge"
@@ -17,7 +17,7 @@
 				{{ name }}
 			</p>
 		</div>
-	</router-link>
+	</nuxt-link>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <router-link
+  <nuxt-link
     data-test="board-item"
     :to="`/boards/${url}`"
     class="board-item"
@@ -19,7 +19,7 @@
         {{ postCount }}
       </div>
     </div>
-  </router-link>
+  </nuxt-link>
 </template>
 
 <script>

@@ -26,12 +26,12 @@
 						{{ role.name }}
 					</div>
 					<div class="table-icon-group boards-table-icons">
-						<router-link
+						<nuxt-link
 							:to="`/dashboard/settings/roles/${role.id}/settings`"
 							class="table-data table-data-icon"
 						>
 							<settings-icon />
-						</router-link>
+						</nuxt-link>
 						<dropdown-wrapper v-if="isDeveloperMode">
 							<template #toggle>
 								<div
