@@ -16,6 +16,14 @@ export default {
 		version: packageJSON.version
 	},
 
+	// Axios https://axios.nuxtjs.org/setup
+	axios: {
+		baseURL:
+			process.env.LOGCHIMP_THEME_STANDALONE === "true"
+				? `http://localhost:${process.env.LOGCHIMP_SERVER_PORT || 80}`
+				: ""
+	},
+
 	// DayJS https://www.npmjs.com/package/@nuxtjs/dayjs
 	dayjs: {
 		plugins: ["relativeTime"]
