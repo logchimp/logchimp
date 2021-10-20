@@ -1,6 +1,6 @@
-import dayjs from "../../src/plugins/dayjs";
+import dayjs from "../plugins/dayjs";
 import { createLocalVue, RouterLinkStub, shallowMount } from "@vue/test-utils";
-import PostCard from "../../src/components/post/PostCard";
+import PostCard from "../../components/roadmap/RoadmapPostCard";
 
 const localVue = createLocalVue();
 localVue.use(dayjs);
