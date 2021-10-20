@@ -48,6 +48,7 @@ export default {
 			const roadmapId = this.roadmap.id;
 			try {
 				const userId = this.$store.getters["user/getUserId"];
+
 				const response = await this.$axios({
 					method: "POST",
 					url: "/api/v1/posts/get",

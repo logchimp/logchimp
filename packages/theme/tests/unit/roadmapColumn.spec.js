@@ -11,7 +11,7 @@ describe("roadmap view", () => {
         color: "dd7479"
       }
     },
-    stubs: ["PostCard"]
+    stubs: ["RoadmapPostCard"]
   });
 
   it("has color dot", () => {
