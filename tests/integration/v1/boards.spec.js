@@ -6,7 +6,7 @@ const database = require("../../../server/database");
 const { hashPassword } = require("../../../server/helpers");
 const { board: generateBoards } = require("../../utils/generators");
 const { getUser } = require("../../utils/getUser");
-const cleanDatabase = require("../../../utils/cleanDatabase");
+const cleanDatabase = require("../../utils/cleanDatabase");
 
 afterAll(() => cleanDatabase());
 

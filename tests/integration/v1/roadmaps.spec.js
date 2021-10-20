@@ -3,7 +3,7 @@ const supertest = require("supertest");
 const app = require("../../../server");
 const database = require("../../../server/database");
 const { roadmap: generateRoadmap } = require("../../utils/generators");
-const cleanDatabase = require("../../../utils/cleanDatabase");
+const cleanDatabase = require("../../utils/cleanDatabase");
 
 afterAll(() => cleanDatabase());
 
