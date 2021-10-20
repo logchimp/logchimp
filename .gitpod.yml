@@ -11,6 +11,10 @@ tasks:
     command: |
       gp sync-await setup
       NODE_ENV="development" yarn run dev
+  - name: Server (logs)
+    openMode: tab-after
+    command: |
+      tail -f ./content/logs/logchimp-all.log
   - name: Mail server
     openMode: tab-after
     command: |
