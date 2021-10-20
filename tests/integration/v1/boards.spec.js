@@ -19,14 +19,6 @@ describe("GET /api/v1/boards", () => {
 		expect(response.status).toBe(200);
 		expect(response.body.boards).toHaveLength(0);
 	});
-
-	it.only("should get 0 boards", async () => {
-		const response = await supertest(app).get("/api/v1/boards");
-
-		expect(response.headers["content-type"]).toContain("application/json");
-		expect(response.status).toBe(200);
-		expect(response.body.boards).toHaveLength(0);
-	});
 });
 
 // Get boards by URL
@@ -111,12 +103,70 @@ describe("GET /boards/search/:name", () => {
 		expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
 	});
 
-	it.only("should search board name", async () => {
-		const response = await supertest(app).get("/api/v1/boards/search/name");
+	it("should return 0 boards", async () => {
+		// seed users with "board:read permission"
+		const createUser = await database
+			.insert([
+				{
+					userId: uuid(),
+					email: "permission@example.com",
+					password: hashPassword("strongPassword"),
+					username: "permission"
+				}
+			])
+			.into("users")
+			.returning(["userId"]);
+
+		// create a new role
+		const newRoleId = uuid();
+		await database
+			.insert({
+				id: newRoleId,
+				name: "board:read",
+				description: "this role has 'board:read' permission"
+			})
+			.into("roles");
+
+		// find "board:read" permission
+		const findPermission = await database
+			.select()
+			.from("permissions")
+			.where({
+				type: "board",
+				action: "read"
+			})
+			.first();
+
+		// assign 'board:read' permission to newly created role
+		await database
+			.insert({
+				id: uuid(),
+				role_id: newRoleId,
+				permission_id: findPermission.id
+			})
+			.into("permissions_roles");
+
+		// assign the role to newly creatd user
+		await database
+			.insert({
+				id: uuid(),
+				role_id: newRoleId,
+				user_id: createUser[0].userId
+			})
+			.into("roles_users");
+
+		const authUser = await getUser({
+			email: "permission-zero-boards@example.com",
+			password: "strongPassword"
+		});
+
+		const response = await supertest(app)
+			.get("/api/v1/boards/search/name")
+			.set("Authorization", `Bearer ${authUser.body.user.authToken}`);
 
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(200);
-		console.log(response.body);
+		expect(response.body.boards).toHaveLength(0);
 	});
 });
 
@@ -175,8 +225,8 @@ describe("POST /api/v1/boards", () => {
 		expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
 	});
 
-	it("should create a board", () => {
-		// seed users with no "board:create permission"
+	it("should create a board", async () => {
+		// seed users with "board:create permission"
 		const createUser = await database
 			.insert([
 				{
