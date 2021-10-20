@@ -3,7 +3,7 @@ import "dayjs/plugin/relativeTime";
 import packageJSON from "./package.json";
 
 export default {
-	srcDir: "packages/theme/",
+	buildDir: ".out",
 	modules: ["@nuxtjs/axios", "@nuxtjs/dayjs"],
 	router: {
 		middleware: ["siteSettings", "isAuthenticated"]
@@ -18,6 +18,6 @@ export default {
 
 	// DayJS https://www.npmjs.com/package/@nuxtjs/dayjs
 	dayjs: {
-		plugins: ['relativeTime']
+		plugins: ["relativeTime"]
 	}
 };

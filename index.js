@@ -2,7 +2,7 @@ const startTime = Date.now();
 
 const app = require("./server");
 const database = require("./server/database");
-const ssr = require("./theme.ssr");
+// const ssr = require("./packages/theme/theme.ssr");
 
 // utils
 const logger = require("./server/utils/logger");

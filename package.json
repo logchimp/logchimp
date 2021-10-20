@@ -20,8 +20,6 @@
 		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
 	},
 	"dependencies": {
-		"@nuxtjs/axios": "^5.13.6",
-		"@nuxtjs/dayjs": "^1.4.1",
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
@@ -31,19 +29,13 @@
 		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.95.11",
 		"lodash": "^4.17.21",
-		"lucide-vue": "^0.16.11",
 		"md5": "^2.3.0",
 		"multer": "^1.4.3",
 		"nanoid": "^3.1.29",
 		"nodemailer": "^6.6.5",
-		"nuxt": "^2.15.8",
 		"pg": "^8.7.1",
 		"supertest": "^6.1.6",
 		"uuid": "^8.3.2",
-		"vue-clickaway": "^2.2.2",
-		"vue-infinite-loading": "^2.4.5",
-		"vuedraggable": "^2.24.3",
-		"vuex": "^3.6.2",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
@@ -55,9 +47,7 @@
 		"jest": "^27.2.4",
 		"nodemon": "^2.0.13",
 		"omgopass": "^3.2.1",
-		"prettier": "^2.4.1",
-		"sass": "^1.43.2",
-		"sass-loader": "10"
+		"prettier": "^2.4.1"
 	},
 	"keywords": [
 		"logchimp",
