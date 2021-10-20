@@ -23,6 +23,7 @@
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.15.8",
+		"@vue/test-utils": "^1.2.2",
 		"babel-core": "7.0.0-bridge.0",
 		"babel-plugin-transform-require-context": "^0.1.1",
 		"dayjs": "^1.10.7",
