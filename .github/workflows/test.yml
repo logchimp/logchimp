@@ -95,7 +95,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Testing
-        run: yarn test:unit
+        run: yarn workspace @logchimp/api test:unit
 
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
