@@ -1,4 +1,4 @@
-import AvatarStack from "../../src/components/AvatarStack";
+import AvatarStack from "../../components/ui/AvatarStack";
 import { mount } from "@vue/test-utils";
 
 describe("avatar stack", () => {

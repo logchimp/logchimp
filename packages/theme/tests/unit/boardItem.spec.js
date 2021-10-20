@@ -1,4 +1,4 @@
-import BoardItem from "../../src/components/board/BoardItem.vue";
+import BoardItem from "../../components/board/BoardItem";
 import { mount, RouterLinkStub } from "@vue/test-utils";
 
 describe("board item", () => {

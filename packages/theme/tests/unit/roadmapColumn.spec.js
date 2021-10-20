@@ -1,4 +1,4 @@
-import RoadmapView from "../../src/components/RoadmapView";
+import RoadmapView from "../../components/roadmap/RoadmapColumn";
 import { shallowMount } from "@vue/test-utils";
 
 describe("roadmap view", () => {

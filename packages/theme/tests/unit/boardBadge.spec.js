@@ -1,4 +1,4 @@
-import BoardBadge from "../../src/components/board/BoardBadge";
+import BoardBadge from "../../components/board/BoardBadge";
 import { mount, RouterLinkStub } from "@vue/test-utils";
 
 describe("board badge", () => {
