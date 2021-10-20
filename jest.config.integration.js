@@ -1,5 +1,5 @@
 module.exports = {
 	displayName: "server",
 	verbose: true,
-	globalSetup: "./tests/utils/globalSetup.js",
+	globalSetup: "./tests/utils/globalSetup.js"
 };
