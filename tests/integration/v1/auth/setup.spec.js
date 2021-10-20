@@ -2,14 +2,9 @@ const supertest = require("supertest");
 
 const app = require("../../../../server");
 const database = require("../../../../server/database");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
-beforeAll(async () => {
-	return await database.migrate.latest();
-});
-
-afterAll(async () => {
-	return await database.migrate.rollback();
-});
+afterAll(() => cleanDatabase());
 
 describe("POST /api/v1/auth/setup", () => {
 	it('should throw error "EMAIL_INVALID"', async () => {

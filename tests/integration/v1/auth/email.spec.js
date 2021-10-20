@@ -4,14 +4,9 @@ const app = require("../../../../server");
 const database = require("../../../../server/database");
 const { createToken } = require("../../../../server/services/token.service");
 const { user: generateUser } = require("../../../utils/generators");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
-beforeAll(async () => {
-	return await database.migrate.latest();
-});
-
-afterAll(async () => {
-	return await database.migrate.rollback();
-});
+afterAll(() => cleanDatabase());
 
 describe("POST /api/v1/auth/email/validate", () => {
 	it('should throw error "MISSING_TOKEN"', async () => {

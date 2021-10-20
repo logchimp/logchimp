@@ -6,20 +6,9 @@ const database = require("../../../server/database");
 const { hashPassword } = require("../../../server/helpers");
 const { board: generateBoards } = require("../../utils/generators");
 const { getUser } = require("../../utils/getUser");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
-beforeEach(() => {
-	return database.migrate
-		.latest()
-		.then()
-		.catch((err) => console.log(err));
-});
-
-afterEach(() => {
-	return database.migrate
-		.rollback()
-		.then()
-		.catch((err) => console.log(err));
-});
+afterAll(() => cleanDatabase());
 
 // Get all boards
 describe("GET /api/v1/boards", () => {
@@ -85,8 +74,8 @@ describe("GET /boards/search/:name", () => {
 					userId: uuid(),
 					email: "no-permission@example.com",
 					password: hashPassword("strongPassword"),
-					username: "no-permission",
-				},
+					username: "no-permission"
+				}
 			])
 			.into("users")
 			.returning(["userId"]);
@@ -104,13 +93,13 @@ describe("GET /boards/search/:name", () => {
 		`,
 			{
 				uuid: uuid(),
-				userId: createUser[0].userId,
+				userId: createUser[0].userId
 			}
 		);
 
 		const authUser = await getUser({
 			email: "no-permission@example.com",
-			password: "strongPassword",
+			password: "strongPassword"
 		});
 
 		const response = await supertest(app)
@@ -120,6 +109,14 @@ describe("GET /boards/search/:name", () => {
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(403);
 		expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+	});
+
+	it.only("should search board name", async () => {
+		const response = await supertest(app).get("/api/v1/boards/search/name");
+
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(200);
+		console.log(response.body);
 	});
 });
 
@@ -141,8 +138,8 @@ describe("POST /api/v1/boards", () => {
 					userId: uuid(),
 					email: "no-permission@example.com",
 					password: hashPassword("strongPassword"),
-					username: "no-permission",
-				},
+					username: "no-permission"
+				}
 			])
 			.into("users")
 			.returning(["userId"]);
@@ -160,13 +157,13 @@ describe("POST /api/v1/boards", () => {
 		`,
 			{
 				uuid: uuid(),
-				userId: createUser[0].userId,
+				userId: createUser[0].userId
 			}
 		);
 
 		const authUser = await getUser({
 			email: "no-permission@example.com",
-			password: "strongPassword",
+			password: "strongPassword"
 		});
 
 		const response = await supertest(app)
@@ -176,5 +173,20 @@ describe("POST /api/v1/boards", () => {
 		expect(response.headers["content-type"]).toContain("application/json");
 		expect(response.status).toBe(403);
 		expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+	});
+
+	it("should create a board", () => {
+		// seed users with no "board:create permission"
+		const createUser = await database
+			.insert([
+				{
+					userId: uuid(),
+					email: "create-board@example.com",
+					password: hashPassword("strongPassword"),
+					username: "create-board"
+				}
+			])
+			.into("users")
+			.returning(["userId"]);
 	});
 });

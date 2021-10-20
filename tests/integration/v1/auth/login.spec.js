@@ -5,10 +5,9 @@ const app = require("../../../../server");
 const database = require("../../../../server/database");
 const { hashPassword } = require("../../../../server/helpers");
 const { verifyToken } = require("../../../../server/services/token.service");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
 beforeAll(async () => {
-	await database.migrate.latest();
-
 	// seed users data
 	await database
 		.insert([
@@ -29,9 +28,7 @@ beforeAll(async () => {
 		.into("users");
 });
 
-afterAll(async () => {
-	return await database.migrate.rollback();
-});
+afterAll(() => cleanDatabase());
 
 describe("POST /api/v1/auth/login", () => {
 	it('should throw error "EMAIL_INVALID"', async () => {

@@ -3,14 +3,9 @@ const supertest = require("supertest");
 const app = require("../../../server");
 const database = require("../../../server/database");
 const { roadmap: generateRoadmap } = require("../../utils/generators");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
-beforeAll(async () => {
-	return await database.migrate.latest();
-});
-
-afterAll(async () => {
-	return await database.migrate.rollback();
-});
+afterAll(() => cleanDatabase());
 
 // Get all roadmaps
 describe("GET /api/v1/roadmaps", () => {
