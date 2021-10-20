@@ -1,4 +1,4 @@
-import Post from "../components/posts/PostItem.vue";
+import Post from "../../src/components/post/Post";
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 
 describe("post", () => {

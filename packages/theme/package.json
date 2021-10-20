@@ -5,7 +5,8 @@
 	"main": "./ssr.js",
 	"scripts": {
 		"dev": "nuxt",
-		"start": "nuxt start"
+		"start": "nuxt start",
+		"test": "jest --config ./jest.config.js"
 	},
 	"engines": {
 		"node": ">= 16"
