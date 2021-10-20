@@ -10,6 +10,7 @@ if (config.mail) {
 		host: config.mail.host,
 		port: config.mail.port,
 		secure: false,
+		ignoreTLS: process.env.NODE_ENV === "development",
 		auth: {
 			user: config.mail.user,
 			pass: config.mail.password
