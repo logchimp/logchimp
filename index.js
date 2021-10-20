@@ -1,5 +1,6 @@
 const startTime = Date.now();
 
+const ssr = require("@logchimp/theme");
 const app = require("./server");
 const database = require("./server/database");
 
@@ -37,7 +38,12 @@ database.migrate
 const port = config.server.port || 3000;
 const host = config.server.host || "127.0.0.1";
 
-app.listen(port, host, () => {
+app.listen(port, host, async () => {
+	if (!config?.theme.standalone) {
+		const nuxt = await ssr();
+		app.use(nuxt.render);
+	}
+
 	logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
 	logger.info(`Listening on port: ${port}`);
 	logger.info("Ctrl+C to shut down");
