@@ -10,7 +10,7 @@ describe("board item", () => {
       postCount: 30
     },
     stubs: {
-      RouterLink: RouterLinkStub
+      NuxtLink: RouterLinkStub
     }
   });
 

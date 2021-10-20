@@ -1,4 +1,4 @@
-import BoardSuggestion from "../../src/components/board/BoardSuggestion";
+import BoardSuggestion from "../../components/board/BoardSuggestion";
 import { mount } from "@vue/test-utils";
 
 describe("board badge", () => {

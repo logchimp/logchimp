@@ -10,7 +10,7 @@ describe("board badge", () => {
       showBoard: true
     },
     stubs: {
-      RouterLink: RouterLinkStub
+      NuxtLink: RouterLinkStub
     }
   });
 

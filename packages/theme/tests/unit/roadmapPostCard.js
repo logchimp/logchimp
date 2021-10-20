@@ -46,7 +46,7 @@ describe("post card", () => {
     },
     stubs: {
       Vote: true,
-      RouterLink: RouterLinkStub,
+      NuxtLink: RouterLinkStub,
       AvatarStack: true,
       BoardBadge: true
     }

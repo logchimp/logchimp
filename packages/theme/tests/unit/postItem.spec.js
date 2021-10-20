@@ -24,7 +24,7 @@ describe("post", () => {
       }
     },
     stubs: {
-      RouterLink: RouterLinkStub
+      NuxtLink: RouterLinkStub
     }
   });
 
