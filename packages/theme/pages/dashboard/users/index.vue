@@ -57,14 +57,16 @@
 					</dropdown-wrapper>
 				</div>
 			</div>
-			<infinite-loading @infinite="getUsers">
-				<div slot="spinner" class="loader-container">
-					<loader />
-				</div>
-				<div slot="no-more" />
-				<div slot="no-results" />
-				<div slot="error" />
-			</infinite-loading>
+			<client-only>
+				<infinite-loading @infinite="getUsers">
+					<div slot="spinner" class="loader-container">
+						<loader />
+					</div>
+					<div slot="no-more" />
+					<div slot="no-results" />
+					<div slot="error" />
+				</infinite-loading>
+			</client-only>
 		</Table>
 	</div>
 </template>

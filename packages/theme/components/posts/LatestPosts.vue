@@ -6,14 +6,16 @@
 			:post="post"
 			:show-board="false"
 		/>
-		<infinite-loading @infinite="getMorePosts">
-			<div slot="spinner" class="loader-container">
-				<loader />
-			</div>
-			<div slot="no-more" />
-			<div slot="no-results" />
-			<div slot="error" />
-		</infinite-loading>
+		<client-only>
+			<infinite-loading @infinite="getMorePosts">
+				<div slot="spinner" class="loader-container">
+					<loader />
+				</div>
+				<div slot="no-more" />
+				<div slot="no-results" />
+				<div slot="error" />
+			</infinite-loading>
+		</client-only>
 	</div>
 </template>
 

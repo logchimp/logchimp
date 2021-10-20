@@ -13,14 +13,16 @@
 				:post="post"
 				:dashboard="true"
 			/>
-			<infinite-loading @infinite="getBoardPosts">
-				<div slot="spinner" class="loader-container">
-					<loader />
-				</div>
-				<div slot="no-more" />
-				<div slot="no-results" />
-				<div slot="error" />
-			</infinite-loading>
+			<client-only>
+				<infinite-loading @infinite="getBoardPosts">
+					<div slot="spinner" class="loader-container">
+						<loader />
+					</div>
+					<div slot="no-more" />
+					<div slot="no-results" />
+					<div slot="error" />
+				</infinite-loading>
+			</client-only>
 		</div>
 	</div>
 </template>

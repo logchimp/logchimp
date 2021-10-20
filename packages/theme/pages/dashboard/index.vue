@@ -20,14 +20,16 @@
 						{{ post.voters.votesCount }}
 					</div>
 				</nuxt-link>
-				<infinite-loading @infinite="getPosts">
-					<div slot="spinner" class="loader-container">
-						<loader />
-					</div>
-					<div slot="no-more" />
-					<div slot="no-results" />
-					<div slot="error" />
-				</infinite-loading>
+				<client-only>
+					<infinite-loading @infinite="getPosts">
+						<div slot="spinner" class="loader-container">
+							<loader />
+						</div>
+						<div slot="no-more" />
+						<div slot="no-results" />
+						<div slot="error" />
+					</infinite-loading>
+				</client-only>
 			</Table>
 		</div>
 		<div class="dashboard-overview-boards">
@@ -58,14 +60,16 @@
 						{{ board.post_count }}
 					</div>
 				</div>
-				<infinite-loading @infinite="getBoards">
-					<div slot="spinner" class="loader-container">
-						<loader />
-					</div>
-					<div slot="no-more" />
-					<div slot="no-results" />
-					<div slot="error" />
-				</infinite-loading>
+				<client-only>
+					<infinite-loading @infinite="getBoards">
+						<div slot="spinner" class="loader-container">
+							<loader />
+						</div>
+						<div slot="no-more" />
+						<div slot="no-results" />
+						<div slot="error" />
+					</infinite-loading>
+				</client-only>
 			</Table>
 		</div>
 	</div>
@@ -75,10 +79,6 @@
 // packages
 import { mapGetters } from "vuex";
 import InfiniteLoading from "vue-infinite-loading";
-
-// modules
-// import { getPosts } from "../../modules/posts";
-// import { getAllBoards } from "../../modules/boards";
 
 // components
 import Table from "../../components/ui/Table.vue";
