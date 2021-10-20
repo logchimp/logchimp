@@ -10,6 +10,9 @@
 	"bugs": {
 		"url": "https://github.com/logchimp/logchimp/issues"
 	},
+	"workspaces": [
+		"packages/**"
+	],
 	"scripts": {
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make",
@@ -20,6 +23,7 @@
 		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
 	},
 	"dependencies": {
+		"@logchimp/theme": "0.7.0-beta.0",
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
@@ -39,6 +43,7 @@
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
+		"@babel/eslint-parser": "^7.15.8",
 		"eslint": "^8.0.1",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-jest": "^25.2.2",

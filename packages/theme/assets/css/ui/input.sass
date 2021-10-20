@@ -1,0 +1,54 @@
+.input
+	display: flex
+	flex-direction: column
+	margin-bottom: 1rem
+
+.input, .input-field
+	width: 100%
+
+.input-field
+	color: var(--color-text-black)
+	padding: 0.625rem 0.75rem
+	background-color: var(--color-white)
+	border-radius: var(--border-radius-default)
+	border-width: 1px
+	border-style: solid
+	border-color: var(--color-gray-90)
+	font:
+		family: inherit
+		size: 0.875rem
+	display: flex
+	outline: none
+
+	&::placeholder
+		color: var(--color-gray-80)
+
+	&:focus
+		border-color: var(--color-gray-80)
+
+.input-field-label
+	font-size: 0.75rem
+	margin-bottom: 0.375rem
+	color: var(--color-gray-60)
+
+.input-field-disabled
+	background-color: var(--color-gray-90)
+	color: var(--color-gray-70)
+	border-color: var(--color-gray-90)
+
+.input-error
+	border-color: var(--color-color-danger)
+
+.input-error-message
+	color: var(--color-color-danger)
+	font-size: 0.75rem
+	margin-top: 0.375rem
+	text-align: right
+
+.input-textarea
+	resize: vertical
+
+.input-description
+	color: var(--color-gray-70)
+	margin-top: 0.25rem
+	font-size: 0.75rem

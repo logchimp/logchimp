@@ -31,11 +31,11 @@
 
 <h3 align="center">
   <a href="https://logchimp.codecarrot.net/docs/">Docs</a>
-  <span> · </span>
+  <span> • </span>
   <a href="https://logchimp.codecarrot.net/docs/contributing">Contribute</a>
-  <span> · </span>
+  <span> • </span>
   <a href="https://twitter.com/logchimp">Twitter</a>
-  <span> · </span>
+  <span> • </span>
   <a href="https://discord.gg/A7mztcC">Discord</a>
 </h3>
 
