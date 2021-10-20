@@ -7,7 +7,6 @@ module.exports = () =>
 			`
 				DELETE FROM "emailVerification";
 				DELETE FROM "resetPassword";
-				DELETE FROM "posts_status";
 				DELETE FROM "posts_comments";
 				DELETE FROM "posts_activity";
 				DELETE FROM "permissions_roles";
