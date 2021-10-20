@@ -85,6 +85,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install packages
         run: yarn --frozen-lockfile
 
@@ -128,7 +134,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install packages
         run: yarn --frozen-lockfile
