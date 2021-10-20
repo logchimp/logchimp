@@ -37,9 +37,8 @@ jobs:
       - name: Install packages
         run: yarn --frozen-lockfile
 
-  theme/unit:
+  theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
-    id: theme-unit
     runs-on: ${{ matrix.os }}
     needs: cache
 
@@ -68,9 +67,8 @@ jobs:
       - name: Testing
         run: yarn workspace @logchimp/theme test:unit
 
-  api/unit:
+  api-unit:
     name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
-    id: api-unit
     runs-on: ${{ matrix.os }}
     needs: cache
 
@@ -99,7 +97,7 @@ jobs:
       - name: Testing
         run: yarn test:unit
 
-  api/integration:
+  api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
     needs: [api-unit, cache]
