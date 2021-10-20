@@ -19,7 +19,6 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"format": "prettier --write \"**/*.{js}\"",
-		"test:unit": "jest ./tests/unit",
 		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
 	},
 	"dependencies": {
