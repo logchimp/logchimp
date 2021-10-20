@@ -11,6 +11,7 @@ module.exports = () =>
 				DELETE FROM "posts_activity";
 				DELETE FROM "permissions_roles";
 				DELETE FROM "roles_users";
+				DELETE FROM roles WHERE name != '@everyone';
 				DELETE FROM "roadmaps";
 				DELETE FROM "boards";
 				DELETE FROM "votes";
