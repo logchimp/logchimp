@@ -5,9 +5,7 @@ export default async function ({ store, $axios }) {
 		localStorage.removeItem("settings");
 	}
 
-	const { settings } = await $axios.$get(
-		"http://localhost:3000/api/v1/settings/site"
-	);
+	const { settings } = await $axios.$get("/api/v1/settings/site");
 
 	store.dispatch("settings/update", settings);
 }
