@@ -22,6 +22,8 @@
 		"vuex": "^3.6.2"
 	},
 	"devDependencies": {
+		"@babel/preset-env": "^7.15.8",
+		"babel-plugin-transform-require-context": "^0.1.1",
 		"sass": "^1.43.2",
 		"sass-loader": "10",
 		"vue-jest": "^3.0.7"
