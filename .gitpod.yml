@@ -11,6 +11,11 @@ tasks:
     command: |
       gp sync-await setup
       NODE_ENV="development" yarn run dev
+  - name: Mail server
+    openMode: tab-after
+    command: |
+      npm install -g maildev
+      maildev
   - name: Client
     openMode: tab-after
     command: |
@@ -24,4 +29,8 @@ ports:
   - port: 3000
     onOpen: ignore
   - port: 5432
+    onOpen: ignore
+  - port: 1080
+    onOpen: ignore
+  - port: 1025
     onOpen: ignore
