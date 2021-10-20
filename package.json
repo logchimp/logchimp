@@ -10,6 +10,9 @@
 	"bugs": {
 		"url": "https://github.com/logchimp/logchimp/issues"
 	},
+	"workspaces": [
+		"packages/**"
+	],
 	"scripts": {
 		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
 		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make",
