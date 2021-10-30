@@ -1,38 +1,12 @@
 const startTime = Date.now();
 
 const ssr = require("@logchimp/theme");
-const app = require("./server");
-const database = require("./server/database");
+const app = require("@logchimp/api");
 
 // utils
-const logger = require("./server/utils/logger");
-const logchimpConfig = require("./server/utils/logchimpConfig");
+const logger = require("@logchimp/api/utils/logger");
+const logchimpConfig = require("@logchimp/api/utils/logchimpConfig");
 const config = logchimpConfig();
-
-database.migrate
-	.latest()
-	.then(() => {
-		logger.info("Database migration complete");
-	})
-	.catch((err) => {
-		logger.error({
-			code: "DATABASE_MIGRATIONS",
-			message: err
-		});
-
-		if (err.message === "SSL/TLS required") {
-			logger.error({
-				code: "DATABASE_CONNECTION",
-				message: "Enable SSL/TLS on your database connection"
-			});
-
-			logger.error({
-				code: "DATABASE_CONNECTION",
-				message: `Connecting to database at ${err.address}:${err.port}`,
-				err
-			});
-		}
-	});
 
 // start express server at SERVER_PORT
 const port = config.server.port || 3000;
