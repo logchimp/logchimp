@@ -14,12 +14,8 @@
 		"packages/**"
 	],
 	"scripts": {
-		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
-		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make",
 		"dev": "nodemon index.js",
-		"start": "node index.js",
-		"format": "prettier --write \"**/*.{js}\"",
-		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration"
+		"start": "node index.js"
 	},
 	"dependencies": {
 		"@logchimp/theme": "0.7.0-beta.0",

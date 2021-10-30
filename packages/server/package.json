@@ -4,7 +4,13 @@
 	"version": "0.7.0-beta.0",
 	"main": "./index.js",
 	"scripts": {
-		"test:unit": "jest ./tests/unit"
+		"dev": "nodemon index.js",
+		"start": "node index.js",
+		"format": "prettier --write \"**/*.{js}\"",
+		"test:unit": "jest ./tests/unit",
+		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration",
+		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
+		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make"
 	},
 	"engines": {
 		"node": ">=16"
