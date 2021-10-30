@@ -12,7 +12,7 @@ export default {
 	},
 	css: [
 		// main SASS file for importing all shared styles
-		"~/assets/css/main.sass"
+		"assets/css/main.sass"
 	],
 	env: {
 		version: packageJSON.version
