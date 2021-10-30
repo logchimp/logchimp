@@ -1,3 +1,3 @@
 #! /bin/bash
 
-npx logchimp-cli config:generate --env
+npx logchimp-cli@0.4.1-beta.1 config:generate --env
