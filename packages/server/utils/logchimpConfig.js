@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 const config = () => {
 	try {
 		const result = fs.readJsonSync(
-			path.resolve(__dirname, "../../logchimp.config.json")
+			path.resolve(__dirname, "../../../logchimp.config.json")
 		);
 
 		return result;
