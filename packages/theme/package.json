@@ -5,6 +5,7 @@
 	"main": "./ssr.js",
 	"scripts": {
 		"dev": "nuxt",
+		"build": "LOGCHIMP_THEME_STANDALONE=true nuxt build",
 		"start": "nuxt start",
 		"test:unit": "jest"
 	},

@@ -14,6 +14,7 @@
 		"packages/**"
 	],
 	"scripts": {
+		"build": "yarn workspace @logchimp/theme build",
 		"dev": "nodemon index.js",
 		"start": "node index.js"
 	},
