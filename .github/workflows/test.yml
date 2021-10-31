@@ -154,7 +154,7 @@ jobs:
           sh ./scripts/create-config.sh
 
       - name: Testing
-        run: yarn test:integration
+        run: yarn workspace @logchimp/api test:integration
         env:
           NODE_ENV: "testing"
 
