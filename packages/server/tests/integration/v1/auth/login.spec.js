@@ -3,7 +3,7 @@ const supertest = require("supertest");
 const { v4: uuidv4 } = require("uuid");
 
 const database = require("../../../utils/setupDatabase");
-const { hashPassword } = require("../../../../server/utils/password");
+const { hashPassword } = require("../../../../utils/password");
 
 beforeAll(async () => {
 	return await database.latest();
