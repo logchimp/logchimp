@@ -10,7 +10,7 @@ const config = logchimpConfig();
 
 // start express server at SERVER_PORT
 const port = config.server.port || 3000;
-const host = config.server.host || "127.0.0.1";
+const host = config.server.host || "0.0.0.0";
 
 api.listen(port, host, async () => {
 	if (!config?.theme.standalone) {
