@@ -1,23 +1,23 @@
 <template>
 	<div class="navbar">
-		<nuxt-link to="/" class="navbar-item">
+		<a href="/" class="navbar-item">
 			<div class="navbar-item-icon">
 				<home-icon />
 			</div>
 			<div class="navbar-item-content">Home</div>
-		</nuxt-link>
-		<nuxt-link to="/roadmaps" class="navbar-item">
+		</a>
+		<a href="/roadmaps" class="navbar-item">
 			<div class="navbar-item-icon">
 				<roadmap-icon />
 			</div>
 			<div class="navbar-item-content">Roadmaps</div>
-		</nuxt-link>
-		<nuxt-link to="/boards" class="navbar-item">
+		</a>
+		<a href="/boards" class="navbar-item">
 			<div class="navbar-item-icon">
 				<board-icon />
 			</div>
 			<div class="navbar-item-content">Boards</div>
-		</nuxt-link>
+		</a>
 	</div>
 </template>
 

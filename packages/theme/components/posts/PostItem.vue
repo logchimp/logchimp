@@ -7,15 +7,15 @@
 			@update-voters="updateVoters"
 		/>
 		<div>
-			<nuxt-link
+			<a
 				class="post-content-link"
 				data-test="post-link"
-				:to="`${dashboardUrl}/posts/${postData.slug}`"
+				:href="`${dashboardUrl}/posts/${postData.slug}`"
 			>
 				<h5 class="post-content-title">
 					{{ postData.title }}
 				</h5>
-			</nuxt-link>
+			</a>
 			<p
 				v-if="postData.roadmap"
 				class="post-roadmap"

@@ -32,7 +32,7 @@
 		</div>
 		<div v-if="settings.allowSignup" class="auth-form-other">
 			Don't have an account yet?
-			<nuxt-link to="/join"> Sign up </nuxt-link>
+			<a href="/join"> Sign up </a>
 		</div>
 	</div>
 </template>

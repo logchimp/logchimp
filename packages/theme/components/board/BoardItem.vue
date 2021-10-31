@@ -1,7 +1,7 @@
 <template>
-  <nuxt-link
+  <a
     data-test="board-item"
-    :to="`/boards/${url}`"
+    :href="`/boards/${url}`"
     class="board-item"
   >
     <div
@@ -19,7 +19,7 @@
         {{ postCount }}
       </div>
     </div>
-  </nuxt-link>
+  </a>
 </template>
 
 <script>
