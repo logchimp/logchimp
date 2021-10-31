@@ -1,4 +1,4 @@
-const database = require("../../server/database");
+const database = require("../../database");
 
 const latest = async () => {
 	return await database.migrate.latest();
