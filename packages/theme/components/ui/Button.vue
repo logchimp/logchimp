@@ -2,11 +2,12 @@
 	<component
 		:is="href ? 'a' : 'button'"
 		class="button"
-		:class="[
-			`button-${type}`,
-			loading ? 'button-loading' : '',
-			disabled ? 'button-primary-disabled' : ''
-		]"
+		:class="{
+			[`button-${type}`]: !!type,
+			'button-loading': loading,
+			'button-primary-disabled': disabled,
+			'button-outline': outline
+		}"
 		:[hrefAttrHandler]="href"
 		@[clickAttrHandler]="click"
 	>
@@ -42,6 +43,10 @@ export default {
 		type: {
 			type: String,
 			required: true
+		},
+		outline: {
+			type: Boolean,
+			default: false
 		},
 		loading: {
 			type: Boolean,

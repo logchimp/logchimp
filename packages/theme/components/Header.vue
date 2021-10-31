@@ -40,8 +40,13 @@
 						</template>
 					</dropdown-wrapper>
 					<div v-else class="nav-item nav-auth">
-						<Button type="text" href="/login"> Login </Button>
-						<Button v-if="settings.allowSignup" type="outline" href="/join">
+						<Button type="primary" href="/login"> Login </Button>
+						<Button
+							v-if="settings.allowSignup"
+							type="primary"
+							:outline="true"
+							href="/join"
+						>
 							Create an account
 						</Button>
 					</div>
