@@ -20,7 +20,7 @@ const config = () => {
 	// LOGCHIMP_THEME_STANDALONE is in BETA
 	const themeStandalone = process.env.LOGCHIMP_THEME_STANDALONE;
 	const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
-	const serverSecretKey = process.env.LOGCHIMP_SERVER_SECRET_KEY;
+	const serverSecretKey = process.env.LOGCHIMP_SECRET_KEY;
 	const databaseHost = process.env.LOGCHIMP_DB_HOST;
 	const databaseUser = process.env.LOGCHIMP_DB_USER;
 	const databasePassword = process.env.LOGCHIMP_DB_PASSWORD;
