@@ -22,9 +22,7 @@ export default {
 	axios: {
 		// NOTE: a hackish way to set baseUrl only for standalone theme deployment
 		...(process.env.LOGCHIMP_THEME_STANDALONE === "true" && {
-			baseURL: `http://${process.env.LOGCHIMP_SERVER_HOST || "localhost"}:${
-				process.env.LOGCHIMP_SERVER_PORT || 80
-			}`
+			baseURL: process.env.LOGCHIMP_SERVER_HOST
 		})
 	},
 
