@@ -9,9 +9,6 @@
 		"start": "nuxt start",
 		"test:unit": "jest"
 	},
-	"engines": {
-		"node": ">= 16"
-	},
 	"dependencies": {
 		"@nuxtjs/axios": "^5.13.6",
 		"@nuxtjs/dayjs": "^1.4.1",
@@ -31,5 +28,8 @@
 		"sass": "^1.43.4",
 		"sass-loader": "10",
 		"vue-jest": "^3.0.7"
+	},
+	"engines": {
+		"node": ">=16 < 17"
 	}
 }
