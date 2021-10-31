@@ -1,9 +1,9 @@
 <template>
-	<nuxt-link
+	<a
 		v-if="showBoard"
 		data-test="board-badge"
 		class="board-badge"
-		:to="`/boards/${url}`"
+		:href="`/boards/${url}`"
 	>
 		<div class="post-board">
 			<div
@@ -17,7 +17,7 @@
 				{{ name }}
 			</p>
 		</div>
-	</nuxt-link>
+	</a>
 </template>
 
 <script>

@@ -39,7 +39,7 @@
 		</div>
 		<div class="auth-form-other">
 			Already have an account?
-			<nuxt-link to="/login">Log in</nuxt-link>
+			<a href="/login">Log in</a>
 		</div>
 	</div>
 </template>

@@ -6,56 +6,56 @@
 		<div class="sidebar-list">
 			<h6>Manage</h6>
 			<li>
-				<nuxt-link to="/dashboard" class="sidebar-list-item">
+				<a href="/dashboard" class="sidebar-list-item">
 					<dashboard-icon />
 					<p>Dashbaord</p>
-				</nuxt-link>
+				</a>
 			</li>
 			<li>
-				<nuxt-link to="/dashboard/boards" class="sidebar-list-item">
+				<a href="/dashboard/boards" class="sidebar-list-item">
 					<board-icon />
 					<p>Boards</p>
-				</nuxt-link>
+				</a>
 			</li>
 			<li>
-				<nuxt-link to="/dashboard/roadmaps" class="sidebar-list-item">
+				<a href="/dashboard/roadmaps" class="sidebar-list-item">
 					<roadmap-icon />
 					<p>Roadmaps</p>
-				</nuxt-link>
+				</a>
 			</li>
 			<li>
-				<nuxt-link to="/dashboard/posts" class="sidebar-list-item">
+				<a href="/dashboard/posts" class="sidebar-list-item">
 					<post-icon />
 					<p>Posts</p>
-				</nuxt-link>
+				</a>
 			</li>
 			<li>
-				<nuxt-link to="/dashboard/users" class="sidebar-list-item">
+				<a href="/dashboard/users" class="sidebar-list-item">
 					<users-icon />
 					<p>Users</p>
-				</nuxt-link>
+				</a>
 			</li>
 		</div>
 
 		<div class="sidebar-list">
 			<h6>Settings</h6>
 			<li>
-				<nuxt-link to="/dashboard/settings/general" class="sidebar-list-item">
+				<a href="/dashboard/settings/general" class="sidebar-list-item">
 					<settings-icon />
 					<p>General</p>
-				</nuxt-link>
+				</a>
 			</li>
 			<li>
-				<nuxt-link to="/dashboard/settings/roles" class="sidebar-list-item">
+				<a href="/dashboard/settings/roles" class="sidebar-list-item">
 					<shield-icon />
 					<p>Roles</p>
-				</nuxt-link>
+				</a>
 			</li>
 			<li>
-				<nuxt-link to="/dashboard/settings/labs" class="sidebar-list-item">
+				<a href="/dashboard/settings/labs" class="sidebar-list-item">
 					<lab-icon />
 					<p>Labs</p>
-				</nuxt-link>
+				</a>
 			</li>
 		</div>
 		<footer>

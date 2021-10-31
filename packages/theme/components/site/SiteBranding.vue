@@ -1,12 +1,12 @@
 <template>
-	<nuxt-link :to="link" class="site-info">
+	<a :href="link" class="site-info">
 		<div class="logo-placeholder">
 			<img class="site-logo" :src="settings.logo" :alt="settings.title" />
 		</div>
 		<h5 v-if="settings.title" class="site-name">
 			{{ settings.title }}
 		</h5>
-	</nuxt-link>
+	</a>
 </template>
 
 <script>

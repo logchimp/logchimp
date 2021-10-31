@@ -2,9 +2,9 @@
 	<div>
 		<header class="form-header">
 			<div class="breadcrumbs">
-				<nuxt-link to="/dashboard/boards" class="breadcrum-item">
+				<a href="/dashboard/boards" class="breadcrum-item">
 					Boards
-				</nuxt-link>
+				</a>
 				<div class="breadcrum-divider">/</div>
 				<h5 class="breadcrum-item">
 					{{ title }}

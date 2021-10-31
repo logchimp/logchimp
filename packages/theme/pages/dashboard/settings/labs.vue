@@ -2,9 +2,9 @@
 	<div>
 		<header class="form-header">
 			<div class="breadcrumbs">
-				<nuxt-link to="/dashboard/settings" class="breadcrum-item">
+				<a href="/dashboard/settings" class="breadcrum-item">
 					Settings
-				</nuxt-link>
+				</a>
 				<div class="breadcrum-divider">/</div>
 				<h5 class="breadcrum-item">Labs</h5>
 			</div>

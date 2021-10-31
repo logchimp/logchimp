@@ -32,10 +32,10 @@
 			</div>
 		</div>
 		<div class="auth-form-other">
-			<nuxt-link to="/password-reset">Forget password?</nuxt-link>
+			<a href="/password-reset">Forget password?</a>
 			<template v-if="settings.allowSignup">
 				• Don't have an account yet?
-				<nuxt-link to="/join">Sign up</nuxt-link>
+				<a href="/join">Sign up</a>
 			</template>
 		</div>
 	</div>

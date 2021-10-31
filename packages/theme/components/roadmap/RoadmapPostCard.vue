@@ -10,9 +10,9 @@
 			<div style="width: 100%">
 				<div class="post-card-section">
 					<div>
-						<nuxt-link data-test="post-link" :to="`/posts/${post.slug}`">
+						<a data-test="post-link" :href="`/posts/${post.slug}`">
 							<h5>{{ post.title }}</h5>
-						</nuxt-link>
+						</a>
 						<span
 							v-if="!isExpanded"
 							data-test="post-board-name"
