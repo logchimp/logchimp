@@ -12,7 +12,7 @@
 			src="https://cdn.logchimp.codecarrot.net/logchimp-home-preview.png"
 			alt="LogChimp homepage preview"
 		/>
-		<Button type="primary" class="welcome-button" @click="createAccount">
+		<Button type="primary" class="welcome-button" href="/setup/create-account">
 			Create an account
 		</Button>
 	</div>
@@ -35,11 +35,6 @@ export default {
 		...mapGetters("settings", {
 			settings: "get"
 		})
-	},
-	methods: {
-		createAccount() {
-			this.$router.push("/setup/create-account");
-		}
 	},
 	head() {
 		return {
