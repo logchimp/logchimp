@@ -1,18 +1,20 @@
 <template>
-	<div
+	<component
+		:is="href ? 'a' : 'button'"
 		class="button"
 		:class="[
 			`button-${type}`,
 			loading ? 'button-loading' : '',
 			disabled ? 'button-primary-disabled' : ''
 		]"
-		@click="click"
+		:[hrefAttrHandler]="href"
+		@[clickAttrHandler]="click"
 	>
 		<slot />
 		<div v-if="loading" class="button-loader">
 			<loader-icon />
 		</div>
-	</div>
+	</component>
 </template>
 
 <script>
@@ -24,7 +26,19 @@ export default {
 	components: {
 		LoaderIcon
 	},
+	computed: {
+		hrefAttrHandler() {
+			return this.href ? 'href' : null
+		},
+		clickAttrHandler() {
+			return this.href ? null : 'click'
+		}
+	},
 	props: {
+		href: {
+			type: String,
+			default: null,
+		},
 		type: {
 			type: String,
 			required: true
@@ -39,10 +53,10 @@ export default {
 		}
 	},
 	methods: {
-		click() {
+		click(e) {
 			if (this.loading) return;
 			if (this.disabled) return;
-			this.$emit("click");
+			this.$emit("click", e);
 		}
 	}
 };
@@ -50,6 +64,11 @@ export default {
 
 <style lang='sass'>
 .button
+	// normalise button
+	border: none
+	padding: 0
+	font-family: inherit
+	font-size: inherit
 	position: relative
 	padding: 0.875rem 1.5rem
 	border-radius: var(--border-radius-default)

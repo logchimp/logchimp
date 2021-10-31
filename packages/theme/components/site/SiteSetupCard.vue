@@ -9,7 +9,7 @@
       </p>
     </div>
     <div class="card-section">
-      <Button type="primary" @click="setupSite">
+      <Button type="primary" href="/setup/welcome">
         Create owner account
       </Button>
     </div>
@@ -31,11 +31,6 @@ export default {
   name: "SiteSetupCard",
   components: {
     Button
-  },
-  methods: {
-    setupSite() {
-      this.$router.push("/setup/welcome");
-    }
   }
 };
 </script>

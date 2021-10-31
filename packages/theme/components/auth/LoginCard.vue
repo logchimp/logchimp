@@ -9,7 +9,7 @@
       </p>
     </div>
     <div class="card-section">
-      <Button type="primary" @click="loginRedirect">
+      <Button type="primary" href="/login">
         Login
       </Button>
     </div>
@@ -24,16 +24,6 @@ export default {
   name: "LoginCard",
   components: {
     Button
-  },
-  methods: {
-    loginRedirect() {
-      this.$router.push({
-        path: "/login",
-        query: {
-          redirect: this.$route.fullPath
-        }
-      });
-    }
   }
 };
 </script>
