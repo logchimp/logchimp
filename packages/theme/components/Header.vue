@@ -40,8 +40,8 @@
 						</template>
 					</dropdown-wrapper>
 					<div v-else class="nav-item nav-auth">
-						<Button type="text" @click="login"> Login </Button>
-						<Button v-if="settings.allowSignup" type="outline" @click="join">
+						<Button type="text" href="/login"> Login </Button>
+						<Button v-if="settings.allowSignup" type="outline" href="/join">
 							Create an account
 						</Button>
 					</div>
@@ -122,12 +122,6 @@ export default {
 		},
 		userSettingsPage() {
 			this.$router.push("/settings");
-		},
-		login() {
-			this.$router.push("/login");
-		},
-		join() {
-			this.$router.push("/join");
 		},
 		logout() {
 			this.$store.dispatch("user/logout");
