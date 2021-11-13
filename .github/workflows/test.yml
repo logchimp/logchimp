@@ -71,7 +71,7 @@ jobs:
   theme-build:
     name: Theme / Build - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: [cache, theme-unit]
+    needs: [theme-unit]
 
     strategy:
       matrix:
@@ -131,7 +131,7 @@ jobs:
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: [api-unit, cache]
+    needs: [api-unit]
 
     strategy:
       matrix:
