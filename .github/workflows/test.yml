@@ -71,7 +71,7 @@ jobs:
   theme-build:
     name: Theme / Build - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: cache
+    needs: [cache, theme-unit]
 
     strategy:
       matrix:
