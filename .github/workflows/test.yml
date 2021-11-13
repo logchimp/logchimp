@@ -68,6 +68,36 @@ jobs:
       - name: Testing
         run: yarn workspace @logchimp/theme test:unit
 
+  theme-build:
+    name: Theme / Build - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    needs: [theme-unit]
+
+    strategy:
+      matrix:
+        node: [16]
+        os: [ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: yarn --frozen-lockfile
+
+      - name: Build theme
+        run: yarn workspace @logchimp/theme build
+
   api-unit:
     name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
@@ -101,7 +131,7 @@ jobs:
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: [api-unit, cache]
+    needs: [api-unit]
 
     strategy:
       matrix:
