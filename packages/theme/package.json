@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@nuxtjs/axios": "^5.13.6",
 		"@nuxtjs/dayjs": "^1.4.1",
-		"lucide-vue": "^0.16.19",
+		"lucide-vue": "^0.17.2",
 		"nuxt": "^2.15.8",
 		"vue-clickaway": "^2.2.2",
 		"vue-infinite-loading": "^2.4.5",
