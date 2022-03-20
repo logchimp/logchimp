@@ -56,4 +56,19 @@ describe("POST /api/v1/auth/signup", () => {
 		expect(response.status).toBe(400);
 		expect(response.body.code).toBe("SIGNUP_NOT_ALLOWED");
 	});
+
+	it("should not create new user with different casing in email", async () => {
+		await supertest(app).post("/api/v1/auth/signup").send({
+			email: "user1@example.com",
+			password: "password"
+		});
+
+		const response = await supertest(app).post("/api/v1/auth/signup").send({
+			email: "USER1@example.com",
+			password: "password"
+		});
+		expect(response.headers["content-type"]).toContain("application/json");
+		expect(response.status).toBe(409);
+		expect(response.body.code).toBe("USER_EXISTS");
+	})
 });
