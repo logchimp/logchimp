@@ -191,3 +191,9 @@ jobs:
       - name: Output logs
         if: always()
         run: cat ./content/logs/logchimp-all.log
+
+      - name: Store Code Coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./coverage

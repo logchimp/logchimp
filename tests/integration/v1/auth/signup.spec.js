@@ -1,18 +1,13 @@
-const app = require("../../../../server");
 const supertest = require("supertest");
 
-const database = require("../../../utils/setupDatabase");
+const app = require("../../../../server");
+const database = require("../../../../server/database");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
-beforeAll(async () => {
-	return await database.latest();
-});
+afterAll(() => cleanDatabase());
 
-afterAll(async () => {
-	return await database.rollback();
-});
-
-describe("signup", () => {
-	it("error: email missing", async () => {
+describe("POST /api/v1/auth/signup", () => {
+	it('should throw error "EMAIL_INVALID"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/signup");
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -20,9 +15,9 @@ describe("signup", () => {
 		expect(response.body.code).toBe("EMAIL_INVALID");
 	});
 
-	it("error: password missing", async () => {
+	it('should throw error "PASSWORD_MISSING"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/signup").send({
-			email: "signup_email@example.com"
+			email: "signup_email@example.com",
 		});
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -33,32 +28,32 @@ describe("signup", () => {
 	it("should create new user", async () => {
 		const response = await supertest(app).post("/api/v1/auth/signup").send({
 			email: "user@example.com",
-			password: "password"
+			password: "password",
 		});
 
 		const user = response.body.user;
 		expect(response.status).toBe(201);
 		expect(user).toMatchObject({
-      name: null,
-      username: 'user',
-      email: 'user@example.com',
-    })
-	})
+			name: null,
+			username: "user",
+			email: "user@example.com",
+		});
+	});
 
-	it("should not be allowed", async () => {
+	it("should not be allow to create account", async () => {
 		// set allowSignup to false in settings table
-		await database.instance.update({
-			allowSignup: false,
-		})
-		.from("settings");
+		await database
+			.update({
+				allowSignup: false,
+			})
+			.from("settings");
 
 		const response = await supertest(app).post("/api/v1/auth/signup").send({
 			email: "user@example.com",
-			password: "password"
+			password: "password",
 		});
 
 		expect(response.status).toBe(400);
 		expect(response.body.code).toBe("SIGNUP_NOT_ALLOWED");
-	})
+	});
 });
-

@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const { validate: validateUUID } = require("uuid");
+const bcrypt = require("bcryptjs");
 
 /**
  * Check value is valid email
@@ -47,8 +48,99 @@ const generateHexColor = () => {
 	return (~~(random * (1 << 24))).toString(16);
 };
 
+/**
+ * Generate hased password
+ *
+ * @param {string} value password to be hashed
+ * @returns Return hash password
+ */
+const hashPassword = (value) => {
+	if (_.isEmpty(value)) {
+		return null;
+	}
+
+	const bcryptSaltRounds = 10;
+	const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
+	const hashPassword = bcrypt.hashSync(value, bcryptSalt);
+	return hashPassword;
+};
+
+/**
+ * Validate hashed pasword
+ *
+ * @param {string} password string password
+ * @param {string} hash hashed password
+ * @returns {boolean} Return boolean value
+ */
+const validatePassword = (password, hash) => {
+	if (_.isEmpty(password && hash)) {
+		return null;
+	}
+
+	if (!_.isString(password && hash)) {
+		return null;
+	}
+
+	return bcrypt.compareSync(password, hash);
+};
+
+/**
+ * Sanitise username
+ *
+ * @param {string} value username
+ * @returns {string} Return username without any special character
+ */
+const sanitiseUsername = (value) => {
+	if (value == null || !_.isString(value)) {
+		return "";
+	}
+
+	return value.replace(/^_+|\W+|[^\w]|\s/g, "");
+};
+
+/**
+ * Sanitise URL
+ *
+ * @param {string} value url
+ * @returns {string} Return sanitised url
+ */
+const sanitiseURL = (value) => {
+	if (value == null || !_.isString(value)) {
+		return "";
+	}
+
+	return value
+		.trim()
+		.toLocaleLowerCase()
+		.replace(/^_+|\W+|[^\w]|\s/g, "-");
+};
+
+/**
+ * Convert string to slug
+ *
+ * @param {string} value
+ * @returns {string} slug
+ */
+const toSlug = (value) => {
+	if (value == null || !_.isString(value)) {
+		return "";
+	}
+
+	return value
+		.replace(/[^\w\s]/gi, "")
+		.replace(/\s\s+/gi, " ")
+		.toLowerCase()
+		.split(" ")
+		.join("-");
+};
+
 module.exports = {
 	validEmail,
 	validUUID,
-	generateHexColor
+	generateHexColor,
+	hashPassword,
+	validatePassword,
+	sanitiseUsername,
+	sanitiseURL,
+	toSlug,
 };

@@ -7,7 +7,6 @@ exports.up = knex => {
 			table
 				.uuid("id")
 				.notNullable()
-				.unique()
 				.primary();
 			table
 				.uuid("role_id")
