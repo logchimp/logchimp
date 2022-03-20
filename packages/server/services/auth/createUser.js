@@ -27,7 +27,7 @@ const error = require("../../errorResponse.json");
  * @returns {object|null} - Returning user data object from database or null
  */
 const createUser = async (req, res, next, userData) => {
-	// generate user unique indentification
+	// generate user unique identification
 	const userId = uuidv4(userData.email);
 
 	const name = userData.name;
@@ -48,7 +48,7 @@ const createUser = async (req, res, next, userData) => {
 		} = await database.raw(
 			`
 				SELECT EXISTS (
-					SELECT * FROM users WHERE email = :email
+					SELECT * FROM users WHERE LOWER(email) = LOWER(:email)
 				)
 			`,
 			{
