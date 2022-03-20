@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+require('dotenv').config()
 
 // utils
 const logchimpConfig = require("../../utils/logchimpConfig");

@@ -19,8 +19,9 @@
 		"start": "node index.js"
 	},
 	"dependencies": {
+		"@logchimp/api": "0.7.0-beta.0",
 		"@logchimp/theme": "0.7.0-beta.0",
-		"@logchimp/api": "0.7.0-beta.0"
+		"dotenv": "^16.0.0"
 	},
 	"devDependencies": {
 		"@babel/eslint-parser": "^7.16.3",
