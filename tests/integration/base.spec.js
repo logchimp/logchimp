@@ -9,9 +9,9 @@ test("GET /api", async () => {
 	expect(response.text).toBe("👍");
 });
 
-test("POST /api", async () => {
-	const response = await supertest(app).post("/api");
+// test("POST /api", async () => {
+// 	const response = await supertest(app).post("/api");
 
-	expect(response.headers["content-type"]).toContain("application/json");
-	expect(response.body.code).toEqual("ROUTE_NOT_FOUND");
-});
+// 	expect(response.headers["content-type"]).toContain("application/json");
+// 	expect(response.body.code).toEqual("ROUTE_NOT_FOUND");
+// });

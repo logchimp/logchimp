@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "friday"
       time: "06:00"
       timezone: "Asia/Calcutta"
@@ -11,3 +11,4 @@ updates:
       - "mittalyashu"
     commit-message:
       prefix: "npm: "
+    open-pull-requests-limit: 10

@@ -1,41 +1,23 @@
 const startTime = Date.now();
 
-const app = require("./server");
-const database = require("./server/database");
+const theme = require("@logchimp/theme");
+const api = require("@logchimp/api");
 
 // utils
-const logger = require("./server/utils/logger");
-const logchimpConfig = require("./server/utils/logchimpConfig");
+const logger = require("@logchimp/api/utils/logger");
+const logchimpConfig = require("@logchimp/api/utils/logchimpConfig");
 const config = logchimpConfig();
-
-database.migrate
-	.latest()
-	.then(() => {
-		logger.info("Database migration complete");
-	})
-	.catch((err) => {
-		logger.error({
-			code: "DATABASE_MIGRATIONS",
-			message: err
-		});
-
-		if (err.message === "SSL/TLS required") {
-			logger.error({
-				code: "DATABASE_CONNECTION",
-				message: "Enable SSL/TLS on your database connection"
-			});
-
-			logger.error({
-				code: "DATABASE_CONNECTION",
-				message: `Connecting to database at ${err.address}:${err.port}`,
-				err
-			});
-		}
-	});
 
 // start express server at SERVER_PORT
 const port = config.server.port || 3000;
-app.listen(port, () => {
+const host = config.server.host || "0.0.0.0";
+
+api.listen(port, host, async () => {
+	if (!config?.theme.standalone) {
+		const nuxt = await theme();
+		api.use(nuxt.render);
+	}
+
 	logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
 	logger.info(`Listening on port: ${port}`);
 	logger.info("Ctrl+C to shut down");

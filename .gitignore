@@ -34,3 +34,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# theme
+packages/theme/.out

@@ -1,0 +1,40 @@
+{
+	"name": "@logchimp/api",
+	"description": "LogChimp APIs",
+	"version": "0.7.0-beta.0",
+	"main": "./index.js",
+	"scripts": {
+		"dev": "nodemon index.js",
+		"start": "node index.js",
+		"format": "prettier --write \"**/*.{js}\"",
+		"test:unit": "jest ./tests/unit",
+		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration",
+		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
+		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make"
+	},
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"express-rate-limit": "^5.5.1",
+		"fs-extra": "^10.0.0",
+		"html-to-text": "^8.1.0",
+		"jsonwebtoken": "^8.5.1",
+		"knex": "^0.95.14",
+		"lodash": "^4.17.21",
+		"md5": "^2.3.0",
+		"multer": "^1.4.3",
+		"nanoid": "^3.1.30",
+		"nodemailer": "^6.7.1",
+		"pg": "^8.7.1",
+		"supertest": "^6.1.6",
+		"uuid": "^8.3.2",
+		"winston": "^3.3.3"
+	},
+	"devDependencies": {
+		"omgopass": "^3.2.1"
+	},
+	"engines": {
+		"node": ">=16 < 17"
+	}
+}
