@@ -4,7 +4,9 @@ const generatePassword = require("omgopass");
 const {
 	validEmail,
 	validUUID,
-	generateHexColor
+	generateHexColor,
+	hashPassword,
+	validatePassword
 } = require("../../helpers");
 
 describe("validate email", () => {
