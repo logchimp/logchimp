@@ -1,9 +1,12 @@
 const _ = require("lodash");
+const generatePassword = require("omgopass");
 
 const {
 	validEmail,
 	validUUID,
-	generateHexColor
+	generateHexColor,
+	hashPassword,
+	validatePassword
 } = require("../../helpers");
 
 describe("validate email", () => {
@@ -150,5 +153,35 @@ describe("generateHexColor", () => {
 		const result = /^#([a-fA-F0-9]){3}$|[a-fA-F0-9]{6}$/gi.test(color);
 
 		expect(result).toBeTruthy();
+	});
+});
+
+describe("hashPassword and validatePassword", () => {
+	it("should not hash empty string as password", () => {
+		const hash = hashPassword("");
+
+		expect(hash).toEqual(null);
+	});
+
+	it("should validate hash random password", () => {
+		const password = generatePassword();
+		const hash = hashPassword(password);
+		const validPassword = validatePassword(password, hash);
+
+		expect(validPassword).toBeTruthy();
+	});
+
+	it("should validate hash random password with missing hash", () => {
+		const password = generatePassword();
+		const validPassword = validatePassword(password);
+
+		expect(validPassword).toEqual(null);
+	});
+
+	it("should validate hash random password with missing password", () => {
+		const hash = hashPassword("");
+		const validPassword = validatePassword("", hash);
+
+		expect(validPassword).toEqual(null);
 	});
 });

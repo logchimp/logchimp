@@ -1,18 +1,13 @@
-const app = require("../../../../server");
 const supertest = require("supertest");
 
-const database = require("../../../utils/setupDatabase");
+const app = require("../../../../server");
+const database = require("../../../../server/database");
+const cleanDatabase = require("../../../utils/cleanDatabase");
 
-beforeAll(async () => {
-	return await database.latest();
-});
+afterAll(() => cleanDatabase());
 
-afterAll(async () => {
-	return await database.rollback();
-});
-
-describe("setup", () => {
-	it("error: email missing", async () => {
+describe("POST /api/v1/auth/setup", () => {
+	it('should throw error "EMAIL_INVALID"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/setup");
 
 		expect(response.headers["content-type"]).toContain("application/json");
@@ -20,9 +15,9 @@ describe("setup", () => {
 		expect(response.body.code).toBe("EMAIL_INVALID");
 	});
 
-	it("error: password missing", async () => {
+	it('show throw error "PASSWORD_MISSING"', async () => {
 		const response = await supertest(app).post("/api/v1/auth/setup").send({
-			email: "admin@example.com"
+			email: "admin@example.com",
 		});
 
 		expect(response.headers["content-type"]).toContain("application/json");

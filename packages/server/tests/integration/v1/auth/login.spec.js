@@ -73,7 +73,7 @@ describe("login", () => {
 
 			expect(response.headers["content-type"]).toContain("application/json");
 			expect(response.status).toBe(400);
-			expect(response.body.errors[0].code).toBe("PASSWORD_MISSING");
+			expect(response.body.code).toBe("PASSWORD_MISSING");
 		});
 
 		it("error: incorrect password", async () => {

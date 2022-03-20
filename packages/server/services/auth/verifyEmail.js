@@ -3,16 +3,13 @@ const database = require("../../database");
 
 // services
 const { mail, generateContent } = require("../../services/mail");
+const { createToken } = require("../../services/token.service");
 
 // utils
-const { createToken } = require("../../utils/token");
-const logchimpConfig = require("../../utils/logchimpConfig");
 const logger = require("../../utils/logger");
-const config = logchimpConfig();
 
 const verifyEmail = async (url, tokenPayload) => {
-	const secretKey = config.server.secretKey;
-	const token = createToken(tokenPayload, secretKey, {
+	const token = createToken(tokenPayload, {
 		expiresIn: "2h"
 	});
 
