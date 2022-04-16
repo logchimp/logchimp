@@ -264,6 +264,16 @@ export default {
 				this.comment.value = "";
 				this.activity.data.unshift(response.data.comment);
 			} catch (error) {
+				// Is user not authenticated?
+				if (error.response.data.code === "INVALID_AUTH_HEADER_FORMAT") {
+					this.$router.push({
+						path: '/login',
+						query: {
+							redirect: this.$router.currentRoute.fullPath
+						}
+					})
+				}
+
 				console.log(error);
 			}
 		},
