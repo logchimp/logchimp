@@ -8,7 +8,7 @@
 			<li>
 				<a href="/dashboard" class="sidebar-list-item">
 					<dashboard-icon />
-					<p>Dashbaord</p>
+					<p>Dashboard</p>
 				</a>
 			</li>
 			<li>
