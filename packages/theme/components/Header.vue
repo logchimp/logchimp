@@ -18,7 +18,7 @@
 									<template #icon>
 										<dashboard-icon />
 									</template>
-									Dashbaord
+									Dashboard
 								</dropdown-item>
 								<dropdown-item @click="userSettingsPage">
 									<template #icon>
