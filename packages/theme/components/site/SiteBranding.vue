@@ -1,9 +1,12 @@
 <template>
-	<a :href="link" class="site-info">
-		<div class="logo-placeholder">
-			<img class="site-logo" :src="settings.logo" :alt="settings.title" />
+	<a :href="link" :class="$style.branding">
+		<div :class="$style.placeholder">
+			<img :class="$style.image" :src="settings.logo" :alt="settings.title" />
 		</div>
-		<h5 v-if="settings.title" class="site-name">
+		<h5
+			v-if="settings.title"
+			:class="$style.name"
+		>
 			{{ settings.title }}
 		</h5>
 	</a>
@@ -29,3 +32,27 @@ export default {
 	}
 };
 </script>
+
+<style lang='sass' module>
+.branding
+	--logo-size: 2rem
+	display: flex
+	align-items: center
+	user-select: none
+
+.placeholder
+	width: var(--logo-size)
+	height: var(--logo-size)
+	background-color: var(--color-gray-97)
+	border-radius: 3rem
+	cursor: pointer
+	user-select: none
+
+.image
+	width: var(--logo-size)
+
+.name
+	margin-left: 0.625rem
+	margin-bottom: 0
+	color: var(--color-white)
+</style>
