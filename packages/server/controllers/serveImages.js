@@ -14,7 +14,7 @@ const serveImages = (req, res) => {
 	const filterImagePath = req.url.match(imagePathRegex);
 
 	if (filterImagePath === null) {
-		return res.sendStatus(400);
+		return res.sendStatus(404);
 	}
 
 	fs.readFile(
