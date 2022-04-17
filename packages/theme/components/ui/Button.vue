@@ -164,5 +164,6 @@ export default {
 	height: 2rem
 
 .button-size-medium
-	padding: 0.875rem 1.5rem
+	padding: 0.625rem 1.25rem
+	height: 2.625rem
 </style>
