@@ -24,9 +24,6 @@ export default {
 	flex-direction: column
 	align-items: center
 
-	.site-name
-		color: var(--color-text-black)
-
 .auth-form-heading
 	font-weight: 400
 	text-align: center

@@ -5,7 +5,11 @@
 		</div>
 		<h5
 			v-if="settings.title"
-			:class="$style.name"
+			:class="{
+				[$style.name]: true,
+				[$style['name-black']]: textColor === 'black',
+				[$style['name-white']]: textColor === 'white'
+			}"
 		>
 			{{ settings.title }}
 		</h5>
@@ -23,6 +27,11 @@ export default {
 		dashboard: {
 			type: Boolean,
 			default: false
+		},
+		textColor: {
+			type: String,
+			default: "black",
+			validator: value => ['white', 'black'].includes(value)
 		}
 	},
 	computed: {
@@ -54,5 +63,10 @@ export default {
 .name
 	margin-left: 0.625rem
 	margin-bottom: 0
+
+.name-black
+	color: var(--color-text-black)
+
+.name-white
 	color: var(--color-white)
 </style>
