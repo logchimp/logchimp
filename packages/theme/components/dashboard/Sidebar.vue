@@ -84,23 +84,12 @@
 					</dropdown>
 				</template>
 				<template #toggle>
-					<div class="dashboard-sidebar-user-container">
-						<div class="dashboard-sidebar-user">
-							<avatar
-								class="dashboard-sidebar-user-avatar"
-								:src="user.avatar"
-								:name="user.name || user.username"
-							/>
-							<div class="dashboard-sidebar-user-data">
-								<div class="dashboard-sidebar-user-name">
-									{{ user.name || user.username }}
-								</div>
-								<div class="dashboard-sidebar-user-email">
-									{{ user.email }}
-								</div>
-							</div>
-						</div>
-					</div>
+					<auth-user
+						:name="user.name"
+						:email="user.email"
+						:username="user.username"
+						:avatar="user.avatar"
+					/>
 				</template>
 			</dropdown-wrapper>
 		</footer>
@@ -125,7 +114,7 @@ import {
 
 // components
 import SiteBranding from "../site/SiteBranding.vue";
-import Avatar from "../ui/Avatar.vue";
+import AuthUser from "./AuthUser.vue";
 import DropdownWrapper from "../ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../ui/dropdown/Dropdown.vue";
 import DropdownItem from "../ui/dropdown/DropdownItem.vue";
@@ -139,7 +128,7 @@ export default {
 	components: {
 		// components
 		SiteBranding,
-		Avatar,
+		AuthUser,
 		DropdownWrapper,
 		Dropdown,
 		DropdownItem,
@@ -242,32 +231,6 @@ $white: #fff
 
 	p
 		font-weight: 600
-
-.dashboard-sidebar-user-container
-	cursor: pointer
-	border-radius: var(--border-radius-default)
-	padding: 0.625rem 1rem
-
-	&:hover
-		background-color: rgba($white, 0.1)
-
-.dashboard-sidebar-user-container, .dashboard-sidebar-user
-	display: flex
-	align-items: center
-
-.dashboard-sidebar-user-data
-	user-select: none
-
-.dashboard-sidebar-user-avatar
-	margin-right: 0.625rem
-
-.dashboard-sidebar-user-name
-	font-weight: 600
-	color: var(--color-white)
-
-.dashboard-sidebar-user-email
-	color: rgba($white, 0.5)
-	font-size: 0.875rem
 
 .dashboard-sidebar-dropdown
 	top: -9rem
