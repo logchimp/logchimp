@@ -6,7 +6,9 @@
 			[`button-${type}`]: !!type,
 			'button-loading': loading,
 			'button-primary-disabled': disabled,
-			'button-outline': outline
+			'button-outline': outline,
+			[$style['button-size-small']]: size === 'small',
+			[$style['button-size-medium']]: size === 'medium',
 		}"
 		:[hrefAttrHandler]="href"
 		@[clickAttrHandler]="click"
@@ -44,6 +46,11 @@ export default {
 			type: String,
 			required: true
 		},
+		size: {
+			type: String,
+			default: 'medium',
+			validator: value => ['small', 'medium'].includes(value),
+		},
 		outline: {
 			type: Boolean,
 			default: false
@@ -75,13 +82,13 @@ export default {
 	font-family: inherit
 	font-size: inherit
 	position: relative
-	padding: 0.875rem 1.5rem
 	border-radius: var(--border-radius-default)
 	font-weight: 500
 	display: flex
 	justify-content: center
 	cursor: pointer
 	user-select: none
+	line-height: 20px
 
 .button-loader
 	border-radius: var(--border-radius-default)
@@ -148,4 +155,14 @@ export default {
 .button-primary-disabled
 	opacity: 0.7
 	cursor: not-allowed
+</style>
+
+<style lang='sass' module>
+// size
+.button-size-small
+	padding: 0.375rem 0.75rem
+	height: 2rem
+
+.button-size-medium
+	padding: 0.875rem 1.5rem
 </style>
