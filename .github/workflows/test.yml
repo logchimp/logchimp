@@ -30,7 +30,7 @@ jobs:
           node-version: 16
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ./node_modules
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -57,7 +57,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ./node_modules
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -87,7 +87,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ./node_modules
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -117,7 +117,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ./node_modules
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -162,7 +162,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ./node_modules
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
