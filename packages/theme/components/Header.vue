@@ -2,7 +2,7 @@
 	<header class="header">
 		<div class="container">
 			<div class="header-container">
-				<site-branding :settings="settings" :dashboard="false" />
+				<site-branding :settings="settings" text-color="white" />
 				<nav class="header-nav">
 					<dropdown-wrapper v-if="isAuthenticated" class="nav-item">
 						<template #toggle>
