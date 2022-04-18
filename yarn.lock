@@ -2737,7 +2737,7 @@ autoprefixer@^9.6.1:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-avatar-generator@^2.0.4:
+avatar-generator@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/avatar-generator/-/avatar-generator-2.0.4.tgz#01d5db33b86ff32cf274f532ab9def0aaf49921a"
   integrity sha512-1XH0LAO6QwtOvv9ImVKr6O0DUtH+QX4B6ReBcfjbUPnFVZMfSgM18jkP8MDsrPxk9UmCGMddxBCxdizU7lbwrw==
