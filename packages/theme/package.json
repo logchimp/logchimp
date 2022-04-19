@@ -28,7 +28,7 @@
 		"dayjs": "1.11.1",
 		"node-sass": "7.0.1",
 		"sass": "1.50.1",
-		"sass-loader": "10.2.1",
+		"sass-loader": "12.6.0",
 		"vue-jest": "3.0.7"
 	},
 	"engines": {
