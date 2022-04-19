@@ -1,8 +1,8 @@
 <template>
-	<div class="activity-item-wrapper">
+	<div :class="$style.root">
 		<avatar :src="activity.author.avatar" :name="activity.author.name" />
 
-		<div class="activity-item-content">
+		<div :class="$style.content">
 			<h6>{{ activity.author.name }}</h6>
 			<p>{{ activity.comment.body }}</p>
 
@@ -36,8 +36,8 @@ export default {
 };
 </script>
 
-<style lang='sass'>
-.activity-item-wrapper
+<style lang='sass' module>
+.root
 	display: flex
 	align-items: flex-start
 	margin-bottom: 1.25rem
@@ -45,7 +45,7 @@ export default {
 	&:last-child
 		margin-bottom: 0
 
-.activity-item-content
+.content
 	margin-left: 1rem
 
 	h6
