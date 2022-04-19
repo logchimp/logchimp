@@ -54,25 +54,7 @@
 		<p v-html="post.contentMarkdown" />
 
 		<div v-if="showPostActivity" class="activity-section">
-			<div class="card">
-				<l-text
-					v-model="comment.value"
-					name="comment"
-					placeholder="Leave a comment"
-					@keyup-enter="submitComment"
-				/>
-
-				<div style="display: flex; justify-content: flex-end">
-					<Button
-						type="primary"
-						:loading="comment.buttonLoading"
-						:disabled="!comment.value"
-						@click="submitComment"
-					>
-						Submit
-					</Button>
-				</div>
-			</div>
+			<add-comment @add-comment="addComment" :post-id="post.postId" />
 
 			<header class="activity-header">
 				<h6>activity</h6>
@@ -125,8 +107,7 @@ import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
 import Avatar from "../../../components/ui/Avatar.vue";
-import LText from "../../../components/ui/LText.vue";
-import Button from "../../../components/ui/Button.vue";
+import AddComment from "../../../components/activity/AddComment.vue"
 import ActivityItem from "../../../components/activity/ActivityItem.vue";
 
 export default {
@@ -140,8 +121,7 @@ export default {
 		Dropdown,
 		DropdownItem,
 		Avatar,
-		LText,
-		Button,
+		AddComment,
 		ActivityItem,
 
 		// icons
@@ -242,40 +222,8 @@ export default {
 				this.activity.loading = false;
 			}
 		},
-		async submitComment() {
-			if (!this.comment.value) return;
-
-			try {
-				const token = this.$store.getters["user/getAuthToken"];
-				const postId = this.post.postId;
-
-				const response = await this.$axios({
-					method: "POST",
-					url: `/api/v1/posts/${postId}/comments`,
-					data: {
-						body: this.comment.value,
-						is_internal: false
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				});
-
-				this.comment.value = "";
-				this.activity.data.unshift(response.data.comment);
-			} catch (error) {
-				// Is user not authenticated?
-				if (error.response.data.code === "INVALID_AUTH_HEADER_FORMAT") {
-					this.$router.push({
-						path: '/login',
-						query: {
-							redirect: this.$router.currentRoute.fullPath
-						}
-					})
-				}
-
-				console.log(error);
-			}
+		addComment(comment) {
+			this.activity.data.unshift(comment);
 		},
 		updateVoters(voters) {
 			this.post.voters.votesCount = voters.votesCount;
