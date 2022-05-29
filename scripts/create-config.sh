@@ -29,6 +29,16 @@ if [ -n "$PG_HOST" ] && [ -n "$PG_USER" ] && [ -n "$PG_DATABASE" ] && [ $PG_PORT
 fi
 
 ##########
+# Theme
+##########
+if [ -n "$THEME_STANDALONE" ]; then
+	FILE="$FILE,\n
+	\t\"theme\": {\n
+		\t\t\"standalone\": \"$THEME_STANDALONE\"\n
+	\t},"
+fi
+
+##########
 # Server
 ##########
 
@@ -38,7 +48,7 @@ if [ -z "$SERVER_PORT" ]; then
 fi
 
 if [ $SERVER_PORT -ne 0 ] && [ -n "$SECRET_KEY" ]; then
-	FILE="$FILE,\n
+	FILE="$FILE\n
   \t\"server\": {\n
 		\t\t\"port\": $SERVER_PORT,\n
     \t\t\"secretKey\": \"$SECRET_KEY\"\n
