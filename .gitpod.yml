@@ -24,8 +24,8 @@ tasks:
     openMode: tab-after
     command: |
       gp sync-await setup
-      cd theme
-      IS_GITPOD=true yarn run dev
+      cd ./packages/theme
+      yarn dev
 
 ports:
   - port: 8080
