@@ -23,7 +23,7 @@ jobs:
           branch: "main"
           allowlist: mittalyashu
           remote-organization-name: "logchimp"
-          remote-repository-name: "logchimp/cla-signatures"
+          remote-repository-name: "cla-signatures"
           custom-notsigned-prcomment: |
             Thank you for your interest in contributing to open source software projects (“Projects”) made available by CodeCarrot.
 
