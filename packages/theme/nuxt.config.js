@@ -3,6 +3,9 @@ import "dayjs/plugin/relativeTime";
 import packageJSON from "./package.json";
 
 export default {
+	server: {
+		port: 8080
+	},
 	srcDir:
 		process.env.LOGCHIMP_THEME_STANDALONE === "true" ? "./" : "packages/theme",
 	buildDir: ".out",
