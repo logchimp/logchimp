@@ -19,8 +19,3 @@ sh ./scripts/create-config.sh
 
 # Install packages
 yarn install
-
-# Clone Logchimp default theme
-git clone https://github.com/logchimp/theme.git
-cd theme
-yarn install

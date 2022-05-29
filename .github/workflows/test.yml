@@ -177,6 +177,7 @@ jobs:
           PG_USER=${{ secrets.TEST_DB_USER }} \
           PG_PASSWORD=${{ secrets.TEST_DB_PASSWORD }} \
           PG_PORT=5432 \
+          THEME_STANDALONE="false" \
           SECRET_KEY=${{ secrets.TEST_SECRET_KEY }} \
           MAIL_SERVICE="logchimp" \
           MAIL_HOST="smtp.example.com" \
