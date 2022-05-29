@@ -17,6 +17,8 @@ export default {
 	env: {
 		version: packageJSON.version
 	},
+	// Disable nuxt telemetry
+	telemetry: false,
 
 	// Axios https://axios.nuxtjs.org/setup
 	axios: {
