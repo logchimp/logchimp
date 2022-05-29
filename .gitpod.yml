@@ -9,7 +9,6 @@ tasks:
   - name: Server
     openMode: tab-after
     command: |
-      gp sync-await setup
       NODE_ENV="development" yarn run dev
   - name: Server (logs)
     openMode: tab-after
@@ -23,7 +22,6 @@ tasks:
   - name: Client
     openMode: tab-after
     command: |
-      gp sync-await setup
       cd ./packages/theme
       yarn dev
 
