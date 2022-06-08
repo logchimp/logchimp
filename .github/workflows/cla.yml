@@ -21,7 +21,7 @@ jobs:
           path-to-signatures: "signatures/version1/cla.json"
           path-to-document: "https://github.com/codecarrotlabs/cla-document/blob/main/readme.md"
           branch: "main"
-          allowlist: mittalyashu
+          allowlist: mittalyashu,renovate[bot]
           remote-organization-name: "logchimp"
           remote-repository-name: "cla-signatures"
           custom-notsigned-prcomment: |
