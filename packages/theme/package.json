@@ -27,7 +27,7 @@
 		"babel-plugin-transform-require-context": "0.1.1",
 		"dayjs": "1.11.4",
 		"node-sass": "7.0.1",
-		"sass": "1.50.1",
+		"sass": "1.54.0",
 		"sass-loader": "10.2.1",
 		"vue-jest": "3.0.7"
 	},
