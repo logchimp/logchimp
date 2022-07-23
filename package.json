@@ -30,7 +30,7 @@
 		"eslint-plugin-jest": "26.2.2",
 		"eslint-plugin-prettier": "4.0.0",
 		"jest": "27.5.1",
-		"nodemon": "2.0.15",
+		"nodemon": "2.0.19",
 		"prettier": "2.6.2"
 	},
 	"keywords": [
