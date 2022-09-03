@@ -30,7 +30,7 @@ tasks:
     openMode: tab-after
     command: |
       cd ./packages/theme
-      yarn dev
+      LOGCHIMP_THEME_STANDALONE=true yarn dev
 
 ports:
   - port: 8080
