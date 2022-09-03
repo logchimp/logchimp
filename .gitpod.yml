@@ -43,3 +43,8 @@ ports:
     onOpen: ignore
   - port: 1025
     onOpen: ignore
+
+github:
+  prebuilds:
+    # enable for the master/default branch (defaults to true)
+    master: true
