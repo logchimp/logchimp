@@ -1,6 +1,13 @@
 image:
   file: .gitpod.Dockerfile
 
+vscode:
+  extensions:
+    - dbaeumer.vscode-eslint
+    - wix.vscode-import-cost
+    - Vue.volar
+    - editorconfig.editorconfig
+
 tasks:
   - name: "Setup workspace"
     init: |
