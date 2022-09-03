@@ -30,7 +30,7 @@ tasks:
     openMode: tab-after
     command: |
       cd ./packages/theme
-      LOGCHIMP_THEME_STANDALONE=true yarn dev
+      NODE_OPTIONS=--max_old_space_size=4096 LOGCHIMP_THEME_STANDALONE=true yarn dev
 
 ports:
   - port: 8080
