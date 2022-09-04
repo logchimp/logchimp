@@ -31,7 +31,7 @@
 		"eslint-plugin-prettier": "4.0.0",
 		"jest": "27.5.1",
 		"nodemon": "2.0.19",
-		"prettier": "2.6.2"
+		"prettier": "2.7.1"
 	},
 	"keywords": [
 		"logchimp",
