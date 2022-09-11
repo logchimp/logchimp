@@ -13,7 +13,9 @@
 				</div>
 				<div slot="no-more" />
 				<div slot="no-results" />
-				<div slot="error" />
+				<client-error slot="error">
+					Something went wrong!
+				</client-error>
 			</infinite-loading>
 		</client-only>
 	</div>
@@ -24,6 +26,7 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
+import ClientError from "../ui/ClientError.vue";
 import PostItem from "../posts/PostItem.vue";
 import Loader from "../ui/Loader.vue";
 
@@ -35,6 +38,7 @@ export default {
 
 		// components
 		PostItem,
+		ClientError,
 		Loader
 	},
 	props: {
