@@ -1,31 +1,114 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div
+    :style="{
+      '--brand-color': `#${siteSettings.accentColor}`
+    }"
+  >
+    <div class="alerts">
+      <Alert
+        v-for="(alert, index) in getAlerts"
+        :key="alert.time"
+        :title="alert.title"
+        :type="alert.type"
+        :timeout="alert.timeout"
+        @remove="removeAlert(index)"
+      />
+    </div>
+    <router-view />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
+<script setup lang="ts">
+// packages
+import axios from "axios";
+import { computed, onMounted } from "vue";
+import gtag, { setOptions, bootstrap } from "vue-gtag";
+import { useHead } from "@vueuse/head";
+
+import packageJson from "../package.json";
+
+import { useSettingStore } from "./store/settings"
+import { useAlertStore } from "./store/alert"
+// components
+import Alert from "./components/Alert.vue";
+
+const { get: siteSettings, update: updateSettings } = useSettingStore()
+const { getAlerts, remove: removeAlert } = useAlertStore()
+
+const logchimpVersion = computed(() => packageJson.version);
+
+function getSiteSettings() {
+	axios({
+		method: "get",
+		url: "/api/v1/settings/site"
+	})
+		.then(response => {
+			updateSettings(response.data.settings);
+		})
+		.catch(error => {
+			console.error(error);
+		});
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+
+onMounted(() => {
+	getSiteSettings();
+
+	// set google analytics
+	if (siteSettings.googleAnalyticsId) {
+		setOptions({
+			config: {
+				id: siteSettings.googleAnalyticsId
+			}
+		});
+
+		// bootstrap(gtag).then();
+	}
+
+	// const user = localStorage.getItem("user");
+	// if (user) {
+	// 	this.$store.dispatch("user/login", JSON.parse(user));
+	// 	this.$store.dispatch("user/updatePermissions");
+	// }
+})
+
+
+// useHead({
+// 	titleTemplate: `%s · ${siteSettings.title}`,
+// 	meta: [
+// 		{
+// 			name: "generator",
+// 			content: `LogChimp v${logchimpVersion}`
+// 		},
+// 		{
+// 			name: "description",
+// 			content: `${siteSettings.description}. Powered By LogChimp.`
+// 		},
+// 		{
+// 			name: "robots",
+// 			content: "index, follow"
+// 		},
+// 		// {
+// 		// 	rel: "canonical",
+// 		// 	href: this.$route.fullPath
+// 		// },
+// 		{
+// 			name: "language",
+// 			content: "es"
+// 		},
+// 		{
+// 			name: "copyright",
+// 			content: siteSettings.title
+// 		},
+
+// 		// openGraph
+// 		{
+// 			name: "og:type",
+// 			content: "website"
+// 		},
+// 		{
+// 			name: "og:description",
+// 			content: `${siteSettings.description}. Powered By LogChimp.`
+// 		}
+// 	]
+// })
+</script>

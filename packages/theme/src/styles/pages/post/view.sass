@@ -1,0 +1,82 @@
+.view
+	display: flex
+	flex-direction: column
+
+@media (min-width: 960px)
+	.view
+		flex-direction: row
+
+// content
+.viewpost
+	flex: 2
+
+	&__vote
+		display: flex
+
+	&__title
+		margin-bottom: 0.75rem
+
+	&__content
+		width: 100%
+
+	&__meta
+		display: flex
+		margin-bottom: 1.5rem
+		align-items: center
+
+		&-author
+			display: flex
+			align-items: center
+
+		&-divider
+			margin-left: 0.875rem
+			margin-right: 0.875rem
+			color: #BABABA
+
+		&-date
+			color: #CCCCCC
+
+	&__author-avatar
+		margin-right: 0.5rem
+
+	&__menu
+		margin-left: auto
+
+		&-dropdown
+			right: 0
+
+@media (min-width: 960px)
+	.viewpost
+		margin-right: 1.5rem
+
+// voters
+.viewvoters
+	flex: 1
+
+	&__container
+		padding: 1.5rem
+		background-color: #F5F5F5
+
+	&__users
+		margin-bottom: 1.5rem
+
+		&-heading
+			color: #A1A1A1
+			margin-bottom: 0.625rem
+
+		&-voters
+			display: flex
+
+		&-image
+			margin-right: -0.625rem
+			max-width: 2.25rem
+			border-radius: 1rem
+			border: 1px solid $white
+
+@media (max-width: 960px)
+	.viewvoters
+		margin-top: 2rem
+
+@media (min-width: 960px)
+	.viewvoters
+		margin-left: 1.5rem
