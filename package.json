@@ -10,13 +10,10 @@
 	"bugs": {
 		"url": "https://github.com/logchimp/logchimp/issues"
 	},
-	"workspaces": [
-		"packages/**"
-	],
 	"scripts": {
-		"build": "yarn workspace @logchimp/theme build",
 		"dev": "nodemon index.js",
-		"start": "node index.js"
+		"start": "node index.js",
+		"build:theme": "pnpm --filter @logchimp/theme build"
 	},
 	"dependencies": {
 		"@logchimp/api": "0.7.0-beta.0",
@@ -40,7 +37,6 @@
 		"codecarrot"
 	],
 	"engines": {
-		"node": ">=16 < 17",
-		"yarn": ">=1.22"
+		"node": ">=16 < 17"
 	}
 }
