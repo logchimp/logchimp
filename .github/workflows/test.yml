@@ -11,6 +11,9 @@ on:
       - "pnpm-lock.yaml"
   workflow_dispatch:
 
+permissions:
+  actions: read
+
 jobs:
   cache:
     name: Cache node_modules directory
