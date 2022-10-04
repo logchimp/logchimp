@@ -1,4 +1,4 @@
-import ToggleItem from "../../components/ui/ToggleItem";
+import ToggleItem from "../../src/components/input/ToggleItem";
 import { shallowMount } from "@vue/test-utils";
 
 describe("toggle item", () => {

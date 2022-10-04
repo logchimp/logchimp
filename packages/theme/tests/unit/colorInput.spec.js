@@ -1,4 +1,4 @@
-import ColorInput from "../../components/ui/ColorInput";
+import ColorInput from "../../src/components/ColorInput";
 import { mount } from "@vue/test-utils";
 
 describe("color input", () => {

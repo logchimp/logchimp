@@ -1,0 +1,47 @@
+.header
+	background-color: $brand-color
+
+.header-container, .site-info, .nav-item
+	display: flex
+	align-items: center
+
+.header-container
+	padding: 1rem 0
+
+.site-info
+	user-select: none
+
+.site-info .site-name
+	margin-left: 0.625rem
+
+.site-logo
+	width: 2rem
+
+.site-name
+	color: $white
+	margin-bottom: 0
+
+// nav
+.header-nav
+	margin-left: auto
+
+.nav-item
+	margin-left: 1.5rem
+	color: rgba(255, 255, 255, 0.5)
+	font-weight: 500
+	position: relative
+
+	&:first-child
+		margin-left: 0
+
+.nav-profile
+	cursor: pointer
+
+.nav-profile-dropdown
+	top: 2.4rem
+
+.nav-auth-link
+	cursor: pointer
+
+	&:hover
+		color: $white

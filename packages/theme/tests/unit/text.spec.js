@@ -1,4 +1,4 @@
-import LText from "../../components/ui/LText";
+import LText from "../../src/components/input/LText";
 import { mount } from "@vue/test-utils";
 
 describe("text input", () => {

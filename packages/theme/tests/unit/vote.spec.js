@@ -1,5 +1,5 @@
 import Vuex from "vuex";
-import Vote from "../../components/vote/Vote";
+import Vote from "../../src/components/post/Vote";
 import { createLocalVue, mount } from "@vue/test-utils";
 
 const localVue = createLocalVue();

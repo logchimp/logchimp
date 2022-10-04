@@ -1,4 +1,4 @@
-import Toggle from "../../components/ui/Toggle";
+import Toggle from "../../src/components/input/Toggle";
 import { mount } from "@vue/test-utils";
 
 describe("toggle", () => {

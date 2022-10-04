@@ -1,5 +1,5 @@
 import Vuex from "vuex";
-import CreatePost from "../../components/posts/CreatePost";
+import CreatePost from "../../src/components/post/CreatePost";
 import { createLocalVue, mount } from "@vue/test-utils";
 
 const localVue = createLocalVue();
