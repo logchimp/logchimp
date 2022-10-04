@@ -8,7 +8,7 @@ on:
       - "server/**"
       - "tests/**"
       - "package.json"
-      - "yarn.lock"
+      - "pnpm-lock.yaml"
   workflow_dispatch:
 
 jobs:
@@ -29,14 +29,24 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install packages
-        run: yarn --frozen-lockfile
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
   theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
@@ -56,17 +66,27 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install packages
-        run: yarn --frozen-lockfile
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
       - name: Testing
-        run: yarn workspace @logchimp/theme test:unit
+        run: pnpm --filter @logchimp/theme test:unit
 
   theme-build:
     name: Theme / Build - OS ${{ matrix.os }} - Node v${{ matrix.node }}
@@ -86,17 +106,27 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install packages
-        run: yarn --frozen-lockfile
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
       - name: Build theme
-        run: yarn workspace @logchimp/theme build
+        run: pnpm --filter @logchimp/theme build
 
   api-unit:
     name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
@@ -116,17 +146,27 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install packages
-        run: yarn --frozen-lockfile
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
       - name: Testing
-        run: yarn workspace @logchimp/api test:unit
+        run: pnpm --filter @logchimp/api test:unit
 
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
@@ -161,14 +201,24 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
-          path: ./node_modules
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install packages
-        run: yarn --frozen-lockfile
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
       - name: Create logchimp config file
         run: |
@@ -185,7 +235,7 @@ jobs:
           sh ./scripts/create-config.sh
 
       - name: Testing
-        run: yarn workspace @logchimp/api test:integration
+        run: pnpm --filter @logchimp/api test:integration
         env:
           NODE_ENV: "testing"
 

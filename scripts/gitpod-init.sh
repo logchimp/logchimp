@@ -17,5 +17,8 @@ MAIL_USER="gitpod" \
 MAIL_PORT=1025 \
 sh ./scripts/create-config.sh
 
+# Install pnpm
+npm i -g pnpm
+
 # Install packages
-yarn install
+pnpm Install
