@@ -17,7 +17,9 @@
 				</div>
 				<div slot="no-more" />
 				<div slot="no-results" />
-				<div slot="error" />
+				<client-error slot="error">
+					<p>Something went wrong!</p>
+				</client-error>
 			</infinite-loading>
 		</client-only>
 	</div>
@@ -29,6 +31,7 @@ import { mapGetters } from "vuex";
 import InfiniteLoading from "vue-infinite-loading";
 
 // components
+import ClientError from "../../components/ui/ClientError.vue";
 import BoardItem from "../../components/board/BoardItem.vue";
 import Loader from "../../components/ui/Loader.vue";
 
@@ -41,7 +44,8 @@ export default {
 
 		// components
 		BoardItem,
-		Loader
+		Loader,
+		ClientError,
 	},
 	data() {
 		return {

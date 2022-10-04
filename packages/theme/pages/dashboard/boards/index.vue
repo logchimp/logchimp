@@ -108,7 +108,9 @@
 					</div>
 					<div slot="no-more" />
 					<div slot="no-results" />
-					<div slot="error" />
+					<client-error slot="error">
+						Something went wrong!
+					</client-error>
 				</infinite-loading>
 			</client-only>
 		</Table>
@@ -132,6 +134,7 @@ import InfiniteLoading from "vue-infinite-loading";
 // components
 import Button from "../../../components/ui/Button.vue";
 import Table from "../../../components/ui/Table.vue";
+import ClientError from "../../../components/ui/ClientError.vue";
 import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
@@ -153,6 +156,7 @@ export default {
 		DropdownItem,
 		DropdownSpacer,
 		Loader,
+		ClientError,
 
 		// icons
 		LinkIcon,

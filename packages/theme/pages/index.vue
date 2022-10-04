@@ -9,7 +9,9 @@
 					</div>
 					<div slot="no-more" />
 					<div slot="no-results" />
-					<div slot="error" />
+					<client-error slot="error">
+						<p>Something went wrong!</p>
+					</client-error>
 				</infinite-loading>
 			</client-only>
 		</main>
@@ -27,6 +29,7 @@ import InfiniteLoading from "vue-infinite-loading";
 
 // components
 import PostItem from "../components/posts/PostItem.vue";
+import ClientError from "../components/ui/ClientError.vue";
 import Loader from "../components/ui/Loader.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import LoginCard from "../components/auth/LoginCard.vue";
@@ -40,6 +43,7 @@ export default {
 
 		// components
 		PostItem,
+		ClientError,
 		Loader,
 		SiteSetupCard,
 		LoginCard
