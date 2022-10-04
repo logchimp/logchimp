@@ -4,7 +4,7 @@
 			<h2 class="onboarding-heading">Create an account</h2>
 		</div>
 		<server-error v-if="serverError" @close="serverError = false" />
-		<div class="card">
+		<card>
 			<l-text
 				v-model="siteTitle.value"
 				label="Site title"
@@ -50,7 +50,7 @@
 					Create account
 				</Button>
 			</div>
-		</div>
+		</card>
 		<!-- <p class="auth-form-other">
 			By continuing, you agree to LogChimp's <strong>Terms</strong> and
 			<strong>Privacy</strong> policy.
@@ -63,6 +63,7 @@ import { mapGetters } from "vuex";
 
 // components
 import ServerError from "../../components/serverError.vue";
+import Card from "../../components/ui/Card.vue";
 import LText from "../../components/ui/LText.vue";
 import Button from "../../components/ui/Button.vue";
 
@@ -71,6 +72,7 @@ export default {
 	components: {
 		// components
 		ServerError,
+		Card,
 		LText,
 		Button
 	},
