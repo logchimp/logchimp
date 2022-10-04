@@ -31,10 +31,10 @@ tasks:
     command: |
       cd ./packages/theme
 
-      # export 'LOGCHIMP_SERVER_HOST' ENV to file
-      echo LOGCHIMP_SERVER_HOST=http://localhost:3000 > .env
+      # export 'APP_SERVER_URL' ENV to file
+      echo APP_SERVER_URL=http://localhost:3000 > .env
 
-      NODE_OPTIONS=--max_old_space_size=4096 LOGCHIMP_THEME_STANDALONE=true yarn dev
+      yarn dev
 
 ports:
   - port: 8080
