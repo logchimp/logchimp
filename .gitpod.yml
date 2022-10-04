@@ -16,7 +16,7 @@ tasks:
   - name: Server
     openMode: tab-after
     command: |
-      NODE_ENV="development" yarn run dev
+      NODE_ENV="development" pnpm dev
   - name: Server (logs)
     openMode: tab-after
     command: |
@@ -34,7 +34,7 @@ tasks:
       # export 'APP_SERVER_URL' ENV to file
       echo APP_SERVER_URL=http://localhost:3000 > .env
 
-      yarn dev
+      pnpm dev
 
 ports:
   - port: 8080

@@ -13,6 +13,7 @@
     "@vueuse/components": "^9.3.0",
     "@vueuse/core": "^9.3.0",
     "@vueuse/head": "^0.9.2",
+    "axios": "^1.0.0",
     "lucide-vue": "npm:lucide-vue-next@^0.91.0",
     "pinia": "^2.0.22",
     "vue": "^3.2.40",
