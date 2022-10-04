@@ -51,6 +51,9 @@ jobs:
           restore-keys: |
             ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+
   theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
@@ -87,6 +90,9 @@ jobs:
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
 
       - name: Testing
         run: pnpm --filter @logchimp/theme test:unit
@@ -128,6 +134,9 @@ jobs:
           restore-keys: |
             ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
 
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+
       - name: Build theme
         run: pnpm --filter @logchimp/theme build
 
@@ -167,6 +176,9 @@ jobs:
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
 
       - name: Testing
         run: pnpm --filter @logchimp/api test:unit
@@ -222,6 +234,9 @@ jobs:
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
 
       - name: Create logchimp config file
         run: |
