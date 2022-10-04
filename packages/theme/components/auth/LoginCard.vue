@@ -1,28 +1,28 @@
 <template>
-  <div class="card">
-    <div class="card-section card-header">
-      <h4 class="card-header-title">
-        Login
-      </h4>
-      <p class="card-header-label">
-        Log in to your account to give feedback
-      </p>
-    </div>
-    <div class="card-section">
-      <Button type="primary" href="/login">
-        Login
-      </Button>
-    </div>
-  </div>
+  <card>
+		<template #title>
+			Login
+		</template>
+		<template #label>
+			Log in to your account to give feedback
+		</template>
+
+		<Button type="primary" href="/login">
+			Login
+		</Button>
+  </card>
 </template>
 
 <script>
 // components
+import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
 
 export default {
   name: "LoginCard",
   components: {
+		// components
+		Card,
     Button
   }
 };
