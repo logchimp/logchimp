@@ -1,5 +1,8 @@
 <template>
-	<div class="roadmap">
+	<client-error v-if="error">
+		<p>Something went wrong!</p>
+	</client-error>
+	<div v-else class="roadmap">
 		<roadmap-column
 			v-for="roadmap in roadmaps"
 			:key="roadmap.id"
@@ -14,17 +17,20 @@ import { mapGetters } from "vuex";
 
 // components
 import RoadmapColumn from "../components/roadmap/RoadmapColumn.vue";
+import ClientError from "../components/ui/ClientError.vue";
 
 export default {
 	name: "RoadmapPage",
 	layout: "viewer",
 	components: {
 		// components
-		RoadmapColumn
+		RoadmapColumn,
+		ClientError
 	},
 	data() {
 		return {
-			roadmaps: []
+			roadmaps: [],
+			error: false,
 		};
 	},
 	computed: {
@@ -42,6 +48,7 @@ export default {
 				this.roadmaps = response.roadmaps;
 			} catch (err) {
 				console.error(err);
+				this.error = true;
 			}
 		}
 	},
