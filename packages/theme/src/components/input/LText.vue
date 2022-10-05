@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { formBaseProps } from "./formBaseProps";
-import { formInputBind, input } from "./formInputBind";
+import { formInputBind } from "./formInputBind";
 
 const props = defineProps({
 	type: {
@@ -49,7 +49,11 @@ const props = defineProps({
 	...formInputBind,
 });
 
-const emit = defineEmits(['hide-error', 'keyup-enter', 'keyup'])
+const emit = defineEmits(['hide-error', 'keyup-enter', 'keyup', 'update:modelValue'])
+
+function input(event: any) {
+	emit('update:modelValue', event.target.value)
+}
 
 function hideError() {
 	emit("hide-error", {
