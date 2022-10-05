@@ -46,7 +46,7 @@ importers:
       vue-infinite-loading: ^2.4.5
       vue-jest: 3.0.7
       vuedraggable: ^2.24.3
-      vuex: ^3.6.2
+      vuex: ^4.0.0
     dependencies:
       '@nuxtjs/axios': 5.13.6
       '@nuxtjs/dayjs': 1.4.1
@@ -55,7 +55,7 @@ importers:
       vue-clickaway: 2.2.2_vue@2.7.10
       vue-infinite-loading: 2.4.5_vue@2.7.10
       vuedraggable: 2.24.3
-      vuex: 3.6.2_vue@2.7.10
+      vuex: 4.0.2_vue@2.7.10
     devDependencies:
       '@babel/preset-env': 7.19.3_@babel+core@7.19.3
       '@nuxt/types': 2.15.8_6vbbfrstapu6gv6iisw225kcce
@@ -13049,6 +13049,15 @@ packages:
     peerDependencies:
       vue: ^2.0.0
     dependencies:
+      vue: 2.7.10
+    dev: false
+
+  /vuex/4.0.2_vue@2.7.10:
+    resolution: {integrity: sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==}
+    peerDependencies:
+      vue: ^3.0.2
+    dependencies:
+      '@vue/devtools-api': 6.4.3
       vue: 2.7.10
     dev: false
 
