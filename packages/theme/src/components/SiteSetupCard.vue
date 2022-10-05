@@ -23,19 +23,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { router } from "../router";
 // components
 import Button from "./Button.vue";
 
-export default {
-  name: "SiteSetupCard",
-  components: {
-    Button
-  },
-  methods: {
-    setupSite() {
-      this.$router.push("/setup/welcome");
-    }
-  }
-};
+function setupSite() {
+	router.push("/setup/welcome");
+}
 </script>
