@@ -5,6 +5,12 @@ import axios from "axios";
 import { useUserStore } from "../store/user"
 import store from "../store";
 
+import { ApiPaginationType } from "../types";
+
+interface UpdateUserSettingsArgs {
+	name?: string
+}
+
 /**
  * Get user settings
  *
@@ -32,14 +38,14 @@ export const getUserSettings = async () => {
  *
  * @returns {object} response
  */
-export const updateUserSettings = async user => {
+export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
   const token = store.getters["user/getAuthToken"];
 
   return await axios({
     method: "patch",
     url: "/api/v1/users/profile",
     data: {
-      ...user
+      name,
     },
     headers: {
       Authorization: `Bearer ${token}`
@@ -70,7 +76,7 @@ export const getPermissions = async () => {
  *
  * @returns {object} response
  */
-export const getAllUsers = async (page, sort) => {
+export const getAllUsers = async ({ page, sort }: ApiPaginationType) => {
   return await axios({
     method: "GET",
     url: "/api/v1/users",
