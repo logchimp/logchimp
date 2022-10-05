@@ -25,3 +25,8 @@ export const formBaseProps = {
 		}
 	}
 }
+
+export interface FormFieldErrorType {
+	show: boolean
+	message: string
+}
