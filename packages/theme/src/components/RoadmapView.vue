@@ -49,7 +49,12 @@ export default {
     async getRoadmapPosts() {
       const roadmapId = this.roadmap.id;
       try {
-        const response = await getPosts(1, 20, "DESC", null, roadmapId);
+        const response = await getPosts({
+					page: 1,
+					limit: 20,
+					sort: "DESC",
+					roadmapId
+				});
 
         this.posts = response.data.posts;
       } catch (err) {

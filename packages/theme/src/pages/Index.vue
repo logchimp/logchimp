@@ -61,7 +61,7 @@ async function getBoardPosts() {
   try {
     const response = await getPosts({
 			page: page.value,
-			sort: "desc"
+			sort: "DESC"
 		});
 
     if (response.data.posts.length) {

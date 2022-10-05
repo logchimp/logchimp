@@ -3,9 +3,9 @@
     <h4 class="form-header">
       Account settings
     </h4>
-    <div v-if="!user.loading">
+    <div v-if="!loading">
       <server-error v-if="serverError" @close="serverError = false" />
-      <div v-if="!userIsVerified" class="user-settings-verification">
+      <div v-if="!isVerified" class="user-settings-verification">
         <div class="user-settings-verification-content">
           <alert-icon />
           <div class="user-settings-verification-text">
@@ -26,7 +26,7 @@
         </Button>
       </div>
       <l-text
-        v-model="user.name.value"
+        v-model="user.name"
         label="Name"
         type="text"
         name="Name"
@@ -35,7 +35,7 @@
         @keyup-enter="updateSettings"
       />
       <l-text
-        v-model="user.username.value"
+        v-model="user.username"
         label="Username"
         type="text"
         name="Username"
@@ -43,7 +43,7 @@
         :disabled="true"
       />
       <l-text
-        v-model="user.email.value"
+        v-model="user.email"
         label="Email Address"
         type="text"
         name="Email Address"
@@ -66,13 +66,18 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // packages
+import { onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
 import { AlertTriangle as AlertIcon } from "lucide-vue";
 
 // modules
+import { router } from "../router";
 import { getUserSettings, updateUserSettings } from "../modules/users";
 import { resendUserVerificationEmail } from "../modules/auth";
+import { useSettingStore } from "../store/settings"
+import { useUserStore } from "../store/user"
 
 // components
 import Loader from "../components/Loader.vue";
@@ -83,120 +88,91 @@ import Button from "../components/Button.vue";
 // utils
 import tokenError from "../utils/tokenError";
 
-export default {
-  name: "UserSettings",
-  components: {
-    // components
-    Loader,
-    ServerError,
-    LText,
-    Button,
+const { get: siteSettings } = useSettingStore()
+const { getUserId } = useUserStore()
 
-    // icons
-    AlertIcon
-  },
-  data() {
-    return {
-      user: {
-        loading: false,
-        name: {
-          value: ""
-        },
-        username: {
-          value: ""
-        },
-        email: {
-          value: ""
-        },
-        isVerified: false
-      },
-      serverError: false,
-      resendVerificationEmailButtonLoading: false,
-      updateUserButtonLoading: false
-    };
-  },
-  computed: {
-    userIsVerified() {
-      return this.user.isVerified;
-    },
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  created() {
-    const userId = this.$store.getters["user/getUserId"];
+const user = reactive({
+	name: "",
+	username: "",
+	email: "",
+});
 
-    if (userId) {
-      this.getUser();
-    } else {
-      this.$router.push({
-        path: "/login",
-        query: {
-          redirect: "/settings"
-        }
-      });
-    }
-  },
-  methods: {
-    async getUser() {
-      this.user.loading = true;
+const loading = ref<boolean>(false);
+const isVerified = ref<boolean>(false);
+const serverError = ref<boolean>(false);
+const resendVerificationEmailButtonLoading = ref<boolean>(false);
+const updateUserButtonLoading = ref<boolean>(false)
 
-      try {
-        const response = await getUserSettings();
+async function getUser() {
+	loading.value = true;
 
-        this.user.name.value = response.data.user.name;
-        this.user.username.value = response.data.user.username;
-        this.user.email.value = response.data.user.email;
-        this.user.isVerified = response.data.user.isVerified;
-      } catch (error) {
-        tokenError(error);
-      } finally {
-        this.user.loading = false;
-      }
-    },
-    async updateSettings() {
-      this.updateUserButtonLoading = true;
+	try {
+		const response = await getUserSettings();
 
-      const userData = {
-        name: this.user.name.value
-      };
+		user.name = response.data.user.name;
+		user.username = response.data.user.username;
+		user.email = response.data.user.email;
+		isVerified.value = response.data.user.isVerified;
+	} catch (error) {
+		tokenError(error);
+	} finally {
+		loading.value = false;
+	}
+}
 
-      try {
-        const response = await updateUserSettings(userData);
-        this.user.name.value = response.data.user.name;
-      } catch (error) {
-        tokenError(error);
-      } finally {
-        this.updateUserButtonLoading = false;
-      }
-    },
-    async resendEmail() {
-      this.resendVerificationEmailButtonLoading = true;
+async function updateSettings() {
+	updateUserButtonLoading.value = true;
 
-      try {
-        const email = this.user.email.value;
-        await resendUserVerificationEmail(email);
-      } catch (error) {
-        if (error.response.data.code === "MAIL_CONFIG_MISSING") {
-          this.serverError = true;
-        }
+	try {
+		const response = await updateUserSettings({
+			name: user.name,
+		});
 
-        console.error(error);
-      } finally {
-        this.resendVerificationEmailButtonLoading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "User settings",
-      meta: [
-        {
-          name: "og:title",
-          content: `User settings · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
-  }
-};
+		user.name = response.data.user.name;
+	} catch (error) {
+		tokenError(error);
+	} finally {
+		updateUserButtonLoading.value = false;
+	}
+}
+
+async function resendEmail() {
+	resendVerificationEmailButtonLoading.value = true;
+
+	try {
+		const email = user.email;
+		await resendUserVerificationEmail(email);
+	} catch (error: any) {
+		if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+			serverError.value = true;
+		}
+
+		console.error(error);
+	} finally {
+		resendVerificationEmailButtonLoading.value = false;
+	}
+}
+
+onMounted(() => {
+	if (getUserId) {
+		getUser();
+	} else {
+		router.push({
+			path: "/login",
+			query: {
+				redirect: "/settings"
+			}
+		});
+	}
+})
+
+useHead({
+	title: "User settings",
+	meta: [
+		{
+			name: "og:title",
+			content: `User settings · ${siteSettings.title}`
+		}
+	]
+})
 </script>

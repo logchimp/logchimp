@@ -3,14 +3,14 @@
     <h4 class="post-edit-heading">
       Edit post
     </h4>
-    <div v-if="!post.loading">
+    <div v-if="!postLoading">
       <l-text
-        v-model="post.title.value"
+        v-model="post.title"
         label="Title"
         type="text"
         name="Post title"
         placeholder="Name of the feature"
-        :error="post.title.error"
+        :error="postFieldError"
         :disabled="updatePostPermissionDisabled"
         @keyup-enter="savePost"
         @hide-error="hideTitleError"
@@ -25,7 +25,7 @@
       <div style="display: flex; justify-content: flex-start;">
         <Button
           type="primary"
-          :loading="buttonLoading"
+          :loading="postSubmitting"
           :disabled="updatePostPermissionDisabled"
           @click="savePost"
         >
@@ -42,124 +42,127 @@
   </p>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
+import { router } from "../../../router";
+import { useSettingStore } from "../../../store/settings"
+import { useUserStore } from "../../../store/user"
 import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
+import { FormFieldErrorType } from "../../../components/input/formBaseProps";
 import Loader from "../../../components/Loader.vue";
 import LText from "../../../components/input/LText.vue";
 import LTextarea from "../../../components/input/LTextarea.vue";
 import Button from "../../../components/Button.vue";
 
-export default {
-  name: "PostEdit",
-  components: {
-    // components
-    Loader,
-    LText,
-    LTextarea,
-    Button
-  },
-  data() {
-    return {
-      isPostExist: true,
-      post: {
-        loading: false,
-        title: {
-          value: "",
-          error: {
-            show: false,
-            message: ""
-          }
-        },
-        contentMarkdown: "",
-        postId: "",
-        slugId: "",
-        author: {},
-        slug: ""
-      },
-      buttonLoading: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    },
-    updatePostPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("post:update");
-      const userId = this.$store.getters["user/getUserId"];
-      const authorId = this.post.author.userId;
-      if (!checkPermission && userId !== authorId) return true;
-      return false;
-    }
-  },
-  created() {
-    this.getPost();
-  },
-  methods: {
-    hideTitleError(event) {
-      this.post.title.error = event;
-    },
-    async getPost() {
-      this.post.loading = true;
-      const slug = this.$route.params.slug;
+const { get: siteSettings } = useSettingStore()
+const { permissions, getUserId } = useUserStore()
 
-      try {
-        const response = await getPostBySlug(slug);
+// posts
+const post = reactive({
+	postId: "",
+	title: "",
+	slug: "",
+	slugId: "",
+	contentMarkdown: "",
+	createdAt: "",
+	author: {
+		name: "",
+		username: "",
+		avatar: "",
+		userId: ""
+	},
+	voters: {
+		votesCount: 0,
+		viewerVote: false,
+	}
+});
+const postLoading = ref(false)
+const isPostExist = ref(true)
+const postSubmitting = ref(false)
+const postFieldError = reactive({
+	show: false,
+	message: ""
+})
 
-        this.post.title.value = response.data.post.title;
-        this.post.contentMarkdown = response.data.post.contentMarkdown;
-        this.post.postId = response.data.post.postId;
-        this.post.slugId = response.data.post.slugId;
-        this.post.author = response.data.post.author;
-      } catch (error) {
-        if (error.response.data.code === "POST_NOT_FOUND") {
-          this.isPostExist = false;
-        }
-      } finally {
-        this.post.loading = false;
-      }
-    },
-    async savePost() {
-      if (!this.post.title.value) {
-        this.post.title.error.show = true;
-        this.post.title.error.message = "Please enter a valid post title";
-        return;
-      }
+const updatePostPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("post:update");
+	const authorId = post.author.userId;
+	if (!checkPermission && getUserId !== authorId) return true;
 
-      this.buttonLoading = true;
+	return false;
+})
 
-      const postData = {
-        id: this.post.postId,
-        title: this.post.title.value,
-        contentMarkdown: this.post.contentMarkdown,
-        slugId: this.post.slugId,
-        userId: this.post.author.userId
-      };
-
-      try {
-        const response = await updatePost(postData);
-
-        this.$router.push(`/posts/${response.data.post.slug}`);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.buttonLoading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Edit post",
-      meta: [
-        {
-          name: "og:title",
-          content: `Edit post · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
-  }
+// TODO: Add TS types
+function hideTitleError(event: FormFieldErrorType) {
+	postFieldError.show = event.show;
+	postFieldError.message = event.message;
 };
+
+async function getPost() {
+	postLoading.value = true;
+
+	const route = router.currentRoute.value;
+	const slug = route.params.slug;
+
+	try {
+		const response = await getPostBySlug(slug);
+
+		post.title = response.data.post.title;
+		post.contentMarkdown = response.data.post.contentMarkdown;
+		post.postId = response.data.post.postId;
+		post.slugId = response.data.post.slugId;
+		post.author = response.data.post.author;
+	} catch (error: any) {
+		if (error.response.data.code === "POST_NOT_FOUND") {
+			isPostExist.value = false;
+		}
+	} finally {
+		postLoading.value = false;
+	}
+}
+
+async function savePost() {
+	if (!post.title) {
+		postFieldError.show = true;
+		postFieldError.message = "Please enter a valid post title";
+		return;
+	}
+
+	postSubmitting.value = true;
+
+	const postData = {
+		id: post.postId,
+		title: post.title,
+		contentMarkdown: post.contentMarkdown,
+		slugId: post.slugId,
+		userId: post.author.userId
+	};
+
+	try {
+		const response = await updatePost(postData);
+
+		router.push(`/posts/${response.data.post.slug}`);
+	} catch (error) {
+		console.log(error);
+	} finally {
+		postSubmitting.value = false;
+	}
+}
+
+onMounted(() => getPost());
+
+useHead({
+	title: "Edit post",
+	meta: [
+		{
+			name: "og:title",
+			content: `Edit post · ${siteSettings.title}`
+		}
+	]
+})
 </script>

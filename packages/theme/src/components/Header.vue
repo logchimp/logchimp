@@ -4,7 +4,7 @@
       <div class="header-container">
         <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
         <nav class="header-nav">
-          <dropdown-wrapper v-if="getUserId" class="nav-item">
+          <dropdown-wrapper v-if="user.userId" class="nav-item">
             <template #toggle>
               <avatar
                 class="nav-profile"
@@ -36,7 +36,7 @@
               </dropdown>
             </template>
           </dropdown-wrapper>
-          <div v-else class="nav-item nav-auth">
+					<div v-else class="nav-item nav-auth">
             <Button type="text" @click="login">
               Login
             </Button>
@@ -58,13 +58,13 @@
 <script setup lang="ts">
 // packages
 import { computed } from "vue";
-import { useRouter } from "vue-router";
 import {
   LayoutDashboard as DashboardIcon,
   Settings as SettingsIcon,
   LogOut as LogoutIcon
 } from "lucide-vue";
 
+import { router } from "../router";
 import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
@@ -78,9 +78,8 @@ import DropdownSpacer from "./dropdown/DropdownSpacer.vue";
 import Button from "./Button.vue";
 import Avatar from "./Avatar";
 
-const router = useRouter();
 const { get: siteSettings } = useSettingStore()
-const { user, getUserId, permissions, logout } = useUserStore()
+const { user, permissions, logout } = useUserStore()
 
 const accessDashboard = computed(() => {
 	const checkPermission = permissions.includes("dashboard:read");
