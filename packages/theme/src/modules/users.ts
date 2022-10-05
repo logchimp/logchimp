@@ -3,7 +3,6 @@ import axios from "axios";
 
 // store
 import { useUserStore } from "../store/user"
-import store from "../store";
 
 import { ApiPaginationType } from "../types";
 
@@ -19,13 +18,13 @@ interface UpdateUserSettingsArgs {
  * @returns {object} response
  */
 export const getUserSettings = async () => {
-  const token = store.getters["user/getAuthToken"];
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: "/api/v1/users/profile",
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -39,7 +38,7 @@ export const getUserSettings = async () => {
  * @returns {object} response
  */
 export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
-  const token = store.getters["user/getAuthToken"];
+	const { authToken } = useUserStore()
 
   return await axios({
     method: "patch",
@@ -48,7 +47,7 @@ export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
       name,
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -93,13 +92,13 @@ export const getAllUsers = async ({ page, sort }: ApiPaginationType) => {
  * @returns {object} response
  */
 export const checkUserDashboardAccess = async () => {
-  const token = store.getters["user/getAuthToken"];
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: "/api/v1/users/dashboard",
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
