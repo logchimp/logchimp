@@ -1,6 +1,5 @@
 const startTime = Date.now();
 
-// const theme = require("@logchimp/theme");
 const api = require("@logchimp/api");
 
 // utils
@@ -13,11 +12,6 @@ const port = config.server.port || 3000;
 const host = config.server.host || "0.0.0.0";
 
 api.listen(port, host, async () => {
-	// if (!config?.theme.standalone) {
-	// 	const nuxt = await theme();
-	// 	api.use(nuxt.render);
-	// }
-
 	logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
 	logger.info(`Listening on port: ${port}`);
 	logger.info("Ctrl+C to shut down");
