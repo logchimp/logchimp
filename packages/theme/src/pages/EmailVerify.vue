@@ -1,7 +1,7 @@
 <template>
   <div class="auth-form">
     <div class="auth-form-header">
-      <site-branding />
+      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
     </div>
     <div v-if="success" class="card">
       <success-icon color="#64B285" />
@@ -23,71 +23,60 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // packages
+import { useHead } from "@vueuse/head";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 
 // modules
+import { router } from "../router";
+import { useSettingStore } from "../store/settings"
 import { verifyUserEmail } from "../modules/auth";
 
 // components
 import Loader from "../components/Loader.vue";
 import SiteBranding from "../components/SiteBranding.vue";
+import { onMounted, ref } from "vue";
 
-export default {
-  name: "EmailVerification",
-  components: {
-    // components
-    Loader,
-    SiteBranding,
+const { get: siteSettings } = useSettingStore()
 
-    // icons
-    SuccessIcon,
-    ErrorIcon
-  },
-  data() {
-    return {
-      loading: true,
-      success: false,
-      error: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  created() {
-    this.verifyEmail();
-  },
-  methods: {
-    async verifyEmail() {
-      const token = this.$route.query.token;
+const loading = ref(true)
+const success = ref(false)
+const error = ref(false)
 
-      if (!token) {
-        this.loading = false;
-        this.error = true;
-        return;
-      }
+async function verifyEmail() {
+	const route = router.currentRoute.value;
+	const token = route.query.token;
 
-      try {
-        const response = await verifyUserEmail(token);
-        if (response.data.verify.success) this.success = true;
-      } catch (error) {
-        if (error.response.data.code === "USER_ALREADY_VERIFIED") {
-          return this.$router.push("/");
-        }
+	if (!token) {
+		loading.value = false;
+		error.value = true;
+		return;
+	}
 
-        this.error = true;
-      } finally {
-        this.loading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Email verification"
-    };
-  }
-};
+	try {
+		const response = await verifyUserEmail(token);
+		if (response.data.verify.success) success.value = true;
+	} catch (error: any) {
+		if (error.response.data.code === "USER_ALREADY_VERIFIED") {
+			return router.push("/");
+		}
+
+		error.value = true;
+	} finally {
+		loading.value = false;
+	}
+}
+
+onMounted(() => verifyEmail())
+
+useHead({
+	title: "Email verification",
+	meta: [
+		{
+			name: "og:title",
+			content: `Email verification · ${siteSettings.title}`
+		}
+	]
+})
 </script>
