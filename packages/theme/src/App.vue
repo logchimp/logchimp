@@ -71,44 +71,43 @@ onMounted(() => {
 	// }
 })
 
+useHead({
+	titleTemplate: `%s · ${siteSettings.title}`,
+	meta: [
+		{
+			name: "generator",
+			content: `LogChimp v${logchimpVersion}`
+		},
+		{
+			name: "description",
+			content: `${siteSettings.description}. Powered By LogChimp.`
+		},
+		{
+			name: "robots",
+			content: "index, follow"
+		},
+		// {
+		// 	rel: "canonical",
+		// 	href: "this.$route.fullPath"
+		// },
+		{
+			name: "language",
+			content: "es"
+		},
+		{
+			name: "copyright",
+			content: siteSettings.title
+		},
 
-// useHead({
-// 	titleTemplate: `%s · ${siteSettings.title}`,
-// 	meta: [
-// 		{
-// 			name: "generator",
-// 			content: `LogChimp v${logchimpVersion}`
-// 		},
-// 		{
-// 			name: "description",
-// 			content: `${siteSettings.description}. Powered By LogChimp.`
-// 		},
-// 		{
-// 			name: "robots",
-// 			content: "index, follow"
-// 		},
-// 		// {
-// 		// 	rel: "canonical",
-// 		// 	href: this.$route.fullPath
-// 		// },
-// 		{
-// 			name: "language",
-// 			content: "es"
-// 		},
-// 		{
-// 			name: "copyright",
-// 			content: siteSettings.title
-// 		},
-
-// 		// openGraph
-// 		{
-// 			name: "og:type",
-// 			content: "website"
-// 		},
-// 		{
-// 			name: "og:description",
-// 			content: `${siteSettings.description}. Powered By LogChimp.`
-// 		}
-// 	]
-// })
+		// openGraph
+		{
+			name: "og:type",
+			content: "website"
+		},
+		{
+			name: "og:description",
+			content: `${siteSettings.description}. Powered By LogChimp.`
+		}
+	]
+})
 </script>
