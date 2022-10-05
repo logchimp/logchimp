@@ -39,6 +39,7 @@
 import { createBoard } from "../../modules/boards";
 
 // components
+import { FormFieldErrorType } from "../../components/input/formBaseProps";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
 
@@ -72,7 +73,7 @@ export default {
     }
   },
   methods: {
-    hideBoardNameError(event) {
+    hideBoardNameError(event: FormFieldErrorType) {
       this.boardName.error = event;
     },
     async create() {

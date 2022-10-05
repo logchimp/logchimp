@@ -63,6 +63,7 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // component
+import { FormFieldErrorType } from "../components/input/formBaseProps";
 import LText from "../components/input/LText.vue";
 import Button from "../components/Button.vue";
 import SiteBranding from "../components/SiteBranding.vue";
@@ -96,7 +97,7 @@ function hideEmailError() {
 	emailError.message = '';
 };
 
-function hidePasswordError(event: any) {
+function hidePasswordError() {
 	passwordError.show = false;
 	passwordError.message = '';
 }

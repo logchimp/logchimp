@@ -53,6 +53,7 @@
 import { signup } from "../modules/auth";
 
 // component
+import { FormFieldErrorType } from "../components/input/formBaseProps";
 import ServerError from "../components/serverError";
 import LText from "../components/input/LText";
 import Button from "../components/Button";
@@ -99,10 +100,10 @@ export default {
     }
   },
   methods: {
-    hideEmailError(event) {
+    hideEmailError(event: FormFieldErrorType) {
       this.email.error = event;
     },
-    hidePasswordError(event) {
+    hidePasswordError(event: FormFieldErrorType) {
       this.password.error = event;
     },
     async join() {

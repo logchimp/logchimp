@@ -69,6 +69,7 @@ import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 import { validateResetPasswordToken, setNewPassword } from "../../modules/auth";
 
 // component
+import { FormFieldErrorType } from "../../components/input/formBaseProps";
 import Loader from "../../components/Loader.vue";
 import LText from "../../components/input/LText.vue";
 import Button from "../../components/Button.vue";
@@ -125,10 +126,10 @@ export default {
     this.validateToken();
   },
   methods: {
-    hidePasswordError(event) {
+    hidePasswordError(event: FormFieldErrorType) {
       this.password.error = event;
     },
-    hideConfirmPasswordError(event) {
+    hideConfirmPasswordError(event: FormFieldErrorType) {
       this.confirmPassword.error = event;
     },
     async validateToken() {

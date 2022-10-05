@@ -69,6 +69,7 @@
 import { siteSetup } from "../../modules/site";
 
 // components
+import { FormFieldErrorType } from "../../components/input/formBaseProps";
 import ServerError from "../../components/serverError";
 import LText from "../../components/input/LText";
 import Button from "../../components/Button";
@@ -121,16 +122,16 @@ export default {
     }
   },
   methods: {
-    hideSiteTitleError(event) {
+    hideSiteTitleError(event: FormFieldErrorType) {
       this.siteTitle.error = event;
     },
-    hideFullNameError(event) {
+    hideFullNameError(event: FormFieldErrorType) {
       this.fullName.error = event;
     },
-    hideEmailError(event) {
+    hideEmailError(event: FormFieldErrorType) {
       this.email.error = event;
     },
-    hidePasswordError(event) {
+    hidePasswordError(event: FormFieldErrorType) {
       this.password.error = event;
     },
     async createAccount() {
