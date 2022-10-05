@@ -127,7 +127,10 @@ export default {
   methods: {
     async getUsers($state) {
       try {
-        const response = await getAllUsers(this.page, "desc");
+        const response = await getAllUsers({
+					page: this.page,
+					sort: "desc",
+				});
 
         if (response.data.users.length) {
           this.users.push(...response.data.users);

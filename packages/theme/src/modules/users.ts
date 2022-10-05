@@ -3,7 +3,12 @@ import axios from "axios";
 
 // store
 import { useUserStore } from "../store/user"
-import store from "../store";
+
+import { ApiPaginationType } from "../types";
+
+interface UpdateUserSettingsArgs {
+	name?: string
+}
 
 /**
  * Get user settings
@@ -13,13 +18,13 @@ import store from "../store";
  * @returns {object} response
  */
 export const getUserSettings = async () => {
-  const token = store.getters["user/getAuthToken"];
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: "/api/v1/users/profile",
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -32,17 +37,17 @@ export const getUserSettings = async () => {
  *
  * @returns {object} response
  */
-export const updateUserSettings = async user => {
-  const token = store.getters["user/getAuthToken"];
+export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
+	const { authToken } = useUserStore()
 
   return await axios({
     method: "patch",
     url: "/api/v1/users/profile",
     data: {
-      ...user
+      name,
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -70,7 +75,7 @@ export const getPermissions = async () => {
  *
  * @returns {object} response
  */
-export const getAllUsers = async (page, sort) => {
+export const getAllUsers = async ({ page, sort }: ApiPaginationType) => {
   return await axios({
     method: "GET",
     url: "/api/v1/users",
@@ -87,13 +92,13 @@ export const getAllUsers = async (page, sort) => {
  * @returns {object} response
  */
 export const checkUserDashboardAccess = async () => {
-  const token = store.getters["user/getAuthToken"];
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: "/api/v1/users/dashboard",
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };

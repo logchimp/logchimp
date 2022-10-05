@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { formBaseProps } from "./formBaseProps";
-import { formInputBind, input } from "./formInputBind";
+import { formInputBind } from "./formInputBind";
 
 defineProps({
 	rows: {
@@ -28,4 +28,10 @@ defineProps({
 	...formBaseProps,
 	...formInputBind
 })
+
+const emit = defineEmits(['update:modelValue'])
+
+function input(event: any) {
+	emit('update:modelValue', event.target.value)
+}
 </script>

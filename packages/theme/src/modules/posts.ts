@@ -3,7 +3,36 @@ import axios from "axios";
 
 // store
 import { useUserStore } from "../store/user"
-import store from "../store";
+import { ApiPaginationType, ApiSortType } from "../types";
+
+interface GetPostArgs extends ApiPaginationType {
+	boardId?: string[]
+	roadmapId?: string
+}
+
+interface CreatePostArgs {
+	title: string
+	contentMarkdown?: string
+}
+
+interface Post extends CreatePostArgs {
+	id: string
+	slugId: string
+	userId: string
+	boardId: string
+	roadmapId: string
+}
+
+interface PostActivityArgs {
+	post_id: string
+	sort?: ApiSortType
+}
+
+interface AddCommentArgs {
+	post_id: string
+	body: string
+	is_internal?: boolean
+}
 
 /**
  * Create post
@@ -13,7 +42,7 @@ import store from "../store";
  *
  * @returns {object} response
  */
-export const createPost = async (boardId, post) => {
+export const createPost = async (boardId: string, post: CreatePostArgs) => {
   const { getUserId, authToken } = useUserStore()
 
   return await axios({
@@ -21,7 +50,7 @@ export const createPost = async (boardId, post) => {
     url: "/api/v1/posts",
     data: {
       title: post.title,
-      contentMarkdown: post.description,
+      contentMarkdown: post.contentMarkdown,
       userId: getUserId,
       boardId
     },
@@ -47,9 +76,9 @@ export const getPosts = async ({
   page = 1,
   limit = 10,
   sort = "DESC",
-  boardId = null,
-  roadmapId = null
-}) => {
+  boardId = [],
+  roadmapId = ""
+}: GetPostArgs) => {
 	const { getUserId } = useUserStore()
 
   return await axios({
@@ -73,7 +102,7 @@ export const getPosts = async ({
  *
  * @returns {object} response
  */
-export const getPostBySlug = async slug => {
+export const getPostBySlug = async (slug: string) => {
   const { getUserId } = useUserStore()
 
   return await axios({
@@ -100,7 +129,7 @@ export const getPostBySlug = async slug => {
  *
  * @returns {object} response
  */
-export const updatePost = async post => {
+export const updatePost = async (post: Post) => {
   const { authToken } = useUserStore()
 
   return await axios({
@@ -119,10 +148,10 @@ export const updatePost = async post => {
  * Get post activity
  *
  * @param {object} activity
- * @param {string} post_id post UUID
- * @param {string} sort sort type
+ * @param {string} activity.post_id post UUID
+ * @param {string} activity.sort sort type
  */
-export const postActivity = async ({ post_id, sort }) => {
+export const postActivity = async ({ post_id, sort }: PostActivityArgs) => {
   return await axios({
     method: "GET",
     url: `/api/v1/posts/${post_id}/activity`,
@@ -137,9 +166,9 @@ export const postActivity = async ({ post_id, sort }) => {
  *
  * @param {object} comment
  * @param {string} comment.body
- * @param {string} comment.is_internal
+ * @param {boolean} comment.is_internal
  */
-export const addComment = async ({ post_id, body, is_internal}) => {
+export const addComment = async ({ post_id, body, is_internal = false }: AddCommentArgs) => {
   const { authToken } = useUserStore()
 
   return await axios({

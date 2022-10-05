@@ -1,10 +1,4 @@
-interface UseTrimType {
-	value: string
-	size: number
-	trail?: string
-}
-
-export function useTrim({ value, size, trail = '...'}: UseTrimType) {
+export function useTrim(value: string, size: number, trail?: string) {
 	if (!value) return "";
   const valueLength = value.length;
 

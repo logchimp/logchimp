@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!post.loading">
+  <div v-if="!postLoading">
     <div v-if="isPostExist" class="viewpost">
       <div class="viewpost__vote">
         <div>
@@ -28,10 +28,10 @@
             </div>
             <time
               :datetime="post.createdAt"
-              :title="$date(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
+              :title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
               class="post-date"
             >
-              {{ $date(post.createdAt).from() }}
+              {{ dayjs(post.createdAt).fromNow() }}
             </time>
             <dropdown-wrapper v-if="postAuthor" class="viewpost__menu">
               <template #toggle>
@@ -62,7 +62,7 @@
       <div v-if="showPostActivity" class="activity-section">
         <div class="card">
           <l-text
-            v-model="comment.value"
+            v-model="commentInput"
             name="comment"
             placeholder="Leave a comment"
             @keyup-enter="submitComment"
@@ -71,8 +71,8 @@
           <div style="display: flex; justify-content: flex-end;">
             <Button
               type="primary"
-              :loading="comment.buttonLoading"
-              :disabled="!comment.value"
+              :loading="submittingComment"
+              :disabled="!commentInput"
               @click="submitComment"
             >
               Submit
@@ -126,16 +126,23 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // packages
+import { computed, onMounted, reactive, ref, watch } from "vue";
+import { useHead } from "@vueuse/head";
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
 
 // modules
+import { router } from "../../../router";
+import { useSettingStore } from "../../../store/settings"
+import { useUserStore } from "../../../store/user"
 import { getPostBySlug, addComment, postActivity } from "../../../modules/posts";
 
 // components
 import Loader from "../../../components/Loader.vue";
-import Vote from "../../../components/post/Vote.vue";
+import Vote, { VoteEventType } from "../../../components/post/Vote.vue";
 import DropdownWrapper from "../../../components/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/dropdown/DropdownItem.vue";
@@ -144,152 +151,153 @@ import LText from "../../../components/input/LText.vue";
 import Button from "../../../components/Button.vue";
 import ActivityItem from "../../../components/ActivityItem/ActivityItem.vue";
 
-export default {
-  name: "PostView",
-  components: {
-    // components
-    Loader,
-    Vote,
-    DropdownWrapper,
-    Dropdown,
-    DropdownItem,
-    Avatar,
-    LText,
-    Button,
-    ActivityItem,
+const { permissions, getUserId } = useUserStore()
+const { labs, get: siteSettings } = useSettingStore()
 
-    // icons
-    MoreIcon,
-    EditIcon
-  },
-  data() {
-    return {
-      post: {
-        loading: false
-      },
-      isPostExist: true,
-      comment: {
-        value: "",
-        buttonLoading: false
-      },
-      activity: {
-        loading: false,
-        sort: "desc",
-        data: []
-      }
-    };
-  },
-  computed: {
-    postAuthorName() {
-      return this.post.author.name
-        ? this.post.author.name
-        : this.post.author.username;
-    },
-    postAuthor() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("post:update");
-      const userId = this.$store.getters["user/getUserId"];
-      const authorId = this.post.author.userId;
+dayjs.extend(relativeTime);
 
-      if (!checkPermission && userId !== authorId) return false;
-      return true;
-    },
-    showPostActivity() {
-      return this.$store.getters["settings/labs"].comments;
-    },
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  watch: {
-    // Get post activity on changing sort
-    "activity.sort": {
-      handler(value) {
-        this.getPostActivity(value);
-      }
-    }
-  },
-  created() {
-    this.postBySlug();
-  },
-  methods: {
-    async postBySlug() {
-      this.post.loading = true;
-      const slug = this.$route.params.slug;
+// posts
+const post = reactive({
+	postId: "",
+	title: "",
+	slug: "",
+	contentMarkdown: "",
+	createdAt: "",
+	author: {
+		name: "",
+		username: "",
+		avatar: "",
+		userId: ""
+	},
+	voters: {
+		votesCount: 0,
+		viewerVote: false,
+	}
+});
+const postLoading = ref(false)
+const isPostExist = ref(true)
 
-      try {
-        const response = await getPostBySlug(slug);
+// comments
+const commentInput = ref("");
+const submittingComment = ref(false);
 
-        this.post = response.data.post;
-        this.getPostActivity();
-      } catch (error) {
-        if (error.response.data.code === "POST_NOT_FOUND") {
-          this.isPostExist = false;
-        }
-      } finally {
-        this.post.loading = false;
-      }
-    },
-    async getPostActivity(sort = "desc") {
-      this.activity.loading = true;
+// activity
+const activity = reactive<{
+	loading: boolean
+	sort: string
+	// TODO: Add TS types
+	data: any
+}>({
+	loading: false,
+	sort: "desc",
+	data: []
+})
 
-      try {
-        const response = await postActivity({
-          post_id: this.post.postId,
-          sort
-        });
+const postAuthorName = computed(() => {
+	return post.author.name
+		? post.author.name
+		: post.author.username;
+})
 
-        this.activity.data = response.data.activity;
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.activity.loading = false;
-      }
-    },
-    async submitComment() {
-      if (!this.comment.value) return;
+const postAuthor = computed(() => {
+	const checkPermission = permissions.includes("post:update");
+	const authorId = post.author.userId;
 
-      try {
-        const response = await addComment({
-          post_id: this.post.postId,
-          body: this.comment.value,
-          is_internal: false
-        });
+	if (!checkPermission && getUserId !== authorId) return false;
+	return true;
+});
 
-        this.comment.value = "";
-        this.activity.data.unshift(response.data.comment);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    updateVoters(voters) {
-      this.post.voters.votesCount = voters.votesCount;
-      this.post.voters.viewerVote = voters.viewerVote;
-    },
-    editPost() {
-      this.$router.push(`/posts/${this.post.slug}/edit`);
-    }
-  },
-  metaInfo() {
-    return {
-      title: `${this.post.title} · Post`,
-      meta: [
-        {
-          name: "description",
-          content: `${this.post.contentMarkdown}`
-        },
+const showPostActivity = computed(() => {
+	return labs.comments;
+})
 
-        // openGraph
-        {
-          name: "og:title",
-          content: `${this.post.title} · Post · ${this.getSiteSittings.title}`
-        },
-        {
-          name: "og:description",
-          content: `${this.post.contentMarkdown}`
-        }
-      ]
-    };
-  }
-};
+async function getPostActivity(sort = "desc") {
+	activity.loading = true;
+
+	try {
+		const response = await postActivity({
+			post_id: post.postId,
+			sort
+		});
+
+		activity.data = response.data.activity;
+	} catch (error) {
+		console.log(error);
+	} finally {
+		activity.loading = false;
+	}
+}
+
+// Get post activity on changing sort
+watch(() => activity.sort, (value) => {
+	getPostActivity(value)
+})
+
+async function postBySlug() {
+	postLoading.value = true;
+	const route = router.currentRoute.value
+	const slug = route.params.slug;
+
+	try {
+		const response = await getPostBySlug(slug);
+
+		Object.assign(post, response.data.post);
+		getPostActivity();
+	} catch (error: any) {
+		if (error.response.data.code === "POST_NOT_FOUND") {
+			isPostExist.value = false;
+		}
+	} finally {
+		postLoading.value = false;
+	}
+}
+
+async function submitComment() {
+	if (!commentInput.value) return;
+
+	try {
+		const response = await addComment({
+			post_id: post.postId,
+			body: commentInput.value,
+			is_internal: false
+		});
+
+		commentInput.value = "";
+		activity.data.unshift(response.data.comment);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+function updateVoters(voters: VoteEventType) {
+	post.voters.votesCount = voters.votesCount;
+	post.voters.viewerVote = voters.viewerVote;
+}
+
+function editPost() {
+	router.push(`/posts/${post.slug}/edit`);
+}
+
+
+onMounted(() => postBySlug())
+
+useHead({
+	title: `${post.title} · Post`,
+	meta: [
+		{
+			name: "description",
+			content: `${post.contentMarkdown}`
+		},
+
+		// openGraph
+		{
+			name: "og:title",
+			content: `${post.title} · Post · ${siteSettings.title}`
+		},
+		{
+			name: "og:description",
+			content: `${post.contentMarkdown}`
+		}
+	]
+});
 </script>

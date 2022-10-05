@@ -13,7 +13,7 @@
       @hide-error="hideTitleError"
     />
     <l-textarea
-      v-model="description.value"
+      v-model="description"
       label="Description"
       rows="4"
       name="Post description"
@@ -24,7 +24,7 @@
       <Button
         type="primary"
         data-test="create-post-button"
-        :loading="buttonLoading"
+        :loading="loading"
         :disabled="createPostPermissionDisabled"
         @click="submitPost"
       >
@@ -34,9 +34,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, reactive, ref } from "vue";
+
 // modules
 import { createPost } from "../../modules/posts";
+import { useUserStore } from "../../store/user"
+import { router } from "../../router";
 
 // components
 import LText from "../input/LText.vue";
@@ -47,79 +51,63 @@ import Button from "../Button.vue";
 import validateUUID from "../../utils/validateUUID";
 import tokenError from "../../utils/tokenError";
 
-export default {
-  name: "CreatePost",
-  components: {
-    // components
-    LText,
-    LTextarea,
-    Button
-  },
-  props: {
-    boardId: {
-      type: String,
-      required: true,
-      validator: validateUUID
-    },
-    dashboard: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      title: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      description: {
-        value: ""
-      },
-      buttonLoading: false
-    };
-  },
-  computed: {
-    dashboardUrl() {
-      return this.dashboard ? "/dashboard" : "";
-    },
-    createPostPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("post:create");
-      return !checkPermission;
-    }
-  },
-  methods: {
-    hideTitleError(event) {
-      this.title.error = event;
-    },
-    async submitPost() {
-      if (!this.title.value) {
-        this.title.error.show = true;
-        this.title.error.message = "You forgot to enter a post title";
-        return;
-      }
+const { permissions } = useUserStore()
 
-      this.buttonLoading = true;
-      const postObject = {
-        title: this.title.value,
-        description: this.description.value
-      };
+const props = defineProps({
+	boardId: {
+		type: String,
+		required: true,
+		validator: validateUUID
+	},
+	dashboard: {
+		type: Boolean,
+		default: false
+	}
+})
 
-      try {
-        const response = await createPost(this.boardId, postObject);
+const title = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const description = ref<string>("")
+const loading = ref<boolean>(false)
 
-        // redirect to post
-        const slug = response.data.post.slug;
-        this.$router.push({ path: `${this.dashboardUrl}/posts/${slug}` });
-      } catch (error) {
-        tokenError(error);
-      } finally {
-        this.buttonLoading = false;
-      }
-    }
-  }
-};
+const dashboardUrl = computed(() => props.dashboard ? "/dashboard" : "")
+const createPostPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("post:create");
+	return !checkPermission;
+})
+
+function hideTitleError(event: any) {
+	title.error = event;
+}
+
+async function submitPost() {
+	if (!title.value) {
+		title.error.show = true;
+		title.error.message = "You forgot to enter a post title";
+		return;
+	}
+
+	loading.value = true;
+	const postObject = {
+		title: title.value,
+		contentMarkdown: description.value
+	};
+
+	try {
+		const response = await createPost(props.boardId, postObject);
+
+		// redirect to post
+		const slug = response.data.post.slug;
+		router.push(`${dashboardUrl.value}/posts/${slug}`);
+	} catch (error) {
+		tokenError(error);
+	} finally {
+		loading.value = false;
+	}
+}
 </script>

@@ -1,8 +1,6 @@
 import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
+import { router } from "../router";
 
 export const useUserStore = defineStore('user', () => {
 	const authToken = ref<string>("");
@@ -27,7 +25,7 @@ export const useUserStore = defineStore('user', () => {
 		user.avatar = payload.avatar;
 
 		localStorage.setItem("user", JSON.stringify({
-			authToken,
+			authToken: authToken.value,
 			...user,
 		}));
 	}
@@ -46,8 +44,7 @@ export const useUserStore = defineStore('user', () => {
 		setPermissions([]);
 
 		localStorage.removeItem("user");
-		console.log(router.currentRoute)
-    // if (router.currentRoute.fullPath !== "/") router.push("/");
+    if (router.currentRoute.value.fullPath !== "/") router.push("/");
 	}
 
 	return {

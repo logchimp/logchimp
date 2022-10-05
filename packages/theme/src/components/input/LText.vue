@@ -37,8 +37,9 @@
 </template>
 
 <script setup lang="ts">
+import type { FormFieldErrorType } from "./formBaseProps";
 import { formBaseProps } from "./formBaseProps";
-import { formInputBind, input } from "./formInputBind";
+import { formInputBind } from "./formInputBind";
 
 const props = defineProps({
 	type: {
@@ -49,7 +50,16 @@ const props = defineProps({
 	...formInputBind,
 });
 
-const emit = defineEmits(['hide-error', 'keyup-enter', 'keyup'])
+const emit = defineEmits<{
+	(e: 'hide-error', event: FormFieldErrorType): void
+	(e: 'keyup-enter', event?: any): void
+	(e: 'keyup', event?: any): void
+	(e: 'update:modelValue', event?: any): void
+}>()
+
+function input(event: any) {
+	emit('update:modelValue', event.target.value)
+}
 
 function hideError() {
 	emit("hide-error", {

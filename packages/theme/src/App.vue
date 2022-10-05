@@ -28,12 +28,16 @@ import { useHead } from "@vueuse/head";
 import packageJson from "../package.json";
 
 import { useSettingStore } from "./store/settings"
+import { useUserStore } from "./store/user"
 import { useAlertStore } from "./store/alert"
+import { getPermissions } from "./modules/users";
+
 // components
 import Alert from "./components/Alert.vue";
 
 const { get: siteSettings, update: updateSettings } = useSettingStore()
 const { getAlerts, remove: removeAlert } = useAlertStore()
+const { setUser, setPermissions } = useUserStore()
 
 const logchimpVersion = computed(() => packageJson.version);
 
@@ -50,7 +54,7 @@ function getSiteSettings() {
 		});
 }
 
-onMounted(() => {
+onMounted(async () => {
 	getSiteSettings();
 
 	// set google analytics
@@ -64,51 +68,51 @@ onMounted(() => {
 		// bootstrap(gtag).then();
 	}
 
-	// const user = localStorage.getItem("user");
-	// if (user) {
-	// 	this.$store.dispatch("user/login", JSON.parse(user));
-	// 	this.$store.dispatch("user/updatePermissions");
-	// }
+	const user = localStorage.getItem("user");
+	if (user) {
+		setUser(JSON.parse(user));
+		const permissions = await getPermissions();
+		setPermissions(permissions.data);
+	}
 })
 
+useHead({
+	titleTemplate: `%s · ${siteSettings.title}`,
+	meta: [
+		{
+			name: "generator",
+			content: `LogChimp v${logchimpVersion}`
+		},
+		{
+			name: "description",
+			content: `${siteSettings.description}. Powered By LogChimp.`
+		},
+		{
+			name: "robots",
+			content: "index, follow"
+		},
+		// {
+		// 	rel: "canonical",
+		// 	href: "this.$route.fullPath"
+		// },
+		{
+			name: "language",
+			content: "es"
+		},
+		{
+			name: "copyright",
+			content: siteSettings.title
+		},
 
-// useHead({
-// 	titleTemplate: `%s · ${siteSettings.title}`,
-// 	meta: [
-// 		{
-// 			name: "generator",
-// 			content: `LogChimp v${logchimpVersion}`
-// 		},
-// 		{
-// 			name: "description",
-// 			content: `${siteSettings.description}. Powered By LogChimp.`
-// 		},
-// 		{
-// 			name: "robots",
-// 			content: "index, follow"
-// 		},
-// 		// {
-// 		// 	rel: "canonical",
-// 		// 	href: this.$route.fullPath
-// 		// },
-// 		{
-// 			name: "language",
-// 			content: "es"
-// 		},
-// 		{
-// 			name: "copyright",
-// 			content: siteSettings.title
-// 		},
-
-// 		// openGraph
-// 		{
-// 			name: "og:type",
-// 			content: "website"
-// 		},
-// 		{
-// 			name: "og:description",
-// 			content: `${siteSettings.description}. Powered By LogChimp.`
-// 		}
-// 	]
-// })
+		// openGraph
+		{
+			name: "og:type",
+			content: "website"
+		},
+		{
+			name: "og:description",
+			content: `${siteSettings.description}. Powered By LogChimp.`
+		}
+	]
+})
 </script>

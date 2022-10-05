@@ -1,11 +1,14 @@
-import store from "../store";
-import {router} from "../router";
+import { useUserStore } from "../store/user"
+import { router } from "../router"
 
-const tokenError = error => {
-  store.dispatch("user/logout");
+const { logout } = useUserStore()
+
+// TODO: Add TS types
+const tokenError = (error: any) => {
+  logout()
 
   if (error.response.data.code === "USER_NOT_FOUND") {
-    if (router.currentRoute.fullPath !== "/") router.push("/");
+    if (router.currentRoute.value.fullPath !== "/") router.push("/");
   }
 
   // invalid token or invalid JWT
@@ -18,7 +21,7 @@ const tokenError = error => {
     router.push({
       path: "/login",
       query: {
-        redirect: router.currentRoute.fullPath
+        redirect: router.currentRoute.value.fullPath
       }
     });
   }

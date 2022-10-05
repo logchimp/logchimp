@@ -18,80 +18,93 @@
 </template>
 
 <script lang="ts">
+interface UserVoteType {
+	voteId: string
+	userId: string
+	postId: string
+	createdAt: string
+	name?: string
+	username?: string
+	avatar?: string
+}
+
+export interface VoteEventType {
+	votes: UserVoteType[]
+	votesCount: number
+	viewerVote: boolean
+}
+</script>
+
+<script setup lang="ts">
+import { computed, ref } from "vue";
+
 // modules
 import { addVote, deleteVote } from "../../modules/votes";
+import { useUserStore } from "../../store/user"
 
-// icons
+// components
 import ArrowIcon from "../icons/Arrow.vue";
 
 // utils
 import validateUUID from "../../utils/validateUUID";
 import tokenError from "../../utils/tokenError";
 
-export default {
-  name: "Vote",
-  components: {
-    ArrowIcon
-  },
-  props: {
-    postId: {
-      type: String,
-      required: true,
-      validator: validateUUID
-    },
-    votesCount: {
-      type: Number,
-      default: 0
-    },
-    isVoted: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      loading: false
-    };
-  },
-  computed: {
-    disabled() {
-      const getUserId = this.$store.getters["user/getUserId"];
-      if (!getUserId) return false;
+const props = defineProps({
+	postId: {
+		type: String,
+		required: true,
+		validator: validateUUID
+	},
+	votesCount: {
+		type: Number,
+		default: 0
+	},
+	isVoted: {
+		type: Boolean,
+		default: false
+	}
+})
 
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("vote:create");
-      return !checkPermission;
-    }
-  },
-  methods: {
-    async changeVote() {
-      if (this.loading) return;
-      if (this.disabled) return;
+const emit = defineEmits<{
+	(e: 'update-voters', voters: VoteEventType): void
+}>()
 
-      this.loading = true;
+const loading = ref<boolean>(false);
+const { getUserId, permissions } = useUserStore()
 
-      if (this.isVoted) {
-        try {
-          const response = await deleteVote(this.postId);
+const disabled = computed(() => {
+	if (!getUserId) return false;
 
-          this.$emit("update-voters", response.data.voters);
-        } catch (error) {
-          tokenError(error);
-        } finally {
-          this.loading = false;
-        }
-      } else {
-        try {
-          const response = await addVote(this.postId);
+	const checkPermission = permissions.includes("vote:create");
+	return !checkPermission;
+})
 
-          this.$emit("update-voters", response.data.voters);
-        } catch (error) {
-          tokenError(error);
-        } finally {
-          this.loading = false;
-        }
-      }
-    }
-  }
-};
+async function changeVote() {
+	if (loading.value) return;
+	if (disabled.value) return;
+
+	loading.value = true;
+
+	if (props.isVoted) {
+		try {
+			const response = await deleteVote(props.postId);
+
+			emit("update-voters", response.data.voters);
+		} catch (error) {
+			tokenError(error);
+		} finally {
+			loading.value = false;
+		}
+	} else {
+		try {
+			const response = await addVote(props.postId);
+
+			emit("update-voters", response.data.voters);
+		} catch (error) {
+			tokenError(error);
+		} finally {
+			loading.value = false;
+		}
+	}
+}
 </script>

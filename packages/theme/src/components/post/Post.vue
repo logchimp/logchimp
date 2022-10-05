@@ -26,7 +26,7 @@
         {{ postData.roadmap.name }}
       </p>
       <p data-test="post-description" class="post-content-description">
-        {{ post.contentMarkdown | trim(120) }}
+        {{ useTrim(postData.contentMarkdown, 120) }}
       </p>
       <board-badge
         v-if="postData.board"
@@ -39,47 +39,37 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, ref } from "vue";
+
+import { useTrim } from "../../hooks";
+
 // components
-import Vote from "./Vote.vue";
+import Vote, { VoteEventType } from "./Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
-export default {
-  name: "Post",
-  components: {
-    Vote,
-    BoardBadge
-  },
-  props: {
-    post: {
-      type: Object,
-      required: true,
-      default: () => {}
-    },
-    dashboard: {
-      type: Boolean,
-      default: false
-    },
-    showBoard: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data() {
-    return {
-      postData: this.post
-    };
-  },
-  computed: {
-    dashboardUrl() {
-      return this.dashboard ? "/dashboard" : "";
-    }
-  },
-  methods: {
-    updateVoters(voters) {
-      this.postData.voters.votesCount = voters.votesCount;
-      this.postData.voters.viewerVote = voters.viewerVote;
-    }
-  }
-};
+const props = defineProps({
+	post: {
+		type: Object,
+		required: true,
+		default: () => {}
+	},
+	dashboard: {
+		type: Boolean,
+		default: false
+	},
+	showBoard: {
+		type: Boolean,
+		default: true
+	}
+})
+
+const postData = ref(props.post);
+const dashboardUrl = computed(() => props.dashboard ? "/dashboard" : "");
+
+// TODO: Add TS types
+function updateVoters(voters: VoteEventType) {
+	postData.value.voters.votesCount = voters.votesCount;
+	postData.value.voters.viewerVote = voters.viewerVote;
+}
 </script>

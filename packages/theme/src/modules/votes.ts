@@ -1,8 +1,7 @@
 // packges
 import axios from "axios";
 
-// store
-import store from "../store";
+import { useUserStore } from "../store/user";
 
 /**
  * Add vote to a post
@@ -11,19 +10,18 @@ import store from "../store";
  *
  * @returns {object} response
  */
-export const addVote = async postId => {
-  const token = store.getters["user/getAuthToken"];
-  const userId = store.getters["user/getUserId"];
+export const addVote = async (postId: string) => {
+	const { getUserId, authToken } = useUserStore()
 
   return await axios({
     method: "POST",
     url: "/api/v1/votes",
     data: {
-      userId,
+      userId: getUserId,
       postId
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -35,19 +33,18 @@ export const addVote = async postId => {
  *
  * @returns {object} response
  */
-export const deleteVote = async postId => {
-  const userId = store.getters["user/getUserId"];
-  const token = store.getters["user/getAuthToken"];
+export const deleteVote = async (postId: string) => {
+  const { getUserId, authToken } = useUserStore()
 
   return await axios({
     method: "DELETE",
     url: "/api/v1/votes",
     data: {
-      userId,
+      userId: getUserId,
       postId
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };

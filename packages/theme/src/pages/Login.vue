@@ -53,13 +53,12 @@
 
 <script setup lang="ts">
 // packages
-import { useRoute, useRouter } from "vue-router";
 import { useHead } from "@vueuse/head";
 
 // modules
+import { router } from "../router"
 import { signin } from "../modules/auth";
 import { getPermissions } from "../modules/users";
-
 import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
@@ -68,7 +67,6 @@ import LText from "../components/input/LText.vue";
 import Button from "../components/Button.vue";
 import SiteBranding from "../components/SiteBranding.vue";
 import { onMounted, reactive, ref } from "vue";
-
 
 const email = ref<string>("")
 const emailError = reactive({
@@ -83,8 +81,6 @@ const passwordError = reactive({
 });
 const buttonLoading = ref<boolean>(false)
 
-const router = useRouter();
-const route = useRoute();
 const { get: siteSettings } = useSettingStore()
 const { setUser, setPermissions } = useUserStore()
 
@@ -126,6 +122,7 @@ async function login() {
 		const permissions = await getPermissions();
 		setPermissions(permissions.data);
 
+		const route = router.currentRoute.value
 		if (route.query.redirect) {
 			router.push(route.query?.redirect.toString());
 		} else {

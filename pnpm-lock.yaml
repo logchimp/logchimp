@@ -118,6 +118,7 @@ importers:
       '@vueuse/core': ^9.3.0
       '@vueuse/head': ^0.9.2
       axios: ^1.0.0
+      dayjs: 1.11.4
       lucide-vue: npm:lucide-vue-next@^0.91.0
       pinia: ^2.0.22
       sass: ^1.55.0
@@ -133,6 +134,7 @@ importers:
       '@vueuse/core': 9.3.0_vue@3.2.40
       '@vueuse/head': 0.9.4_vue@3.2.40
       axios: 1.0.0
+      dayjs: 1.11.4
       lucide-vue: /lucide-vue-next/0.91.0_vue@3.2.40
       pinia: 2.0.22_bfjwoga25wxjazzogo7o372nwq
       vue: 3.2.40

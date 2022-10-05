@@ -2,8 +2,8 @@
   <div
 		class="dropdown-wrapper"
 		@click="click"
+		v-on-click-outside="away"
   >
-	<!-- v-on-clickaway="away" -->
     <slot name="toggle" />
     <slot :active="active" />
   </div>
@@ -12,10 +12,9 @@
 <script setup lang="ts">
 // packages
 import { ref } from 'vue';
-// import { mixin as clickaway } from "vue-clickaway";
+import { vOnClickOutside } from '@vueuse/components'
 
 const active = ref<boolean>(false);
-
 const props = defineProps({
     disabled: {
       type: Boolean,
@@ -31,6 +30,4 @@ function click() {
 function away() {
 	active.value = false;
 }
-
-// mixins: [clickaway],
 </script>

@@ -24,11 +24,11 @@
               v-else
               data-test="post-date"
               :datetime="post.createdAt"
-              :title="$date(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
+							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
               class="post-date"
             >
-              {{ $date(post.createdAt).from() }}
-            </time>
+              {{ dayjs(post.createdAt).fromNow() }}
+					</time>
           </div>
           <div
             data-test="post-card-toggle"
@@ -46,7 +46,7 @@
           data-test="post-card-description"
           class="post-card-description"
         >
-          {{ post.contentMarkdown | trim(120) }}
+          {{ useTrim(post.contentMarkdown, 120) }}
         </p>
       </div>
     </div>
@@ -69,42 +69,34 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // pacakges
 import { ChevronUp as ArrowTopIcon } from "lucide-vue";
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
+import { useTrim } from "../../hooks";
 
 // components
-import Vote from "./Vote.vue";
+import Vote, { VoteEventType } from "./Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 import AvatarStack from "../AvatarStack.vue";
+import { ref } from "vue";
 
-export default {
-  name: "PostCard",
-  components: {
-    Vote,
-    BoardBadge,
-    AvatarStack,
+dayjs.extend(relativeTime);
 
-    // icons
-    ArrowTopIcon
-  },
-  props: {
-    post: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      postData: this.post,
-      isExpanded: false
-    };
-  },
-  methods: {
-    updateVoters(voters) {
-      this.postData.voters.votesCount = voters.votesCount;
-      this.postData.voters.viewerVote = voters.viewerVote;
-    }
-  }
-};
+const props = defineProps({
+	post: {
+		type: Object,
+		required: true
+	}
+})
+
+const isExpanded = ref(false);
+const postData = ref(props.post);
+
+function updateVoters(voters: VoteEventType) {
+	postData.value.voters.votesCount = voters.votesCount;
+	postData.value.voters.viewerVote = voters.viewerVote;
+}
 </script>

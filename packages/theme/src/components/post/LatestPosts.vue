@@ -47,8 +47,8 @@ async function getMorePosts() {
 	try {
 		const response = await getPosts({
 			page: page.value,
-			sort: "desc",
-			boardId,
+			sort: "DESC",
+			boardId: [boardId],
 		});
 
 		if (response.data.posts.length) {

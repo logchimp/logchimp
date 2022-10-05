@@ -120,7 +120,11 @@ export default {
   methods: {
     async getPosts($state) {
       try {
-        const response = await getPosts(1, 4, "desc");
+        const response = await getPosts({
+					page: 1,
+					limit: 4,
+					sort: "DESC"
+				});
 
         this.posts.data = response.data.posts;
         $state.complete();
