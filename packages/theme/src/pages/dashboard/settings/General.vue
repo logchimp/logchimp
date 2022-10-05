@@ -112,6 +112,7 @@ import {
 } from "../../../modules/site";
 
 // components
+import { FormFieldErrorType } from "../../../components/input/formBaseProps";
 import LText from "../../../components/input/LText";
 import Button from "../../../components/Button";
 import ColorInput from "../../../components/ColorInput";
@@ -173,16 +174,16 @@ export default {
     this.getSettings();
   },
   methods: {
-    hideSiteNameError(event) {
+    hideSiteNameError(event: FormFieldErrorType) {
       this.siteName.error = event;
     },
-    hideDescriptionError(event) {
+    hideDescriptionError(event: FormFieldErrorType) {
       this.description.error = event;
     },
-    hideAccentColorError(event) {
+    hideAccentColorError(event: FormFieldErrorType) {
       this.accentColor.error = event;
     },
-    hideGoogleAnalyticsError(event) {
+    hideGoogleAnalyticsError(event: FormFieldErrorType) {
       this.googleAnalyticsId.error = event;
     },
     selectFileHandler() {

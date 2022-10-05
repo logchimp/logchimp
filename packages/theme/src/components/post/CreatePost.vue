@@ -43,6 +43,7 @@ import { useUserStore } from "../../store/user"
 import { router } from "../../router";
 
 // components
+import { FormFieldErrorType } from "../input/formBaseProps";
 import LText from "../input/LText.vue";
 import LTextarea from "../input/LTextarea.vue";
 import Button from "../Button.vue";
@@ -81,7 +82,7 @@ const createPostPermissionDisabled = computed(() => {
 	return !checkPermission;
 })
 
-function hideTitleError(event: any) {
+function hideTitleError(event: FormFieldErrorType) {
 	title.error = event;
 }
 
