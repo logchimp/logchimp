@@ -7,7 +7,7 @@ import { ApiPaginationType, ApiSortType } from "../types";
 
 interface GetPostArgs extends ApiPaginationType {
 	boardId?: string[]
-	roadmapId?: string[]
+	roadmapId?: string
 }
 
 interface CreatePostArgs {
@@ -77,7 +77,7 @@ export const getPosts = async ({
   limit = 10,
   sort = "DESC",
   boardId = [],
-  roadmapId = []
+  roadmapId = ""
 }: GetPostArgs) => {
 	const { getUserId } = useUserStore()
 
