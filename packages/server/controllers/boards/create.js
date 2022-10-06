@@ -12,6 +12,7 @@ const error = require("../../errorResponse.json");
 
 exports.create = async (req, res) => {
 	const permissions = req.user.permissions;
+	const name = req.body.name || "new board";
 
 	const checkPermission = permissions.includes("board:create");
 	if (!checkPermission) {
@@ -25,7 +26,7 @@ exports.create = async (req, res) => {
 		const createBoard = await database
 			.insert({
 				boardId: uuidv4(),
-				name: "new board",
+				name,
 				url: `new-board-${nanoid(10)}`,
 				color: generateHexColor()
 			})
