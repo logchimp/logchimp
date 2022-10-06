@@ -52,15 +52,14 @@ const error = ref(false)
 
 async function verifyEmail() {
 	const route = router.currentRoute.value;
-	const token = route.query.token;
-
-	if (!token) {
-		loading.value = false;
+	if (!route.query.token) {
+    loading.value = false;
 		error.value = true;
 		return;
 	}
 
 	try {
+    const token = route.query.token.toString();
 		const response = await verifyUserEmail(token);
 		if (response.data.verify.success) success.value = true;
 	} catch (error: any) {

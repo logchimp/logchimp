@@ -11,7 +11,7 @@
         type="primary"
         :loading="createRoleButtonLoading"
         :disabled="createRoleButtonDisabled"
-        @click="createRole"
+        @click="createRoleHandler"
       >
         Create
       </Button>
@@ -40,7 +40,7 @@
             >
               <settings-icon />
             </router-link>
-            <dropdown-wrapper v-if="isDeveloperMode">
+            <dropdown-wrapper v-if="settings.developer_mode">
               <template #toggle>
                 <div
                   class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
@@ -51,7 +51,7 @@
               <template #default="dropdown">
                 <dropdown v-if="dropdown.active">
                   <dropdown-item
-                    @click="copyText(role.id)"
+                    @click="useCopyText(role.id)"
                   >
                     <template #icon>
                       <copy-icon />
@@ -69,7 +69,15 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardRoles",
+}
+</script>
+
+<script setup lang="ts">
 // packages
+import { computed, onMounted, ref } from "vue";
+import { useHead } from "@vueuse/head";
 import {
   Settings as SettingsIcon,
   Clipboard as CopyIcon,
@@ -77,73 +85,57 @@ import {
 } from "lucide-vue";
 
 // modules
+import { router} from "../../../../router";
+import {useSettingStore} from "../../../../store/settings"
+import {useUserStore} from "../../../../store/user"
 import { getAllRoles, createRole } from "../../../../modules/roles";
+import { useCopyText } from "../../../../hooks";
 
 // components
-import Button from "../../../../components/Button";
-import DropdownWrapper from "../../../../components/dropdown/DropdownWrapper";
-import Dropdown from "../../../../components/dropdown/Dropdown";
-import DropdownItem from "../../../../components/dropdown/DropdownItem";
+import Button from "../../../../components/Button.vue";
+import DropdownWrapper from "../../../../components/dropdown/DropdownWrapper.vue";
+import Dropdown from "../../../../components/dropdown/Dropdown.vue";
+import DropdownItem from "../../../../components/dropdown/DropdownItem.vue";
 
-export default {
-  name: "SettingsRoles",
-  components: {
-    // components
-    Button,
-    DropdownWrapper,
-    Dropdown,
-    DropdownItem,
+const { settings } = useSettingStore()
+const { permissions  } = useUserStore()
 
-    // icons
-    SettingsIcon,
-    CopyIcon,
-    MoreIcon
-  },
-  data() {
-    return {
-      roles: [],
-      createRoleButtonLoading: false
-    };
-  },
-  computed: {
-    createRoleButtonDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("role:create");
-      return !checkPermission;
-    },
-    isDeveloperMode() {
-      return this.$store.getters["settings/get"].developer_mode;
-    }
-  },
-  created() {
-    this.getRoles();
-  },
-  methods: {
-    async createRole() {
-      this.createRoleButtonLoading = true;
-      try {
-        const response = await createRole();
+// TODO: Add TS types
+const roles = ref<any>([])
+const createRoleButtonLoading = ref(false)
 
-        const roleId = response.data.role;
-        this.$router.push(`/dashboard/settings/roles/${roleId}/settings`);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.createRoleButtonLoading = false;
-      }
-    },
-    async getRoles() {
-      try {
-        const response = await getAllRoles();
+const createRoleButtonDisabled = computed(() => {
+	const checkPermission = permissions.includes("role:create");
+	return !checkPermission;
+})
 
-        this.roles = response.data.roles;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    copyText(text) {
-      navigator.clipboard.writeText(text).then().catch(err => console.log(err));
-    }
-  }
-};
+async function createRoleHandler() {
+	createRoleButtonLoading.value = true;
+	try {
+		const response = await createRole();
+
+		const roleId = response.data.role;
+		router.push(`/dashboard/settings/roles/${roleId.id}/settings`);
+	} catch (error) {
+		console.error(error);
+	} finally {
+		createRoleButtonLoading.value = false;
+	}
+}
+
+async function getRoles() {
+	try {
+		const response = await getAllRoles();
+
+		roles.value = response.data.roles;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+onMounted(() => getRoles())
+
+useHead({
+	title: "Roles · Settings · Dashboard"
+})
 </script>

@@ -2,6 +2,13 @@
 import axios from "axios";
 
 import { useUserStore } from "../store/user";
+import { UserType } from "./users";
+
+export interface PostVoteType extends UserType {
+  voteId: string
+  postId: string
+  createdAt: string
+}
 
 /**
  * Add vote to a post

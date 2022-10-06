@@ -8,77 +8,68 @@
       </div>
     </header>
 
-    <div>
+    <div v-infinite-scroll="getBoardPosts">
       <post
         v-for="post in posts"
         :key="post.postId"
         :post="post"
         :dashboard="true"
       />
-      <infinite-loading @infinite="getBoardPosts">
-        <div slot="spinner" class="loader-container">
-          <loader />
-        </div>
-        <div slot="no-more" />
-        <div slot="no-results" />
-        <div slot="error" />
-      </infinite-loading>
+			<!-- <div slot="spinner" class="loader-container">
+				<loader />
+			</div>
+			<div slot="no-more" />
+			<div slot="no-results" />
+			<div slot="error" /> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardPosts",
+}
+</script>
+
+<script setup lang="ts">
 // packages
-import InfiniteLoading from "vue-infinite-loading";
+import { onMounted, ref } from "vue";
+import { useHead } from "@vueuse/head";
+import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { getPosts } from "../../../modules/posts";
 
 // components
 import Post from "../../../components/post/Post.vue";
-import Loader from "../../../components/Loader.vue";
+// import Loader from "../../../components/Loader.vue";
 
-export default {
-  name: "DashboardPosts",
-  components: {
-    // packages
-    InfiniteLoading,
+const posts = ref<any>([])
+const page = ref(1);
 
-    // components
-    Post,
-    Loader
-  },
-  data() {
-    return {
-      posts: [],
-      page: 1
-    };
-  },
-  methods: {
-    async getBoardPosts($state) {
-      try {
-        const response = await getPosts({
-					page: this.page,
-					sort: "DESC"
-				});
+async function getBoardPosts() {
+	try {
+		const response = await getPosts({
+			page: page.value,
+			sort: "DESC"
+		});
 
-        if (response.data.posts.length) {
-          this.posts.push(...response.data.posts);
-          this.page += 1;
-          $state.loaded();
-        } else {
-          $state.complete();
-        }
-      } catch (error) {
-        console.error(error);
-        $state.error();
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Posts · Dashboard"
-    };
-  }
-};
+		if (response.data.posts.length) {
+			posts.value.push(...response.data.posts);
+			page.value += 1;
+			// $state.loaded();
+		} else {
+			// $state.complete();
+		}
+	} catch (error) {
+		console.error(error);
+		// $state.error();
+	}
+}
+
+onMounted(() => getBoardPosts())
+
+useHead({
+	title: "Posts · Dashboard"
+})
 </script>

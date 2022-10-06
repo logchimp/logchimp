@@ -10,6 +10,13 @@ interface UpdateUserSettingsArgs {
 	name?: string
 }
 
+export interface UserType {
+  userId: string
+  name: string
+  username: string
+  avatar: string
+}
+
 /**
  * Get user settings
  *

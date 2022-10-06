@@ -2,7 +2,30 @@
 import axios from "axios";
 
 // store
-import store from "../store";
+import { useUserStore } from "../store/user"
+
+interface SiteSetupArgs {
+	siteTitle: string
+	name: string
+	email: string
+	password: string
+}
+
+export interface LabsType {
+	comments: boolean
+}
+
+interface SiteSettingsType {
+	title: string
+	description?: string
+	logo?: string
+	accentColor: string
+	googleAnalyticsId: string
+	isPoweredBy?: boolean
+	allowSignup: boolean
+	developer_mode: boolean
+	labs?: LabsType
+}
 
 /**
  * Create owner account while setting up LogChimp site.
@@ -14,7 +37,7 @@ import store from "../store";
  *
  * @returns {object} response
  */
-export const siteSetup = async (siteTitle, name, email, password) => {
+export const siteSetup = async ({ siteTitle, name, email, password }: SiteSetupArgs) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/setup",
@@ -63,8 +86,8 @@ export const getSettings = async () => {
  *
  * @returns {object} response
  */
-export const updateSettings = async site => {
-  const token = store.getters["user/getAuthToken"];
+export const updateSettings = async (site: SiteSettingsType) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "PATCH",
@@ -73,7 +96,7 @@ export const updateSettings = async site => {
       ...site
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -85,15 +108,16 @@ export const updateSettings = async site => {
  *
  * @returns {object} response
  */
-export const uploadSiteLogo = async logo => {
-  const token = store.getters["user/getAuthToken"];
+// TODO: Add TS types
+export const uploadSiteLogo = async (logo: any) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "POST",
     url: "/api/v1/settings/update-logo",
     data: logo,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${authToken}`,
       "Content-Type": "multipart/form-data"
     }
   });
@@ -118,15 +142,15 @@ export const getLabsSettings = async () => {
  *
  * @returns {object} response
  */
-export const updateLabsSettings = async labs => {
-  const token = store.getters["user/getAuthToken"];
+export const updateLabsSettings = async (labs: LabsType) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "PATCH",
     url: "/api/v1/settings/labs",
     data: labs,
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="auth-form">
     <div class="auth-form-header">
-      <site-branding />
+      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
       <h3 class="auth-form-heading">
         Forget password
       </h3>
@@ -9,12 +9,12 @@
     <server-error v-if="serverError" @close="serverError = false" />
     <div v-if="!hideForm" class="card">
       <l-text
-        v-model="email.value"
+        v-model="email"
         label="Email Address"
         type="email"
         name="email"
         placeholder="Email address"
-        :error="email.error"
+        :error="emailError"
         @keyup-enter="forgetPassword"
         @hide-error="hideEmailError"
       />
@@ -36,7 +36,7 @@
     <div v-if="requestError" class="card">
       <p>Something went wrong!</p>
     </div>
-    <div v-if="getSiteSittings.allowSignup" class="auth-form-other">
+    <div v-if="siteSettings.allowSignup" class="auth-form-other">
       Don't have an account yet?
       <router-link to="/join">
         Sign up
@@ -46,92 +46,86 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "ForgetPassword",
+}
+</script>
+
+<script setup lang="ts">
+import { reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
 import { requestPasswordReset } from "../../modules/auth";
+import { useSettingStore } from "../../store/settings"
+import { useUserStore } from "../../store/user"
 
 // component
 import { FormFieldErrorType } from "../../components/input/formBaseProps";
-import ServerError from "../../components/serverError";
-import LText from "../../components/input/LText";
-import Button from "../../components/Button";
-import SiteBranding from "../../components/SiteBranding";
+import ServerError from "../../components/serverError.vue";
+import LText from "../../components/input/LText.vue";
+import Button from "../../components/Button.vue";
+import SiteBranding from "../../components/SiteBranding.vue";
 
-export default {
-  name: "ForgetPassword",
-  components: {
-    // component
-    LText,
-    Button,
-    ServerError,
-    SiteBranding
-  },
-  data() {
-    return {
-      email: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      hideForm: false,
-      requestSuccess: false,
-      requestError: false,
-      buttonLoading: false,
-      serverError: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  methods: {
-    hideEmailError(event: FormFieldErrorType) {
-      this.email.error = event;
-    },
-    async forgetPassword() {
-      if (!this.email.value) {
-        this.email.error.show = true;
-        this.email.error.message = "Required";
-        return;
-      }
+const { get: siteSettings } = useSettingStore()
 
-      this.buttonLoading = true;
+const email = ref("");
+const emailError = reactive({
+	show: false,
+	message: ""
+})
 
-      try {
-        const response = await requestPasswordReset(this.email.value);
+const hideForm = ref(false)
+const requestSuccess = ref(false)
+const requestError = ref(false)
+const buttonLoading = ref(false)
+const serverError = ref(false)
 
-        this.hideForm = true;
-        if (response.data.reset.success) {
-          this.requestSuccess = true;
-        } else {
-          this.requestError = true;
-        }
-      } catch (error) {
-        if (error.response.data.code === "MAIL_CONFIG_MISSING") {
-          this.serverError = true;
-        }
-
-        if (error.response.data.code === "USER_NOT_FOUND") {
-          this.email.error.show = true;
-          this.email.error.message = "User not found";
-        }
-      } finally {
-        this.buttonLoading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Forget password",
-      meta: [
-        {
-          name: "og:title",
-          content: `Forget password · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
-  }
+function hideEmailError(event: FormFieldErrorType) {
+	emailError.message = event.message;
+	emailError.show = event.show;
 };
+
+async function  forgetPassword() {
+	if (!email.value) {
+		emailError.show = true;
+		emailError.message = "Required";
+		return;
+	}
+
+	buttonLoading.value = true;
+
+	try {
+		const response = await requestPasswordReset(email.value);
+
+		hideForm.value = true;
+		if (response.data.reset.success) {
+			requestSuccess.value = true;
+		} else {
+			requestError.value = true;
+		}
+	} catch (error: any) {
+		if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+			serverError.value = true;
+		}
+
+		if (error.response.data.code === "USER_NOT_FOUND") {
+			emailError.show = true;
+			emailError.message = "User not found";
+		}
+	} finally {
+		buttonLoading.value = false;
+	}
+}
+
+
+useHead({
+	title: "Forget password",
+	meta: [
+		{
+			name: "og:title",
+			content: `Forget password · ${siteSettings.title}`
+		}
+	]
+})
 </script>

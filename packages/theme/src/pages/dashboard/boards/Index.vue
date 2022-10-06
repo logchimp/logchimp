@@ -11,7 +11,7 @@
         type="primary"
         :disabled="createBoardPermissionDisabled"
         :loading="createBoardButtonLoading"
-        @click="createBoard"
+        @click="createBoardHandler"
       >
         Create board
       </Button>
@@ -28,95 +28,102 @@
         </div>
         <div class="table-header-item boards-table-icons" />
       </template>
-      <div
-        v-for="(board, index) in boards"
-        :key="board.boardId"
-        class="table-row"
-      >
-        <div class="table-data boards-table-color">
-          <div
-            class="color-dot"
-            :style="{
-              backgroundColor: `#${board.color}`
-            }"
-          />
-        </div>
-        <div class="table-data boards-table-name">
-          {{ board.name }}
-        </div>
-        <div class="table-data boards-table-posts">
-          {{ board.post_count }}
-        </div>
-        <div class="table-icon-group boards-table-icons">
-          <router-link
-            :to="`/boards/${board.url}`"
-            class="table-data table-data-icon boards-table-icon-link"
-          >
-            <link-icon />
-          </router-link>
-          <div class="table-data table-data-icon">
-            <eye-icon v-if="board.display" />
-            <eye-off-icon v-else />
-          </div>
-          <dropdown-wrapper>
-            <template #toggle>
-              <div
-                class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
-              >
-                <more-icon />
-              </div>
-            </template>
-            <template #default="dropdown">
-              <dropdown v-if="dropdown.active" class="sw">
-                <dropdown-item
-                  @click="
-                    $router.push(`/dashboard/boards/${board.url}/settings`)
-                  "
-                >
-                  <template #icon>
-                    <settings-icon />
-                  </template>
-                  Settings
-                </dropdown-item>
-                <dropdown-item
-                  v-if="isDeveloperMode"
-                  @click="copyText(board.boardId)"
-                >
-                  <template #icon>
-                    <copy-icon />
-                  </template>
-                  Copy ID
-                </dropdown-item>
-                <dropdown-spacer />
-                <dropdown-item
-                  :disabled="deleteBoardPermissionDisabled"
-                  class="color-danger"
-                  @click="deleteBoard(board.boardId, index)"
-                >
-                  <template #icon>
-                    <delete-icon />
-                  </template>
-                  Delete
-                </dropdown-item>
-              </dropdown>
-            </template>
-          </dropdown-wrapper>
-        </div>
-      </div>
-      <infinite-loading @infinite="getBoards">
-        <div slot="spinner" class="loader-container">
+			<div v-infinite-scroll="getBoards">
+				<div
+					v-for="(board, index) in boards"
+					:key="board.boardId"
+					class="table-row"
+				>
+					<div class="table-data boards-table-color">
+						<div
+							class="color-dot"
+							:style="{
+								backgroundColor: `#${board.color}`
+							}"
+						/>
+					</div>
+					<div class="table-data boards-table-name">
+						{{ board.name }}
+					</div>
+					<div class="table-data boards-table-posts">
+						{{ board.post_count }}
+					</div>
+					<div class="table-icon-group boards-table-icons">
+						<router-link
+							:to="`/boards/${board.url}`"
+							class="table-data table-data-icon boards-table-icon-link"
+						>
+							<link-icon />
+						</router-link>
+						<div class="table-data table-data-icon">
+							<eye-icon v-if="board.display" />
+							<eye-off-icon v-else />
+						</div>
+						<dropdown-wrapper>
+							<template #toggle>
+								<div
+									class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
+								>
+									<more-icon />
+								</div>
+							</template>
+							<template #default="dropdown">
+								<dropdown v-if="dropdown.active" class="sw">
+									<dropdown-item
+										@click="
+											router.push(`/dashboard/boards/${board.url}/settings`)
+										"
+									>
+										<template #icon>
+											<settings-icon />
+										</template>
+										Settings
+									</dropdown-item>
+									<dropdown-item
+										v-if="settings.developer_mode"
+										@click="useCopyText(board.boardId)"
+									>
+										<template #icon>
+											<copy-icon />
+										</template>
+										Copy ID
+									</dropdown-item>
+									<dropdown-spacer />
+									<dropdown-item
+										:disabled="deleteBoardPermissionDisabled"
+										class="color-danger"
+										@click="deleteBoardHandler(board.boardId, index)"
+									>
+										<template #icon>
+											<delete-icon />
+										</template>
+										Delete
+									</dropdown-item>
+								</dropdown>
+							</template>
+						</dropdown-wrapper>
+					</div>
+				</div>
+        <!-- <div slot="spinner" class="loader-container">
           <loader />
         </div>
         <div slot="no-more" />
         <div slot="no-results" />
-        <div slot="error" />
-      </infinite-loading>
+        <div slot="error" /> -->
+      </div>
     </Table>
   </div>
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardBoards",
+}
+</script>
+
+<script setup lang="ts">
 // packages
+import { computed, onMounted, ref } from "vue";
 import {
   Link as LinkIcon,
   Eye as EyeIcon,
@@ -126,14 +133,19 @@ import {
   Trash2 as DeleteIcon,
   Settings as SettingsIcon
 } from "lucide-vue";
-import InfiniteLoading from "vue-infinite-loading";
+import { useHead } from "@vueuse/head";
+import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
+import { router } from "../../../router";
+import { useSettingStore } from "../../../store/settings";
+import { useUserStore } from "../../../store/user";
 import {
   getAllBoards,
   createBoard,
   deleteBoard
 } from "../../../modules/boards";
+import { useCopyText } from "../../../hooks";
 
 // components
 import Button from "../../../components/Button.vue";
@@ -142,104 +154,76 @@ import DropdownWrapper from "../../../components/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/dropdown/DropdownItem.vue";
 import DropdownSpacer from "../../../components/dropdown/DropdownSpacer.vue";
-import Loader from "../../../components/Loader.vue";
+// import Loader from "../../../components/Loader.vue";
 
-export default {
-  name: "DashboardBoards",
-  components: {
-    // package
-    InfiniteLoading,
+const { settings } = useSettingStore()
+const { permissions } = useUserStore()
 
-    // component
-    Button,
-    Table,
-    DropdownWrapper,
-    Dropdown,
-    DropdownItem,
-    DropdownSpacer,
-    Loader,
+const createBoardButtonLoading = ref(false)
+const boards = ref<any>([]);
+const page = ref(1);
 
-    // icons
-    LinkIcon,
-    EyeIcon,
-    EyeOffIcon,
-    MoreIcon,
-    CopyIcon,
-    SettingsIcon,
-    DeleteIcon
-  },
-  data() {
-    return {
-      createBoardButtonLoading: false,
-      boards: [],
-      page: 1
-    };
-  },
-  computed: {
-    createBoardPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("board:create");
-      return !checkPermission;
-    },
-    deleteBoardPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("board:destroy");
-      return !checkPermission;
-    },
-    isDeveloperMode() {
-      return this.$store.getters["settings/get"].developer_mode;
-    }
-  },
-  methods: {
-    async createBoard() {
-      this.createBoardButtonLoading = true;
-      try {
-        const response = await createBoard();
+const createBoardPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("board:create");
+	return !checkPermission;
+})
 
-        const url = response.data.board.url;
-        this.$router.push(`/dashboard/boards/${url}/settings`);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.createBoardButtonLoading = false;
-      }
-    },
-    async getBoards($state) {
-      try {
-        const response = await getAllBoards(this.page, null, "desc");
+const deleteBoardPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("board:destroy");
+	return !checkPermission;
+})
 
-        if (response.data.boards.length) {
-          this.boards.push(...response.data.boards);
-          this.page += 1;
-          $state.loaded();
-        } else {
-          $state.complete();
-        }
-      } catch (error) {
-        console.error(error);
-        $state.error();
-      }
-    },
-    async deleteBoard(id, index) {
-      try {
-        const response = await deleteBoard(id);
+async function createBoardHandler() {
+	createBoardButtonLoading.value = true;
 
-        if (response.status === 204) {
-          this.boards.splice(index, 1);
-          console.log(`[Dashboard] Delete board (${id})`);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    copyText(text) {
-      navigator.clipboard.writeText(text).then().catch(err => console.log(err));
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Boards · Dashboard"
-    };
-  }
-};
+	try {
+		const response = await createBoard({});
+
+		const url = response.data.board.url;
+		router.push(`/dashboard/boards/${url}/settings`);
+	} catch (err) {
+		console.error(err);
+	} finally {
+		createBoardButtonLoading.value = false;
+	}
+}
+
+async function getBoards() {
+	try {
+		const response = await getAllBoards({
+			page: page.value,
+			sort: "DESC"
+		});
+
+		if (response.data.boards.length) {
+			boards.value.push(...response.data.boards);
+			page.value += 1;
+			// $state.loaded();
+		} else {
+			// $state.complete();
+		}
+	} catch (error) {
+		console.error(error);
+		// $state.error();
+	}
+}
+
+async function deleteBoardHandler(id: string, index: number) {
+	try {
+		const response = await deleteBoard(id);
+
+		if (response.status === 204) {
+			boards.splice(index, 1);
+			console.log(`[Dashboard] Delete board (${id})`);
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+onMounted(() => getBoards());
+
+useHead({
+	title: "Boards · Dashboard"
+})
 </script>

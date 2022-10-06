@@ -5,7 +5,7 @@ const { validUUID } = require("../helpers");
 const error = require("../errorResponse.json");
 
 module.exports = async (req, res, next) => {
-	const id = validUUID(req.body.id);
+	const id = validUUID(req.body.boardId);
 	const url = req.params.url;
 
 	const board = await database

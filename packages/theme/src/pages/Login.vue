@@ -59,6 +59,7 @@ export default {
 
 <script setup lang="ts">
 // packages
+import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
@@ -69,11 +70,9 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // component
-import { FormFieldErrorType } from "../components/input/formBaseProps";
 import LText from "../components/input/LText.vue";
 import Button from "../components/Button.vue";
 import SiteBranding from "../components/SiteBranding.vue";
-import { onMounted, reactive, ref } from "vue";
 
 const email = ref<string>("")
 const emailError = reactive({
@@ -123,7 +122,10 @@ async function login() {
 	buttonLoading.value = true;
 
 	try {
-		const response = await signin(email.value, password.value);
+		const response = await signin({
+      email: email.value,
+      password: password.value
+    });
 		setUser(response.data.user)
 
 		const permissions = await getPermissions();

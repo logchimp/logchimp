@@ -2,7 +2,7 @@
   <div class="auth-form">
     <div>
       <div class="auth-form-header">
-        <site-branding />
+        <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
         <h3 class="auth-form-heading">
           Set new password
         </h3>
@@ -62,11 +62,21 @@
 </template>
 
 <script lang="ts">
+export default {
+  name: "SetNewPassword"
+}
+</script>
+
+<script setup lang="ts">
 // packages
+import { onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 
 // modules
 import { validateResetPasswordToken, setNewPassword } from "../../modules/auth";
+import { router } from "../../router";
+import { useSettingStore } from "../../store/settings";
 
 // component
 import { FormFieldErrorType } from "../../components/input/formBaseProps";
@@ -75,133 +85,124 @@ import LText from "../../components/input/LText.vue";
 import Button from "../../components/Button.vue";
 import SiteBranding from "../../components/SiteBranding.vue";
 
-export default {
-  name: "SetNewPassword",
-  components: {
-    // component
-    Loader,
-    LText,
-    Button,
-    SiteBranding,
+const { get: siteSettings } = useSettingStore()
 
-    // icons
-    SuccessIcon,
-    ErrorIcon
-  },
-  data() {
-    return {
-      password: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      confirmPassword: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      validToken: {
-        loading: true,
-        success: false,
-        error: false
-      },
-      changePassword: {
-        success: false,
-        error: false
-      },
-      buttonLoading: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  created() {
-    // validate reset password token
-    this.validateToken();
-  },
-  methods: {
-    hidePasswordError(event: FormFieldErrorType) {
-      this.password.error = event;
-    },
-    hideConfirmPasswordError(event: FormFieldErrorType) {
-      this.confirmPassword.error = event;
-    },
-    async validateToken() {
-      // have reset password token
-      const token = this.$route.query.token;
+const password = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const confirmPassword = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const validToken = reactive({
+	loading: true,
+	success: false,
+	error: false
+})
+const changePassword = reactive({
+	success: false,
+	error: false
+})
+const buttonLoading = ref(false)
 
-      if (!token) {
-        this.validToken.loading = false;
-        this.validToken.error = true;
-        return;
-      }
+function hidePasswordError(event: FormFieldErrorType) {
+	password.error = event;
+}
 
-      try {
-        const response = await validateResetPasswordToken(token);
+function hideConfirmPasswordError(event: FormFieldErrorType) {
+	confirmPassword.error = event;
+}
 
-        if (response.data.reset.valid) {
-          this.validToken.loading = false;
-          this.validToken.success = true;
-        }
-      } catch (error) {
-        this.validToken.loading = false;
-        this.validToken.error = true;
-      }
-    },
-    async setPassword() {
-      if (!(this.password.value && this.confirmPassword.value)) {
-        if (!this.password.value) {
-          this.password.error.show = true;
-          this.password.error.message = "Required";
-        }
+async function validateToken() {
+	// have reset password token
+	const route = router.currentRoute.value;
 
-        if (!this.confirmPassword.value) {
-          this.confirmPassword.error.show = true;
-          this.confirmPassword.error.message = "Required";
-        }
-        return;
-      }
+	if (!route.query.token) {
+    validToken.loading = false;
+		validToken.error = true;
+		return;
+	}
 
-      // match password and confirm password
-      if (this.password.value !== this.confirmPassword.value) {
-        this.confirmPassword.error.show = true;
-        this.confirmPassword.error.message = "Password doesn't match";
-        return;
-      }
+	try {
+    const token = route.query.token.toString();
+		const response = await validateResetPasswordToken(token);
 
-      const token = this.$route.query.token;
-      this.buttonLoading = true;
+		if (response.data.reset.valid) {
+			validToken.loading = false;
+			validToken.success = true;
+		}
+	} catch (error) {
+		validToken.loading = false;
+		validToken.error = true;
+	}
+}
 
-      try {
-        const response = await setNewPassword(token, this.password.value);
-
-        if (response.data.reset.success) {
-          this.changePassword.success = true;
-        }
-      } catch (err) {
-        this.changePassword.error = true;
-      } finally {
-        this.buttonLoading = false;
-        // this.$store.dispatch("user/logout");
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Set new password",
-      meta: [
-        {
-          name: "og:title",
-          content: `Set new password · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
+async function setPassword() {
+  const route = router.currentRoute.value;
+  if (!route.query.token) {
+    validToken.error = true;
+    return;
   }
-};
+
+	if (!(password.value && confirmPassword.value)) {
+		if (!password.value) {
+			password.error.show = true;
+			password.error.message = "Required";
+		}
+
+		if (!confirmPassword.value) {
+			confirmPassword.error.show = true;
+			confirmPassword.error.message = "Required";
+		}
+		return;
+	}
+
+	// match password and confirm password
+	if (password.value !== confirmPassword.value) {
+		confirmPassword.error.show = true;
+		confirmPassword.error.message = "Password doesn't match";
+		return;
+	}
+
+	const token = route.query.token.toString();
+	buttonLoading.value = true;
+
+	try {
+		const response = await setNewPassword({
+      token,
+      password: password.value
+    });
+
+		if (response.data.reset.success) {
+			changePassword.success = true;
+		}
+	} catch (err) {
+		changePassword.error = true;
+	} finally {
+		buttonLoading.value = false;
+		// this.$store.dispatch("user/logout");
+	}
+}
+
+onMounted(() => {
+	// validate reset password token
+	validateToken();
+})
+
+useHead({
+	title: "Set new password",
+	meta: [
+		{
+			name: "og:title",
+			content: `Set new password · ${siteSettings.title}`
+		}
+	]
+})
 </script>

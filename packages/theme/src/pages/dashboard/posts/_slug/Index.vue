@@ -9,7 +9,7 @@
           /
         </div>
         <h5 class="breadcrum-item">
-          {{ title }}
+          {{ postData.title }}
         </h5>
       </div>
 
@@ -17,7 +17,7 @@
         type="primary"
         :loading="loading.updatePostButton"
         :disabled="updatePostPermissionDisabled"
-        @click="updatePost"
+        @click="updatePostHandler"
       >
         Save
       </Button>
@@ -27,13 +27,13 @@
       <div class="form-columns">
         <div class="form-column">
           <l-text
-            v-model="post.title"
+            v-model="postData.title"
             label="Title"
             placeholder="Name of the feature"
           />
 
           <l-textarea
-            v-model="post.contentMarkdown"
+            v-model="postData.contentMarkdown"
             label="Description"
             rows="4"
             placeholder="What would you use it for?"
@@ -46,7 +46,7 @@
               Preview
             </p>
             <div class="card">
-              <post v-if="!loading.post" :post="post" />
+              <post v-if="!loading.post" :post="postData" />
             </div>
           </div>
         </div>
@@ -117,10 +117,25 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardPostView",
+}
+</script>
+
+<script setup lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
-import { getPostBySlug, updatePost } from "../../../../modules/posts";
-import { searchBoard } from "../../../../modules/boards";
-import { searchRoadmap } from "../../../../modules/roadmaps";
+import { router } from "../../../../router"
+
+import { PostType, getPostBySlug, updatePost } from "../../../../modules/posts";
+import { Board, searchBoard } from "../../../../modules/boards";
+import { Roadmap, searchRoadmap } from "../../../../modules/roadmaps";
+import { UserType } from "../../../../modules/users";
+import { PostVoteType } from "../../../../modules/votes";
+
+import { useUserStore } from "../../../../store/user";
 
 // components
 import Button from "../../../../components/Button.vue";
@@ -131,128 +146,171 @@ import Dropdown from "../../../../components/dropdown/Dropdown.vue";
 import DropdownWrapper from "../../../../components/dropdown/DropdownWrapper.vue";
 import BoardSuggestion from "../../../../components/board/BoardSuggestion.vue";
 
-export default {
-  name: "DashboardPostView",
-  components: {
-    // components
-    Button,
-    LText,
-    LTextarea,
-    Post,
-    Dropdown,
-    DropdownWrapper,
-    BoardSuggestion
-  },
-  data() {
-    return {
-      title: "",
-      loading: {
-        post: false,
-        updatePostButton: false
-      },
-      post: {},
-      boards: {
-        search: "",
-        suggestions: []
-      },
-      roadmaps: {
-        search: "",
-        suggestions: []
-      }
-    };
-  },
-  computed: {
-    updatePostPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("post:update");
-      return !checkPermission;
-    }
-  },
-  created() {
-    this.postBySlug();
-  },
-  methods: {
-    async updatePost() {
-      this.loading.updatePostButton = true;
-      try {
-        const postData = {
-          id: this.post.postId,
-          title: this.post.title,
-          contentMarkdown: this.post.contentMarkdown,
-          slugId: this.post.slugId,
-          userId: this.post.author.userId,
-          boardId: this.post.board ? this.post.board.boardId : null,
-          roadmapId: this.post.roadmap ? this.post.roadmap.id : null
-        };
-
-        const response = await updatePost(postData);
-        if (response.status === 200) {
-          this.$router.push("/dashboard/posts");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.loading.updatePostButton = false;
-      }
-    },
-    async postBySlug() {
-      this.loading.post = true;
-      const slug = this.$route.params.slug;
-
-      try {
-        const response = await getPostBySlug(slug);
-
-        this.title = response.data.post.title;
-        this.post = response.data.post;
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.loading.post = false;
-      }
-    },
-    async suggestBoard(name) {
-      if (!name) {
-        return this.clearSuggestion("boards");
-      }
-
-      try {
-        const response = await searchBoard(name);
-        this.boards.suggestions = response.data.boards;
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async suggestRoadmap(name) {
-      if (!name) {
-        return this.clearSuggestion("roadmaps");
-      }
-
-      try {
-        const response = await searchRoadmap(name);
-        this.roadmaps.suggestions = response.data.roadmaps;
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    selectBoard(index) {
-      const item = this.boards.suggestions[index];
-      this.post.board = item;
-      this.clearSuggestion("boards");
-    },
-    selectRoadmap(index) {
-      const item = this.roadmaps.suggestions[index];
-      this.post.roadmap = item;
-      this.clearSuggestion("roadmaps");
-    },
-    clearSuggestion(type) {
-      this[type].search = "";
-      this[type].suggestions = [];
-    }
-  },
-  metaInfo() {
-    return {
-      title: `${this.title} · Post · Dashboard`
-    };
+interface GetPostType extends PostType {
+  author: UserType
+  board: Board
+  roadmap: Roadmap
+  voters: {
+    votes: PostVoteType[]
+    votesCount: number
+    viewerVote: boolean
   }
-};
+}
+
+const { permissions } = useUserStore()
+
+const loading = reactive<{
+	post: boolean
+	updatePostButton: boolean
+}>({
+	post: false,
+	updatePostButton: false
+})
+const postData = reactive<GetPostType>({
+	postId: "",
+	title: "",
+	slug: "",
+	slugId: "",
+	contentMarkdown: "",
+	createdAt: "",
+	updatedAt: "",
+  author: {
+    userId: "",
+    name: "",
+    username: "",
+    avatar: "",
+  },
+	board: {
+    boardId: "",
+    name: "",
+    url: "",
+    color: "",
+  },
+	roadmap: {
+    id: "",
+    name: "",
+    url: "",
+    color: "",
+  },
+  voters: {
+    votes: [],
+    votesCount: 0,
+    viewerVote: false,
+  }
+})
+const boards = reactive<{
+	search: string
+	suggestions: Board[]
+}>({
+	search: "",
+	suggestions: []
+})
+const roadmaps = reactive<{
+	search: string
+	suggestions: Roadmap[]
+}>({
+	search: "",
+	suggestions: []
+})
+
+const updatePostPermissionDisabled = computed(() =>  {
+	const checkPermission = permissions.includes("post:update");
+	return !checkPermission;
+})
+
+async function updatePostHandler() {
+	loading.updatePostButton = true;
+
+	try {
+		const response = await updatePost({
+			id: postData.postId,
+			title: postData.title,
+			contentMarkdown: postData.contentMarkdown,
+			slugId: postData.slugId,
+			userId: postData.author.userId,
+			boardId: postData.board ? postData.board.boardId : undefined,
+			roadmapId: postData.roadmap ? postData.roadmap.id : undefined
+		});
+
+		if (response.status === 200) {
+			router.push("/dashboard/posts");
+		}
+	} catch (err) {
+		console.error(err);
+	} finally {
+		loading.updatePostButton = false;
+	}
+}
+
+async function postBySlug() {
+	loading.post = true;
+	const route = router.currentRoute.value;
+
+  if (route.params.slug) {
+    try {
+      const slug = route.params.slug.toString();
+      const response = await getPostBySlug(slug);
+
+      Object.assign(postData, response.data.post);
+      loading.post = false;
+    } catch (err) {
+      console.error(err);
+      loading.post = false;
+    }
+  }
+}
+
+async function suggestBoard(event: any) {
+  const name = event.target.value;
+	if (!name) {
+		boards.search = "";
+		boards.suggestions = []
+		return;
+	}
+
+	try {
+		const response = await searchBoard(name);
+		boards.suggestions = response.data.boards;
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+async function suggestRoadmap(event: any) {
+  const name = event.target.value;
+	if (!name) {
+		roadmaps.search = "";
+		roadmaps.suggestions = []
+		return;
+	}
+
+	try {
+		const response = await searchRoadmap(name);
+		roadmaps.suggestions = response.data.roadmaps;
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+function selectBoard(index: number) {
+	const item = boards.suggestions[index];
+
+  Object.assign(postData.board, item)
+	boards.search = "";
+	boards.suggestions = []
+}
+
+function selectRoadmap(index: number) {
+	const item = roadmaps.suggestions[index];
+
+  Object.assign(postData.roadmap, item)
+	roadmaps.search = "";
+	roadmaps.suggestions = []
+}
+
+onMounted(() => postBySlug())
+
+useHead({
+	title: `${postData.title ? `${postData.title} · `: ''}Post · Dashboard`
+})
 </script>
