@@ -8,30 +8,30 @@
 
       <time
         :datetime="activity.created_at"
-        :title="$date(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
+				:title="dayjs(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
         class="post-date"
       >
-        {{ $date(activity.created_at).from() }}
+        {{ dayjs(activity.created_at).fromNow() }}
       </time>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+// packages
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
 import Avatar from "../Avatar";
 
-export default {
-  name: "ActivityItem",
-  components: {
-    Avatar
-  },
-  props: {
-    activity: {
-      type: Object,
-      required: true
-    }
-  }
-};
+dayjs.extend(relativeTime);
+
+defineProps({
+	activity: {
+		type: Object,
+		required: true
+	}
+})
 </script>
 
 <style lang="sass" src="./ActivityItem.sass" />

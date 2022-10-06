@@ -18,24 +18,23 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Toggle",
-  props: {
-    checked: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  methods: {
-    click(value) {
-      if (this.disabled) return;
-      this.$emit("input", value.target.checked);
-    }
-  }
-};
+<script setup lang="ts">
+const props = defineProps({
+	checked: {
+		type: Boolean,
+		default: false
+	},
+	disabled: {
+		type: Boolean,
+		default: false
+	}
+})
+
+const emit = defineEmits(['input'])
+
+// TODO: Add TS types
+function click(value: any) {
+	if (props.disabled) return;
+	emit("input", value.target.checked);
+}
 </script>

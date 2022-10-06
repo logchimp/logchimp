@@ -6,7 +6,7 @@
         ref="toggleRefs"
         :checked="value"
         :disabled="disabled"
-        @input="emit"
+        @input="input"
       />
     </div>
     <p
@@ -19,39 +19,35 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // components
-import Toggle from "./Toggle";
+import Toggle from "./Toggle.vue";
 
-export default {
-  name: "ToggleItem",
-  components: {
-    Toggle
-  },
-  props: {
-    label: {
-      type: String,
-      required: true
-    },
-    value: {
-      type: Boolean,
-      default: false
-    },
-    note: {
-      type: String,
-      default: ""
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  methods: {
-    emit(event) {
-      if (this.disabled) return;
-      this.check = event;
-      this.$emit("input", event);
-    }
-  }
-};
+const props = defineProps({
+	label: {
+		type: String,
+		required: true
+	},
+	value: {
+		type: Boolean,
+		default: false
+	},
+	note: {
+		type: String,
+		default: ""
+	},
+	disabled: {
+		type: Boolean,
+		default: false
+	}
+})
+
+const emit = defineEmits(['input'])
+
+// TODO: Add TS types
+function input(event: any) {
+	if (props.disabled) return;
+	// props.check = event;
+	emit("input", event);
+}
 </script>

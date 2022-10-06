@@ -20,7 +20,7 @@
         type="text"
         placeholder="abcdef"
         spellcheck="false"
-        @input="$emit('input', $event.target.value)"
+        @input="input"
         @click="hideError"
       >
     </div>
@@ -34,34 +34,34 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "ColorInput",
-  props: {
-    value: {
-      type: String,
-      default: ""
-    }
-  },
-  data() {
-    return {
-      error: {
-        show: false,
-        message: "The color should be in valid hex format."
-      }
-    };
-  },
-  watch: {
-    value: function(newValue) {
-      const validColor = /^[0-9A-F]{6}$/i.test(newValue);
-      if (!validColor) this.error.show = true;
-      else this.error.show = false;
-    }
-  },
-  methods: {
-    hideError() {
-      this.error.show = false;
-    }
-  }
-};
+<script setup lang="ts">
+import { reactive, watch } from 'vue';
+
+const props = defineProps({
+	value: {
+		type: String,
+		default: ""
+	}
+});
+
+const emit = defineEmits(['input']);
+
+const error = reactive({
+	show: false,
+	message: "The color should be in valid hex format."
+})
+
+watch(() => props.value, (newValue) => {
+	const validColor = /^[0-9A-F]{6}$/i.test(newValue);
+	if (!validColor) error.show = true;
+	else error.show = false;
+})
+
+function hideError() {
+	error.show = false;
+}
+
+function input(event: any) {
+	emit('input', event.target.value)
+}
 </script>

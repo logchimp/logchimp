@@ -15,20 +15,18 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DropdownItem",
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  methods: {
-    click() {
-      if (this.disabled) return;
-      this.$emit("click");
-    }
-  }
-};
+<script setup lang="ts">
+const props = defineProps({
+	disabled: {
+		type: Boolean,
+		default: false
+	}
+})
+
+const emit = defineEmits(['click']);
+
+function click() {
+	if (props.disabled) return;
+	emit("click");
+}
 </script>
