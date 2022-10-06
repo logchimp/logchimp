@@ -1,7 +1,8 @@
 // packages
+import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
 
-import store from "./store";
+import { useUserStore } from "./store/user";
 import { isSiteSetup } from "./modules/site";
 import { checkUserDashboardAccess } from "./modules/users";
 
@@ -53,7 +54,7 @@ const routes = [
     redirect: {
       name: "Setup welcome"
     },
-    beforeEnter: async (to, from, next) => {
+    beforeEnter: async (_: RouteLocationNormalized, __: RouteLocationNormalized, next: NavigationGuardNext) => {
       try {
         const response = await isSiteSetup();
         if (response.data.is_setup) {
@@ -87,7 +88,7 @@ const routes = [
   {
     path: "/dashboard",
     component: () => import("./layout/Dashboard.vue"),
-    beforeEnter: async (to, from, next) => {
+    beforeEnter: async (_: RouteLocationNormalized, __: RouteLocationNormalized, next: NavigationGuardNext) => {
       try {
         const setup = await isSiteSetup();
         // Check for site setup
@@ -96,8 +97,8 @@ const routes = [
         }
 
         // Is user logged in
-        const user = store.getters["user/getUser"];
-        if (!user.userId) {
+        const { getUserId } = useUserStore()
+        if (!getUserId) {
           return next({ name: "Login", query: { redirect: "/dashboard" } });
         }
 
