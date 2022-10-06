@@ -16,14 +16,11 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "BoardSuggestion",
-  props: {
-    board: {
-      type: Object,
-      default: () => {}
-    }
-  }
-};
+<script setup lang="ts">
+defineProps({
+	board: {
+		type: Object,
+		default: () => {}
+	}
+})
 </script>

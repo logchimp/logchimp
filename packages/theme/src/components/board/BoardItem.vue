@@ -22,29 +22,26 @@
   </router-link>
 </template>
 
-<script lang="ts">
-export default {
-  name: "BoardItem",
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    color: {
-      type: String,
-      required: true,
-      validator: value => {
-        return value.length === 6;
-      }
-    },
-    url: {
-      type: String,
-      required: true
-    },
-    postCount: {
-      type: Number,
-      default: 0
-    }
-  }
-};
+<script setup lang="ts">
+defineProps({
+	name: {
+		type: String,
+		required: true
+	},
+	color: {
+		type: String,
+		required: true,
+		validator: (value: string) => {
+			return value.length === 6;
+		}
+	},
+	url: {
+		type: String,
+		required: true
+	},
+	postCount: {
+		type: Number,
+		default: 0
+	}
+})
 </script>

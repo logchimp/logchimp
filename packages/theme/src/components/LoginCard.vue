@@ -16,24 +16,20 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { router } from "../router";
+
 // components
 import Button from "./Button.vue";
 
-export default {
-  name: "LoginCard",
-  components: {
-    Button
-  },
-  methods: {
-    loginRedirect() {
-      this.$router.push({
-        path: "/login",
-        query: {
-          redirect: this.$route.fullPath
-        }
-      });
-    }
-  }
-};
+function loginRedirect() {
+	const route = router.currentRoute.value;
+
+	router.push({
+		path: "/login",
+		query: {
+			redirect: route.fullPath
+		}
+	});
+}
 </script>
