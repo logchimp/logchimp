@@ -65,142 +65,142 @@
 </template>
 
 <script lang="ts">
+export default {
+  name: "SetupAccount",
+}
+</script>
+
+<script setup lang="ts">
+import { reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
+import { router } from "../../router"
 import { siteSetup } from "../../modules/site";
+import { getPermissions } from "../../modules/users";
+import { useSettingStore } from "../../store/settings"
+import { useUserStore } from "../../store/user"
 
 // components
 import { FormFieldErrorType } from "../../components/input/formBaseProps";
-import ServerError from "../../components/serverError";
-import LText from "../../components/input/LText";
-import Button from "../../components/Button";
+import ServerError from "../../components/serverError.vue";
+import LText from "../../components/input/LText.vue";
+import Button from "../../components/Button.vue";
 
-export default {
-  name: "SetupAccount",
-  components: {
-    // components
-    ServerError,
-    LText,
-    Button
-  },
-  data() {
-    return {
-      siteTitle: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      fullName: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      email: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      password: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      buttonLoading: false,
-      serverError: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  methods: {
-    hideSiteTitleError(event: FormFieldErrorType) {
-      this.siteTitle.error = event;
-    },
-    hideFullNameError(event: FormFieldErrorType) {
-      this.fullName.error = event;
-    },
-    hideEmailError(event: FormFieldErrorType) {
-      this.email.error = event;
-    },
-    hidePasswordError(event: FormFieldErrorType) {
-      this.password.error = event;
-    },
-    async createAccount() {
-      if (
-        !(
-          this.siteTitle.value &&
-					this.fullName.value &&
-					this.email.value &&
-					this.password.value
-        )
-      ) {
-        if (!this.siteTitle.value) {
-          this.siteTitle.error.show = true;
-          this.siteTitle.error.message = "Required";
-        }
+const { get: siteSettings } = useSettingStore()
+const { login, setPermissions } = useUserStore()
 
-        if (!this.fullName.value) {
-          this.fullName.error.show = true;
-          this.fullName.error.message = "Required";
-        }
+const siteTitle = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const fullName = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const email = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const password = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const buttonLoading = ref(false)
+const serverError = ref(false)
 
-        if (!this.email.value) {
-          this.email.error.show = true;
-          this.email.error.message = "Required";
-        }
-        if (!this.password.value) {
-          this.password.error.show = true;
-          this.password.error.message = "Required";
-        }
-        return;
-      }
+function hideSiteTitleError(event: FormFieldErrorType) {
+	siteTitle.error = event;
+}
 
-      this.buttonLoading = true;
+function hideFullNameError(event: FormFieldErrorType) {
+	fullName.error = event;
+}
 
-      try {
-        const response = await siteSetup(
-          this.siteTitle.value,
-          this.fullName.value,
-          this.email.value,
-          this.password.value
-        );
+function hideEmailError(event: FormFieldErrorType) {
+	email.error = event;
+}
 
-        this.$store.dispatch("user/login", {
-          ...response.data.user
-        });
+function hidePasswordError(event: FormFieldErrorType) {
+	password.error = event;
+}
 
-        this.$store.dispatch("user/updatePermissions");
-        this.$router.push("/setup/create-board");
-      } catch (error) {
-        if (error.response.data.code === "MAIL_CONFIG_MISSING") {
-          this.serverError = true;
-        }
+async function createAccount() {
+	if (
+		!(
+			siteTitle.value &&
+			fullName.value &&
+			email.value &&
+			password.value
+		)
+	) {
+		if (!siteTitle.value) {
+			siteTitle.error.show = true;
+			siteTitle.error.message = "Required";
+		}
 
-        console.error(error);
-      } finally {
-        this.buttonLoading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Account · Onboarding",
-      meta: [
-        {
-          name: "og:title",
-          content: `Account · Onboarding · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
-  }
-};
+		if (!fullName.value) {
+			fullName.error.show = true;
+			fullName.error.message = "Required";
+		}
+
+		if (!email.value) {
+			email.error.show = true;
+			email.error.message = "Required";
+		}
+		if (!password.value) {
+			password.error.show = true;
+			password.error.message = "Required";
+		}
+		return;
+	}
+
+	buttonLoading.value = true;
+
+	try {
+		const response = await siteSetup({
+			siteTitle: siteTitle.value,
+			name: fullName.value,
+			email: email.value,
+			password: password.value
+		});
+
+		login(response.data.user)
+
+		const permissions = await getPermissions();
+		setPermissions(permissions.data);
+
+		router.push("/setup/create-board");
+	} catch (error: any) {
+		if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+			serverError.value = true;
+		}
+
+		console.error(error);
+	} finally {
+		buttonLoading.value = false;
+	}
+}
+
+useHead({
+	title: "Account · Onboarding",
+	meta: [
+		{
+			name: "og:title",
+			content: `Account · Onboarding · ${siteSettings.title}`
+		}
+	]
+})
 </script>

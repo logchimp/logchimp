@@ -13,27 +13,27 @@
             votes
           </div>
         </template>
-        <router-link
-          v-for="post in posts.data"
-          :key="post.postId"
-          :to="`/dashboard/posts/${post.slug}`"
-          class="table-row"
-        >
-          <div class="table-data posts-table-title">
-            {{ post.title }}
-          </div>
-          <div class="table-data posts-table-votes">
-            {{ post.voters.votesCount }}
-          </div>
-        </router-link>
-        <infinite-loading @infinite="getPosts">
-          <div slot="spinner" class="loader-container">
+				<div v-infinite-scroll="getPosts">
+					<router-link
+						v-for="post in posts.data"
+						:key="post.postId"
+						:to="`/dashboard/posts/${post.slug}`"
+						class="table-row"
+					>
+						<div class="table-data posts-table-title">
+							{{ post.title }}
+						</div>
+						<div class="table-data posts-table-votes">
+							{{ post.voters.votesCount }}
+						</div>
+					</router-link>
+          <!-- <div slot="spinner" class="loader-container">
             <loader />
           </div>
           <div slot="no-more" />
           <div slot="no-results" />
-          <div slot="error" />
-        </infinite-loading>
+          <div slot="error" /> -->
+        </div>
       </Table>
     </div>
     <div class="dashboard-overview-boards">
@@ -50,42 +50,50 @@
             posts
           </div>
         </template>
-        <div
-          v-for="board in boards.data"
-          :key="board.boardId"
-          class="table-row"
-        >
-          <div class="table-data boards-table-color">
-            <div
-              class="color-dot"
-              :style="{
-                backgroundColor: `#${board.color}`
-              }"
-            />
-          </div>
-          <div class="table-data boards-table-name">
-            {{ board.name }}
-          </div>
-          <div class="table-data boards-table-posts">
-            {{ board.post_count }}
-          </div>
-        </div>
-        <infinite-loading @infinite="getBoards">
-          <div slot="spinner" class="loader-container">
+        <div v-infinite-scroll="getBoards">
+					<div
+						v-for="board in boards.data"
+						:key="board.boardId"
+						class="table-row"
+					>
+						<div class="table-data boards-table-color">
+							<div
+								class="color-dot"
+								:style="{
+									backgroundColor: `#${board.color}`
+								}"
+							/>
+						</div>
+						<div class="table-data boards-table-name">
+							{{ board.name }}
+						</div>
+						<div class="table-data boards-table-posts">
+							{{ board.post_count }}
+						</div>
+					</div>
+          <!-- <div slot="spinner" class="loader-container">
             <loader />
           </div>
           <div slot="no-more" />
           <div slot="no-results" />
-          <div slot="error" />
-        </infinite-loading>
+          <div slot="error" /> -->
+        </div>
       </Table>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardOverview",
+}
+</script>
+
+<script setup lang="ts">
 // packages
-import InfiniteLoading from "vue-infinite-loading";
+import { onMounted, reactive } from "vue";
+import { useHead } from "@vueuse/head";
+import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { getPosts } from "../../modules/posts";
@@ -93,62 +101,63 @@ import { getAllBoards } from "../../modules/boards";
 
 // components
 import Table from "../../components/Table.vue";
-import Loader from "../../components/Loader.vue";
+// import Loader from "../../components/Loader.vue";
 
-export default {
-  name: "DashboardOverview",
-  components: {
-    // packages
-    InfiniteLoading,
+const posts = reactive<{
+	// TODO: Add TS types
+	data: any
+	loading: boolean
+}>({
+	data: [],
+	loading: false
+})
+const boards = reactive<{
+	// TODO: Add TS types
+	data: any
+	loading: boolean
+}>({
+	data: [],
+	loading: false
+})
 
-    // components
-    Table,
-    Loader
-  },
-  data() {
-    return {
-      posts: {
-        data: [],
-        loading: false
-      },
-      boards: {
-        data: [],
-        loading: false
-      }
-    };
-  },
-  methods: {
-    async getPosts($state) {
-      try {
-        const response = await getPosts({
-					page: 1,
-					limit: 4,
-					sort: "DESC"
-				});
+async function getRecentPosts() {
+	try {
+		const response = await getPosts({
+			page: 1,
+			limit: 4,
+			sort: "DESC"
+		});
 
-        this.posts.data = response.data.posts;
-        $state.complete();
-      } catch (error) {
-        console.error(error);
-        $state.error();
-      }
-    },
-    async getBoards($state) {
-      try {
-        const response = await getAllBoards(1, 4, "desc");
+		posts.data = response.data.posts;
+		// $state.complete();
+	} catch (error) {
+		console.error(error);
+		// $state.error();
+	}
+}
 
-        this.boards.data = response.data.boards;
-        $state.complete();
-      } catch (error) {
-        console.error(error);
-        $state.error();
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Dashboard"
-    };
-  }
-};
+async function getBoards() {
+	try {
+		const response = await getAllBoards({
+			page: 1,
+			limit: 4,
+			sort: "DESC"
+		});
+
+		boards.data = response.data.boards;
+		// $state.complete();
+	} catch (error) {
+		console.error(error);
+		// $state.error();
+	}
+}
+
+onMounted(() => {
+	getRecentPosts()
+	getBoards()
+})
+
+useHead({
+	title: "Dashboard"
+})
 </script>

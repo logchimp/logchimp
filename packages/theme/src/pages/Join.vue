@@ -1,7 +1,7 @@
 <template>
   <div class="auth-form">
     <div class="auth-form-header">
-      <site-branding />
+      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
       <h3 class="auth-form-heading">
         Create your account
       </h3>
@@ -9,22 +9,22 @@
     <server-error v-if="serverError" @close="serverError = false" />
     <div class="card">
       <l-text
-        v-model="email.value"
+        v-model="email"
         label="Email Address"
         type="email"
         name="email"
         placeholder="Email address"
-        :error="email.error"
+        :error="emailError"
         @keyup-enter="join"
         @hide-error="hideEmailError"
       />
       <l-text
-        v-model="password.value"
+        v-model="password"
         label="Password"
         type="password"
         name="password"
         placeholder="Password"
-        :error="password.error"
+        :error="passwordError"
         @keyup-enter="join"
         @hide-error="hidePasswordError"
       />
@@ -32,7 +32,7 @@
         <Button
           type="primary"
           :loading="buttonLoading"
-          :disabled="!getSiteSittings.allowSignup"
+          :disabled="!siteSettings.allowSignup"
           @click="join"
         >
           Create account
@@ -49,118 +49,116 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "Join"
+}
+</script>
+
+<script setup lang="ts">
+import { onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
+import { router } from "../router";
 import { signup } from "../modules/auth";
+import { getPermissions } from "../modules/users";
+import { useSettingStore } from "../store/settings"
+import { useUserStore } from "../store/user"
 
 // component
 import { FormFieldErrorType } from "../components/input/formBaseProps";
-import ServerError from "../components/serverError";
-import LText from "../components/input/LText";
-import Button from "../components/Button";
-import SiteBranding from "../components/SiteBranding";
+import ServerError from "../components/serverError.vue";
+import LText from "../components/input/LText.vue";
+import Button from "../components/Button.vue";
+import SiteBranding from "../components/SiteBranding.vue";
 
-export default {
-  name: "Join",
-  components: {
-    // components
-    ServerError,
-    LText,
-    Button,
-    SiteBranding
-  },
-  data() {
-    return {
-      email: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      password: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      buttonLoading: false,
-      serverError: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    }
-  },
-  created() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      this.$router.push("/");
-    }
-  },
-  methods: {
-    hideEmailError(event: FormFieldErrorType) {
-      this.email.error = event;
-    },
-    hidePasswordError(event: FormFieldErrorType) {
-      this.password.error = event;
-    },
-    async join() {
-      if (!(this.email.value && this.password.value)) {
-        if (!this.email.value) {
-          this.email.error.show = true;
-          this.email.error.message = "Required";
-        }
+const { get: siteSettings } = useSettingStore()
+const { login, setPermissions } = useUserStore()
 
-        if (!this.password.value) {
-          this.password.error.show = true;
-          this.password.error.message = "Required";
-        }
+const email = ref("");
+const emailError = reactive({
+	show: false,
+	message: ""
+})
+const password = ref("");
+const passwordError = reactive({
+	show: false,
+	message: ""
+})
+const buttonLoading = ref(false)
+const serverError = ref(false)
 
-        return;
-      }
+onMounted(() => {
+	const getUserLocal = localStorage.getItem("user")
+	if (getUserLocal) {
+		router.push("/");
+	}
+})
 
-      this.buttonLoading = true;
+function hideEmailError(event: FormFieldErrorType) {
+	emailError.message = event.message;
+	emailError.show = event.show;
+}
 
-      try {
-        const response = await signup(this.email.value, this.password.value);
+function hidePasswordError(event: FormFieldErrorType) {
+	passwordError.message = event.message;
+	passwordError.show = event.show;
+}
 
-        this.$store.dispatch("user/login", {
-          ...response.data.user
-        });
+async function join() {
+	if (!(email.value && password.value)) {
+		if (!email.value) {
+			emailError.show = true;
+			emailError.message = "Required";
+		}
 
-        this.$store.dispatch("user/updatePermissions");
+		if (!password.value) {
+			passwordError.show = true;
+			passwordError.message = "Required";
+		}
 
-        if (this.$route.query.redirect) {
-          this.$router.push(this.$route.query.redirect);
-        } else {
-          this.$router.push("/");
-        }
-      } catch (error) {
-        if (error.response.data.code === "MAIL_CONFIG_MISSING") {
-          this.serverError = true;
-        }
+		return;
+	}
 
-        if (error.response.data.code === "USER_EXISTS") {
-          this.email.error.show = true;
-          this.email.error.message = "Exists";
-        }
-      } finally {
-        this.buttonLoading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Join",
-      meta: [
-        {
-          name: "og:title",
-          content: `Join · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
-  }
-};
+	buttonLoading.value = true;
+
+	try {
+		const response = await signup({
+      email: email.value,
+      password: password.value
+    });
+
+		login(response.data.user);
+		const permissions = await getPermissions();
+		setPermissions(permissions.data);
+
+		const route = router.currentRoute.value;
+		if (route.query.redirect) {
+			router.push(route.query.redirect.toString());
+		} else {
+			router.push("/");
+		}
+	} catch (error: any) {
+		if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+			serverError.value = true;
+		}
+
+		if (error.response.data.code === "USER_EXISTS") {
+			emailError.show = true;
+			emailError.message = "Exists";
+		}
+	} finally {
+		buttonLoading.value = false;
+	}
+}
+
+useHead({
+	title: "Join",
+	meta: [
+		{
+			name: "og:title",
+			content: `Join · ${siteSettings.title}`
+		}
+	]
+})
 </script>

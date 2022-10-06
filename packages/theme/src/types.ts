@@ -6,3 +6,13 @@ export interface ApiPaginationType {
 	sort?: ApiSortType
 }
 
+export interface DraggableSortFromToType {
+	from: {
+		id: string
+		index: string
+	}
+	to: {
+		id: string
+		index: string
+	}
+}

@@ -17,7 +17,7 @@
         type="primary"
         :loading="updateRoleButtonLoading"
         :disabled="updateRoleButtonDisabled"
-        @click="updateRole"
+        @click="updateRoleHandler"
       >
         Save
       </Button>
@@ -172,137 +172,144 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardRoleEdit",
+}
+</script>
+
+<script setup lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
+import { router } from "../../../../router"
+import {useUserStore} from "../../../../store/user"
 import { getRole, updateRole } from "../../../../modules/roles";
 
 // components
-import Button from "../../../../components/Button";
-import LText from "../../../../components/input/LText";
-import LTextarea from "../../../../components/input/LTextarea";
-import ToggleItem from "../../../../components/input/ToggleItem";
+import Button from "../../../../components/Button.vue";
+import LText from "../../../../components/input/LText.vue";
+import LTextarea from "../../../../components/input/LTextarea.vue";
+import ToggleItem from "../../../../components/input/ToggleItem.vue";
 
-export default {
-  name: "RoleSettings",
-  components: {
-    Button,
-    LText,
-    LTextarea,
-    ToggleItem
-  },
-  data() {
-    return {
-      title: "",
-      role: {},
-      permissions: {
-        post: {
-          create: false,
-          read: false,
-          update: false,
-          destroy: false
-        },
-        board: {
-          create: false,
-          read: false,
-          update: false,
-          destroy: false,
-          assign: false,
-          unassign: false
-        },
-        roadmap: {
-          create: false,
-          read: false,
-          update: false,
-          destroy: false,
-          assign: false,
-          unassign: false
-        },
-        vote: {
-          create: false,
-          destroy: false,
-          assign: false,
-          unassign: false
-        },
-        dashboard: {
-          read: false
-        },
-        role: {
-          create: false,
-          read: false,
-          update: false,
-          destroy: false,
-          assign: false,
-          unassign: false
-        },
-        settings: {
-          read: false,
-          update: false
-        }
-      },
-      updateRoleButtonLoading: false
-    };
-  },
-  computed: {
-    updateRoleButtonDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("role:update");
-      return !checkPermission;
-    }
-  },
-  created() {
-    this.getRole();
-  },
-  methods: {
-    async updateRole() {
-      this.updateRoleButtonLoading = true;
+const { permissions: userPermissions } = useUserStore()
 
-      const activePermissions = [];
-      for (let i in this.permissions) {
-        let type = i;
+const title = ref("")
+// TODO: Add TS types
+const role = ref<any>({})
+const permissions = reactive({
+	post: {
+		create: false,
+		read: false,
+		update: false,
+		destroy: false
+	},
+	board: {
+		create: false,
+		read: false,
+		update: false,
+		destroy: false,
+		assign: false,
+		unassign: false
+	},
+	roadmap: {
+		create: false,
+		read: false,
+		update: false,
+		destroy: false,
+		assign: false,
+		unassign: false
+	},
+	vote: {
+		create: false,
+		destroy: false,
+		assign: false,
+		unassign: false
+	},
+	dashboard: {
+		read: false
+	},
+	role: {
+		create: false,
+		read: false,
+		update: false,
+		destroy: false,
+		assign: false,
+		unassign: false
+	},
+	settings: {
+		read: false,
+		update: false
+	}
+})
+const updateRoleButtonLoading = ref(false)
 
-        for (let j in this.permissions[i]) {
-          let action = j;
-          if (this.permissions[i][j]) {
-            activePermissions.push(`${type}:${action}`);
-          }
-        }
-      }
+const updateRoleButtonDisabled = computed(() => {
+	const checkPermission = userPermissions.includes("role:update");
+	return !checkPermission;
+})
 
-      try {
-        const response = await updateRole({
-          id: this.role.id,
-          name: this.role.name,
-          description: this.role.description,
-          permissions: activePermissions
-        });
+async function updateRoleHandler() {
+	updateRoleButtonLoading.value = true;
 
-        if (response.status === 200) {
-          this.$router.push("/dashboard/settings/roles");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.updateRoleButtonLoading = false;
-      }
-    },
-    async getRole() {
-      try {
-        const id = this.$route.params.id;
-        const response = await getRole(id);
+	const activePermissions = [] as unknown;
+	// for (let i in permissions) {
+	// 	let type = i;
 
-        this.title = response.data.role.name;
-        this.role = response.data.role;
+	// 	for (let j in permissions[i]) {
+	// 		let action = j;
+	// 		if (permissions[i][j]) {
+	// 			activePermissions.push(`${type}:${action}`);
+	// 		}
+	// 	}
+	// }
 
-        const permissions = response.data.role.permissions;
-        for (let i = 0; i < permissions.length; i++) {
-          const type = permissions[i].split(":")[0];
-          const action = permissions[i].split(":")[1];
 
-          this.permissions[type][action] = true;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  }
-};
+	try {
+		const response = await updateRole({
+			id: role.value.id,
+			name: role.value.name,
+			description: role.value.description,
+			permissions: activePermissions
+		});
+
+		if (response.status === 200) {
+			router.push("/dashboard/settings/roles");
+		}
+	} catch (err) {
+		console.error(err);
+	} finally {
+		updateRoleButtonLoading.value = false;
+	}
+}
+
+async function getRoleHandler() {
+	const route = router.currentRoute.value;
+
+	if (route.params.id) {
+		try {
+			const id = route.params.id.toString();
+			const response = await getRole(id);
+
+			title.value = response.data.role.name;
+			role.value = response.data.role;
+
+			const permissions = response.data.role.permissions;
+			for (let i = 0; i < permissions.length; i++) {
+				const type = permissions[i].split(":")[0];
+				const action = permissions[i].split(":")[1];
+
+				permissions.value[type][action] = true;
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	}
+}
+
+onMounted(() => getRoleHandler())
+
+useHead({
+	title: `${title.value ? `${title.value} ` : ''}Roles · Settings · Dashboard`
+})
 </script>

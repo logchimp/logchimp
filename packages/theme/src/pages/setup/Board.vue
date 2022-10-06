@@ -35,77 +35,75 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "SetupBoard",
+}
+</script>
+
+<script setup lang="ts">
+import { computed, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
+import { router } from "../../router";
+import { useSettingStore } from "../../store/settings";
+import { useUserStore } from "../../store/user";
 import { createBoard } from "../../modules/boards";
 
 // components
 import { FormFieldErrorType } from "../../components/input/formBaseProps";
-import LText from "../../components/input/LText";
-import Button from "../../components/Button";
+import LText from "../../components/input/LText.vue";
+import Button from "../../components/Button.vue";
 
-export default {
-  name: "SetupBoard",
-  components: {
-    // components
-    LText,
-    Button
-  },
-  data() {
-    return {
-      boardName: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      buttonLoading: false
-    };
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    },
-    createBoardPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("board:create");
-      return !checkPermission;
-    }
-  },
-  methods: {
-    hideBoardNameError(event: FormFieldErrorType) {
-      this.boardName.error = event;
-    },
-    async create() {
-      if (!this.boardName.value) {
-        this.boardName.error.show = true;
-        this.boardName.error.message = "Required";
-        return;
-      }
+const boardName = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const buttonLoading = ref(false)
 
-      this.buttonLoading = true;
+const { get: siteSettings } = useSettingStore()
+const { permissions } = useUserStore()
 
-      try {
-        await createBoard(this.boardName.value);
+const createBoardPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("board:create");
+	return !checkPermission;
+})
 
-        this.$router.push("/dashboard");
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.buttonLoading = false;
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Create board · Onboarding",
-      meta: [
-        {
-          name: "og:title",
-          content: `Create board · Onboarding · ${this.getSiteSittings.title}`
-        }
-      ]
-    };
-  }
-};
+function hideBoardNameError(event: FormFieldErrorType) {
+	boardName.error = event;
+}
+
+async function create() {
+	if (!boardName.value) {
+		boardName.error.show = true;
+		boardName.error.message = "Required";
+		return;
+	}
+
+	buttonLoading.value = true;
+
+	try {
+		await createBoard({
+			name: boardName.value
+		});
+
+		router.push("/dashboard");
+	} catch (error) {
+		console.error(error);
+		buttonLoading.value = false;
+	}
+}
+
+useHead({
+	title: "Create board · Onboarding",
+	meta: [
+		{
+			name: "og:title",
+			content: `Create board · Onboarding · ${siteSettings.title}`
+		}
+	]
+})
 </script>

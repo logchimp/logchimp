@@ -11,7 +11,7 @@
         type="primary"
         :loading="updateSettingsButtonLoading"
         :disabled="updateSettingsPermissionDisabled"
-        @click="updateSettings"
+        @click="updateSettingsHandler"
       >
         Save
       </Button>
@@ -104,7 +104,18 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardSettings",
+}
+</script>
+
+<script setup lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
+import { useSettingStore } from "../../../store/settings"
+import { useUserStore } from "../../../store/user"
 import {
   getSettings,
   updateSettings,
@@ -113,161 +124,149 @@ import {
 
 // components
 import { FormFieldErrorType } from "../../../components/input/formBaseProps";
-import LText from "../../../components/input/LText";
-import Button from "../../../components/Button";
-import ColorInput from "../../../components/ColorInput";
-import ToggleItem from "../../../components/input/ToggleItem";
+import LText from "../../../components/input/LText.vue";
+import Button from "../../../components/Button.vue";
+import ColorInput from "../../../components/ColorInput.vue";
+import ToggleItem from "../../../components/input/ToggleItem.vue";
 
-export default {
-  name: "DashboardSettings",
-  components: {
-    // components
-    LText,
-    Button,
-    ColorInput,
-    ToggleItem
-  },
-  data() {
-    return {
-      siteName: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      logo: "",
-      description: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      allowSignup: false,
-      accentColor: {
-        value: "484d7c",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      googleAnalyticsId: {
-        value: "",
-        error: {
-          show: false,
-          message: ""
-        }
-      },
-      developer_mode: false,
-      updateSettingsButtonLoading: false
-    };
-  },
-  computed: {
-    updateSettingsPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("settings:update");
-      return !checkPermission;
-    }
-  },
-  created() {
-    this.getSettings();
-  },
-  methods: {
-    hideSiteNameError(event: FormFieldErrorType) {
-      this.siteName.error = event;
-    },
-    hideDescriptionError(event: FormFieldErrorType) {
-      this.description.error = event;
-    },
-    hideAccentColorError(event: FormFieldErrorType) {
-      this.accentColor.error = event;
-    },
-    hideGoogleAnalyticsError(event: FormFieldErrorType) {
-      this.googleAnalyticsId.error = event;
-    },
-    selectFileHandler() {
-      this.$refs.fileSelector.click();
-    },
-    async uploadFile(event) {
-      const logo = event.target.files[0];
+const { update } = useSettingStore()
+const { permissions } = useUserStore()
 
-      const formData = new FormData();
-      formData.append("logo", logo);
+const siteName = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const logo = ref("")
+const description = reactive ({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+})
+const allowSignup = ref(false)
+const accentColor = reactive({
+	value: "484d7c",
+	error: {
+		show: false,
+		message: ""
+	}
+});
+const googleAnalyticsId = reactive({
+	value: "",
+	error: {
+		show: false,
+		message: ""
+	}
+});
+const developer_mode = ref(false)
+const updateSettingsButtonLoading = ref(false)
 
-      try {
-        const response = await uploadSiteLogo(formData);
+const updateSettingsPermissionDisabled = computed(() =>  {
+	const checkPermission = permissions.includes("settings:update");
+	return !checkPermission;
+})
 
-        this.logo = response.data.settings.logo;
+function hideSiteNameError(event: FormFieldErrorType) {
+	siteName.error = event;
+}
 
-        this.$store.dispatch("settings/updateLogo", {
-          logo: response.data.settings.logo
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async updateSettings() {
-      if (!(this.siteName.value && this.accentColor.value)) {
-        if (!this.siteName.value) {
-          this.siteName.error.show = true;
-          this.siteName.error.message = "Required";
-        }
+function hideDescriptionError(event: FormFieldErrorType) {
+	description.error = event;
+}
 
-        if (!this.accentColor.value) {
-          this.accentColor.error.show = true;
-          this.accentColor.error.message = "Required";
-        }
-      }
+function hideAccentColorError(event: FormFieldErrorType) {
+	accentColor.error = event;
+}
 
-      this.updateSettingsButtonLoading = true;
+function hideGoogleAnalyticsError(event: FormFieldErrorType) {
+	googleAnalyticsId.error = event;
+}
 
-      const siteData = {
-        title: this.siteName.value,
-        description: this.description.value,
-        accentColor: this.accentColor.value,
-        googleAnalyticsId: this.googleAnalyticsId.value,
-        allowSignup: this.allowSignup,
-        developer_mode: this.developer_mode
-      };
+function selectFileHandler() {
+	// $refs.fileSelector.click();
+}
 
-      try {
-        const response = await updateSettings(siteData);
+async function uploadFile(event: any) {
+	const logo = event.target.files[0];
 
-        this.siteName.value = response.data.settings.title;
-        this.logo = response.data.settings.logo;
-        this.description.value = response.data.settings.description;
-        this.accentColor.value = response.data.settings.accentColor;
-        this.googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
-        this.developer_mode = response.data.settings.developer_mode;
+	const formData = new FormData();
+	formData.append("logo", logo);
 
-        this.$store.dispatch("settings/update", response.data.settings);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.updateSettingsButtonLoading = false;
-      }
-    },
-    async getSettings() {
-      try {
-        const response = await getSettings();
+	try {
+		const response = await uploadSiteLogo(formData);
 
-        this.siteName.value = response.data.settings.title;
-        this.logo = response.data.settings.logo;
-        this.description.value = response.data.settings.description;
-        this.allowSignup = response.data.settings.allowSignup;
-        this.accentColor.value = response.data.settings.accentColor;
-        this.googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
-        this.developer_mode = response.data.settings.developer_mode;
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "General · Settings · Dashboard"
-    };
-  }
-};
+		logo.value = response.data.settings.logo;
+		update(response.data.settings.logo)
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+async function updateSettingsHandler() {
+	if (!(siteName.value && accentColor.value)) {
+		if (!siteName.value) {
+			siteName.error.show = true;
+			siteName.error.message = "Required";
+		}
+
+		if (!accentColor.value) {
+			accentColor.error.show = true;
+			accentColor.error.message = "Required";
+		}
+	}
+
+	updateSettingsButtonLoading.value = true;
+
+	const siteData = {
+		title: siteName.value,
+		description: description.value,
+		accentColor: accentColor.value,
+		googleAnalyticsId: googleAnalyticsId.value,
+		allowSignup: allowSignup.value,
+		developer_mode: developer_mode.value
+	};
+
+	try {
+		const response = await updateSettings(siteData);
+
+		siteName.value = response.data.settings.title;
+		logo.value = response.data.settings.logo;
+		description.value = response.data.settings.description;
+		accentColor.value = response.data.settings.accentColor;
+		googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+		developer_mode.value = response.data.settings.developer_mode;
+
+		update(response.data.settings);
+	} catch (error) {
+		console.error(error);
+	} finally {
+		updateSettingsButtonLoading.value = false;
+	}
+}
+
+async function getSettingsHandler() {
+	try {
+		const response = await getSettings();
+
+		siteName.value = response.data.settings.title;
+		logo.value = response.data.settings.logo;
+		description.value = response.data.settings.description;
+		allowSignup.value = response.data.settings.allowSignup;
+		accentColor.value = response.data.settings.accentColor;
+		googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+		developer_mode.value = response.data.settings.developer_mode;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+onMounted(() => getSettingsHandler());
+
+useHead({
+	title: "General · Settings · Dashboard"
+})
 </script>

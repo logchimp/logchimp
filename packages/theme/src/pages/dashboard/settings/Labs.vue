@@ -44,68 +44,66 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashboardLabs",
+}
+</script>
+
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+
 // modules
+import { useSettingStore } from "../../../store/settings"
+import { useUserStore } from "../../../store/user"
 import {
+	LabsType,
   getLabsSettings,
   updateLabsSettings
 } from "../../../modules/site";
 
 // components
-import Button from "../../../components/Button";
-import ToggleItem from "../../../components/input/ToggleItem";
+import Button from "../../../components/Button.vue";
+import ToggleItem from "../../../components/input/ToggleItem.vue";
+import { useHead } from "@vueuse/head";
 
-export default {
-  name: "DashboardLabs",
-  components: {
-    // components
-    Button,
-    ToggleItem
-  },
-  data() {
-    return {
-      labs: {},
-      updateSettingsButtonLoading: false
-    };
-  },
-  computed: {
-    updateSettingsPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("settings:update");
-      return !checkPermission;
-    }
-  },
-  created() {
-    this.getSettings();
-  },
-  methods: {
-    async updateSettings() {
-      this.updateSettingsButtonLoading = true;
+const { update } = useSettingStore()
+const { permissions } = useUserStore()
 
-      try {
-        await updateLabsSettings(this.labs);
+const labs = ref<LabsType>({
+	comments: false,
+})
+const updateSettingsButtonLoading = ref(false)
 
-        this.$store.dispatch("settings/update", {
-          labs: this.labs
-        });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.updateSettingsButtonLoading = false;
-      }
-    },
-    async getSettings() {
-      try {
-        const response = await getLabsSettings();
-        this.labs = response.data.labs;
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: "Labs · Settings · Dashboard"
-    };
-  }
-};
+const updateSettingsPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("settings:update");
+	return !checkPermission;
+})
+
+async function updateSettings() {
+	updateSettingsButtonLoading.value = true;
+
+	try {
+		await updateLabsSettings(labs.value);
+
+		update(labs.value)
+	} catch (error) {
+		console.error(error);
+	} finally {
+		updateSettingsButtonLoading.value = false;
+	}
+}
+async function getSettings() {
+	try {
+		const response = await getLabsSettings();
+		labs.value = response.data.labs;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+onMounted(() => getSettings());
+
+useHead({
+	title: "Labs · Settings · Dashboard"
+})
 </script>

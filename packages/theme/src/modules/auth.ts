@@ -1,5 +1,21 @@
 // packges
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { UserType } from "./users";
+
+interface AuthenticateUserArgs {
+  email: string
+  password: string
+}
+
+interface SetNewPasswordArgs {
+  token: string
+  password: string
+}
+
+interface AuthenticateUserType extends UserType {
+  email: string
+  authToken: string
+}
 
 /**
  * Sign in to user account
@@ -8,7 +24,9 @@ import axios from "axios";
  * @param {string} password user password
  * @returns {object} response
  */
-export const signin = async (email, password) => {
+export const signin = async ({ email, password }: AuthenticateUserArgs): Promise<AxiosResponse<{
+  user: AuthenticateUserType
+}>> => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/login",
@@ -26,7 +44,7 @@ export const signin = async (email, password) => {
  * @param {string} password user password
  * @returns {object} response
  */
-export const signup = async (email, password) => {
+export const signup = async ({ email, password }: AuthenticateUserArgs) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/signup",
@@ -43,7 +61,7 @@ export const signup = async (email, password) => {
  * @param {string} email email address
  * @returns {object} response
  */
-export const resendUserVerificationEmail = async email => {
+export const resendUserVerificationEmail = async (email: string) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/email/verify",
@@ -60,7 +78,7 @@ export const resendUserVerificationEmail = async email => {
  *
  * @returns {object} response
  */
-export const verifyUserEmail = async token => {
+export const verifyUserEmail = async (token: string) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/email/validate",
@@ -77,7 +95,7 @@ export const verifyUserEmail = async token => {
  *
  * @returns {object} response
  */
-export const requestPasswordReset = async email => {
+export const requestPasswordReset = async (email: string) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/password/reset",
@@ -94,7 +112,7 @@ export const requestPasswordReset = async email => {
  *
  * @returns {object} response
  */
-export const validateResetPasswordToken = async token => {
+export const validateResetPasswordToken = async (token: string) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/password/validateToken",
@@ -112,7 +130,7 @@ export const validateResetPasswordToken = async token => {
  *
  * @returns {object} response
  */
-export const setNewPassword = async (token, password) => {
+export const setNewPassword = async ({ token, password }: SetNewPasswordArgs) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/password/set",

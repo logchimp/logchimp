@@ -5,6 +5,16 @@ import axios from "axios";
 import { useUserStore } from "../store/user"
 import { ApiPaginationType, ApiSortType } from "../types";
 
+export interface PostType {
+  postId: string
+  title: string
+  slug: string
+  slugId: string
+  contentMarkdown?: string
+  createdAt: string
+  updatedAt: string
+}
+
 interface GetPostArgs extends ApiPaginationType {
 	boardId?: string[]
 	roadmapId?: string
@@ -15,17 +25,17 @@ interface CreatePostArgs {
 	contentMarkdown?: string
 }
 
-interface Post extends CreatePostArgs {
+export interface UpdatePostArgs extends CreatePostArgs {
 	id: string
 	slugId: string
 	userId: string
-	boardId: string
-	roadmapId: string
+	boardId?: string
+	roadmapId?: string
 }
 
 interface PostActivityArgs {
 	post_id: string
-	sort?: ApiSortType
+	sort: ApiSortType
 }
 
 interface AddCommentArgs {
@@ -129,7 +139,7 @@ export const getPostBySlug = async (slug: string) => {
  *
  * @returns {object} response
  */
-export const updatePost = async (post: Post) => {
+export const updatePost = async (post: UpdatePostArgs) => {
   const { authToken } = useUserStore()
 
   return await axios({

@@ -50,7 +50,10 @@ const page = ref(1)
 
 async function getBoards() {
 	try {
-		const response = await getPublicBoards(page.value, null, "desc");
+		const response = await getPublicBoards({
+      page: page.value,
+      sort: "DESC"
+    });
 
 		if (response.data.boards.length) {
 			boards.value.push(...response.data.boards);

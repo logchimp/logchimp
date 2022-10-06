@@ -2,7 +2,24 @@
 import axios from "axios";
 
 // store
-import store from "../store";
+import { useUserStore } from "../store/user"
+import { ApiPaginationType } from "../types";
+
+interface CreateBoardArgs {
+	name?: string
+}
+
+export interface Board {
+	boardId: string
+	name: string
+	url: string
+	color: string
+}
+
+interface UpdateBoardArgs extends Board {
+	view_voters: boolean
+	display: boolean
+}
 
 /**
  *	Get public boards
@@ -12,7 +29,11 @@ import store from "../store";
  *
  * @returns {object} response
  */
-export const getPublicBoards = async (page = 1, limit, sort = "desc") => {
+export const getPublicBoards = async ({
+	page = 1,
+	limit,
+	sort = "DESC"
+}: ApiPaginationType) => {
   return await axios({
     method: "GET",
     url: "/api/v1/boards",
@@ -32,7 +53,11 @@ export const getPublicBoards = async (page = 1, limit, sort = "desc") => {
  *
  * @returns {object} response
  */
-export const getAllBoards = async (page = 1, limit, sort = "desc") => {
+export const getAllBoards = async ({
+	page = 1,
+	limit,
+	sort = "DESC"
+}: ApiPaginationType) => {
   return await axios({
     method: "GET",
     url: "/api/v1/boards/get",
@@ -51,7 +76,7 @@ export const getAllBoards = async (page = 1, limit, sort = "desc") => {
  *
  * @returns {object} response
  */
-export const getBoardByUrl = async url => {
+export const getBoardByUrl = async (url: string) => {
   return await axios({
     method: "GET",
     url: `/api/v1/boards/${url}`
@@ -65,14 +90,14 @@ export const getBoardByUrl = async url => {
  *
  * @returns {object} response
  */
-export const searchBoard = async name => {
-  const token = store.getters["user/getAuthToken"];
+export const searchBoard = async (name: string) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: `/api/v1/boards/search/${name}`,
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -82,14 +107,17 @@ export const searchBoard = async name => {
  *
  * @returns {object} response
  */
-export const createBoard = async () => {
-  const token = store.getters["user/getAuthToken"];
+export const createBoard = async ({ name }: CreateBoardArgs) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "POST",
     url: "/api/v1/boards",
+		data: {
+			name,
+		},
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -106,8 +134,9 @@ export const createBoard = async () => {
  *
  * @returns {object} response
  */
-export const updateBoard = async board => {
-  const token = store.getters["user/getAuthToken"];
+export const updateBoard = async (board: UpdateBoardArgs) => {
+  const { authToken } = useUserStore()
+
   return await axios({
     method: "PATCH",
     url: "/api/v1/boards",
@@ -115,7 +144,7 @@ export const updateBoard = async board => {
       ...board
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -123,21 +152,21 @@ export const updateBoard = async board => {
 /**
  * delete board
  *
- * @param {string} id board id
+ * @param {string} boardId board id
  *
  * @returns {object} response
  */
-export const deleteBoard = async id => {
-  const token = store.getters["user/getAuthToken"];
+export const deleteBoard = async (boardId: string) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "DELETE",
     url: "/api/v1/boards",
     data: {
-      id
+      boardId
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -149,8 +178,8 @@ export const deleteBoard = async id => {
  *
  * @returns {object} response
  */
-export const checkBoardName = async name => {
-  const token = store.getters["user/getAuthToken"];
+export const checkBoardName = async (name: string) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "POST",
@@ -159,7 +188,7 @@ export const checkBoardName = async name => {
       name
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };

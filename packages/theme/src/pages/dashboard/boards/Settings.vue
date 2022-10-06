@@ -76,123 +76,124 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "BoardSettings",
+}
+</script>
+
+<script setup lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
+
 // modules
+import { router } from "../../../router";
 import {
   getBoardByUrl,
   updateBoard,
   checkBoardName
 } from "../../../modules/boards";
+import { useUserStore } from "../../../store/user";
 
 // components
-import Button from "../../../components/Button";
-import LText from "../../../components/input/LText";
-import ToggleItem from "../../../components/input/ToggleItem";
-import ColorInput from "../../../components/ColorInput";
+import Button from "../../../components/Button.vue";
+import LText from "../../../components/input/LText.vue";
+import ToggleItem from "../../../components/input/ToggleItem.vue";
+import ColorInput from "../../../components/ColorInput.vue";
+import { useHead } from "@vueuse/head";
 
-export default {
-  name: "BoardSettings",
-  components: {
-    Button,
-    LText,
-    ToggleItem,
-    ColorInput
-  },
-  data() {
-    return {
-      title: "",
-      board: {
-        name: "",
-        url: "",
-        color: "",
-        view_voters: false,
-        display: false
-      },
-      urlAvailableError: false,
-      saveButtonLoading: false
-    };
-  },
-  computed: {
-    createBoardPermissionDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("board:update");
-      return !checkPermission;
-    },
-    slimUrl: {
-      get() {
-        return this.board.url;
-      },
-      set(value) {
-        this.board.url = value
-          .trim()
-          .replace(/[^\w]+/gi, "-")
-          .toLowerCase();
-      }
-    }
-  },
-  created() {
-    this.getBoard();
-  },
-  methods: {
-    async validateBoardUrl(event) {
-      const keyCode = event.keyCode;
+const title = ref("")
+const board = reactive({
+	boardId: "",
+	name: "",
+	url: "",
+	color: "",
+	view_voters: false,
+	display: false
+})
+const urlAvailableError = ref(false)
+const saveButtonLoading = ref(false)
 
-      // only accept letters, numbers, & numpad numbers
-      if (
-        !(
-          (keyCode > 65 && keyCode < 90) ||
-					(keyCode > 45 && keyCode < 57) ||
-					(keyCode > 96 && keyCode < 105) ||
-					keyCode === 8
-        )
-      )
-        return false;
+const { permissions } = useUserStore()
 
-      this.urlAvailableError = false;
+const createBoardPermissionDisabled = computed(() => {
+	const checkPermission = permissions.includes("board:update");
+	return !checkPermission;
+});
 
-      try {
-        const response = await checkBoardName(this.board.url);
-        if (!response.data.available) {
-          this.urlAvailableError = true;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async update() {
-      this.saveButtonLoading = true;
-      try {
-        await updateBoard({
-          id: this.board.boardId,
-          color: this.board.color,
-          name: this.board.name,
-          url: this.board.url,
-          view_voters: this.board.view_voters,
-          display: this.board.display
-        });
+const slimUrl = computed({
+	get() {
+		return board.url;
+	},
+	set(value) {
+		board.url = value
+			.trim()
+			.replace(/[^\w]+/gi, "-")
+			.toLowerCase();
+	}
+})
 
-        this.$router.push("/dashboard/boards");
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.saveButtonLoading = false;
-      }
-    },
-    async getBoard() {
-      try {
-        const url = this.$route.params.url;
-        const response = await getBoardByUrl(url);
+async function validateBoardUrl(event: any) {
+	const keyCode = event.keyCode;
 
-        this.board = response.data.board;
-        this.title = response.data.board.name;
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: `${this.title} · Settings · Board · Dashboard`
-    };
+	// only accept letters, numbers, & numpad numbers
+	if (
+		!(
+			(keyCode > 65 && keyCode < 90) ||
+			(keyCode > 45 && keyCode < 57) ||
+			(keyCode > 96 && keyCode < 105) ||
+			keyCode === 8
+		)
+	)
+		return false;
+
+	urlAvailableError.value = false;
+
+	try {
+		const response = await checkBoardName(board.url);
+		if (!response.data.available) {
+			urlAvailableError.value = true;
+		}
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+async function update() {
+	saveButtonLoading.value = true;
+	try {
+		await updateBoard({
+			boardId: board.boardId,
+			color: board.color,
+			name: board.name,
+			url: board.url,
+			view_voters: board.view_voters,
+			display: board.display
+		});
+
+		router.push("/dashboard/boards");
+	} catch (error) {
+		console.error(error);
+	} finally {
+		saveButtonLoading.value = false;
+	}
+}
+
+async function getBoard() {
+	const route = router.currentRoute.value;
+
+  try {
+    const url = route.params.url.toString();
+    const response = await getBoardByUrl(url);
+
+    Object.assign(board, response.data.board)
+    title.value = response.data.board.name;
+  } catch (error) {
+    console.error(error);
   }
-};
+}
+
+onMounted(() => getBoard());
+
+useHead({
+	title: `${title.value} · Settings · Board · Dashboard`
+});
 </script>

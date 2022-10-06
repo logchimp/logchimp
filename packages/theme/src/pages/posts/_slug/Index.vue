@@ -141,6 +141,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
 
 // modules
+import type { ApiSortType } from "../../../types";
 import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings"
 import { useUserStore } from "../../../store/user"
@@ -190,12 +191,12 @@ const submittingComment = ref(false);
 // activity
 const activity = reactive<{
 	loading: boolean
-	sort: string
+	sort: ApiSortType
 	// TODO: Add TS types
 	data: any
 }>({
 	loading: false,
-	sort: "desc",
+	sort: "DESC",
 	data: []
 })
 
@@ -217,7 +218,7 @@ const showPostActivity = computed(() => {
 	return labs.comments;
 })
 
-async function getPostActivity(sort = "desc") {
+async function getPostActivity(sort: ApiSortType = "DESC") {
 	activity.loading = true;
 
 	try {
@@ -242,20 +243,22 @@ watch(() => activity.sort, (value) => {
 async function postBySlug() {
 	postLoading.value = true;
 	const route = router.currentRoute.value
-	const slug = route.params.slug;
 
-	try {
-		const response = await getPostBySlug(slug);
+  if (route.params.slug) {
+    try {
+      const slug = route.params.slug.toString();
+      const response = await getPostBySlug(slug);
 
-		Object.assign(post, response.data.post);
-		getPostActivity();
-	} catch (error: any) {
-		if (error.response.data.code === "POST_NOT_FOUND") {
-			isPostExist.value = false;
-		}
-	} finally {
-		postLoading.value = false;
-	}
+      Object.assign(post, response.data.post);
+      getPostActivity();
+    } catch (error: any) {
+      if (error.response.data.code === "POST_NOT_FOUND") {
+        isPostExist.value = false;
+      }
+    } finally {
+      postLoading.value = false;
+    }
+  }
 }
 
 async function submitComment() {

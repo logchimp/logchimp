@@ -113,7 +113,7 @@ async function getPost() {
 	postLoading.value = true;
 
 	const route = router.currentRoute.value;
-	const slug = route.params.slug;
+	const slug = route.params.slug.toString();
 
 	try {
 		const response = await getPostBySlug(slug);

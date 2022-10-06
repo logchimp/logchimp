@@ -1,8 +1,16 @@
 // packges
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // store
-import store from "../store";
+import { useUserStore } from "../store/user"
+
+interface UpdateRoleArgs {
+	id: string
+	name: string
+	description: string
+	// TODO: Add TS types
+	permissions: any
+}
 
 /**
  *	Get all roles
@@ -10,13 +18,13 @@ import store from "../store";
  * @returns {object} response
  */
 export const getAllRoles = async () => {
-  const token = store.getters["user/getAuthToken"];
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: "/api/v1/roles",
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -28,14 +36,14 @@ export const getAllRoles = async () => {
  *
  * @returns {object} response
  */
-export const getRole = async id => {
-  const token = store.getters["user/getAuthToken"];
+export const getRole = async (id: string) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "GET",
     url: `/api/v1/roles/${id}`,
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -45,14 +53,18 @@ export const getRole = async id => {
  *
  * @returns {object} response
  */
-export const createRole = async () => {
-  const token = store.getters["user/getAuthToken"];
+export const createRole = async (): Promise<AxiosResponse<{
+	role: {
+		id: string
+	}
+}>> => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "POST",
     url: "/api/v1/roles",
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };
@@ -68,8 +80,8 @@ export const createRole = async () => {
  *
  * @returns {object} response
  */
-export const updateRole = async role => {
-  const token = store.getters["user/getAuthToken"];
+export const updateRole = async (role: UpdateRoleArgs) => {
+  const { authToken } = useUserStore()
 
   return await axios({
     method: "PATCH",
@@ -78,7 +90,7 @@ export const updateRole = async role => {
       ...role
     },
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${authToken}`
     }
   });
 };

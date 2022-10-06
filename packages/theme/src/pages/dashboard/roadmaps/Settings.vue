@@ -17,7 +17,7 @@
         type="primary"
         :loading="updateButtonLoading"
         :disabled="updateRoadmapButtonDisabled"
-        @click="update"
+        @click="updateHandler"
       >
         Save
       </Button>
@@ -64,86 +64,85 @@
 </template>
 
 <script lang="ts">
+export default {
+	name: "DashbordRoadmapSettings"
+}
+</script>
+
+<script setup lang="ts">
 // modules
+import { router } from "../../../router";
+import { useUserStore } from "../../../store/user";
 import { getRoadmapByUrl, updateRoadmap } from "../../../modules/roadmaps";
 
 // components
-import Button from "../../../components/Button";
-import LText from "../../../components/input/LText";
-import ToggleItem from "../../../components/input/ToggleItem";
-import ColorInput from "../../../components/ColorInput";
+import Button from "../../../components/Button.vue";
+import LText from "../../../components/input/LText.vue";
+import ToggleItem from "../../../components/input/ToggleItem.vue";
+import ColorInput from "../../../components/ColorInput.vue";
+import { useHead } from "@vueuse/head";
+import { computed, onMounted, reactive, ref } from "vue";
 
-export default {
-  name: "DashbordRoadmapSettings",
-  components: {
-    Button,
-    LText,
-    ToggleItem,
-    ColorInput
-  },
-  data() {
-    return {
-      title: "",
-      roadmap: {
-        name: "",
-        url: "",
-        color: "",
-        display: false
-      },
-      updateButtonLoading: false
-    };
-  },
-  computed: {
-    updateRoadmapButtonDisabled() {
-      const permissions = this.$store.getters["user/getPermissions"];
-      const checkPermission = permissions.includes("roadmap:update");
-      return !checkPermission;
-    },
-    slimUrl() {
-      return this.roadmap.url
-        .replace(/[^\w]+/gi, "-")
-        .trim()
-        .toLowerCase();
-    }
-  },
-  created() {
-    this.getRoadmap();
-  },
-  methods: {
-    async update() {
-      this.updateButtonLoading = true;
-      console.log("update roadmap");
-      try {
-        const response = await updateRoadmap({
-          id: this.roadmap.id,
-          ...this.roadmap
-        });
+const { permissions } = useUserStore()
 
-        if (response.status === 200) {
-          this.$router.push("/dashboard/roadmaps");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.updateButtonLoading = false;
-      }
-    },
-    async getRoadmap() {
-      const url = this.$route.params.url;
-      try {
-        const response = await getRoadmapByUrl(url);
+const title = ref("");
+const roadmap = reactive({
+	id: "",
+	name: "",
+	url: "",
+	color: "",
+	display: false
+})
+const updateButtonLoading = ref(false)
 
-        this.roadmap = response.data.roadmap;
-        this.title = response.data.roadmap.name;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  },
-  metaInfo() {
-    return {
-      title: `${this.title} · Settings · Roadmap · Dashboard`
-    };
+const updateRoadmapButtonDisabled = computed(() => {
+	const checkPermission = permissions.includes("roadmap:update");
+	return !checkPermission;
+})
+
+const slimUrl = computed(() => {
+	return roadmap.url
+		.replace(/[^\w]+/gi, "-")
+		.trim()
+		.toLowerCase();
+})
+
+
+async function updateHandler() {
+	updateButtonLoading.value = true;
+
+	try {
+		const response = await updateRoadmap({
+			...roadmap
+		});
+
+		if (response.status === 200) {
+			router.push("/dashboard/roadmaps");
+		}
+	} catch (err) {
+		console.error(err);
+	} finally {
+		updateButtonLoading.value = false;
+	}
+}
+
+async function getRoadmap() {
+	const route = router.currentRoute.value;
+
+  const url = route.params.url.toString();
+  try {
+    const response = await getRoadmapByUrl(url);
+
+    Object.assign(roadmap, response.data.roadmap)
+    title.value = response.data.roadmap.name;
+  } catch (err) {
+    console.error(err);
   }
-};
+}
+
+onMounted(() => getRoadmap());
+
+useHead({
+	title: `${title.value} · Settings · Roadmap · Dashboard`
+})
 </script>
