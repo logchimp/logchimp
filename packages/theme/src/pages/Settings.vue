@@ -66,6 +66,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+	name: "UserSettings",
+}
+</script>
+
 <script setup lang="ts">
 // packages
 import { onMounted, reactive, ref } from "vue";

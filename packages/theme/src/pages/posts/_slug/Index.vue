@@ -126,6 +126,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+	name: "PostView"
+}
+</script>
+
 <script setup lang="ts">
 // packages
 import { computed, onMounted, reactive, ref, watch } from "vue";
