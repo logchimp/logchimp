@@ -19,48 +19,40 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+
 // modules
 import { getPosts } from "../modules/posts";
 
 // components
 import PostCard from "../components/post/PostCard.vue";
 
-export default {
-  name: "RoadmapView",
-  components: {
-    PostCard
-  },
-  props: {
-    roadmap: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      posts: []
-    };
-  },
-  created() {
-    this.getRoadmapPosts();
-  },
-  methods: {
-    async getRoadmapPosts() {
-      const roadmapId = this.roadmap.id;
-      try {
-        const response = await getPosts({
-					page: 1,
-					limit: 20,
-					sort: "DESC",
-					roadmapId
-				});
+const props = defineProps({
+	roadmap: {
+		type: Object,
+		required: true
+	}
+})
 
-        this.posts = response.data.posts;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  }
-};
+// TODO: Add TS types
+const posts = ref<any>([]);
+
+async function getRoadmapPosts() {
+	const roadmapId = props.roadmap.id;
+	try {
+		const response = await getPosts({
+			page: 1,
+			limit: 20,
+			sort: "DESC",
+			roadmapId
+		});
+
+		posts.value = response.data.posts;
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+onMounted(() => getRoadmapPosts())
 </script>

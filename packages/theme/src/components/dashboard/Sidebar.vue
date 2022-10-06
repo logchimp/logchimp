@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <header>
-      <site-branding :dashboard="true" />
+      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" :dashboard="true" />
     </header>
     <div class="sidebar-list">
       <h6>Manage</h6>
@@ -75,7 +75,7 @@
               Tweet @LogChimp!
             </dropdown-item>
             <dropdown-spacer />
-            <dropdown-item @click="signOut">
+            <dropdown-item @click="logout">
               <template #icon>
                 <logout-icon />
               </template>
@@ -107,7 +107,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // packages
 import {
   LayoutDashboard as DashboardIcon,
@@ -122,6 +122,9 @@ import {
   LogOut as LogoutIcon
 } from "lucide-vue";
 
+import { useSettingStore } from "../../store/settings"
+import { useUserStore } from "../../store/user"
+
 // components
 import SiteBranding from "../SiteBranding.vue";
 import Avatar from "../Avatar.vue";
@@ -133,50 +136,16 @@ import DropdownSpacer from "../dropdown/DropdownSpacer.vue";
 // icons
 import RoadmapIcon from "../../components/icons/Roadmap.vue";
 
-export default {
-  name: "DashboardSidebar",
-  components: {
-    // components
-    SiteBranding,
-    Avatar,
-    DropdownWrapper,
-    Dropdown,
-    DropdownItem,
-    DropdownSpacer,
+const { get: siteSettings } = useSettingStore()
+const { user, logout } = useUserStore()
 
-    // icons
-    DashboardIcon,
-    BoardIcon,
-    RoadmapIcon,
-    PostIcon,
-    UsersIcon,
-    SettingsIcon,
-    LabIcon,
-    InfoIcon,
-    TwitterIcon,
-    LogoutIcon,
-    ShieldIcon
-  },
-  computed: {
-    getSiteSittings() {
-      return this.$store.getters["settings/get"];
-    },
-    user() {
-      return this.$store.getters["user/getUser"];
-    }
-  },
-  methods: {
-    aboutLogChimp() {
-      window.open("https://logchimp.codecarrot.net/");
-    },
-    tweetLogChimp() {
-      window.open(
-        "https://twitter.com/intent/tweet?text=%40LogChimp+Hi%21+Can+you+help+me+with+&related=LogChimp"
-      );
-    },
-    signOut() {
-      this.$store.dispatch("user/logout");
-    }
-  }
-};
+function aboutLogChimp() {
+	window.open("https://logchimp.codecarrot.net/");
+}
+
+function tweetLogChimp() {
+	window.open(
+		"https://twitter.com/intent/tweet?text=%40LogChimp+Hi%21+Can+you+help+me+with+&related=LogChimp"
+	);
+}
 </script>

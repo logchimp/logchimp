@@ -4,14 +4,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // icons
 import LoaderIcon from "./icons/Loader.vue";
-
-export default {
-  name: "Loader",
-  components: {
-    LoaderIcon
-  }
-};
 </script>

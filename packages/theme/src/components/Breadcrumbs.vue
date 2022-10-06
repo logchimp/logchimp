@@ -23,13 +23,15 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: "Breadcrumbs",
-  props: {
-    items: {
-      type: Array,
-      required: true
-    }
-  }
-};
+interface BreadcrumbItemType {
+	href?: string
+	text: string
+}
+</script>
+
+<script setup lang="ts">
+defineProps<{
+	items: BreadcrumbItemType[]
+	lastItem?: boolean
+}>()
 </script>

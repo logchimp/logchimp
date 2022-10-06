@@ -19,25 +19,26 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: "AvatarStack",
-  props: {
-    avatars: {
-      type: Array,
-      required: true
-    },
-    totalCount: {
-      type: Number,
-      required: true
-    }
-  },
-  computed: {
-    hideMoreStack() {
-      return this.totalCount <= 6;
-    },
-    moreStack() {
-      return this.totalCount - 6;
-    }
-  }
-};
+interface AvatarType {
+	userId: string
+	avatar: string
+	username?: string
+}
+</script>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps<{
+	avatars: AvatarType[]
+	totalCount: number
+}>()
+
+const hideMoreStack = computed(() => {
+	return props.totalCount <= 6;
+});
+
+const moreStack = computed(() => {
+	return props.totalCount - 6;
+})
 </script>
