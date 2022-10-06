@@ -9,6 +9,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+	name: "Roadmaps",
+}
+</script>
+
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";

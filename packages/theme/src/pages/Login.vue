@@ -51,6 +51,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+	name: "Login"
+}
+</script>
+
 <script setup lang="ts">
 // packages
 import { useHead } from "@vueuse/head";

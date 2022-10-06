@@ -22,6 +22,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+	name: "Homepage"
+}
+</script>
+
 <script setup lang="ts">
 // packages
 import { onMounted, ref } from "vue";

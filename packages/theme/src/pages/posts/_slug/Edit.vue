@@ -42,6 +42,12 @@
   </p>
 </template>
 
+<script lang="ts">
+export default {
+	name: "PostEdit"
+}
+</script>
+
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";

@@ -24,6 +24,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+	name: "SetupWelcome"
+}
+</script>
+
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useHead } from "@vueuse/head";
