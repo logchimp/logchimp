@@ -13,6 +13,9 @@ content/logs/*.log
 # Server
 server/public
 
+# Theme
+packages/theme/dist
+
 # local env files
 .env
 .env.local
