@@ -156,6 +156,12 @@ const routes = [
         component: () => import("./pages/dashboard/Users.vue")
       },
       {
+        path: "settings",
+        redirect: () => {
+          return { path: '/dashboard/settings/general' }
+        },
+      },
+      {
         path: "settings/general",
         name: "Dashboard settings",
         component: () => import("./pages/dashboard/settings/General.vue")
