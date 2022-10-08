@@ -129,6 +129,7 @@ importers:
       vue-infinite-loading: github:nvitius/vue-infinite-loading#next
       vue-router: ^4.1.5
       vue-tsc: ^0.40.13
+      vuedraggable: ^4.1.0
     dependencies:
       '@vueuse/components': 9.3.0_vue@3.2.40
       '@vueuse/core': 9.3.0_vue@3.2.40
@@ -141,6 +142,7 @@ importers:
       vue-gtag: 2.0.1_vue@3.2.40
       vue-infinite-loading: github.com/nvitius/vue-infinite-loading/b339d982d6d66e1e91324a5182156682c237ac4d_vue@3.2.40
       vue-router: 4.1.5_vue@3.2.40
+      vuedraggable: 4.1.0_vue@3.2.40
     devDependencies:
       '@vitejs/plugin-vue': 3.1.2_vite@3.1.4+vue@3.2.40
       sass: 1.55.0
@@ -11697,6 +11699,10 @@ packages:
     resolution: {integrity: sha512-YkPGufevysvfwn5rfdlGyrGjt7/CRHwvRPogD/lC+TnvcN29jDpCifKP+rBqf+LRldfXSTh+0CGLcSg0VIxq3A==}
     dev: false
 
+  /sortablejs/1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
+    dev: false
+
   /source-list-map/2.0.1:
     resolution: {integrity: sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==}
 
@@ -13044,6 +13050,15 @@ packages:
     resolution: {integrity: sha512-6/HDXi92GzB+Hcs9fC6PAAozK1RLt1ewPTLjK0anTYguXLAeySDmcnqE8IC0xa7shvSzRjQXq3/+dsZ7ETGF3g==}
     dependencies:
       sortablejs: 1.10.2
+    dev: false
+
+  /vuedraggable/4.1.0_vue@3.2.40:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      sortablejs: 1.14.0
+      vue: 3.2.40
     dev: false
 
   /vuex/3.6.2_vue@2.7.10:
