@@ -8,11 +8,11 @@
           'input-error': error.show
         }"
         :style="{
-          backgroundColor: `#${value}`
+          backgroundColor: `#${modelValue}`
         }"
       />
       <input
-        :value="value"
+        :value="modelValue"
         class="input-field"
         :class="{
           'input-error': error.show
@@ -36,22 +36,22 @@
 
 <script setup lang="ts">
 import { reactive, watch } from 'vue';
+import { formInputBind } from './input/formInputBind';
 
 const props = defineProps({
-	value: {
-		type: String,
-		default: ""
-	}
+	...formInputBind,
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits<{
+	(e: 'update:modelValue', event?: any): void
+}>();
 
 const error = reactive({
 	show: false,
 	message: "The color should be in valid hex format."
 })
 
-watch(() => props.value, (newValue) => {
+watch(() => props.modelValue, (newValue) => {
 	const validColor = /^[0-9A-F]{6}$/i.test(newValue);
 	if (!validColor) error.show = true;
 	else error.show = false;
@@ -62,6 +62,6 @@ function hideError() {
 }
 
 function input(event: any) {
-	emit('input', event.target.value)
+	emit('update:modelValue', event.target.value)
 }
 </script>
