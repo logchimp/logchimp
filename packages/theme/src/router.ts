@@ -174,7 +174,7 @@ const routes = [
       {
         path: "settings/roles/:id/settings",
         name: "Dashbord roles settings",
-        component: () => import("./pages/dashboard/settings/roles/Index.vue")
+        component: () => import("./pages/dashboard/settings/roles/Settings.vue")
       },
       {
         path: "settings/labs",
