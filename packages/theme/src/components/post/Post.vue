@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, withDefaults } from "vue";
 
 import { useTrim } from "../../hooks";
 
@@ -48,20 +48,15 @@ import { useTrim } from "../../hooks";
 import Vote, { VoteEventType } from "./Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
-const props = defineProps({
-	post: {
-		type: Object,
-		required: true,
-		default: () => {}
-	},
-	dashboard: {
-		type: Boolean,
-		default: false
-	},
-	showBoard: {
-		type: Boolean,
-		default: true
-	}
+interface Props {
+  post: any
+  dashboard?: boolean
+  showBoard?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  dashboard: false,
+  showBoard: true,
 })
 
 const postData = ref(props.post);
