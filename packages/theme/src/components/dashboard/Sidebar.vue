@@ -127,7 +127,7 @@ import { useUserStore } from "../../store/user"
 
 // components
 import SiteBranding from "../SiteBranding.vue";
-import Avatar from "../Avatar.vue";
+import Avatar from "../Avatar";
 import DropdownWrapper from "../dropdown/DropdownWrapper.vue";
 import Dropdown from "../dropdown/Dropdown.vue";
 import DropdownItem from "../dropdown/DropdownItem.vue";
