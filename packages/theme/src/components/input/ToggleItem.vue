@@ -4,7 +4,7 @@
       <label data-test="toggle-item-label">{{ label }}</label>
       <toggle
         ref="toggleRefs"
-        :checked="value"
+        v-model="modelValue"
         :disabled="disabled"
         @input="input"
       />
@@ -28,10 +28,6 @@ const props = defineProps({
 		type: String,
 		required: true
 	},
-	value: {
-		type: Boolean,
-		default: false
-	},
 	note: {
 		type: String,
 		default: ""
@@ -39,15 +35,20 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 		default: false
+	},
+	modelValue: {
+		type: Boolean,
+		default: false,
 	}
 })
 
-const emit = defineEmits(['input'])
+const emit = defineEmits<{
+	(e: 'update:modelValue', event?: any): void
+}>()
 
 // TODO: Add TS types
 function input(event: any) {
-	if (props.disabled) return;
-	// props.check = event;
-	emit("input", event);
+	// if (props.disabled) return;
+	emit("update:modelValue", event.target.checked);
 }
 </script>

@@ -3,15 +3,15 @@
     class="toggle"
     data-test="toggle"
     :style="{
-      backgroundColor: checked ? `var(--brand-color)` : `#999`,
-      justifyContent: checked ? `flex-end` : ''
+      backgroundColor: modelValue ? `var(--brand-color)` : `#999`,
+      justifyContent: modelValue ? `flex-end` : ''
     }"
   >
     <div class="toggle-slider" />
     <input
       type="checkbox"
       data-test="toggle-checkbox"
-      :checked="checked"
+      :checked="modelValue"
       :disabled="disabled"
       @input="click"
     >
@@ -27,14 +27,20 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 		default: false
+	},
+	modelValue: {
+		type: Boolean,
+		default: false,
 	}
 })
 
-const emit = defineEmits(['input'])
+const emit = defineEmits<{
+	(e: 'update:modelValue', event?: any): void
+}>()
 
 // TODO: Add TS types
 function click(value: any) {
-	if (props.disabled) return;
-	emit("input", value.target.checked);
+	// if (props.disabled) return;
+	emit("update:modelValue", value.target.checked);
 }
 </script>
