@@ -148,7 +148,7 @@ const routes = [
       {
         path: "posts/:slug",
         name: "Dashboard posts settings",
-        components: () => import("./pages/dashboard/posts/_slug/Index.vue")
+        component: () => import("./pages/dashboard/posts/_slug/Index.vue")
       },
       {
         path: "users",
