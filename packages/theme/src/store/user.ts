@@ -1,6 +1,8 @@
 import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
+
 import { router } from "../router";
+import { PermissionType } from "../modules/users";
 
 export const useUserStore = defineStore('user', () => {
 	const authToken = ref<string>("");
@@ -30,8 +32,8 @@ export const useUserStore = defineStore('user', () => {
 		}));
 	}
 
-	function setPermissions(payload: any) {
-    permissions.value = payload.permissions;
+	function setPermissions(payload: PermissionType) {
+    permissions.value = payload;
   }
 
 	function login(payload: any) {

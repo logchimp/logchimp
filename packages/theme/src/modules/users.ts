@@ -1,5 +1,5 @@
 // packges
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // store
 import { useUserStore } from "../store/user"
@@ -15,6 +15,12 @@ export interface UserType {
   name: string
   username: string
   avatar: string
+}
+
+export type PermissionType = string[]
+
+interface GetPermissions {
+  permissions: PermissionType
 }
 
 /**
@@ -62,7 +68,7 @@ export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
 /**
  * Get authenticated user permissions
  */
-export const getPermissions = async () => {
+export const getPermissions = async (): Promise<AxiosResponse<GetPermissions>> => {
 	const { authToken } = useUserStore()
 
   return await axios({
