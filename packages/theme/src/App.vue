@@ -72,7 +72,7 @@ onMounted(async () => {
 	if (user) {
 		setUser(JSON.parse(user));
 		const permissions = await getPermissions();
-		setPermissions(permissions.data);
+		setPermissions(permissions.data.permissions);
 	}
 })
 
