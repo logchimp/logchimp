@@ -21,7 +21,7 @@
 	},
 	"devDependencies": {
 		"@babel/eslint-parser": "7.19.1",
-		"eslint": "8.23.0",
+		"eslint": "8.25.0",
 		"eslint-config-prettier": "8.5.0",
 		"eslint-plugin-jest": "26.9.0",
 		"eslint-plugin-prettier": "4.2.1",
