@@ -1,4 +1,4 @@
-import { createTestingPinia } from "@pinia/testing";
+import { createPinia } from "pinia";
 import { shallowMount } from "@vue/test-utils";
 
 import RoadmapView from "./RoadmapView.vue";
@@ -7,7 +7,7 @@ describe("roadmap view", () => {
   const wrapper = shallowMount(RoadmapView, {
     global: {
       plugins: [
-        createTestingPinia(),
+        createPinia(),
       ],
     },
     props: {
