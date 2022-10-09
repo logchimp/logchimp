@@ -1,9 +1,10 @@
-import BoardSuggestion from "../../src/components/board/BoardSuggestion";
 import { mount } from "@vue/test-utils";
+
+import BoardSuggestion from "./BoardSuggestion.vue";
 
 describe("board badge", () => {
   const wrapper = mount(BoardSuggestion, {
-    propsData: {
+    props: {
       board: {
         name: "Feature requests",
         color: "abcabc",

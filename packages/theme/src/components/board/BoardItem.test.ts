@@ -1,9 +1,10 @@
-import BoardItem from "../../src/components/board/BoardItem.vue";
 import { mount, RouterLinkStub } from "@vue/test-utils";
+
+import BoardItem from "./BoardItem.vue";
 
 describe("board item", () => {
   const wrapper = mount(BoardItem, {
-    propsData: {
+    props: {
       name: "Feature requests",
       color: "abcabc",
       url: "feature-requests",
@@ -18,8 +19,7 @@ describe("board item", () => {
     expect(
       wrapper
         .find("[data-test=board-item]")
-        .findComponent(RouterLinkStub)
-        .props().to
+        .attributes('to')
     ).toBe("/boards/feature-requests");
   });
 

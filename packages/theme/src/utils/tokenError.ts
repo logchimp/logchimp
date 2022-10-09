@@ -1,10 +1,10 @@
 import { useUserStore } from "../store/user"
 import { router } from "../router"
 
-const { logout } = useUserStore()
-
 // TODO: Add TS types
 const tokenError = (error: any) => {
+  const { logout } = useUserStore()
+
   logout()
 
   if (error.response.data.code === "USER_NOT_FOUND") {
