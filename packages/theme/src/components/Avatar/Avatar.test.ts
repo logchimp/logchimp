@@ -1,11 +1,12 @@
-import Avatar from ".";
 import { mount } from "@vue/test-utils";
+
+import { Avatar } from ".";
 
 describe("avatar", () => {
   describe("name", () => {
     it("check initials 'W'", () => {
       const wrapper = mount(Avatar, {
-        propsData: {
+        props: {
           name: "Watson holmes"
         }
       });
@@ -15,7 +16,7 @@ describe("avatar", () => {
 
     it("empty name", () => {
       const wrapper = mount(Avatar, {
-        propsData: {
+        props: {
           name: ""
         }
       });
@@ -27,7 +28,7 @@ describe("avatar", () => {
   describe("image", () => {
     it("render image", () => {
       const wrapper = mount(Avatar, {
-        propsData: {
+        props: {
           name: "Watson",
           src: "https://www.gravatar.com/avatar/1"
         }
@@ -38,7 +39,7 @@ describe("avatar", () => {
 
     it("check image url", () => {
       const wrapper = mount(Avatar, {
-        propsData: {
+        props: {
           name: "Watson",
           src: "https://www.gravatar.com/avatar/1"
         }

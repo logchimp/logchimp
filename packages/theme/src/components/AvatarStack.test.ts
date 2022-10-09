@@ -1,9 +1,10 @@
-import AvatarStack from "../../src/components/AvatarStack";
 import { mount } from "@vue/test-utils";
+
+import AvatarStack from "./AvatarStack.vue";
 
 describe("avatar stack", () => {
   const wrapper = mount(AvatarStack, {
-    propsData: {
+    props: {
       avatars: [
         {
           // random UUID

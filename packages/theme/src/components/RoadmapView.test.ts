@@ -1,9 +1,16 @@
-import RoadmapView from "../../src/components/RoadmapView";
+import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
+
+import RoadmapView from "./RoadmapView.vue";
 
 describe("roadmap view", () => {
   const wrapper = shallowMount(RoadmapView, {
-    propsData: {
+    global: {
+      plugins: [
+        createTestingPinia(),
+      ],
+    },
+    props: {
       roadmap: {
         // random UUID
         id: "b474072b-9e8e-41c1-8bd7-a10f52bf8650",

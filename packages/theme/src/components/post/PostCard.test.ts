@@ -1,14 +1,11 @@
-import dayjs from "../../src/plugins/dayjs";
-import { createLocalVue, RouterLinkStub, shallowMount } from "@vue/test-utils";
-import PostCard from "../../src/components/post/PostCard";
+// import dayjs from "dayjs";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 
-const localVue = createLocalVue();
-localVue.use(dayjs);
+import PostCard from "./PostCard.vue";
 
 describe("post card", () => {
   const wrapper = shallowMount(PostCard, {
-    localVue,
-    propsData: {
+    props: {
       post: {
         // random UUID
         postId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
@@ -56,8 +53,7 @@ describe("post card", () => {
     expect(
       wrapper
         .find("[data-test=post-link]")
-        .findComponent(RouterLinkStub)
-        .props().to
+        .attributes('to')
     ).toBe("/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk");
   });
 

@@ -1,9 +1,10 @@
-import Post from "../../src/components/post/Post";
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+
+import Post from "./Post.vue";
 
 describe("post", () => {
   const wrapper = shallowMount(Post, {
-    propsData: {
+    props: {
       post: {
         // random UUID
         postId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
@@ -32,8 +33,7 @@ describe("post", () => {
     expect(
       wrapper
         .find("[data-test=post-link]")
-        .findComponent(RouterLinkStub)
-        .props().to
+        .attributes('to')
     ).toBe("/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk");
   });
 

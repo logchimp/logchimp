@@ -1,5 +1,6 @@
-import LText from "../../src/components/input/LText";
 import { mount } from "@vue/test-utils";
+
+import LText from "./LText.vue";
 
 describe("text input", () => {
   const wrapper = mount(LText);
@@ -26,7 +27,7 @@ describe("text input", () => {
 
   describe("Disable input", () => {
     const wrapper = mount(LText, {
-      propsData: {
+      props: {
         disabled: true
       }
     });
@@ -40,13 +41,13 @@ describe("text input", () => {
     it("Has 'disabled' attribute in input", () => {
       expect(
         wrapper.find("[data-test=input-field]").attributes("disabled")
-      ).toBe("disabled");
+      ).toEqual("");
     });
   });
 
   describe("Error in input and message section", () => {
     const wrapper = mount(LText, {
-      propsData: {
+      props: {
         error: {
           show: true
         }
