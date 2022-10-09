@@ -1,5 +1,6 @@
-import Toggle from "../../src/components/input/Toggle";
 import { mount } from "@vue/test-utils";
+
+import Toggle from "./Toggle.vue";
 
 describe("toggle", () => {
   const wrapper = mount(Toggle);

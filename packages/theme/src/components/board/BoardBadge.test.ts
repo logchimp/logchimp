@@ -1,9 +1,10 @@
-import BoardBadge from "../../src/components/board/BoardBadge";
 import { mount, RouterLinkStub } from "@vue/test-utils";
+
+import BoardBadge from "./BoardBadge.vue";
 
 describe("board badge", () => {
   const wrapper = mount(BoardBadge, {
-    propsData: {
+    props: {
       name: "Feature requests",
       color: "abcabc",
       url: "feature-requests",
@@ -27,11 +28,7 @@ describe("board badge", () => {
   });
 
   it("link to '/feature-requests' board", () => {
-    expect(
-      wrapper
-        .find("[data-test=board-badge]")
-        .findComponent(RouterLinkStub)
-        .props().to
-    ).toBe("/boards/feature-requests");
+    const component = wrapper.getComponent(BoardBadge);
+    expect(component.find("[data-test=board-badge]").attributes('to')).toBe('/boards/feature-requests');
   });
 });

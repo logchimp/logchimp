@@ -4,11 +4,12 @@
     <div class="color-input">
       <div
         class="color-preview"
+        data-test="color-preview"
         :class="{
           'input-error': error.show
         }"
         :style="{
-          backgroundColor: `#${modelValue}`
+          backgroundColor: `#${modelValue ? modelValue : 'fff'}`
         }"
       />
       <input

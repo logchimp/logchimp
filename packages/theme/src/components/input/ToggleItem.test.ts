@@ -1,15 +1,16 @@
-import ToggleItem from "../../src/components/input/ToggleItem";
 import { shallowMount } from "@vue/test-utils";
+
+import ToggleItem from "./ToggleItem.vue";
 
 describe("toggle item", () => {
   const wrapper = shallowMount(ToggleItem, {
-    propsData: {
+    props: {
       label: "ToggleItem Label"
     }
   });
 
   it("has label", () => {
-    expect(wrapper.find("[data-test=toggle-item-label").text()).toBe(
+    expect(wrapper.find("[data-test=toggle-item-label]").text()).toBe(
       "ToggleItem Label"
     );
   });
