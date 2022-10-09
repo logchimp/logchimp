@@ -44,11 +44,11 @@ describe("avatar stack", () => {
   it("render first avatar from avatars props", () => {
     const images = wrapper.findAll("[data-test=avatar-stack-image]");
 
-    expect(images.at(0).attributes("src")).toBe(
+    expect(images.at(0)?.attributes("src")).toBe(
       "https://www.gravatar.com/avatar/1"
     );
 
-    expect(images.at(0).attributes("alt")).toBe("peg-legge");
+    expect(images.at(0)?.attributes("alt")).toBe("peg-legge");
   });
 
   describe("avatar stack more", () => {
