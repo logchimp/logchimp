@@ -129,7 +129,7 @@ async function login() {
 		setUser(response.data.user)
 
 		const permissions = await getPermissions();
-		setPermissions(permissions.data);
+		setPermissions(permissions.data.permissions);
 
 		const route = router.currentRoute.value
 		if (route.query.redirect) {

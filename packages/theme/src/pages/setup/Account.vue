@@ -180,7 +180,7 @@ async function createAccount() {
 		login(response.data.user)
 
 		const permissions = await getPermissions();
-		setPermissions(permissions.data);
+		setPermissions(permissions.data.permissions);
 
 		router.push("/setup/create-board");
 	} catch (error: any) {
