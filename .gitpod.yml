@@ -9,6 +9,7 @@ tasks:
   - name: Server
     openMode: tab-after
     command: |
+      gp sync-await setup
       NODE_ENV="development" pnpm dev
   - name: Server (logs)
     openMode: tab-after
@@ -22,6 +23,7 @@ tasks:
   - name: Client
     openMode: tab-after
     command: |
+      gp sync-await setup
       cd ./packages/theme
 
       # export 'APP_SERVER_URL' ENV to file
