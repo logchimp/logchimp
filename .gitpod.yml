@@ -5,6 +5,10 @@ tasks:
   - name: "Setup workspace"
     init: |
       bash ./scripts/gitpod-init.sh
+    command: |
+      # Install packages
+      pnpm Install
+
       gp sync-done setup
   - name: Server
     openMode: tab-after
