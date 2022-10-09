@@ -40,7 +40,7 @@ describe("create post", () => {
   })
 
   it("Disable create post button by removing 'post:create' permission", () => {
-    wrapper.vm.userStore.setPermissions([])
+    userStore.setPermissions([])
     console.log(wrapper.find('[data-test="create-post-button"]').html())
     expect(wrapper.find('[data-test="create-post-button"]').classes('button-primary-disabled')).toBe(true)
   });
