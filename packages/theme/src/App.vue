@@ -78,6 +78,9 @@ onMounted(async () => {
 
 useHead({
 	titleTemplate: `%s · ${siteSettings.title}`,
+  htmlAttrs: {
+    lang: "en",
+  },
 	meta: [
 		{
 			name: "generator",
@@ -112,7 +115,16 @@ useHead({
 		{
 			name: "og:description",
 			content: `${siteSettings.description}. Powered By LogChimp.`
-		}
+		},
+
+    {
+      name: "theme-color",
+      content: siteSettings.accentColor
+    },
+    {
+      name: "msapplication-TileColor",
+      content: siteSettings.accentColor
+    }
 	]
 })
 </script>
