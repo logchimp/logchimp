@@ -1,16 +1,22 @@
-.loader-container
-	display: flex
-	justify-content: center
-	margin-bottom: 1rem
-	width: 100%
+<template>
+	<div class="loader">
+		<loader-icon />
+	</div>
+</template>
 
+<script setup lang="ts">
+// icons
+import LoaderIcon from "../icons/Loader.vue";
+</script>
+
+<style lang='sass'>
 .loader
 	display: flex
 
 	svg
 		width: 1.5rem
 		height: 1.5rem
-		stroke: $gray-80
+		stroke: var(--color-gray-80)
 		animation-name: spinner
 		animation-duration: 1.1s
 		animation-direction: normal
@@ -23,3 +29,4 @@
 
 	100%
 		transform: rotate(360deg)
+</style>
