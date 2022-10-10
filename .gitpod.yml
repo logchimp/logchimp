@@ -59,3 +59,4 @@ vscode:
     - Vue.volar
     - editorconfig.editorconfig
     - ZixuanChen.vitest-explorer
+    - syler.sass-indented
