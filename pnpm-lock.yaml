@@ -113,6 +113,7 @@ importers:
 
   packages/theme:
     specifiers:
+      '@types/uuid': ^8.3.4
       '@vitejs/plugin-vue': 3.1.2
       '@vue/test-utils': 2.1.0
       '@vueuse/components': 9.3.0
@@ -124,6 +125,7 @@ importers:
       pinia: 2.0.23
       sass: 1.55.0
       typescript: 4.8.4
+      uuid: ^9.0.0
       vite: 3.1.6
       vitest: 0.23.4
       vue: 3.2.40
@@ -140,12 +142,14 @@ importers:
       dayjs: 1.11.4
       lucide-vue: /lucide-vue-next/0.91.0_vue@3.2.40
       pinia: 2.0.23_bfjwoga25wxjazzogo7o372nwq
+      uuid: 9.0.0
       vue: 3.2.40
       vue-gtag: 2.0.1_vue@3.2.40
       vue-infinite-loading: github.com/nvitius/vue-infinite-loading/b339d982d6d66e1e91324a5182156682c237ac4d_vue@3.2.40
       vue-router: 4.1.5_vue@3.2.40
       vuedraggable: 4.1.0_vue@3.2.40
     devDependencies:
+      '@types/uuid': 8.3.4
       '@vitejs/plugin-vue': 3.1.2_vite@3.1.6+vue@3.2.40
       '@vue/test-utils': 2.1.0_vue@3.2.40
       sass: 1.55.0
@@ -2490,6 +2494,10 @@ packages:
     resolution: {integrity: sha512-3HO6rm0y+/cqvOyA8xcYLweF0TKXlAxmQASjbOi49Co51A1N4nR4bEwBgRoD9kNM+rqFGArjKr654SLp2CoGmQ==}
     dependencies:
       source-map: 0.6.1
+
+  /@types/uuid/8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
+    dev: true
 
   /@types/web-bluetooth/0.0.15:
     resolution: {integrity: sha512-w7hEHXnPMEZ+4nGKl/KDRVpxkwYxYExuHOYXyzIzCDzEZ9ZCGMAewulr9IqJu2LR4N37fcnb1XVeuZ09qgOxhA==}
@@ -12839,6 +12847,11 @@ packages:
 
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
     dev: false
 
