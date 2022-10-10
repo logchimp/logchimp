@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      '--brand-color': `#${siteSettings.accentColor}`
+      '--color-brand-color': `#${siteSettings.accentColor}`
     }"
   >
     <div class="alerts">
