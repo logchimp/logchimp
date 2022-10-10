@@ -1,45 +1,48 @@
 <template>
-	<a :href="link" :class="$style.branding">
+	<router-link :to="link" :class="$style.branding">
 		<div :class="$style.placeholder">
-			<img :class="$style.image" :src="settings.logo" :alt="settings.title" />
+			<img :class="$style.image"
+				:src="logo"
+				:alt="title"
+			>
 		</div>
 		<h5
-			v-if="settings.title"
+			v-if="title"
 			:class="{
 				[$style.name]: true,
 				[$style['name-black']]: textColor === 'black',
 				[$style['name-white']]: textColor === 'white'
 			}"
 		>
-			{{ settings.title }}
+			{{ title }}
 		</h5>
-	</a>
+	</router-link>
 </template>
 
-<script>
-export default {
-	name: "SiteBranding",
-	props: {
-		settings: {
-			type: Object,
-			required: true
-		},
-		dashboard: {
-			type: Boolean,
-			default: false
-		},
-		textColor: {
-			type: String,
-			default: "black",
-			validator: value => ['white', 'black'].includes(value)
-		}
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps({
+	title: {
+		type: String,
+		required: true,
 	},
-	computed: {
-		link() {
-			return this.dashboard ? "/dashboard" : "/";
-		}
+	logo: {
+		type: String,
+		required: true,
+	},
+	dashboard: {
+		type: Boolean,
+		default: false
+	},
+	textColor: {
+		type: String,
+		default: "black",
+		validator: (value: 'white' | 'black') => ['white', 'black'].includes(value)
 	}
-};
+})
+
+const link = computed(() =>  props.dashboard ? "/dashboard" : "/")
 </script>
 
 <style lang='sass' module>
