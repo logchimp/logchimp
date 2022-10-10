@@ -2,9 +2,7 @@
   <div>
     <Header />
     <div class="container container-view">
-      <router-view v-slot="{ Component }">
-				<component :is="Component" />
-			</router-view>
+      <router-view />
 
 			<power-by v-if="siteSettings.isPoweredBy" />
     </div>

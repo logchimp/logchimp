@@ -9,7 +9,7 @@ import { checkUserDashboardAccess } from "./modules/users";
 const routes = [
   {
     path: "/",
-    component: () => import("./layout/HeaderFooter.vue"),
+    component: () => import("./layout/Viewer.vue"),
     children: [
       {
         path: "",
