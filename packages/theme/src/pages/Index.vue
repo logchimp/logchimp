@@ -2,7 +2,7 @@
   <div class="homepage">
     <main class="homepage-posts">
 			<div v-infinite-scroll="getBoardPosts">
-				<post
+				<post-item
 					v-for="post in posts"
 					:key="post.postId"
 					:post="post"
@@ -12,7 +12,9 @@
         </div>
         <div slot="no-more" />
         <div slot="no-results" />
-        <div slot="error" /> -->
+				<client-error slot="error">
+					<p>Something went wrong!</p>
+				</client-error> -->
       </div>
     </main>
     <aside class="homepage-sidebar">
@@ -41,10 +43,11 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // components
-import Post from "../components/post/Post.vue";
-// import Loader from "../components/Loader.vue";
-import SiteSetupCard from "../components/SiteSetupCard.vue";
-import LoginCard from "../components/LoginCard.vue";
+import PostItem from "../components/post/PostItem.vue";
+// import ClientError from "../components/ui/ClientError.vue";
+// import Loader from "../components/ui/Loader.vue";
+import SiteSetupCard from "../components/site/SiteSetupCard.vue";
+import LoginCard from "../components/auth/LoginCard.vue";
 
 const { get: siteSettings } = useSettingStore()
 const { getUserId } = useUserStore()
@@ -98,3 +101,25 @@ useHead({
 	]
 })
 </script>
+
+<style lang='sass'>
+.homepage
+	display: flex
+	margin-bottom: 4rem
+
+@media (max-width: 990px)
+	.homepage
+		flex-direction: column-reverse
+
+	.homepage-sidebar
+		margin-bottom: 1.5rem
+
+@media (min-width: 992px)
+	.homepage-posts
+		flex: 2
+		margin-right: 2rem
+
+	.homepage-sidebar
+		flex: 1
+		margin-left: 2rem
+</style>
