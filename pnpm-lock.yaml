@@ -38,7 +38,7 @@ importers:
       babel-plugin-transform-require-context: 0.1.1
       dayjs: 1.11.4
       lucide-vue: ^0.88.0
-      node-sass: 7.0.1
+      node-sass: 7.0.3
       nuxt: ^2.15.8
       sass: 1.54.8
       sass-loader: 10.3.1
@@ -58,14 +58,14 @@ importers:
       vuex: 3.6.2_vue@2.7.10
     devDependencies:
       '@babel/preset-env': 7.19.4_@babel+core@7.19.3
-      '@nuxt/types': 2.15.8_6vbbfrstapu6gv6iisw225kcce
+      '@nuxt/types': 2.15.8_crxsri4owpiit4rybdkuaue5cu
       '@vue/test-utils': 1.3.0_42puyn3dcxirnpdjnosl7pbb6a
       babel-core: 7.0.0-bridge.0_@babel+core@7.19.3
       babel-plugin-transform-require-context: 0.1.1
       dayjs: 1.11.4
-      node-sass: 7.0.1
+      node-sass: 7.0.3
       sass: 1.54.8
-      sass-loader: 10.3.1_6vbbfrstapu6gv6iisw225kcce
+      sass-loader: 10.3.1_crxsri4owpiit4rybdkuaue5cu
       vue-jest: 3.0.7_i3g5ct7fh5wtolwqklzapd5wym
 
   packages/server:
@@ -1963,7 +1963,7 @@ packages:
       - encoding
     dev: false
 
-  /@nuxt/types/2.15.8_6vbbfrstapu6gv6iisw225kcce:
+  /@nuxt/types/2.15.8_crxsri4owpiit4rybdkuaue5cu:
     resolution: {integrity: sha512-zBAG5Fy+SIaZIerOVF1vxy1zz16ZK07QSbsuQAjdtEFlvr+vKK+0AqCv8r8DBY5IVqdMIaw5FgNUz5py0xWdPg==}
     dependencies:
       '@types/autoprefixer': 9.7.2
@@ -1984,7 +1984,7 @@ packages:
       '@types/webpack-bundle-analyzer': 3.9.3
       '@types/webpack-dev-middleware': 4.1.2
       '@types/webpack-hot-middleware': 2.25.4
-      sass-loader: 10.1.1_6vbbfrstapu6gv6iisw225kcce
+      sass-loader: 10.1.1_crxsri4owpiit4rybdkuaue5cu
     transitivePeerDependencies:
       - fibers
       - node-sass
@@ -6728,7 +6728,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -9248,8 +9248,8 @@ packages:
       vary: 1.1.2
     dev: false
 
-  /node-sass/7.0.1:
-    resolution: {integrity: sha512-uMy+Xt29NlqKCFdFRZyXKOTqGt+QaKHexv9STj2WeLottnlqZEEWx6Bj0MXNthmFRRdM/YwyNo/8Tr46TOM0jQ==}
+  /node-sass/7.0.3:
+    resolution: {integrity: sha512-8MIlsY/4dXUkJDYht9pIWBhMil3uHmE8b/AdJPjmFn1nBx9X9BASzfzmsCy0uCCb8eqI3SYYzVPDswWqSx7gjw==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
@@ -9266,7 +9266,7 @@ packages:
       node-gyp: 8.4.1
       npmlog: 5.0.1
       request: 2.88.2
-      sass-graph: 4.0.0
+      sass-graph: 4.0.1
       stdout-stream: 1.4.1
       true-case-path: 1.0.3
     transitivePeerDependencies:
@@ -11369,18 +11369,18 @@ packages:
   /safer-buffer/2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /sass-graph/4.0.0:
-    resolution: {integrity: sha512-WSO/MfXqKH7/TS8RdkCX3lVkPFQzCgbqdGsmSKq6tlPU+GpGEsa/5aW18JqItnqh+lPtcjifqdZ/VmiILkKckQ==}
+  /sass-graph/4.0.1:
+    resolution: {integrity: sha512-5YCfmGBmxoIRYHnKK2AKzrAkCoQ8ozO+iumT8K4tXJXRVCPf+7s1/9KxTSW3Rbvf+7Y7b4FR3mWyLnQr3PHocA==}
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
       glob: 7.2.3
       lodash: 4.17.21
-      scss-tokenizer: 0.3.0
+      scss-tokenizer: 0.4.3
       yargs: 17.6.0
     dev: true
 
-  /sass-loader/10.1.1_6vbbfrstapu6gv6iisw225kcce:
+  /sass-loader/10.1.1_crxsri4owpiit4rybdkuaue5cu:
     resolution: {integrity: sha512-W6gVDXAd5hR/WHsPicvZdjAWHBcEJ44UahgxcIE196fW2ong0ZHMPO1kZuI5q0VlvMQZh32gpv69PLWQm70qrw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -11399,14 +11399,14 @@ packages:
       klona: 2.0.5
       loader-utils: 2.0.2
       neo-async: 2.6.2
-      node-sass: 7.0.1
+      node-sass: 7.0.3
       sass: 1.54.8
       schema-utils: 3.1.1
       semver: 7.3.7
       webpack: 4.46.0
     dev: true
 
-  /sass-loader/10.3.1_6vbbfrstapu6gv6iisw225kcce:
+  /sass-loader/10.3.1_crxsri4owpiit4rybdkuaue5cu:
     resolution: {integrity: sha512-y2aBdtYkbqorVavkC3fcJIUDGIegzDWPn3/LAFhsf3G+MzPKTJx37sROf5pXtUeggSVbNbmfj8TgRaSLMelXRA==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -11425,7 +11425,7 @@ packages:
       klona: 2.0.5
       loader-utils: 2.0.2
       neo-async: 2.6.2
-      node-sass: 7.0.1
+      node-sass: 7.0.3
       sass: 1.54.8
       schema-utils: 3.1.1
       semver: 7.3.7
@@ -11488,8 +11488,8 @@ packages:
       ajv: 6.12.6
       ajv-keywords: 3.5.2_ajv@6.12.6
 
-  /scss-tokenizer/0.3.0:
-    resolution: {integrity: sha512-14Zl9GcbBvOT9057ZKjpz5yPOyUWG2ojd9D5io28wHRYsOrs7U95Q+KNL87+32p8rc+LvDpbu/i9ZYjM9Q+FsQ==}
+  /scss-tokenizer/0.4.3:
+    resolution: {integrity: sha512-raKLgf1LI5QMQnG+RxHz6oK0sL3x3I4FN2UDLqgLOGO8hodECNnNh5BXn7fAyBxrA8zVzdQizQ6XjNJQ+uBwMw==}
     dependencies:
       js-base64: 2.6.4
       source-map: 0.7.4
