@@ -45,7 +45,7 @@ import { computed, ref, withDefaults } from "vue";
 import { useTrim } from "../../hooks";
 
 // components
-import Vote, { VoteEventType } from "./Vote.vue";
+import Vote, { VoteEventType } from "../vote/Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
 interface Props {
@@ -68,3 +68,35 @@ function updateVoters(voters: VoteEventType) {
 	postData.value.voters.viewerVote = voters.viewerVote;
 }
 </script>
+
+<style lang='sass'>
+.post
+	display: flex
+	align-items: flex-start
+	margin-bottom: 1.25rem
+
+	&:last-child
+		margin-bottom: 0
+
+.post-content-link
+	text-decoration: none
+
+.post-content-title
+	color: var(--color-text-black)
+	margin-bottom: 0
+
+.post-roadmap
+	text-transform: uppercase
+	font-weight: 500
+	font-size: 0.875rem
+	margin-top: 0.25rem
+
+.post-content-description
+	margin-top: 0.5rem
+	color: var(--color-gray-40)
+	margin-bottom: 0.625rem
+
+.post-date
+	color: var(--color-gray-70)
+	font-size: 0.875rem
+</style>

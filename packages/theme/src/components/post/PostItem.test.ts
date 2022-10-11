@@ -1,9 +1,9 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 
-import Post from "./Post.vue";
+import PostItem from "./PostItem.vue";
 
 describe("post", () => {
-  const wrapper = shallowMount(Post, {
+  const wrapper = shallowMount(PostItem, {
     props: {
       post: {
         // random UUID
