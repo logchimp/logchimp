@@ -16,11 +16,11 @@ import { vOnClickOutside } from '@vueuse/components'
 
 const active = ref<boolean>(false);
 const props = defineProps({
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  });
+	disabled: {
+		type: Boolean,
+		default: false
+	}
+});
 
 function click() {
 	if (props.disabled) return;
