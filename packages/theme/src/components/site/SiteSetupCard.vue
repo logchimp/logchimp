@@ -24,9 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { router } from "../router";
+import { router } from "../../router";
+
 // components
-import Button from "./Button.vue";
+import Button from "../ui/Button.vue";
 
 function setupSite() {
 	router.push("/setup/welcome");
