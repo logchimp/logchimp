@@ -66,3 +66,32 @@ function input(event: any) {
 	emit('update:modelValue', event.target.value)
 }
 </script>
+
+<style lang='sass'>
+.color-input
+	display: flex
+	position: relative
+
+	&::after
+		content: "#"
+		position: absolute
+		top: 0.75rem
+		left: 3.2rem
+		color: var(--color-gray-70)
+		font-family: inherit
+		font-size: 0.875rem
+
+	.input-field
+		border-left: 0
+		border-top-left-radius: 0
+		border-bottom-left-radius: 0
+		padding-left: 1.626rem
+
+.color-preview
+	width: 2.5rem
+	height: 2.5rem
+	border: 1px solid var(--color-gray-90)
+	border-radius: var(--border-radius-default)
+	border-top-right-radius: 0
+	border-bottom-right-radius: 0
+</style>
