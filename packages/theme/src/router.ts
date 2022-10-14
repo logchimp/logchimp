@@ -81,7 +81,7 @@ const routes = [
       {
         path: "create-board",
         name: "Setup create board",
-        component: () => import("./pages/setup/Board.vue")
+        component: () => import("./pages/setup/CreateBoard.vue")
       }
     ]
   },

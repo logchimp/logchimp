@@ -51,7 +51,7 @@ import { useUserStore } from "../../store/user";
 import { createBoard } from "../../modules/boards";
 
 // components
-import { FormFieldErrorType } from "../../components/input/formBaseProps";
+import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import LText from "../../components/input/LText.vue";
 import Button from "../../components/Button.vue";
 
@@ -98,11 +98,11 @@ async function create() {
 }
 
 useHead({
-	title: "Create board · Onboarding",
+	title: "Create board • Onboarding",
 	meta: [
 		{
 			name: "og:title",
-			content: `Create board · Onboarding · ${siteSettings.title}`
+			content: `Create board • Onboarding • ${siteSettings.title}`
 		}
 	]
 })
