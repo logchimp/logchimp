@@ -42,7 +42,7 @@
         Forget password?
       </router-link>
       <div v-if="siteSettings.allowSignup">
-        · Don't have an account yet?
+       • Don't have an account yet?
         <router-link to="/join">
           Sign up
         </router-link>
@@ -138,6 +138,8 @@ async function login() {
 			router.push("/");
 		}
 	} catch (error: any) {
+		buttonLoading.value = false;
+
 		if (error.response.data.code === "USER_NOT_FOUND") {
 			emailError.show = true;
 			emailError.message = "User not found";
@@ -147,8 +149,6 @@ async function login() {
 			passwordError.show = true;
 			passwordError.message = "Incorrect password";
 		}
-	} finally {
-		buttonLoading.value = false;
 	}
 }
 
@@ -157,7 +157,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Login · ${siteSettings.title}`
+			content: `Login • ${siteSettings.title}`
 		}
 	]
 })
