@@ -43,3 +43,20 @@ defineProps({
 	}
 })
 </script>
+
+<style lang='sass'>
+.board-badge
+	display: block
+	user-select: none
+
+.post-board
+	display: inline-flex
+	align-items: center
+	padding: 0.25rem 0.625rem
+	background-color: var(--color-gray-95)
+	border-radius: 1rem
+
+.post-board-name
+	margin-left: 0.375rem
+	color: var(--color-gray-50)
+</style>
