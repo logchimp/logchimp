@@ -1,10 +1,10 @@
 <template>
 	<div class="auth-form">
-		<Nuxt />
+		<slot />
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
 	name: "AuthLayout"
 };

@@ -76,7 +76,7 @@ const routes = [
       {
         path: "create-account",
         name: "Setup create account",
-        component: () => import("./pages/setup/Account.vue")
+        component: () => import("./pages/setup/CreateAccount.vue")
       },
       {
         path: "create-board",

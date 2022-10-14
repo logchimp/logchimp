@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-form">
+  <auth-layout>
     <div class="onboarding-header">
       <h2 class="onboarding-heading">
         Create an account
@@ -47,21 +47,17 @@
         @keyup-enter="createAccount"
         @hide-error="hidePasswordError"
       />
-      <div style="display: flex; justify-content: center;">
-        <Button
-          :loading="buttonLoading"
-          type="primary"
-          @click="createAccount"
-        >
+      <div style="display: flex; justify-content: center">
+        <Button :loading="buttonLoading" type="primary" @click="createAccount">
           Create account
         </Button>
       </div>
     </div>
-    <p class="auth-form-other">
+    <!-- <p class="auth-form-other">
       By continuing, you agree to LogChimp's <strong>Terms</strong> and
       <strong>Privacy</strong> policy.
-    </p>
-  </div>
+    </p> -->
+  </auth-layout>
 </template>
 
 <script lang="ts">
@@ -82,10 +78,11 @@ import { useSettingStore } from "../../store/settings"
 import { useUserStore } from "../../store/user"
 
 // components
+import AuthLayout from "../../layout/Auth.vue"
 import { FormFieldErrorType } from "../../components/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
-import LText from "../../components/input/LText.vue";
-import Button from "../../components/Button.vue";
+import LText from "../../components/ui/LText.vue";
+import Button from "../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore()
 const { login, setPermissions } = useUserStore()
@@ -195,12 +192,12 @@ async function createAccount() {
 }
 
 useHead({
-	title: "Account · Onboarding",
-	meta: [
-		{
-			name: "og:title",
-			content: `Account · Onboarding · ${siteSettings.title}`
-		}
-	]
+  title: "Create account • Onboarding",
+  meta: [
+    {
+      name: "og:title",
+      content: `Create account • Onboarding • ${siteSettings.title}`
+    }
+  ]
 })
 </script>
