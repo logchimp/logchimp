@@ -1,39 +1,37 @@
 <template>
   <div v-if="isPostExist">
-    <h4 class="post-edit-heading">
-      Edit post
-    </h4>
-    <div v-if="!postLoading">
-      <l-text
-        v-model="post.title"
-        label="Title"
-        type="text"
-        name="Post title"
-        placeholder="Name of the feature"
-        :error="postFieldError"
-        :disabled="updatePostPermissionDisabled"
-        @keyup-enter="savePost"
-        @hide-error="hideTitleError"
-      />
-      <l-textarea
-        v-model="post.contentMarkdown"
-        label="Description"
-        name="Post description"
-        placeholder="What would you use it for?"
-        :disabled="updatePostPermissionDisabled"
-      />
-      <div style="display: flex; justify-content: flex-start;">
-        <Button
-          type="primary"
-          :loading="postSubmitting"
-          :disabled="updatePostPermissionDisabled"
-          @click="savePost"
-        >
-          Update
-        </Button>
-      </div>
-    </div>
-    <div v-else class="loader-container">
+    <h4 class="post-edit-heading">Edit post</h4>
+		<div v-if="!postLoading">
+			<l-text
+				v-model="post.title"
+				label="Title"
+				type="text"
+				name="Post title"
+				placeholder="Name of the feature"
+				:error="postFieldError"
+				:disabled="updatePostPermissionDisabled"
+				@keyup-enter="savePost"
+				@hide-error="hideTitleError"
+			/>
+			<l-textarea
+				v-model="post.contentMarkdown"
+				label="Description"
+				name="Post description"
+				placeholder="What would you use it for?"
+				:disabled="updatePostPermissionDisabled"
+			/>
+			<div style="display: flex; justify-content: flex-start">
+				<Button
+					type="primary"
+					:loading="postSubmitting"
+					:disabled="updatePostPermissionDisabled"
+					@click="savePost"
+				>
+					Update
+				</Button>
+			</div>
+		</div>
+		<div v-else class="loader-container">
       <loader />
     </div>
   </div>
@@ -59,11 +57,11 @@ import { useUserStore } from "../../../store/user"
 import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
-import { FormFieldErrorType } from "../../../components/input/formBaseProps";
-import Loader from "../../../components/Loader.vue";
-import LText from "../../../components/input/LText.vue";
-import LTextarea from "../../../components/input/LTextarea.vue";
-import Button from "../../../components/Button.vue";
+import { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
+import Loader from "../../../components/ui/Loader.vue";
+import LText from "../../../components/ui/input/LText.vue";
+import LTextarea from "../../../components/ui/input/LTextarea.vue";
+import Button from "../../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore()
 const { permissions, getUserId } = useUserStore()
@@ -167,8 +165,13 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Edit post · ${siteSettings.title}`
+			content: `Edit post • ${siteSettings.title}`
 		}
 	]
 })
 </script>
+
+<style lang='sass'>
+.post-edit-heading
+  margin-bottom: 2rem
+</style>

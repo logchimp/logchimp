@@ -104,6 +104,6 @@ async function getSettings() {
 onMounted(() => getSettings());
 
 useHead({
-	title: "Labs · Settings · Dashboard"
+	title: "Labs • Settings • Dashboard"
 })
 </script>

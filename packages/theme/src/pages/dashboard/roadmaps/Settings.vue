@@ -107,7 +107,6 @@ const slimUrl = computed(() => {
 		.toLowerCase();
 })
 
-
 async function updateHandler() {
 	updateButtonLoading.value = true;
 

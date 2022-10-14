@@ -311,6 +311,6 @@ function selectRoadmap(index: number) {
 onMounted(() => postBySlug())
 
 useHead({
-	title: `${postData.title ? `${postData.title} · `: ''}Post · Dashboard`
+	title: `${postData.title ? `${postData.title} • `: ''}Post • Dashboard`
 })
 </script>

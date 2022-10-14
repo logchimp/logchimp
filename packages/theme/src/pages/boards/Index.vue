@@ -16,7 +16,9 @@
 				</div>
 				<div slot="no-more" />
 				<div slot="no-results" />
-				<div slot="error" /> -->
+				<client-error slot="error">
+					<p>Something went wrong!</p>
+				</client-error> -->
 			</div>
 		</div>
   </div>
@@ -39,8 +41,9 @@ import { getPublicBoards } from "../../modules/boards";
 import { useSettingStore } from "../../store/settings"
 
 // components
+// import ClientError from "../../components/ui/ClientError.vue";
 import BoardItem from "../../components/board/BoardItem.vue";
-// import Loader from "../../components/Loader.vue";
+// import Loader from "../../components/ui/Loader.vue";
 
 const { get: siteSettings } = useSettingStore()
 
@@ -77,8 +80,31 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Boards · ${siteSettings.title}`
+			content: `Boards • ${siteSettings.title}`
 		}
 	]
 })
 </script>
+
+<style lang='sass'>
+.boards-lists
+	display: grid
+	grid-template-columns: 1fr
+	grid-column-gap: 1rem
+	grid-row-gap: 1rem
+	justify-content: space-between
+	margin-bottom: 4rem
+
+@media (min-width: 768px)
+	.boards-lists
+		grid-template-columns: repeat(auto-fill, 48%)
+		grid-row-gap: 1.5rem
+
+@media (min-width: 992px)
+	.boards-lists
+		grid-template-columns: repeat(auto-fill, 30%)
+
+@media (min-width: 1200px)
+	.boards-lists
+		grid-template-columns: repeat(auto-fill, 23%)
+</style>

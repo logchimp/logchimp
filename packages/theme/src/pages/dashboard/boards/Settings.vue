@@ -51,9 +51,7 @@
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">
-        Privacy
-      </h6>
+      <h6 class="form-section-title">Privacy</h6>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item
@@ -83,6 +81,7 @@ export default {
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
 
 // modules
 import { router } from "../../../router";
@@ -98,7 +97,6 @@ import Button from "../../../components/Button.vue";
 import LText from "../../../components/input/LText.vue";
 import ToggleItem from "../../../components/input/ToggleItem.vue";
 import ColorInput from "../../../components/ColorInput.vue";
-import { useHead } from "@vueuse/head";
 
 const title = ref("")
 const board = reactive({
@@ -194,6 +192,6 @@ async function getBoard() {
 onMounted(() => getBoard());
 
 useHead({
-	title: `${title.value} · Settings · Board · Dashboard`
+	title: `${title.value} • Settings • Board • Dashboard`
 });
 </script>

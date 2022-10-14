@@ -4,7 +4,7 @@
     <div class="container container-view">
       <router-view />
 
-			<power-by v-if="siteSettings.isPoweredBy" />
+			<power-by v-if="settingsStore.get.isPoweredBy" />
     </div>
   </div>
 </template>
@@ -16,5 +16,5 @@ import { useSettingStore } from "../store/settings"
 import Header from "../components/Header.vue";
 import PowerBy from "../components/PowerBy.vue";
 
-const { get: siteSettings } = useSettingStore()
+const settingsStore = useSettingStore()
 </script>

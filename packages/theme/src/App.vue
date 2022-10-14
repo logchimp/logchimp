@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      '--color-brand-color': `#${siteSettings.accentColor}`
+      '--color-brand-color': `#${settingsStore.get.accentColor}`
     }"
   >
     <div class="alerts">
@@ -35,9 +35,9 @@ import { getPermissions } from "./modules/users";
 // components
 import Alert from "./components/Alert.vue";
 
-const { get: siteSettings, update: updateSettings } = useSettingStore()
+const settingsStore = useSettingStore()
 const { getAlerts, remove: removeAlert } = useAlertStore()
-const { setUser, setPermissions } = useUserStore()
+const userStore = useUserStore()
 
 const logchimpVersion = computed(() => packageJson.version);
 
@@ -47,7 +47,7 @@ function getSiteSettings() {
 		url: "/api/v1/settings/site"
 	})
 		.then(response => {
-			updateSettings(response.data.settings);
+			settingsStore.update(response.data.settings);
 		})
 		.catch(error => {
 			console.error(error);
@@ -58,10 +58,10 @@ onMounted(async () => {
 	getSiteSettings();
 
 	// set google analytics
-	if (siteSettings.googleAnalyticsId) {
+	if (settingsStore.get.googleAnalyticsId) {
 		setOptions({
 			config: {
-				id: siteSettings.googleAnalyticsId
+				id: settingsStore.get.googleAnalyticsId
 			}
 		});
 
@@ -70,14 +70,14 @@ onMounted(async () => {
 
 	const user = localStorage.getItem("user");
 	if (user) {
-		setUser(JSON.parse(user));
+		userStore.setUser(JSON.parse(user));
 		const permissions = await getPermissions();
-		setPermissions(permissions.data.permissions);
+		userStore.setPermissions(permissions.data.permissions);
 	}
 })
 
 useHead({
-	titleTemplate: `%s · ${siteSettings.title}`,
+	titleTemplate: `%s•${settingsStore.get.title}`,
   htmlAttrs: {
     lang: "en",
   },
@@ -88,7 +88,7 @@ useHead({
 		},
 		{
 			name: "description",
-			content: `${siteSettings.description}. Powered By LogChimp.`
+			content: `${settingsStore.get.description}. Powered By LogChimp.`
 		},
 		{
 			name: "robots",
@@ -104,7 +104,7 @@ useHead({
 		},
 		{
 			name: "copyright",
-			content: siteSettings.title
+			content: settingsStore.get.title
 		},
 
 		// openGraph
@@ -114,16 +114,16 @@ useHead({
 		},
 		{
 			name: "og:description",
-			content: `${siteSettings.description}. Powered By LogChimp.`
+			content: `${settingsStore.get.description}. Powered By LogChimp.`
 		},
 
     {
       name: "theme-color",
-      content: siteSettings.accentColor
+      content: settingsStore.get.accentColor
     },
     {
       name: "msapplication-TileColor",
-      content: siteSettings.accentColor
+      content: settingsStore.get.accentColor
     }
 	]
 })

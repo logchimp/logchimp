@@ -19,7 +19,7 @@
     </main>
     <aside class="homepage-sidebar">
       <site-setup-card v-if="showSiteSetupCard" />
-      <login-card v-if="!getUserId && !showSiteSetupCard" />
+      <login-card v-if="!userStore.getUserId && !showSiteSetupCard" />
     </aside>
   </div>
 </template>
@@ -49,8 +49,8 @@ import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import LoginCard from "../components/auth/LoginCard.vue";
 
-const { get: siteSettings } = useSettingStore()
-const { getUserId } = useUserStore()
+const settingsStore = useSettingStore()
+const userStore = useUserStore()
 
 // TODO: Add TS type
 const posts = ref<any>([]);
@@ -96,7 +96,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Home · ${siteSettings.title}`
+			content: `Home • ${settingsStore.get.title}`
 		}
 	]
 })

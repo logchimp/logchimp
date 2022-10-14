@@ -1,28 +1,28 @@
 <template>
-  <div>
-    <header class="form-header">
-      <div class="breadcrumbs">
-        <h5 class="breadcrum-item">
-          Posts
-        </h5>
-      </div>
-    </header>
+	<div>
+		<header class="form-header">
+			<div class="breadcrumbs">
+				<h5 class="breadcrum-item">Posts</h5>
+			</div>
+		</header>
 
-    <div v-infinite-scroll="getBoardPosts">
-      <post
-        v-for="post in posts"
-        :key="post.postId"
-        :post="post"
-        :dashboard="true"
-      />
+		<div v-infinite-scroll="getBoardPosts">
+			<post-item
+				v-for="post in posts"
+				:key="post.postId"
+				:post="post"
+				:dashboard="true"
+			/>
 			<!-- <div slot="spinner" class="loader-container">
 				<loader />
 			</div>
 			<div slot="no-more" />
 			<div slot="no-results" />
-			<div slot="error" /> -->
-    </div>
-  </div>
+			<client-error slot="error">
+				Something went wrong!
+			</client-error> -->
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -41,8 +41,9 @@ import { vInfiniteScroll } from "@vueuse/components";
 import { getPosts } from "../../../modules/posts";
 
 // components
-import Post from "../../../components/post/Post.vue";
-// import Loader from "../../../components/Loader.vue";
+import PostItem from "../../../components/posts/PostItem.vue";
+import Loader from "../../../components/ui/Loader.vue";
+// import ClientError from "../../../components/ui/ClientError.vue";
 
 const posts = ref<any>([])
 const page = ref(1);
@@ -70,6 +71,6 @@ async function getBoardPosts() {
 onMounted(() => getBoardPosts())
 
 useHead({
-	title: "Posts · Dashboard"
+	title: "Posts • Dashboard"
 })
 </script>
