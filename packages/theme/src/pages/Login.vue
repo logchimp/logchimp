@@ -70,9 +70,9 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // component
-import LText from "../components/input/LText.vue";
-import Button from "../components/Button.vue";
-import SiteBranding from "../components/SiteBranding.vue";
+import LText from "../components/ui/input/LText.vue";
+import Button from "../components/ui/Button.vue";
+import SiteBranding from "../components/site/SiteBranding.vue";
 
 const email = ref<string>("")
 const emailError = reactive({

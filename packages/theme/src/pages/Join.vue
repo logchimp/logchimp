@@ -66,11 +66,11 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // component
-import { FormFieldErrorType } from "../components/input/formBaseProps";
+import { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
-import LText from "../components/input/LText.vue";
-import Button from "../components/Button.vue";
-import SiteBranding from "../components/SiteBranding.vue";
+import LText from "../components/ui/input/LText.vue";
+import Button from "../components/ui/Button.vue";
+import SiteBranding from "../components/site/SiteBranding.vue";
 
 const { get: siteSettings } = useSettingStore()
 const { login, setPermissions } = useUserStore()

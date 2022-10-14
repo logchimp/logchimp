@@ -93,10 +93,10 @@ import {
 import { useUserStore } from "../../../store/user";
 
 // components
-import Button from "../../../components/Button.vue";
-import LText from "../../../components/input/LText.vue";
-import ToggleItem from "../../../components/input/ToggleItem.vue";
-import ColorInput from "../../../components/ColorInput.vue";
+import Button from "../../../components/ui/Button.vue";
+import LText from "../../../components/ui/input/LText.vue";
+import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
+import ColorInput from "../../../components/ui/ColorInput.vue";
 
 const title = ref("")
 const board = reactive({

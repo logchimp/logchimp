@@ -169,10 +169,10 @@ import {useUserStore} from "../../../../store/user"
 import { getRole, updateRole } from "../../../../modules/roles";
 
 // components
-import Button from "../../../../../components/ui/Button.vue";
-import LText from "../../../../../components/ui/LText.vue";
-import LTextarea from "../../../../../components/ui/LTextarea.vue";
-import ToggleItem from "../../../../../components/ui/ToggleItem.vue";
+import Button from "../../../../components/ui/Button.vue";
+import LText from "../../../../components/ui/input/LText.vue";
+import LTextarea from "../../../../components/ui/input/LTextarea.vue";
+import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
 
 const { permissions: userPermissions } = useUserStore()
 

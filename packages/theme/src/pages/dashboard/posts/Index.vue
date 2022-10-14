@@ -41,7 +41,7 @@ import { vInfiniteScroll } from "@vueuse/components";
 import { getPosts } from "../../../modules/posts";
 
 // components
-import PostItem from "../../../components/posts/PostItem.vue";
+import PostItem from "../../../components/post/PostItem.vue";
 import Loader from "../../../components/ui/Loader.vue";
 // import ClientError from "../../../components/ui/ClientError.vue";
 

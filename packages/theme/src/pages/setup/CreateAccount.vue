@@ -80,9 +80,9 @@ import { useUserStore } from "../../store/user"
 // components
 import AuthLayout from "../../layout/Auth.vue"
 import Card from "../../components/ui/Card.vue";
-import { FormFieldErrorType } from "../../components/input/formBaseProps";
+import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
-import LText from "../../components/ui/LText.vue";
+import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore()

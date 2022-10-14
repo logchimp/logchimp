@@ -115,12 +115,12 @@ import { useSettingStore } from "../../store/settings"
 import { useUserStore } from "../../store/user"
 
 // components
-import SiteBranding from "../SiteBranding.vue";
+import SiteBranding from "../site/SiteBranding.vue";
 import AuthUser from "./AuthUser.vue";
-import DropdownWrapper from "../dropdown/DropdownWrapper.vue";
-import Dropdown from "../dropdown/Dropdown.vue";
-import DropdownItem from "../dropdown/DropdownItem.vue";
-import DropdownSpacer from "../dropdown/DropdownSpacer.vue";
+import DropdownWrapper from "../ui/dropdown/DropdownWrapper.vue";
+import Dropdown from "../ui/dropdown/Dropdown.vue";
+import DropdownItem from "../ui/dropdown/DropdownItem.vue";
+import DropdownSpacer from "../ui/dropdown/DropdownSpacer.vue";
 
 // icons
 import RoadmapIcon from "../../components/icons/Roadmap.vue";

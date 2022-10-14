@@ -29,7 +29,7 @@ import { getPosts } from "../../modules/posts";
 
 // components
 // import ClientError from "../ui/ClientError.vue";
-import PostItem from "../posts/PostItem.vue";
+import PostItem from "../post/PostItem.vue";
 // import Loader from "../Loader.vue";
 
 const props = defineProps({

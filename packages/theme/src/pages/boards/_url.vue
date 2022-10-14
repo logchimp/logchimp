@@ -65,9 +65,9 @@ import { getBoardByUrl } from "../../modules/boards";
 import Loader from "../../components/ui/Loader.vue";
 import Tab from "../../components/ui/tab/Tab.vue";
 import TabItem from "../../components/ui/tab/TabItem.vue";
-import LatestPosts from "../../components/posts/LatestPosts.vue";
-import OldestPosts from "../../components/posts/OldestPosts.vue";
-import CreatePost from "../../components/posts/CreatePost.vue";
+import LatestPosts from "../../components/post/LatestPosts.vue";
+import OldestPosts from "../../components/post/OldestPosts.vue";
+import CreatePost from "../../components/post/CreatePost.vue";
 import LoginCard from "../../components/auth/LoginCard.vue";
 
 import { useSettingStore } from "../../store/settings"

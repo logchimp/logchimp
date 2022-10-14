@@ -28,7 +28,7 @@ import { addComment } from "../../modules/posts";
 import tokenError from "../../utils/tokenError";
 
 // components
-import LText from "../ui/LText.vue";
+import LText from "../ui/input/LText.vue";
 import Button from "../ui/Button.vue";
 
 const props = defineProps({

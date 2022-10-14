@@ -52,8 +52,8 @@ import { createBoard } from "../../modules/boards";
 
 // components
 import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
-import LText from "../../components/input/LText.vue";
-import Button from "../../components/Button.vue";
+import LText from "../../components/ui/input/LText.vue";
+import Button from "../../components/ui/Button.vue";
 
 const boardName = reactive({
 	value: "",

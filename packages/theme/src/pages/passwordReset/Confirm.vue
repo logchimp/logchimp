@@ -77,7 +77,7 @@ import { useSettingStore } from "../../store/settings";
 // component
 import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import Loader from "../../components/ui/Loader.vue";
-import LText from "../../components/ui/LText.vue";
+import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 import SiteBranding from "../../components/site/SiteBranding.vue";
 
