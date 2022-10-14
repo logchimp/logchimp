@@ -1,7 +1,7 @@
 <template>
 	<div class="card">
 		<l-text
-			v-model="value"
+			v-model="comment"
 			name="comment"
 			placeholder="Leave a comment"
 			@keyup-enter="submitComment"
@@ -11,7 +11,7 @@
 			<Button
 				type="primary"
 				:loading="loading"
-				:disabled="!value"
+				:disabled="!comment"
 				@click="submitComment"
 			>
 				Submit
@@ -20,76 +20,48 @@
 	</div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref } from "vue"
+
+// modules
+import { addComment } from "../../modules/posts";
+import tokenError from "../../utils/tokenError";
+
 // components
 import LText from "../ui/LText.vue";
 import Button from "../ui/Button.vue";
 
-export default {
-	name: 'AddComment',
-	data() {
-		return {
-			value: "",
-			loading: false,
-		}
-	},
-	props: {
-		postId: {
-			type: String,
-			required: true,
-		}
-	},
-	components: {
-		// components
-		LText,
-		Button,
-	},
-	methods: {
-		async submitComment() {
-			if (!this.value) return;
+const props = defineProps({
+	postId: {
+		type: String,
+		required: true,
+	}
+})
 
-			try {
-				const token = this.$store.getters["user/getAuthToken"];
-				const postId = this.postId;
+const emit = defineEmits(['add-comment'])
 
-				this.loading = true;
+const comment = ref("");
+const loading = ref(false)
 
-				const response = await this.$axios({
-					method: "POST",
-					url: `/api/v1/posts/${postId}/comments`,
-					data: {
-						body: this.value,
-						is_internal: false
-					},
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				});
+async function submitComment() {
+	if (!comment.value) return;
 
-				this.value = "";
-				this.loading = false;
+	try {
+		loading.value = true;
 
-				this.$emit('add-comment', response.data.comment)
-			} catch (error) {
-				this.loading = false;
+		const response = await addComment({
+			post_id: props.postId,
+			body: comment.value,
+			is_internal: false,
+		})
 
-				// Is user not authenticated?
-				if (error.response.data.code === "INVALID_AUTH_HEADER_FORMAT") {
-					this.$router.push({
-						path: '/login',
-						query: {
-							redirect: this.$router.currentRoute.fullPath
-						}
-					})
-				}
+		comment.value = "";
+		loading.value = false;
 
-				console.log(error);
-			}
-		},
+		emit('add-comment', response.data.comment)
+	} catch (error) {
+		tokenError(error)
+		loading.value = false
 	}
 }
 </script>
-
-<style lang='sass'>
-
-</style>

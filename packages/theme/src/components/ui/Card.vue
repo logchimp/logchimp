@@ -16,15 +16,12 @@
 	</div>
 </template>
 
-<script>
-export default {
-	name: "Card",
-	computed: {
-		hasHeaderSlot() {
-			return this.$slots.title || this.$slots.label
-		}
-	}
-}
+<script setup lang="ts">
+import { useSlots, computed } from "vue"
+
+const hasHeaderSlot = computed(() => {
+	return useSlots().title || useSlots().label
+})
 </script>
 
 <style module>
