@@ -237,6 +237,6 @@ async function deleteRoadmapHandler(id: string) {
 onMounted(() => getRoadmaps())
 
 useHead({
-	title: "Roadmaps · Dashboard"
+	title: "Roadmaps • Dashboard"
 })
 </script>

@@ -143,6 +143,6 @@ async function getRoadmap() {
 onMounted(() => getRoadmap());
 
 useHead({
-	title: `${title.value} · Settings · Roadmap · Dashboard`
+	title: `${title.value} • Settings • Roadmap • Dashboard`
 })
 </script>
