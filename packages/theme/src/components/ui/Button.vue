@@ -10,8 +10,8 @@
 			[$style['button-size-small']]: size === 'small',
 			[$style['button-size-medium']]: size === 'medium',
 		}"
-		:[hrefAttrHandler]="href"
-		@[clickAttrHandler]="click"
+		:href="href"
+		@click="click"
 	>
 		<slot />
 		<div v-if="loading" class="button-loader">
@@ -20,58 +20,49 @@
 	</component>
 </template>
 
-<script>
-// icons
-import LoaderIcon from "../icons/Loader";
+<script lang="ts">
+type ButtonSize = 'small' | 'medium'
+</script>
 
-export default {
-	name: "Button",
-	components: {
-		LoaderIcon
+<script setup lang="ts">
+// icons
+import LoaderIcon from "../icons/Loader.vue";
+
+const props = defineProps({
+	href: {
+		type: String,
+		default: null,
 	},
-	computed: {
-		hrefAttrHandler() {
-			return this.href ? 'href' : null
-		},
-		clickAttrHandler() {
-			return this.href ? null : 'click'
-		}
+	type: {
+		type: String,
+		required: true
 	},
-	props: {
-		href: {
-			type: String,
-			default: null,
-		},
-		type: {
-			type: String,
-			required: true
-		},
-		size: {
-			type: String,
-			default: 'medium',
-			validator: value => ['small', 'medium'].includes(value),
-		},
-		outline: {
-			type: Boolean,
-			default: false
-		},
-		loading: {
-			type: Boolean,
-			default: false
-		},
-		disabled: {
-			type: Boolean,
-			default: false
-		}
+	size: {
+		type: String,
+		default: 'medium',
+		validator: (value: ButtonSize) => ['small', 'medium'].includes(value),
 	},
-	methods: {
-		click(e) {
-			if (this.loading) return;
-			if (this.disabled) return;
-			this.$emit("click", e);
-		}
+	outline: {
+		type: Boolean,
+		default: false
+	},
+	loading: {
+		type: Boolean,
+		default: false
+	},
+	disabled: {
+		type: Boolean,
+		default: false
 	}
-};
+})
+
+const emit = defineEmits(['click'])
+
+function click() {
+	if (props.loading) return;
+	if (props.disabled) return;
+	emit("click");
+}
 </script>
 
 <style lang='sass'>
