@@ -9,12 +9,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "TabItem"
-};
-</script>
-
 <style lang='sass'>
 .tab-item
 	padding: 0.75rem 1.5rem

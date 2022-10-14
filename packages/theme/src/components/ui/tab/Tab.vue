@@ -4,12 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "Tab"
-};
-</script>
-
 <style lang='sass'>
 .tab
 	display: flex
