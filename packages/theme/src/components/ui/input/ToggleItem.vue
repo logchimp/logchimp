@@ -52,3 +52,24 @@ function input(event: any) {
 	emit("update:modelValue", event.target.checked);
 }
 </script>
+
+<style lang='sass'>
+.toggle-item
+	&:not(:last-child)
+		margin-bottom: 1rem
+
+.toggle-item-row
+	display: flex
+	justify-content: space-between
+	align-items: center
+	margin-bottom: 0.5rem
+
+	label
+		font-weight: 500
+		cursor: pointer
+		user-select: none
+
+.toggle-item-note
+	font-size: 0.875rem
+	color: var(--color-gray-50)
+</style>
