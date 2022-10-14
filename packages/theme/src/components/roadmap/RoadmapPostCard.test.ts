@@ -1,10 +1,10 @@
 // import dayjs from "dayjs";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 
-import PostCard from "./PostCard.vue";
+import RoadmapPostCard from "./RoadmapPostCard.vue";
 
 describe("post card", () => {
-  const wrapper = shallowMount(PostCard, {
+  const wrapper = shallowMount(RoadmapPostCard, {
     props: {
       post: {
         // random UUID
