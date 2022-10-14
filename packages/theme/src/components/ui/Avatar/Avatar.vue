@@ -21,25 +21,23 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "Avatar",
-  props: {
-    src: {
-      type: String,
-      default: ""
-    },
-    name: {
-      type: String,
-      required: true
-    }
-  },
-  computed: {
-    initals() {
-      return this.name.slice(0, 1);
-    }
-  }
-};
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps({
+	src: {
+		type: String,
+		default: ""
+	},
+	name: {
+		type: String,
+		required: true
+	}
+});
+
+const initals = computed(() => {
+	return props.name.slice(0, 1);
+})
 </script>
 
 <style lang='sass'>
