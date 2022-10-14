@@ -17,8 +17,8 @@
 	</div>
 </template>
 
-<script>
-import Avatar from "../ui/Avatar.vue";
+<script lang="ts">
+import { Avatar } from "../ui/Avatar";
 
 export default {
 	name: "DashboardAuthUser",
