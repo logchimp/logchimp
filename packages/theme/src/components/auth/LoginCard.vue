@@ -1,25 +1,23 @@
 <template>
-  <div class="card">
-    <div class="card-section card-header">
-      <h4 class="card-header-title">
-        Login
-      </h4>
-      <p class="card-header-label">
-        Log in to your account to give feedback
-      </p>
-    </div>
-    <div class="card-section">
-      <Button type="primary" @click="loginRedirect">
-        Login
-      </Button>
-    </div>
-  </div>
+  <card>
+		<template #title>
+			Login
+		</template>
+		<template #label>
+			Log in to your account to give feedback
+		</template>
+
+		<Button type="primary" @click="loginRedirect">
+			Login
+		</Button>
+  </card>
 </template>
 
 <script setup lang="ts">
 import { router } from "../../router";
 
 // components
+import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
 
 function loginRedirect() {

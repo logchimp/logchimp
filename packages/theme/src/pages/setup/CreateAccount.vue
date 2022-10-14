@@ -6,7 +6,7 @@
       </h2>
     </div>
     <server-error v-if="serverError" @close="serverError = false" />
-    <div class="card">
+    <card>
       <l-text
         v-model="siteTitle.value"
         label="Site title"
@@ -52,7 +52,7 @@
           Create account
         </Button>
       </div>
-    </div>
+    </card>
     <!-- <p class="auth-form-other">
       By continuing, you agree to LogChimp's <strong>Terms</strong> and
       <strong>Privacy</strong> policy.
@@ -79,6 +79,7 @@ import { useUserStore } from "../../store/user"
 
 // components
 import AuthLayout from "../../layout/Auth.vue"
+import Card from "../../components/ui/Card.vue";
 import { FormFieldErrorType } from "../../components/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
 import LText from "../../components/ui/LText.vue";

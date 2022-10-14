@@ -1,35 +1,49 @@
 <template>
-  <div class="card">
-    <div class="card-section card-header">
-      <h4 class="card-header-title">
-        Setup your LogChimp site
-      </h4>
-      <p class="card-header-label">
-        Complete your LogChimp site setup to access dashboard.
-      </p>
-    </div>
-    <div class="card-section">
-      <Button type="primary" @click="setupSite">
+  <card>
+    <template #title>
+			Setup your LogChimp site
+    </template>
+    <template #label>
+			Complete your LogChimp site setup to access dashboard.
+    </template>
+
+    <div :class="$style.cta">
+      <Button type="primary" href="/setup/welcome">
         Create owner account
       </Button>
     </div>
-    <div class="card-section">
+
+    <div :class="$style.image">
       <img
-        style="width: 20rem"
         src="https://cdn.logchimp.codecarrot.net/dashboard-loading-skeleton.png"
         alt="Dashboard loading skeleton"
       >
     </div>
-  </div>
+  </card>
 </template>
 
 <script setup lang="ts">
 import { router } from "../../router";
 
 // components
+import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
 
 function setupSite() {
 	router.push("/setup/welcome");
 }
 </script>
+
+<style module>
+.cta {
+	margin-bottom: 1.5rem;
+}
+.image {
+	max-width: 20rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+.image img {
+	width: 100%;
+}
+</style>
