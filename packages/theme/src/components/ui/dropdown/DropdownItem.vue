@@ -36,3 +36,59 @@ function click() {
 	emit("click");
 }
 </script>
+
+<style lang='sass'>
+.dropdown-item
+	border-radius: var(--border-radius-default)
+	margin: 0 0.375rem
+	padding: 0.5rem 0.75rem
+	display: flex
+	align-items: center
+	cursor: pointer
+	user-select: none
+
+	&:hover:not(.dropdown-item-disabled)
+		background-color: var(--color-gray-97)
+
+.dropdown-item-content
+	color: var(--color-gray-40)
+	font-weight: 400
+	white-space: nowrap
+
+.dropdown-item-icon
+	margin-right: 0.625rem
+	display: flex
+
+	svg
+		width: 1rem
+		height: 1rem
+		stroke: var(--color-gray-60)
+
+.dropdown-menu-icon svg
+	stroke: var(--color-gray-60)
+	width: 1.125rem
+	height: 1.125rem
+
+// dropdown item disabled
+.dropdown-item-disabled
+	opacity: 0.7
+	cursor: not-allowed
+
+// dopdown item danger
+.dropdown-item.color-danger
+
+	&:hover
+		background-color: var(--color-color-danger)
+
+		.dropdown-item-content
+			color: var(--color-white)
+
+		.dropdown-item-icon svg
+			stroke: var(--color-white)
+
+	.dropdown-item-content
+		color: var(--color-color-danger)
+
+	.dropdown-item-icon svg
+		stroke: var(--color-color-danger)
+</style>

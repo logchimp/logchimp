@@ -31,3 +31,8 @@ function away() {
 	active.value = false;
 }
 </script>
+
+<style lang='sass'>
+.dropdown-wrapper
+	position: relative
+</style>
