@@ -1,10 +1,10 @@
 import { createPinia } from "pinia";
 import { shallowMount } from "@vue/test-utils";
 
-import RoadmapView from "./RoadmapView.vue";
+import RoadmapColumn from "./RoadmapColumn.vue";
 
 describe("roadmap view", () => {
-  const wrapper = shallowMount(RoadmapView, {
+  const wrapper = shallowMount(RoadmapColumn, {
     global: {
       plugins: [
         createPinia(),
