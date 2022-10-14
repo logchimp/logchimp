@@ -7,7 +7,7 @@
 			class="avatar-stack-image"
 			:src="avatar.avatar"
 			:alt="avatar.username"
-		/>
+		>
 		<div
 			v-if="!hideMoreStack"
 			data-test="avatar-stack-more"
@@ -18,28 +18,29 @@
 	</div>
 </template>
 
-<script>
-export default {
-	name: "AvatarStack",
-	props: {
-		avatars: {
-			type: Array,
-			required: true
-		},
-		totalCount: {
-			type: Number,
-			required: true
-		}
-	},
-	computed: {
-		hideMoreStack() {
-			return this.totalCount <= 6;
-		},
-		moreStack() {
-			return this.totalCount - 6;
-		}
-	}
-};
+<script lang="ts">
+interface AvatarType {
+	userId: string
+	avatar: string
+	username?: string
+}
+</script>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps<{
+	avatars: AvatarType[]
+	totalCount: number
+}>()
+
+const hideMoreStack = computed(() => {
+	return props.totalCount <= 6;
+});
+
+const moreStack = computed(() => {
+	return props.totalCount - 6;
+})
 </script>
 
 <style lang='sass'>

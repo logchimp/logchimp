@@ -1,6 +1,7 @@
 import Avatar from "./Avatar.vue";
+import AvatarStack from "./AvatarStack.vue";
 
-export default Avatar;
 export {
-  Avatar
+  Avatar,
+  AvatarStack
 };
