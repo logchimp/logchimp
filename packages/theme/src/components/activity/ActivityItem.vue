@@ -8,32 +8,30 @@
 
 			<time
 				:datetime="activity.created_at"
-				:title="$dayjs(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
+				:title="dayjs(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
 				class="post-date"
 			>
-				{{ $dayjs(activity.created_at).from() }}
+				{{ dayjs(activity.created_at).fromNow() }}
 			</time>
 		</div>
 	</div>
 </template>
 
-<script>
-// components
-import Avatar from "../ui/Avatar.vue";
+<script setup lang="ts">
+// packages
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
 
-export default {
-	name: "ActivityItem",
-	components: {
-		// components
-		Avatar
-	},
-	props: {
-		activity: {
-			type: Object,
-			required: true
-		}
+import { Avatar } from "../ui/Avatar";
+
+dayjs.extend(relativeTime);
+
+defineProps({
+	activity: {
+		type: Object,
+		required: true
 	}
-};
+})
 </script>
 
 <style lang='sass' module>
