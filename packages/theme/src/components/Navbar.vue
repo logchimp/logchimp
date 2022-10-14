@@ -62,7 +62,7 @@ import RoadmapIcon from "./icons/Roadmap.vue";
   color: var(--color-white-light)
   font-weight: 500
 
-.navbar-item.nuxt-link-exact-active
+.navbar-item.router-link-exact-active
   border-color: var(--color-white)
 
   .navbar-item-icon svg
