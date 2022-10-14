@@ -84,23 +84,12 @@
           </dropdown>
         </template>
         <template #toggle>
-          <div class="dashboard-sidebar-user-container">
-            <div class="dashboard-sidebar-user">
-              <avatar
-                class="dashboard-sidebar-user-avatar"
-                :src="user.avatar"
-                :name="user.name || user.username"
-              />
-              <div class="dashboard-sidebar-user-data">
-                <div class="dashboard-sidebar-user-name">
-                  {{ user.name || user.username }}
-                </div>
-                <div class="dashboard-sidebar-user-email">
-                  {{ user.email }}
-                </div>
-              </div>
-            </div>
-          </div>
+          <auth-user
+						:name="user.name"
+						:email="user.email"
+						:username="user.username"
+						:avatar="user.avatar"
+					/>
         </template>
       </dropdown-wrapper>
     </footer>
@@ -127,7 +116,7 @@ import { useUserStore } from "../../store/user"
 
 // components
 import SiteBranding from "../SiteBranding.vue";
-import Avatar from "../Avatar";
+import AuthUser from "./AuthUser.vue";
 import DropdownWrapper from "../dropdown/DropdownWrapper.vue";
 import Dropdown from "../dropdown/Dropdown.vue";
 import DropdownItem from "../dropdown/DropdownItem.vue";
@@ -149,3 +138,63 @@ function tweetLogChimp() {
 	);
 }
 </script>
+
+<style lang='sass'>
+$white: var(--color-white)
+
+.sidebar
+	display: flex
+	flex-direction: column
+	position: sticky
+	top: 0
+	bottom: 0
+	background-color: var(--color-brand-color)
+	height: 100vh
+	padding: 1rem
+	min-width: 200px
+	overflow-y: auto
+
+	header
+		margin-bottom: 1rem
+
+	footer
+		position: relative
+		margin-top: auto
+
+.sidebar-list
+	margin-top: 2rem
+
+	h6
+		font-size: 0.75rem
+		text-transform: uppercase
+		color: var(--color-white)
+		letter-spacing: 0.4px
+		margin-bottom: 0.625rem
+
+	li
+		list-style: none
+
+.sidebar-list-item
+	display: flex
+	align-items: center
+	padding: 0.625rem 1rem
+
+	svg
+		stroke: var(--color-white)
+		width: 1rem
+		height: 1rem
+		margin-right: 0.375rem
+
+	p
+		color: var(--color-white)
+
+.sidebar-list-item.router-link-exact-active
+	background-color: rgba($white, 0.1)
+	border-radius: var(--border-radius-default)
+
+	p
+		font-weight: 600
+
+.dashboard-sidebar-dropdown
+	top: -9rem
+</style>
