@@ -7,47 +7,44 @@
 				better products.
 			</p>
 		</div>
+		<Button type="primary" class="welcome-button" href="/setup/create-account">
+			Create an account
+		</Button>
 		<img
 			class="welcome-image"
 			src="https://cdn.logchimp.codecarrot.net/logchimp-home-preview.png"
 			alt="LogChimp homepage preview"
 		/>
-		<Button type="primary" class="welcome-button" href="/setup/create-account">
-			Create an account
-		</Button>
 	</div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
+export default {
+	name: "SetupWelcome"
+}
+</script>
+
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import { useHead } from "@vueuse/head";
+
+import { useSettingStore } from "../../store/settings"
 
 // components
 import Button from "../../components/ui/Button.vue";
 
-export default {
-	name: "SetupWelcome",
-	layout: "onboarding",
-	components: {
-		// components
-		Button
-	},
-	computed: {
-		...mapGetters("settings", {
-			settings: "get"
-		})
-	},
-	head() {
-		return {
-			title: `Welcome • Onboarding • ${this.settings.title}`,
-			meta: [
-				{
-					name: "og:title",
-					content: `Welcome • Onboarding • ${this.settings.title}`
-				}
-			]
-		};
-	}
-};
+const router = useRouter();
+const { get: siteSettings } = useSettingStore()
+
+useHead({
+	title: "Welcome • Onboarding",
+	meta: [
+		{
+			name: "og:title",
+			content: `Welcome • Onboarding • ${siteSettings.title}`
+		}
+	]
+})
 </script>
 
 <style lang='sass'>
@@ -57,5 +54,5 @@ export default {
 	border: 1px solid var(--color-gray-90)
 
 .welcome-button
-	margin-top: 4rem
+	margin-bottom: 3rem
 </style>

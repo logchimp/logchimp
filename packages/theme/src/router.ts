@@ -71,7 +71,7 @@ const routes = [
       {
         path: "welcome",
         name: "Setup welcome",
-        component: () => import("./pages/setup/Index.vue")
+        component: () => import("./pages/setup/Welcome.vue")
       },
       {
         path: "create-account",
