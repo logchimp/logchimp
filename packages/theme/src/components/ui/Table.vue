@@ -1,16 +1,28 @@
+<template>
+  <div class="table-container">
+    <div class="table-header">
+      <slot name="header" />
+    </div>
+    <div class="table-body">
+      <slot />
+    </div>
+  </div>
+</template>
+
+<style lang='sass'>
 .table-container
-	border: 1px solid $gray-90
-	border-radius: $border-radius
+	border: 1px solid var(--color-gray-90)
+	border-radius: var(--border-radius-default)
 
 .table-heading
-	color: $gray-40
+	color: var(--color-gray-40)
 	font-size: 0.875rem
 	font-weight: 500
 	margin-left: 0.375rem
 	margin-bottom: 0.5rem
 
 .table-header
-	color: $gray-70
+	color: var(--color-gray-70)
 	text-transform: uppercase
 	font-size: 0.75rem
 	font-weight: 600
@@ -26,16 +38,16 @@
 	padding: 1rem 1.5rem
 
 .table-row
-	color: $text-black
+	color: var(--color-text-black)
 	display: flex
 	align-items: center
 
 	&:hover
-		background-color: $gray-97
+		background-color: var(--color-gray-97)
 
 		&:last-child
-			border-bottom-left-radius: $border-radius
-			border-bottom-right-radius: $border-radius
+			border-bottom-left-radius: var(--border-radius-default)
+			border-bottom-right-radius: var(--border-radius-default)
 
 .table-data
 	padding: 1rem 1.5rem
@@ -49,9 +61,10 @@
 	cursor: pointer
 
 	&:hover svg
-		stroke: $gray-60
+		stroke: var(--color-gray-60)
 
 	svg
 		width: 1.125rem
 		height: 1.125rem
-		stroke: $gray-80
+		stroke: var(--color-gray-80)
+</style>
