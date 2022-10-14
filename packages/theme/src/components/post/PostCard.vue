@@ -80,7 +80,7 @@ import { useTrim } from "../../hooks";
 // components
 import Vote, { VoteEventType } from "./Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
-import AvatarStack from "../AvatarStack.vue";
+import { AvatarStack }from "../ui/Avatar";
 import { ref } from "vue";
 
 dayjs.extend(relativeTime);

@@ -99,7 +99,7 @@ import { useCopyText } from "../../hooks";
 
 // components
 import Table from "../../components/Table.vue";
-import Avatar from "../../components/Avatar";
+import { Avatar }from "../../components/ui/Avatar";
 // import Loader from "../../components/Loader.vue";
 import DropdownWrapper from "../../components/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../components/dropdown/Dropdown.vue";

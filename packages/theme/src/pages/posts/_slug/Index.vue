@@ -153,7 +153,7 @@ import Vote, { VoteEventType } from "../../../components/post/Vote.vue";
 import DropdownWrapper from "../../../components/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/dropdown/DropdownItem.vue";
-import Avatar from "../../../components/Avatar";
+import { Avatar } from "../../../components/ui/Avatar";
 import LText from "../../../components/input/LText.vue";
 import Button from "../../../components/Button.vue";
 import ActivityItem from "../../../components/ActivityItem/ActivityItem.vue";
