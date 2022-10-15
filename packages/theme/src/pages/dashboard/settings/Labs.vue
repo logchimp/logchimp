@@ -51,6 +51,7 @@ export default {
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+import { useHead } from "@vueuse/head";
 
 // modules
 import { useSettingStore } from "../../../store/settings"
@@ -62,9 +63,8 @@ import {
 } from "../../../modules/site";
 
 // components
-import Button from "../../../components/Button.vue";
-import ToggleItem from "../../../components/input/ToggleItem.vue";
-import { useHead } from "@vueuse/head";
+import Button from "../../../components/ui/Button.vue";
+import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
@@ -104,6 +104,6 @@ async function getSettings() {
 onMounted(() => getSettings());
 
 useHead({
-	title: "Labs · Settings · Dashboard"
+	title: "Labs • Settings • Dashboard"
 })
 </script>

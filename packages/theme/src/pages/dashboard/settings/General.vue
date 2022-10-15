@@ -2,9 +2,7 @@
   <div>
     <header class="form-header">
       <div class="breadcrumbs">
-        <h5 class="breadcrum-item">
-          Settings
-        </h5>
+        <h5 class="breadcrum-item">Settings</h5>
       </div>
 
       <Button
@@ -51,7 +49,7 @@
                 :src="logo"
                 :alt="siteName.value"
                 @click="selectFileHandler"
-              >
+              />
             </div>
             <input
               ref="fileSelector"
@@ -60,16 +58,14 @@
               name="logo"
               style="display: none"
               @change="uploadFile"
-            >
+            />
           </div>
         </div>
       </div>
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">
-        Apperences
-      </h6>
+      <h6 class="form-section-title">Apperences</h6>
       <div class="form-columns">
         <div class="form-column">
           <color-input v-model="accentColor.value" />
@@ -78,9 +74,7 @@
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">
-        Meta
-      </h6>
+      <h6 class="form-section-title">Meta</h6>
       <div class="form-columns">
         <div class="form-column">
           <l-text
@@ -93,10 +87,7 @@
         </div>
 
         <div class="form-column">
-          <toggle-item
-            v-model="developer_mode"
-            label="Developer Mode"
-          />
+          <toggle-item v-model="developer_mode" label="Developer Mode" />
         </div>
       </div>
     </div>
@@ -105,7 +96,7 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardSettings",
+  name: "DashboardSettings",
 }
 </script>
 
@@ -123,150 +114,169 @@ import {
 } from "../../../modules/site";
 
 // components
-import { FormFieldErrorType } from "../../../components/input/formBaseProps";
-import LText from "../../../components/input/LText.vue";
-import Button from "../../../components/Button.vue";
-import ColorInput from "../../../components/ColorInput.vue";
-import ToggleItem from "../../../components/input/ToggleItem.vue";
+import { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
+import LText from "../../../components/ui/input/LText.vue";
+import Button from "../../../components/ui/Button.vue";
+import ColorInput from "../../../components/ui/ColorInput.vue";
+import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
 
 const siteName = reactive({
-	value: "",
-	error: {
-		show: false,
-		message: ""
-	}
+  value: "",
+  error: {
+    show: false,
+    message: ""
+  }
 })
 const logo = ref("")
 const description = reactive ({
-	value: "",
-	error: {
-		show: false,
-		message: ""
-	}
+  value: "",
+  error: {
+    show: false,
+    message: ""
+  }
 })
 const allowSignup = ref(false)
 const accentColor = reactive({
-	value: "484d7c",
-	error: {
-		show: false,
-		message: ""
-	}
+  value: "484d7c",
+  error: {
+    show: false,
+    message: ""
+  }
 });
 const googleAnalyticsId = reactive({
-	value: "",
-	error: {
-		show: false,
-		message: ""
-	}
+  value: "",
+  error: {
+    show: false,
+    message: ""
+  }
 });
 const developer_mode = ref(false)
 const updateSettingsButtonLoading = ref(false)
 
 const updateSettingsPermissionDisabled = computed(() =>  {
-	const checkPermission = permissions.includes("settings:update");
-	return !checkPermission;
+  const checkPermission = permissions.includes("settings:update");
+  return !checkPermission;
 })
 
 function hideSiteNameError(event: FormFieldErrorType) {
-	siteName.error = event;
+  siteName.error = event;
 }
 
 function hideDescriptionError(event: FormFieldErrorType) {
-	description.error = event;
+  description.error = event;
 }
 
 function hideAccentColorError(event: FormFieldErrorType) {
-	accentColor.error = event;
+  accentColor.error = event;
 }
 
 function hideGoogleAnalyticsError(event: FormFieldErrorType) {
-	googleAnalyticsId.error = event;
+  googleAnalyticsId.error = event;
 }
 
 function selectFileHandler() {
-	// $refs.fileSelector.click();
+  // $refs.fileSelector.click();
 }
 
 async function uploadFile(event: any) {
-	const logo = event.target.files[0];
+  const logo = event.target.files[0];
 
-	const formData = new FormData();
-	formData.append("logo", logo);
+  const formData = new FormData();
+  formData.append("logo", logo);
 
-	try {
-		const response = await uploadSiteLogo(formData);
+  try {
+    const response = await uploadSiteLogo(formData);
 
-		logo.value = response.data.settings.logo;
-		update(response.data.settings.logo)
-	} catch (error) {
-		console.error(error);
-	}
+    logo.value = response.data.settings.logo;
+    update(response.data.settings.logo)
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function updateSettingsHandler() {
-	if (!(siteName.value && accentColor.value)) {
-		if (!siteName.value) {
-			siteName.error.show = true;
-			siteName.error.message = "Required";
-		}
+  if (!(siteName.value && accentColor.value)) {
+    if (!siteName.value) {
+      siteName.error.show = true;
+      siteName.error.message = "Required";
+    }
 
-		if (!accentColor.value) {
-			accentColor.error.show = true;
-			accentColor.error.message = "Required";
-		}
-	}
+    if (!accentColor.value) {
+      accentColor.error.show = true;
+      accentColor.error.message = "Required";
+    }
+  }
 
-	updateSettingsButtonLoading.value = true;
+  updateSettingsButtonLoading.value = true;
 
-	const siteData = {
-		title: siteName.value,
-		description: description.value,
-		accentColor: accentColor.value,
-		googleAnalyticsId: googleAnalyticsId.value,
-		allowSignup: allowSignup.value,
-		developer_mode: developer_mode.value
-	};
+  const siteData = {
+    title: siteName.value,
+    description: description.value,
+    accentColor: accentColor.value,
+    googleAnalyticsId: googleAnalyticsId.value,
+    allowSignup: allowSignup.value,
+    developer_mode: developer_mode.value
+  };
 
-	try {
-		const response = await updateSettings(siteData);
+  try {
+    const response = await updateSettings(siteData);
 
-		siteName.value = response.data.settings.title;
-		logo.value = response.data.settings.logo;
-		description.value = response.data.settings.description;
-		accentColor.value = response.data.settings.accentColor;
-		googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
-		developer_mode.value = response.data.settings.developer_mode;
+    siteName.value = response.data.settings.title;
+    logo.value = response.data.settings.logo;
+    description.value = response.data.settings.description;
+    accentColor.value = response.data.settings.accentColor;
+    googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+    developer_mode.value = response.data.settings.developer_mode;
 
-		update(response.data.settings);
-	} catch (error) {
-		console.error(error);
-	} finally {
-		updateSettingsButtonLoading.value = false;
-	}
+    update(response.data.settings);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    updateSettingsButtonLoading.value = false;
+  }
 }
 
 async function getSettingsHandler() {
-	try {
-		const response = await getSettings();
+  try {
+    const response = await getSettings();
 
-		siteName.value = response.data.settings.title;
-		logo.value = response.data.settings.logo;
-		description.value = response.data.settings.description;
-		allowSignup.value = response.data.settings.allowSignup;
-		accentColor.value = response.data.settings.accentColor;
-		googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
-		developer_mode.value = response.data.settings.developer_mode;
-	} catch (error) {
-		console.error(error);
-	}
+    siteName.value = response.data.settings.title;
+    logo.value = response.data.settings.logo;
+    description.value = response.data.settings.description;
+    allowSignup.value = response.data.settings.allowSignup;
+    accentColor.value = response.data.settings.accentColor;
+    googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
+    developer_mode.value = response.data.settings.developer_mode;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 onMounted(() => getSettingsHandler());
 
 useHead({
-	title: "General · Settings · Dashboard"
+  title: "General • Settings • Dashboard"
 })
 </script>
+
+<style lang='sass'>
+.dashboard-settings-logo
+  margin-bottom: 1rem
+  display: flex
+  flex-direction: column
+
+.dashboard-settings-logo-placeholder
+  width: 4rem
+  height: 4rem
+  background-color: var(--color-gray-97)
+  border: 1px solid var(--color-gray-90)
+  border-radius: 3rem
+  cursor: pointer
+  user-select: none
+
+  img
+    width: 100%
+</style>

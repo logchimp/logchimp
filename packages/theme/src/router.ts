@@ -9,7 +9,7 @@ import { checkUserDashboardAccess } from "./modules/users";
 const routes = [
   {
     path: "/",
-    component: () => import("./layout/HeaderFooter.vue"),
+    component: () => import("./layout/Viewer.vue"),
     children: [
       {
         path: "",
@@ -71,17 +71,17 @@ const routes = [
       {
         path: "welcome",
         name: "Setup welcome",
-        component: () => import("./pages/setup/Index.vue")
+        component: () => import("./pages/setup/Welcome.vue")
       },
       {
         path: "create-account",
         name: "Setup create account",
-        component: () => import("./pages/setup/Account.vue")
+        component: () => import("./pages/setup/CreateAccount.vue")
       },
       {
         path: "create-board",
         name: "Setup create board",
-        component: () => import("./pages/setup/Board.vue")
+        component: () => import("./pages/setup/CreateBoard.vue")
       }
     ]
   },

@@ -1,7 +1,7 @@
 <template>
   <div>
 		<div v-infinite-scroll="getMorePosts">
-			<post
+			<post-item
 				v-for="post in posts"
 				:key="post.postId"
 				:post="post"
@@ -12,7 +12,9 @@
       </div>
       <div slot="no-more" />
       <div slot="no-results" />
-      <div slot="error" /> -->
+      <client-error slot="error">
+				Something went wrong!
+			</client-error> -->
     </div>
   </div>
 </template>
@@ -26,7 +28,8 @@ import { vInfiniteScroll } from "@vueuse/components";
 import { getPosts } from "../../modules/posts";
 
 // components
-import Post from "../post/Post.vue";
+// import ClientError from "../ui/ClientError.vue";
+import PostItem from "../post/PostItem.vue";
 // import Loader from "../Loader.vue";
 
 const props = defineProps({

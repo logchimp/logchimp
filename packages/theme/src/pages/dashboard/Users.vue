@@ -2,24 +2,19 @@
   <div>
     <header class="form-header">
       <div class="breadcrumbs">
-        <h5 class="breadcrum-item">
-          Users
-        </h5>
+        <h5 class="breadcrum-item">Users</h5>
       </div>
     </header>
 
     <Table class="users-table">
       <template #header>
-        <div class="table-header-item users-table-user">
-          name
-        </div>
-        <div class="table-header-item users-table-posts">
-          posts
-        </div>
-        <div class="table-header-item users-table-votes">
-          votes
-        </div>
-        <div v-if="settings.developer_mode" class="table-header-item users-table-votes" />
+        <div class="table-header-item users-table-user">name</div>
+        <div class="table-header-item users-table-posts">posts</div>
+        <div class="table-header-item users-table-votes">votes</div>
+        <div
+          v-if="settings.developer_mode"
+          class="table-header-item users-table-votes"
+        />
       </template>
 			<div v-infinite-scroll="getUsers">
 				<div
@@ -45,7 +40,11 @@
 						<dropdown-wrapper>
 							<template #toggle>
 								<div
-									class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
+									class="
+										table-data table-data-icon
+										boards-table-icon-settings
+										dropdown-menu-icon
+									"
 								>
 									<more-icon />
 								</div>
@@ -65,13 +64,15 @@
 						</dropdown-wrapper>
 					</div>
 				</div>
-        <!-- <div slot="spinner" class="loader-container">
-          <loader />
-        </div>
-        <div slot="no-more" />
-        <div slot="no-results" />
-        <div slot="error" /> -->
-      </div>
+				<!-- <div slot="spinner" class="loader-container">
+					<loader />
+				</div>
+				<div slot="no-more" />
+				<div slot="no-results" />
+				<client-error slot="error">
+					Something went wrong!
+				</client-error> -->
+			</div>
     </Table>
   </div>
 </template>
@@ -98,12 +99,13 @@ import { getAllUsers } from "../../modules/users";
 import { useCopyText } from "../../hooks";
 
 // components
-import Table from "../../components/Table.vue";
-import Avatar from "../../components/Avatar";
-// import Loader from "../../components/Loader.vue";
-import DropdownWrapper from "../../components/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../components/dropdown/Dropdown.vue";
-import DropdownItem from "../../components/dropdown/DropdownItem.vue";
+import Table from "../../components/ui/Table.vue";
+import { Avatar } from "../../components/ui/Avatar";
+// import Loader from "../../components/ui/Loader.vue";
+import DropdownWrapper from "../../components/ui/dropdown/DropdownWrapper.vue";
+import Dropdown from "../../components/ui/dropdown/Dropdown.vue";
+import DropdownItem from "../../components/ui/dropdown/DropdownItem.vue";
+// import ClientError from "../../components/ui/ClientError.vue";
 
 const { settings } = useSettingStore()
 
@@ -134,6 +136,26 @@ async function getUsers() {
 onMounted(() => getUsers())
 
 useHead({
-	title: "Users · Dashboard"
+	title: "Users • Dashboard"
 })
 </script>
+
+<style lang='sass'>
+.users-table
+  .users-table-user
+    display: flex
+    align-items: center
+    flex: 6
+
+    .users-table-user-avatar
+      margin-right: 0.5rem
+
+    .users-table-user-name
+      margin-bottom: 0
+
+  .users-table-posts
+    flex: 1
+
+  .users-table-votes
+    flex: 1
+</style>

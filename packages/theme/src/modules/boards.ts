@@ -7,6 +7,7 @@ import { ApiPaginationType } from "../types";
 
 interface CreateBoardArgs {
 	name?: string
+  display?: boolean
 }
 
 export interface Board {
@@ -107,7 +108,7 @@ export const searchBoard = async (name: string) => {
  *
  * @returns {object} response
  */
-export const createBoard = async ({ name }: CreateBoardArgs) => {
+export const createBoard = async ({ name, display }: CreateBoardArgs) => {
   const { authToken } = useUserStore()
 
   return await axios({
@@ -115,6 +116,7 @@ export const createBoard = async ({ name }: CreateBoardArgs) => {
     url: "/api/v1/boards",
 		data: {
 			name,
+      display,
 		},
     headers: {
       Authorization: `Bearer ${authToken}`

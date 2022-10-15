@@ -2,9 +2,7 @@
   <div class="auth-form">
     <div class="auth-form-header">
       <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">
-        Forget password
-      </h3>
+      <h3 class="auth-form-heading">Forget password</h3>
     </div>
     <server-error v-if="serverError" @close="serverError = false" />
     <div v-if="!hideForm" class="card">
@@ -18,12 +16,8 @@
         @keyup-enter="forgetPassword"
         @hide-error="hideEmailError"
       />
-      <div style="display: flex; justify-content: center;">
-        <Button
-          type="primary"
-          :loading="buttonLoading"
-          @click="forgetPassword"
-        >
+      <div style="display: flex; justify-content: center">
+        <Button type="primary" :loading="buttonLoading" @click="forgetPassword">
           Continue
         </Button>
       </div>
@@ -58,14 +52,13 @@ import { useHead } from "@vueuse/head";
 // modules
 import { requestPasswordReset } from "../../modules/auth";
 import { useSettingStore } from "../../store/settings"
-import { useUserStore } from "../../store/user"
 
 // component
-import { FormFieldErrorType } from "../../components/input/formBaseProps";
+import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
-import LText from "../../components/input/LText.vue";
-import Button from "../../components/Button.vue";
-import SiteBranding from "../../components/SiteBranding.vue";
+import LText from "../../components/ui/input/LText.vue";
+import Button from "../../components/ui/Button.vue";
+import SiteBranding from "../../components/site/SiteBranding.vue";
 
 const { get: siteSettings } = useSettingStore()
 
@@ -118,14 +111,13 @@ async function  forgetPassword() {
 	}
 }
 
-
 useHead({
-	title: "Forget password",
-	meta: [
-		{
-			name: "og:title",
-			content: `Forget password · ${siteSettings.title}`
-		}
-	]
+  title: "Forget password",
+  meta: [
+    {
+      name: "og:title",
+      content: `Forget password • ${siteSettings.title}`
+    }
+  ]
 })
 </script>

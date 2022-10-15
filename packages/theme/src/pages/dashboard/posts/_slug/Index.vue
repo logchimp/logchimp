@@ -46,7 +46,7 @@
               Preview
             </p>
             <div class="card">
-              <post v-if="!loading.post" :post="postData" />
+              <post-item v-if="!loading.post" :post="postData" />
             </div>
           </div>
         </div>
@@ -138,12 +138,12 @@ import { PostVoteType } from "../../../../modules/votes";
 import { useUserStore } from "../../../../store/user";
 
 // components
-import Button from "../../../../components/Button.vue";
-import LText from "../../../../components/input/LText.vue";
-import LTextarea from "../../../../components/input/LTextarea.vue";
-import Post from "../../../../components/post/Post.vue";
-import Dropdown from "../../../../components/dropdown/Dropdown.vue";
-import DropdownWrapper from "../../../../components/dropdown/DropdownWrapper.vue";
+import Button from "../../../../components/ui/Button.vue";
+import LText from "../../../../components/ui/input/LText.vue";
+import LTextarea from "../../../../components/ui/input/LTextarea.vue";
+import PostItem from "../../../../components/post/PostItem.vue";
+import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
+import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
 import BoardSuggestion from "../../../../components/board/BoardSuggestion.vue";
 
 interface GetPostType extends PostType {
@@ -311,6 +311,6 @@ function selectRoadmap(index: number) {
 onMounted(() => postBySlug())
 
 useHead({
-	title: `${postData.title ? `${postData.title} · `: ''}Post · Dashboard`
+	title: `${postData.title ? `${postData.title} • `: ''}Post • Dashboard`
 })
 </script>

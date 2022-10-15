@@ -3,9 +3,7 @@
     <div>
       <div class="auth-form-header">
         <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-        <h3 class="auth-form-heading">
-          Set new password
-        </h3>
+        <h3 class="auth-form-heading">Set new password</h3>
       </div>
       <div v-if="validToken.success">
         <div v-if="!changePassword.success" class="card">
@@ -49,9 +47,7 @@
     </div>
     <div v-if="validToken.error || changePassword.error" class="card">
       <error-icon color="#DE544E" />
-      <div>
-        Invalid or expired password reset link.
-      </div>
+      <div>Invalid or expired password reset link.</div>
     </div>
     <div v-if="validToken.loading" class="card">
       <div class="loader-container">
@@ -79,11 +75,11 @@ import { router } from "../../router";
 import { useSettingStore } from "../../store/settings";
 
 // component
-import { FormFieldErrorType } from "../../components/input/formBaseProps";
-import Loader from "../../components/Loader.vue";
-import LText from "../../components/input/LText.vue";
-import Button from "../../components/Button.vue";
-import SiteBranding from "../../components/SiteBranding.vue";
+import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
+import Loader from "../../components/ui/Loader.vue";
+import LText from "../../components/ui/input/LText.vue";
+import Button from "../../components/ui/Button.vue";
+import SiteBranding from "../../components/site/SiteBranding.vue";
 
 const { get: siteSettings } = useSettingStore()
 
@@ -201,7 +197,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Set new password · ${siteSettings.title}`
+			content: `Set new password • ${siteSettings.title}`
 		}
 	]
 })

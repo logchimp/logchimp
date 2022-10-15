@@ -70,18 +70,19 @@ export default {
 </script>
 
 <script setup lang="ts">
+import { computed, onMounted, reactive, ref } from "vue";
+import { useHead } from "@vueuse/head";
+
 // modules
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
 import { getRoadmapByUrl, updateRoadmap } from "../../../modules/roadmaps";
 
 // components
-import Button from "../../../components/Button.vue";
-import LText from "../../../components/input/LText.vue";
-import ToggleItem from "../../../components/input/ToggleItem.vue";
-import ColorInput from "../../../components/ColorInput.vue";
-import { useHead } from "@vueuse/head";
-import { computed, onMounted, reactive, ref } from "vue";
+import Button from "../../../components/ui/Button.vue";
+import LText from "../../../components/ui/input/LText.vue";
+import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
+import ColorInput from "../../../components/ui/ColorInput.vue";
 
 const { permissions } = useUserStore()
 
@@ -106,7 +107,6 @@ const slimUrl = computed(() => {
 		.trim()
 		.toLowerCase();
 })
-
 
 async function updateHandler() {
 	updateButtonLoading.value = true;
@@ -143,6 +143,6 @@ async function getRoadmap() {
 onMounted(() => getRoadmap());
 
 useHead({
-	title: `${title.value} · Settings · Roadmap · Dashboard`
+	title: `${title.value} • Settings • Roadmap • Dashboard`
 })
 </script>

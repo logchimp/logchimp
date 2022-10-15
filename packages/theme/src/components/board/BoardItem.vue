@@ -45,3 +45,33 @@ defineProps({
 	}
 })
 </script>
+
+<style lang='sass'>
+.board-item
+	display: flex
+	align-items: center
+	padding: 1rem
+	background-color: var(--color-gray-97)
+	border-radius: var(--border-radius-default)
+	user-select: none
+
+	&:hover
+		background-color: var(--color-gray-95)
+
+.board-item-name-and-posts
+	margin-left: 0.625rem
+	display: flex
+	justify-content: space-between
+	align-items: center
+	width: 100%
+
+.board-item-name
+	color: var(--color-gray-40)
+	font-weight: 500
+
+.board-item-postcount
+	color: var(--color-gray-60)
+	font-size: 0.875rem
+	font-weight: 600
+	margin-left: 1rem
+</style>

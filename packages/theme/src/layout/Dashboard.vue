@@ -20,3 +20,9 @@ import PowerBy from "../components/PowerBy.vue";
 
 const { get: siteSettings } = useSettingStore()
 </script>
+
+<style lang='scss'>
+.dashboard {
+  display: flex;
+}
+</style>
