@@ -9,7 +9,7 @@ importers:
       dotenv: 16.0.3
       eslint: 8.25.0
       eslint-config-prettier: 8.5.0
-      eslint-plugin-jest: 26.9.0
+      eslint-plugin-jest: 27.1.2
       eslint-plugin-prettier: 4.2.1
       jest: 27.5.1
       nodemon: 2.0.20
@@ -21,7 +21,7 @@ importers:
       '@babel/eslint-parser': 7.19.1_v37dtiefj2fmp2s4n57pt7n35y
       eslint: 8.25.0
       eslint-config-prettier: 8.5.0_eslint@8.25.0
-      eslint-plugin-jest: 26.9.0_modv4flpvv7f4cqi6bsbkskzj4
+      eslint-plugin-jest: 27.1.2_modv4flpvv7f4cqi6bsbkskzj4
       eslint-plugin-prettier: 4.2.1_hvbqyfstm4urdpm6ffpwfka4e4
       jest: 27.5.1
       nodemon: 2.0.20
@@ -2338,12 +2338,12 @@ packages:
       eslint: 8.25.0
     dev: true
 
-  /eslint-plugin-jest/26.9.0_modv4flpvv7f4cqi6bsbkskzj4:
-    resolution: {integrity: sha512-TWJxWGp1J628gxh2KhaH1H1paEdgE2J61BBF1I59c6xWeL5+D1BzMxGDN/nXAfX+aSkR5u80K+XhskK6Gwq9ng==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+  /eslint-plugin-jest/27.1.2_modv4flpvv7f4cqi6bsbkskzj4:
+    resolution: {integrity: sha512-+nLOn5jvQKLUywXxXKsLuuENsB/FhygXOLI+l5QlF+ACGe0DM14FlpYrGZ4nEiTo0BGlL5MymG73XA/tC3v3fA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': ^5.0.0
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      eslint: ^7.0.0 || ^8.0.0
       jest: '*'
     peerDependenciesMeta:
       '@typescript-eslint/eslint-plugin':
