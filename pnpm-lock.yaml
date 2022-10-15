@@ -12,7 +12,7 @@ importers:
       eslint-plugin-jest: 26.9.0
       eslint-plugin-prettier: 4.2.1
       jest: 27.5.1
-      nodemon: 2.0.19
+      nodemon: 2.0.20
       prettier: 2.7.1
     dependencies:
       '@logchimp/api': link:packages/server
@@ -24,7 +24,7 @@ importers:
       eslint-plugin-jest: 26.9.0_modv4flpvv7f4cqi6bsbkskzj4
       eslint-plugin-prettier: 4.2.1_hvbqyfstm4urdpm6ffpwfka4e4
       jest: 27.5.1
-      nodemon: 2.0.19
+      nodemon: 2.0.20
       prettier: 2.7.1
 
   packages/server:
@@ -4171,11 +4171,10 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: false
 
-  /nodemon/2.0.19:
-    resolution: {integrity: sha512-4pv1f2bMDj0Eeg/MhGqxrtveeQ5/G/UVe9iO6uTZzjnRluSA4PVWf8CW99LUPwGB3eNIA7zUFoP77YuI7hOc0A==}
+  /nodemon/2.0.20:
+    resolution: {integrity: sha512-Km2mWHKKY5GzRg6i1j5OxOHQtuvVsgskLfigG25yTtbyfRGn/GNvIbRyOf1PSCKJ2aT/58TiuUsuOU5UToVViw==}
     engines: {node: '>=8.10.0'}
     hasBin: true
-    requiresBuild: true
     dependencies:
       chokidar: 3.5.3
       debug: 3.2.7_supports-color@5.5.0
