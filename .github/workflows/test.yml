@@ -15,8 +15,8 @@ permissions:
   actions: read
 
 jobs:
-  cache:
-    name: Cache node_modules directory
+  utils:
+    name: Run utilities
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -54,10 +54,15 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
+      - uses: rome/setup-rome@v0.1
+        with:
+          version: latest
+      - run: rome format --ci .
+
   theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: cache
+    needs: utils
 
     strategy:
       matrix:
@@ -143,7 +148,7 @@ jobs:
   api-unit:
     name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: cache
+    needs: utils
 
     strategy:
       matrix:
