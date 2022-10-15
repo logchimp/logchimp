@@ -1,7 +1,11 @@
 <template>
   <div>
     <template v-if="loading">
-      <slot name="spinner" />
+      <slot name="spinner">
+        <div :class="$style['loader-container']">
+          <loader />
+        </div>
+      </slot>
     </template>
     <template v-if="noMoreResults">
       <slot name="no-more" />
@@ -10,7 +14,11 @@
       <slot name="no-results" />
     </template>
     <template v-if="error">
-      <slot name="error" />
+      <slot name="error">
+        <client-error>
+          Something went wrong!
+        </client-error>
+      </slot>
     </template>
   </div>
 </template>
@@ -22,6 +30,10 @@ export type InfiniteScrollStateType = 'LOADING' | 'LOADED' | 'COMPLETED' | 'ERRO
 <script setup lang="ts">
 import { ref, onMounted, PropType, watch, computed } from "vue"
 import { useInfiniteScroll } from '@vueuse/core'
+
+// components
+import ClientError from "./ClientError.vue";
+import Loader from "./Loader.vue";
 
 const props = defineProps({
   /**
@@ -66,3 +78,12 @@ useInfiniteScroll(window, () => executeInfiniteScroll(), {
   direction: 'bottom'
 })
 </script>
+
+<style module>
+.loader-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1rem;
+	width: 100%;
+}
+</style>
