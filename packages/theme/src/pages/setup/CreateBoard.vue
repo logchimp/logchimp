@@ -87,7 +87,8 @@ async function create() {
 
 	try {
 		await createBoard({
-			name: boardName.value
+			name: boardName.value,
+      display: true,
 		});
 
 		router.push("/dashboard");
