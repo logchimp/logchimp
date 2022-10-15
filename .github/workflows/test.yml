@@ -55,7 +55,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Rome
-        uses: rome/setup-rome@latest
+        uses: rome/setup-rome@latestv0.4
         with:
           version: latest
       - name: Rome format
