@@ -2,14 +2,19 @@
 	<client-error v-if="error">
 		<p>Something went wrong!</p>
 	</client-error>
-	<div v-else class="roadmap">
-		<roadmap-column
-			v-for="roadmap in roadmaps"
-			:key="roadmap.id"
-			class="roadmap-view"
-			:roadmap="roadmap"
-		/>
-	</div>
+	<template v-else-if="roadmaps[0]" >
+    <div class="roadmap">
+      <roadmap-column
+        v-for="roadmap in roadmaps"
+        :key="roadmap.id"
+        class="roadmap-view"
+        :roadmap="roadmap"
+      />
+    </div>
+  </template>
+  <template v-else>
+    <p>There are no roadmaps.</p>
+  </template>
 </template>
 
 <script lang="ts">
