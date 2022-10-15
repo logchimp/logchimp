@@ -1,0 +1,21 @@
+{
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentSize": 2,
+    "lineWidth": 80,
+    "ignore": [
+      "./packages/theme/dist"
+    ]
+  },
+  "linter": {
+    "enabled": true
+  }
+}
+
+
