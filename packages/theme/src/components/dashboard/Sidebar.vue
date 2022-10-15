@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <header>
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" :dashboard="true" />
+      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" :dashboard="true" text-color="white" />
     </header>
     <div class="sidebar-list">
       <h6>Manage</h6>
