@@ -58,6 +58,16 @@
         </router-link>
       </li>
     </div>
+
+    <div class="sidebar-list">
+      <li>
+        <router-link to="/" class="sidebar-list-item">
+          <arrow-up-right-icon />
+          <p>Public view</p>
+        </router-link>
+      </li>
+    </div>
+
     <footer>
       <dropdown-wrapper>
         <template #default="dropdown">
@@ -106,6 +116,7 @@ import {
   Settings as SettingsIcon,
   Shield as ShieldIcon,
   FlaskConical as LabIcon,
+  ArrowUpRight as ArrowUpRightIcon,
   Info as InfoIcon,
   Twitter as TwitterIcon,
   LogOut as LogoutIcon
