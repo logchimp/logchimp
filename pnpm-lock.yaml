@@ -79,7 +79,7 @@ importers:
       '@vueuse/core': 9.3.0
       '@vueuse/head': 0.9.7
       axios: 1.1.2
-      dayjs: 1.11.4
+      dayjs: 1.11.5
       lucide-vue: npm:lucide-vue-next@0.91.0
       pinia: 2.0.23
       sass: 1.55.0
@@ -98,7 +98,7 @@ importers:
       '@vueuse/core': 9.3.0_vue@3.2.40
       '@vueuse/head': 0.9.7_vue@3.2.40
       axios: 1.1.2
-      dayjs: 1.11.4
+      dayjs: 1.11.5
       lucide-vue: /lucide-vue-next/0.91.0_vue@3.2.40
       pinia: 2.0.23_bfjwoga25wxjazzogo7o372nwq
       uuid: 9.0.0
@@ -1849,8 +1849,8 @@ packages:
       whatwg-url: 8.7.0
     dev: true
 
-  /dayjs/1.11.4:
-    resolution: {integrity: sha512-Zj/lPM5hOvQ1Bf7uAvewDaUcsJoI6JmNqmHhHl3nyumwe0XHwt8sWdOVAPACJzCebL8gQCi+K49w7iKWnGwX9g==}
+  /dayjs/1.11.5:
+    resolution: {integrity: sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==}
     dev: false
 
   /debug/2.6.9:
