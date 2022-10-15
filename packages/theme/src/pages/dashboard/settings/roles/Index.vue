@@ -2,9 +2,7 @@
   <div>
     <header class="form-header">
       <div class="breadcrumbs">
-        <div class="breadcrum-item">
-          Roles
-        </div>
+        <div class="breadcrum-item">Roles</div>
       </div>
 
       <Button
@@ -19,17 +17,11 @@
 
     <div class="table-container">
       <div class="table-header">
-        <div class="table-header-item">
-          name
-        </div>
+        <div class="table-header-item">name</div>
         <div class="table-header-item" />
       </div>
       <div class="table-body">
-        <div
-          v-for="role in roles"
-          :key="role.id"
-          class="table-row"
-        >
+        <div v-for="role in roles" :key="role.id" class="table-row">
           <div class="table-data">
             {{ role.name }}
           </div>
@@ -43,7 +35,11 @@
             <dropdown-wrapper v-if="settings.developer_mode">
               <template #toggle>
                 <div
-                  class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
+                  class="
+                    table-data table-data-icon
+                    boards-table-icon-settings
+                    dropdown-menu-icon
+                  "
                 >
                   <more-icon />
                 </div>
@@ -63,6 +59,14 @@
             </dropdown-wrapper>
           </div>
         </div>
+        <!-- <div slot="spinner" class="loader-container">
+          <loader />
+        </div>
+        <div slot="no-more" />
+        <div slot="no-results" />
+        <client-error slot="error">
+          Something went wrong!
+        </client-error> -->
       </div>
     </div>
   </div>
@@ -85,17 +89,19 @@ import {
 } from "lucide-vue";
 
 // modules
-import { router} from "../../../../router";
-import {useSettingStore} from "../../../../store/settings"
-import {useUserStore} from "../../../../store/user"
+import { router } from "../../../../router";
+import { useSettingStore } from "../../../../store/settings"
+import { useUserStore } from "../../../../store/user"
 import { getAllRoles, createRole } from "../../../../modules/roles";
 import { useCopyText } from "../../../../hooks";
 
 // components
-import Button from "../../../../components/Button.vue";
-import DropdownWrapper from "../../../../components/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../../components/dropdown/Dropdown.vue";
-import DropdownItem from "../../../../components/dropdown/DropdownItem.vue";
+import Button from "../../../../components/ui/Button.vue";
+import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
+import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
+import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
+// import Loader from "../../../../components/ui/Loader.vue";
+// import ClientError from "../../../../components/ui/ClientError.vue";
 
 const { settings } = useSettingStore()
 const { permissions  } = useUserStore()
@@ -136,6 +142,6 @@ async function getRoles() {
 onMounted(() => getRoles())
 
 useHead({
-	title: "Roles · Settings · Dashboard"
+	title: "Roles • Settings • Dashboard"
 })
 </script>

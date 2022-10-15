@@ -121,6 +121,7 @@ import {
   Settings as SettingsIcon
 } from "lucide-vue";
 import draggable from "vuedraggable";
+import { useHead } from "@vueuse/head";
 
 // modules
 import type { DraggableSortFromToType } from "../../../types"
@@ -137,12 +138,11 @@ import {
 import { useCopyText } from "../../../hooks";
 
 // components
-import Button from "../../../components/Button.vue";
-import DropdownWrapper from "../../../components/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../components/dropdown/Dropdown.vue";
-import DropdownItem from "../../../components/dropdown/DropdownItem.vue";
-import DropdownSpacer from "../../../components/dropdown/DropdownSpacer.vue";
-import { useHead } from "@vueuse/head";
+import Button from "../../../components/ui/Button.vue";
+import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue";
+import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
+import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
+import DropdownSpacer from "../../../components/ui/dropdown/DropdownSpacer.vue";
 
 const { settings } = useSettingStore()
 const { permissions } = useUserStore()
@@ -237,6 +237,6 @@ async function deleteRoadmapHandler(id: string) {
 onMounted(() => getRoadmaps())
 
 useHead({
-	title: "Roadmaps · Dashboard"
+	title: "Roadmaps • Dashboard"
 })
 </script>

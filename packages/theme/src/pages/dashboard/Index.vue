@@ -1,17 +1,11 @@
 <template>
   <div class="dashboard-overview-posts-and-boards">
     <div class="dashboard-overview-posts">
-      <div class="table-heading">
-        Posts
-      </div>
+      <div class="table-heading">Posts</div>
       <Table>
         <template #header>
-          <div class="table-header-item posts-table-title">
-            title
-          </div>
-          <div class="table-header-item posts-table-votes">
-            votes
-          </div>
+          <div class="table-header-item posts-table-title">title</div>
+          <div class="table-header-item posts-table-votes">votes</div>
         </template>
 				<div v-infinite-scroll="getPosts">
 					<router-link
@@ -27,28 +21,24 @@
 							{{ post.voters.votesCount }}
 						</div>
 					</router-link>
-          <!-- <div slot="spinner" class="loader-container">
-            <loader />
-          </div>
-          <div slot="no-more" />
-          <div slot="no-results" />
-          <div slot="error" /> -->
-        </div>
+					<!-- <div slot="spinner" class="loader-container">
+						<loader />
+					</div>
+					<div slot="no-more" />
+					<div slot="no-results" />
+					<client-error slot="error">
+						Something went wrong!
+					</client-error> -->
+				</div>
       </Table>
     </div>
     <div class="dashboard-overview-boards">
-      <div class="table-heading">
-        Boards
-      </div>
+      <div class="table-heading">Boards</div>
       <Table>
         <template #header>
           <div class="table-header-item boards-table-color" />
-          <div class="table-header-item boards-table-name">
-            name
-          </div>
-          <div class="table-header-item boards-table-posts">
-            posts
-          </div>
+          <div class="table-header-item boards-table-name">name</div>
+          <div class="table-header-item boards-table-posts">posts</div>
         </template>
         <div v-infinite-scroll="getBoards">
 					<div
@@ -71,13 +61,15 @@
 							{{ board.post_count }}
 						</div>
 					</div>
-          <!-- <div slot="spinner" class="loader-container">
-            <loader />
-          </div>
-          <div slot="no-more" />
-          <div slot="no-results" />
-          <div slot="error" /> -->
-        </div>
+					<!-- <div slot="spinner" class="loader-container">
+						<loader />
+					</div>
+					<div slot="no-more" />
+					<div slot="no-results" />
+					<client-error slot="error">
+						Something went wrong!
+					</client-error> -->
+				</div>
       </Table>
     </div>
   </div>
@@ -100,8 +92,9 @@ import { getPosts } from "../../modules/posts";
 import { getAllBoards } from "../../modules/boards";
 
 // components
-import Table from "../../components/Table.vue";
-// import Loader from "../../components/Loader.vue";
+import Table from "../../components/ui/Table.vue";
+// import Loader from "../../components/ui/Loader.vue";
+// import ClientError from "../../components/ui/ClientError.vue";
 
 const posts = reactive<{
 	// TODO: Add TS types
@@ -161,3 +154,40 @@ useHead({
 	title: "Dashboard"
 })
 </script>
+
+<style lang='sass'>
+.dashboard-overview-posts-and-boards
+  display: flex
+  align-items: flex-start
+
+.dashboard-overview-posts
+  flex: 2
+  margin-right: 1rem
+
+.dashboard-overview-boards
+  flex: 1
+  margin-left: 1rem
+
+// posts
+.posts-table-title
+  flex: 6
+  font-weight: 500
+
+.posts-table-votes
+  flex: 1
+  text-align: right
+
+// boards
+.boards-table-color
+  flex: 0.5
+  padding-right: 0.5rem
+
+.boards-table-name
+  flex: 10
+  font-weight: 500
+  padding-left: 0.5rem
+
+.boards-table-posts
+  flex: 2
+  text-align: right
+</style>

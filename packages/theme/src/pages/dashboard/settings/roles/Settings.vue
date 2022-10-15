@@ -26,11 +26,7 @@
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
-          <l-text
-            v-model="role.name"
-            label="Name"
-            placeholder="Role name"
-          />
+          <l-text v-model="role.name" label="Name" placeholder="Role name" />
         </div>
 
         <div class="form-column">
@@ -46,9 +42,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Posts permissions
-      </p>
+      <p class="form-section-title">Posts permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.post.read" label="Read" />
@@ -67,9 +61,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Boards permissions
-      </p>
+      <p class="form-section-title">Boards permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.board.read" label="Read" />
@@ -86,9 +78,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Roadmaps permissions
-      </p>
+      <p class="form-section-title">Roadmaps permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.roadmap.read" label="Read" />
@@ -108,9 +98,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Vote permissions
-      </p>
+      <p class="form-section-title">Vote permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.vote.create" label="Create" />
@@ -125,9 +113,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Dashboard permissions
-      </p>
+      <p class="form-section-title">Dashboard permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.dashboard.read" label="Read" />
@@ -136,9 +122,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Roles permissions
-      </p>
+      <p class="form-section-title">Roles permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.role.read" label="Read" />
@@ -155,9 +139,7 @@
     </div>
 
     <div class="form-section">
-      <p class="form-section-title">
-        Settings permissions
-      </p>
+      <p class="form-section-title">Settings permissions</p>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.settings.read" label="Read" />
@@ -187,10 +169,10 @@ import {useUserStore} from "../../../../store/user"
 import { getRole, updateRole } from "../../../../modules/roles";
 
 // components
-import Button from "../../../../components/Button.vue";
-import LText from "../../../../components/input/LText.vue";
-import LTextarea from "../../../../components/input/LTextarea.vue";
-import ToggleItem from "../../../../components/input/ToggleItem.vue";
+import Button from "../../../../components/ui/Button.vue";
+import LText from "../../../../components/ui/input/LText.vue";
+import LTextarea from "../../../../components/ui/input/LTextarea.vue";
+import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
 
 const { permissions: userPermissions } = useUserStore()
 
@@ -310,6 +292,6 @@ async function getRoleHandler() {
 onMounted(() => getRoleHandler())
 
 useHead({
-	title: `${title.value ? `${title.value} ` : ''}Roles · Settings · Dashboard`
+	title: `${title.value ? `${title.value} • ` : ''}Roles • Settings • Dashboard`
 })
 </script>

@@ -84,15 +84,13 @@ import { getUserSettings, updateUserSettings } from "../modules/users";
 import { resendUserVerificationEmail } from "../modules/auth";
 import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
+import tokenError from "../utils/tokenError";
 
 // components
-import Loader from "../components/Loader.vue";
+import Loader from "../components/ui/Loader.vue";
 import ServerError from "../components/serverError.vue";
-import LText from "../components/input/LText.vue";
-import Button from "../components/Button.vue";
-
-// utils
-import tokenError from "../utils/tokenError";
+import LText from "../components/ui/input/LText.vue";
+import Button from "../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore()
 const { getUserId } = useUserStore()
@@ -177,8 +175,37 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `User settings · ${siteSettings.title}`
+			content: `User settings • ${siteSettings.title}`
 		}
 	]
 })
 </script>
+
+<style lang='sass'>
+.user-settings-verification
+	border: 1px solid var(--color-gray-90)
+	border-radius: var(--border-radius-default)
+	padding: 1rem 1.5rem
+	margin-bottom: 2rem
+
+	.button
+		margin-left: auto
+
+.user-settings-verification, .user-settings-verification-content
+	display: flex
+	align-items: center
+
+.user-settings-verification-content svg
+	margin-right: 1rem
+	stroke: var(--color-color-warning)
+
+.user-settings-verification-text
+	display: flex
+	flex-direction: column
+
+	h6
+		margin-bottom: 0.25rem
+
+	p
+		font-size: 0.875rem
+</style>

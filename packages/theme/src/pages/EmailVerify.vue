@@ -31,6 +31,7 @@ export default {
 
 <script setup lang="ts">
 // packages
+import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 
@@ -40,9 +41,8 @@ import { useSettingStore } from "../store/settings"
 import { verifyUserEmail } from "../modules/auth";
 
 // components
-import Loader from "../components/Loader.vue";
-import SiteBranding from "../components/SiteBranding.vue";
-import { onMounted, ref } from "vue";
+import Loader from "../components/ui/Loader.vue";
+import SiteBranding from "../components/site/SiteBranding.vue";
 
 const { get: siteSettings } = useSettingStore()
 
@@ -85,3 +85,22 @@ useHead({
 	]
 })
 </script>
+
+<style lang='sass'>
+.email-verification
+	margin-top: 4rem
+	display: flex
+	flex-direction: column
+	justify-content: center
+	align-items: center
+
+.email-verification > .auth-form
+	display: flex
+	flex-direction: column
+	align-items: center
+
+	svg
+		margin-bottom: 1rem
+		width: 3rem
+		height: 3rem
+</style>

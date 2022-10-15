@@ -43,10 +43,10 @@ import { useUserStore } from "../../store/user"
 import { router } from "../../router";
 
 // components
-import { FormFieldErrorType } from "../input/formBaseProps";
-import LText from "../input/LText.vue";
-import LTextarea from "../input/LTextarea.vue";
-import Button from "../Button.vue";
+import { FormFieldErrorType } from "../ui/input/formBaseProps";
+import LText from "../ui/input/LText.vue";
+import LTextarea from "../ui/input/LTextarea.vue";
+import Button from "../ui/Button.vue";
 
 // utils
 import validateUUID from "../../utils/validateUUID";

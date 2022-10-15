@@ -13,6 +13,7 @@ const error = require("../../errorResponse.json");
 exports.create = async (req, res) => {
 	const permissions = req.user.permissions;
 	const name = req.body.name || "new board";
+  const display = req.body.display;
 
 	const checkPermission = permissions.includes("board:create");
 	if (!checkPermission) {
@@ -28,7 +29,8 @@ exports.create = async (req, res) => {
 				boardId: uuidv4(),
 				name,
 				url: `new-board-${nanoid(10)}`,
-				color: generateHexColor()
+				color: generateHexColor(),
+        display,
 			})
 			.into("boards")
 			.returning("*");
