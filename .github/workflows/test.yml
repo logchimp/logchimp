@@ -54,10 +54,12 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - uses: rome/setup-rome@v0.1
+      - name: Install Rome
+        uses: rome/setup-rome@latest
         with:
           version: latest
-      - run: rome format --ci .
+      - name: Rome format
+        run: rome format --ci .
 
   theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
