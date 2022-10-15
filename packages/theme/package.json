@@ -17,7 +17,7 @@
     "dayjs": "1.11.4",
     "lucide-vue": "npm:lucide-vue-next@0.91.0",
     "pinia": "2.0.23",
-    "uuid": "^9.0.0",
+    "uuid": "9.0.0",
     "vue": "3.2.40",
     "vue-gtag": "2.0.1",
     "vue-infinite-loading": "github:nvitius/vue-infinite-loading#next",
@@ -25,7 +25,7 @@
     "vuedraggable": "4.1.0"
   },
   "devDependencies": {
-    "@types/uuid": "^8.3.4",
+    "@types/uuid": "8.3.4",
     "@vitejs/plugin-vue": "3.1.2",
     "@vue/test-utils": "2.1.0",
     "sass": "1.55.0",
