@@ -45,7 +45,10 @@ ports:
   - port: 1080
     onOpen: ignore
   - port: 1025
-    onOpen: ignore
+
+gitConfig:
+  alias.st: status
+  alias.co: checkout
 
 github:
   prebuilds:
