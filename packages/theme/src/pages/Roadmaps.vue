@@ -1,9 +1,6 @@
 <template>
-	<client-error v-if="error">
-		<p>Something went wrong!</p>
-	</client-error>
-	<template v-else-if="roadmaps[0]" >
-    <div class="roadmap">
+  <div>
+    <div v-if="roadmaps[0]" class="roadmap">
       <roadmap-column
         v-for="roadmap in roadmaps"
         :key="roadmap.id"
@@ -11,10 +8,13 @@
         :roadmap="roadmap"
       />
     </div>
-  </template>
-  <template v-else>
-    <p>There are no roadmaps.</p>
-  </template>
+
+    <infinite-scroll @infinite="getRoadmaps" :state="state">
+      <template #no-results>
+        <p>There are no roadmaps.</p>
+      </template>
+    </infinite-scroll>
+  </div>
 </template>
 
 <script lang="ts">
@@ -24,7 +24,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
@@ -32,25 +32,27 @@ import { getAllRoadmaps } from "../modules/roadmaps";
 import { useSettingStore } from "../store/settings"
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../components/roadmap/RoadmapColumn.vue";
-import ClientError from "../components/ui/ClientError.vue";
 
 const { get: siteSettings } = useSettingStore()
 // TODO: Add TS types
 const roadmaps = ref<any>([])
-const error = ref<boolean>(false)
+const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
-	try {
-		const response = await getAllRoadmaps();
-		roadmaps.value = response.data.roadmaps;
-	} catch (err) {
-		console.error(err);
-		error.value = true;
-	}
-}
+  state.value = "LOADING";
 
-onMounted(() => getRoadmaps())
+  try {
+    const response = await getAllRoadmaps();
+    roadmaps.value = response.data.roadmaps;
+
+    state.value = "LOADED";
+  } catch (err) {
+    console.error(err);
+    state.value = "ERROR";
+  }
+}
 
 useHead({
 	title: "Roadmaps",
