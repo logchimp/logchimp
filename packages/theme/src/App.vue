@@ -12,6 +12,7 @@
         :type="alert.type"
         :timeout="alert.timeout"
         @remove="removeAlert(index)"
+        :is-toast="true"
       />
     </div>
     <router-view />
@@ -33,7 +34,7 @@ import { useAlertStore } from "./store/alert"
 import { getPermissions } from "./modules/users";
 
 // components
-import Alert from "./components/Alert.vue";
+import { Alert } from "./components/ui/Alert";
 
 const settingsStore = useSettingStore()
 const { getAlerts, remove: removeAlert } = useAlertStore()

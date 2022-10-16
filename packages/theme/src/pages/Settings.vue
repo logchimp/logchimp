@@ -5,26 +5,25 @@
     </h4>
     <div v-if="!loading">
       <server-error v-if="serverError" @close="serverError = false" />
-      <div v-if="!isVerified" class="user-settings-verification">
-        <div class="user-settings-verification-content">
-          <alert-icon />
-          <div class="user-settings-verification-text">
-            <h6>Email verification</h6>
-            <p>
-              We’ve sent you an verification email. Please follow the
-              instructions in the email.
-            </p>
-          </div>
-        </div>
 
-        <Button
-          type="background"
-          :loading="resendVerificationEmailButtonLoading"
-          @click="resendEmail"
-        >
-          Resend
-        </Button>
-      </div>
+      <alert
+        v-if="!isVerified"
+        title="Email verification"
+        description="We’ve sent you an verification email. Please follow the instructions in the email."
+        type="warning"
+        :class="$style.verification"
+      >
+        <template #cta>
+          <Button
+            type="primary"
+            :loading="resendVerificationEmailButtonLoading"
+            @click="resendEmail"
+          >
+            Resend
+          </Button>
+        </template>
+      </alert>
+
       <l-text
         v-model="user.name"
         label="Name"
@@ -76,7 +75,6 @@ export default {
 // packages
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { AlertTriangle as AlertIcon } from "lucide-vue";
 
 // modules
 import { router } from "../router";
@@ -87,6 +85,7 @@ import { useUserStore } from "../store/user"
 import tokenError from "../utils/tokenError";
 
 // components
+import { Alert } from "../components/ui/Alert";
 import Loader from "../components/ui/Loader.vue";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
@@ -181,31 +180,8 @@ useHead({
 })
 </script>
 
-<style lang='sass'>
-.user-settings-verification
-	border: 1px solid var(--color-gray-90)
-	border-radius: var(--border-radius-default)
-	padding: 1rem 1.5rem
-	margin-bottom: 2rem
-
-	.button
-		margin-left: auto
-
-.user-settings-verification, .user-settings-verification-content
-	display: flex
-	align-items: center
-
-.user-settings-verification-content svg
-	margin-right: 1rem
-	stroke: var(--color-color-warning)
-
-.user-settings-verification-text
-	display: flex
-	flex-direction: column
-
-	h6
-		margin-bottom: 0.25rem
-
-	p
-		font-size: 0.875rem
+<style lang='scss' module>
+.verification {
+	margin-bottom: 2rem;
+}
 </style>
