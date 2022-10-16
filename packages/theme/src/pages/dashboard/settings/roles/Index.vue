@@ -59,14 +59,8 @@
             </dropdown-wrapper>
           </div>
         </div>
-        <!-- <div slot="spinner" class="loader-container">
-          <loader />
-        </div>
-        <div slot="no-more" />
-        <div slot="no-results" />
-        <client-error slot="error">
-          Something went wrong!
-        </client-error> -->
+
+        <infinite-scroll @infinite="getRoles" :state="state" />
       </div>
     </div>
   </div>
@@ -80,7 +74,7 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import {
   Settings as SettingsIcon,
@@ -96,12 +90,11 @@ import { getAllRoles, createRole } from "../../../../modules/roles";
 import { useCopyText } from "../../../../hooks";
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
-// import Loader from "../../../../components/ui/Loader.vue";
-// import ClientError from "../../../../components/ui/ClientError.vue";
 
 const { settings } = useSettingStore()
 const { permissions  } = useUserStore()
@@ -109,6 +102,7 @@ const { permissions  } = useUserStore()
 // TODO: Add TS types
 const roles = ref<any>([])
 const createRoleButtonLoading = ref(false)
+const state = ref<InfiniteScrollStateType>()
 
 const createRoleButtonDisabled = computed(() => {
 	const checkPermission = permissions.includes("role:create");
@@ -130,16 +124,18 @@ async function createRoleHandler() {
 }
 
 async function getRoles() {
+  state.value = 'LOADING'
+
 	try {
 		const response = await getAllRoles();
 
 		roles.value = response.data.roles;
+    state.value = 'COMPLETED'
 	} catch (error) {
 		console.error(error);
+    state.value = 'ERROR'
 	}
 }
-
-onMounted(() => getRoles())
 
 useHead({
 	title: "Roles • Settings • Dashboard"

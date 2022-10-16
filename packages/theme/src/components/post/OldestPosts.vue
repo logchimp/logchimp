@@ -7,18 +7,7 @@
       :show-board="false"
     />
 
-    <infinite-scroll @infinite="getMorePosts" :state="state">
-      <template #spinner>
-        <div class="loader-container">
-          <loader />
-        </div>
-      </template>
-      <template #error>
-        <client-error>
-          Something went wrong!
-        </client-error>
-      </template>
-    </infinite-scroll>
+    <infinite-scroll @infinite="getMorePosts" :state="state" />
   </div>
 </template>
 
@@ -31,9 +20,7 @@ import { getPosts } from "../../modules/posts";
 
 // components
 import InfiniteScroll, { InfiniteScrollStateType } from "../ui/InfiniteScroll.vue";
-import ClientError from "../ui/ClientError.vue";
 import PostItem from "../post/PostItem.vue";
-import Loader from "../ui/Loader.vue";
 
 const props = defineProps({
 	board: {
