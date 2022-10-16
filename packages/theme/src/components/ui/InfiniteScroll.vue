@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-test="infinite-scroll" :data-state="state">
     <template v-if="loading">
       <slot name="spinner">
         <div :class="$style['loader-container']">

@@ -1,21 +1,13 @@
 <template>
   <div class="homepage">
     <main class="homepage-posts">
-			<div v-infinite-scroll="getBoardPosts">
-				<post-item
-					v-for="post in posts"
-					:key="post.postId"
-					:post="post"
-				/>
-        <!-- <div slot="spinner" class="loader-container">
-          <loader />
-        </div>
-        <div slot="no-more" />
-        <div slot="no-results" />
-				<client-error slot="error">
-					<p>Something went wrong!</p>
-				</client-error> -->
-      </div>
+      <post-item
+        v-for="post in posts"
+        :key="post.postId"
+        :post="post"
+      />
+
+      <infinite-scroll @infinite="getBoardPosts" :state="state" />
     </main>
     <aside class="homepage-sidebar">
       <site-setup-card v-if="showSiteSetupCard" />
@@ -34,7 +26,6 @@ export default {
 // packages
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { isSiteSetup } from "../modules/site";
@@ -43,9 +34,8 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import PostItem from "../components/post/PostItem.vue";
-// import ClientError from "../components/ui/ClientError.vue";
-// import Loader from "../components/ui/Loader.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import LoginCard from "../components/auth/LoginCard.vue";
 
@@ -54,8 +44,9 @@ const userStore = useUserStore()
 
 // TODO: Add TS type
 const posts = ref<any>([]);
-const page = ref(1);
+const page = ref<number>(1);
 const showSiteSetupCard = ref<boolean>(false)
+const state = ref<InfiniteScrollStateType>()
 
 async function isSetup() {
 	try {
@@ -67,6 +58,8 @@ async function isSetup() {
 }
 
 async function getBoardPosts() {
+  state.value = 'LOADING'
+
   try {
     const response = await getPosts({
 			page: page.value,
@@ -76,20 +69,17 @@ async function getBoardPosts() {
     if (response.data.posts.length) {
       posts.value.push(...response.data.posts);
       page.value += 1;
-      // $state.loaded();
+      state.value = 'LOADED'
     } else {
-      // $state.complete();
+      state.value = 'COMPLETED'
     }
   } catch (error) {
     console.error(error);
-    // $state.error();
+    state.value = 'ERROR'
   }
 }
 
-onMounted(() => {
-	isSetup()
-	getBoardPosts()
-});
+onMounted(() => isSetup());
 
 useHead({
 	title: "Home",

@@ -6,22 +6,14 @@
 			</div>
 		</header>
 
-		<div v-infinite-scroll="getBoardPosts">
-			<post-item
-				v-for="post in posts"
-				:key="post.postId"
-				:post="post"
-				:dashboard="true"
-			/>
-			<!-- <div slot="spinner" class="loader-container">
-				<loader />
-			</div>
-			<div slot="no-more" />
-			<div slot="no-results" />
-			<client-error slot="error">
-				Something went wrong!
-			</client-error> -->
-		</div>
+    <post-item
+      v-for="post in posts"
+      :key="post.postId"
+      :post="post"
+      :dashboard="true"
+    />
+
+    <infinite-scroll @infinite="getBoardPosts" :state="state" />
 	</div>
 </template>
 
@@ -33,22 +25,25 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { getPosts } from "../../../modules/posts";
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue"
 import PostItem from "../../../components/post/PostItem.vue";
 import Loader from "../../../components/ui/Loader.vue";
-// import ClientError from "../../../components/ui/ClientError.vue";
 
 const posts = ref<any>([])
-const page = ref(1);
+const page = ref<number>(1);
+
+const state = ref<InfiniteScrollStateType>()
 
 async function getBoardPosts() {
+  state.value = "LOADING"
+
 	try {
 		const response = await getPosts({
 			page: page.value,
@@ -58,17 +53,15 @@ async function getBoardPosts() {
 		if (response.data.posts.length) {
 			posts.value.push(...response.data.posts);
 			page.value += 1;
-			// $state.loaded();
+			state.value = "LOADED"
 		} else {
-			// $state.complete();
+			state.value = "COMPLETED"
 		}
 	} catch (error) {
 		console.error(error);
-		// $state.error();
+		state.value = "ERROR"
 	}
 }
-
-onMounted(() => getBoardPosts())
 
 useHead({
 	title: "Posts • Dashboard"

@@ -7,29 +7,22 @@
           <div class="table-header-item posts-table-title">title</div>
           <div class="table-header-item posts-table-votes">votes</div>
         </template>
-				<div v-infinite-scroll="getPosts">
-					<router-link
-						v-for="post in posts.data"
-						:key="post.postId"
-						:to="`/dashboard/posts/${post.slug}`"
-						class="table-row"
-					>
-						<div class="table-data posts-table-title">
-							{{ post.title }}
-						</div>
-						<div class="table-data posts-table-votes">
-							{{ post.voters.votesCount }}
-						</div>
-					</router-link>
-					<!-- <div slot="spinner" class="loader-container">
-						<loader />
-					</div>
-					<div slot="no-more" />
-					<div slot="no-results" />
-					<client-error slot="error">
-						Something went wrong!
-					</client-error> -->
-				</div>
+
+        <router-link
+          v-for="post in posts"
+          :key="post.postId"
+          :to="`/dashboard/posts/${post.slug}`"
+          class="table-row"
+        >
+          <div class="table-data posts-table-title">
+            {{ post.title }}
+          </div>
+          <div class="table-data posts-table-votes">
+            {{ post.voters.votesCount }}
+          </div>
+        </router-link>
+
+        <infinite-scroll @infinite="getRecentPosts" :state="postState" />
       </Table>
     </div>
     <div class="dashboard-overview-boards">
@@ -40,36 +33,29 @@
           <div class="table-header-item boards-table-name">name</div>
           <div class="table-header-item boards-table-posts">posts</div>
         </template>
-        <div v-infinite-scroll="getBoards">
-					<div
-						v-for="board in boards.data"
-						:key="board.boardId"
-						class="table-row"
-					>
-						<div class="table-data boards-table-color">
-							<div
-								class="color-dot"
-								:style="{
-									backgroundColor: `#${board.color}`
-								}"
-							/>
-						</div>
-						<div class="table-data boards-table-name">
-							{{ board.name }}
-						</div>
-						<div class="table-data boards-table-posts">
-							{{ board.post_count }}
-						</div>
-					</div>
-					<!-- <div slot="spinner" class="loader-container">
-						<loader />
-					</div>
-					<div slot="no-more" />
-					<div slot="no-results" />
-					<client-error slot="error">
-						Something went wrong!
-					</client-error> -->
-				</div>
+
+        <div
+          v-for="board in boards"
+          :key="board.boardId"
+          class="table-row"
+        >
+          <div class="table-data boards-table-color">
+            <div
+              class="color-dot"
+              :style="{
+                backgroundColor: `#${board.color}`
+              }"
+            />
+          </div>
+          <div class="table-data boards-table-name">
+            {{ board.name }}
+          </div>
+          <div class="table-data boards-table-posts">
+            {{ board.post_count }}
+          </div>
+        </div>
+
+        <infinite-scroll @infinite="getBoards" :state="boardState" />
       </Table>
     </div>
   </div>
@@ -83,37 +69,27 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { onMounted, reactive } from "vue";
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { getPosts } from "../../modules/posts";
 import { getAllBoards } from "../../modules/boards";
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
-// import Loader from "../../components/ui/Loader.vue";
-// import ClientError from "../../components/ui/ClientError.vue";
 
-const posts = reactive<{
-	// TODO: Add TS types
-	data: any
-	loading: boolean
-}>({
-	data: [],
-	loading: false
-})
-const boards = reactive<{
-	// TODO: Add TS types
-	data: any
-	loading: boolean
-}>({
-	data: [],
-	loading: false
-})
+// TODO: Add TS types
+const posts = ref<any>([])
+const postState = ref<InfiniteScrollStateType>()
+// TODO: Add TS types
+const boards = ref<any>([])
+const boardState = ref<InfiniteScrollStateType>()
 
 async function getRecentPosts() {
+  postState.value = 'LOADING'
+
 	try {
 		const response = await getPosts({
 			page: 1,
@@ -121,11 +97,11 @@ async function getRecentPosts() {
 			sort: "DESC"
 		});
 
-		posts.data = response.data.posts;
-		// $state.complete();
+		posts.value = response.data.posts;
+		postState.value = 'COMPLETED'
 	} catch (error) {
 		console.error(error);
-		// $state.error();
+		postState.value = 'ERROR'
 	}
 }
 
@@ -137,18 +113,13 @@ async function getBoards() {
 			sort: "DESC"
 		});
 
-		boards.data = response.data.boards;
-		// $state.complete();
+		boards.value = response.data.boards;
+		boardState.value = "COMPLETED";
 	} catch (error) {
 		console.error(error);
-		// $state.error();
+		boardState.value = "ERROR";
 	}
 }
-
-onMounted(() => {
-	getRecentPosts()
-	getBoards()
-})
 
 useHead({
 	title: "Dashboard"

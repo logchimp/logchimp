@@ -97,6 +97,8 @@
 						</div>
 					</template>
         </draggable>
+
+        <infinite-scroll @infinite="getRoadmaps" :state="state" />
       </div>
     </div>
   </div>
@@ -110,7 +112,7 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import {
   GripVertical as GripIcon,
   Eye as EyeIcon,
@@ -138,6 +140,7 @@ import {
 import { useCopyText } from "../../../hooks";
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../components/ui/Button.vue";
 import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
@@ -160,6 +163,7 @@ const sort = ref<DraggableSortFromToType>({
 	},
 })
 const drag = ref(false)
+const state = ref<InfiniteScrollStateType>()
 
 const createRoadmapButtonDisabled = computed(() => {
 	const checkPermission = permissions.includes("roadmap:create");
@@ -213,11 +217,16 @@ async function initialiseSort() {
 }
 
 async function getRoadmaps() {
+  state.value = "LOADING";
+
 	try {
 		const response = await getAllRoadmaps();
+
 		roadmaps.value = response.data.roadmaps;
+    state.value = "COMPLETED";
 	} catch (err) {
 		console.error(err);
+    state.value = "ERROR";
 	}
 }
 
@@ -233,8 +242,6 @@ async function deleteRoadmapHandler(id: string) {
 		console.error(error);
 	}
 }
-
-onMounted(() => getRoadmaps())
 
 useHead({
 	title: "Roadmaps • Dashboard"

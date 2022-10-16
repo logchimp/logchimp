@@ -22,95 +22,88 @@
 				<div class="table-header-item boards-table-posts">posts</div>
 				<div class="table-header-item boards-table-icons" />
 			</template>
-			<div v-infinite-scroll="getBoards">
-				<div
-					v-for="(board, index) in boards"
-					:key="board.boardId"
-					class="table-row"
-				>
-					<div class="table-data boards-table-color">
-						<div
-							class="color-dot"
-							:style="{
-								backgroundColor: `#${board.color}`
-							}"
-						/>
-					</div>
-					<div class="table-data boards-table-name">
-						{{ board.name }}
-					</div>
-					<div class="table-data boards-table-posts">
-						{{ board.post_count }}
-					</div>
-					<div class="table-icon-group boards-table-icons">
-						<router-link
-							:to="`/boards/${board.url}`"
-							class="table-data table-data-icon boards-table-icon-link"
-						>
-							<link-icon />
-						</router-link>
-						<div class="table-data table-data-icon">
-							<eye-icon v-if="board.display" />
-							<eye-off-icon v-else />
-						</div>
-						<dropdown-wrapper>
-							<template #toggle>
-								<div
-									class="
-										table-data table-data-icon
-										boards-table-icon-settings
-										dropdown-menu-icon
-									"
-								>
-									<more-icon />
-								</div>
-							</template>
-							<template #default="dropdown">
-								<dropdown v-if="dropdown.active" class="sw">
-									<dropdown-item
-										@click="
-											router.push(`/dashboard/boards/${board.url}/settings`)
-										"
-									>
-										<template #icon>
-											<settings-icon />
-										</template>
-										Settings
-									</dropdown-item>
-									<dropdown-item
-										v-if="settings.developer_mode"
-										@click="useCopyText(board.boardId)"
-									>
-										<template #icon>
-											<copy-icon />
-										</template>
-										Copy ID
-									</dropdown-item>
-									<dropdown-spacer />
-									<dropdown-item
-										:disabled="deleteBoardPermissionDisabled"
-										class="color-danger"
-										@click="deleteBoardHandler(board.boardId, index)"
-									>
-										<template #icon>
-											<delete-icon />
-										</template>
-										Delete
-									</dropdown-item>
-								</dropdown>
-							</template>
-						</dropdown-wrapper>
-					</div>
-				</div>
-				<!-- <div slot="spinner" class="loader-container">
-					<loader />
-				</div>
-				<div slot="no-more" />
-				<div slot="no-results" />
-				<client-error slot="error">
-					Something went wrong!
-				</client-error> -->
-			</div>
+
+      <div
+        v-for="(board, index) in boards"
+        :key="board.boardId"
+        class="table-row"
+      >
+        <div class="table-data boards-table-color">
+          <div
+            class="color-dot"
+            :style="{
+              backgroundColor: `#${board.color}`
+            }"
+          />
+        </div>
+        <div class="table-data boards-table-name">
+          {{ board.name }}
+        </div>
+        <div class="table-data boards-table-posts">
+          {{ board.post_count }}
+        </div>
+        <div class="table-icon-group boards-table-icons">
+          <router-link
+            :to="`/boards/${board.url}`"
+            class="table-data table-data-icon boards-table-icon-link"
+          >
+            <link-icon />
+          </router-link>
+          <div class="table-data table-data-icon">
+            <eye-icon v-if="board.display" />
+            <eye-off-icon v-else />
+          </div>
+          <dropdown-wrapper>
+            <template #toggle>
+              <div
+                class="
+                  table-data table-data-icon
+                  boards-table-icon-settings
+                  dropdown-menu-icon
+                "
+              >
+                <more-icon />
+              </div>
+            </template>
+            <template #default="dropdown">
+              <dropdown v-if="dropdown.active" class="sw">
+                <dropdown-item
+                  @click="
+                    router.push(`/dashboard/boards/${board.url}/settings`)
+                  "
+                >
+                  <template #icon>
+                    <settings-icon />
+                  </template>
+                  Settings
+                </dropdown-item>
+                <dropdown-item
+                  v-if="settings.developer_mode"
+                  @click="useCopyText(board.boardId)"
+                >
+                  <template #icon>
+                    <copy-icon />
+                  </template>
+                  Copy ID
+                </dropdown-item>
+                <dropdown-spacer />
+                <dropdown-item
+                  :disabled="deleteBoardPermissionDisabled"
+                  class="color-danger"
+                  @click="deleteBoardHandler(board.boardId, index)"
+                >
+                  <template #icon>
+                    <delete-icon />
+                  </template>
+                  Delete
+                </dropdown-item>
+              </dropdown>
+            </template>
+          </dropdown-wrapper>
+        </div>
+      </div>
+
+      <infinite-scroll @infinite="getBoards" :state="state" />
 		</Table>
 	</div>
 </template>
@@ -123,7 +116,7 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import {
   Link as LinkIcon,
   Eye as EyeIcon,
@@ -134,7 +127,6 @@ import {
   Settings as SettingsIcon
 } from "lucide-vue";
 import { useHead } from "@vueuse/head";
-import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { router } from "../../../router";
@@ -148,21 +140,21 @@ import {
 import { useCopyText } from "../../../hooks";
 
 // components
+import InfiniteScroll, { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../components/ui/Button.vue";
 import Table from "../../../components/ui/Table.vue";
-// import ClientError from "../../../components/ui/ClientError.vue";
 import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
 import DropdownSpacer from "../../../components/ui/dropdown/DropdownSpacer.vue";
-// import Loader from "../../../components/ui/Loader.vue";
 
 const { settings } = useSettingStore()
 const { permissions } = useUserStore()
 
 const createBoardButtonLoading = ref(false)
 const boards = ref<any>([]);
-const page = ref(1);
+const page = ref<number>(1);
+const state = ref<InfiniteScrollStateType>()
 
 const createBoardPermissionDisabled = computed(() => {
 	const checkPermission = permissions.includes("board:create");
@@ -190,6 +182,8 @@ async function createBoardHandler() {
 }
 
 async function getBoards() {
+  state.value = "LOADING"
+
 	try {
 		const response = await getAllBoards({
 			page: page.value,
@@ -199,13 +193,13 @@ async function getBoards() {
 		if (response.data.boards.length) {
 			boards.value.push(...response.data.boards);
 			page.value += 1;
-			// $state.loaded();
+			state.value = "LOADED"
 		} else {
-			// $state.complete();
+			state.value = "COMPLETED"
 		}
 	} catch (error) {
 		console.error(error);
-		// $state.error();
+		state.value = "ERROR"
 	}
 }
 
@@ -221,8 +215,6 @@ async function deleteBoardHandler(id: string, index: number) {
 		console.error(error);
 	}
 }
-
-onMounted(() => getBoards());
 
 useHead({
 	title: "Boards • Dashboard"
