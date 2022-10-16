@@ -14,27 +14,25 @@ describe("post", () => {
         contentMarkdown: "What's this feature is all about?",
         voters: {
           isVoted: true,
-          voteCount: 120
+          voteCount: 120,
         },
         board: {
           name: "Feature requests",
           color: "abcabc",
           url: "feature-requests",
-          showBoard: true
-        }
-      }
+          showBoard: true,
+        },
+      },
     },
     stubs: {
-      RouterLink: RouterLinkStub
-    }
+      RouterLink: RouterLinkStub,
+    },
   });
 
   it("link to post", () => {
-    expect(
-      wrapper
-        .find("[data-test=post-link]")
-        .attributes('to')
-    ).toBe("/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk");
+    expect(wrapper.find("[data-test=post-link]").attributes("to")).toBe(
+      "/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk",
+    );
   });
 
   it("title", () => {
@@ -43,7 +41,7 @@ describe("post", () => {
 
   it("description", () => {
     expect(wrapper.find("[data-test=post-description]").text()).toBe(
-      "What's this feature is all about?"
+      "What's this feature is all about?",
     );
   });
 });

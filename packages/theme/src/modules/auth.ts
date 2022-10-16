@@ -3,18 +3,18 @@ import axios, { AxiosResponse } from "axios";
 import { UserType } from "./users";
 
 interface AuthenticateUserArgs {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 interface SetNewPasswordArgs {
-  token: string
-  password: string
+  token: string;
+  password: string;
 }
 
 interface AuthenticateUserType extends UserType {
-  email: string
-  authToken: string
+  email: string;
+  authToken: string;
 }
 
 /**
@@ -24,16 +24,21 @@ interface AuthenticateUserType extends UserType {
  * @param {string} password user password
  * @returns {object} response
  */
-export const signin = async ({ email, password }: AuthenticateUserArgs): Promise<AxiosResponse<{
-  user: AuthenticateUserType
-}>> => {
+export const signin = async ({
+  email,
+  password,
+}: AuthenticateUserArgs): Promise<
+  AxiosResponse<{
+    user: AuthenticateUserType;
+  }>
+> => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/login",
     data: {
       email,
-      password
-    }
+      password,
+    },
   });
 };
 
@@ -50,8 +55,8 @@ export const signup = async ({ email, password }: AuthenticateUserArgs) => {
     url: "/api/v1/auth/signup",
     data: {
       email,
-      password
-    }
+      password,
+    },
   });
 };
 
@@ -66,8 +71,8 @@ export const resendUserVerificationEmail = async (email: string) => {
     method: "POST",
     url: "/api/v1/auth/email/verify",
     data: {
-      email
-    }
+      email,
+    },
   });
 };
 
@@ -83,8 +88,8 @@ export const verifyUserEmail = async (token: string) => {
     method: "POST",
     url: "/api/v1/auth/email/validate",
     data: {
-      token
-    }
+      token,
+    },
   });
 };
 
@@ -100,8 +105,8 @@ export const requestPasswordReset = async (email: string) => {
     method: "POST",
     url: "/api/v1/auth/password/reset",
     data: {
-      email
-    }
+      email,
+    },
   });
 };
 
@@ -117,8 +122,8 @@ export const validateResetPasswordToken = async (token: string) => {
     method: "POST",
     url: "/api/v1/auth/password/validateToken",
     data: {
-      token
-    }
+      token,
+    },
   });
 };
 
@@ -130,13 +135,16 @@ export const validateResetPasswordToken = async (token: string) => {
  *
  * @returns {object} response
  */
-export const setNewPassword = async ({ token, password }: SetNewPasswordArgs) => {
+export const setNewPassword = async ({
+  token,
+  password,
+}: SetNewPasswordArgs) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/password/set",
     data: {
       token,
-      password
-    }
+      password,
+    },
   });
 };

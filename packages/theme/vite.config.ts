@@ -1,8 +1,8 @@
-import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig, loadEnv } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), "");
   const serverUrl = env.APP_SERVER_URL || "http://localhost:3000";
 
   return {
@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => {
       port: 8080,
       proxy: {
         "/api": {
-          target: serverUrl
-        }
-      }
-    }
-  }
-})
+          target: serverUrl,
+        },
+      },
+    },
+  };
+});

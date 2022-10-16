@@ -22,19 +22,19 @@ router.get("/posts/:post_id/activity", post.activity.get);
 
 // post comment
 router.post(
-	"/posts/:post_id/comments",
-	middleware.apiAuth,
-	post.comments.create
+  "/posts/:post_id/comments",
+  middleware.apiAuth,
+  post.comments.create,
 );
 router.put(
-	"/posts/:post_id/comments/:comment_id",
-	middleware.apiAuth,
-	post.comments.update
+  "/posts/:post_id/comments/:comment_id",
+  middleware.apiAuth,
+  post.comments.update,
 );
 router.delete(
-	"/posts/:post_id/comments/:comment_id",
-	middleware.apiAuth,
-	post.comments.destroy
+  "/posts/:post_id/comments/:comment_id",
+  middleware.apiAuth,
+  post.comments.destroy,
 );
 
 module.exports = router;

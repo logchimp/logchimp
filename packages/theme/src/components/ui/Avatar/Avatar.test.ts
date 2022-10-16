@@ -7,8 +7,8 @@ describe("avatar", () => {
     it("check initials 'W'", () => {
       const wrapper = mount(Avatar, {
         props: {
-          name: "Watson holmes"
-        }
+          name: "Watson holmes",
+        },
       });
 
       expect(wrapper.find("[data-test=avatar-initials]").text()).toBe("W");
@@ -17,8 +17,8 @@ describe("avatar", () => {
     it("empty name", () => {
       const wrapper = mount(Avatar, {
         props: {
-          name: ""
-        }
+          name: "",
+        },
       });
 
       expect(wrapper.find("[data-test=avatar-initials]").text()).toBe("");
@@ -30,8 +30,8 @@ describe("avatar", () => {
       const wrapper = mount(Avatar, {
         props: {
           name: "Watson",
-          src: "https://www.gravatar.com/avatar/1"
-        }
+          src: "https://www.gravatar.com/avatar/1",
+        },
       });
 
       expect(wrapper.find("[data-test=avatar-image]").isVisible()).toBe(true);
@@ -41,12 +41,12 @@ describe("avatar", () => {
       const wrapper = mount(Avatar, {
         props: {
           name: "Watson",
-          src: "https://www.gravatar.com/avatar/1"
-        }
+          src: "https://www.gravatar.com/avatar/1",
+        },
       });
 
       expect(
-        wrapper.find("[data-test=avatar-image] img").attributes("src")
+        wrapper.find("[data-test=avatar-image] img").attributes("src"),
       ).toBe("https://www.gravatar.com/avatar/1");
     });
   });

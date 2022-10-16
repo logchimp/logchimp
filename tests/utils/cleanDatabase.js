@@ -2,9 +2,9 @@ const database = require("../../server/database");
 
 // Not removing data from permissions table
 module.exports = () =>
-	database
-		.raw(
-			`
+  database
+    .raw(
+      `
 				DELETE FROM "emailVerification";
 				DELETE FROM "resetPassword";
 				DELETE FROM "posts_comments";
@@ -18,13 +18,13 @@ module.exports = () =>
 				DELETE FROM "posts";
 				DELETE FROM "users";
 				DELETE FROM "settings";
-			`
-		)
-		.then(() => {
-			if (process.env.NODE_ENV !== "CI") {
-				console.log("🚨 All data deleted!");
-			}
-		})
-		.catch((err) => {
-			console.log(err);
-		});
+			`,
+    )
+    .then(() => {
+      if (process.env.NODE_ENV !== "CI") {
+        console.log("🚨 All data deleted!");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });

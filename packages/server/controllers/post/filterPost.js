@@ -9,19 +9,19 @@ const { validUUID } = require("../../helpers");
 const logger = require("../../utils/logger");
 
 exports.filterPost = async (req, res) => {
-	const userId = validUUID(req.body.userId);
-	const boardId = validUUID(req.body.boardId);
-	const roadmapId = validUUID(req.body.roadmapId);
-	/**
-	 * top, latest, oldest, trending
-	 */
-	const created = req.body.created;
-	const page = req.body.page - 1;
-	const limit = req.body.limit || 10;
+  const userId = validUUID(req.body.userId);
+  const boardId = validUUID(req.body.boardId);
+  const roadmapId = validUUID(req.body.roadmapId);
+  /**
+   * top, latest, oldest, trending
+   */
+  const created = req.body.created;
+  const page = req.body.page - 1;
+  const limit = req.body.limit || 10;
 
-	try {
-		const { rows: response } = await database.raw(
-			`
+  try {
+    const { rows: response } = await database.raw(
+      `
 				SELECT
 					"postId",
 					"title",
@@ -33,64 +33,64 @@ exports.filterPost = async (req, res) => {
 				FROM
 					posts
 				${
-					boardId
-						? `WHERE "boardId" IN (${boardId.map(item => {
-								return `'${item}'`;
-						  })})`
-						: ""
-				}
+          boardId
+            ? `WHERE "boardId" IN (${boardId.map((item) => {
+                return `'${item}'`;
+              })})`
+            : ""
+        }
 				${roadmapId ? `WHERE roadmap_id = :roadmapId` : ""}
 				ORDER BY "createdAt" ${created}
 				LIMIT :limit
 				OFFSET :offset;
 		`,
-			{
-				limit,
-				offset: limit * page,
-				roadmapId
-			}
-		);
+      {
+        limit,
+        offset: limit * page,
+        roadmapId,
+      },
+    );
 
-		const posts = [];
+    const posts = [];
 
-		for (let i = 0; i < response.length; i++) {
-			const postId = response[i].postId;
-			const boardId = response[i].boardId;
-			const roadmapId = response[i].roadmap_id;
+    for (let i = 0; i < response.length; i++) {
+      const postId = response[i].postId;
+      const boardId = response[i].boardId;
+      const roadmapId = response[i].roadmap_id;
 
-			try {
-				const board = await getBoardById(boardId);
-				const voters = await getVotes(postId, userId);
-				const roadmap = await database
-					.select("id", "name", "url", "color")
-					.from("roadmaps")
-					.where({
-						id: roadmapId
-					})
-					.first();
+      try {
+        const board = await getBoardById(boardId);
+        const voters = await getVotes(postId, userId);
+        const roadmap = await database
+          .select("id", "name", "url", "color")
+          .from("roadmaps")
+          .where({
+            id: roadmapId,
+          })
+          .first();
 
-				delete response[i].boardId;
-				delete response[i].roadmap_id;
+        delete response[i].boardId;
+        delete response[i].roadmap_id;
 
-				posts.push({
-					...response[i],
-					board,
-					roadmap,
-					voters
-				});
-			} catch (err) {
-				logger.log({
-					level: "error",
-					message: err
-				});
-			}
-		}
+        posts.push({
+          ...response[i],
+          board,
+          roadmap,
+          voters,
+        });
+      } catch (err) {
+        logger.log({
+          level: "error",
+          message: err,
+        });
+      }
+    }
 
-		res.status(200).send({ posts });
-	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
-		});
-	}
+    res.status(200).send({ posts });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
 };

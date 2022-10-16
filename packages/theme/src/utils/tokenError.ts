@@ -1,11 +1,11 @@
-import { useUserStore } from "../store/user"
-import { router } from "../router"
+import { useUserStore } from "../store/user";
+import { router } from "../router";
 
 // TODO: Add TS types
 const tokenError = (error: any) => {
-  const { logout } = useUserStore()
+  const { logout } = useUserStore();
 
-  logout()
+  logout();
 
   if (error.response.data.code === "USER_NOT_FOUND") {
     if (router.currentRoute.value.fullPath !== "/") router.push("/");
@@ -21,8 +21,8 @@ const tokenError = (error: any) => {
     router.push({
       path: "/login",
       query: {
-        redirect: router.currentRoute.value.fullPath
-      }
+        redirect: router.currentRoute.value.fullPath,
+      },
     });
   }
 };

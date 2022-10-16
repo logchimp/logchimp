@@ -13,15 +13,15 @@ const roadmaps = require("./roadmaps");
 const roles = require("./roles");
 
 router.use(
-	"/api/v1",
-	auth,
-	posts,
-	votes,
-	users,
-	boards,
-	settings,
-	roadmaps,
-	roles
+  "/api/v1",
+  auth,
+  posts,
+  votes,
+  users,
+  boards,
+  settings,
+  roadmaps,
+  roles,
 );
 
 module.exports = router;

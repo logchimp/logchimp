@@ -4,13 +4,13 @@ const database = require("../../../database");
 const logger = require("../../../utils/logger");
 
 module.exports = async (req, res) => {
-	const { post_id } = req.params;
-	const { per_page = 10, page = 1 } = req.query;
+  const { post_id } = req.params;
+  const { per_page = 10, page = 1 } = req.query;
 
-	try {
-		const activities = await database.raw(
-		/* SQL */
-		`
+  try {
+    const activities = await database.raw(
+      /* SQL */
+      `
 			SELECT
 				id,
 				type,
@@ -51,20 +51,20 @@ module.exports = async (req, res) => {
 			LIMIT :limit
 			OFFSET :offset
 		;`,
-			{
-				limit: per_page,
-				offset: page,
-				post_id,
-			}
-		);
+      {
+        limit: per_page,
+        offset: page,
+        post_id,
+      },
+    );
 
-		res.status(200).send({
-			activity: activities.rows
-		});
-	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
-		});
-	}
+    res.status(200).send({
+      activity: activities.rows,
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
 };

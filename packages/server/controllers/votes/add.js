@@ -12,51 +12,51 @@ const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
 module.exports = async (req, res) => {
-	const userId = req.user.userId;
-	const permissions = req.user.permissions;
+  const userId = req.user.userId;
+  const permissions = req.user.permissions;
+  const checkPermission = permissions.includes("vote:create");
 
-	const postId = validUUID(req.body.postId);
+  const postId = validUUID(req.body.postId);
 
-	const checkPermission = permissions.includes("vote:create");
-	if (!checkPermission) {
-		return res.status(403).send({
-			message: error.api.roles.notEnoughPermission,
-			code: "NOT_ENOUGH_PERMISSION"
-		});
-	}
+  if (!checkPermission) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
 
-	try {
-		const vote = await database
-			.select()
-			.from("votes")
-			.where({
-				postId: postId || null,
-				userId
-			})
-			.first();
+  try {
+    const vote = await database
+      .select()
+      .from("votes")
+      .where({
+        postId: postId || null,
+        userId,
+      })
+      .first();
 
-		if (vote) {
-			return res.status(409).send({
-				message: error.api.votes.exists,
-				code: "VOTE_EXISTS"
-			});
-		}
+    if (vote) {
+      return res.status(409).send({
+        message: error.api.votes.exists,
+        code: "VOTE_EXISTS",
+      });
+    }
 
-		await database
-			.insert({
-				voteId: uuidv4(),
-				userId,
-				postId
-			})
-			.into("votes");
+    await database
+      .insert({
+        voteId: uuidv4(),
+        userId,
+        postId,
+      })
+      .into("votes");
 
-		const voters = await getVotes(postId, userId);
+    const voters = await getVotes(postId, userId);
 
-		res.status(201).send({ voters });
-	} catch (err) {
-		logger.log({
-			level: "error",
-			message: err
-		});
-	}
+    res.status(201).send({ voters });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
 };
