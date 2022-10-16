@@ -167,6 +167,10 @@ const routes = [
         component: () => import("./pages/dashboard/settings/General.vue")
       },
       {
+        path: "settings/billing",
+        component: () => import("./pages/dashboard/settings/billing.vue")
+      },
+      {
         path: "settings/roles",
         name: "Dashbord roles",
         component: () => import("./pages/dashboard/settings/roles/Index.vue")
