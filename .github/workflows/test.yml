@@ -262,7 +262,7 @@ jobs:
         run: cat ./content/logs/logchimp-all.log
 
       - name: Store Code Coverage
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: ./coverage
