@@ -1,36 +1,26 @@
 <template>
   <div>
-		<div v-infinite-scroll="getMorePosts">
-			<post-item
-				v-for="post in posts"
-				:key="post.postId"
-				:post="post"
-				:show-board="false"
-			/>
-      <!-- <div slot="spinner" class="loader-container">
-        <loader />
-      </div>
-      <div slot="no-more" />
-      <div slot="no-results" />
-      <client-error slot="error">
-				Something went wrong!
-			</client-error> -->
-    </div>
+    <post-item
+      v-for="post in posts"
+      :key="post.postId"
+      :post="post"
+      :show-board="false"
+    />
+
+    <infinite-scroll @infinite="getMorePosts" :state="state" />
   </div>
 </template>
 
 <script setup lang="ts">
 // packages
-import { onMounted, ref } from "vue";
-import { vInfiniteScroll } from "@vueuse/components";
+import { ref } from "vue";
 
 // modules
 import { getPosts } from "../../modules/posts";
 
 // components
-// import ClientError from "../ui/ClientError.vue";
+import InfiniteScroll, { InfiniteScrollStateType } from "../ui/InfiniteScroll.vue";
 import PostItem from "../post/PostItem.vue";
-// import Loader from "../Loader.vue";
 
 const props = defineProps({
 	board: {
@@ -42,10 +32,12 @@ const props = defineProps({
 });
 
 const posts = ref<any>([]);
-const page = ref(1);
+const page = ref<number>(1);
+const state = ref<InfiniteScrollStateType>()
 
 async function getMorePosts() {
 	const boardId = props.board.boardId;
+  state.value = 'LOADING'
 
 	try {
 		const response = await getPosts({
@@ -57,15 +49,13 @@ async function getMorePosts() {
 		if (response.data.posts.length) {
 			posts.value.push(...response.data.posts);
 			page.value += 1;
-			// $state.loaded();
+			state.value = 'LOADED';
 		} else {
-			// $state.complete();
+			state.value = 'COMPLETED';
 		}
 	} catch (error) {
 		console.error(error);
-		// $state.error();
+		state.value = 'ERROR';
 	}
 }
-
-onMounted(() => getMorePosts())
 </script>
