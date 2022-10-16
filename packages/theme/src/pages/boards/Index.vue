@@ -1,26 +1,17 @@
 <template>
   <div>
     <div v-if="boards.length > 0" class="boards-lists">
-			<div v-infinite-scroll="getBoards">
-				<board-item
-					v-for="board in boards"
-					:key="board.boardId"
-					:name="board.name"
-					:color="board.color"
-					:url="board.url"
-					:post-count="Number(board.post_count)"
-				/>
+      <board-item
+        v-for="board in boards"
+        :key="board.boardId"
+        :name="board.name"
+        :color="board.color"
+        :url="board.url"
+        :post-count="Number(board.post_count)"
+      />
+    </div>
 
-				<!-- <div slot="spinner" class="loader-container">
-					<loader />
-				</div>
-				<div slot="no-more" />
-				<div slot="no-results" />
-				<client-error slot="error">
-					<p>Something went wrong!</p>
-				</client-error> -->
-			</div>
-		</div>
+    <infinite-scroll @infinite="getBoards" :state="state" />
   </div>
 </template>
 
@@ -32,24 +23,23 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { vInfiniteScroll } from "@vueuse/components";
 
 // modules
 import { getPublicBoards } from "../../modules/boards";
 import { useSettingStore } from "../../store/settings"
 
 // components
-// import ClientError from "../../components/ui/ClientError.vue";
+import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import BoardItem from "../../components/board/BoardItem.vue";
-// import Loader from "../../components/ui/Loader.vue";
 
 const { get: siteSettings } = useSettingStore()
 
 // TODO: Add TS types
 const boards = ref<any>([])
-const page = ref(1)
+const page = ref<number>(1)
+const state = ref<InfiniteScrollStateType>()
 
 async function getBoards() {
 	try {
@@ -61,19 +51,15 @@ async function getBoards() {
 		if (response.data.boards.length) {
 			boards.value.push(...response.data.boards);
 			page.value += 1;
-			// $state.loaded();
+			state.value = "LOADED"
 		} else {
-			// $state.complete();
+			state.value = "COMPLETED";
 		}
 	} catch (error) {
 		console.error(error);
-		// $state.error();
+		state.value = "ERROR"
 	}
 }
-
-onMounted(() => {
-	getBoards()
-})
 
 useHead({
 	title: "Boards",
