@@ -46,6 +46,12 @@
         </router-link>
       </li>
       <li>
+        <router-link to="/dashboard/settings/billing" class="sidebar-list-item">
+          <credit-card-icon />
+          <p>Billing</p>
+        </router-link>
+      </li>
+      <li>
         <router-link to="/dashboard/settings/roles" class="sidebar-list-item">
           <shield-icon />
           <p>Roles</p>
@@ -117,6 +123,7 @@ import {
   Shield as ShieldIcon,
   FlaskConical as LabIcon,
   ArrowUpRight as ArrowUpRightIcon,
+  CreditCard as CreditCardIcon,
   Info as InfoIcon,
   Twitter as TwitterIcon,
   LogOut as LogoutIcon
