@@ -9,10 +9,10 @@ exports.up = (knex) => {
   return knex
     .raw(
       `
-			CREATE UNIQUE INDEX "role_id_user_id_unique_index" ON "roles_users"("role_id", "user_id");
+      CREATE UNIQUE INDEX "role_id_user_id_unique_index" ON "roles_users"("role_id", "user_id");
 
-			ALTER TABLE roles_users DROP CONSTRAINT IF EXISTS roles_users_id_unique;
-		`,
+      ALTER TABLE roles_users DROP CONSTRAINT IF EXISTS roles_users_id_unique;
+    `,
     )
     .then(() => {
       logger.info({

@@ -75,14 +75,14 @@ describe("GET /boards/search/:name", () => {
     // assign '@everyone' role to user
     await database.raw(
       `
-			INSERT INTO roles_users (id, role_id, user_id)
-			VALUES(:uuid, (
-					SELECT
-						id FROM roles
-					WHERE
-						name = '@everyone'
-					), :userId)
-		`,
+      INSERT INTO roles_users (id, role_id, user_id)
+      VALUES(:uuid, (
+          SELECT
+            id FROM roles
+          WHERE
+            name = '@everyone'
+          ), :userId)
+    `,
       {
         uuid: uuid(),
         userId: createUser[0].userId,
@@ -197,14 +197,14 @@ describe("POST /api/v1/boards", () => {
     // assign '@everyone' role to user
     await database.raw(
       `
-			INSERT INTO roles_users (id, role_id, user_id)
-			VALUES(:uuid, (
-					SELECT
-						id FROM roles
-					WHERE
-						name = '@everyone'
-					), :userId)
-		`,
+      INSERT INTO roles_users (id, role_id, user_id)
+      VALUES(:uuid, (
+          SELECT
+            id FROM roles
+          WHERE
+            name = '@everyone'
+          ), :userId)
+    `,
       {
         uuid: uuid(),
         userId: createUser[0].userId,

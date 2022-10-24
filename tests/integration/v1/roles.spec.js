@@ -28,14 +28,14 @@ describe("GET /api/v1/roles", () => {
     // assign '@everyone' role to user
     await database.raw(
       `
-			INSERT INTO roles_users (id, role_id, user_id)
-			VALUES(:uuid, (
-					SELECT
-						id FROM roles
-					WHERE
-						name = '@everyone'
-					), :userId)
-		`,
+      INSERT INTO roles_users (id, role_id, user_id)
+      VALUES(:uuid, (
+          SELECT
+            id FROM roles
+          WHERE
+            name = '@everyone'
+          ), :userId)
+    `,
       {
         uuid: uuid(),
         userId: createUser[0].userId,

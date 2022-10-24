@@ -47,10 +47,10 @@ const createUser = async (req, res, next, userData) => {
       rows: [getUser],
     } = await database.raw(
       `
-				SELECT EXISTS (
-					SELECT * FROM users WHERE LOWER(email) = LOWER(:email)
-				)
-			`,
+        SELECT EXISTS (
+          SELECT * FROM users WHERE LOWER(email) = LOWER(:email)
+        )
+      `,
       {
         email: userData.email,
       },
