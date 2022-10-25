@@ -66,7 +66,7 @@ importers:
       '@vitejs/plugin-vue': 3.1.2
       '@vue/test-utils': 2.1.0
       '@vueuse/components': 9.3.1
-      '@vueuse/core': 9.3.0
+      '@vueuse/core': 9.3.1
       '@vueuse/head': 0.9.8
       axios: 1.1.3
       dayjs: 1.11.5
@@ -85,7 +85,7 @@ importers:
       vuedraggable: 4.1.0
     dependencies:
       '@vueuse/components': 9.3.1_vue@3.2.41
-      '@vueuse/core': 9.3.0_vue@3.2.41
+      '@vueuse/core': 9.3.1_vue@3.2.41
       '@vueuse/head': 0.9.8_vue@3.2.41
       axios: 1.1.3
       dayjs: 1.11.5
@@ -877,10 +877,6 @@ packages:
     resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: true
 
-  /@types/web-bluetooth/0.0.15:
-    resolution: {integrity: sha512-w7hEHXnPMEZ+4nGKl/KDRVpxkwYxYExuHOYXyzIzCDzEZ9ZCGMAewulr9IqJu2LR4N37fcnb1XVeuZ09qgOxhA==}
-    dev: false
-
   /@types/web-bluetooth/0.0.16:
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
     dev: false
@@ -1046,18 +1042,6 @@ packages:
       - vue
     dev: false
 
-  /@vueuse/core/9.3.0_vue@3.2.41:
-    resolution: {integrity: sha512-64Rna8IQDWpdrJxgitDg7yv1yTp41ZmvV8zlLEylK4QQLWAhz1OFGZDPZ8bU4lwcGgbEJ2sGi2jrdNh4LttUSQ==}
-    dependencies:
-      '@types/web-bluetooth': 0.0.15
-      '@vueuse/metadata': 9.3.0
-      '@vueuse/shared': 9.3.0_vue@3.2.41
-      vue-demi: 0.13.11_vue@3.2.41
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: false
-
   /@vueuse/core/9.3.1_vue@3.2.41:
     resolution: {integrity: sha512-xriyD+v3D2ObH/UtnkEl+1sbcLBVHNaZaLi/rqoNEe/B92hggDEFQIGXoQUjdRzYOjASHSezf9uCDtmd7LeWyA==}
     dependencies:
@@ -1081,10 +1065,6 @@ packages:
       vue: 3.2.41
     transitivePeerDependencies:
       - '@vue/composition-api'
-    dev: false
-
-  /@vueuse/metadata/9.3.0:
-    resolution: {integrity: sha512-GnnfjbzIPJIh9ngL9s9oGU1+Hx/h5/KFqTfJykzh/1xjaHkedV9g0MASpdmPZIP+ynNhKAcEfA6g5i8KXwtoMA==}
     dev: false
 
   /@vueuse/metadata/9.3.1:
