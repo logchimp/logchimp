@@ -14,7 +14,10 @@
     ]
   },
   "linter": {
-    "enabled": true
+    "enabled": true,
+    "ignore": [
+      "./packages/theme/dist"
+    ]
   }
 }
 
