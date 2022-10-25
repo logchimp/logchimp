@@ -3,7 +3,7 @@ const update = require("./update");
 const destroy = require("./destroy");
 
 module.exports = {
-	create,
-	update,
-	destroy
+  create,
+  update,
+  destroy,
 };

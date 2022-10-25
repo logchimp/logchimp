@@ -12,8 +12,8 @@ const port = config.server.port || 3000;
 const host = config.server.host || "0.0.0.0";
 
 api.listen(port, host, async () => {
-	logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
-	logger.info(`Listening on port: ${port}`);
-	logger.info("Ctrl+C to shut down");
-	logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
+  logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
+  logger.info(`Listening on port: ${port}`);
+  logger.info("Ctrl+C to shut down");
+  logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
 });

@@ -15,13 +15,13 @@ const v1 = require("./v1");
  * each IP to 100 requests per windowMs
  */
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000,
-	max: 100
+  windowMs: 15 * 60 * 1000,
+  max: 100,
 });
 router.use("/content/images", limiter, serveImages);
 
 router.get("/api", (req, res) => {
-	res.send("👍");
+  res.send("👍");
 });
 
 // v1 APIs

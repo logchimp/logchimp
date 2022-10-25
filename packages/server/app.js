@@ -10,10 +10,10 @@ app.disable("x-powered-by");
 const logchimpConfig = require("./utils/logchimpConfig");
 const config = logchimpConfig();
 if (!config) {
-	console.log(
-		"LogChimp configuration missing!\nTry running this command 'logchimp install' again."
-	);
-	process.exit(1);
+  console.log(
+    "LogChimp configuration missing!\nTry running this command 'logchimp install' again.",
+  );
+  process.exit(1);
 }
 
 // Set the default environment to be `development`

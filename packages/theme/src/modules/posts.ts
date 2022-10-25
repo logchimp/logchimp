@@ -2,46 +2,46 @@
 import axios from "axios";
 
 // store
-import { useUserStore } from "../store/user"
+import { useUserStore } from "../store/user";
 import { ApiPaginationType, ApiSortType } from "../types";
 
 export interface PostType {
-  postId: string
-  title: string
-  slug: string
-  slugId: string
-  contentMarkdown?: string
-  createdAt: string
-  updatedAt: string
+  postId: string;
+  title: string;
+  slug: string;
+  slugId: string;
+  contentMarkdown?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface GetPostArgs extends ApiPaginationType {
-	boardId?: string[]
-	roadmapId?: string
+  boardId?: string[];
+  roadmapId?: string;
 }
 
 interface CreatePostArgs {
-	title: string
-	contentMarkdown?: string
+  title: string;
+  contentMarkdown?: string;
 }
 
 export interface UpdatePostArgs extends CreatePostArgs {
-	id: string
-	slugId: string
-	userId: string
-	boardId?: string
-	roadmapId?: string
+  id: string;
+  slugId: string;
+  userId: string;
+  boardId?: string;
+  roadmapId?: string;
 }
 
 interface PostActivityArgs {
-	post_id: string
-	sort: ApiSortType
+  post_id: string;
+  sort: ApiSortType;
 }
 
 interface AddCommentArgs {
-	post_id: string
-	body: string
-	is_internal?: boolean
+  post_id: string;
+  body: string;
+  is_internal?: boolean;
 }
 
 /**
@@ -53,7 +53,7 @@ interface AddCommentArgs {
  * @returns {object} response
  */
 export const createPost = async (boardId: string, post: CreatePostArgs) => {
-  const { getUserId, authToken } = useUserStore()
+  const { getUserId, authToken } = useUserStore();
 
   return await axios({
     method: "POST",
@@ -62,11 +62,11 @@ export const createPost = async (boardId: string, post: CreatePostArgs) => {
       title: post.title,
       contentMarkdown: post.contentMarkdown,
       userId: getUserId,
-      boardId
+      boardId,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -87,9 +87,9 @@ export const getPosts = async ({
   limit = 10,
   sort = "DESC",
   boardId = [],
-  roadmapId = ""
+  roadmapId = "",
 }: GetPostArgs) => {
-	const { getUserId } = useUserStore()
+  const { getUserId } = useUserStore();
 
   return await axios({
     method: "POST",
@@ -100,8 +100,8 @@ export const getPosts = async ({
       created: sort,
       userId: getUserId,
       boardId,
-      roadmapId
-    }
+      roadmapId,
+    },
   });
 };
 
@@ -113,15 +113,15 @@ export const getPosts = async ({
  * @returns {object} response
  */
 export const getPostBySlug = async (slug: string) => {
-  const { getUserId } = useUserStore()
+  const { getUserId } = useUserStore();
 
   return await axios({
     method: "POST",
     url: "/api/v1/posts/slug",
     data: {
       slug,
-      userId: getUserId
-    }
+      userId: getUserId,
+    },
   });
 };
 
@@ -140,17 +140,17 @@ export const getPostBySlug = async (slug: string) => {
  * @returns {object} response
  */
 export const updatePost = async (post: UpdatePostArgs) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "PATCH",
     url: "/api/v1/posts",
     data: {
-      ...post
+      ...post,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -166,8 +166,8 @@ export const postActivity = async ({ post_id, sort }: PostActivityArgs) => {
     method: "GET",
     url: `/api/v1/posts/${post_id}/activity`,
     params: {
-      sort
-    }
+      sort,
+    },
   });
 };
 
@@ -178,18 +178,22 @@ export const postActivity = async ({ post_id, sort }: PostActivityArgs) => {
  * @param {string} comment.body
  * @param {boolean} comment.is_internal
  */
-export const addComment = async ({ post_id, body, is_internal = false }: AddCommentArgs) => {
-  const { authToken } = useUserStore()
+export const addComment = async ({
+  post_id,
+  body,
+  is_internal = false,
+}: AddCommentArgs) => {
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: `/api/v1/posts/${post_id}/comments`,
     data: {
       body,
-      is_internal
+      is_internal,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };

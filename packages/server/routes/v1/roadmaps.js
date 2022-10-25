@@ -12,9 +12,9 @@ const exists = require("../../middlewares/roadmapExists");
 router.get("/roadmaps", roadmaps.filter);
 router.get("/roadmaps/:url", exists, roadmaps.roadmapByUrl);
 router.get(
-	"/roadmaps/search/:name",
-	middleware.apiAuth,
-	roadmaps.searchRoadmap
+  "/roadmaps/search/:name",
+  middleware.apiAuth,
+  roadmaps.searchRoadmap,
 );
 
 router.post("/roadmaps", middleware.apiAuth, roadmaps.create);

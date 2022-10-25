@@ -23,43 +23,41 @@ describe("post card", () => {
               // random UUID
               userId: "01982803-d099-4f03-8607-471f87d7c6e9",
               avatar: "https://www.gravatar.com/avatar/1",
-              username: "peg-legge"
+              username: "peg-legge",
             },
             {
               // random UUID
               userId: "e1de47b3-7acb-4024-9635-1c7ebffc07c3",
               avatar: "https://www.gravatar.com/avatar/2",
-              username: "peter"
-            }
-          ]
+              username: "peter",
+            },
+          ],
         },
         board: {
           name: "Feature requests",
           color: "abcabc",
           url: "feature-requests",
-          showBoard: true
-        }
-      }
+          showBoard: true,
+        },
+      },
     },
     stubs: {
       Vote: true,
       RouterLink: RouterLinkStub,
       AvatarStack: true,
-      BoardBadge: true
-    }
+      BoardBadge: true,
+    },
   });
 
   it("link to post", () => {
-    expect(
-      wrapper
-        .find("[data-test=post-link]")
-        .attributes('to')
-    ).toBe("/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk");
+    expect(wrapper.find("[data-test=post-link]").attributes("to")).toBe(
+      "/posts/post-title-qwJy9_3Sm9g3Qm3r9OQk",
+    );
   });
 
   it("post board name", () => {
     expect(wrapper.find("[data-test=post-board-name]").text()).toBe(
-      "Feature requests"
+      "Feature requests",
     );
   });
 
@@ -72,7 +70,7 @@ describe("post card", () => {
       await wrapper.find("[data-test=post-card-toggle]").trigger("click");
 
       expect(
-        wrapper.find("[data-test=post-card-toggle]").attributes("style")
+        wrapper.find("[data-test=post-card-toggle]").attributes("style"),
       ).toBe("transform: rotateX(180deg);");
     });
 
@@ -93,7 +91,7 @@ describe("post card", () => {
 
     it("post description", () => {
       expect(wrapper.find("[data-test=post-card-description]").text()).toBe(
-        "What's this feature is all about?"
+        "What's this feature is all about?",
       );
     });
 

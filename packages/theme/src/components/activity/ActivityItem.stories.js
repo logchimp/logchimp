@@ -2,14 +2,14 @@ import ActivityItem from "./ActivityItem";
 
 export default {
   title: "UI/Activity Item",
-  component: ActivityItem
+  component: ActivityItem,
 };
 
 //👇 We create a “template” of how args map to rendering
 const Template = (args, { argTypes }) => ({
   components: { ActivityItem },
   props: Object.keys(argTypes),
-  template: "<activity-item v-bind=\"$props\" />"
+  template: '<activity-item v-bind="$props" />',
 });
 
 export const Default = Template.bind({});
@@ -24,14 +24,15 @@ Default.args = {
       is_internal: false,
       is_edited: false,
       is_spam: false,
-      created_at: "2021-06-26T06:10:24.536+00:00"
+      created_at: "2021-06-26T06:10:24.536+00:00",
     },
     author: {
       user_id: "5713d443-98b0-4a07-8908-385c4e6afca5",
       name: "Yashu Mittal",
       username: "mittalyashu",
-      avatar: "https://www.gravatar.com/avatar/a32d5e3c2f125c7dfc92467707d73f3c"
+      avatar:
+        "https://www.gravatar.com/avatar/a32d5e3c2f125c7dfc92467707d73f3c",
     },
-    created_at: "2021-06-26T06:10:24.537Z"
-  }
+    created_at: "2021-06-26T06:10:24.537Z",
+  },
 };

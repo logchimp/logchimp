@@ -8,12 +8,12 @@ const updateBoard = require("./updateBoard");
 const deleteById = require("./deleteById");
 
 module.exports = {
-	...create,
-	...filter,
-	get,
-	searchBoard,
-	checkName,
-	boardByUrl,
-	updateBoard,
-	deleteById
+  ...create,
+  ...filter,
+  get,
+  searchBoard,
+  checkName,
+  boardByUrl,
+  updateBoard,
+  deleteById,
 };

@@ -57,7 +57,7 @@ github:
 
 vscode:
   extensions:
-    - dbaeumer.vscode-eslint
+    - rome.rome
     - wix.vscode-import-cost
     - Vue.volar
     - editorconfig.editorconfig

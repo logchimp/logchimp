@@ -8,11 +8,11 @@ const app = require("../../server");
  * @param {string} password user password
  */
 const getUser = async ({ email, password }) =>
-	await supertest(app).post("/api/v1/auth/login").send({
-		email,
-		password,
-	});
+  await supertest(app).post("/api/v1/auth/login").send({
+    email,
+    password,
+  });
 
 module.exports = {
-	getUser,
+  getUser,
 };

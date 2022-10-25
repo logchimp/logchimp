@@ -6,10 +6,10 @@ const email = require("./email");
 const password = require("./password");
 
 module.exports = {
-	...login,
-	...signup,
-	setup,
-	isSiteSetup,
-	email,
-	password
+  ...login,
+  ...signup,
+  setup,
+  isSiteSetup,
+  email,
+  password,
 };

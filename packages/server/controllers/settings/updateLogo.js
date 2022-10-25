@@ -5,27 +5,27 @@ const database = require("../../database");
 const logger = require("../../utils/logger");
 
 exports.updateLogo = async (req, res) => {
-	const host = req.headers.host;
-	const imagePath = req.file.path.split("content/images")[1];
+  const host = req.headers.host;
+  const imagePath = req.file.path.split("content/images")[1];
 
-	const imageUrl = `//${host}/content/images${imagePath}`;
+  const imageUrl = `//${host}/content/images${imagePath}`;
 
-	try {
-		const updatedSettings = await database
-			.update({
-				logo: imageUrl
-			})
-			.from("settings")
-			.returning("*");
+  try {
+    const updatedSettings = await database
+      .update({
+        logo: imageUrl,
+      })
+      .from("settings")
+      .returning("*");
 
-		res.status(200).send({
-			settings: updatedSettings[0]
-		});
-	} catch (err) {
-		logger.error({
-			code: "DASHBOARD_SETTINGS_UPDATE",
-			message: "Update logo",
-			err
-		});
-	}
+    res.status(200).send({
+      settings: updatedSettings[0],
+    });
+  } catch (err) {
+    logger.error({
+      code: "DASHBOARD_SETTINGS_UPDATE",
+      message: "Update logo",
+      err,
+    });
+  }
 };

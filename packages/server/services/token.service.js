@@ -12,10 +12,10 @@ const config = require("../utils/logchimpConfig")();
  * @returns {string} JWT token
  */
 const createToken = (data, payload) => {
-	const secretKey = config.server.secretKey;
-	const token = jwt.sign(data, secretKey, payload);
+  const secretKey = config.server.secretKey;
+  const token = jwt.sign(data, secretKey, payload);
 
-	return token;
+  return token;
 };
 
 /**
@@ -25,15 +25,15 @@ const createToken = (data, payload) => {
  * @returns
  */
 const verifyToken = (token) => {
-	if (!_.isString(token)) {
-		return null;
-	}
+  if (!_.isString(token)) {
+    return null;
+  }
 
-	const secretKey = config.server.secretKey;
-	return jwt.verify(token, secretKey);
-}
+  const secretKey = config.server.secretKey;
+  return jwt.verify(token, secretKey);
+};
 
 module.exports = {
-	createToken,
-	verifyToken
+  createToken,
+  verifyToken,
 };

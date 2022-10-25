@@ -7,11 +7,11 @@ const searchRoadmap = require("./searchRoadmap");
 const deleteById = require("./deleteById");
 
 module.exports = {
-	filter,
-	create,
-	roadmapByUrl,
-	updateRoadmap,
-	sort,
-	searchRoadmap,
-	deleteById
+  filter,
+  create,
+  roadmapByUrl,
+  updateRoadmap,
+  sort,
+  searchRoadmap,
+  deleteById,
 };

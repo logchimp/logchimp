@@ -1,5 +1,7 @@
 export function useTrim(value: string, size: number, trail?: string) {
-	if (!value) return "";
+  if (!value) {
+    return "";
+  }
   const valueLength = value.length;
 
   value = value.slice(0, size);
@@ -7,5 +9,8 @@ export function useTrim(value: string, size: number, trail?: string) {
 }
 
 export function useCopyText(text: string) {
-	navigator.clipboard.writeText(text).then().catch(err => console.log(err));
+  navigator.clipboard
+    .writeText(text)
+    .then()
+    .catch((err) => console.log(err));
 }

@@ -5,13 +5,13 @@ import ToggleItem from "./ToggleItem.vue";
 describe("toggle item", () => {
   const wrapper = shallowMount(ToggleItem, {
     props: {
-      label: "ToggleItem Label"
-    }
+      label: "ToggleItem Label",
+    },
   });
 
   it("has label", () => {
     expect(wrapper.find("[data-test=toggle-item-label]").text()).toBe(
-      "ToggleItem Label"
+      "ToggleItem Label",
     );
   });
 
@@ -21,11 +21,11 @@ describe("toggle item", () => {
 
   it("has note", async () => {
     await wrapper.setProps({
-      note: "This is note section"
+      note: "This is note section",
     });
 
     expect(wrapper.find("[data-test=toggle-item-note]").text()).toBe(
-      "This is note section"
+      "This is note section",
     );
   });
 });
