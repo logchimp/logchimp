@@ -11,8 +11,8 @@
 		"url": "https://github.com/logchimp/logchimp/issues"
 	},
 	"scripts": {
-		"dev": "nodemon index.js",
-		"start": "node index.js",
+		"server:dev": "pnpm --filter @logchimp/api dev",
+		"server:start": "pnpm --filter @logchimp/api start",
 		"build:theme": "pnpm --filter @logchimp/theme build",
 		"rome:format": "rome format --write ."
 	},

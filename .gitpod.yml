@@ -14,7 +14,9 @@ tasks:
     openMode: tab-after
     command: |
       gp sync-await setup
-      NODE_ENV="development" pnpm dev
+      cd ./packages/server
+
+      pnpm dev
   - name: Server (logs)
     openMode: tab-after
     command: |
