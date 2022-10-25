@@ -2,14 +2,8 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - name: "Setup workspace"
-    init: |
-      bash ./scripts/gitpod-init.sh
-    command: |
-      # Install packages
-      pnpm Install
-
-      gp sync-done setup
+  - name: "Init Gitpod"
+    init: bash ./scripts/gitpod-init.sh
   - name: Server
     openMode: tab-after
     command: |
