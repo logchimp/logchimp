@@ -3,7 +3,7 @@ const validateToken = require("./validateToken");
 const set = require("./set");
 
 module.exports = {
-	...reset,
-	...validateToken,
-	...set
+  ...reset,
+  ...validateToken,
+  ...set,
 };

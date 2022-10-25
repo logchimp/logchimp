@@ -1,12 +1,12 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
 import dayjs from "../src/plugins/dayjs";
 import "../src/filters";
 import "../src/styles/main.sass";
 
 export const parameters = {
-  layout: 'centered',
+  layout: "centered",
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
@@ -14,7 +14,7 @@ export const parameters = {
       date: /Date$/,
     },
   },
-}
+};
 
 Vue.use(dayjs);
 Vue.use(Vuex);

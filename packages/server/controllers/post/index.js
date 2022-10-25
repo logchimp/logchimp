@@ -8,11 +8,11 @@ const activity = require("./activity");
 const comments = require("./comments");
 
 module.exports = {
-	...create,
-	...filterPost,
-	...postBySlug,
-	...updatePost,
-	...deleteById,
-	activity,
-	comments
+  ...create,
+  ...filterPost,
+  ...postBySlug,
+  ...updatePost,
+  ...deleteById,
+  activity,
+  comments,
 };

@@ -1,44 +1,44 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 
-type AlertType = 'success' | 'warning' | 'error'
+type AlertType = "success" | "warning" | "error";
 
 export interface AlertObjectType {
-	title: string
-	type: AlertType
-	time?: number
-	timeout: number
+  title: string;
+  type: AlertType;
+  time?: number;
+  timeout: number;
 }
 
-export const useAlertStore = defineStore('alerts', () => {
-	const alert = ref<AlertObjectType[]>([]);
+export const useAlertStore = defineStore("alerts", () => {
+  const alert = ref<AlertObjectType[]>([]);
 
-	const getAlerts = computed(() => alert.value)
+  const getAlerts = computed(() => alert.value);
 
-	function add({ title, type, timeout }: AlertObjectType) {
-		const alertObject = {
+  function add({ title, type, timeout }: AlertObjectType) {
+    const alertObject = {
       title,
       type,
       time: Date.now(),
       timeout,
     };
 
-		alert.value.push(alertObject)
-	}
+    alert.value.push(alertObject);
+  }
 
-	function remove(payload: any) {
+  function remove(payload: any) {
     alert.value.splice(payload, 1);
   }
 
-	return {
-		// state
-		alert,
+  return {
+    // state
+    alert,
 
-		// getters
-		getAlerts,
+    // getters
+    getAlerts,
 
-		// actions
-		add,
-		remove,
-	}
-})
+    // actions
+    add,
+    remove,
+  };
+});

@@ -2,14 +2,14 @@
 import axios, { AxiosResponse } from "axios";
 
 // store
-import { useUserStore } from "../store/user"
+import { useUserStore } from "../store/user";
 
 interface UpdateRoleArgs {
-	id: string
-	name: string
-	description: string
-	// TODO: Add TS types
-	permissions: any
+  id: string;
+  name: string;
+  description: string;
+  // TODO: Add TS types
+  permissions: any;
 }
 
 /**
@@ -18,14 +18,14 @@ interface UpdateRoleArgs {
  * @returns {object} response
  */
 export const getAllRoles = async () => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "GET",
     url: "/api/v1/roles",
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -37,14 +37,14 @@ export const getAllRoles = async () => {
  * @returns {object} response
  */
 export const getRole = async (id: string) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "GET",
     url: `/api/v1/roles/${id}`,
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -53,19 +53,21 @@ export const getRole = async (id: string) => {
  *
  * @returns {object} response
  */
-export const createRole = async (): Promise<AxiosResponse<{
-	role: {
-		id: string
-	}
-}>> => {
-  const { authToken } = useUserStore()
+export const createRole = async (): Promise<
+  AxiosResponse<{
+    role: {
+      id: string;
+    };
+  }>
+> => {
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: "/api/v1/roles",
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -81,16 +83,16 @@ export const createRole = async (): Promise<AxiosResponse<{
  * @returns {object} response
  */
 export const updateRole = async (role: UpdateRoleArgs) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "PATCH",
     url: "/api/v1/roles",
     data: {
-      ...role
+      ...role,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };

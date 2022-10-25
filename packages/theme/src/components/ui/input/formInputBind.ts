@@ -1,6 +1,6 @@
 export const formInputBind = {
-	modelValue: {
-		type: String,
-		default: ""
-	}
-}
+  modelValue: {
+    type: String,
+    default: "",
+  },
+};

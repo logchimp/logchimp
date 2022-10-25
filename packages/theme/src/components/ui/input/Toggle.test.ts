@@ -7,7 +7,7 @@ describe("toggle", () => {
 
   it("unchecked with gray color", () => {
     expect(wrapper.find("[data-test=toggle]").attributes("style")).toBe(
-      "background-color: rgb(153, 153, 153);"
+      "background-color: rgb(153, 153, 153);",
     );
   });
 

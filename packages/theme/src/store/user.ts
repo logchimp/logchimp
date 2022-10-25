@@ -4,65 +4,70 @@ import { defineStore } from "pinia";
 import { router } from "../router";
 import { PermissionType } from "../modules/users";
 
-export const useUserStore = defineStore('user', () => {
-	const authToken = ref<string>("");
-	const user = reactive({
-		userId: "",
-		name: "",
-		username: "",
-		email: "",
-		avatar: "",
-	});
-	const permissions = ref<string[]>([]);
+export const useUserStore = defineStore("user", () => {
+  const authToken = ref<string>("");
+  const user = reactive({
+    userId: "",
+    name: "",
+    username: "",
+    email: "",
+    avatar: "",
+  });
+  const permissions = ref<string[]>([]);
 
-	const getUser = computed(() => user);
+  const getUser = computed(() => user);
   const getUserId = computed(() => user.userId);
 
-	function setUser(payload: any) {
-		authToken.value = payload.authToken;
-		user.userId = payload.userId;
-		user.name = payload.name;
-		user.username = payload.username;
-		user.email = payload.email;
-		user.avatar = payload.avatar;
+  function setUser(payload: any) {
+    authToken.value = payload.authToken;
+    user.userId = payload.userId;
+    user.name = payload.name;
+    user.username = payload.username;
+    user.email = payload.email;
+    user.avatar = payload.avatar;
 
-		localStorage.setItem("user", JSON.stringify({
-			authToken: authToken.value,
-			...user,
-		}));
-	}
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        authToken: authToken.value,
+        ...user,
+      }),
+    );
+  }
 
-	function setPermissions(payload: PermissionType) {
+  function setPermissions(payload: PermissionType) {
     permissions.value = payload;
   }
 
-	function login(payload: any) {
-		setUser(payload);
-	}
+  function login(payload: any) {
+    setUser(payload);
+  }
 
-	function logout() {
-		setUser({});
+  function logout() {
+    setUser({});
 
-		setPermissions([]);
+    setPermissions([]);
 
-		localStorage.removeItem("user");
-    if (router.currentRoute.value.fullPath !== "/") router.push("/");
-	}
+    localStorage.removeItem("user");
+    if (router.currentRoute.value.fullPath !== "/") {
+      router.push("/");
+    }
+  }
 
-	return {
-		// state
-		authToken,
-		user,
-		permissions,
+  return {
+    // state
+    authToken,
+    user,
+    permissions,
 
-		// getters
-		getUser,
-		getUserId,
+    // getters
+    getUser,
+    getUserId,
 
-		// actions
-		setUser,
-		login,
-		logout,
-		setPermissions,
-	}
+    // actions
+    setUser,
+    login,
+    logout,
+    setPermissions,
+  };
 });

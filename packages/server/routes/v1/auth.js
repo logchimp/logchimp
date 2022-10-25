@@ -19,30 +19,30 @@ router.get("/auth/setup", auth.isSiteSetup);
 // email
 router.post("/auth/email/verify", mailConfigExists, exists, auth.email.verify);
 router.post(
-	"/auth/email/validate",
-	validateEmailToken,
-	exists,
-	auth.email.validate
+  "/auth/email/validate",
+  validateEmailToken,
+  exists,
+  auth.email.validate,
 );
 
 // password
 router.post(
-	"/auth/password/reset",
-	mailConfigExists,
-	exists,
-	auth.password.reset
+  "/auth/password/reset",
+  mailConfigExists,
+  exists,
+  auth.password.reset,
 );
 router.post(
-	"/auth/password/validateToken",
-	validateEmailToken,
-	exists,
-	auth.password.validateToken
+  "/auth/password/validateToken",
+  validateEmailToken,
+  exists,
+  auth.password.validateToken,
 );
 router.post(
-	"/auth/password/set",
-	validateEmailToken,
-	exists,
-	auth.password.set
+  "/auth/password/set",
+  validateEmailToken,
+  exists,
+  auth.password.set,
 );
 
 module.exports = router;

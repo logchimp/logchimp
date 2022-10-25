@@ -2,11 +2,11 @@ const app = require("../../server");
 const supertest = require("supertest");
 
 test("GET /api", async () => {
-	const response = await supertest(app).get("/api");
+  const response = await supertest(app).get("/api");
 
-	expect(response.headers["content-type"]).toContain("text/html");
-	expect(response.status).toEqual(200);
-	expect(response.text).toBe("👍");
+  expect(response.headers["content-type"]).toContain("text/html");
+  expect(response.status).toEqual(200);
+  expect(response.text).toBe("👍");
 });
 
 // test("POST /api", async () => {

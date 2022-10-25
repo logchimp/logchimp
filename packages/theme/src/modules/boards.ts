@@ -2,24 +2,24 @@
 import axios from "axios";
 
 // store
-import { useUserStore } from "../store/user"
+import { useUserStore } from "../store/user";
 import { ApiPaginationType } from "../types";
 
 interface CreateBoardArgs {
-	name?: string
-  display?: boolean
+  name?: string;
+  display?: boolean;
 }
 
 export interface Board {
-	boardId: string
-	name: string
-	url: string
-	color: string
+  boardId: string;
+  name: string;
+  url: string;
+  color: string;
 }
 
 interface UpdateBoardArgs extends Board {
-	view_voters: boolean
-	display: boolean
+  view_voters: boolean;
+  display: boolean;
 }
 
 /**
@@ -31,9 +31,9 @@ interface UpdateBoardArgs extends Board {
  * @returns {object} response
  */
 export const getPublicBoards = async ({
-	page = 1,
-	limit,
-	sort = "DESC"
+  page = 1,
+  limit,
+  sort = "DESC",
 }: ApiPaginationType) => {
   return await axios({
     method: "GET",
@@ -41,8 +41,8 @@ export const getPublicBoards = async ({
     params: {
       page,
       limit,
-      created: sort
-    }
+      created: sort,
+    },
   });
 };
 
@@ -55,9 +55,9 @@ export const getPublicBoards = async ({
  * @returns {object} response
  */
 export const getAllBoards = async ({
-	page = 1,
-	limit,
-	sort = "DESC"
+  page = 1,
+  limit,
+  sort = "DESC",
 }: ApiPaginationType) => {
   return await axios({
     method: "GET",
@@ -65,8 +65,8 @@ export const getAllBoards = async ({
     params: {
       page,
       limit,
-      created: sort
-    }
+      created: sort,
+    },
   });
 };
 
@@ -80,7 +80,7 @@ export const getAllBoards = async ({
 export const getBoardByUrl = async (url: string) => {
   return await axios({
     method: "GET",
-    url: `/api/v1/boards/${url}`
+    url: `/api/v1/boards/${url}`,
   });
 };
 
@@ -92,14 +92,14 @@ export const getBoardByUrl = async (url: string) => {
  * @returns {object} response
  */
 export const searchBoard = async (name: string) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "GET",
     url: `/api/v1/boards/search/${name}`,
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -109,18 +109,18 @@ export const searchBoard = async (name: string) => {
  * @returns {object} response
  */
 export const createBoard = async ({ name, display }: CreateBoardArgs) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: "/api/v1/boards",
-		data: {
-			name,
+    data: {
+      name,
       display,
-		},
+    },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -137,17 +137,17 @@ export const createBoard = async ({ name, display }: CreateBoardArgs) => {
  * @returns {object} response
  */
 export const updateBoard = async (board: UpdateBoardArgs) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "PATCH",
     url: "/api/v1/boards",
     data: {
-      ...board
+      ...board,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -159,17 +159,17 @@ export const updateBoard = async (board: UpdateBoardArgs) => {
  * @returns {object} response
  */
 export const deleteBoard = async (boardId: string) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "DELETE",
     url: "/api/v1/boards",
     data: {
-      boardId
+      boardId,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -181,16 +181,16 @@ export const deleteBoard = async (boardId: string) => {
  * @returns {object} response
  */
 export const checkBoardName = async (name: string) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: "/api/v1/boards/check-name",
     data: {
-      name
+      name,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };

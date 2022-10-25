@@ -2,29 +2,29 @@
 import axios from "axios";
 
 // store
-import { useUserStore } from "../store/user"
+import { useUserStore } from "../store/user";
 
 interface SiteSetupArgs {
-	siteTitle: string
-	name: string
-	email: string
-	password: string
+  siteTitle: string;
+  name: string;
+  email: string;
+  password: string;
 }
 
 export interface LabsType {
-	comments: boolean
+  comments: boolean;
 }
 
 interface SiteSettingsType {
-	title: string
-	description?: string
-	logo?: string
-	accentColor: string
-	googleAnalyticsId: string
-	isPoweredBy?: boolean
-	allowSignup: boolean
-	developer_mode: boolean
-	labs?: LabsType
+  title: string;
+  description?: string;
+  logo?: string;
+  accentColor: string;
+  googleAnalyticsId: string;
+  isPoweredBy?: boolean;
+  allowSignup: boolean;
+  developer_mode: boolean;
+  labs?: LabsType;
 }
 
 /**
@@ -37,7 +37,12 @@ interface SiteSettingsType {
  *
  * @returns {object} response
  */
-export const siteSetup = async ({ siteTitle, name, email, password }: SiteSetupArgs) => {
+export const siteSetup = async ({
+  siteTitle,
+  name,
+  email,
+  password,
+}: SiteSetupArgs) => {
   return await axios({
     method: "POST",
     url: "/api/v1/auth/setup",
@@ -45,8 +50,8 @@ export const siteSetup = async ({ siteTitle, name, email, password }: SiteSetupA
       siteTitle,
       name,
       email,
-      password
-    }
+      password,
+    },
   });
 };
 
@@ -58,7 +63,7 @@ export const siteSetup = async ({ siteTitle, name, email, password }: SiteSetupA
 export const isSiteSetup = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/auth/setup"
+    url: "/api/v1/auth/setup",
   });
 };
 
@@ -70,7 +75,7 @@ export const isSiteSetup = async () => {
 export const getSettings = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/settings/site"
+    url: "/api/v1/settings/site",
   });
 };
 
@@ -87,17 +92,17 @@ export const getSettings = async () => {
  * @returns {object} response
  */
 export const updateSettings = async (site: SiteSettingsType) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "PATCH",
     url: "/api/v1/settings/site",
     data: {
-      ...site
+      ...site,
     },
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -110,7 +115,7 @@ export const updateSettings = async (site: SiteSettingsType) => {
  */
 // TODO: Add TS types
 export const uploadSiteLogo = async (logo: any) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
@@ -118,8 +123,8 @@ export const uploadSiteLogo = async (logo: any) => {
     data: logo,
     headers: {
       Authorization: `Bearer ${authToken}`,
-      "Content-Type": "multipart/form-data"
-    }
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
 
@@ -131,7 +136,7 @@ export const uploadSiteLogo = async (logo: any) => {
 export const getLabsSettings = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/settings/labs"
+    url: "/api/v1/settings/labs",
   });
 };
 
@@ -143,14 +148,14 @@ export const getLabsSettings = async () => {
  * @returns {object} response
  */
 export const updateLabsSettings = async (labs: LabsType) => {
-  const { authToken } = useUserStore()
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "PATCH",
     url: "/api/v1/settings/labs",
     data: labs,
     headers: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
