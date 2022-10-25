@@ -14,7 +14,7 @@ exports.validateToken = async (req, res) => {
 
   res.status(200).send({
     reset: {
-      valid: !!emailToken,
+      valid: emailToken,
       ...__token,
     },
   });

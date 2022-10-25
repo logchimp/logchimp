@@ -39,7 +39,7 @@ exports.filterPost = async (req, res) => {
               })})`
             : ""
         }
-        ${roadmapId ? `WHERE roadmap_id = :roadmapId` : ""}
+        ${roadmapId ? "WHERE roadmap_id = :roadmapId" : ""}
         ORDER BY "createdAt" ${created}
         LIMIT :limit
         OFFSET :offset;
@@ -69,8 +69,8 @@ exports.filterPost = async (req, res) => {
           })
           .first();
 
-        delete response[i].boardId;
-        delete response[i].roadmap_id;
+        response[i].boardId = undefined;
+        response[i].roadmap_id = undefined;
 
         posts.push({
           ...response[i],

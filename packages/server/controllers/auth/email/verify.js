@@ -37,7 +37,7 @@ exports.verify = async (req, res) => {
 
     res.status(200).send({
       verify: {
-        success: !!emailVerification,
+        success: emailVerification,
         ...__token,
       },
     });

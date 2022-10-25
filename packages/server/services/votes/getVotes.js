@@ -34,7 +34,7 @@ const getVotes = async (postId, userId) => {
     return {
       votes,
       votesCount: parseInt(votesCount.count),
-      viewerVote: !!viewerVote,
+      viewerVote: viewerVote,
     };
   } catch (err) {
     logger.log({

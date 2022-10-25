@@ -15,7 +15,7 @@ const isSiteSetup = async (req, res) => {
       .first();
 
     res.status(200).send({
-      is_setup: !!isSetup,
+      is_setup: isSetup,
     });
   } catch (err) {
     logger.error({

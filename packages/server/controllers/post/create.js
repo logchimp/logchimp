@@ -26,21 +26,21 @@ exports.create = async (req, res) => {
     });
   }
 
-  if (!title || !boardId) {
+  if (!(title && boardId)) {
     return res.status(400).send({
       errors: [
-        !title
-          ? {
+        title
+          ? ""
+          : {
               message: error.api.posts.titleMissing,
               code: "POST_TITLE_MISSING",
-            }
-          : "",
-        !boardId
-          ? {
+            },
+        boardId
+          ? ""
+          : {
               message: error.api.boards.boardIdMissing,
               code: "BOARD_ID_MISSING",
-            }
-          : "",
+            },
       ],
     });
   }

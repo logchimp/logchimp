@@ -20,12 +20,12 @@ module.exports = async (req, res) => {
   if (!name) {
     return res.status(400).send({
       errors: [
-        !name
-          ? {
+        name
+          ? ""
+          : {
               message: error.api.boards.nameMissing,
               code: "BOARD_NAME_MISSING",
-            }
-          : "",
+            },
       ],
     });
   }

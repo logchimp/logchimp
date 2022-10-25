@@ -13,12 +13,12 @@ module.exports = async (req, res) => {
   if (!url) {
     return res.status(400).send({
       errors: [
-        !url
-          ? {
+        url
+          ? ""
+          : {
               message: error.api.roadmaps.urlMissing,
               code: "ROADMAP_URL_MISSING",
-            }
-          : "",
+            },
       ],
     });
   }

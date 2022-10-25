@@ -19,7 +19,7 @@ const authenticateWithToken = async (req, res, next, token) => {
   const decoded = jwt.decode(token, { complete: true });
 
   // validate JWT token type
-  if (!decoded || !decoded.header) {
+  if (!(decoded && decoded.header)) {
     res.status(401).send({
       message: error.middleware.auth.invalidToken,
       code: "INVALID_JWT",
@@ -39,10 +39,16 @@ const authenticateWithToken = async (req, res, next, token) => {
     const user = users[0];
 
     // remove password before passing user's data to next middleware
-    delete user.password;
+    user.password = undefined;
 
     if (user) {
-      if (!user.isBlocked) {
+      if (user.isBlocked) {
+        // user is blocked
+        res.status(403).send({
+          message: error.middleware.user.userBlocked,
+          code: "USER_BLOCKED",
+        });
+      } else {
         try {
           // validate JWT auth token
           const secretKey = config.server.secretKey;
@@ -66,16 +72,8 @@ const authenticateWithToken = async (req, res, next, token) => {
               code: "INVALID_TOKEN",
               err,
             });
-            return;
           }
         }
-      } else {
-        // user is blocked
-        res.status(403).send({
-          message: error.middleware.user.userBlocked,
-          code: "USER_BLOCKED",
-        });
-        return;
       }
     } else {
       // user not found
@@ -83,7 +81,6 @@ const authenticateWithToken = async (req, res, next, token) => {
         message: error.middleware.user.userNotFound,
         code: "USER_NOT_FOUND",
       });
-      return;
     }
   } catch (err) {
     logger.log({
@@ -95,7 +92,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 
 const token = (req, res, next) => {
   // check for authorization header
-  if (!req.headers || !req.headers.authorization) {
+  if (!(req.headers && req.headers.authorization)) {
     res.status(400).send({
       message: error.middleware.auth.invalidAuthHeader,
       code: "INVALID_AUTH_HEADER",

@@ -29,7 +29,7 @@ exports.reset = async (req, res) => {
 
     res.status(200).send({
       reset: {
-        success: !!passwordReset,
+        success: passwordReset,
         ...__token,
       },
     });

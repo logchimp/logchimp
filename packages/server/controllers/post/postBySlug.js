@@ -38,9 +38,9 @@ exports.postBySlug = async (req, res) => {
       })
       .first();
 
-    delete post.boardId;
-    delete post.userId;
-    delete post.roadmap_id;
+    post.boardId = undefined;
+    post.userId = undefined;
+    post.roadmap_id = undefined;
 
     res.status(200).send({
       post: {

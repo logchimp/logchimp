@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
       .ignore();
 
     res.status(response.rowCount ? 200 : 204).send({
-      success: !!response.rowCount,
+      success: response.rowCount,
     });
   } catch (err) {
     logger.error({

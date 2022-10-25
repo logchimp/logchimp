@@ -13,12 +13,12 @@ exports.set = async (req, res) => {
   if (!password) {
     return res.status(400).send({
       errors: [
-        !password
-          ? {
+        password
+          ? ""
+          : {
               message: error.api.authentication.noPasswordProvided,
               code: "PASSWORD_MISSING",
-            }
-          : "",
+            },
       ],
     });
   }

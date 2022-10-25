@@ -15,12 +15,12 @@ module.exports = async (req, res, next) => {
   if (!token) {
     return res.status(400).send({
       errors: [
-        !token
-          ? {
+        token
+          ? ""
+          : {
               message: error.api.emailVerify.tokenMissing,
               code: "MISSING_TOKEN",
-            }
-          : "",
+            },
       ],
     });
   }
@@ -44,8 +44,7 @@ module.exports = async (req, res, next) => {
       });
     }
 
-    const user = { email: emailToken.email };
-    req.user = user;
+    req.user = { email: emailToken.email };
 
     req.emailToken = emailToken;
     next();
