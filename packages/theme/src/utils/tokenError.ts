@@ -8,7 +8,9 @@ const tokenError = (error: any) => {
   logout();
 
   if (error.response.data.code === "USER_NOT_FOUND") {
-    if (router.currentRoute.value.fullPath !== "/") { router.push("/"); }
+    if (router.currentRoute.value.fullPath !== "/") {
+      router.push("/");
+    }
   }
 
   // invalid token or invalid JWT

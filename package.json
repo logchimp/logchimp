@@ -14,7 +14,7 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"build:theme": "pnpm --filter @logchimp/theme build",
-    "rome": "rome format --write ."
+		"rome:format": "rome format --write ."
 	},
 	"dependencies": {
 		"@logchimp/api": "0.7.0-beta.0",
@@ -23,7 +23,7 @@
 	"devDependencies": {
 		"jest": "27.5.1",
 		"nodemon": "2.0.20",
-    "rome": "0.10.1-next"
+		"rome": "0.10.1-next"
 	},
 	"keywords": [
 		"logchimp",
