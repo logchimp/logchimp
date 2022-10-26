@@ -57,7 +57,7 @@ describe("GET /boards/search/:name", () => {
   });
 
   it("should throw error not having 'board:read' permission", async () => {
-    const userId = uuid()
+    const userId = uuid();
     const randomEmail = faker.internet.email();
     const username = randomEmail.split("@")[0];
 
