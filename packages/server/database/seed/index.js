@@ -12,9 +12,10 @@ async function seedData() {
 seedData()
   .then(() => {
     console.log("🌱 Database seeded");
+    process.exit(0);
   })
   .catch((error) => {
     console.log("Something went wrong!");
     console.log(error);
-  })
-  .finally(() => process.exit(1));
+    process.exit(1);
+  });
