@@ -1,25 +1,28 @@
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 const { v4: uuid } = require("uuid");
+import { faker } from "@faker-js/faker";
 
-const app = require("../../../server");
-const database = require("../../../server/database");
-const { getUser } = require("../../utils/getUser");
-const { hashPassword } = require("../../../server/helpers");
-const cleanDatabase = require("../../utils/cleanDatabase");
-
-beforeEach(() => cleanDatabase());
+const app = require("../../../app");
+const database = require("../../../database");
+import { getUser } from "../../utils/getUser";
+const { hashPassword } = require("../../../helpers");
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
   it("should not have permission 'role:read'", async () => {
+    const userId = uuid();
+    const randomEmail = faker.internet.email("no-permission");
+    const username = randomEmail.split("@")[0];
+
     // create simple user (without any permissions) for getting roles
     const createUser = await database
       .insert([
         {
-          userId: uuid(),
-          email: "no-permission@example.com",
+          userId,
+          email: randomEmail,
           password: hashPassword("strongPassword"),
-          username: "no-permission",
+          username,
         },
       ])
       .into("users")
@@ -43,7 +46,7 @@ describe("GET /api/v1/roles", () => {
     );
 
     const user = await getUser({
-      email: "no-permission@example.com",
+      email: randomEmail,
       password: "strongPassword",
     });
 
@@ -57,60 +60,59 @@ describe("GET /api/v1/roles", () => {
   });
 
   // 2. get all roles
-  it.only("should get all the roles", async () => {
+  it("should get all the roles", async () => {
+    const userId = uuid();
+    const randomEmail = faker.internet.email("role-read-user");
+    const username = randomEmail.split("@")[0];
+
     // role:read
     const createUser = await database
       .insert([
         {
-          userId: uuid(),
-          email: "role-read-user@example.com",
+          userId,
+          email: randomEmail,
           password: hashPassword("strongPassword"),
-          username: "role-read-user",
+          username,
         },
       ])
       .into("users")
       .returning(["userId"]);
 
     const roleId = uuid();
-    await database.transaction((t) => {
-      return database("roles")
-        .transacting(t)
-        .insert({
-          id: roleId,
-          name: "CreateRole",
-        })
-        .then(() => {
-          return database
-            .transacting(t)
-            .select("id")
-            .from("permissions")
-            .where({
-              type: "role",
-              action: "read",
-            })
-            .first()
-            .then((response) => {
-              database("permissions_roles").transacting(t).insert({
-                id: uuid(),
-                role_id: roleId,
-                permission_id: response.id,
-              });
+    await database
+      .insert({
+        id: roleId,
+        name: "CreateRole",
+      })
+      .into("roles");
 
-              return database("roles_users")
-                .transacting(t)
-                .insert({
-                  id: uuid(),
-                  role_id: roleId,
-                  user_id: createUser[0].userId,
-                });
-            });
-        })
-        .then(t.commit)
-        .catch(t.rollback);
-    });
+    const readRolePerms = await database
+      .select("id")
+      .from("permissions")
+      .where({
+        type: "role",
+        action: "read",
+      })
+      .first();
+
+    await database
+      .insert({
+        id: uuid(),
+        role_id: roleId,
+        permission_id: readRolePerms.id,
+      })
+      .into("permissions_roles");
+
+    await database
+      .insert({
+        id: uuid(),
+        role_id: roleId,
+        user_id: createUser[0].userId,
+      })
+      .into("roles_users");
 
     const authUser = await getUser({
-      email: "role-read-user@example.com",
+      email: randomEmail,
       password: "strongPassword",
     });
 
@@ -118,10 +120,9 @@ describe("GET /api/v1/roles", () => {
       .get("/api/v1/roles")
       .set("Authorization", `Bearer ${authUser.body.user.authToken}`);
 
-    console.log(response.body);
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    // expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.roles.length).toBeGreaterThanOrEqual(3);
   });
 });
 

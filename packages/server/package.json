@@ -7,10 +7,11 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"format": "prettier --write \"**/*.{js}\"",
-		"test:unit": "jest ./tests/unit",
-		"test:integration": "jest --forceExit --detectOpenHandles ./tests/integration",
-		"db:migrate": "knex --knexfile ./server/database/config.js migrate:latest",
-		"db:migrate:create": "knex --knexfile ./server/database/config.js migrate:make"
+		"test:unit": "vitest --config ./vitest.config.unit.ts",
+		"test:integration": "vitest --config ./vitest.config.integration.ts",
+		"db:migrate": "knex --knexfile ./database/config.js migrate:latest",
+		"db:migrate:create": "knex --knexfile ./database/config.js migrate:make",
+		"db:seed:run": "knex --knexfile ./database/config.js seed:run"
 	},
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
@@ -32,8 +33,10 @@
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^7.6.0",
 		"avatar-generator": "2.0.4",
-		"omgopass": "3.2.1"
+		"omgopass": "3.2.1",
+		"vitest": "0.24.3"
 	},
 	"engines": {
 		"node": ">=16 < 17"
