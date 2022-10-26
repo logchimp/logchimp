@@ -32,6 +32,7 @@
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^7.6.0",
 		"avatar-generator": "2.0.4",
 		"omgopass": "3.2.1",
 		"vitest": "0.24.3"

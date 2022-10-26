@@ -19,6 +19,7 @@ importers:
 
   packages/server:
     specifiers:
+      '@faker-js/faker': ^7.6.0
       avatar-generator: 2.0.4
       bcryptjs: ^2.4.3
       cors: ^2.8.5
@@ -58,6 +59,7 @@ importers:
       uuid: 8.3.2
       winston: 3.8.2
     devDependencies:
+      '@faker-js/faker': 7.6.0
       avatar-generator: 2.0.4
       omgopass: 3.2.1
       vitest: 0.24.3
@@ -466,6 +468,11 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@faker-js/faker/7.6.0:
+    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    dev: true
 
   /@istanbuljs/load-nyc-config/1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
