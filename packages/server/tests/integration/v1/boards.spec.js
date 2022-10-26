@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 const { v4: uuid } = require("uuid");
+import { faker } from "@faker-js/faker";
 
 const app = require("../../../app");
 const database = require("../../../database");
@@ -32,13 +33,12 @@ describe("GET /boards/:url", () => {
   it("should get board by url", async () => {
     // generate & add board
     const board = generateBoards();
-    board.url = "create-existing-board";
+    const boardName = faker.commerce.product().toLowerCase();
+    board.url = boardName;
 
     await database.insert(board).into("boards");
 
-    const response = await supertest(app).get(
-      "/api/v1/boards/create-existing-board",
-    );
+    const response = await supertest(app).get(`/api/v1/boards/${boardName}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
@@ -57,14 +57,18 @@ describe("GET /boards/search/:name", () => {
   });
 
   it("should throw error not having 'board:read' permission", async () => {
+    const userId = uuid()
+    const randomEmail = faker.internet.email();
+    const username = randomEmail.split("@")[0];
+
     // seed users with no "board:read permission"
-    const createUser = await database
+    await database
       .insert([
         {
-          userId: uuid(),
-          email: "serchBoard@example.com",
+          userId,
+          email: randomEmail,
           password: hashPassword("strongPassword"),
-          username: "searchBoard",
+          username,
         },
       ])
       .into("users")
@@ -83,12 +87,12 @@ describe("GET /boards/search/:name", () => {
     `,
       {
         uuid: uuid(),
-        userId: createUser[0].userId,
+        userId,
       },
     );
 
     const authUser = await getUser({
-      email: "serchBoard@example.com",
+      email: randomEmail,
       password: "strongPassword",
     });
 
