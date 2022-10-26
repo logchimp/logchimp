@@ -37,6 +37,7 @@ importers:
       pg: ^8.7.1
       supertest: ^6.1.6
       uuid: ^8.3.2
+      vitest: 0.24.3
       winston: ^3.3.3
     dependencies:
       bcryptjs: 2.4.3
@@ -59,6 +60,7 @@ importers:
     devDependencies:
       avatar-generator: 2.0.4
       omgopass: 3.2.1
+      vitest: 0.24.3
 
   packages/theme:
     specifiers:
@@ -4960,6 +4962,33 @@ packages:
     engines: {node: '>= 0.8'}
     dev: false
 
+  /vite/3.1.8:
+    resolution: {integrity: sha512-m7jJe3nufUbuOfotkntGFupinL/fmuTNuQmiVE7cH2IZMuf4UbfbGYMUT3jVWgGYuRVLY9j8NnrRqgw5rr5QTg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.15.10
+      postcss: 8.4.17
+      resolve: 1.22.1
+      rollup: 2.78.1
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
   /vite/3.1.8_sass@1.55.0:
     resolution: {integrity: sha512-m7jJe3nufUbuOfotkntGFupinL/fmuTNuQmiVE7cH2IZMuf4UbfbGYMUT3jVWgGYuRVLY9j8NnrRqgw5rr5QTg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -4986,6 +5015,47 @@ packages:
       sass: 1.55.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vitest/0.24.3:
+    resolution: {integrity: sha512-aM0auuPPgMSstWvr851hB74g/LKaKBzSxcG3da7ejfZbx08Y21JpZmbmDYrMTCGhVZKqTGwzcnLMwyfz2WzkhQ==}
+    engines: {node: '>=v14.16.0'}
+    hasBin: true
+    peerDependencies:
+      '@edge-runtime/vm': '*'
+      '@vitest/browser': '*'
+      '@vitest/ui': '*'
+      happy-dom: '*'
+      jsdom: '*'
+    peerDependenciesMeta:
+      '@edge-runtime/vm':
+        optional: true
+      '@vitest/browser':
+        optional: true
+      '@vitest/ui':
+        optional: true
+      happy-dom:
+        optional: true
+      jsdom:
+        optional: true
+    dependencies:
+      '@types/chai': 4.3.3
+      '@types/chai-subset': 1.3.3
+      '@types/node': 18.8.2
+      chai: 4.3.6
+      debug: 4.3.4
+      local-pkg: 0.4.2
+      strip-literal: 0.4.2
+      tinybench: 2.3.0
+      tinypool: 0.3.0
+      tinyspy: 1.0.2
+      vite: 3.1.8
+    transitivePeerDependencies:
+      - less
+      - sass
+      - stylus
+      - supports-color
+      - terser
     dev: true
 
   /vitest/0.24.3_sass@1.55.0:
