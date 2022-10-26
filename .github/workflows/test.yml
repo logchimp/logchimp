@@ -265,7 +265,7 @@ jobs:
           pnpm --filter @logchimp/api db:migrate 
 
           # Seeding database
-          node ./packages/server/database/seed/index.js
+          pnpm --filter @logchimp/api db:seed:run 
 
           # Running integration test
           pnpm --filter @logchimp/api test:integration

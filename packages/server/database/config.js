@@ -34,7 +34,7 @@ module.exports = {
     tableName: "migrations",
   },
   seeds: {
-    directory: path.resolve(__dirname, "seeds"),
+    directory: path.resolve(__dirname, "seed"),
   },
   log: {
     warn(err) {

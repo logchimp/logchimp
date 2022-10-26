@@ -10,7 +10,8 @@
 		"test:unit": "vitest --config ./vitest.config.unit.ts",
 		"test:integration": "vitest --config ./vitest.config.integration.ts",
 		"db:migrate": "knex --knexfile ./database/config.js migrate:latest",
-		"db:migrate:create": "knex --knexfile ./database/config.js migrate:make"
+		"db:migrate:create": "knex --knexfile ./database/config.js migrate:make",
+		"db:seed:run": "knex --knexfile ./database/config.js seed:run"
 	},
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
