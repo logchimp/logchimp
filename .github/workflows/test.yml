@@ -260,7 +260,12 @@ jobs:
           sh ./scripts/create-config.sh
 
       - name: Testing
-        run: pnpm --filter @logchimp/api test:integration
+        run: |
+          # Seeding database
+          node ./packages/server//database/seed/index.js
+
+          # Running integration test
+          pnpm --filter @logchimp/api test:integration
         env:
           NODE_ENV: "testing"
 
