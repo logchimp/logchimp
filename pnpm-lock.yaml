@@ -65,7 +65,7 @@ importers:
   packages/theme:
     specifiers:
       '@types/uuid': 8.3.4
-      '@vitejs/plugin-vue': 3.1.2
+      '@vitejs/plugin-vue': 3.2.0
       '@vue/test-utils': 2.2.0
       '@vueuse/components': 9.3.1
       '@vueuse/core': 9.3.1
@@ -102,7 +102,7 @@ importers:
       vuedraggable: 4.1.0_vue@3.2.41
     devDependencies:
       '@types/uuid': 8.3.4
-      '@vitejs/plugin-vue': 3.1.2_vite@3.1.8+vue@3.2.41
+      '@vitejs/plugin-vue': 3.2.0_vite@3.1.8+vue@3.2.41
       '@vue/test-utils': 2.2.0_vue@3.2.41
       jsdom: 20.0.1
       sass: 1.55.0
@@ -272,8 +272,8 @@ packages:
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
     dev: false
 
-  /@vitejs/plugin-vue/3.1.2_vite@3.1.8+vue@3.2.41:
-    resolution: {integrity: sha512-3zxKNlvA3oNaKDYX0NBclgxTQ1xaFdL7PzwF6zj9tGFziKwmBa3Q/6XcJQxudlT81WxDjEhHmevvIC4Orc1LhQ==}
+  /@vitejs/plugin-vue/3.2.0_vite@3.1.8+vue@3.2.41:
+    resolution: {integrity: sha512-E0tnaL4fr+qkdCNxJ+Xd0yM31UwMkQje76fsDVBBUCoGOUPexu2VDUYHL8P4CwV+zMvWw6nlRw19OnRKmYAJpw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^3.0.0
