@@ -1,13 +1,11 @@
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 const { v4: uuid } = require("uuid");
 
-const app = require("../../../server");
-const database = require("../../../server/database");
-const { getUser } = require("../../utils/getUser");
-const { hashPassword } = require("../../../server/helpers");
-const cleanDatabase = require("../../utils/cleanDatabase");
-
-beforeEach(() => cleanDatabase());
+const app = require("../../../app");
+const database = require("../../../database");
+import { getUser } from "../../utils/getUser";
+const { hashPassword } = require("../../../helpers");
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
@@ -57,7 +55,7 @@ describe("GET /api/v1/roles", () => {
   });
 
   // 2. get all roles
-  it.only("should get all the roles", async () => {
+  it("should get all the roles", async () => {
     // role:read
     const createUser = await database
       .insert([

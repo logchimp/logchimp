@@ -1,14 +1,12 @@
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 const { v4: uuid } = require("uuid");
 
-const app = require("../../../server");
-const database = require("../../../server/database");
-const { hashPassword } = require("../../../server/helpers");
-const { board: generateBoards } = require("../../utils/generators");
+const app = require("../../../app");
+const database = require("../../../database");
+const { hashPassword } = require("../../../helpers");
+import { board as generateBoards } from "../../utils/generators";
 const { getUser } = require("../../utils/getUser");
-const cleanDatabase = require("../../utils/cleanDatabase");
-
-afterAll(() => cleanDatabase());
 
 // Get all boards
 describe("GET /api/v1/boards", () => {
@@ -225,18 +223,18 @@ describe("POST /api/v1/boards", () => {
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should create a board", async () => {
-    // seed users with "board:create permission"
-    const createUser = await database
-      .insert([
-        {
-          userId: uuid(),
-          email: "create-board@example.com",
-          password: hashPassword("strongPassword"),
-          username: "create-board",
-        },
-      ])
-      .into("users")
-      .returning(["userId"]);
-  });
+  // it("should create a board", async () => {
+  //   // seed users with "board:create permission"
+  //   const createUser = await database
+  //     .insert([
+  //       {
+  //         userId: uuid(),
+  //         email: "create-board@example.com",
+  //         password: hashPassword("strongPassword"),
+  //         username: "create-board",
+  //       },
+  //     ])
+  //     .into("users")
+  //     .returning(["userId"]);
+  // });
 });

@@ -1,15 +1,7 @@
-const app = require("../../../app");
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 
-const database = require("../../utils/setupDatabase");
-
-beforeAll(async () => {
-  return await database.latest();
-});
-
-afterAll(async () => {
-  return await database.rollback();
-});
+const app = require("../../../app");
 
 describe("GET /api/v1/settings/site", () => {
   it("should get all settings", async () => {
