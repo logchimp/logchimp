@@ -45,8 +45,6 @@ describe("POST /api/v1/auth/login", () => {
     expect(response.body.code).toBe("INCORRECT_PASSWORD");
   });
 
-
-
   it('should get "user_exists" user', async () => {
     const response = await supertest(app).post("/api/v1/auth/login").send({
       email: "user_exists@example.com",

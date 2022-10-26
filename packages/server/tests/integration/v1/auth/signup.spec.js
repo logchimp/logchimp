@@ -26,7 +26,7 @@ describe("POST /api/v1/auth/signup", () => {
 
   it("should create new user", async () => {
     const randomEmail = faker.internet.email();
-    const username = randomEmail.split("@")[0]
+    const username = randomEmail.split("@")[0];
 
     const response = await supertest(app).post("/api/v1/auth/signup").send({
       email: randomEmail,
@@ -35,8 +35,8 @@ describe("POST /api/v1/auth/signup", () => {
 
     const user = response.body.user;
     expect(response.status).toBe(201);
-    expect(user.username).toEqual(username)
-    expect(user.email).toEqual(randomEmail)
+    expect(user.username).toEqual(username);
+    expect(user.email).toEqual(randomEmail);
   });
 
   it("should not be allow to create account", async () => {
