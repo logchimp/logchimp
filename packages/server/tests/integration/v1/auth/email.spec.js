@@ -1,12 +1,10 @@
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 
-const app = require("../../../../server");
-const database = require("../../../../server/database");
-const { createToken } = require("../../../../server/services/token.service");
-const { user: generateUser } = require("../../../utils/generators");
-const cleanDatabase = require("../../../utils/cleanDatabase");
-
-afterAll(() => cleanDatabase());
+const app = require("../../../../app");
+const database = require("../../../../database");
+const { createToken } = require("../../../../services/token.service");
+import { user as generateUser } from "../../../utils/generators";
 
 describe("POST /api/v1/auth/email/validate", () => {
   it('should throw error "MISSING_TOKEN"', async () => {

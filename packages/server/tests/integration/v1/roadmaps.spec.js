@@ -1,11 +1,9 @@
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 
-const app = require("../../../server");
-const database = require("../../../server/database");
-const { roadmap: generateRoadmap } = require("../../utils/generators");
-const cleanDatabase = require("../../utils/cleanDatabase");
-
-afterAll(() => cleanDatabase());
+const app = require("../../../app");
+import { roadmap as generateRoadmap } from "../../utils/generators";
+const database = require("../../../database");
 
 // Get all roadmaps
 describe("GET /api/v1/roadmaps", () => {

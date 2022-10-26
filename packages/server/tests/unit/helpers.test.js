@@ -1,13 +1,14 @@
-const _ = require("lodash");
-const generatePassword = require("omgopass");
+import { describe, it, expect } from "vitest";
+import _ from "lodash";
+import generatePassword from "omgopass";
 
-const {
+import {
   validEmail,
   validUUID,
   generateHexColor,
   hashPassword,
   validatePassword,
-} = require("../../helpers");
+} from "../../helpers";
 
 describe("validate email", () => {
   it('should be a valid email "yashu@codecarrot.net"', () => {

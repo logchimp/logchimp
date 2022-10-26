@@ -21,7 +21,6 @@
 		"dotenv": "16.0.3"
 	},
 	"devDependencies": {
-		"jest": "27.5.1",
 		"nodemon": "2.0.20",
 		"rome": "0.10.1-next"
 	},

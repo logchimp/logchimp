@@ -1,18 +1,10 @@
-const app = require("../../../../app");
+import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 
-const database = require("../../../utils/setupDatabase");
+const app = require("../../../../app");
 
-beforeAll(async () => {
-  return await database.latest();
-});
-
-afterAll(async () => {
-  return await database.rollback();
-});
-
-describe("setup", () => {
-  it("error: email missing", async () => {
+describe("POST /api/v1/auth/setup", () => {
+  it('should throw error "EMAIL_INVALID"', async () => {
     const response = await supertest(app).post("/api/v1/auth/setup");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -20,7 +12,7 @@ describe("setup", () => {
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
 
-  it("error: password missing", async () => {
+  it('show throw error "PASSWORD_MISSING"', async () => {
     const response = await supertest(app).post("/api/v1/auth/setup").send({
       email: "admin@example.com",
     });

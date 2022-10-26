@@ -1,20 +1,19 @@
-const _ = require("lodash");
+import { faker } from "@faker-js/faker";
 const { v4: uuid } = require("uuid");
 const generatePassword = require("omgopass");
-const faker = require("faker");
 const { nanoid } = require("nanoid");
 
-const {
+import {
   generateHexColor,
   sanitiseUsername,
   sanitiseURL,
   toSlug,
-} = require("../../server/helpers");
+} from "../../helpers";
 
 const user = () => {
   return {
     userId: uuid(),
-    name: faker.name.findName(),
+    name: faker.name.fullName(),
     email: faker.internet.email(),
     password: generatePassword(),
     username: sanitiseUsername(faker.internet.userName()),
@@ -64,7 +63,7 @@ const post = () => {
 };
 
 const board = () => {
-  const name = faker.name.title();
+  const name = faker.commerce.product();
 
   return {
     boardId: uuid(),
