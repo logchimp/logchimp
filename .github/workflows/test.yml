@@ -262,7 +262,7 @@ jobs:
       - name: Testing
         run: |
           # Seeding database
-          node ./packages/server//database/seed/index.js
+          node ./packages/server/database/seed/index.js
 
           # Running integration test
           pnpm --filter @logchimp/api test:integration
