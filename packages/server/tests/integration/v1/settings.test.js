@@ -1,10 +1,18 @@
 import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 
+import database from "../../../database";
 const app = require("../../../app");
 
 describe("GET /api/v1/settings/site", () => {
   it("should get all settings", async () => {
+    // set allowSignup to true in settings table
+    await database
+      .update({
+        allowSignup: true,
+      })
+      .from("settings");
+
     const response = await supertest(app).get("/api/v1/settings/site");
 
     expect(response.headers["content-type"]).toContain("application/json");
