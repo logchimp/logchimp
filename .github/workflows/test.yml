@@ -261,6 +261,9 @@ jobs:
 
       - name: Testing
         run: |
+          # Run database migrations
+          pnpm --filter @logchimp/api db:migrate 
+
           # Seeding database
           node ./packages/server/database/seed/index.js
 
