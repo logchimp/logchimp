@@ -66,7 +66,7 @@ importers:
     specifiers:
       '@types/uuid': 8.3.4
       '@vitejs/plugin-vue': 3.2.0
-      '@vue/test-utils': 2.2.0
+      '@vue/test-utils': 2.2.1
       '@vueuse/components': 9.4.0
       '@vueuse/core': 9.4.0
       '@vueuse/head': 0.9.8
@@ -103,7 +103,7 @@ importers:
     devDependencies:
       '@types/uuid': 8.3.4
       '@vitejs/plugin-vue': 3.2.0_vite@3.2.2+vue@3.2.41
-      '@vue/test-utils': 2.2.0_vue@3.2.41
+      '@vue/test-utils': 2.2.1_vue@3.2.41
       jsdom: 20.0.1
       sass: 1.55.0
       typescript: 4.8.4
@@ -404,8 +404,8 @@ packages:
   /@vue/shared/3.2.41:
     resolution: {integrity: sha512-W9mfWLHmJhkfAmV+7gDjcHeAWALQtgGT3JErxULl0oz6R6+3ug91I7IErs93eCFhPCZPHBs4QJS7YWEV7A3sxw==}
 
-  /@vue/test-utils/2.2.0_vue@3.2.41:
-    resolution: {integrity: sha512-EKp5/N7ieNZdoLTkD16j/irUjIEDN63QUIc41vLUMqGvSsTQN0QxbFiQqh5v49RPfS5vZH+DhjNUEkijCMOCSg==}
+  /@vue/test-utils/2.2.1_vue@3.2.41:
+    resolution: {integrity: sha512-AkLt24wnnxedJ3NX090JYiueog184QqlR5TVNZM+lggCrK8XjeuPr274okaLqDmiRgp4XVCaGa07KqKLGQbsMQ==}
     peerDependencies:
       vue: ^3.0.1
     dependencies:
