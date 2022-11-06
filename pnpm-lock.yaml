@@ -7,13 +7,13 @@ importers:
       '@logchimp/api': 0.7.0-beta.0
       dotenv: 16.0.3
       nodemon: 2.0.20
-      rome: 0.10.1-next
+      rome: 3.0.0
     dependencies:
       '@logchimp/api': link:packages/server
       dotenv: 16.0.3
     devDependencies:
       nodemon: 2.0.20
-      rome: 0.10.1-next
+      rome: 3.0.0
 
   packages/server:
     specifiers:
@@ -171,72 +171,6 @@ packages:
     resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
     dev: true
-
-  /@rometools/cli-darwin-arm64/0.10.1-next:
-    resolution: {integrity: sha512-nyNijAs52mIE6oAJOXEGgnJfiBRP2tN+puQbi88o4ktmSXR43XnXs2fTme7xXRwzZ6uwoc9kVRAbHsgFZpYgMA==}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-darwin-x64/0.10.1-next:
-    resolution: {integrity: sha512-O+1tDZKITaf/WaF3r1PnANGhm8Ex6IwrHXAFNVHEdy496jHfBGIzZ9wf6g8o2INpUe+OM6v6knA9wwjbMPmzSw==}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-linux-arm64/0.10.1-next:
-    resolution: {integrity: sha512-aZGSrTaPzcHarlrA8hAO2ZbpoF1yl5BwhX93U5eM92jEJg9/NPl0RuVmZaiOIVN6gUu7Xv2PDE9S0ZqPUugcAA==}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-linux-x64/0.10.1-next:
-    resolution: {integrity: sha512-fVN7HhUVSEANQL8qFJbteX/8wLIFc+1HtTRxwoGEbmSZfXbIPalFuvkQ3o0pke2+LdpU1URiLzMIx+5gBwPjeA==}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-win32-arm64/0.10.1-next:
-    resolution: {integrity: sha512-UMkSgQMslkTQ/QvwTdOsmQWlTc2RgiA4fsHv9thcDHdrV13+kUCsYQV5EA27ROVCFFdyxAG3OrZiRPbd92mHHA==}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-win32-x64/0.10.1-next:
-    resolution: {integrity: sha512-1ZCdAZKtB/bzFDJtbSECfCE3f+d00n8+/8AShOZ4+gKTtJZMOZ56XWD+9MvLq16DUogyGKwR0IzVgIUzvOQGwQ==}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/wasm-bundler/0.10.1-next:
-    resolution: {integrity: sha512-yREKu7ZgmKfCOvxYvX7EmJu65mNT+BioaJf3Vep/mCI+/S6WJotMomNogeMzfrWQ06VhEVkqebV4x8W1hFLMjg==}
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/wasm-nodejs/0.10.1-next:
-    resolution: {integrity: sha512-4aiPUhsumpzj497ipSAqQhJTT12hVS2IJaVe4hztGxqZgLlrm1hbWWal/XzUMYYh30iGAaqZIfR8vuA4E8WCoQ==}
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/wasm-web/0.10.1-next:
-    resolution: {integrity: sha512-FjPkty4Rab2fEciL4tonpDwHpOyHVgAdxhz3BhSnDlEMCW1VnFCpk45v/2srDrBCY+W23++zQyBbDoZKbjIbJA==}
-    requiresBuild: true
-    dev: true
-    optional: true
 
   /@selderee/plugin-htmlparser2/0.6.0:
     resolution: {integrity: sha512-J3jpy002TyBjd4N/p6s+s90eX42H2eRhK3SbsZuvTDv977/E8p2U3zikdiehyJja66do7FlxLomZLPlvl2/xaA==}
@@ -588,6 +522,10 @@ packages:
   /asynckit/0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  /atoa/1.0.0:
+    resolution: {integrity: sha512-VVE1H6cc4ai+ZXo/CRWoJiHXrA1qfA31DPnx6D20+kSI547hQN5Greh51LQ1baMRMfxO5K5M4ImMtZbZt2DODQ==}
+    dev: true
+
   /avatar-generator/2.0.4:
     resolution: {integrity: sha512-1XH0LAO6QwtOvv9ImVKr6O0DUtH+QX4B6ReBcfjbUPnFVZMfSgM18jkP8MDsrPxk9UmCGMddxBCxdizU7lbwrw==}
     engines: {node: '>=8.0', npm: '>=6.0'}
@@ -691,6 +629,14 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
+    dev: true
+
+  /bullseye/1.4.6:
+    resolution: {integrity: sha512-7Y69O3EPzT5g9D3J6zcVKyufX2g5HvzdDgcuebvmAXgcD7FvAOvRsEMcPBqI/oOEJOj4FSdBxRu0PoyIuHcmAw==}
+    dependencies:
+      crossvent: 1.5.0
+      seleccion: 2.0.0
+      sell: 1.0.0
     dev: true
 
   /busboy/0.2.14:
@@ -851,6 +797,13 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /contra/1.9.1:
+    resolution: {integrity: sha512-wFB355FoeiNHSoiXBsosiHNZRPVe0Nm0KzUBfjZx/GA+VqmgEdqlUTUgaAuRVMoPyAba9ECjnZUVvKPP4XpQeQ==}
+    dependencies:
+      atoa: 1.0.0
+      ticky: 1.0.0
+    dev: true
+
   /cookie-signature/1.0.6:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
     dev: false
@@ -875,6 +828,12 @@ packages:
       vary: 1.1.2
     dev: false
 
+  /crossvent/1.5.0:
+    resolution: {integrity: sha512-jt1QxLWytu7YGx3rPFm3K34/NJ55ryj6D50GloC8j+m9djy5rAUSG7Z/cavtMODXKMJunQb5sl809A3vCC7tkA==}
+    dependencies:
+      custom-event: 1.0.0
+    dev: true
+
   /crypt/0.0.2:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
     dev: false
@@ -896,6 +855,10 @@ packages:
 
   /csstype/2.6.21:
     resolution: {integrity: sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==}
+
+  /custom-event/1.0.0:
+    resolution: {integrity: sha512-6nOXX3UitrmdvSJWoVR2dlzhbX5bEUqmqsMUyx1ypCLZkHHkcuYtdpW3p94RGvcFkTV7DkLo+Ilbwnlwi8L+jw==}
+    dev: true
 
   /data-urls/3.0.2:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
@@ -2086,6 +2049,10 @@ packages:
     hasBin: true
     dev: true
 
+  /moment/2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+    dev: true
+
   /moo/0.5.2:
     resolution: {integrity: sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==}
     dev: false
@@ -2598,21 +2565,13 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rome/0.10.1-next:
-    resolution: {integrity: sha512-WB+zT+NGE6pqSmNgemlAwreE2BwWLi6rQ3g8L1IlBOvBI8QB0iRMgYRmdVxBMjQ2X6CDnCuDnbKOE3uqC50qvw==}
-    engines: {node: '>=14.*'}
-    hasBin: true
-    requiresBuild: true
-    optionalDependencies:
-      '@rometools/cli-darwin-arm64': 0.10.1-next
-      '@rometools/cli-darwin-x64': 0.10.1-next
-      '@rometools/cli-linux-arm64': 0.10.1-next
-      '@rometools/cli-linux-x64': 0.10.1-next
-      '@rometools/cli-win32-arm64': 0.10.1-next
-      '@rometools/cli-win32-x64': 0.10.1-next
-      '@rometools/wasm-bundler': 0.10.1-next
-      '@rometools/wasm-nodejs': 0.10.1-next
-      '@rometools/wasm-web': 0.10.1-next
+  /rome/3.0.0:
+    resolution: {integrity: sha512-lwugyr0DLnfi0ODGjuEo47v/gXRaanbBI7V3e7GBo6rbCwDoka1PspmYfZVYxXaVIA+Rvn+RpRuLplUxwNP/+g==}
+    dependencies:
+      bullseye: 1.4.6
+      contra: 1.9.1
+      crossvent: 1.5.0
+      moment: 2.29.4
     dev: true
 
   /safe-buffer/5.1.2:
@@ -2655,6 +2614,14 @@ packages:
     dependencies:
       parseley: 0.7.0
     dev: false
+
+  /seleccion/2.0.0:
+    resolution: {integrity: sha512-PhrdUIWfCSpXujtwb2E+v/L4VgOo8KGn860V/Nep57IxL8Mz7vGCZ5yCCMU6IJVt4rE5XG9TRT1tpcXxXYqqcQ==}
+    dev: true
+
+  /sell/1.0.0:
+    resolution: {integrity: sha512-xd3i7H12FAVIfAT4FiWM07pxjqEZj2aPWEDREvF1Yb+gD0AUQvwrY/4/lT+Xb+eGWG2H0avvo963xQQ8ERWhIA==}
+    dev: true
 
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
@@ -2947,6 +2914,10 @@ packages:
   /text-hex/1.0.0:
     resolution: {integrity: sha512-uuVGNWzgJ4yhRaNSiubPY7OjISw4sw4E5Uv0wbjp+OzcbmVU/rsT8ujgcXJhn9ypzsgr5vlzpPqP+MBBKcGvbg==}
     dev: false
+
+  /ticky/1.0.0:
+    resolution: {integrity: sha512-ITKtHPz+WMC9jyTveaf3S6FEXJ78ewvmYzfIMnwwehB6piKJRCgL708YXM0UFp5CY/8fuSF3hiEQa8VrlZAGsA==}
+    dev: true
 
   /tildify/2.0.0:
     resolution: {integrity: sha512-Cc+OraorugtXNfs50hU9KS369rFXCfgGLpfCfvlc+Ud5u6VWmUQsOAa9HbTvheQdYnrdJqqv1e5oIqXppMYnSw==}
