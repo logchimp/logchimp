@@ -22,7 +22,7 @@
 	},
 	"devDependencies": {
 		"nodemon": "2.0.20",
-		"rome": "0.10.1-next"
+		"rome": "0.14.0"
 	},
 	"keywords": [
 		"logchimp",
