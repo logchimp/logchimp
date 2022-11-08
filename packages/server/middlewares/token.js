@@ -19,7 +19,7 @@ const authenticateWithToken = async (req, res, next, token) => {
   const decoded = jwt.decode(token, { complete: true });
 
   // validate JWT token type
-  if (!(decoded && decoded.header)) {
+  if (!decoded?.header) {
     res.status(401).send({
       message: error.middleware.auth.invalidToken,
       code: "INVALID_JWT",
@@ -92,7 +92,7 @@ const authenticateWithToken = async (req, res, next, token) => {
 
 const token = (req, res, next) => {
   // check for authorization header
-  if (!(req.headers && req.headers.authorization)) {
+  if (!req.headers?.authorization) {
     res.status(400).send({
       message: error.middleware.auth.invalidAuthHeader,
       code: "INVALID_AUTH_HEADER",

@@ -1,7 +1,7 @@
 const error = require("../errorResponse.json");
 
 const authorize = (req, res, next) => {
-  const hasUser = req.user && req.user.userId;
+  const hasUser = req.user?.userId;
 
   if (hasUser) {
     // user is blocked
