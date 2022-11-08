@@ -7,13 +7,13 @@ importers:
       '@logchimp/api': 0.7.0-beta.0
       dotenv: 16.0.3
       nodemon: 2.0.20
-      rome: 0.10.1-next
+      rome: 10.0.0
     dependencies:
       '@logchimp/api': link:packages/server
       dotenv: 16.0.3
     devDependencies:
       nodemon: 2.0.20
-      rome: 0.10.1-next
+      rome: 10.0.0
 
   packages/server:
     specifiers:
@@ -172,68 +172,50 @@ packages:
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
     dev: true
 
-  /@rometools/cli-darwin-arm64/0.10.1-next:
-    resolution: {integrity: sha512-nyNijAs52mIE6oAJOXEGgnJfiBRP2tN+puQbi88o4ktmSXR43XnXs2fTme7xXRwzZ6uwoc9kVRAbHsgFZpYgMA==}
+  /@rometools/cli-darwin-arm64/10.0.0:
+    resolution: {integrity: sha512-JT7JccEtKyFDHXy0MxhwHN4Zc94s/kW+0aTczb1ChAoCStfjj5jWzv/yQnm+HFw5Vf3ukAocLsDNRN6d9gQYbQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rometools/cli-darwin-x64/0.10.1-next:
-    resolution: {integrity: sha512-O+1tDZKITaf/WaF3r1PnANGhm8Ex6IwrHXAFNVHEdy496jHfBGIzZ9wf6g8o2INpUe+OM6v6knA9wwjbMPmzSw==}
+  /@rometools/cli-darwin-x64/10.0.0:
+    resolution: {integrity: sha512-HORYhz8eM3L3XePPNBhU44zFpTVfhpuO4B7fjdfho7z9kwTW22M0fVvuPrxxPauxmin7gHM8lxCD2jHxabg34Q==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rometools/cli-linux-arm64/0.10.1-next:
-    resolution: {integrity: sha512-aZGSrTaPzcHarlrA8hAO2ZbpoF1yl5BwhX93U5eM92jEJg9/NPl0RuVmZaiOIVN6gUu7Xv2PDE9S0ZqPUugcAA==}
+  /@rometools/cli-linux-arm64/10.0.0:
+    resolution: {integrity: sha512-/L3jxo9RUwJ+uvDvAPCquAw10ccpZDuzADfZff5tHd6Fzv28cAToC3JrN/2miGpur0Fx/NIZIPbAsdI4NWGIRA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rometools/cli-linux-x64/0.10.1-next:
-    resolution: {integrity: sha512-fVN7HhUVSEANQL8qFJbteX/8wLIFc+1HtTRxwoGEbmSZfXbIPalFuvkQ3o0pke2+LdpU1URiLzMIx+5gBwPjeA==}
+  /@rometools/cli-linux-x64/10.0.0:
+    resolution: {integrity: sha512-KC6CDeSR4haRfxmfrvCn8+NzQ7X31pDjFgD+m+PAbSXOeMr/KHmU7eDsjC3d47ORYYkYXqhx9VxHe1w3IEShMg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rometools/cli-win32-arm64/0.10.1-next:
-    resolution: {integrity: sha512-UMkSgQMslkTQ/QvwTdOsmQWlTc2RgiA4fsHv9thcDHdrV13+kUCsYQV5EA27ROVCFFdyxAG3OrZiRPbd92mHHA==}
+  /@rometools/cli-win32-arm64/10.0.0:
+    resolution: {integrity: sha512-8XWjx7Z1dMp9q4Lvi+ax4+Y8vkbp7JHVdfrTSMQTyUA9ofaW6ah1h9iGPuKic057VTZGX66/KazC5qNTbrlckQ==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rometools/cli-win32-x64/0.10.1-next:
-    resolution: {integrity: sha512-1ZCdAZKtB/bzFDJtbSECfCE3f+d00n8+/8AShOZ4+gKTtJZMOZ56XWD+9MvLq16DUogyGKwR0IzVgIUzvOQGwQ==}
+  /@rometools/cli-win32-x64/10.0.0:
+    resolution: {integrity: sha512-mAf3f32oE919cZ86KVMR/X0VOs+C16jEUyt1ww2UPw/rKUmm0DNfuT6/m4FQW8GEHdCBC8z3zdRVCd05VK7UJg==}
     cpu: [x64]
     os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/wasm-bundler/0.10.1-next:
-    resolution: {integrity: sha512-yREKu7ZgmKfCOvxYvX7EmJu65mNT+BioaJf3Vep/mCI+/S6WJotMomNogeMzfrWQ06VhEVkqebV4x8W1hFLMjg==}
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/wasm-nodejs/0.10.1-next:
-    resolution: {integrity: sha512-4aiPUhsumpzj497ipSAqQhJTT12hVS2IJaVe4hztGxqZgLlrm1hbWWal/XzUMYYh30iGAaqZIfR8vuA4E8WCoQ==}
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/wasm-web/0.10.1-next:
-    resolution: {integrity: sha512-FjPkty4Rab2fEciL4tonpDwHpOyHVgAdxhz3BhSnDlEMCW1VnFCpk45v/2srDrBCY+W23++zQyBbDoZKbjIbJA==}
     requiresBuild: true
     dev: true
     optional: true
@@ -2598,21 +2580,18 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rome/0.10.1-next:
-    resolution: {integrity: sha512-WB+zT+NGE6pqSmNgemlAwreE2BwWLi6rQ3g8L1IlBOvBI8QB0iRMgYRmdVxBMjQ2X6CDnCuDnbKOE3uqC50qvw==}
+  /rome/10.0.0:
+    resolution: {integrity: sha512-dQnIlzgHDt94N4JoFaqe9e2aDAZfdmyGOW4UaefMztDph41mt75Mg0aeJ/C7JgcIOLbp9D4LD+omyUB5YFUUPw==}
     engines: {node: '>=14.*'}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      '@rometools/cli-darwin-arm64': 0.10.1-next
-      '@rometools/cli-darwin-x64': 0.10.1-next
-      '@rometools/cli-linux-arm64': 0.10.1-next
-      '@rometools/cli-linux-x64': 0.10.1-next
-      '@rometools/cli-win32-arm64': 0.10.1-next
-      '@rometools/cli-win32-x64': 0.10.1-next
-      '@rometools/wasm-bundler': 0.10.1-next
-      '@rometools/wasm-nodejs': 0.10.1-next
-      '@rometools/wasm-web': 0.10.1-next
+      '@rometools/cli-darwin-arm64': 10.0.0
+      '@rometools/cli-darwin-x64': 10.0.0
+      '@rometools/cli-linux-arm64': 10.0.0
+      '@rometools/cli-linux-x64': 10.0.0
+      '@rometools/cli-win32-arm64': 10.0.0
+      '@rometools/cli-win32-x64': 10.0.0
     dev: true
 
   /safe-buffer/5.1.2:
