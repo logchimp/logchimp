@@ -68,7 +68,7 @@ importers:
       '@vitejs/plugin-vue': 3.2.0
       '@vue/test-utils': 2.2.1
       '@vueuse/components': 9.4.0
-      '@vueuse/core': 9.4.0
+      '@vueuse/core': 9.5.0
       '@vueuse/head': 0.9.8
       axios: 1.1.3
       dayjs: 1.11.6
@@ -88,7 +88,7 @@ importers:
       vuedraggable: 4.1.0
     dependencies:
       '@vueuse/components': 9.4.0_vue@3.2.41
-      '@vueuse/core': 9.4.0_vue@3.2.41
+      '@vueuse/core': 9.5.0_vue@3.2.41
       '@vueuse/head': 0.9.8_vue@3.2.41
       axios: 1.1.3
       dayjs: 1.11.6
@@ -417,6 +417,18 @@ packages:
       - vue
     dev: false
 
+  /@vueuse/core/9.5.0_vue@3.2.41:
+    resolution: {integrity: sha512-6GsWBsJHEb3sYw15mbLrcbslAVY45pkzjJYTKYKCXv88z7srAF0VEW0q+oXKsl58tCbqooplInahXFg8Yo1m4w==}
+    dependencies:
+      '@types/web-bluetooth': 0.0.16
+      '@vueuse/metadata': 9.5.0
+      '@vueuse/shared': 9.5.0_vue@3.2.41
+      vue-demi: 0.13.11_vue@3.2.41
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
+
   /@vueuse/head/0.9.8_vue@3.2.41:
     resolution: {integrity: sha512-zt8+JksoVFKxRvmABlaUHA62w+8nOcD8cJnaJ0+SHcr6xaIP3GXgh7/n2TzUoWw4l3d9UxRNs+tapgHdsQ7RbA==}
     peerDependencies:
@@ -432,6 +444,10 @@ packages:
 
   /@vueuse/metadata/9.4.0:
     resolution: {integrity: sha512-7GKMdGAsJyQJl35MYOz/RDpP0FxuiZBRDSN79QIPbdqYx4Sd0sVTnIC68KJ6Oln0t0SouvSUMvRHuno216Ud2Q==}
+    dev: false
+
+  /@vueuse/metadata/9.5.0:
+    resolution: {integrity: sha512-4M1AyPZmIv41pym+K5+4wup3bKuYebbH8w8BROY1hmT7rIwcyS4tEL+UsGz0Hiu1FCOxcoBrwtAizc0YmBJjyQ==}
     dev: false
 
   /@vueuse/shared/9.3.0_vue@3.2.41:
@@ -452,6 +468,15 @@ packages:
       - vue
     dev: false
 
+  /@vueuse/shared/9.5.0_vue@3.2.41:
+    resolution: {integrity: sha512-HnnCWU1Vg9CVWRCcI8ohDKDRB2Sc4bTgT1XAIaoLSfVHHn+TKbrox6pd3klCSw4UDxkhDfOk8cAdcK+Z5KleCA==}
+    dependencies:
+      vue-demi: 0.13.11_vue@3.2.41
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
+
   /@zhead/schema-raw/0.8.5:
     resolution: {integrity: sha512-Aq+9mksf5zbtj7HYluT6PVyfpQ6z7mja9MzjFxg76Vt+Q9i0oL1XN6ZYaCXImWRafwbyAxjFQ5aUCVyFn79OpA==}
     dependencies:
@@ -463,7 +488,7 @@ packages:
     peerDependencies:
       vue: '>=2.7 || >=3'
     dependencies:
-      '@vueuse/shared': 9.4.0_vue@3.2.41
+      '@vueuse/shared': 9.5.0_vue@3.2.41
       '@zhead/schema': 0.8.5
       '@zhead/schema-raw': 0.8.5
       vue: 3.2.41
