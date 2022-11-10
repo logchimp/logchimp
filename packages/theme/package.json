@@ -10,7 +10,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
-    "@vueuse/components": "9.4.0",
+    "@vueuse/components": "9.5.0",
     "@vueuse/core": "9.5.0",
     "@vueuse/head": "0.9.8",
     "axios": "1.1.3",
