@@ -202,7 +202,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12.12
+        image: postgres:12.13
         env:
           POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
           POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
