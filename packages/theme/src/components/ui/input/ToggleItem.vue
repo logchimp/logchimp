@@ -4,9 +4,9 @@
       <label data-test="toggle-item-label">{{ label }}</label>
       <toggle
         ref="toggleRefs"
-        v-model="modelValue"
+        :modelValue="modelValue"
         :disabled="disabled"
-        @input="input"
+        @update:modelValue="input"
       />
     </div>
     <p
