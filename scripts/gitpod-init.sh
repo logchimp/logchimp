@@ -16,3 +16,8 @@ MAIL_HOST="localhost" \
 MAIL_USER="gitpod" \
 MAIL_PORT=1025 \
 sh ./scripts/create-config.sh
+
+# Install packages
+pnpm Install
+
+gp sync-done setup
