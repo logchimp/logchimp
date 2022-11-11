@@ -73,7 +73,7 @@ importers:
       axios: 1.1.3
       dayjs: 1.11.6
       jsdom: ^20.0.1
-      lucide-vue: npm:lucide-vue-next@0.99.0
+      lucide-vue: npm:lucide-vue-next@0.100.0
       pinia: 2.0.23
       sass: 1.56.1
       typescript: 4.8.4
@@ -92,7 +92,7 @@ importers:
       '@vueuse/head': 0.9.8_vue@3.2.44
       axios: 1.1.3
       dayjs: 1.11.6
-      lucide-vue: /lucide-vue-next/0.99.0_vue@3.2.44
+      lucide-vue: /lucide-vue-next/0.100.0_vue@3.2.44
       pinia: 2.0.23_d45o5shxrtvj6wh4y524t7cqnm
       uuid: 9.0.0
       vue: 3.2.44
@@ -1963,8 +1963,8 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lucide-vue-next/0.99.0_vue@3.2.44:
-    resolution: {integrity: sha512-DIOMPMP33jMKTFD3tehjdx7QuJN3iEbAVZsn4bjVaRiXT7aaThGtxPXqw1NpIA+w72tMemqdQ07uYMgcIvkSDg==}
+  /lucide-vue-next/0.100.0_vue@3.2.44:
+    resolution: {integrity: sha512-ynr+ccz47yk3nH8aZTcCk59s6SxsA+p1As7QpfCCvRdd2rCiXqnCMcqEIyjH19gJJNhUAToJGF44Db5dBBKobA==}
     peerDependencies:
       vue: '>=3.0.1'
     dependencies:
