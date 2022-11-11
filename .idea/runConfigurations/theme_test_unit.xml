@@ -5,6 +5,7 @@
     <scripts>
       <script value="test:unit" />
     </scripts>
+    <arguments value="--watch=false" />
     <node-interpreter value="project" />
     <envs />
     <method v="2" />
