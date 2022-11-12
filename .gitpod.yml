@@ -57,3 +57,4 @@ vscode:
     - editorconfig.editorconfig
     - ZixuanChen.vitest-explorer
     - syler.sass-indented
+    - eamodio.gitlens
