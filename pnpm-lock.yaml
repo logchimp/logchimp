@@ -69,7 +69,7 @@ importers:
       '@vue/test-utils': 2.2.2
       '@vueuse/components': 9.5.0
       '@vueuse/core': 9.5.0
-      '@vueuse/head': 1.0.5
+      '@vueuse/head': 1.0.6
       axios: 1.1.3
       dayjs: 1.11.6
       jsdom: ^20.0.1
@@ -89,7 +89,7 @@ importers:
     dependencies:
       '@vueuse/components': 9.5.0_vue@3.2.45
       '@vueuse/core': 9.5.0_vue@3.2.45
-      '@vueuse/head': 1.0.5_vue@3.2.45
+      '@vueuse/head': 1.0.6_vue@3.2.45
       axios: 1.1.3
       dayjs: 1.11.6
       lucide-vue: /lucide-vue-next/0.100.0_vue@3.2.45
@@ -470,8 +470,8 @@ packages:
       - vue
     dev: false
 
-  /@vueuse/head/1.0.5_vue@3.2.45:
-    resolution: {integrity: sha512-uAaTFwDQChhErwNyzAWOSUQZPigFBq4YIR2/hjle7BAqDcGAYJeD2t6yH1w1t+V2WkWoMdKgOt8bhvDX+PrOJg==}
+  /@vueuse/head/1.0.6_vue@3.2.45:
+    resolution: {integrity: sha512-GzlSgpt6wix6/3QqUJG8gydm6V/wHi1yC2SMJVY1kOMwIZ6Lf76adtL7yI6dv6FpJ7ffZRitMXogTpxGra5REQ==}
     peerDependencies:
       vue: '>=2.7 || >=3'
     dependencies:
