@@ -30,9 +30,14 @@
 	</a>
 </p>
 
-### 🧐 About
+### Features
 
-LogChimp is an open source software to capture your customers feedback and inform your product decisions.
+* 🎨 Brand customizable
+* 📝 Create posts
+* 🗃️ Organise posts by Boards & Roadmaps
+* 💪 Powerful dashboard
+* 🔐 Secure by design
+* 🤖 Self-hosted
 
 ### 🤝🏻 Community
 
