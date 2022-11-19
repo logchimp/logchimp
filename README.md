@@ -16,9 +16,6 @@
 </h4>
 <br />
 <p align="center">
-  <a href="https://www.patreon.com/mittalyashu">
-    <img src="https://img.shields.io/badge/become%20a-patron-blue.svg?style=flat&colorA=555555&colorB=F86754" alt="Become a Patreon" />
-  </a>
   <a href="https://github.com/logchimp/logchimp/actions">
     <img src="https://github.com/logchimp/logchimp/workflows/Test/badge.svg" alt="CI Test Status" />
   </a>
