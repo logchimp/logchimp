@@ -30,7 +30,7 @@
 	</a>
 </p>
 
-### Features
+## Features
 
 * 🎨 Brand customizable
 * 📝 Create posts
@@ -39,24 +39,28 @@
 * 🔐 Secure by design
 * 🤖 Self-hosted
 
-### 🤝🏻 Community
+## Getting started
+
+To get started you can read our [deployment docs](https://logchimp.codecarrot.net/docs/install) for self-hosting with Ubuntu or cloud hosting with one click deploy button.
+
+## 🤝🏻 Community
 
 Stay up to date on the development of LogChimp you can star this repository, follow us on Twitter or reach out to the community with these helpful resources.
 
 - Follow [@logchimp](https://twitter.com/@logchimp) on Twitter.
 - Join the official [LogChimp Discord](https://discord.gg/A7mztcC)
 
-### ⛏️ Built Using
+## ⛏️ Built Using
 
 Contributing to LogChimp project is fairly easy.
 
-- **Express** - Node.js web framework
-- **PostgreSQL** - Database
-- **Vue.js** - [LogChimp default theme](https://github.com/logchimp/theme)
+- **Express** - APIs
+- **PostgresQL** - Database
+- **Vue 3** + **Vite.js** - Theme
 
 &nbsp;
 
-# 🎁 LogChimp Sponsors
+## 🎁 LogChimp Sponsors
 
 Big shout-out to our [sponsors and partners](https://logchimp.codecarrot.net/partners). If you're interested in sponsoring LogChimp and supporting the project, please reach out to us on [LogChimp Discord server](https://discordapp.com/invite/A7mztcC/).
 
