@@ -1,16 +1,20 @@
+<a href="https://logchimp.codecarrot.net/">
+  <img src="./.github/images/readme.png" alt="LogChimp" />
+</a>
+<br /><br />
 <p align="center">
-  <a href="https://logchimp.codecarrot.net/">
-    <img src="https://logchimp.codecarrot.net/images/logchimp-logo_circle.png" alt="LogChimp" height="72" />
-  </a>
+  Track your customers feedback to build better products with LogChimp
 </p>
-<h1 align="center">
-  LogChimp
-</h1>
-
-<p align="center">
-	Track your customers feedback to build better products with LogChimp
-</p>
-
+<h4 align="center">
+  <a href="https://logchimp.codecarrot.net/docs/">Docs</a>
+  <span> • </span>
+  <a href="https://logchimp.codecarrot.net/docs/contributing">Contribute</a>
+  <span> • </span>
+  <a href="https://twitter.com/logchimp">Twitter</a>
+  <span> • </span>
+  <a href="https://discord.gg/A7mztcC">Discord</a>
+</h4>
+<br />
 <p align="center">
   <a href="https://www.patreon.com/mittalyashu">
     <img src="https://img.shields.io/badge/become%20a-patron-blue.svg?style=flat&colorA=555555&colorB=F86754" alt="Become a Patreon" />
@@ -28,20 +32,6 @@
 		<img src="https://img.shields.io/badge/contribute-Open%20Collective-7FADF2?logo=open-collective" alt="Contribute on Open Collective" />
 	</a>
 </p>
-
-<h3 align="center">
-  <a href="https://logchimp.codecarrot.net/docs/">Docs</a>
-  <span> • </span>
-  <a href="https://logchimp.codecarrot.net/docs/contributing">Contribute</a>
-  <span> • </span>
-  <a href="https://twitter.com/logchimp">Twitter</a>
-  <span> • </span>
-  <a href="https://discord.gg/A7mztcC">Discord</a>
-</h3>
-
-<a href="https://logchimp.codecarrot.net/">
-	<img src="https://logchimp.codecarrot.net/images/what-is-logchimp.gif" alt="What is LogChimp? " />
-</a>
 
 ### 🧐 About
 
