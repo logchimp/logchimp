@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-form">
+  <auth-form>
     <div class="auth-form-header">
       <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
       <h3 class="auth-form-heading">
@@ -45,7 +45,7 @@
         Log in
       </router-link>
     </div>
-  </div>
+  </auth-form>
 </template>
 
 <script lang="ts">
@@ -66,6 +66,7 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // component
+import AuthForm from "../layout/AuthForm.vue";
 import { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
