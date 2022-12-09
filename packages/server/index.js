@@ -1,9 +1,11 @@
-const database = require("./database");
+const startTime = Date.now();
 
+const database = require("./database");
 const app = require("./app");
 
 // utils
 const logger = require("./utils/logger");
+const logchimpConfig = require("./utils/logchimpConfig");
 
 // run database migrations
 database.migrate
@@ -31,4 +33,17 @@ database.migrate
     }
   });
 
-module.exports = app;
+
+const config = logchimpConfig();
+
+// start express server at SERVER_PORT
+const port = config.server.port || 3000;
+const host = config.server.host || "0.0.0.0";
+
+app.listen(port, host, async () => {
+  logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
+  logger.info(`Listening on port: ${port}`);
+  logger.info("Ctrl+C to shut down");
+  logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
+});
+
