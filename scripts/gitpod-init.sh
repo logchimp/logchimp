@@ -18,6 +18,6 @@ MAIL_PORT=1025 \
 sh ./scripts/create-config.sh
 
 # Install packages
-pnpm Install
+pnpm install
 
 gp sync-done setup
