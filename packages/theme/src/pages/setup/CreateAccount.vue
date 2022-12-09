@@ -78,7 +78,7 @@ import { useSettingStore } from "../../store/settings"
 import { useUserStore } from "../../store/user"
 
 // components
-import AuthLayout from "../../layout/Auth.vue"
+import AuthLayout from "../../layout/AuthForm.vue"
 import Card from "../../components/ui/Card.vue";
 import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
