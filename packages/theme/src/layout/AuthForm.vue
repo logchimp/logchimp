@@ -6,7 +6,7 @@
 
 <script lang="ts">
 export default {
-	name: "AuthLayout"
+	name: "AuthFormLayout"
 };
 </script>
 
