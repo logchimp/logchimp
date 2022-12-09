@@ -32,6 +32,7 @@ import { useSettingStore } from "./store/settings"
 import { useUserStore } from "./store/user"
 import { useAlertStore } from "./store/alert"
 import { getPermissions } from "./modules/users";
+import tokenError from "./utils/tokenError";
 
 // components
 import { Alert } from "./components/ui/Alert";
@@ -72,8 +73,17 @@ onMounted(async () => {
 	const user = localStorage.getItem("user");
 	if (user) {
 		userStore.setUser(JSON.parse(user));
-		const permissions = await getPermissions();
-		userStore.setPermissions(permissions.data.permissions);
+
+    /**
+     * Handling an edge-case when the user not found,
+     * and the data still exists on client-side.
+     */
+    try {
+      const permissions = await getPermissions();
+      userStore.setPermissions(permissions.data.permissions);
+    } catch (error) {
+      tokenError(error)
+    }
 	}
 })
 
