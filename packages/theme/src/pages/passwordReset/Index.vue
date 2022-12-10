@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-form">
+  <auth-form>
     <div class="auth-form-header">
       <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
       <h3 class="auth-form-heading">Forget password</h3>
@@ -36,7 +36,7 @@
         Sign up
       </router-link>
     </div>
-  </div>
+  </auth-form>
 </template>
 
 <script lang="ts">
@@ -54,6 +54,7 @@ import { requestPasswordReset } from "../../modules/auth";
 import { useSettingStore } from "../../store/settings"
 
 // component
+import AuthForm from "../../layout/AuthForm.vue";
 import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
 import LText from "../../components/ui/input/LText.vue";

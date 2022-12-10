@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-form">
+  <auth-form>
     <div class="auth-form-header">
       <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
     </div>
@@ -20,7 +20,7 @@
         <loader />
       </div>
     </div>
-  </div>
+  </auth-form>
 </template>
 
 <script lang="ts">
@@ -41,6 +41,7 @@ import { useSettingStore } from "../store/settings"
 import { verifyUserEmail } from "../modules/auth";
 
 // components
+import AuthForm from "../layout/AuthForm.vue";
 import Loader from "../components/ui/Loader.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";
 
