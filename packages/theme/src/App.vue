@@ -88,7 +88,7 @@ onMounted(async () => {
 })
 
 useHead({
-	titleTemplate: `%s•${settingsStore.get.title}`,
+	titleTemplate: `%s • ${settingsStore.get.title}`,
   htmlAttrs: {
     lang: "en",
   },
