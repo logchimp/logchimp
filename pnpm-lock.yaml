@@ -69,7 +69,7 @@ importers:
       '@vue/test-utils': 2.2.2
       '@vueuse/components': 9.5.0
       '@vueuse/core': 9.5.0
-      '@vueuse/head': 1.0.8
+      '@vueuse/head': 1.0.22
       autoprefixer: ^10.4.13
       axios: 1.1.3
       dayjs: 1.11.6
@@ -92,7 +92,7 @@ importers:
     dependencies:
       '@vueuse/components': 9.5.0_vue@3.2.45
       '@vueuse/core': 9.5.0_vue@3.2.45
-      '@vueuse/head': 1.0.8_vue@3.2.45
+      '@vueuse/head': 1.0.22_vue@3.2.45
       axios: 1.1.3
       dayjs: 1.11.6
       lucide-vue: /lucide-vue-next/0.100.0_vue@3.2.45
@@ -281,32 +281,32 @@ packages:
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
     dev: false
 
-  /@unhead/dom/0.6.4:
-    resolution: {integrity: sha512-GBvVDwOdQqcBE181eZJCjo66P25GENWld2jeah0TlDBF8HMUd77nJtlATwhAxhmpwrJyu4ydVrIeO7TUHXf95w==}
+  /@unhead/dom/1.0.13:
+    resolution: {integrity: sha512-ErfhK3Nwk3kpxnPEOrkruKAdS3/TrNlKs0nYtKgFJ1ywJYg+uNwRFDe82v4JdUMhnfmbgL/qcO3PTx3Dv09IEQ==}
     dependencies:
-      '@unhead/schema': 0.6.4
+      '@unhead/schema': 1.0.13
     dev: false
 
-  /@unhead/schema/0.6.4:
-    resolution: {integrity: sha512-PqsqIzxFPXFzsTWU9Rkl3JXJt6yY3V0xKVvUwVM3XhxaiIceb8nKon6MwZAG4tU5dFMrITZlIoaEV4vH8avhiQ==}
+  /@unhead/schema/1.0.13:
+    resolution: {integrity: sha512-K8SiAEkM8G7GaF1QvsKlthLmRqGB8R9SvZXMCucZqb2VQ6bU4IFSs/4q6dKxmV0fXb5AHdKUL9+rX/4rQ6FsZg==}
     dependencies:
-      '@zhead/schema': 1.0.0-beta.13
-      hookable: 5.4.1
+      '@zhead/schema': 1.0.7
+      hookable: 5.4.2
     dev: false
 
-  /@unhead/ssr/0.6.4:
-    resolution: {integrity: sha512-+vmCCFj2hKLtwmSw1rc4BvKR29VWwUMBLlF7+EgugS0EFYyuT/ad0YopVVoaNaMP2VmKF3/wmg6oXQs8/bLozg==}
+  /@unhead/ssr/1.0.13:
+    resolution: {integrity: sha512-pach3THVx8LU54M6aQ4qZeQdcLjXVnPlpHe7pQjHGvD6iBJC5bZc8TL+CHdTRxeiq2DqMA5uyfoor7VJJTi5AQ==}
     dependencies:
-      '@unhead/schema': 0.6.4
+      '@unhead/schema': 1.0.13
     dev: false
 
-  /@unhead/vue/0.6.4_vue@3.2.45:
-    resolution: {integrity: sha512-lIKH2LV8hPywKprYbjYwbSwhIaPa+ATBGmfI2wtVj4vApmifVkDyEr+TAzFEOCDuEUtnSpXzIiMFupbiHZ/+OA==}
+  /@unhead/vue/1.0.13_vue@3.2.45:
+    resolution: {integrity: sha512-sGl640UQqN8HUYTKXOh6gErk/vw8byPdx1+ECqX4ec7UZYktsWgfyIReYBu09Qm3O6pIYfX8HlZbDipX+wQAOQ==}
     peerDependencies:
       vue: '>=2.7 || >=3'
     dependencies:
-      '@unhead/schema': 0.6.4
-      hookable: 5.4.1
+      '@unhead/schema': 1.0.13
+      hookable: 5.4.2
       vue: 3.2.45
     dev: false
 
@@ -493,15 +493,15 @@ packages:
       - vue
     dev: false
 
-  /@vueuse/head/1.0.8_vue@3.2.45:
-    resolution: {integrity: sha512-wQ+cZ4efWqCLLdf5QLceVV53cngKYhyLs6OTUBF2Le4n2H0Cq2RV06BTQ+o220F6jhNeLd17V/dYXAl2xFvqUg==}
+  /@vueuse/head/1.0.22_vue@3.2.45:
+    resolution: {integrity: sha512-YmUdbzNdCnhmrAFxGnJS+Rixj+swE+TQC9OEaYDHIro6gE7W11jugcdwVP00HrA4WRQhg+TOQ4YcY2oL/PP1hw==}
     peerDependencies:
       vue: '>=2.7 || >=3'
     dependencies:
-      '@unhead/dom': 0.6.4
-      '@unhead/schema': 0.6.4
-      '@unhead/ssr': 0.6.4
-      '@unhead/vue': 0.6.4_vue@3.2.45
+      '@unhead/dom': 1.0.13
+      '@unhead/schema': 1.0.13
+      '@unhead/ssr': 1.0.13
+      '@unhead/vue': 1.0.13_vue@3.2.45
       vue: 3.2.45
     dev: false
 
@@ -518,8 +518,8 @@ packages:
       - vue
     dev: false
 
-  /@zhead/schema/1.0.0-beta.13:
-    resolution: {integrity: sha512-P1A1vRGFBhITco8Iw4/hvnDYoE/SoVrd71dW1pBFdXJb3vP+pBtoOuhbEKy0ROJGOyzQuqvFibcwzyLlWMqNiQ==}
+  /@zhead/schema/1.0.7:
+    resolution: {integrity: sha512-jN2ipkz39YrHd8uulgw/Y7x8iOxvR/cTkin/E9zRQVP5JBIrrJMiGyFFj6JBW4Q029xJ5dKtpwy/3RZWpz+dkQ==}
     dev: false
 
   /abab/2.0.6:
@@ -1752,8 +1752,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /hookable/5.4.1:
-    resolution: {integrity: sha512-i808BglQ1OuSIcgPSZoWsDapCMLXKe5wLS6XZvIXpaBWdWLUZARM8vOLayu6cXewj5TSbaZaMzKnq+pRnfscEQ==}
+  /hookable/5.4.2:
+    resolution: {integrity: sha512-6rOvaUiNKy9lET1X0ECnyZ5O5kSV0PJbtA5yZUgdEF7fGJEVwSLSislltyt7nFwVVALYHQJtfGeAR2Y0A0uJkg==}
     dev: false
 
   /html-encoding-sniffer/3.0.0:
@@ -3472,7 +3472,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.15.10
-      postcss: 8.4.19
+      postcss: 8.4.18
       resolve: 1.22.1
       rollup: 2.78.1
       sass: 1.56.1
