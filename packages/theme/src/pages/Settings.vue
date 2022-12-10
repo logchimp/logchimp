@@ -25,13 +25,15 @@
       </alert>
 
       <l-text
-        v-model="user.name"
+        v-model="name.value"
         label="Name"
         type="text"
         name="Name"
         placeholder="Full name"
         class="user-settings-name-item"
         @keyup-enter="updateSettings"
+        @hide-error="hideNameError"
+        :error="name.error"
       />
       <l-text
         v-model="user.username"
@@ -90,15 +92,23 @@ import Loader from "../components/ui/Loader.vue";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
+import { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 
 const { get: siteSettings } = useSettingStore()
 const { getUserId } = useUserStore()
 
 const user = reactive({
-	name: "",
 	username: "",
 	email: "",
 });
+
+const name = reactive({
+  value: "",
+  error: {
+    show: false,
+    message: ""
+  }
+})
 
 const loading = ref<boolean>(false);
 const isVerified = ref<boolean>(false);
@@ -112,7 +122,7 @@ async function getUser() {
 	try {
 		const response = await getUserSettings();
 
-		user.name = response.data.user.name;
+		name.value = response.data.user.name;
 		user.username = response.data.user.username;
 		user.email = response.data.user.email;
 		isVerified.value = response.data.user.isVerified;
@@ -128,14 +138,20 @@ async function updateSettings() {
 
 	try {
 		const response = await updateUserSettings({
-			name: user.name,
+			name: name.value,
 		});
 
-		user.name = response.data.user.name;
-	} catch (error) {
-		tokenError(error);
-	} finally {
+		name.value = response.data.user.name;
 		updateUserButtonLoading.value = false;
+    // TODO: Add TS types
+    // rome-ignore lint: Add TS types
+	} catch (error: any) {
+		updateUserButtonLoading.value = false;
+
+    Object.assign(name.error, {
+      message: error.response.data.name,
+      show: true,
+    })
 	}
 }
 
@@ -154,6 +170,10 @@ async function resendEmail() {
 	} finally {
 		resendVerificationEmailButtonLoading.value = false;
 	}
+}
+
+function hideNameError(value: FormFieldErrorType) {
+  Object.assign(name.error, value)
 }
 
 onMounted(() => {
