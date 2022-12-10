@@ -3463,7 +3463,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.15.10
-      postcss: 8.4.18
+      postcss: 8.4.19
       resolve: 1.22.1
       rollup: 2.78.1
       sass: 1.56.1
