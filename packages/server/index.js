@@ -33,7 +33,6 @@ database.migrate
     }
   });
 
-
 const config = logchimpConfig();
 
 // start express server at SERVER_PORT
@@ -46,4 +45,3 @@ app.listen(port, host, async () => {
   logger.info("Ctrl+C to shut down");
   logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
 });
-
