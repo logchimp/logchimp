@@ -3,7 +3,7 @@
     <vote
       :post-id="postData.postId"
       :votes-count="postData.voters.votesCount"
-      :is-voted="postData.voters.viewerVote"
+      :is-voted="isVoted"
       @update-voters="updateVoters"
     />
     <div>
@@ -61,6 +61,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const postData = ref(props.post);
 const dashboardUrl = computed(() => props.dashboard ? "/dashboard" : "");
+const isVoted = computed<boolean>(() => Boolean(props.post.voters?.viewerVote?.voteId))
 
 // TODO: Add TS types
 function updateVoters(voters: VoteEventType) {
