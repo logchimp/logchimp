@@ -8,6 +8,14 @@ module.exports = async (req, res) => {
   const userId = req.user.userId;
   const name = req.body.name;
 
+  if (name?.length >= 30) {
+    res.status(400).send({
+      name: "Name cannot execed 30 characters",
+      code: "NAME_LENGTH",
+    });
+    return;
+  }
+
   try {
     const users = await database
       .update({
