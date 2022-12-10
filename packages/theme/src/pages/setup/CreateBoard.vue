@@ -31,6 +31,10 @@
         </Button>
       </div>
     </div>
+
+    <div class="auth-form-other">
+      You can <router-link to="/dashboard">skip</router-link> and create one later.
+    </div>
   </auth-form>
 </template>
 
