@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-form">
+  <auth-form>
     <div class="onboarding-header">
       <h2 class="onboarding-heading">
         Create a new board
@@ -31,7 +31,7 @@
         </Button>
       </div>
     </div>
-  </div>
+  </auth-form>
 </template>
 
 <script lang="ts">
@@ -51,6 +51,7 @@ import { useUserStore } from "../../store/user";
 import { createBoard } from "../../modules/boards";
 
 // components
+import AuthForm from "../../layout/AuthForm.vue";
 import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
