@@ -26,6 +26,8 @@ export const useAlertStore = defineStore("alerts", () => {
     alert.value.push(alertObject);
   }
 
+  // TODO: Add TS types
+  // rome-ignore lint: Add TS types
   function remove(payload: any) {
     alert.value.splice(payload, 1);
   }

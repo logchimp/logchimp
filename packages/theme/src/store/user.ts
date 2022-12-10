@@ -18,6 +18,8 @@ export const useUserStore = defineStore("user", () => {
   const getUser = computed(() => user);
   const getUserId = computed(() => user.userId);
 
+  // TODO: Add TS types
+  // rome-ignore lint: Add TS types
   function setUser(payload: any) {
     authToken.value = payload.authToken;
     user.userId = payload.userId;
@@ -39,6 +41,8 @@ export const useUserStore = defineStore("user", () => {
     permissions.value = payload;
   }
 
+  // TODO: Add TS types
+  // rome-ignore lint: Add TS types
   function login(payload: any) {
     setUser(payload);
   }
