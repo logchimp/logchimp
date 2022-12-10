@@ -53,6 +53,7 @@ vscode:
   extensions:
     - rome.rome
     - wix.vscode-import-cost
+    - bradlc.vscode-tailwindcss
     - Vue.volar
     - editorconfig.editorconfig
     - ZixuanChen.vitest-explorer
