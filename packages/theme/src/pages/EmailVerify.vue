@@ -62,14 +62,17 @@ async function verifyEmail() {
 	try {
     const token = route.query.token.toString();
 		const response = await verifyUserEmail(token);
-		if (response.data.verify.success) success.value = true;
+
+		if (response.data.verify.success) {
+      success.value = true;
+      loading.value = false;
+    }
 	} catch (error: any) {
 		if (error.response.data.code === "USER_ALREADY_VERIFIED") {
 			return router.push("/");
 		}
 
 		error.value = true;
-	} finally {
 		loading.value = false;
 	}
 }
