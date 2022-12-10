@@ -95,7 +95,7 @@ useHead({
 	meta: [
 		{
 			name: "generator",
-			content: `LogChimp v${logchimpVersion}`
+			content: `LogChimp v${logchimpVersion.value}`
 		},
 		{
 			name: "description",
