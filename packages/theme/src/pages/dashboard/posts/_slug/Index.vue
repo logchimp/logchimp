@@ -5,12 +5,16 @@
         <router-link to="/dashboard/posts" class="breadcrum-item">
           Posts
         </router-link>
-        <div class="breadcrum-divider">
-          /
-        </div>
-        <h5 class="breadcrum-item">
-          {{ postData.title }}
-        </h5>
+
+        <!-- Show divider & title once data loaded -->
+        <template v-if="postData.title">
+          <div class="breadcrum-divider">
+            /
+          </div>
+          <h5 class="breadcrum-item">
+            {{ postData.title }}
+          </h5>
+        </template>
       </breadcrumbs>
 
       <Button
