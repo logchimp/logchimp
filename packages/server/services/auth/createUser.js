@@ -102,6 +102,7 @@ const createUser = async (req, res, next, userData) => {
     const tokenPayload = {
       userId: newUser.userId,
       email: newUser.email,
+      type: "emailVerification",
     };
     // send email verification
     const url = req.headers.origin;
