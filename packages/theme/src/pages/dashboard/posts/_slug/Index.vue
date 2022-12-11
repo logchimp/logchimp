@@ -1,7 +1,7 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <router-link to="/dashboard/posts" class="breadcrum-item">
           Posts
         </router-link>
@@ -11,7 +11,7 @@
         <h5 class="breadcrum-item">
           {{ postData.title }}
         </h5>
-      </div>
+      </breadcrumbs>
 
       <Button
         type="primary"
@@ -145,6 +145,7 @@ import PostItem from "../../../../components/post/PostItem.vue";
 import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
 import BoardSuggestion from "../../../../components/board/BoardSuggestion.vue";
+import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 
 interface GetPostType extends PostType {
   author: UserType
