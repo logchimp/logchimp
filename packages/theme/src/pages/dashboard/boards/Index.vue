@@ -17,7 +17,7 @@
 
 		<Table class="boards-table">
 			<template #header>
-				<div class="table-header-item boards-table-color" />
+				<div class="w-14" />
 				<div class="table-header-item boards-table-name">name</div>
 				<div class="table-header-item boards-table-posts">posts</div>
 				<div class="table-header-item boards-table-icons" />
@@ -28,9 +28,9 @@
         :key="board.boardId"
         class="table-row"
       >
-        <div class="table-data boards-table-color">
+        <div class="flex justify-center w-14">
           <div
-            class="color-dot"
+            class="w-3 h-3 rounded-full"
             :style="{
               backgroundColor: `#${board.color}`
             }"
@@ -236,10 +236,6 @@ useHead({
 	margin-left: auto
 
 .boards-table
-	.boards-table-color
-		flex: 0.5
-		padding-right: 0.5rem
-
 	.boards-table-name
 		flex: 6
 		font-weight: 500

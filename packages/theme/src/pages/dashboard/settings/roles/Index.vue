@@ -17,12 +17,12 @@
 
     <div class="table-container">
       <div class="table-header">
-        <div class="table-header-item">name</div>
+        <div class="table-header-item flex-1">name</div>
         <div class="table-header-item" />
       </div>
       <div class="table-body">
         <div v-for="role in roles" :key="role.id" class="table-row">
-          <div class="table-data">
+          <div class="table-data flex-1">
             {{ role.name }}
           </div>
           <div class="table-icon-group boards-table-icons">

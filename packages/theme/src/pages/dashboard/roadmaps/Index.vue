@@ -19,8 +19,8 @@
 
     <div class="table-container">
       <div class="table-header">
-        <div class="table-header-item" />
-        <div class="table-header-item">
+        <div class="w-14" />
+        <div class="table-header-item flex-1">
           name
         </div>
         <div class="table-header-item" />
@@ -37,10 +37,10 @@
         >
           <template #item="{ element: roadmap }">
 						<div class="table-row">
-							<div class="grip-handler table-data table-data-icon">
+							<div class="grip-handler table-data-icon px-5 py-4">
 								<grip-icon />
 							</div>
-							<div class="table-data">
+							<div class="table-data flex-1">
 								{{ roadmap.name }}
 							</div>
 							<div class="table-icon-group boards-table-icons">
@@ -252,3 +252,9 @@ useHead({
 	title: "Roadmaps • Dashboard"
 })
 </script>
+
+<style lang='scss'>
+.roadmap-table-name {
+  flex: 6;
+}
+</style>
