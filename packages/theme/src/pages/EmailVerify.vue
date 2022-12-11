@@ -23,7 +23,7 @@
     <div v-if="error" class="card flex flex-col items-center space-y-4">
       <error-icon class="w-8 h-8" color="#DE544E" />
       <div>
-        Invalid or expired link.
+        Invalid or expired link. Please try again.
       </div>
     </div>
 
