@@ -1,7 +1,20 @@
 <template>
-  <div class="toggle-item">
+  <div
+    class="toggle-item"
+    :class="{
+      'opacity-60': disabled
+    }"
+    :aria-disabled="disabled ? 'true' : undefined"
+  >
     <div class="toggle-item-row">
-      <label data-test="toggle-item-label">{{ label }}</label>
+      <label
+        data-test="toggle-item-label"
+        :class="{
+          'cursor-pointer': !disabled
+        }"
+      >
+        {{ label }}
+      </label>
       <toggle
         ref="toggleRefs"
         :modelValue="modelValue"
@@ -66,7 +79,6 @@ function input(event: any) {
 
 	label
 		font-weight: 500
-		cursor: pointer
 		user-select: none
 
 .toggle-item-note
