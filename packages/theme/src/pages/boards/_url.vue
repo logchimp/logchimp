@@ -2,7 +2,7 @@
   <div v-if="!loading">
     <div v-if="isBoardExist">
       <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
-        <main class="flex-auto">
+        <main class="grow-[2] shrink basis-0">
           <tab>
             <tab-item
               :class="{
