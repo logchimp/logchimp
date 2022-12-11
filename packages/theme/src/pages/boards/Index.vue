@@ -66,7 +66,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Boards • ${siteSettings.title}`
+			content: () => `Boards • ${siteSettings.title}`
 		}
 	]
 })

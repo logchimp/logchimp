@@ -193,6 +193,6 @@ async function getBoard() {
 onMounted(() => getBoard());
 
 useHead({
-	title: `${title.value} • Settings • Board • Dashboard`
+	title: () => `${title.value ? `${title.value} • ` : ''}Board • Dashboard`
 });
 </script>

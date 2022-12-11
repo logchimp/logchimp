@@ -193,7 +193,7 @@ async function getSettingsHandler() {
 onMounted(() => getSettingsHandler());
 
 useHead({
-  title: "General • Settings • Dashboard"
+  title: "Billing • Settings • Dashboard"
 })
 </script>
 

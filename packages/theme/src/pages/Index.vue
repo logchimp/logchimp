@@ -86,7 +86,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Home • ${settingsStore.get.title}`
+			content: () => `Home • ${settingsStore.get.title}`
 		}
 	]
 })

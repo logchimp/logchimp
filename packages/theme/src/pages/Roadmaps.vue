@@ -59,7 +59,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Roadmaps • ${siteSettings.title}`
+			content: () => `Roadmaps • ${siteSettings.title}`
 		}
 	]
 })

@@ -266,21 +266,21 @@ function editPost() {
 onMounted(() => postBySlug())
 
 useHead({
-	title: `${post.title} • Post`,
+	title: () => `${post.title ? `${post.title} • ` : ''}Post`,
 	meta: [
 		{
 			name: "description",
-			content: `${post.contentMarkdown}`
+			content: () => post.contentMarkdown,
 		},
 
 		// openGraph
 		{
 			name: "og:title",
-			content: `${post.title} • Post • ${siteSettings.title}`
+			content: () => `${post.title ? `${post.title} • ` : ''}Post • ${siteSettings.title}`
 		},
 		{
 			name: "og:description",
-			content: `${post.contentMarkdown}`
+			content: () => post.contentMarkdown,
 		}
 	]
 });

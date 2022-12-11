@@ -158,7 +158,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Login • ${siteSettings.title}`
+			content: () => `Login • ${siteSettings.title}`
 		}
 	]
 })
