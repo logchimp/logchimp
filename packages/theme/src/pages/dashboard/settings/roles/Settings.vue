@@ -292,6 +292,6 @@ async function getRoleHandler() {
 onMounted(() => getRoleHandler())
 
 useHead({
-	title: `${title.value ? `${title.value} • ` : ''}Roles • Settings • Dashboard`
+	title: () => `${title.value ? `${title.value} • ` : ''}Role • Dashboard`
 })
 </script>

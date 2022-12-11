@@ -108,7 +108,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Create board • Onboarding • ${siteSettings.title}`
+			content: () => `Create board • Onboarding • ${siteSettings.title}`
 		}
 	]
 })

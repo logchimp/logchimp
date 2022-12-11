@@ -98,7 +98,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Email verification · ${siteSettings.title}`
+			content: () => `Email verification · ${siteSettings.title}`
 		}
 	]
 })
