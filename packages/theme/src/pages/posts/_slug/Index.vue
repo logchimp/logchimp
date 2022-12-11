@@ -19,7 +19,7 @@
 							<avatar
 								class="viewpost__author-avatar"
 								:src="post.author.avatar"
-								:name="post.author.name"
+								:name="postAuthorName"
 							/>
 							{{ postAuthorName }}
 						</div>
@@ -176,11 +176,7 @@ const activity = reactive<{
 	data: []
 })
 
-const postAuthorName = computed(() => {
-	return post.author.name
-		? post.author.name
-		: post.author.username;
-})
+const postAuthorName = computed(() => post.author.name || post.author.username)
 
 const postAuthor = computed(() => {
 	const checkPermission = permissions.includes("post:update");
