@@ -177,12 +177,16 @@ const deleteRoadmapPermissionDisabled = computed(() => {
 })
 
 async function createRoadmapHandler() {
+  createRoadmapButtonLoading.value = true;
+
 	try {
 		const response = await createRoadmap();
 
 		const url = response.data.roadmap.url;
 		router.push(`/dashboard/roadmaps/${url}/settings`);
 	} catch (err) {
+    createRoadmapButtonLoading.value = false;
+
 		console.error(err);
 	}
 }
