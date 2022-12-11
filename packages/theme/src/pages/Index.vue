@@ -1,6 +1,6 @@
 <template>
-  <div class="homepage">
-    <main class="homepage-posts">
+  <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
+    <main class="flex-auto">
       <post-item
         v-for="post in posts"
         :key="post.postId"
@@ -9,7 +9,7 @@
 
       <infinite-scroll @infinite="getBoardPosts" :state="state" />
     </main>
-    <aside class="homepage-sidebar">
+    <aside class="flex-1 mb-6 lg:mb-0">
       <site-setup-card v-if="showSiteSetupCard" />
       <login-card v-if="!userStore.getUserId && !showSiteSetupCard" />
     </aside>
@@ -91,25 +91,3 @@ useHead({
 	]
 })
 </script>
-
-<style lang='sass'>
-.homepage
-	display: flex
-	margin-bottom: 4rem
-
-@media (max-width: 990px)
-	.homepage
-		flex-direction: column-reverse
-
-	.homepage-sidebar
-		margin-bottom: 1.5rem
-
-@media (min-width: 992px)
-	.homepage-posts
-		flex: 2
-		margin-right: 2rem
-
-	.homepage-sidebar
-		flex: 1
-		margin-left: 2rem
-</style>
