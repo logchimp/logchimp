@@ -1,8 +1,8 @@
 <template>
   <div v-if="!loading">
     <div v-if="isBoardExist">
-      <div class="homepage">
-        <main class="homepage-posts">
+      <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
+        <main class="flex-auto">
           <tab>
             <tab-item
               :class="{
@@ -30,7 +30,7 @@
 
           <component :is="activeTab" :board="board" />
         </main>
-        <aside class="homepage-sidebar">
+        <aside class="flex-1 mb-6 lg:mb-0">
           <create-post v-if="getUserId" :board-id="board.boardId" />
           <login-card v-else />
         </aside>
