@@ -81,7 +81,7 @@ const board = reactive({
   display: false,
 });
 const loading = ref<boolean>(false)
-const isBoardExist = ref<boolean>(true)
+const isBoardExist = ref<boolean>(false)
 
 const { get: siteSettings } = useSettingStore()
 const { getUserId } = useUserStore()
@@ -107,13 +107,14 @@ async function getBoard() {
   try {
     const response = await getBoardByUrl(url);
 
+    isBoardExist.value = true;
+    loading.value = false;
     Object.assign(board, response.data.board)
   } catch (error: any) {
     if (error.response.data.code === "BOARD_NOT_FOUND") {
       isBoardExist.value = false;
+      loading.value = false;
     }
-  } finally {
-    loading.value = false;
   }
 }
 
