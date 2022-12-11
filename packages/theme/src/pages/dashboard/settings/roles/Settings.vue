@@ -240,17 +240,19 @@ async function updateRoleHandler() {
 	updateRoleButtonLoading.value = true;
 
 	const activePermissions = [] as unknown;
-	// for (let i in permissions) {
-	// 	let type = i;
+	for (let i in permissions) {
+		let type = i;
 
-	// 	for (let j in permissions[i]) {
-	// 		let action = j;
-	// 		if (permissions[i][j]) {
-	// 			activePermissions.push(`${type}:${action}`);
-	// 		}
-	// 	}
-	// }
-
+    // @ts-ignore
+		for (let j in permissions[i]) {
+			let action = j;
+      // @ts-ignore
+			if (permissions[i][j]) {
+        // @ts-ignore
+				activePermissions.push(`${type}:${action}`);
+			}
+		}
+	}
 
 	try {
 		const response = await updateRole({
@@ -281,12 +283,13 @@ async function getRoleHandler() {
 			title.value = response.data.role.name;
 			role.value = response.data.role;
 
-			const permissions = response.data.role.permissions;
-			for (let i = 0; i < permissions.length; i++) {
-				const type = permissions[i].split(":")[0];
-				const action = permissions[i].split(":")[1];
+			const permissionsList = response.data.role.permissions;
+			for (let i = 0; i < permissionsList.length; i++) {
+				const type = permissionsList[i].split(":")[0];
+				const action = permissionsList[i].split(":")[1];
 
-				permissions.value[type][action] = true;
+        // @ts-ignore
+				permissions[type][action] = true;
 			}
 		} catch (err) {
 			console.error(err);
