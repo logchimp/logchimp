@@ -4,6 +4,12 @@
     "dockerfile": "../.gitpod.Dockerfile"
   },
 
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    }
+  },
+
   "forwardPorts": [
     "8080:8080",
     "3000:3000",
