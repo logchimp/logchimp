@@ -1,11 +1,11 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <h5 class="breadcrum-item">
           Roadmaps
         </h5>
-      </div>
+      </breadcrumbs>
 
       <Button
         type="primary"
@@ -146,6 +146,7 @@ import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
 import DropdownSpacer from "../../../components/ui/dropdown/DropdownSpacer.vue";
+import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
 const { settings } = useSettingStore()
 const { permissions } = useUserStore()

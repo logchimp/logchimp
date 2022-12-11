@@ -1,7 +1,7 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <router-link to="/dashboard/roadmaps" class="breadcrum-item">
           Roadmaps
         </router-link>
@@ -11,7 +11,7 @@
         <h5 class="breadcrum-item">
           {{ title }}
         </h5>
-      </div>
+      </breadcrumbs>
 
       <Button
         type="primary"
@@ -83,6 +83,7 @@ import Button from "../../../components/ui/Button.vue";
 import LText from "../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 import ColorInput from "../../../components/ui/ColorInput.vue";
+import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
 const { permissions } = useUserStore()
 
