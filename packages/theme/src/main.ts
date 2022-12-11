@@ -15,4 +15,4 @@ app.use(router);
 app.use(store);
 app.use(head);
 
-app.mount("#app");
+app.mount("body");
