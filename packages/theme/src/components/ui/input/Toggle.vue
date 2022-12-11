@@ -2,9 +2,13 @@
   <div
     class="toggle"
     data-test="toggle"
+    :aria-disabled="disabled ? 'true' : undefined"
     :style="{
       backgroundColor: modelValue ? `var(--color-brand-color)` : `#999`,
       justifyContent: modelValue ? `flex-end` : ''
+    }"
+    :class="{
+      'opacity-60': disabled
     }"
   >
     <div class="toggle-slider" />
