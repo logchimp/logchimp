@@ -3,18 +3,31 @@
     <div class="auth-form-header">
       <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
     </div>
-    <div v-if="success" class="card">
-      <success-icon color="#64B285" />
+
+    <!-- Success -->
+    <template v-if="success">
+      <div class="card flex flex-col items-center space-y-4">
+        <success-icon class="w-8 h-8" color="#64B285" />
+
+        <p>
+          Thank you verifying your account.
+        </p>
+      </div>
+
+      <div class="auth-form-other">
+        You may close this window.
+      </div>
+    </template>
+
+    <!-- Error -->
+    <div v-if="error" class="card flex flex-col items-center space-y-4">
+      <error-icon class="w-8 h-8" color="#DE544E" />
       <div>
-        Thank you verifying your account. You may close this window.
+        Invalid or expired link.
       </div>
     </div>
-    <div v-if="error" class="card">
-      <error-icon color="#DE544E" />
-      <div>
-        Invalid or expired activation link.
-      </div>
-    </div>
+
+    <!-- Loading -->
     <div v-if="loading" class="email-verification">
       <div class="loader-container">
         <loader />
