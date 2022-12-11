@@ -74,7 +74,7 @@ import Button from "../components/ui/Button.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";
 
 const { get: siteSettings } = useSettingStore()
-const { login, setPermissions } = useUserStore()
+const { getUserId, login, setPermissions } = useUserStore()
 
 const email = ref("");
 const emailError = reactive({
@@ -88,13 +88,6 @@ const passwordError = reactive({
 })
 const buttonLoading = ref(false)
 const serverError = ref(false)
-
-onMounted(() => {
-	const getUserLocal = localStorage.getItem("user")
-	if (getUserLocal) {
-		router.push("/");
-	}
-})
 
 function hideEmailError(event: FormFieldErrorType) {
 	emailError.message = event.message;
@@ -152,6 +145,21 @@ async function join() {
 		buttonLoading.value = false;
 	}
 }
+
+onMounted(() => {
+  /**
+   * Redirect the user to homepage or "redirect" query param
+   * If the user is already authenticated.
+   */
+  if (getUserId) {
+    const route = router.currentRoute.value
+    if (route.query.redirect) {
+			router.push(route.query?.redirect.toString());
+		} else {
+			router.push("/");
+		}
+  }
+})
 
 useHead({
 	title: "Join",
