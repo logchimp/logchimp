@@ -9,6 +9,7 @@
 			'button-outline': outline,
 			[$style['button-size-small']]: size === 'small',
 			[$style['button-size-medium']]: size === 'medium',
+      'w-full': fullWidth,
 		}"
 		:href="href"
 		@click="click"
@@ -53,7 +54,11 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 		default: false
-	}
+	},
+	fullWidth: {
+		type: Boolean,
+		default: false
+	},
 })
 
 const emit = defineEmits(['click'])
