@@ -89,14 +89,7 @@ const passwordError = reactive({
 const buttonLoading = ref<boolean>(false)
 
 const { get: siteSettings } = useSettingStore()
-const { setUser, setPermissions } = useUserStore()
-
-onMounted(() => {
-	const getUserLocal = localStorage.getItem("user")
-	if (getUserLocal) {
-		router.push("/");
-	}
-})
+const { getUserId, setUser, setPermissions } = useUserStore()
 
 function hideEmailError() {
 	emailError.show = false;
@@ -152,6 +145,21 @@ async function login() {
 		}
 	}
 }
+
+onMounted(() => {
+  /**
+   * Redirect the user to homepage or "redirect" query param
+   * If the user is already authenticated.
+   */
+  if (getUserId) {
+    const route = router.currentRoute.value
+    if (route.query.redirect) {
+			router.push(route.query?.redirect.toString());
+		} else {
+			router.push("/");
+		}
+  }
+})
 
 useHead({
 	title: "Login",
