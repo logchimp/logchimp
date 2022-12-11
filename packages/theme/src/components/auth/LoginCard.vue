@@ -7,7 +7,7 @@
 			Log in to your account to give feedback
 		</template>
 
-		<Button type="primary" @click="loginRedirect">
+		<Button type="primary" @click="loginRedirect" :full-width="true">
 			Login
 		</Button>
   </card>
