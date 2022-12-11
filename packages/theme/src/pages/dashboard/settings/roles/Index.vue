@@ -1,9 +1,9 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <div class="breadcrum-item">Roles</div>
-      </div>
+      </breadcrumbs>
 
       <Button
         type="primary"
@@ -95,6 +95,7 @@ import Button from "../../../../components/ui/Button.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
+import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 
 const { settings } = useSettingStore()
 const { permissions  } = useUserStore()

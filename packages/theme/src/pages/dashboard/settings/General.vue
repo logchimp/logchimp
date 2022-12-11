@@ -1,9 +1,9 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <h5 class="breadcrum-item">Settings</h5>
-      </div>
+      </breadcrumbs>
 
       <Button
         type="primary"
@@ -119,6 +119,7 @@ import LText from "../../../components/ui/input/LText.vue";
 import Button from "../../../components/ui/Button.vue";
 import ColorInput from "../../../components/ui/ColorInput.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
+import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()

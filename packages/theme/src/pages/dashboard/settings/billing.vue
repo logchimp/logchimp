@@ -1,9 +1,9 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <h5 class="breadcrum-item">Billing</h5>
-      </div>
+      </breadcrumbs>
     </header>
 
     <div class="form-section">
@@ -53,6 +53,7 @@ import {
 // components
 import { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
 import { Alert } from "../../../components/ui/Alert";
+import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
