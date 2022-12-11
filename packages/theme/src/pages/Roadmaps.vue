@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="roadmaps[0]" class="roadmap">
+    <div v-if="roadmaps.length > 0" class="roadmap">
       <roadmap-column
         v-for="roadmap in roadmaps"
         :key="roadmap.id"
@@ -38,6 +38,7 @@ import RoadmapColumn from "../components/roadmap/RoadmapColumn.vue";
 const { get: siteSettings } = useSettingStore()
 // TODO: Add TS types
 const roadmaps = ref<any>([])
+const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
@@ -47,7 +48,13 @@ async function getRoadmaps() {
     const response = await getAllRoadmaps();
     roadmaps.value = response.data.roadmaps;
 
-    state.value = "LOADED";
+    if (response.data.roadmaps.length) {
+			roadmaps.value.push(...response.data.roadmaps);
+			page.value += 1;
+			state.value = "LOADED"
+		} else {
+			state.value = "COMPLETED";
+		}
   } catch (err) {
     console.error(err);
     state.value = "ERROR";
