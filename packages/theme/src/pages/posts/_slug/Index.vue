@@ -158,7 +158,7 @@ const post = reactive({
 	}
 });
 const postLoading = ref(false)
-const isPostExist = ref(true)
+const isPostExist = ref(false)
 
 // comments
 const commentInput = ref("");
@@ -225,14 +225,16 @@ async function postBySlug() {
 			const slug = route.params.slug.toString();
 			const response = await getPostBySlug(slug);
 
+      postLoading.value = false;
 			Object.assign(post, response.data.post);
+      isPostExist.value = true;
+
 			getPostActivity();
 		} catch (error: any) {
 			if (error.response.data.code === "POST_NOT_FOUND") {
-				isPostExist.value = false;
+        postLoading.value = false;
+        isPostExist.value = false;
 			}
-		} finally {
-			postLoading.value = false;
 		}
 	}
 }
