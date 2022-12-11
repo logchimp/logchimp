@@ -5,12 +5,16 @@
         <router-link to="/dashboard/settings/roles" class="breadcrum-item">
           Roles
         </router-link>
-        <div class="breadcrum-divider">
-          /
-        </div>
-        <h5 class="breadcrum-item">
-          {{ title }}
-        </h5>
+
+        <!-- Show divider & title once data loaded -->
+        <template v-if="title">
+          <div class="breadcrum-divider">
+            /
+          </div>
+          <h5 class="breadcrum-item">
+            {{ title }}
+          </h5>
+        </template>
       </breadcrumbs>
 
       <Button
