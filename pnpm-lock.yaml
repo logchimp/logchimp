@@ -68,7 +68,7 @@ importers:
       '@vitejs/plugin-vue': 3.2.0
       '@vue/test-utils': 2.2.6
       '@vueuse/components': 9.6.0
-      '@vueuse/core': 9.5.0
+      '@vueuse/core': 9.6.0
       '@vueuse/head': 1.0.22
       autoprefixer: ^10.4.13
       axios: 1.2.1
@@ -91,7 +91,7 @@ importers:
       vuedraggable: 4.1.0
     dependencies:
       '@vueuse/components': 9.6.0_vue@3.2.45
-      '@vueuse/core': 9.5.0_vue@3.2.45
+      '@vueuse/core': 9.6.0_vue@3.2.45
       '@vueuse/head': 1.0.22_vue@3.2.45
       axios: 1.2.1
       dayjs: 1.11.7
@@ -457,18 +457,6 @@ packages:
       - vue
     dev: false
 
-  /@vueuse/core/9.5.0_vue@3.2.45:
-    resolution: {integrity: sha512-6GsWBsJHEb3sYw15mbLrcbslAVY45pkzjJYTKYKCXv88z7srAF0VEW0q+oXKsl58tCbqooplInahXFg8Yo1m4w==}
-    dependencies:
-      '@types/web-bluetooth': 0.0.16
-      '@vueuse/metadata': 9.5.0
-      '@vueuse/shared': 9.5.0_vue@3.2.45
-      vue-demi: 0.13.11_vue@3.2.45
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: false
-
   /@vueuse/core/9.6.0_vue@3.2.45:
     resolution: {integrity: sha512-qGUcjKQXHgN+jqXEgpeZGoxdCbIDCdVPz3QiF1uyecVGbMuM63o96I1GjYx5zskKgRI0FKSNsVWM7rwrRMTf6A==}
     dependencies:
@@ -493,21 +481,8 @@ packages:
       vue: 3.2.45
     dev: false
 
-  /@vueuse/metadata/9.5.0:
-    resolution: {integrity: sha512-4M1AyPZmIv41pym+K5+4wup3bKuYebbH8w8BROY1hmT7rIwcyS4tEL+UsGz0Hiu1FCOxcoBrwtAizc0YmBJjyQ==}
-    dev: false
-
   /@vueuse/metadata/9.6.0:
     resolution: {integrity: sha512-sIC8R+kWkIdpi5X2z2Gk8TRYzmczDwHRhEFfCu2P+XW2JdPoXrziqsGpDDsN7ykBx4ilwieS7JUIweVGhvZ93w==}
-    dev: false
-
-  /@vueuse/shared/9.5.0_vue@3.2.45:
-    resolution: {integrity: sha512-HnnCWU1Vg9CVWRCcI8ohDKDRB2Sc4bTgT1XAIaoLSfVHHn+TKbrox6pd3klCSw4UDxkhDfOk8cAdcK+Z5KleCA==}
-    dependencies:
-      vue-demi: 0.13.11_vue@3.2.45
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
     dev: false
 
   /@vueuse/shared/9.6.0_vue@3.2.45:
