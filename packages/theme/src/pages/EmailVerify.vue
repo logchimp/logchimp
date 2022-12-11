@@ -6,7 +6,7 @@
 
     <!-- Success -->
     <template v-if="success">
-      <div class="card flex flex-col items-center space-y-4">
+      <div class="card text-center flex flex-col items-center space-y-4">
         <success-icon class="w-8 h-8" color="#64B285" />
 
         <p>
@@ -20,8 +20,9 @@
     </template>
 
     <!-- Error -->
-    <div v-if="error" class="card flex flex-col items-center space-y-4">
+    <div v-if="error" class="card text-center flex flex-col items-center space-y-4">
       <error-icon class="w-8 h-8" color="#DE544E" />
+
       <div>
         Invalid or expired link. Please try again.
       </div>
