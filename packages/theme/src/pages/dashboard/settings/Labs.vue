@@ -1,7 +1,7 @@
 <template>
   <div>
     <header class="form-header">
-      <div class="breadcrumbs">
+      <breadcrumbs>
         <router-link to="/dashboard/settings" class="breadcrum-item">
           Settings
         </router-link>
@@ -11,7 +11,7 @@
         <h5 class="breadcrum-item">
           Labs
         </h5>
-      </div>
+      </breadcrumbs>
 
       <Button
         type="primary"
@@ -65,6 +65,7 @@ import {
 // components
 import Button from "../../../components/ui/Button.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
+import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
