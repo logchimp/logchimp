@@ -59,10 +59,8 @@ const emit = defineEmits<{
 	(e: 'update:modelValue', event?: any): void
 }>()
 
-// TODO: Add TS types
-function input(event: any) {
-	// if (props.disabled) return;
-	emit("update:modelValue", event.target.checked);
+function input(checked: boolean) {
+	emit("update:modelValue", checked);
 }
 </script>
 
