@@ -1,0 +1,45 @@
+{
+  "name": "logchimp",
+  "build": {
+    "dockerfile": "../.gitpod.Dockerfile"
+  },
+
+  "forwardPorts": [
+    "8080:8080",
+    "3000:3000",
+    "5432:5432",
+    "1080:1080",
+    "1025:1025"
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "Theme"
+    },
+    "3000": {
+      "label": "API Server"
+    },
+    "5432": {
+      "label": "PostgreSQL Database"
+    },
+    "1080": {
+      "label": "Email client"
+    },
+    "1025": {
+      "label": "Email injection"
+    }
+  },
+
+  // Visual Studio Code extensions
+  "extensions": [
+    "rome.rome",
+    "wix.vscode-import-cost",
+    "bradlc.vscode-tailwindcss",
+    "Vue.volar",
+    "editorconfig.editorconfig",
+    "ZixuanChen.vitest-explorer",
+    "syler.sass-indented",
+    "eamodio.gitlens"
+  ],
+
+  "postCreateCommand": "bash ../scripts/gitpod-init.sh"
+}
