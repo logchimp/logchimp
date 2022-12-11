@@ -121,11 +121,11 @@ async function getBoard() {
 onMounted(() => getBoard())
 
 useHead({
-  title: `${board.name} • Board`,
+  title: () => `${board.name ? `${board.name} • ` : ''}Board`,
   meta: [
     {
       name: "og:title",
-      content: `${board.name} • Board • ${siteSettings.title}`
+      content: () => `${board.name} • Board • ${siteSettings.title}`
     },
     !board.display
       ? {

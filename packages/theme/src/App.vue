@@ -88,18 +88,18 @@ onMounted(async () => {
 })
 
 useHead({
-	titleTemplate: (title) => `${title} • ${settingsStore.get.title}`,
+	titleTemplate: (title) => `${title ? `${title} • ` : ""}${settingsStore.get.title}`,
   htmlAttrs: {
     lang: "en",
   },
 	meta: [
 		{
 			name: "generator",
-			content: `LogChimp v${logchimpVersion.value}`
+			content: () => `LogChimp v${logchimpVersion.value}`
 		},
 		{
 			name: "description",
-			content: `${settingsStore.get.description}. Powered By LogChimp.`
+			content: () => `${settingsStore.get.description}. Powered By LogChimp.`
 		},
 		{
 			name: "robots",
@@ -125,7 +125,7 @@ useHead({
 		},
 		{
 			name: "og:description",
-			content: `${settingsStore.get.description}. Powered By LogChimp.`
+			content: () => `${settingsStore.get.description}. Powered By LogChimp.`
 		},
 
     {

@@ -194,7 +194,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `User settings • ${siteSettings.title}`
+			content: () => `User settings • ${siteSettings.title}`
 		}
 	]
 })

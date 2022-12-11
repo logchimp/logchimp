@@ -165,7 +165,7 @@ useHead({
 	meta: [
 		{
 			name: "og:title",
-			content: `Edit post • ${siteSettings.title}`
+			content: () => `Edit post • ${siteSettings.title}`
 		}
 	]
 })
