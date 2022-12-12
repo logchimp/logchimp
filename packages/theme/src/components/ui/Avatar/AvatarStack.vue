@@ -1,5 +1,5 @@
 <template>
-	<div class="avatar-stack">
+	<div class="avatar-stack -space-x-3.5">
 		<img
 			v-for="avatar in avatars"
 			:key="avatar.userId"
@@ -50,7 +50,6 @@ const moreStack = computed(() => {
 
 	img
 		border-radius: 1rem
-		margin-right: -0.875rem
 		border: 1px solid var(--color-white)
 		width: 2rem
 		height: 2rem
