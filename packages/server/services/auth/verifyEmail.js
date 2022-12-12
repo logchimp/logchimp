@@ -26,11 +26,18 @@ const verifyEmail = async (url, tokenPayload) => {
       .into("emailVerification")
       .returning("*");
 
+    /**
+     * Get site title for using it in email footer
+     */
+    const siteInfo = await database.select("title").from("settings");
+    const siteTitle = siteInfo[0].title;
+
     const urlObject = new URL(url);
     const onboardingMailContent = await generateContent("verify", {
       url: urlObject.origin,
       domain: urlObject.host,
       verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
+      siteTitle,
     });
 
     const noReplyEmail = `noreply@${urlObject.host}`;
@@ -38,7 +45,7 @@ const verifyEmail = async (url, tokenPayload) => {
     await mail.sendMail({
       from: noReplyEmail,
       to: tokenPayload.email,
-      subject: "LogChimp - Please confirm your email",
+      subject: `${siteTitle} - Please confirm your email`,
       text: onboardingMailContent.text,
       html: onboardingMailContent.html,
     });

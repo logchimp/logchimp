@@ -27,11 +27,18 @@ const passwordReset = async (url, tokenPayload) => {
       .into("resetPassword")
       .returning("*");
 
+    /**
+     * Get site title for using it in email footer
+     */
+    const siteInfo = await database.select("title").from("settings");
+    const siteTitle = siteInfo[0].title;
+
     const urlObject = new URL(url);
     const passwordResetMailContent = await generateContent("reset", {
       url: urlObject.origin,
       domain: urlObject.host,
       resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`,
+      siteTitle,
     });
 
     const noReplyEmail = `noreply@${urlObject.host}`;
@@ -39,7 +46,7 @@ const passwordReset = async (url, tokenPayload) => {
     await mail.sendMail({
       from: noReplyEmail,
       to: tokenPayload.email,
-      subject: "Reset your LogChimp password",
+      subject: `${siteTitle} - Reset your account password`,
       text: passwordResetMailContent.text,
       html: passwordResetMailContent.html,
     });
