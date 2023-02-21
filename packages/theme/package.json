@@ -13,7 +13,7 @@
     "@vueuse/components": "9.11.1",
     "@vueuse/core": "9.11.1",
     "@vueuse/head": "1.0.23",
-    "axios": "1.2.5",
+    "axios": "1.2.6",
     "dayjs": "1.11.7",
     "lucide-vue": "npm:lucide-vue-next@0.104.0",
     "pinia": "2.0.29",
