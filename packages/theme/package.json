@@ -12,7 +12,7 @@
   "dependencies": {
     "@vueuse/components": "9.12.0",
     "@vueuse/core": "9.12.0",
-    "@vueuse/head": "1.0.23",
+    "@vueuse/head": "1.0.24",
     "axios": "1.2.6",
     "dayjs": "1.11.7",
     "lucide-vue": "npm:lucide-vue-next@0.104.0",
