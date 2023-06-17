@@ -6,13 +6,13 @@ importers:
     specifiers:
       '@logchimp/api': 0.7.0-beta.0
       dotenv: 16.0.3
-      nodemon: 2.0.20
+      nodemon: 2.0.22
       rome: 11.0.0
     dependencies:
       '@logchimp/api': link:packages/server
       dotenv: 16.0.3
     devDependencies:
-      nodemon: 2.0.20
+      nodemon: 2.0.22
       rome: 11.0.0
 
   packages/server:
@@ -2313,8 +2313,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: false
 
-  /nodemon/2.0.20:
-    resolution: {integrity: sha512-Km2mWHKKY5GzRg6i1j5OxOHQtuvVsgskLfigG25yTtbyfRGn/GNvIbRyOf1PSCKJ2aT/58TiuUsuOU5UToVViw==}
+  /nodemon/2.0.22:
+    resolution: {integrity: sha512-B8YqaKMmyuCO7BowF1Z1/mkPqLk6cs/l63Ojtd6otKjMx47Dq1utxfRxcavH1I7VSaL8n5BUaoutadnsX3AAVQ==}
     engines: {node: '>=8.10.0'}
     hasBin: true
     dependencies:

@@ -21,7 +21,7 @@
 		"dotenv": "16.0.3"
 	},
 	"devDependencies": {
-		"nodemon": "2.0.20",
+		"nodemon": "2.0.22",
 		"rome": "11.0.0"
 	},
 	"keywords": [
