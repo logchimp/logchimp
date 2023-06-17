@@ -1,4 +1,7 @@
 {
+	"general": {
+		"serverError": "Something went wrong!"
+	},
 	"middleware": {
 		"auth": {
 			"accessDenied": "Access denied",
