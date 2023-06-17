@@ -59,6 +59,11 @@ module.exports = async (req, res, next) => {
         code: "INVALID_TOKEN",
         err,
       });
+    } else {
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      })
     }
   }
 };

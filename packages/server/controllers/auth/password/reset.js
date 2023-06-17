@@ -3,6 +3,7 @@ const passwordResetEmail = require("../../../services/auth/passwordReset");
 
 // utils
 const logger = require("../../../utils/logger");
+const error = require("../../../errorResponse.json");
 
 exports.reset = async (req, res) => {
   const { userId, email } = req.user;
@@ -37,5 +38,10 @@ exports.reset = async (req, res) => {
     logger.error({
       message: err,
     });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };

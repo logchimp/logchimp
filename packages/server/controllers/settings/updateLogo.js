@@ -3,6 +3,7 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.updateLogo = async (req, res) => {
   const host = req.headers.host;
@@ -27,5 +28,10 @@ exports.updateLogo = async (req, res) => {
       message: "Update logo",
       err,
     });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
