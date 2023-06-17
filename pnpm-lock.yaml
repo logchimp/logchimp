@@ -72,7 +72,7 @@ importers:
       '@vueuse/head': 1.0.22
       autoprefixer: ^10.4.13
       axios: 1.2.1
-      dayjs: 1.11.7
+      dayjs: 1.11.8
       jsdom: ^20.0.1
       lucide-vue: npm:lucide-vue-next@0.104.0
       pinia: 2.0.28
@@ -94,7 +94,7 @@ importers:
       '@vueuse/core': 9.6.0_vue@3.2.45
       '@vueuse/head': 1.0.22_vue@3.2.45
       axios: 1.2.1
-      dayjs: 1.11.7
+      dayjs: 1.11.8
       lucide-vue: /lucide-vue-next/0.104.0_vue@3.2.45
       pinia: 2.0.28_prq2uz4lho2pwp6irk4cfkrxwu
       uuid: 9.0.0
@@ -1021,8 +1021,8 @@ packages:
       whatwg-url: 11.0.0
     dev: true
 
-  /dayjs/1.11.7:
-    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+  /dayjs/1.11.8:
+    resolution: {integrity: sha512-LcgxzFoWMEPO7ggRv1Y2N31hUf2R0Vj7fuy/m+Bg1K8rr+KAs1AEy4y9jd5DXe8pbHgX+srkHNS7TH6Q6ZhYeQ==}
     dev: false
 
   /de-indent/1.0.2:
