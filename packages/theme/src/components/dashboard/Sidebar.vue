@@ -8,7 +8,7 @@
       <li>
         <router-link to="/dashboard" class="sidebar-list-item">
           <dashboard-icon />
-          <p>Dashbaord</p>
+          <p>Dashboard</p>
         </router-link>
       </li>
       <li>
