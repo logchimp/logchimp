@@ -7,7 +7,7 @@ const logger = require("../../utils/logger");
 const isSiteSetup = async (req, res) => {
   try {
     const isSetup = await database
-      .select()
+      .select("userId")
       .from("users")
       .where({
         isOwner: true,
@@ -15,7 +15,7 @@ const isSiteSetup = async (req, res) => {
       .first();
 
     res.status(200).send({
-      is_setup: isSetup,
+      is_setup: !!isSetup.userId,
     });
   } catch (err) {
     logger.error({
