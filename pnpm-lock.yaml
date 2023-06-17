@@ -26,7 +26,7 @@ importers:
       fs-extra: ^11.0.0
       html-to-text: ^8.1.0
       jsonwebtoken: ^8.5.1
-      knex: ^1.0.4
+      knex: ^2.0.0
       lodash: ^4.17.21
       md5: ^2.3.0
       multer: ^1.4.3
@@ -46,7 +46,7 @@ importers:
       fs-extra: 11.1.1
       html-to-text: 8.2.1
       jsonwebtoken: 8.5.1
-      knex: 1.0.7_pg@8.8.0
+      knex: 2.4.2_pg@8.8.0
       lodash: 4.17.21
       md5: 2.3.0
       multer: 1.4.4
@@ -895,8 +895,8 @@ packages:
       color-convert: 1.9.3
       color-string: 1.9.1
 
-  /colorette/2.0.16:
-    resolution: {integrity: sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==}
+  /colorette/2.0.19:
+    resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
     dev: false
 
   /colorspace/1.1.4:
@@ -2025,21 +2025,19 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /knex/1.0.7_pg@8.8.0:
-    resolution: {integrity: sha512-89jxuRATt4qJMb9ZyyaKBy0pQ4d5h7eOFRqiNFnUvsgU+9WZ2eIaZKrAPG1+F3mgu5UloPUnkVE5Yo2sKZUs6Q==}
+  /knex/2.4.2_pg@8.8.0:
+    resolution: {integrity: sha512-tMI1M7a+xwHhPxjbl/H9K1kHX+VncEYcvCx5K00M16bWvpYPKAZd6QrCu68PtHAdIZNQPWZn0GVhqVBEthGWCg==}
     engines: {node: '>=12'}
     hasBin: true
     peerDependencies:
-      '@vscode/sqlite3': '*'
       better-sqlite3: '*'
       mysql: '*'
       mysql2: '*'
       pg: '*'
       pg-native: '*'
+      sqlite3: '*'
       tedious: '*'
     peerDependenciesMeta:
-      '@vscode/sqlite3':
-        optional: true
       better-sqlite3:
         optional: true
       mysql:
@@ -2050,10 +2048,12 @@ packages:
         optional: true
       pg-native:
         optional: true
+      sqlite3:
+        optional: true
       tedious:
         optional: true
     dependencies:
-      colorette: 2.0.16
+      colorette: 2.0.19
       commander: 9.4.1
       debug: 4.3.4
       escalade: 3.1.1
