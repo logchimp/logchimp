@@ -4,16 +4,16 @@ importers:
 
   .:
     specifiers:
+      '@biomejs/biome': 1.0.0
       '@logchimp/api': 0.7.0-beta.2
       dotenv: 16.0.3
       nodemon: 2.0.22
-      rome: 11.0.0
     dependencies:
       '@logchimp/api': link:packages/server
       dotenv: 16.0.3
     devDependencies:
+      '@biomejs/biome': 1.0.0
       nodemon: 2.0.22
-      rome: 11.0.0
 
   packages/server:
     specifiers:
@@ -149,6 +149,74 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
+  /@biomejs/biome/1.0.0:
+    resolution: {integrity: sha512-Y5CND1QZ5pF6hc4dFw5ItDutv9KJO91ksLdBIFyvHL7LmXN0UomqyyRWryvrqq+YlA8Q58cR6sqjjQuMp9E2Ig==}
+    engines: {node: '>=14.*'}
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      '@biomejs/cli-darwin-arm64': 1.0.0
+      '@biomejs/cli-darwin-x64': 1.0.0
+      '@biomejs/cli-linux-arm64': 1.0.0
+      '@biomejs/cli-linux-x64': 1.0.0
+      '@biomejs/cli-win32-arm64': 1.0.0
+      '@biomejs/cli-win32-x64': 1.0.0
+    dev: true
+
+  /@biomejs/cli-darwin-arm64/1.0.0:
+    resolution: {integrity: sha512-3v7kEyxkf3D246esH+q/lDK5wWn+xLCXZpHCuc1itAmC35GkEc6S7um6C1VD3XKXLx6N0sJR/rTmjKiRGV32Ig==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-darwin-x64/1.0.0:
+    resolution: {integrity: sha512-uxIMt/X7TQWicjsImkqMvUUEqaFZTOJJrtEhlHl/eIaETWJmK3uAR7ihIWctpGJnN16sUgpLgwczc7FETqu/PQ==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-linux-arm64/1.0.0:
+    resolution: {integrity: sha512-kJWtu3Xr4MdHV2Yn4U+eZudAGPgv0kRCjWAyzLRewJiqE5TLPrX08imB9SU1n3+VxNO8e2JJ0tWWBHo4J+aSEg==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-linux-x64/1.0.0:
+    resolution: {integrity: sha512-FK6hYZ0Lkk39eXYx1+2ZWtLkApc0RdOpcjDVM96JbvI0bxqvNnm193BPXuxh5A/fCl6N28RNUvcKnZ5LbgZ0Yw==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-win32-arm64/1.0.0:
+    resolution: {integrity: sha512-kE+OY2isEJHBodiLPMlybZckHkl3CQWsvXuJEvSxkoMhLbGDPEV3yZ/0lEph3BlxP3KP5vUO3hOFGaTvHFOuqQ==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-win32-x64/1.0.0:
+    resolution: {integrity: sha512-Ko6ZsbmbScPMEnh/xz4mwDSCZIUCAEjbbbnUVApgAAL2+1Hoe7Vnhh2RiwYRqy3tHrBIMDwXkSxj0vlf1G3EHg==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
   /@colors/colors/1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
@@ -220,54 +288,6 @@ packages:
   /@one-ini/wasm/0.1.1:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
-
-  /@rometools/cli-darwin-arm64/11.0.0:
-    resolution: {integrity: sha512-F3vkdY+s3FLIEnAjSbyHTuIPB88cLpccimW4ecid5I7S6GzGG3iUJI4xT00JhH73K4P/qW20/9r+kH1T9Du8Xg==}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-darwin-x64/11.0.0:
-    resolution: {integrity: sha512-X6jhtS6Iml4GOzgNtnLwIp/KXXhSdqeVyfv69m/AHnIzx3gQAjPZ7BPnJLvTCbhe4SKHL+uTZYFSCJpkUUKE6w==}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-linux-arm64/11.0.0:
-    resolution: {integrity: sha512-dktTJJlTpmycBZ2TwhJBcAO8ztK8DdevdyZnFFxdYRvtmJgTjIsC2UFayf/SbKew8B8q1IhI0it+D6ihAeIpeg==}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-linux-x64/11.0.0:
-    resolution: {integrity: sha512-WVcnXPNdWGUWo0p4NU8YzuthjYR7q+b4vRcjdxtP1DlpphZmSsoC/RSE85nEqRAz8hChcKUansVzOPM8BSsuGA==}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-win32-arm64/11.0.0:
-    resolution: {integrity: sha512-tPj6RThQzS7Q45jqQll7NlTYvNcsg/BEP3LYiiazqSh9FAFnMkrV6ewUcMPKWyAfiyLs7jlz4rRvdNRUSygzfQ==}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rometools/cli-win32-x64/11.0.0:
-    resolution: {integrity: sha512-bmBai8WHxYjsGk1+je7ZTfCUCWq30WJI3pQM8pzTA674lfGTZ9ymJoZwTaIMSO4rL5V9mlO6uLunsBKso9VqOg==}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
 
   /@selderee/plugin-htmlparser2/0.6.0:
     resolution: {integrity: sha512-J3jpy002TyBjd4N/p6s+s90eX42H2eRhK3SbsZuvTDv977/E8p2U3zikdiehyJja66do7FlxLomZLPlvl2/xaA==}
@@ -3089,20 +3109,6 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
-
-  /rome/11.0.0:
-    resolution: {integrity: sha512-rRo6JOwpMLc3OkeTDRXkrmrDqnxDvZ75GS4f0jLDBNmRgDXWbu0F8eVnJoRn+VbK2AE7vWvhVOMBjnWowcopkQ==}
-    engines: {node: '>=14.*'}
-    hasBin: true
-    requiresBuild: true
-    optionalDependencies:
-      '@rometools/cli-darwin-arm64': 11.0.0
-      '@rometools/cli-darwin-x64': 11.0.0
-      '@rometools/cli-linux-arm64': 11.0.0
-      '@rometools/cli-linux-x64': 11.0.0
-      '@rometools/cli-win32-arm64': 11.0.0
-      '@rometools/cli-win32-x64': 11.0.0
     dev: true
 
   /run-parallel/1.2.0:
