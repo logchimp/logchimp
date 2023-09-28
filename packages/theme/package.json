@@ -14,7 +14,7 @@
     "@vueuse/core": "9.13.0",
     "@vueuse/head": "1.1.26",
     "axios": "1.2.1",
-    "dayjs": "1.11.9",
+    "dayjs": "1.11.10",
     "lucide-vue": "npm:lucide-vue-next@0.104.0",
     "pinia": "2.0.28",
     "uuid": "9.0.0",
