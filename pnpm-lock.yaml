@@ -71,7 +71,7 @@ importers:
       '@vueuse/core': 9.13.0
       '@vueuse/head': 1.1.26
       autoprefixer: ^10.4.13
-      axios: 1.2.1
+      axios: 1.5.1
       dayjs: 1.11.10
       jsdom: ^20.0.1
       lucide-vue: npm:lucide-vue-next@0.104.0
@@ -93,7 +93,7 @@ importers:
       '@vueuse/components': 9.13.0_vue@3.2.45
       '@vueuse/core': 9.13.0_vue@3.2.45
       '@vueuse/head': 1.1.26_vue@3.2.45
-      axios: 1.2.1
+      axios: 1.5.1
       dayjs: 1.11.10
       lucide-vue: /lucide-vue-next/0.104.0_vue@3.2.45
       pinia: 2.0.28_2hxmazfbcwwtly5fgw7ckvmlau
@@ -781,8 +781,8 @@ packages:
       sharp: 0.25.4
     dev: true
 
-  /axios/1.2.1:
-    resolution: {integrity: sha512-I88cFiGu9ryt/tfVEi4kX2SITsvDddTajXTOFmt2uK1ZVA8LytjtdeyefdQWEf5PU8w+4SSJDoYnggflB5tW4A==}
+  /axios/1.5.1:
+    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
