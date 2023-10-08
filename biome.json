@@ -1,4 +1,8 @@
 {
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
@@ -15,6 +19,9 @@
   },
   "linter": {
     "enabled": true,
+        "rules": {
+      "recommended": true
+    },
     "ignore": [
       "./packages/theme/dist"
     ]

@@ -54,13 +54,13 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Install Rome
-        uses: rome/setup-rome@v0.4
+      - name: Install Biome
+        uses: biomejs/setup-biome@v1
         with:
           version: latest
 
-      - name: Rome format
-        run: rome ci .
+      - name: Biome format
+        run: biome ci .
         continue-on-error: true
 
   theme-unit:
