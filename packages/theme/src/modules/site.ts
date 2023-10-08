@@ -114,7 +114,7 @@ export const updateSettings = async (site: SiteSettingsType) => {
  * @returns {object} response
  */
 // TODO: Add TS types
-// rome-ignore lint: Add TS types
+// biome-ignore lint: Add TS types
 export const uploadSiteLogo = async (logo: any) => {
   const { authToken } = useUserStore();
 
