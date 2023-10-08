@@ -6,11 +6,11 @@ importers:
     specifiers:
       '@biomejs/biome': 1.0.0
       '@logchimp/api': 0.7.0-beta.2
-      dotenv: 16.0.3
+      dotenv: 16.3.1
       nodemon: 2.0.22
     dependencies:
       '@logchimp/api': link:packages/server
-      dotenv: 16.0.3
+      dotenv: 16.3.1
     devDependencies:
       '@biomejs/biome': 1.0.0
       nodemon: 2.0.22
@@ -1317,8 +1317,8 @@ packages:
       domhandler: 4.3.1
     dev: false
 
-  /dotenv/16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+  /dotenv/16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
     dev: false
 
