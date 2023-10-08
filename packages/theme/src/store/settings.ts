@@ -23,7 +23,7 @@ export const useSettingStore = defineStore("settings", () => {
   const labs = computed(() => settings.labs);
 
   // TODO: Add TS types
-  // rome-ignore lint: Add TS types
+  // biome-ignore lint: Add TS types
   function update(payload: any) {
     Object.assign(settings, payload);
   }

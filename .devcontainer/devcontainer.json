@@ -37,7 +37,7 @@
 
   // Visual Studio Code extensions
   "extensions": [
-    "rome.rome",
+    "biomejs.biome",
     "wix.vscode-import-cost",
     "bradlc.vscode-tailwindcss",
     "Vue.volar",

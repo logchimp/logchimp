@@ -9,7 +9,7 @@ interface UpdateRoleArgs {
   name: string;
   description: string;
   // TODO: Add TS types
-  // rome-ignore lint: Add TS types
+  // biome-ignore lint: Add TS types
   permissions: any;
 }
 
