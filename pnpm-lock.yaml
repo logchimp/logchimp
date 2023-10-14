@@ -125,8 +125,8 @@ importers:
         specifier: github:nvitius/vue-infinite-loading#next
         version: github.com/nvitius/vue-infinite-loading/b339d982d6d66e1e91324a5182156682c237ac4d(vue@3.3.4)
       vue-router:
-        specifier: 4.1.6
-        version: 4.1.6(vue@3.3.4)
+        specifier: 4.2.5
+        version: 4.2.5(vue@3.3.4)
       vuedraggable:
         specifier: 4.1.0
         version: 4.1.0(vue@3.3.4)
@@ -519,6 +519,10 @@ packages:
 
   /@vue/devtools-api@6.4.5:
     resolution: {integrity: sha512-JD5fcdIuFxU4fQyXUu3w2KpAJHzTVdN+p4iOX2lMWSHMOoQdMAcpFLZzm9Z/2nmsoZ1a96QEhZ26e50xLBsgOQ==}
+    dev: false
+
+  /@vue/devtools-api@6.5.1:
+    resolution: {integrity: sha512-+KpckaAQyfbvshdDW5xQylLni1asvNSGme1JFs8I1+/H5pHEhqUKMEQD/qn3Nx5+/nycBq11qAEi8lk+LXI2dA==}
     dev: false
 
   /@vue/language-core@1.8.19(typescript@4.9.5):
@@ -3869,12 +3873,12 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vue-router@4.1.6(vue@3.3.4):
-    resolution: {integrity: sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==}
+  /vue-router@4.2.5(vue@3.3.4):
+    resolution: {integrity: sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
-      '@vue/devtools-api': 6.4.5
+      '@vue/devtools-api': 6.5.1
       vue: 3.3.4
     dev: false
 
