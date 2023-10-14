@@ -1,8 +1,39 @@
 import { describe, it, expect } from "vitest";
-import { cleanDb } from "../../../utils/db";
 const supertest = require("supertest");
 
+import { cleanDb } from "../../../utils/db";
 const app = require("../../../../app");
+
+describe("GET /api/v1/auth/setup", () => {
+  it('should not have site setup', async () => {
+    await cleanDb();
+
+    const response = await supertest(app).get("/api/v1/auth/setup");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    expect(response.body).toBeDefined()
+    expect(response.body.is_setup).toBeFalsy()
+  });
+
+  it('show have site setup', async () => {
+    await supertest(app).post("/api/v1/auth/setup").send({
+      siteTitle: "test site setup",
+      name: "Admin",
+      email: "admin@example.com",
+      password: "password",
+    });
+
+    const response = await supertest(app).get("/api/v1/auth/setup");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    expect(response.body).toBeDefined()
+    expect(response.body.is_setup).toBeTruthy()
+  });
+});
 
 describe("POST /api/v1/auth/setup", () => {
   it('should throw error "EMAIL_INVALID"', async () => {

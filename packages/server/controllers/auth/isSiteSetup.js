@@ -15,7 +15,7 @@ const isSiteSetup = async (req, res) => {
       .first();
 
     res.status(200).send({
-      is_setup: !!isSetup.userId,
+      is_setup: typeof isSetup !== "undefined",
     });
   } catch (err) {
     logger.error({
