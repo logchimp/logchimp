@@ -3,6 +3,7 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.siteSettings = async (_, res) => {
   try {
@@ -19,5 +20,10 @@ exports.siteSettings = async (_, res) => {
       level: "error",
       message: err,
     });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };

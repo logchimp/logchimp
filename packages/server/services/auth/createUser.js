@@ -122,6 +122,11 @@ const createUser = async (req, res, next, userData) => {
       level: "error",
       message: err,
     });
+
+    return res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
 

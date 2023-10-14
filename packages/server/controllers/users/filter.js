@@ -6,6 +6,7 @@ const getUsers = require("../../services/users/getUsers");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 exports.filter = async (req, res) => {
   const created = req.query.created;
@@ -54,6 +55,11 @@ exports.filter = async (req, res) => {
     logger.log({
       level: "error",
       message: err,
-    });
+    })
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
