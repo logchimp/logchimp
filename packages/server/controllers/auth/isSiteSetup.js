@@ -3,6 +3,7 @@ const database = require("../../database");
 
 // utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 const isSiteSetup = async (req, res) => {
   try {
@@ -21,6 +22,11 @@ const isSiteSetup = async (req, res) => {
     logger.error({
       message: err.message,
     });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
 

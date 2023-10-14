@@ -1,5 +1,8 @@
 const database = require("../../database");
+
+// utils
 const logger = require("../../utils/logger");
+const error = require("../../errorResponse.json");
 
 const getUserInfo = async (req, res) => {
   const { user_id } = req.params;
@@ -28,9 +31,14 @@ const getUserInfo = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    logger.error({
+      message: error,
+    });
 
-    logger.error(error);
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
 

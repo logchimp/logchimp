@@ -46,6 +46,11 @@ module.exports = async (req, res) => {
   } catch (err) {
     logger.error({
       message: err,
-    });
+    })
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };

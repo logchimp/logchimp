@@ -110,6 +110,11 @@ const authenticateWithToken = async (req, res, next, token) => {
             code: "INVALID_TOKEN",
             err,
           });
+        } else {
+          res.status(500).send({
+            message: error.general.serverError,
+            code: "SERVER_ERROR",
+          })
         }
       }
     } else {
@@ -121,6 +126,11 @@ const authenticateWithToken = async (req, res, next, token) => {
     }
   } catch (err) {
     logger.error(err);
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
 

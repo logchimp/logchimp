@@ -2,6 +2,7 @@ const database = require("../../../database");
 
 // utils
 const logger = require("../../../utils/logger");
+const error = require("../../../errorResponse.json");
 
 module.exports = async (req, res) => {
   const { post_id } = req.params;
@@ -66,5 +67,10 @@ module.exports = async (req, res) => {
       level: "error",
       message: err,
     });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    })
   }
 };
