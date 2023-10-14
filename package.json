@@ -22,7 +22,7 @@
 	},
 	"devDependencies": {
 		"nodemon": "2.0.22",
-		"@biomejs/biome": "1.0.0"
+		"@biomejs/biome": "1.2.2"
 	},
 	"keywords": [
 		"logchimp",
