@@ -6,7 +6,7 @@
 					<vote
 						:post-id="post.postId"
 						:votes-count="post.voters.votesCount"
-						:is-voted="post.voters.viewerVote"
+						:is-voted="isVoted"
 						@update-voters="updateVoters"
 					/>
 				</div>
@@ -44,6 +44,7 @@
 											<edit-icon />
 										</template>
 										Edit
+
 									</dropdown-item>
 								</dropdown>
 							</template>
@@ -175,6 +176,8 @@ const activity = reactive<{
 	sort: "DESC",
 	data: []
 })
+
+const isVoted = computed(() => post.voters.hasOwnProperty('viewerVote'));
 
 const postAuthorName = computed(() => post.author.name || post.author.username)
 
