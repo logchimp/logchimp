@@ -29,7 +29,7 @@
 		"nodemailer": "^6.7.3",
 		"pg": "^8.7.1",
 		"supertest": "^6.1.6",
-		"uuid": "^8.3.2",
+		"uuid": "^9.0.0",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
