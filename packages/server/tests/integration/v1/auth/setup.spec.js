@@ -19,7 +19,7 @@ describe("GET /api/v1/auth/setup", () => {
 
   it('show have site setup', async () => {
     await supertest(app).post("/api/v1/auth/setup").send({
-      siteTitle: "test site setup",
+      siteTitle: "LogChimp",
       name: "Admin",
       email: "admin@example.com",
       password: "password",
@@ -58,7 +58,7 @@ describe("POST /api/v1/auth/setup", () => {
     await cleanDb();
 
     const response = await supertest(app).post("/api/v1/auth/setup").send({
-      siteTitle: "test site setup",
+      siteTitle: "LogChimp",
       name: "Admin",
       email: "admin@example.com",
       password: "password",
