@@ -53,7 +53,7 @@
 				</div>
 			</div>
 
-			<p v-html="post.contentMarkdown" />
+			<p v-html="postContent" />
 
 			<div v-if="showPostActivity" class="activity-section">
 				<add-comment @add-comment="addComment" :post-id="post.postId" />
@@ -158,6 +158,7 @@ const post = reactive({
 		viewerVote: false,
 	}
 });
+const postContent = ref<string>('');
 const postLoading = ref(false)
 const isPostExist = ref(false)
 
@@ -227,6 +228,10 @@ async function postBySlug() {
       postLoading.value = false;
 			Object.assign(post, response.data.post);
       isPostExist.value = true;
+
+      if (response.data.post.hasOwnProperty('contentMarkdown')) {
+        postContent.value = response.data.post.contentMarkdown.replace(/\n/g, '<br>');
+      }
 
 			getPostActivity();
 		} catch (error: any) {
