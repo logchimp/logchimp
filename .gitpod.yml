@@ -2,17 +2,21 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - name: "Init Gitpod"
-    init: bash ./scripts/gitpod-init.sh
+  - name: Init Gitpod
+    init: |
+      # Install packages
+      pnpm Install
+      bash ./scripts/gitpod-init.sh 
+      gp sync-done setup
   - name: Server
     openMode: tab-after
     command: |
       gp sync-await setup
-
       pnpm --filter @logchimp/api dev
   - name: Server (logs)
     openMode: tab-after
     command: |
+      gp sync-await setup
       tail -f ./content/logs/logchimp-all.log
   - name: Mail server
     openMode: tab-after
@@ -23,7 +27,6 @@ tasks:
     openMode: tab-after
     command: |
       gp sync-await setup
-
       # export 'APP_SERVER_URL' ENV to file
       echo APP_SERVER_URL=http://localhost:3000 > .env
 
