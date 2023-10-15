@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@logchimp/api':
-        specifier: 0.7.0-beta.2
+        specifier: 0.7.0-beta.3
         version: link:packages/server
       dotenv:
         specifier: 16.3.1
