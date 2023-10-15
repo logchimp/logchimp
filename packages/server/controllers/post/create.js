@@ -55,6 +55,8 @@ exports.create = async (req, res) => {
     .split(" ")
     .join("-")}-${slugId}`;
 
+  const contentHtml = contentMarkdown.replace(/\n/g, '<br>');
+
   try {
     const createPost = await database
       .insert({
@@ -62,7 +64,7 @@ exports.create = async (req, res) => {
         title,
         slug,
         slugId,
-        contentMarkdown,
+        contentMarkdown: contentHtml,
         userId,
         boardId,
       })
