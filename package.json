@@ -21,7 +21,7 @@
 		"dotenv": "16.3.1"
 	},
 	"devDependencies": {
-		"nodemon": "2.0.22",
+		"nodemon": "3.0.1",
 		"@biomejs/biome": "1.2.2"
 	},
 	"keywords": [
