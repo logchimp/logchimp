@@ -3,10 +3,10 @@ image:
 
 tasks:
   - name: Init Gitpod
-    init: bash ./scripts/gitpod-init.sh
-    command: |
+    init: |
       # Install packages
       pnpm Install
+      bash ./scripts/gitpod-init.sh 
       gp sync-done setup
   - name: Server
     openMode: tab-after
