@@ -1,7 +1,7 @@
 {
 	"name": "logchimp",
 	"description": "A open-source software to track your customers feedback",
-	"version": "0.7.0-beta.2",
+	"version": "0.7.0-beta.3",
 	"private": true,
 	"repository": {
 		"type": "git",
@@ -17,7 +17,7 @@
 		"biome:format": "biome format --write ."
 	},
 	"dependencies": {
-		"@logchimp/api": "0.7.0-beta.2",
+		"@logchimp/api": "0.7.0-beta.3",
 		"dotenv": "16.3.1"
 	},
 	"devDependencies": {
