@@ -138,8 +138,8 @@ importers:
         specifier: 3.2.0
         version: 3.2.0(vite@3.2.7)(vue@3.3.4)
       '@vue/test-utils':
-        specifier: 2.4.1
-        version: 2.4.1(vue@3.3.4)
+        specifier: 2.4.3
+        version: 2.4.3(vue@3.3.4)
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.13(postcss@8.4.31)
@@ -579,8 +579,8 @@ packages:
   /@vue/shared@3.3.4:
     resolution: {integrity: sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ==}
 
-  /@vue/test-utils@2.4.1(vue@3.3.4):
-    resolution: {integrity: sha512-VO8nragneNzUZUah6kOjiFmD/gwRjUauG9DROh6oaOeFwX1cZRUNHhdeogE8635cISigXFTtGLUQWx5KCb0xeg==}
+  /@vue/test-utils@2.4.3(vue@3.3.4):
+    resolution: {integrity: sha512-F4K7mF+ad++VlTrxMJVRnenKSJmO6fkQt2wpRDiKDesQMkfpniGWsqEi/JevxGBo2qEkwwjvTUAoiGJLNx++CA==}
     peerDependencies:
       '@vue/server-renderer': ^3.0.1
       vue: ^3.0.1
@@ -590,7 +590,7 @@ packages:
     dependencies:
       js-beautify: 1.14.9
       vue: 3.3.4
-      vue-component-type-helpers: 1.8.4
+      vue-component-type-helpers: 1.8.26
     dev: true
 
   /@vue/typescript@1.8.19(typescript@4.9.5):
@@ -3803,8 +3803,8 @@ packages:
       - terser
     dev: true
 
-  /vue-component-type-helpers@1.8.4:
-    resolution: {integrity: sha512-6bnLkn8O0JJyiFSIF0EfCogzeqNXpnjJ0vW/SZzNHfe6sPx30lTtTXlE5TFs2qhJlAtDFybStVNpL73cPe3OMQ==}
+  /vue-component-type-helpers@1.8.26:
+    resolution: {integrity: sha512-CIwb7s8cqUuPpHDk+0DY8EJ/x8tzdzqw8ycX8hhw1GnbngTgSsIceHAqrrLjmv8zXi+j5XaiqYRQMw8sKyyjkw==}
     dev: true
 
   /vue-demi@0.13.11(vue@3.3.4):
