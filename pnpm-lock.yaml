@@ -87,7 +87,7 @@ importers:
         version: 3.2.1
       vitest:
         specifier: 0.34.6
-        version: 0.34.6
+        version: 0.34.6(jsdom@20.0.1)(sass@1.69.5)
 
   packages/theme:
     dependencies:
@@ -107,8 +107,8 @@ importers:
         specifier: 1.11.10
         version: 1.11.10
       lucide-vue:
-        specifier: npm:lucide-vue-next@0.287.0
-        version: /lucide-vue-next@0.287.0(vue@3.3.4)
+        specifier: npm:lucide-vue-next@0.360.0
+        version: /lucide-vue-next@0.360.0(vue@3.3.4)
       pinia:
         specifier: 2.1.7
         version: 2.1.7(typescript@4.9.5)(vue@3.3.4)
@@ -2323,8 +2323,8 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lucide-vue-next@0.287.0(vue@3.3.4):
-    resolution: {integrity: sha512-wOeminoWfQXYn5yldgtlfj9b1hvyLY5epD4TMQ1AIYy5Ks1hJqfdGFIPO9oZQCkasJz5Q1EYAbUbmiCDCSfE9g==}
+  /lucide-vue-next@0.360.0(vue@3.3.4):
+    resolution: {integrity: sha512-Qh67oCvAASGVxzYVMLK7okW/ZUtbBxbfBvfuVY7yvaVvG22puZtT0FncaHKKU0e2FHgRmLFrkiKh1fjkyweVVA==}
     peerDependencies:
       vue: '>=3.0.1'
     dependencies:
@@ -3704,7 +3704,7 @@ packages:
       - terser
     dev: true
 
-  /vite@3.2.7(@types/node@18.8.2):
+  /vite@3.2.7(@types/node@18.8.2)(sass@1.69.5):
     resolution: {integrity: sha512-29pdXjk49xAP0QBr0xXqu2s5jiQIXNvE/xwd0vUizYT2Hzqe4BksNNoWllFVXJf4eLZ+UlVQmXfB4lWrc+t18g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -3734,6 +3734,7 @@ packages:
       postcss: 8.4.31
       resolve: 1.22.1
       rollup: 2.79.1
+      sass: 1.69.5
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -3771,70 +3772,6 @@ packages:
       sass: 1.69.5
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
-
-  /vitest@0.34.6:
-    resolution: {integrity: sha512-+5CALsOvbNKnS+ZHMXtuUC7nL8/7F1F2DnHGjSsszX8zCjWSSviphCb/NuS9Nzf4Q03KyyDRBAXhF/8lffME4Q==}
-    engines: {node: '>=v14.18.0'}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@vitest/browser': '*'
-      '@vitest/ui': '*'
-      happy-dom: '*'
-      jsdom: '*'
-      playwright: '*'
-      safaridriver: '*'
-      webdriverio: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@vitest/browser':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
-      playwright:
-        optional: true
-      safaridriver:
-        optional: true
-      webdriverio:
-        optional: true
-    dependencies:
-      '@types/chai': 4.3.5
-      '@types/chai-subset': 1.3.3
-      '@types/node': 18.8.2
-      '@vitest/expect': 0.34.6
-      '@vitest/runner': 0.34.6
-      '@vitest/snapshot': 0.34.6
-      '@vitest/spy': 0.34.6
-      '@vitest/utils': 0.34.6
-      acorn: 8.10.0
-      acorn-walk: 8.2.0
-      cac: 6.7.14
-      chai: 4.3.10
-      debug: 4.3.4(supports-color@5.5.0)
-      local-pkg: 0.4.3
-      magic-string: 0.30.2
-      pathe: 1.1.1
-      picocolors: 1.0.0
-      std-env: 3.3.3
-      strip-literal: 1.0.1
-      tinybench: 2.5.0
-      tinypool: 0.7.0
-      vite: 3.2.7(@types/node@18.8.2)
-      vite-node: 0.34.6(@types/node@18.8.2)(sass@1.69.5)
-      why-is-node-running: 2.2.2
-    transitivePeerDependencies:
-      - less
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
     dev: true
 
   /vitest@0.34.6(jsdom@20.0.1)(sass@1.69.5):
@@ -3890,7 +3827,7 @@ packages:
       strip-literal: 1.0.1
       tinybench: 2.5.0
       tinypool: 0.7.0
-      vite: 3.2.8(@types/node@18.8.2)(sass@1.69.5)
+      vite: 3.2.7(@types/node@18.8.2)(sass@1.69.5)
       vite-node: 0.34.6(@types/node@18.8.2)(sass@1.69.5)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
