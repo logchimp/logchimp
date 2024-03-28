@@ -16,7 +16,7 @@
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
-		"express": "^4.17.1",
+		"express": "^4.19.2",
 		"express-rate-limit": "^6.3.0",
 		"fs-extra": "^11.0.0",
 		"html-to-text": "^8.1.0",
