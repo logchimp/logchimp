@@ -103,8 +103,8 @@ importers:
         specifier: 1.7.4
         version: 1.7.4
       dayjs:
-        specifier: 1.11.10
-        version: 1.11.10
+        specifier: 1.11.13
+        version: 1.11.13
       lucide-vue:
         specifier: npm:lucide-vue-next@0.360.0
         version: /lucide-vue-next@0.360.0(vue@3.3.4)
@@ -1257,8 +1257,8 @@ packages:
       whatwg-url: 11.0.0
     dev: true
 
-  /dayjs@1.11.10:
-    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+  /dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
     dev: false
 
   /de-indent@1.0.2:
