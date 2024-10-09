@@ -6,8 +6,8 @@ const logchimpConfig = require("../../utils/logchimpConfig");
 const config = logchimpConfig();
 const logger = require("../../utils/logger");
 
-if (config.mail) {
-  const mail = nodemailer.createTransport({
+function getMailConfig() {
+  const mailConfig = {
     host: process.env.LOGCHIMP_MAIL_HOST || config.mail?.host,
     port: process.env.LOGCHIMP_MAIL_PORT || config.mail?.port,
     secure: false,
@@ -16,10 +16,18 @@ if (config.mail) {
       user: process.env.LOGCHIMP_MAIL_USER || config.mail?.user,
       pass: process.env.LOGCHIMP_MAIL_PASSWORD || config.mail?.password,
     },
-  });
+  };
 
-  module.exports = mail;
-} else {
-  logger.warn("Email adapter missing");
-  module.exports = null;
+  const isConfigured = Object.values(mailConfig).some(
+    (value) => value !== undefined,
+  );
+
+  if (!isConfigured) {
+    logger.warn("Email adapter missing");
+    return null;
+  }
+
+  return nodemailer.createTransport(mailConfig);
 }
+
+module.exports = getMailConfig();
