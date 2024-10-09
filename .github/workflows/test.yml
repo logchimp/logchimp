@@ -247,20 +247,6 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Create logchimp config file
-        run: |
-          PG_DATABASE=${{ secrets.TEST_DB_NAME }} \
-          PG_HOST="localhost" \
-          PG_USER=${{ secrets.TEST_DB_USER }} \
-          PG_PASSWORD=${{ secrets.TEST_DB_PASSWORD }} \
-          PG_PORT=5432 \
-          THEME_STANDALONE="false" \
-          SECRET_KEY=${{ secrets.TEST_SECRET_KEY }} \
-          MAIL_SERVICE="logchimp" \
-          MAIL_HOST="smtp.example.com" \
-          MAIL_USER="logchimp@example.com" \
-          sh ./scripts/create-config.sh
-
       - name: Testing
         run: |
           # Run database migrations
@@ -273,6 +259,16 @@ jobs:
           pnpm --filter @logchimp/api test:integration
         env:
           NODE_ENV: "testing"
+          PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
+          PG_HOST: "localhost"
+          PG_USER: ${{ secrets.TEST_DB_USER }}
+          PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          PG_PORT: 5432
+          THEME_STANDALONE: "false"
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+          MAIL_SERVICE: "logchimp"
+          MAIL_HOST: "smtp.example.com"
+          MAIL_USER: "logchimp@example.com"
 
       - name: Output logs
         if: always()
