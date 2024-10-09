@@ -12,7 +12,7 @@ const config = require("../utils/logchimpConfig")();
  * @returns {string} JWT token
  */
 const createToken = (data, payload) => {
-  const secretKey = config.server.secretKey;
+  const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
   const token = jwt.sign(data, secretKey, payload);
 
   return token;
@@ -29,7 +29,7 @@ const verifyToken = (token) => {
     return null;
   }
 
-  const secretKey = config.server.secretKey;
+  const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
   return jwt.verify(token, secretKey);
 };
 

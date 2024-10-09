@@ -1,3 +1,5 @@
+const isBoolean = require("lodash/isBoolean");
+
 // modules
 const path = require("path");
 
@@ -6,23 +8,24 @@ const logger = require("../utils/logger");
 const logchimpConfig = require("../utils/logchimpConfig");
 const config = logchimpConfig();
 
-const ssl = config.database.ssl
-  ? {
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    }
-  : {};
+const ssl =
+  isBoolean(process.env.LOGCHIMP_DB_SSL) || config?.database?.ssl
+    ? {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      }
+    : {};
 
 module.exports = {
   client: "pg",
   version: "12.4",
   connection: {
-    host: config.database.host,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.name,
-    port: config.database.port,
+    host: process.env.LOGCHIMP_DB_HOST || config.database.host,
+    user: process.env.LOGCHIMP_DB_USER || config.database.user,
+    password: process.env.LOGCHIMP_DB_PASSWORD || config.database.password,
+    database: process.env.LOGCHIMP_DB_DATABASE || config.database.name,
+    port: process.env.LOGCHIMP_DB_PORT || config.database.port,
     ...ssl,
   },
   pool: {

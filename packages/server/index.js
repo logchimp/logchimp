@@ -36,7 +36,7 @@ database.migrate
 const config = logchimpConfig();
 
 // start express server at SERVER_PORT
-const port = config.server.port || 3000;
+const port = process.env.PORT || config.server.port || 3000;
 const host = config.server.host || "0.0.0.0";
 
 app.listen(port, host, async () => {

@@ -51,7 +51,7 @@ const authenticateWithToken = async (req, res, next, token) => {
       } else {
         try {
           // validate JWT auth token
-          const secretKey = config.server.secretKey;
+          const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
           jwt.verify(token, secretKey);
 
           res.locals.user = user;

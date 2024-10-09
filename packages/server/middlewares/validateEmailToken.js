@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
 
   try {
     // validate JWT token
-    const secretKey = config.server.secretKey;
+    const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
     const decoded = await jwt.verify(token, secretKey);
 
     const tokenType = decoded.type;
