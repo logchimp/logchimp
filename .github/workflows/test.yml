@@ -259,16 +259,17 @@ jobs:
           pnpm --filter @logchimp/api test:integration
         env:
           NODE_ENV: "testing"
-          PG_DATABASE: ${{ secrets.TEST_DB_NAME }}
-          PG_HOST: "localhost"
-          PG_USER: ${{ secrets.TEST_DB_USER }}
-          PG_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          PG_PORT: 5432
+          LOGCHIMP_DB_DATABASE: ${{ secrets.TEST_DB_NAME }}
+          LOGCHIMP_DB_HOST: "localhost"
+          LOGCHIMP_DB_USER: ${{ secrets.TEST_DB_USER }}
+          LOGCHIMP_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          LOGCHIMP_DB_PORT: 5432
           THEME_STANDALONE: "false"
-          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
-          MAIL_SERVICE: "logchimp"
-          MAIL_HOST: "smtp.example.com"
-          MAIL_USER: "logchimp@example.com"
+          LOGCHIMP_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+          LOGCHIMP_MAIL_SERVICE: "logchimp"
+          LOGCHIMP_MAIL_HOST: "smtp.example.com"
+          LOGCHIMP_MAIL_USER: "logchimp@example.com"
+          LOGCHIMP_MAIL_PORT: 587
 
       - name: Output logs
         if: always()
