@@ -16,6 +16,7 @@
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
 		"express": "^4.17.1",
 		"express-rate-limit": "^6.3.0",
 		"fs-extra": "^11.0.0",
@@ -35,6 +36,7 @@
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.0",
 		"avatar-generator": "2.0.4",
+		"nodemon": "^3.1.7",
 		"omgopass": "3.2.1",
 		"vitest": "0.34.6"
 	},
