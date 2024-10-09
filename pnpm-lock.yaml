@@ -100,8 +100,8 @@ importers:
         specifier: 1.3.1
         version: 1.3.1(vue@3.3.4)
       axios:
-        specifier: 1.7.4
-        version: 1.7.4
+        specifier: 1.7.7
+        version: 1.7.7
       dayjs:
         specifier: 1.11.13
         version: 1.11.13
@@ -876,8 +876,8 @@ packages:
       sharp: 0.25.4
     dev: true
 
-  /axios@1.7.4:
-    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
+  /axios@1.7.7:
+    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.0
