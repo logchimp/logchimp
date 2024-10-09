@@ -16,10 +16,6 @@
 		"build:theme": "pnpm --filter @logchimp/theme build",
 		"biome:format": "biome format --write ."
 	},
-	"dependencies": {
-		"@logchimp/api": "0.7.0-beta.3",
-		"dotenv": "16.3.1"
-	},
 	"devDependencies": {
 		"nodemon": "3.0.2",
 		"@biomejs/biome": "1.4.1"
