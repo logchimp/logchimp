@@ -15,5 +15,4 @@ RUN NODE_VERSION=$(node -v) && \
         PNPM_VERSION="v9"; \
     fi; \
     npm i -g pnpm@$PNPM_VERSION; \
-    echo "pnpm version:" $PNPM_VERSION; \
     pnpm install
