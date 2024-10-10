@@ -300,6 +300,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/.docker-backend-buildx-cache
+          key: ${{ runner.os }}-docker-backend-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-backend-buildx-
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -307,3 +315,5 @@ jobs:
           file: ./packages/server/Dockerfile
           build-args: NODE_VERSION=${{ matrix.node }}
           tags: logchimp.codecarrot.net/logchimp/backend:${{ github.sha }}
+          cache-from: type=local,src=${{ github.workspace }}/.docker-backend-buildx-cache
+          cache-to: type=local,dest=${{ github.workspace }}/.docker-backend-buildx-cache
