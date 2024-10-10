@@ -250,10 +250,10 @@ jobs:
       - name: Testing
         run: |
           # Run database migrations
-          pnpm --filter @logchimp/api db:migrate 
+          pnpm --filter @logchimp/api db:migrate
 
           # Seeding database
-          pnpm --filter @logchimp/api db:seed:run 
+          pnpm --filter @logchimp/api db:seed:run
 
           # Running integration test
           pnpm --filter @logchimp/api test:integration
@@ -305,7 +305,5 @@ jobs:
         with:
           context: .
           file: ./packages/server/Dockerfile
-          build-args:
-            - NODE_VERSION=${{ matrix.node }}
-          tags:
-            - logchimp.codecarrot.net/logchimp/backend:${{ github.sha }}
+          build-args: NODE_VERSION=${{ matrix.node }}
+          tags: logchimp.codecarrot.net/logchimp/backend:${{ github.sha }}
