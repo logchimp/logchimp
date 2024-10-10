@@ -7,6 +7,13 @@ COPY ./package.json ./pnpm-lock.yaml ./
 
 WORKDIR /app/packages/server
 
-# Install packages
-RUN npm i -g pnpm; \
+# Conditional installation of pnpm based on Node.js version
+RUN NODE_VERSION=$(node -v) && \
+    if [[ "$NODE_VERSION" == v16* ]]; then \
+        PNPM_VERSION="v8"; \
+    else \
+        PNPM_VERSION="v9"; \
+    fi; \
+    npm i -g pnpm@$PNPM_VERSION; \
+    echo "pnpm version:" $PNPM_VERSION; \
     pnpm install
