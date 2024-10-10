@@ -17,7 +17,7 @@
 		"biome:format": "biome format --write ."
 	},
 	"devDependencies": {
-		"nodemon": "3.0.2",
+		"nodemon": "3.1.7",
 		"@biomejs/biome": "1.4.1"
 	},
 	"keywords": [
