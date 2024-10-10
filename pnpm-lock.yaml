@@ -86,7 +86,7 @@ importers:
         version: 3.2.1
       vitest:
         specifier: 0.34.6
-        version: 0.34.6
+        version: 0.34.6(jsdom@20.0.3)(sass@1.69.5)
 
   packages/theme:
     dependencies:
@@ -137,8 +137,8 @@ importers:
         specifier: 3.2.0
         version: 3.2.0(vite@3.2.11)(vue@3.3.4)
       '@vue/test-utils':
-        specifier: 2.4.3
-        version: 2.4.3(vue@3.3.4)
+        specifier: 2.4.6
+        version: 2.4.6
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.20(postcss@8.4.47)
@@ -651,18 +651,11 @@ packages:
     resolution: {integrity: sha512-W8GgysJVnFo81FthhzurdRAWP/byq3q2qIw70e0JWblzVhjgOMiC2GyovXrZTFQJnFVryYaKGP3Tc9vYzYm6PQ==}
     dev: true
 
-  /@vue/test-utils@2.4.3(vue@3.3.4):
-    resolution: {integrity: sha512-F4K7mF+ad++VlTrxMJVRnenKSJmO6fkQt2wpRDiKDesQMkfpniGWsqEi/JevxGBo2qEkwwjvTUAoiGJLNx++CA==}
-    peerDependencies:
-      '@vue/server-renderer': ^3.0.1
-      vue: ^3.0.1
-    peerDependenciesMeta:
-      '@vue/server-renderer':
-        optional: true
+  /@vue/test-utils@2.4.6:
+    resolution: {integrity: sha512-FMxEjOpYNYiFe0GkaHsnJPXFHxQ6m4t8vI/ElPGpMWxZKpmRvQ33OIrvRXemy6yha03RxhOlQuy+gZMC3CQSow==}
     dependencies:
       js-beautify: 1.15.1
-      vue: 3.3.4
-      vue-component-type-helpers: 1.8.27
+      vue-component-type-helpers: 2.1.6
     dev: true
 
   /@vueuse/components@9.13.0(vue@3.3.4):
@@ -4014,7 +4007,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@3.2.8(@types/node@22.7.5):
+  /vite@3.2.8(@types/node@22.7.5)(sass@1.69.5):
     resolution: {integrity: sha512-EtQU16PLIJpAZol2cTLttNP1mX6L0SyI0pgQB1VOoWeQnMSvtiwovV3D6NcjN8CZQWWyESD2v5NGnpz5RvgOZA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -4044,72 +4037,9 @@ packages:
       postcss: 8.4.47
       resolve: 1.22.8
       rollup: 2.79.2
+      sass: 1.69.5
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
-
-  /vitest@0.34.6:
-    resolution: {integrity: sha512-+5CALsOvbNKnS+ZHMXtuUC7nL8/7F1F2DnHGjSsszX8zCjWSSviphCb/NuS9Nzf4Q03KyyDRBAXhF/8lffME4Q==}
-    engines: {node: '>=v14.18.0'}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@vitest/browser': '*'
-      '@vitest/ui': '*'
-      happy-dom: '*'
-      jsdom: '*'
-      playwright: '*'
-      safaridriver: '*'
-      webdriverio: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@vitest/browser':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
-      playwright:
-        optional: true
-      safaridriver:
-        optional: true
-      webdriverio:
-        optional: true
-    dependencies:
-      '@types/chai': 4.3.20
-      '@types/chai-subset': 1.3.5
-      '@types/node': 22.7.5
-      '@vitest/expect': 0.34.6
-      '@vitest/runner': 0.34.6
-      '@vitest/snapshot': 0.34.6
-      '@vitest/spy': 0.34.6
-      '@vitest/utils': 0.34.6
-      acorn: 8.12.1
-      acorn-walk: 8.3.4
-      cac: 6.7.14
-      chai: 4.5.0
-      debug: 4.3.7(supports-color@5.5.0)
-      local-pkg: 0.4.3
-      magic-string: 0.30.11
-      pathe: 1.1.2
-      picocolors: 1.1.0
-      std-env: 3.7.0
-      strip-literal: 1.3.0
-      tinybench: 2.9.0
-      tinypool: 0.7.0
-      vite: 3.2.8(@types/node@22.7.5)
-      vite-node: 0.34.6(@types/node@22.7.5)(sass@1.69.5)
-      why-is-node-running: 2.3.0
-    transitivePeerDependencies:
-      - less
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
     dev: true
 
   /vitest@0.34.6(jsdom@20.0.3)(sass@1.69.5):
@@ -4165,7 +4095,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.9.0
       tinypool: 0.7.0
-      vite: 3.2.11(@types/node@22.7.5)(sass@1.69.5)
+      vite: 3.2.8(@types/node@22.7.5)(sass@1.69.5)
       vite-node: 0.34.6(@types/node@22.7.5)(sass@1.69.5)
       why-is-node-running: 2.3.0
     transitivePeerDependencies:
@@ -4177,8 +4107,8 @@ packages:
       - terser
     dev: true
 
-  /vue-component-type-helpers@1.8.27:
-    resolution: {integrity: sha512-0vOfAtI67UjeO1G6UiX5Kd76CqaQ67wrRZiOe7UAb9Jm6GzlUr/fC7CV90XfwapJRjpCMaZFhv1V0ajWRmE9Dg==}
+  /vue-component-type-helpers@2.1.6:
+    resolution: {integrity: sha512-ng11B8B/ZADUMMOsRbqv0arc442q7lifSubD0v8oDXIFoMg/mXwAPUunrroIDkY+mcD0dHKccdaznSVp8EoX3w==}
     dev: true
 
   /vue-demi@0.14.10(vue@3.3.4):
@@ -4307,7 +4237,7 @@ packages:
   /wide-align@1.1.5:
     resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
     dependencies:
-      string-width: 1.0.2
+      string-width: 4.2.3
     dev: true
 
   /winston-transport@4.8.0:
