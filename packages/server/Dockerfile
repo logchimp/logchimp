@@ -1,4 +1,5 @@
-FROM node:16-alpine
+ARG NODE_VERSION=16
+FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /app
 COPY ./packages/server/ ./packages/server/
