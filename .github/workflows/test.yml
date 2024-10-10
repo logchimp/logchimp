@@ -280,3 +280,32 @@ jobs:
         with:
           name: coverage
           path: ./coverage
+
+  backend-docker-build:
+    name: Docker build - Backend
+    runs-on: ${{ matrix.os }}
+    needs: [api-integration]
+
+    strategy:
+      matrix:
+        node: [16, 18]
+        os: [ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./packages/server/Dockerfile
+          build-args:
+            - NODE_VERSION=${{ matrix.node }}
+          tags:
+            - logchimp.codecarrot.net/logchimp/backend:${{ github.sha }}
