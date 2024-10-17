@@ -18,7 +18,7 @@
 	},
 	"devDependencies": {
 		"nodemon": "3.0.2",
-		"@biomejs/biome": "1.4.1"
+		"@biomejs/biome": "1.9.4"
 	},
 	"keywords": [
 		"logchimp",
