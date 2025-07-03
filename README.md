@@ -79,3 +79,5 @@ Big shout-out to our [sponsors and partners](https://logchimp.codecarrot.net/par
 <a href="https://codecarrot.net/?utm_source=github&utm_medium=referral&utm_campaign=logchimp-sponsorship">
 	<img width="200" src="https://codecarrot.net/images/codecarrot_logo.svg" alt="CodeCarrot logo">
 </a>
+
+> This project was forked and updated by Sagar Savaliya for interview purposes.
