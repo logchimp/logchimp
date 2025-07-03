@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -4414,3 +4410,7 @@ packages:
       tiny-emitter: 2.1.0
       vue: 3.3.4
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

@@ -1,4 +1,6 @@
 const isBoolean = require("lodash/isBoolean");
+require("dotenv").config();
+
 
 // modules
 const path = require("path");
@@ -7,6 +9,9 @@ const path = require("path");
 const logger = require("../utils/logger");
 const logchimpConfig = require("../utils/logchimpConfig");
 const config = logchimpConfig();
+console.log("DB PASSWORD TYPE =>", typeof process.env.LOGCHIMP_DB_PASSWORD);
+console.log("DB PASSWORD VALUE =>", process.env.LOGCHIMP_DB_PASSWORD);
+
 
 const ssl =
   isBoolean(process.env.LOGCHIMP_DB_SSL) || config?.database?.ssl

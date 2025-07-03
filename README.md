@@ -55,6 +55,17 @@
 
 To get started you can read our [deployment docs](https://logchimp.codecarrot.net/docs/install) for self-hosting with Ubuntu or cloud hosting with one click deploy button.
 
+## 🚀 Local Development (using pnpm)
+
+To run LogChimp locally:
+
+### 1. Clone and install dependencies
+
+```bash
+git clone https://github.com/logchimp/logchimp
+cd logchimp
+pnpm install
+
 ## 🤝🏻 Community
 
 Stay up to date on the development of LogChimp you can star this repository, follow us on Twitter or reach out to the community with these helpful resources.
