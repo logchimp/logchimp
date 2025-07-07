@@ -42,18 +42,18 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
-import { useSettingStore } from "../../../store/settings"
-import { useUserStore } from "../../../store/user"
+import { useSettingStore } from "../../../../store/settings"
+import { useUserStore } from "../../../../store/user"
 import {
   getSettings,
   updateSettings,
   uploadSiteLogo
-} from "../../../modules/site";
+} from "../../../../modules/site";
 
 // components
-import { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
-import { Alert } from "../../../components/ui/Alert";
-import Breadcrumbs from "../../../components/Breadcrumbs.vue";
+import { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
+import { Alert } from "../../../../components/ui/Alert";
+import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
