@@ -1,0 +1,73 @@
+name: "LogChimp-Dev"
+
+services:
+  db:
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: lc
+      POSTGRES_PASSWORD: password
+    networks:
+      - dev-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  logchimp:
+    build:
+      dockerfile: packages/server/Dockerfile
+      context: .
+      args:
+        DOCKER_BUILDKIT: 1
+    command: ['pnpm', 'nodemon', 'index.js']
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - dev-network
+    environment:
+      PORT: 8000
+      # Database
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: db
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: lc
+      LOGCHIMP_DB_PASSWORD: password
+      # Mail
+      LOGCHIMP_MAIL_HOST: mail
+      LOGCHIMP_MAIL_PORT: 1025
+    env_file:
+      - packages/server/.env
+    ports:
+      - "8000:8000"
+
+  # Local SMTP mailbox
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - dev-network
+
+  # theme:
+  #   image: logchimp-theme:0.2.0
+  #   environment:
+  #     API_HOST: logchimp
+  #     command: /logchimp/scripts/run_nginx.sh
+  #   depends_on:
+  #     - logchimp
+
+networks:
+  dev-network:
+    driver: bridge
+
+volumes:
+  pg_data:
