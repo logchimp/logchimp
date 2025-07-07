@@ -13,9 +13,9 @@
         :loading="createRoadmapButtonLoading"
         @click="createRoadmapHandler"
       >
-        <div>
-          <PhCrownSimple :size="32" color="#d8f218" weight="fill" />
-        </div>
+<!--        <div>-->
+<!--          <PhCrownSimple :size="32" color="#d8f218" weight="fill" />-->
+<!--        </div>-->
         Create roadmap
       </Button>
     </header>
@@ -127,7 +127,7 @@ import {
 } from "lucide-vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import { PhCrownSimple } from "@phosphor-icons/vue";
+// import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
 import type { DraggableSortFromToType } from "../../../../types"
