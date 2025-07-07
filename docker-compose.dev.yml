@@ -19,9 +19,18 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
+  # Local SMTP mailbox
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - dev-network
+
   logchimp:
     build:
-      dockerfile: packages/server/Dockerfile
+      dockerfile: docker/local/server.Dockerfile
       context: .
       args:
         DOCKER_BUILDKIT: 1
@@ -47,15 +56,6 @@ services:
       - packages/server/.env
     ports:
       - "8000:8000"
-
-  # Local SMTP mailbox
-  mail:
-    image: mailhog/mailhog
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-    networks:
-      - dev-network
 
   # theme:
   #   image: logchimp-theme:0.2.0
