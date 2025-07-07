@@ -23,7 +23,7 @@
 import { onMounted, ref } from "vue";
 
 // modules
-import { getPosts } from "../../modules/posts";
+import { getPosts } from "../../../modules/posts";
 
 // components
 import RoadmapPostCard from "./RoadmapPostCard.vue";

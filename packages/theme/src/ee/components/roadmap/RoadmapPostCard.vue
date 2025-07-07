@@ -76,12 +76,12 @@ import { ChevronUp as ArrowTopIcon } from "lucide-vue";
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 
-import { useTrim } from "../../hooks";
+import { useTrim } from "../../../hooks";
 
 // components
-import Vote, { VoteEventType } from "../vote/Vote.vue";
-import BoardBadge from "../board/BoardBadge.vue";
-import { AvatarStack }from "../ui/Avatar";
+import Vote, { VoteEventType } from "../../../components/vote/Vote.vue";
+import BoardBadge from "../../../components/board/BoardBadge.vue";
+import { AvatarStack }from "../../../components/ui/Avatar";
 
 dayjs.extend(relativeTime);
 
