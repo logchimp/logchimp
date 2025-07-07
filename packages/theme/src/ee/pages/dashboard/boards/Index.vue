@@ -136,7 +136,7 @@ import {
   getAllBoards,
   createBoard,
   deleteBoard
-} from "../../../../modules/boards";
+} from "../../../modules/boards";
 import { useCopyText } from "../../../../hooks";
 
 // components

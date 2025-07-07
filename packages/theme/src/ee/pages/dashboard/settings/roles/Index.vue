@@ -86,7 +86,7 @@ import {
 import { router } from "../../../../../router";
 import { useSettingStore } from "../../../../../store/settings"
 import { useUserStore } from "../../../../../store/user"
-import { getAllRoles, createRole } from "../../../../../modules/roles";
+import { getAllRoles, createRole } from "../../../../modules/roles";
 import { useCopyText } from "../../../../../hooks";
 
 // components

@@ -2,8 +2,8 @@
 import axios from "axios";
 
 // store
-import { useUserStore } from "../store/user";
-import { ApiPaginationType } from "../types";
+import { useUserStore } from "../../store/user";
+import { ApiPaginationType } from "../../types";
 
 interface CreateBoardArgs {
   name?: string;

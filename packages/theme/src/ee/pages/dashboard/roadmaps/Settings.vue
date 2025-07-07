@@ -80,7 +80,8 @@ import { useHead } from "@vueuse/head";
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
-import { getRoadmapByUrl, updateRoadmap } from "../../../../modules/roadmaps";
+import { getRoadmapByUrl } from "../../../../modules/roadmaps";
+import { updateRoadmap } from "../../../modules/roadmaps";
 
 // components
 import Button from "../../../../components/ui/Button.vue";

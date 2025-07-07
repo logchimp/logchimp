@@ -170,7 +170,7 @@ import { useHead } from "@vueuse/head";
 // modules
 import { router } from "../../../../../router"
 import {useUserStore} from "../../../../../store/user"
-import { getRole, updateRole } from "../../../../../modules/roles";
+import { getRole, updateRole } from "../../../../modules/roles";
 
 // components
 import Button from "../../../../../components/ui/Button.vue";

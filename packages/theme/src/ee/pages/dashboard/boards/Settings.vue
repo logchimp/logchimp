@@ -93,7 +93,7 @@ import {
   getBoardByUrl,
   updateBoard,
   checkBoardName
-} from "../../../../modules/boards";
+} from "../../../modules/boards";
 import { useUserStore } from "../../../../store/user";
 
 // components

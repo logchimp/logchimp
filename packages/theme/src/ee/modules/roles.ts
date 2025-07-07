@@ -2,7 +2,7 @@
 import axios, { AxiosResponse } from "axios";
 
 // store
-import { useUserStore } from "../store/user";
+import { useUserStore } from "../../store/user";
 
 interface UpdateRoleArgs {
   id: string;
