@@ -11,6 +11,12 @@ const config = () => {
       path.resolve(__dirname, "../../../logchimp.config.json"),
     );
 
+    if (config.mail.service) {
+      console.log(
+        "'mail.service' key is deprecated and will be removed in next major release in `logchimp.config.json`.",
+      );
+    }
+
     return config;
   }
 
@@ -29,6 +35,12 @@ const config = () => {
   const mailUser = process.env.LOGCHIMP_MAIL_USER;
   const mailPassword = process.env.LOGCHIMP_MAIL_PASSWORD;
   const mailPort = process.env.LOGCHIMP_MAIL_PORT;
+
+  if (process.env.LOGCHIMP_MAIL_SERVICE) {
+    console.log(
+      "'LOGCHIMP_MAIL_SERVICE' variable is deprecated and will be removed in next major release.",
+    );
+  }
 
   return {
     theme: {

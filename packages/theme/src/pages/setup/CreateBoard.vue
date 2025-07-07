@@ -52,7 +52,7 @@ import { useHead } from "@vueuse/head";
 import { router } from "../../router";
 import { useSettingStore } from "../../store/settings";
 import { useUserStore } from "../../store/user";
-import { createBoard } from "../../modules/boards";
+import { createBoard } from "../../ee/modules/boards";
 
 // components
 import AuthForm from "../../layout/AuthForm.vue";

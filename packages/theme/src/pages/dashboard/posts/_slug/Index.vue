@@ -134,7 +134,7 @@ import { useHead } from "@vueuse/head";
 import { router } from "../../../../router"
 
 import { PostType, getPostBySlug, updatePost } from "../../../../modules/posts";
-import { Board, searchBoard } from "../../../../modules/boards";
+import { Board, searchBoard } from "../../../../ee/modules/boards";
 import { Roadmap, searchRoadmap } from "../../../../modules/roadmaps";
 import { UserType } from "../../../../modules/users";
 import { PostVoteType } from "../../../../modules/votes";
