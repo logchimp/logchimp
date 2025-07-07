@@ -131,22 +131,22 @@ const routes = [
       {
         path: "boards",
         name: "Dashboard boards",
-        component: () => import("./pages/dashboard/boards/Index.vue"),
+        component: () => import("./ee/pages/dashboard/boards/Index.vue"),
       },
       {
         path: "boards/:url/settings",
         name: "Dashboard boards settings",
-        component: () => import("./pages/dashboard/boards/Settings.vue"),
+        component: () => import("./ee/pages/dashboard/boards/Settings.vue"),
       },
       {
         path: "roadmaps",
         name: "Dashboard roadmaps",
-        component: () => import("./pages/dashboard/roadmaps/Index.vue"),
+        component: () => import("./ee/pages/dashboard/roadmaps/Index.vue"),
       },
       {
         path: "roadmaps/:url/settings",
         name: "Dashboard roadmaps settings",
-        component: () => import("./pages/dashboard/roadmaps/Settings.vue"),
+        component: () => import("./ee/pages/dashboard/roadmaps/Settings.vue"),
       },
       {
         path: "posts",
@@ -176,18 +176,18 @@ const routes = [
       },
       {
         path: "settings/billing",
-        component: () => import("./pages/dashboard/settings/billing.vue"),
+        component: () => import("./ee/pages/dashboard/settings/billing.vue"),
       },
       {
         path: "settings/roles",
         name: "Dashbord roles",
-        component: () => import("./pages/dashboard/settings/roles/Index.vue"),
+        component: () => import("./ee/pages/dashboard/settings/roles/Index.vue"),
       },
       {
         path: "settings/roles/:id/settings",
         name: "Dashbord roles settings",
         component: () =>
-          import("./pages/dashboard/settings/roles/Settings.vue"),
+          import("./ee/pages/dashboard/settings/roles/Settings.vue"),
       },
       {
         path: "settings/labs",

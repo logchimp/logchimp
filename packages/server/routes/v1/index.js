@@ -7,10 +7,15 @@ const auth = require("./auth");
 const posts = require("./posts");
 const votes = require("./votes");
 const users = require("./users");
-const boards = require("./boards");
 const settings = require("./settings");
+
 const roadmaps = require("./roadmaps");
-const roles = require("./roles");
+
+// EE routes
+const eeRoadmaps = require("./../../ee/routes/v1/roadmaps");
+const boards = require("../../ee/routes/v1/boards");
+const roles = require("../../ee/routes/v1/roles");
+// const permissions = require("../../ee/routes/v1/permissions");
 
 router.use(
   "/api/v1",
@@ -18,9 +23,12 @@ router.use(
   posts,
   votes,
   users,
-  boards,
   settings,
   roadmaps,
+
+  // EE
+  boards,
+  eeRoadmaps,
   roles,
 );
 
