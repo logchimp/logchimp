@@ -276,7 +276,7 @@ jobs:
         run: cat ./content/logs/logchimp-all.log
 
       - name: Store Code Coverage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-${{ matrix.runs-on }}
           path: ./coverage
