@@ -5,8 +5,10 @@ const { createToken } = require("../../services/token.service");
 const { validatePassword } = require("../../utils/password");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
-//importing Blacklisted Domains function
-const {isDomainBlacklisted}=require('./domainBlacklist');
+
+// import blacklist function
+const { isDomainBlacklisted } = require("./domainBlacklist");
+
 exports.login = async (req, res) => {
   const user = req.user;
   const password = req.body.password;
@@ -17,7 +19,8 @@ exports.login = async (req, res) => {
       code: "USER_BLOCKED",
     });
   }
- //  Check if email domain is blacklisted
+    // Check if email domain is blacklisted
+
   if (isDomainBlacklisted(user.email)) {
     return res.status(403).send({
       message: "Email domain is not allowed to login.",

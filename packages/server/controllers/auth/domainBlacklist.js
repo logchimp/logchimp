@@ -1,7 +1,8 @@
 // Load blacklisted domains once
 const blacklistedDomains = process.env.BLACKLISTED_DOMAINS
-  ? process.env.BLACKLISTED_DOMAINS.split(',').map(domain => domain.trim().toLowerCase())
-  : [];
+  ? new Set(process.env.BLACKLISTED_DOMAINS.split(',').map(domain => domain.trim().toLowerCase())
+)
+: new Set();
 
 /**
  * Checking if the domain of a given email is blacklisted

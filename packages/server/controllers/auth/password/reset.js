@@ -4,10 +4,17 @@ const passwordResetEmail = require("../../../services/auth/passwordReset");
 // utils
 const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
-
+//import blacklist function
+const { isDomainBlacklisted } = require("../domainBlacklist");
 exports.reset = async (req, res) => {
   const { userId, email } = req.user;
-
+// Check if email's domain is blacklisted
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "The domain of the email is not allowed.",
+      code: "DOMAIN_BLACKLISTED",
+    });
+  }
   try {
     const tokenPayload = {
       userId,
