@@ -3,12 +3,12 @@ import vue from "@vitejs/plugin-vue";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const serverUrl = env.APP_SERVER_URL || "http://localhost:3000";
+  const serverUrl = env.APP_SERVER_URL || "http://localhost:8000";
 
   return {
     plugins: [vue()],
     server: {
-      port: 8080,
+      port: 3000,
       proxy: {
         "/api": {
           target: serverUrl,

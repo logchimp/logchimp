@@ -59,7 +59,7 @@ import { useHead } from "@vueuse/head";
 import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
 
 // modules
-import { getBoardByUrl } from "../../modules/boards";
+import { getBoardByUrl } from "../../ee/modules/boards";
 
 // components
 import Loader from "../../components/ui/Loader.vue";

@@ -74,7 +74,7 @@ import { useHead } from "@vueuse/head";
 
 // modules
 import { getPosts } from "../../modules/posts";
-import { getAllBoards } from "../../modules/boards";
+import { getAllBoards } from "../../ee/modules/boards";
 
 // components
 import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";

@@ -33,7 +33,7 @@ import { useSettingStore } from "../store/settings"
 
 // components
 import InfiniteScroll, { InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
-import RoadmapColumn from "../components/roadmap/RoadmapColumn.vue";
+import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 const { get: siteSettings } = useSettingStore()
 // TODO: Add TS types

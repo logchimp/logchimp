@@ -31,7 +31,7 @@ import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
-import { getPublicBoards } from "../../modules/boards";
+import { getPublicBoards } from "../../ee/modules/boards";
 import { useSettingStore } from "../../store/settings"
 
 // components
