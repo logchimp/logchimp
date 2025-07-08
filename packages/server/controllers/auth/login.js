@@ -5,15 +5,8 @@ const { createToken } = require("../../services/token.service");
 const { validatePassword } = require("../../utils/password");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
-// Load blacklisted domains from environment variable
-const blacklistedDomains = process.env.BLACKLISTED_DOMAINS
-  ? process.env.BLACKLISTED_DOMAINS.split(',').map(domain => domain.trim().toLowerCase())
-  : [];
-  // Check if domain is blacklisted
-const isDomainBlacklisted = (email) => {
-  const domain = email.split("@")[1]?.toLowerCase();
-  return blacklistedDomains.includes(domain);
-};
+//importing Blacklisted Domains function
+const {isDomainBlacklisted}=require('./domainBlacklist');
 exports.login = async (req, res) => {
   const user = req.user;
   const password = req.body.password;
@@ -24,6 +17,13 @@ exports.login = async (req, res) => {
       code: "USER_BLOCKED",
     });
   }
+ //  Check if email domain is blacklisted
+  if (isDomainBlacklisted(user.email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed to login.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
 
   if (!password) {
     return res.status(400).send({
@@ -31,13 +31,7 @@ exports.login = async (req, res) => {
       code: "PASSWORD_MISSING",
     });
   }
-  // Check if email domain is blacklisted
-  if (isDomainBlacklisted(user.email)) {
-    return res.status(403).send({
-      message: "Email domain is not allowed to login.",
-      code: "EMAIL_DOMAIN_BLACKLISTED",
-    });
-  }
+
 
   try {
     const validateUserPassword = await validatePassword(

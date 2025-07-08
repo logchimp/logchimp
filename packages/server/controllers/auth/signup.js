@@ -7,17 +7,8 @@ const database = require("../../database");
 const { validEmail } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
-//Extracting blacklisted domains from environment variables
-const blacklistedDomains = process.env.BLACKLISTED_DOMAINS
-  ? process.env.BLACKLISTED_DOMAINS.split(',').map(domain => domain.trim().toLowerCase())
-  : [];
-
-
-//function to check if the email domain is blacklisted
-const isDomainBlacklisted = (email) => {
-  const domain = email.split("@")[1]?.toLowerCase();
-  return blacklistedDomains.includes(domain);
-};
+//Importing Blacklisted Domains function
+const {isDomainBlacklisted}=require("./domainBlacklist");
 exports.signup = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -27,20 +18,21 @@ exports.signup = async (req, res, next) => {
       code: "EMAIL_INVALID",
     });
   }
- //  Domain blacklist check
+ 
+ // Check if email domain is blacklisted
   if (isDomainBlacklisted(email)) {
-    return res.status(400).send({
-      message: "Email domain is not allowed for signup.",
+    return res.status(403).send({
+      message: "Email domain is not allowed to sign up.",
       code: "EMAIL_DOMAIN_BLACKLISTED",
     });
   }
-
   if (!password) {
     return res.status(400).send({
       message: error.api.authentication.noPasswordProvided,
       code: "PASSWORD_MISSING",
     });
   }
+
 
   try {
     const settings = await database.select().from("settings").first();
