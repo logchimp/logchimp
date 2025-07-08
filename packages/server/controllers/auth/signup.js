@@ -1,7 +1,3 @@
-import { blacklistedDomains } from "./blacklist.js";
-
-
-
 // services
 const createUser = require("../../services/auth/createUser");
 
@@ -11,13 +7,17 @@ const database = require("../../database");
 const { validEmail } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
+//Extracting blacklisted domains from environment variables
+const blacklistedDomains = process.env.BLACKLISTED_DOMAINS
+  ? process.env.BLACKLISTED_DOMAINS.split(',').map(domain => domain.trim().toLowerCase())
+  : [];
+
 
 //function to check if the email domain is blacklisted
 const isDomainBlacklisted = (email) => {
   const domain = email.split("@")[1]?.toLowerCase();
   return blacklistedDomains.includes(domain);
 };
-
 exports.signup = async (req, res, next) => {
   const { email, password } = req.body;
 
