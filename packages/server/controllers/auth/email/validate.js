@@ -4,11 +4,18 @@ const database = require("../../../database");
 // utils
 const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
-
+// Importing Blacklisted Domains function
+const { isDomainBlacklisted } = require("../domainBlacklist");
 exports.validate = async (req, res) => {
   const { isVerified } = req.user;
   const { email } = req.emailToken;
-
+ // Add domain blacklist check
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
   if (isVerified) {
     return res.status(409).send({
       message: error.api.emailVerify.emailAlreadyVerified,
