@@ -12,7 +12,7 @@ const blacklistedDomains = process.env.LOGCHIMP_BLACKLISTED_DOMAINS?
  */
 const isDomainBlacklisted = (email) => {
   const domain = email.split("@")[1]?.toLowerCase();
-  return blacklistedDomains.includes(domain);
+  return blacklistedDomains.has(domain);
 };
 
 module.exports = { isDomainBlacklisted };
