@@ -8,7 +8,8 @@ const createUser = require("../../services/auth/createUser");
 const { validEmail } = require("../../helpers");
 const error = require("../../errorResponse.json");
 const logger = require("../../utils/logger");
-
+//importing Blacklisted Domains function
+const { isDomainBlacklisted } = require("./domainBlacklist");
 module.exports = async (req, res, next) => {
   const { siteTitle, name, email, password } = req.body;
 
@@ -18,6 +19,12 @@ module.exports = async (req, res, next) => {
       code: "EMAIL_INVALID",
     });
   }
+if (isDomainBlacklisted(email)) {
+  return res.status(403).send({
+    message: "Email domain is not allowed.",
+    code: "EMAIL_DOMAIN_BLACKLISTED",
+  });
+}
 
   if (!password) {
     return res.status(400).send({
