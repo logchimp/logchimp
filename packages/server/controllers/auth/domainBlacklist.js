@@ -1,5 +1,5 @@
 // Load blacklisted domains once
-const blacklistedDomains = process.env.BLACKLISTED_DOMAINS?
+const blacklistedDomains = process.env.LOGCHIMP_BLACKLISTED_DOMAINS?
      new Set(process.env.LOGCHIMP_BLACKLISTED_DOMAINS.split(',').map(domain => domain.trim().toLowerCase())
     )
   : new Set();
