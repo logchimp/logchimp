@@ -1,23 +1,26 @@
+const logger = require("../../utils/logger");
+
 // Valid domain regex (e.g., example.com, sub.domain.org)
 const domainRegex = /^(?!-)([A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/;
 
 // Load and validate blacklisted domains
-const blacklistedDomains = process.env.LOGCHIMP_BLACKLISTED_DOMAINS
-  ? new Set(
-      process.env.LOGCHIMP_BLACKLISTED_DOMAINS
-        .split(',')
-        .map(domain => domain.trim().toLowerCase())
-        .filter(domain => {
-          if (!domain) return false; // remove empty strings
-          const isValid = domainRegex.test(domain);
-          if (!isValid) {
-            console.warn(`⚠️ Invalid domain in blacklist config: "${domain}"`);
-          }
-          return isValid;
-        })
-    )
-  : new Set();
+const blacklistedDomains=new Set();
+const rawDomains = process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
 
+if (rawDomains) {
+  rawDomains
+    .split(',')
+    .map(domain => domain.trim().toLowerCase())
+    .forEach(domain => {
+      if (!domain) return; 
+      if (!domainRegex.test(domain)) {
+        logger.warn(`Invalid domain in blacklist config: "${domain}"`);
+        return;
+      }
+
+      blacklistedDomains.add(domain);
+    });
+  }
 
 
 /**
