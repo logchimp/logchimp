@@ -21,22 +21,22 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18]
+        node: [22]
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 10
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -44,7 +44,7 @@ jobs:
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
       - name: Cache .pnpm-store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -55,7 +55,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Biome
-        uses: biomejs/setup-biome@v1
+        uses: biomejs/setup-biome@v2
         with:
           version: latest
 
@@ -70,22 +70,22 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18]
+        node: [22]
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 10
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -93,7 +93,7 @@ jobs:
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
       - name: Cache .pnpm-store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -113,22 +113,22 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18]
+        node: [22]
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 10
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -136,7 +136,7 @@ jobs:
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
       - name: Cache .pnpm-store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -156,22 +156,22 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18]
+        node: [22]
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 10
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -179,7 +179,7 @@ jobs:
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
       - name: Cache .pnpm-store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -199,7 +199,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18]
+        node: [22]
         os: [ubuntu-24.04]
 
     services:
@@ -218,18 +218,18 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 10
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -237,7 +237,7 @@ jobs:
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
       - name: Cache .pnpm-store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
