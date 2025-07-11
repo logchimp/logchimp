@@ -20,9 +20,9 @@
 
 <script lang="ts">
 interface AvatarType {
-	userId: string
-	avatar: string
-	username?: string
+  userId: string;
+  avatar: string;
+  username?: string;
 }
 </script>
 

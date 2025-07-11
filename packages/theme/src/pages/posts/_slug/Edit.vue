@@ -42,8 +42,8 @@
 
 <script lang="ts">
 export default {
-	name: "PostEdit"
-}
+  name: "PostEdit",
+};
 </script>
 
 <script setup lang="ts">

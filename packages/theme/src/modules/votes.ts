@@ -1,8 +1,8 @@
-// packges
+// packages
 import axios from "axios";
 
 import { useUserStore } from "../store/user";
-import { UserType } from "./users";
+import type { UserType } from "./users";
 
 export interface PostVoteType extends UserType {
   voteId: string;

@@ -1,5 +1,5 @@
-// packges
-import axios, { AxiosResponse } from "axios";
+// packages
+import axios, { type AxiosResponse } from "axios";
 
 // store
 import { useUserStore } from "../../store/user";

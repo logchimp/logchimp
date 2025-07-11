@@ -15,7 +15,7 @@ const extractTokenFromHeader = (header) => {
   }
 };
 
-const authenticateWithToken = async (req, res, next, token) => {
+const authenticateWithToken = async (_, res, next, token) => {
   const decoded = jwt.decode(token, { complete: true });
 
   // validate JWT token type
@@ -51,7 +51,8 @@ const authenticateWithToken = async (req, res, next, token) => {
       } else {
         try {
           // validate JWT auth token
-          const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
+          const secretKey =
+            process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
           jwt.verify(token, secretKey);
 
           res.locals.user = user;
@@ -76,7 +77,7 @@ const authenticateWithToken = async (req, res, next, token) => {
             res.status(500).send({
               message: error.general.serverError,
               code: "SERVER_ERROR",
-            })
+            });
           }
         }
       }
@@ -96,7 +97,7 @@ const authenticateWithToken = async (req, res, next, token) => {
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
-    })
+    });
   }
 };
 

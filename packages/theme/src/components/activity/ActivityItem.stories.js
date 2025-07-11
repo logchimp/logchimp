@@ -6,7 +6,7 @@ export default {
 };
 
 //👇 We create a “template” of how args map to rendering
-const Template = (args, { argTypes }) => ({
+const Template = (_, { argTypes }) => ({
   components: { ActivityItem },
   props: Object.keys(argTypes),
   template: '<activity-item v-bind="$props" />',

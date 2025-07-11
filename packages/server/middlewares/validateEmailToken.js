@@ -27,7 +27,8 @@ module.exports = async (req, res, next) => {
 
   try {
     // validate JWT token
-    const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
+    const secretKey =
+      process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
     const decoded = await jwt.verify(token, secretKey);
 
     const tokenType = decoded.type;
@@ -63,7 +64,7 @@ module.exports = async (req, res, next) => {
       res.status(500).send({
         message: error.general.serverError,
         code: "SERVER_ERROR",
-      })
+      });
     }
   }
 };

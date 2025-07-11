@@ -64,12 +64,12 @@ import { computed } from "vue";
 import {
   LayoutDashboard as DashboardIcon,
   Settings as SettingsIcon,
-  LogOut as LogoutIcon
+  LogOut as LogoutIcon,
 } from "lucide-vue";
 
 import { router } from "../router";
-import { useSettingStore } from "../store/settings"
-import { useUserStore } from "../store/user"
+import { useSettingStore } from "../store/settings";
+import { useUserStore } from "../store/user";
 
 // components
 import Navbar from "./Navbar.vue";
@@ -81,32 +81,32 @@ import DropdownSpacer from "./ui/dropdown/DropdownSpacer.vue";
 import Button from "./ui/Button.vue";
 import { Avatar } from "./ui/Avatar";
 
-const settingsStore = useSettingStore()
-const userStore = useUserStore()
+const settingsStore = useSettingStore();
+const userStore = useUserStore();
 
 const accessDashboard = computed(() => {
-	const checkPermission = userStore.permissions.includes("dashboard:read");
-	return checkPermission;
-})
+  const checkPermission = userStore.permissions.includes("dashboard:read");
+  return checkPermission;
+});
 
 function openDashboard() {
-	router.push("/dashboard");
+  router.push("/dashboard");
 }
 
 function settings() {
-	router.push("/settings");
+  router.push("/settings");
 }
 
 const showVersion = computed(() => {
-	return (
-		userStore.permissions.includes("dashboard:read") &&
-		settingsStore.get.developer_mode
-	);
-})
+  return (
+    userStore.permissions.includes("dashboard:read") &&
+    settingsStore.get.developer_mode
+  );
+});
 
 const version = computed(() => {
-	return process.env.version;
-})
+  return process.env.version;
+});
 </script>
 
 <style lang='sass'>

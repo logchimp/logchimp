@@ -1,6 +1,6 @@
-// packges
-import axios, { AxiosResponse } from "axios";
-import { UserType } from "./users";
+// packages
+import axios, { type AxiosResponse } from "axios";
+import type { UserType } from "./users";
 
 interface AuthenticateUserArgs {
   email: string;

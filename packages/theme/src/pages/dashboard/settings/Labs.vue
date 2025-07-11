@@ -45,8 +45,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardLabs",
-}
+  name: "DashboardLabs",
+};
 </script>
 
 <script setup lang="ts">

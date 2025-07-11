@@ -30,7 +30,7 @@ import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
 
 function setupSite() {
-	router.push("/setup/welcome");
+  router.push("/setup/welcome");
 }
 </script>
 

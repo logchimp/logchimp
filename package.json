@@ -1,32 +1,32 @@
 {
-	"name": "logchimp",
-	"description": "A open-source software to track your customers feedback",
-	"version": "0.7.0-beta.3",
-	"private": true,
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/logchimp/logchimp.git"
-	},
-	"bugs": {
-		"url": "https://github.com/logchimp/logchimp/issues"
-	},
-	"scripts": {
-		"server:dev": "pnpm --filter @logchimp/api dev",
-		"server:start": "pnpm --filter @logchimp/api start",
-		"build:theme": "pnpm --filter @logchimp/theme build",
-		"biome:format": "biome format --write ."
-	},
-	"devDependencies": {
-		"nodemon": "3.0.2",
-		"@biomejs/biome": "1.4.1"
-	},
-	"keywords": [
-		"logchimp",
-		"feedback",
-		"open-source",
-		"codecarrot"
-	],
-	"engines": {
-		"node": ">=22 < 23"
-	}
+  "name": "logchimp",
+  "description": "A open-source software to track your customers feedback",
+  "version": "0.7.0-beta.3",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/logchimp/logchimp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/logchimp/logchimp/issues"
+  },
+  "scripts": {
+    "server:dev": "pnpm --filter @logchimp/api dev",
+    "server:start": "pnpm --filter @logchimp/api start",
+    "build:theme": "pnpm --filter @logchimp/theme build",
+    "biome:format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.1.1",
+    "nodemon": "3.0.2"
+  },
+  "keywords": [
+    "logchimp",
+    "feedback",
+    "open-source",
+    "codecarrot"
+  ],
+  "engines": {
+    "node": ">=22 < 23"
+  }
 }

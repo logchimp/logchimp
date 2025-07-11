@@ -1,5 +1,5 @@
-import { createPinia } from "pinia";
 import { mount, RouterLinkStub } from "@vue/test-utils";
+import { createPinia } from "pinia";
 
 import { useUserStore } from "../../store/user";
 import CreatePost from "./CreatePost.vue";

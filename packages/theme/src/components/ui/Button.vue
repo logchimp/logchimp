@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-type ButtonSize = 'small' | 'medium'
+type ButtonSize = "small" | "medium";
 </script>
 
 <script setup lang="ts">

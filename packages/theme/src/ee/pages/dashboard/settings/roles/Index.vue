@@ -68,8 +68,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardRoles",
-}
+  name: "DashboardRoles",
+};
 </script>
 
 <script setup lang="ts">
@@ -101,7 +101,7 @@ const { settings } = useSettingStore()
 const { permissions  } = useUserStore()
 
 // TODO: Add TS types
-const roles = ref<any>([])
+const roles = ref<unknown>([])
 const createRoleButtonLoading = ref(false)
 const state = ref<InfiniteScrollStateType>()
 

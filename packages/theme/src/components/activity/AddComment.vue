@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref } from "vue";
 
 // modules
 import { addComment } from "../../modules/posts";
@@ -32,36 +32,36 @@ import LText from "../ui/input/LText.vue";
 import Button from "../ui/Button.vue";
 
 const props = defineProps({
-	postId: {
-		type: String,
-		required: true,
-	}
-})
+  postId: {
+    type: String,
+    required: true,
+  },
+});
 
-const emit = defineEmits(['add-comment'])
+const emit = defineEmits(["add-comment"]);
 
 const comment = ref("");
-const loading = ref(false)
+const loading = ref(false);
 
 async function submitComment() {
-	if (!comment.value) return;
+  if (!comment.value) return;
 
-	try {
-		loading.value = true;
+  try {
+    loading.value = true;
 
-		const response = await addComment({
-			post_id: props.postId,
-			body: comment.value,
-			is_internal: false,
-		})
+    const response = await addComment({
+      post_id: props.postId,
+      body: comment.value,
+      is_internal: false,
+    });
 
-		comment.value = "";
-		loading.value = false;
+    comment.value = "";
+    loading.value = false;
 
-		emit('add-comment', response.data.comment)
-	} catch (error) {
-		tokenError(error)
-		loading.value = false
-	}
+    emit("add-comment", response.data.comment);
+  } catch (error) {
+    tokenError(error);
+    loading.value = false;
+  }
 }
 </script>

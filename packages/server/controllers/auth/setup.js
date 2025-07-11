@@ -69,11 +69,11 @@ module.exports = async (req, res, next) => {
     logger.log({
       level: "error",
       message: error,
-    })
+    });
 
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
-    })
+    });
   }
 };

@@ -11,24 +11,24 @@
 
 <script setup lang="ts">
 // packages
-import { ref } from 'vue';
-import { vOnClickOutside } from '@vueuse/components'
+import { ref } from "vue";
+import { vOnClickOutside } from "@vueuse/components";
 
 const active = ref<boolean>(false);
 const props = defineProps({
-	disabled: {
-		type: Boolean,
-		default: false
-	}
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 function click() {
-	if (props.disabled) return;
-	active.value = !active.value;
-};
+  if (props.disabled) return;
+  active.value = !active.value;
+}
 
 function away() {
-	active.value = false;
+  active.value = false;
 }
 </script>
 

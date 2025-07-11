@@ -19,19 +19,19 @@
 
 <script setup lang="ts">
 // packages
-import dayjs from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { Avatar } from "../ui/Avatar";
 
 dayjs.extend(relativeTime);
 
 defineProps({
-	activity: {
-		type: Object,
-		required: true
-	}
-})
+  activity: {
+    type: Object,
+    required: true,
+  },
+});
 </script>
 
 <style lang='sass' module>

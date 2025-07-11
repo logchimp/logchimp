@@ -2,7 +2,7 @@ import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
 
 import { router } from "../router";
-import { PermissionType } from "../modules/users";
+import type { PermissionType } from "../modules/users";
 
 export const useUserStore = defineStore("user", () => {
   const authToken = ref<string>("");
@@ -19,8 +19,7 @@ export const useUserStore = defineStore("user", () => {
   const getUserId = computed(() => user.userId);
 
   // TODO: Add TS types
-  // biome-ignore lint: Add TS types
-  function setUser(payload: any) {
+  function setUser(payload: unknown) {
     authToken.value = payload.authToken;
     user.userId = payload.userId;
     user.name = payload.name;
@@ -41,9 +40,7 @@ export const useUserStore = defineStore("user", () => {
     permissions.value = payload;
   }
 
-  // TODO: Add TS types
-  // biome-ignore lint: Add TS types
-  function login(payload: any) {
+  function login(payload: unknown) {
     setUser(payload);
   }
 

@@ -20,8 +20,8 @@
 
 <script lang="ts">
 export default {
-	name: "SetupWelcome"
-}
+  name: "SetupWelcome",
+};
 </script>
 
 <script setup lang="ts">

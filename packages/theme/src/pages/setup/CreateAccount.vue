@@ -63,7 +63,7 @@
 <script lang="ts">
 export default {
   name: "SetupAccount",
-}
+};
 </script>
 
 <script setup lang="ts">

@@ -69,8 +69,8 @@
 
 <script lang="ts">
 export default {
-	name: "UserSettings",
-}
+  name: "UserSettings",
+};
 </script>
 
 <script setup lang="ts">

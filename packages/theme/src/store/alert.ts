@@ -26,9 +26,7 @@ export const useAlertStore = defineStore("alerts", () => {
     alert.value.push(alertObject);
   }
 
-  // TODO: Add TS types
-  // biome-ignore lint: Add TS types
-  function remove(payload: any) {
+  function remove(payload: unknown) {
     alert.value.splice(payload, 1);
   }
 

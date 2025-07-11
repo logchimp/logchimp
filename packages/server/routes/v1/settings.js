@@ -5,10 +5,10 @@ const router = express.Router();
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, path.resolve(__dirname, "../../../content/images"));
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const fileExtension =
       file.originalname.split(".")[file.originalname.split(".").length - 1];
     const fileName = Date.now().toString(32);

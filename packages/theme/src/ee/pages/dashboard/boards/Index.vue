@@ -110,8 +110,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardBoards",
-}
+  name: "DashboardBoards",
+};
 </script>
 
 <script setup lang="ts">
@@ -153,7 +153,8 @@ const { settings } = useSettingStore()
 const { permissions } = useUserStore()
 
 const createBoardButtonLoading = ref(false)
-const boards = ref<any>([]);
+// TODO: Add TS types
+const boards = ref<unknown>([]);
 const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>()
 

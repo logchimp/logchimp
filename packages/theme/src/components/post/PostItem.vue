@@ -45,28 +45,30 @@ import { computed, ref, withDefaults } from "vue";
 import { useTrim } from "../../hooks";
 
 // components
-import Vote, { VoteEventType } from "../vote/Vote.vue";
+import Vote, { type VoteEventType } from "../vote/Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
 interface Props {
-  post: any
-  dashboard?: boolean
-  showBoard?: boolean
+  post: unknown;
+  dashboard?: boolean;
+  showBoard?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   dashboard: false,
   showBoard: true,
-})
+});
 
 const postData = ref(props.post);
-const dashboardUrl = computed(() => props.dashboard ? "/dashboard" : "");
-const isVoted = computed<boolean>(() => Boolean(props.post.voters?.viewerVote?.voteId))
+const dashboardUrl = computed(() => (props.dashboard ? "/dashboard" : ""));
+const isVoted = computed<boolean>(() =>
+  Boolean(props.post.voters?.viewerVote?.voteId),
+);
 
 // TODO: Add TS types
 function updateVoters(voters: VoteEventType) {
-	postData.value.voters.votesCount = voters.votesCount;
-	postData.value.voters.viewerVote = voters.viewerVote;
+  postData.value.voters.votesCount = voters.votesCount;
+  postData.value.voters.viewerVote = voters.viewerVote;
 }
 </script>
 

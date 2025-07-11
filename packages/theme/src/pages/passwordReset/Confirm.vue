@@ -59,8 +59,8 @@
 
 <script lang="ts">
 export default {
-  name: "SetNewPassword"
-}
+  name: "SetNewPassword",
+};
 </script>
 
 <script setup lang="ts">

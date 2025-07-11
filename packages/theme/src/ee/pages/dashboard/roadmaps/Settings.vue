@@ -69,8 +69,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashbordRoadmapSettings"
-}
+  name: "DashboardRoadmapSettings",
+};
 </script>
 
 <script setup lang="ts">

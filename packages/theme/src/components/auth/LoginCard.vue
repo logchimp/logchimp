@@ -21,13 +21,13 @@ import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
 
 function loginRedirect() {
-	const route = router.currentRoute.value;
+  const route = router.currentRoute.value;
 
-	router.push({
-		path: "/login",
-		query: {
-			redirect: route.fullPath
-		}
-	});
+  router.push({
+    path: "/login",
+    query: {
+      redirect: route.fullPath,
+    },
+  });
 }
 </script>

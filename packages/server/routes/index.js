@@ -20,7 +20,7 @@ const limiter = rateLimit({
 });
 router.use("/content/images", limiter, serveImages);
 
-router.get("/api", (req, res) => {
+router.get("/api", (_, res) => {
   res.send("👍");
 });
 

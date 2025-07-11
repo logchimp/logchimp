@@ -19,19 +19,19 @@
 
 <script lang="ts">
 interface UserVoteType {
-	voteId: string
-	userId: string
-	postId: string
-	createdAt: string
-	name?: string
-	username?: string
-	avatar?: string
+  voteId: string;
+  userId: string;
+  postId: string;
+  createdAt: string;
+  name?: string;
+  username?: string;
+  avatar?: string;
 }
 
 export interface VoteEventType {
-	votes: UserVoteType[]
-	votesCount: number
-	viewerVote: boolean
+  votes: UserVoteType[];
+  votesCount: number;
+  viewerVote: boolean;
 }
 </script>
 

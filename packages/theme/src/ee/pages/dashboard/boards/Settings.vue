@@ -79,8 +79,8 @@
 
 <script lang="ts">
 export default {
-	name: "BoardSettings",
-}
+  name: "BoardSettings",
+};
 </script>
 
 <script setup lang="ts">
@@ -134,7 +134,7 @@ const slimUrl = computed({
 	}
 })
 
-async function validateBoardUrl(event: any) {
+async function validateBoardUrl(event: unknown) {
 	const keyCode = event.keyCode;
 
 	// only accept letters, numbers, & numpad numbers

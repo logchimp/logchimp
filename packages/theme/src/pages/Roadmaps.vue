@@ -19,8 +19,8 @@
 
 <script lang="ts">
 export default {
-	name: "Roadmaps",
-}
+  name: "Roadmaps",
+};
 </script>
 
 <script setup lang="ts">
@@ -37,7 +37,7 @@ import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 const { get: siteSettings } = useSettingStore()
 // TODO: Add TS types
-const roadmaps = ref<any>([])
+const roadmaps = ref<unknown>([])
 const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>();
 

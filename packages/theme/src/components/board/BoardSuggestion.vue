@@ -18,11 +18,11 @@
 
 <script setup lang="ts">
 defineProps({
-	board: {
-		type: Object,
-		default: () => {}
-	}
-})
+  board: {
+    type: Object,
+    default: () => {},
+  },
+});
 </script>
 
 <style lang='sass'>

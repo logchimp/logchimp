@@ -39,8 +39,8 @@
 
 <script lang="ts">
 export default {
-	name: "EmailVerification"
-}
+  name: "EmailVerification",
+};
 </script>
 
 <script setup lang="ts">
