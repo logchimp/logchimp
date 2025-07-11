@@ -38,6 +38,7 @@
 		"avatar-generator": "2.0.4",
 		"nodemon": "^3.1.7",
 		"omgopass": "3.2.1",
+		"typescript": "5.4.5",
 		"vitest": "0.34.6"
 	},
 	"engines": {
