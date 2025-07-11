@@ -19,14 +19,14 @@ const error = require("../../errorResponse.json");
  *
  * @param {any} req
  * @param {any} res
- * @param {any} next
+ * @param {any} _next
  * @param {object} userData - User data to create account
  * @param {string} userData.email - User email address
  * @param {string} userData.password - User password
  * @param {string} userData.name - User name
  * @returns {object|null} - Returning user data object from database or null
  */
-const createUser = async (req, res, next, userData) => {
+const createUser = async (req, res, _next, userData) => {
   // generate user unique identification
   const userId = uuidv4(userData.email);
 

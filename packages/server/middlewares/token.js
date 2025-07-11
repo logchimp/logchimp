@@ -15,7 +15,7 @@ const extractTokenFromHeader = (header) => {
   }
 };
 
-const authenticateWithToken = async (req, res, next, token) => {
+const authenticateWithToken = async (_, res, next, token) => {
   const decoded = jwt.decode(token, { complete: true });
 
   // validate JWT token type

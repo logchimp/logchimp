@@ -36,7 +36,7 @@ const props = defineProps({
 });
 
 // TODO: Add TS types
-const posts = ref<any>([]);
+const posts = ref<unknown>([]);
 
 async function getRoadmapPosts() {
   const roadmapId = props.roadmap.id;

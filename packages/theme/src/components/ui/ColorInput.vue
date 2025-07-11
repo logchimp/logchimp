@@ -43,9 +43,7 @@ const props = defineProps({
   ...formInputBind,
 });
 
-const emit = defineEmits<{
-  (e: "update:modelValue", event?: any): void;
-}>();
+const emit = defineEmits<(e: "update:modelValue", event?: any) => void>();
 
 const error = reactive({
   show: false,

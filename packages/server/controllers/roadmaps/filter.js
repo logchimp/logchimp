@@ -4,7 +4,7 @@ const database = require("../../database");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
-module.exports = async (req, res) => {
+module.exports = async (_, res) => {
   try {
     const roadmaps = await database
       .select("id", "name", "url", "color", "display", "index")

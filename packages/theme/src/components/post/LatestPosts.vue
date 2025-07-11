@@ -20,7 +20,7 @@ import { getPosts } from "../../modules/posts";
 
 // components
 import InfiniteScroll, {
-  InfiniteScrollStateType,
+  type InfiniteScrollStateType,
 } from "../../components/ui/InfiniteScroll.vue";
 import PostItem from "../post/PostItem.vue";
 
@@ -31,7 +31,7 @@ const props = defineProps({
   },
 });
 
-const posts = ref<any>([]);
+const posts = ref<unknown>([]);
 const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>();
 

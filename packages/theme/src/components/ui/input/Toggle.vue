@@ -38,9 +38,7 @@ defineProps({
   },
 });
 
-const emit = defineEmits<{
-  (e: "update:modelValue", event?: any): void;
-}>();
+const emit = defineEmits<(e: "update:modelValue", event?: any) => void>();
 
 // TODO: Add TS types
 function click(value: any) {

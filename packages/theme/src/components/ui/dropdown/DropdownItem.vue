@@ -27,9 +27,7 @@ const props = defineProps({
 
 const isIcon = computed(() => useSlots().icon);
 
-const emit = defineEmits<{
-  (e: "click", event?: any): void;
-}>();
+const emit = defineEmits<(e: "click", event?: any) => void>();
 
 function click() {
   if (props.disabled) return;

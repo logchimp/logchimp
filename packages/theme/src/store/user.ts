@@ -2,7 +2,7 @@ import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
 
 import { router } from "../router";
-import { PermissionType } from "../modules/users";
+import type { PermissionType } from "../modules/users";
 
 export const useUserStore = defineStore("user", () => {
   const authToken = ref<string>("");

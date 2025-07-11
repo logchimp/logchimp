@@ -1,9 +1,9 @@
-// packges
+// packages
 import axios from "axios";
 
 // store
 import { useUserStore } from "../store/user";
-import { ApiPaginationType, ApiSortType } from "../types";
+import type { ApiPaginationType, ApiSortType } from "../types";
 
 export interface PostType {
   postId: string;

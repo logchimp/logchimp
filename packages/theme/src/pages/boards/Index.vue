@@ -41,7 +41,7 @@ import BoardItem from "../../components/board/BoardItem.vue";
 const { get: siteSettings } = useSettingStore()
 
 // TODO: Add TS types
-const boards = ref<any>([])
+const boards = ref<unknown>([])
 const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>()
 

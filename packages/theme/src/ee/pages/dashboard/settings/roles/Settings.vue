@@ -183,7 +183,7 @@ const { permissions: userPermissions } = useUserStore()
 
 const title = ref("")
 // TODO: Add TS types
-const role = ref<any>({})
+const role = ref<unknown>({})
 const permissions = reactive({
 	post: {
 		create: false,

@@ -1,4 +1,4 @@
-// packges
+// packages
 import axios from "axios";
 
 // store

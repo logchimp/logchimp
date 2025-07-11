@@ -5,7 +5,7 @@ const database = require("../../database");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
-const isSiteSetup = async (req, res) => {
+const isSiteSetup = async (_, res) => {
   try {
     const isSetup = await database
       .select("userId")

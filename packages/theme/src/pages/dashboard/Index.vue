@@ -81,10 +81,10 @@ import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/Inf
 import Table from "../../components/ui/Table.vue";
 
 // TODO: Add TS types
-const posts = ref<any>([])
+const posts = ref<unknown>([])
 const postState = ref<InfiniteScrollStateType>()
 // TODO: Add TS types
-const boards = ref<any>([])
+const boards = ref<unknown>([])
 const boardState = ref<InfiniteScrollStateType>()
 
 async function getRecentPosts() {

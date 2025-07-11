@@ -79,7 +79,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useTrim } from "../../../hooks";
 
 // components
-import Vote, { VoteEventType } from "../../../components/vote/Vote.vue";
+import Vote, { type VoteEventType } from "../../../components/vote/Vote.vue";
 import BoardBadge from "../../../components/board/BoardBadge.vue";
 import { AvatarStack } from "../../../components/ui/Avatar";
 

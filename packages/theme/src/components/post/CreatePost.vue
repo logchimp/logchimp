@@ -43,7 +43,7 @@ import { useUserStore } from "../../store/user";
 import { router } from "../../router";
 
 // components
-import { FormFieldErrorType } from "../ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../ui/input/formBaseProps";
 import LText from "../ui/input/LText.vue";
 import LTextarea from "../ui/input/LTextarea.vue";
 import Button from "../ui/Button.vue";

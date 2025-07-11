@@ -102,7 +102,7 @@ import Breadcrumbs from "../../components/Breadcrumbs.vue";
 const { settings } = useSettingStore()
 
 // TODO: Add TS types
-const users = ref<any>([])
+const users = ref<unknown>([])
 const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>()
 

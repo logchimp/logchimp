@@ -45,7 +45,7 @@ import { computed, ref, withDefaults } from "vue";
 import { useTrim } from "../../hooks";
 
 // components
-import Vote, { VoteEventType } from "../vote/Vote.vue";
+import Vote, { type VoteEventType } from "../vote/Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
 interface Props {
