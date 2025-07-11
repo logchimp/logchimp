@@ -1,8 +1,8 @@
 {
-  "name": "logchimp",
-  "workspaceFolder": "/workspaces/logchimp",
+  "name": "LogChimp Server",
+  "workspaceFolder": "/workspaces/packages/server",
   "dockerComposeFile": [
-    "../docker-compose.dev.yml"
+    "../../docker-compose.dev.yml"
   ],
   "service": "logchimp",
 
@@ -12,27 +12,11 @@
   },
 
   "forwardPorts": [
-    "8080:8080",
-    "3000:3000",
-    "5432:5432",
-    "1080:1080",
-    "1025:1025"
+    "8000:8000"
   ],
   "portsAttributes": {
-    "8080": {
-      "label": "Theme"
-    },
-    "3000": {
+    "8000": {
       "label": "API Server"
-    },
-    "5432": {
-      "label": "PostgreSQL Database"
-    },
-    "1080": {
-      "label": "Email client"
-    },
-    "1025": {
-      "label": "Email injection"
     }
   },
 
@@ -51,5 +35,5 @@
     }
   },
 
-  "initializeCommand": "bash ./.devcontainer/initializeCommand.sh"
+  "initializeCommand": "bash ./.devcontainer/server/initializeCommand.sh"
 }

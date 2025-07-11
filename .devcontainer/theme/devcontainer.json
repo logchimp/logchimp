@@ -1,0 +1,32 @@
+{
+  "name": "LogChimp Theme",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+
+  "forwardPorts": [
+    "3000:3000"
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "Theme"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "wix.vscode-import-cost",
+        "bradlc.vscode-tailwindcss",
+        "Vue.volar",
+        "editorconfig.editorconfig",
+        "ZixuanChen.vitest-explorer",
+        "syler.sass-indented",
+        "eamodio.gitlens"
+      ]
+    }
+  }
+}
