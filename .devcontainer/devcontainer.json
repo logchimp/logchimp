@@ -9,7 +9,8 @@
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {
       "version": "latest"
-    }
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {}
   },
 
   "forwardPorts": [
