@@ -53,5 +53,5 @@
     }
   },
 
-  "initializeCommand": "bash ./initializeCommand.sh"
+  "initializeCommand": "bash ./.devcontainer/initializeCommand.sh"
 }
