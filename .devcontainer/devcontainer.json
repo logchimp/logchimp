@@ -51,5 +51,5 @@
     }
   },
 
-  "postCreateCommand": "bash ../scripts/gitpod-init.sh"
+  "postCreateCommand": "bash ./postCreateCommand.sh"
 }
