@@ -7,5 +7,5 @@ COPY ./package.json ./pnpm-lock.yaml ./
 WORKDIR /app/packages/server
 
 RUN \
-    npm i -g pnpm@8; \
+    npm i -g pnpm; \
     pnpm install
