@@ -1,6 +1,6 @@
 {
   "name": "LogChimp Server",
-  "workspaceFolder": "/workspaces/packages/server",
+  "workspaceFolder": "/workspaces/logchimp/packages/server",
   "dockerComposeFile": [
     "../../docker-compose.dev.yml"
   ],
