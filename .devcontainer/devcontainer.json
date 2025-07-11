@@ -51,5 +51,5 @@
     }
   },
 
-  "postCreateCommand": "bash ./postCreateCommand.sh"
+  "initializeCommand": "bash ./initializeCommand.sh"
 }
