@@ -1,8 +1,9 @@
 {
   "name": "logchimp",
-  "build": {
-    "dockerfile": "../.gitpod.Dockerfile"
-  },
+  "dockerComposeFile": [
+    "../docker-compose.dev.yml"
+  ],
+  "service": "logchimp",
 
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {
