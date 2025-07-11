@@ -14,6 +14,9 @@ on:
 permissions:
   actions: read
 
+env:
+  pnpm-version: 10
+
 jobs:
   theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
@@ -36,7 +39,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 10
+          version: ${{ env.pnpm-version }}
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -47,9 +50,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
@@ -90,9 +93,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
@@ -132,9 +135,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
@@ -175,9 +178,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
@@ -233,9 +236,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
