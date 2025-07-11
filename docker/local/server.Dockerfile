@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22-bullseye
 
 WORKDIR /app
 COPY ./packages/server/ ./packages/server/
