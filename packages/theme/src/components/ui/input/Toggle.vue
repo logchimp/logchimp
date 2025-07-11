@@ -38,10 +38,10 @@ defineProps({
   },
 });
 
-const emit = defineEmits<(e: "update:modelValue", event?: any) => void>();
+const emit = defineEmits<(e: "update:modelValue", event?: unknown) => void>();
 
 // TODO: Add TS types
-function click(value: any) {
+function click(value: unknown) {
   // if (props.disabled) return;
   emit("update:modelValue", value.target.checked);
 }

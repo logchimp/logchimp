@@ -52,12 +52,12 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: "hide-error", event: FormFieldErrorType): void;
-  (e: "keyup-enter", event?: any): void;
-  (e: "keyup", event?: any): void;
-  (e: "update:modelValue", event?: any): void;
+  (e: "keyup-enter", event?: unknown): void;
+  (e: "keyup", event?: unknown): void;
+  (e: "update:modelValue", event?: unknown): void;
 }>();
 
-function input(event: any) {
+function input(event: unknown) {
   emit("update:modelValue", event.target.value);
 }
 

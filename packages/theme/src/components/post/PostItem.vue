@@ -49,7 +49,7 @@ import Vote, { type VoteEventType } from "../vote/Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
 interface Props {
-  post: any;
+  post: unknown;
   dashboard?: boolean;
   showBoard?: boolean;
 }
