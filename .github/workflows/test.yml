@@ -15,58 +15,9 @@ permissions:
   actions: read
 
 jobs:
-  utils:
-    name: Run utilities
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        node: [22]
-        os: [ubuntu-24.04]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 10
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Biome
-        uses: biomejs/setup-biome@v2
-        with:
-          version: latest
-
-      - name: Biome format
-        run: biome ci .
-        continue-on-error: true
-
   theme-unit:
     name: Theme / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: utils
 
     strategy:
       matrix:
@@ -149,10 +100,52 @@ jobs:
       - name: Build theme
         run: pnpm --filter @logchimp/theme build
 
+  api-typecheck:
+    name: Typecheck - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node: [22]
+        os: [ubuntu-24.04]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-
+
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter @logchimp/api tsc --noEmit
+
   api-unit:
     name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: utils
+    needs: [api-typecheck]
 
     strategy:
       matrix:
@@ -280,3 +273,7 @@ jobs:
         with:
           name: coverage-${{ matrix.runs-on }}
           path: ./coverage
+
+  biome-tools:
+    name: "Biome CLI"
+    uses: ./.github/workflows/biome-tools.yml
