@@ -140,7 +140,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Typecheck
-        run: pnpm --filter @logchimp/api tsc --noEmit
+        run: pnpm --filter @logchimp/api exec pnpm tsc --noEmit
 
   api-unit:
     name: API / Unit Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
