@@ -159,8 +159,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardRoleEdit",
-}
+  name: "DashboardRoleEdit",
+};
 </script>
 
 <script setup lang="ts">

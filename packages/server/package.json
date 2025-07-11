@@ -1,47 +1,47 @@
 {
-	"name": "@logchimp/api",
-	"description": "LogChimp APIs",
-	"version": "0.7.0-beta.3",
-	"main": "./index.js",
-	"scripts": {
-		"dev": "nodemon index.js",
-		"start": "node index.js",
-		"format": "prettier --write \"**/*.{js}\"",
-		"test:unit": "vitest --config ./vitest.config.unit.ts",
-		"test:integration": "vitest --config ./vitest.config.integration.ts",
-		"db:migrate": "knex --knexfile ./database/config.js migrate:latest",
-		"db:migrate:create": "knex --knexfile ./database/config.js migrate:make",
-		"db:seed:run": "knex --knexfile ./database/config.js seed:run"
-	},
-	"dependencies": {
-		"bcryptjs": "^2.4.3",
-		"cors": "^2.8.5",
-		"dotenv": "^16.4.5",
-		"express": "^4.17.1",
-		"express-rate-limit": "^6.3.0",
-		"fs-extra": "^11.0.0",
-		"html-to-text": "^8.1.0",
-		"jsonwebtoken": "^8.5.1",
-		"knex": "^2.0.0",
-		"lodash": "^4.17.21",
-		"md5": "^2.3.0",
-		"multer": "^1.4.3",
-		"nanoid": "^3.3.2",
-		"nodemailer": "^6.7.3",
-		"pg": "^8.7.1",
-		"supertest": "^6.1.6",
-		"uuid": "^9.0.0",
-		"winston": "^3.3.3"
-	},
-	"devDependencies": {
-		"@faker-js/faker": "^8.0.0",
-		"avatar-generator": "2.0.4",
-		"nodemon": "^3.1.7",
-		"omgopass": "3.2.1",
-		"typescript": "5.4.5",
-		"vitest": "0.34.6"
-	},
-	"engines": {
-		"node": ">=22 < 23"
-	}
+  "name": "@logchimp/api",
+  "description": "LogChimp APIs",
+  "version": "0.7.0-beta.3",
+  "main": "./index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "format": "prettier --write \"**/*.{js}\"",
+    "test:unit": "vitest --config ./vitest.config.unit.ts",
+    "test:integration": "vitest --config ./vitest.config.integration.ts",
+    "db:migrate": "knex --knexfile ./database/config.js migrate:latest",
+    "db:migrate:create": "knex --knexfile ./database/config.js migrate:make",
+    "db:seed:run": "knex --knexfile ./database/config.js seed:run"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.17.1",
+    "express-rate-limit": "^6.3.0",
+    "fs-extra": "^11.0.0",
+    "html-to-text": "^8.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^2.0.0",
+    "lodash": "^4.17.21",
+    "md5": "^2.3.0",
+    "multer": "^1.4.3",
+    "nanoid": "^3.3.2",
+    "nodemailer": "^6.7.3",
+    "pg": "^8.7.1",
+    "supertest": "^6.1.6",
+    "uuid": "^9.0.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.0",
+    "avatar-generator": "2.0.4",
+    "nodemon": "^3.1.7",
+    "omgopass": "3.2.1",
+    "typescript": "5.4.5",
+    "vitest": "0.34.6"
+  },
+  "engines": {
+    "node": ">=22 < 23"
+  }
 }

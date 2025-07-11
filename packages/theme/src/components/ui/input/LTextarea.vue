@@ -21,17 +21,17 @@ import { formBaseProps } from "./formBaseProps";
 import { formInputBind } from "./formInputBind";
 
 defineProps({
-	rows: {
-		type: String,
-		default: "3"
-	},
-	...formBaseProps,
-	...formInputBind
-})
+  rows: {
+    type: String,
+    default: "3",
+  },
+  ...formBaseProps,
+  ...formInputBind,
+});
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
 function input(event: any) {
-	emit('update:modelValue', event.target.value)
+  emit("update:modelValue", event.target.value);
 }
 </script>

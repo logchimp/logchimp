@@ -92,7 +92,8 @@ const authenticateWithToken = async (req, res, next, token) => {
     if (user) {
       try {
         // validate JWT auth token
-        const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
+        const secretKey =
+          process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
         jwt.verify(token, secretKey);
 
         req.user = {
@@ -114,7 +115,7 @@ const authenticateWithToken = async (req, res, next, token) => {
           res.status(500).send({
             message: error.general.serverError,
             code: "SERVER_ERROR",
-          })
+          });
         }
       }
     } else {
@@ -130,7 +131,7 @@ const authenticateWithToken = async (req, res, next, token) => {
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
-    })
+    });
   }
 };
 

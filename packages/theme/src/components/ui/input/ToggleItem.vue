@@ -37,30 +37,30 @@
 import Toggle from "./Toggle.vue";
 
 const props = defineProps({
-	label: {
-		type: String,
-		required: true
-	},
-	note: {
-		type: String,
-		default: ""
-	},
-	disabled: {
-		type: Boolean,
-		default: false
-	},
-	modelValue: {
-		type: Boolean,
-		default: false,
-	}
-})
+  label: {
+    type: String,
+    required: true,
+  },
+  note: {
+    type: String,
+    default: "",
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const emit = defineEmits<{
-	(e: 'update:modelValue', event?: any): void
-}>()
+  (e: "update:modelValue", event?: any): void;
+}>();
 
 function input(checked: boolean) {
-	emit("update:modelValue", checked);
+  emit("update:modelValue", checked);
 }
 </script>
 

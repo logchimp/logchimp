@@ -19,21 +19,21 @@
 import { computed, useSlots } from "vue";
 
 const props = defineProps({
-	disabled: {
-		type: Boolean,
-		default: false
-	}
-})
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-const isIcon = computed(() => useSlots().icon)
+const isIcon = computed(() => useSlots().icon);
 
 const emit = defineEmits<{
-	(e: 'click', event?: any): void
+  (e: "click", event?: any): void;
 }>();
 
 function click() {
-	if (props.disabled) return;
-	emit("click");
+  if (props.disabled) return;
+  emit("click");
 }
 </script>
 

@@ -29,32 +29,32 @@ import { getPosts } from "../../../modules/posts";
 import RoadmapPostCard from "./RoadmapPostCard.vue";
 
 const props = defineProps({
-	roadmap: {
-		type: Object,
-		required: true
-	}
-})
+  roadmap: {
+    type: Object,
+    required: true,
+  },
+});
 
 // TODO: Add TS types
 const posts = ref<any>([]);
 
 async function getRoadmapPosts() {
-	const roadmapId = props.roadmap.id;
-	try {
-		const response = await getPosts({
-			page: 1,
-			limit: 20,
-			sort: "DESC",
-			roadmapId
-		});
+  const roadmapId = props.roadmap.id;
+  try {
+    const response = await getPosts({
+      page: 1,
+      limit: 20,
+      sort: "DESC",
+      roadmapId,
+    });
 
-		posts.value = response.data.posts;
-	} catch (err) {
-		console.error(err);
-	}
+    posts.value = response.data.posts;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-onMounted(() => getRoadmapPosts())
+onMounted(() => getRoadmapPosts());
 </script>
 
 <style lang='sass'>

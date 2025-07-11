@@ -79,8 +79,8 @@
 
 <script lang="ts">
 export default {
-	name: "BoardSettings",
-}
+  name: "BoardSettings",
+};
 </script>
 
 <script setup lang="ts">

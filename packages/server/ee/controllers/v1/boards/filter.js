@@ -33,6 +33,6 @@ exports.filter = async (req, res) => {
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
-    })
+    });
   }
 };

@@ -110,8 +110,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardBoards",
-}
+  name: "DashboardBoards",
+};
 </script>
 
 <script setup lang="ts">

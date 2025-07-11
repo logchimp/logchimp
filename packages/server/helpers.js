@@ -109,7 +109,10 @@ const sanitiseURL = (value) => {
     return "";
   }
 
-  return value.trim().toLocaleLowerCase().replace(/^_+|\W+|[^\w]|\s/g, "-");
+  return value
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/^_+|\W+|[^\w]|\s/g, "-");
 };
 
 /**

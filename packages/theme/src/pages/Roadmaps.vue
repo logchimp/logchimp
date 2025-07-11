@@ -19,8 +19,8 @@
 
 <script lang="ts">
 export default {
-	name: "Roadmaps",
-}
+  name: "Roadmaps",
+};
 </script>
 
 <script setup lang="ts">

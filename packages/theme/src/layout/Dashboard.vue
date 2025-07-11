@@ -12,13 +12,13 @@
 </template>
 
 <script setup lang="ts">
-import { useSettingStore } from "../store/settings"
+import { useSettingStore } from "../store/settings";
 
 // components
 import Sidebar from "../components/dashboard/Sidebar.vue";
 import PowerBy from "../components/PowerBy.vue";
 
-const { get: siteSettings } = useSettingStore()
+const { get: siteSettings } = useSettingStore();
 </script>
 
 <style lang='scss'>

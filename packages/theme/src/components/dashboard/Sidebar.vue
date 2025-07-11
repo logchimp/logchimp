@@ -126,11 +126,11 @@ import {
   CreditCard as CreditCardIcon,
   Info as InfoIcon,
   Twitter as TwitterIcon,
-  LogOut as LogoutIcon
+  LogOut as LogoutIcon,
 } from "lucide-vue";
 
-import { useSettingStore } from "../../store/settings"
-import { useUserStore } from "../../store/user"
+import { useSettingStore } from "../../store/settings";
+import { useUserStore } from "../../store/user";
 
 // components
 import SiteBranding from "../site/SiteBranding.vue";
@@ -143,17 +143,17 @@ import DropdownSpacer from "../ui/dropdown/DropdownSpacer.vue";
 // icons
 import RoadmapIcon from "../../components/icons/Roadmap.vue";
 
-const { get: siteSettings } = useSettingStore()
-const { user, logout } = useUserStore()
+const { get: siteSettings } = useSettingStore();
+const { user, logout } = useUserStore();
 
 function aboutLogChimp() {
-	window.open("https://logchimp.codecarrot.net/");
+  window.open("https://logchimp.codecarrot.net/");
 }
 
 function tweetLogChimp() {
-	window.open(
-		"https://twitter.com/intent/tweet?text=%40LogChimp+Hi%21+Can+you+help+me+with+&related=LogChimp"
-	);
+  window.open(
+    "https://twitter.com/intent/tweet?text=%40LogChimp+Hi%21+Can+you+help+me+with+&related=LogChimp",
+  );
 }
 </script>
 

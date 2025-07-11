@@ -5,7 +5,7 @@ import { cleanDb } from "../../../utils/db";
 const app = require("../../../../app");
 
 describe("GET /api/v1/auth/setup", () => {
-  it('should not have site setup', async () => {
+  it("should not have site setup", async () => {
     await cleanDb();
 
     const response = await supertest(app).get("/api/v1/auth/setup");
@@ -13,11 +13,11 @@ describe("GET /api/v1/auth/setup", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
-    expect(response.body).toBeDefined()
-    expect(response.body.is_setup).toBeFalsy()
+    expect(response.body).toBeDefined();
+    expect(response.body.is_setup).toBeFalsy();
   });
 
-  it('show have site setup', async () => {
+  it("show have site setup", async () => {
     await supertest(app).post("/api/v1/auth/setup").send({
       siteTitle: "LogChimp",
       name: "Admin",
@@ -30,8 +30,8 @@ describe("GET /api/v1/auth/setup", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
-    expect(response.body).toBeDefined()
-    expect(response.body.is_setup).toBeTruthy()
+    expect(response.body).toBeDefined();
+    expect(response.body.is_setup).toBeTruthy();
   });
 });
 
@@ -54,7 +54,7 @@ describe("POST /api/v1/auth/setup", () => {
     expect(response.body.code).toBe("PASSWORD_MISSING");
   });
 
-  it('should setup site', async () => {
+  it("should setup site", async () => {
     await cleanDb();
 
     const response = await supertest(app).post("/api/v1/auth/setup").send({
@@ -67,9 +67,9 @@ describe("POST /api/v1/auth/setup", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toEqual(201);
 
-    expect(response.body.user).toBeDefined()
-    expect(response.body.user.name).toEqual('Admin')
-    expect(response.body.user.email).toEqual('admin@example.com')
-    expect(response.body.user.authToken).toBeDefined()
-  })
+    expect(response.body.user).toBeDefined();
+    expect(response.body.user.name).toEqual("Admin");
+    expect(response.body.user.email).toEqual("admin@example.com");
+    expect(response.body.user.authToken).toBeDefined();
+  });
 });

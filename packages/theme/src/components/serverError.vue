@@ -9,7 +9,7 @@
 
 <script lang="ts">
 export default {
-	name: "ServerError",
+  name: "ServerError",
 };
 </script>
 

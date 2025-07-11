@@ -70,34 +70,34 @@
 </template>
 
 <script setup lang="ts">
-// pacakges
+// packages
 import { ref } from "vue";
 import { ChevronUp as ArrowTopIcon } from "lucide-vue";
-import dayjs from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { useTrim } from "../../../hooks";
 
 // components
 import Vote, { VoteEventType } from "../../../components/vote/Vote.vue";
 import BoardBadge from "../../../components/board/BoardBadge.vue";
-import { AvatarStack }from "../../../components/ui/Avatar";
+import { AvatarStack } from "../../../components/ui/Avatar";
 
 dayjs.extend(relativeTime);
 
 const props = defineProps({
-	post: {
-		type: Object,
-		required: true
-	}
-})
+  post: {
+    type: Object,
+    required: true,
+  },
+});
 
 const isExpanded = ref(false);
 const postData = ref(props.post);
 
 function updateVoters(voters: VoteEventType) {
-	postData.value.voters.votesCount = voters.votesCount;
-	postData.value.voters.viewerVote = voters.viewerVote;
+  postData.value.voters.votesCount = voters.votesCount;
+  postData.value.voters.viewerVote = voters.viewerVote;
 }
 </script>
 

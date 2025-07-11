@@ -30,7 +30,10 @@ module.exports = async (req, res) => {
     });
   }
 
-  const slimUrl = name.replace(/[^\w]+/gi, "-").trim().toLowerCase();
+  const slimUrl = name
+    .replace(/[^\w]+/gi, "-")
+    .trim()
+    .toLowerCase();
 
   try {
     const board = await database
@@ -50,6 +53,6 @@ module.exports = async (req, res) => {
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
-    })
+    });
   }
 };

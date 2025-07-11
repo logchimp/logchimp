@@ -34,7 +34,7 @@
 <script lang="ts">
 export default {
   name: "DashboardSettings",
-}
+};
 </script>
 
 <script setup lang="ts">

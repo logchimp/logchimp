@@ -122,8 +122,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardPostView",
-}
+  name: "DashboardPostView",
+};
 </script>
 
 <script setup lang="ts">

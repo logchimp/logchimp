@@ -10,11 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import { useSettingStore } from "../store/settings"
+import { useSettingStore } from "../store/settings";
 
 // components
 import Header from "../components/Header.vue";
 import PowerBy from "../components/PowerBy.vue";
 
-const settingsStore = useSettingStore()
+const settingsStore = useSettingStore();
 </script>

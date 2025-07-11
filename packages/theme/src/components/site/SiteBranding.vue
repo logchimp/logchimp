@@ -20,29 +20,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 
 const props = defineProps({
-	title: {
-		type: String,
-		required: true,
-	},
-	logo: {
-		type: String,
-		required: true,
-	},
-	dashboard: {
-		type: Boolean,
-		default: false
-	},
-	textColor: {
-		type: String,
-		default: "black",
-		validator: (value: 'white' | 'black') => ['white', 'black'].includes(value)
-	}
-})
+  title: {
+    type: String,
+    required: true,
+  },
+  logo: {
+    type: String,
+    required: true,
+  },
+  dashboard: {
+    type: Boolean,
+    default: false,
+  },
+  textColor: {
+    type: String,
+    default: "black",
+    validator: (value: "white" | "black") => ["white", "black"].includes(value),
+  },
+});
 
-const link = computed(() =>  props.dashboard ? "/dashboard" : "/")
+const link = computed(() => (props.dashboard ? "/dashboard" : "/"));
 </script>
 
 <style lang='sass' module>

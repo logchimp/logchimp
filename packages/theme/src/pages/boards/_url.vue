@@ -47,8 +47,8 @@
 
 <script lang="ts">
 export default {
-  name: "BoardView"
-}
+  name: "BoardView",
+};
 </script>
 
 <script setup lang="ts">

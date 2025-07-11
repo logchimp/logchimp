@@ -24,28 +24,28 @@
 
 <script setup lang="ts">
 defineProps({
-	checked: {
-		type: Boolean,
-		default: false
-	},
-	disabled: {
-		type: Boolean,
-		default: false
-	},
-	modelValue: {
-		type: Boolean,
-		default: false,
-	}
-})
+  checked: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const emit = defineEmits<{
-	(e: 'update:modelValue', event?: any): void
-}>()
+  (e: "update:modelValue", event?: any): void;
+}>();
 
 // TODO: Add TS types
 function click(value: any) {
-	// if (props.disabled) return;
-	emit("update:modelValue", value.target.checked);
+  // if (props.disabled) return;
+  emit("update:modelValue", value.target.checked);
 }
 </script>
 

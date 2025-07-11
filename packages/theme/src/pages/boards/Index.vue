@@ -21,8 +21,8 @@
 
 <script lang="ts">
 export default {
-	name: "Boards"
-}
+  name: "Boards",
+};
 </script>
 
 <script setup lang="ts">

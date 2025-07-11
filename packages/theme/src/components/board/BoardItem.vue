@@ -24,26 +24,26 @@
 
 <script setup lang="ts">
 defineProps({
-	name: {
-		type: String,
-		required: true
-	},
-	color: {
-		type: String,
-		required: true,
-		validator: (value: string) => {
-			return value.length === 6;
-		}
-	},
-	url: {
-		type: String,
-		required: true
-	},
-	postCount: {
-		type: Number,
-		default: 0
-	}
-})
+  name: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    required: true,
+    validator: (value: string) => {
+      return value.length === 6;
+    },
+  },
+  url: {
+    type: String,
+    required: true,
+  },
+  postCount: {
+    type: Number,
+    default: 0,
+  },
+});
 </script>
 
 <style lang='sass'>

@@ -63,8 +63,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardOverview",
-}
+  name: "DashboardOverview",
+};
 </script>
 
 <script setup lang="ts">

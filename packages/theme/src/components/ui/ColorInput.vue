@@ -36,34 +36,36 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
-import { formInputBind } from './input/formInputBind';
+import { reactive, watch } from "vue";
+import { formInputBind } from "./input/formInputBind";
 
 const props = defineProps({
-	...formInputBind,
+  ...formInputBind,
 });
 
 const emit = defineEmits<{
-	(e: 'update:modelValue', event?: any): void
+  (e: "update:modelValue", event?: any): void;
 }>();
 
 const error = reactive({
-	show: false,
-	message: "The color should be in valid hex format."
-})
+  show: false,
+  message: "The color should be in valid hex format.",
+});
 
-watch(() => props.modelValue, (newValue) => {
-	const validColor = /^[0-9A-F]{6}$/i.test(newValue);
-	if (!validColor) error.show = true;
-	else error.show = false;
-})
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    const validColor = /^[0-9A-F]{6}$/i.test(newValue);
+    error.show = !validColor;
+  },
+);
 
 function hideError() {
-	error.show = false;
+  error.show = false;
 }
 
 function input(event: any) {
-	emit('update:modelValue', event.target.value)
+  emit("update:modelValue", event.target.value);
 }
 </script>
 

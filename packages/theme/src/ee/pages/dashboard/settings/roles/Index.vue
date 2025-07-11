@@ -68,8 +68,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardRoles",
-}
+  name: "DashboardRoles",
+};
 </script>
 
 <script setup lang="ts">

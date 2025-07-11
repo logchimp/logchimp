@@ -72,8 +72,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardUsers"
-}
+  name: "DashboardUsers",
+};
 </script>
 
 <script setup lang="ts">

@@ -126,7 +126,7 @@ const createUser = async (req, res, next, userData) => {
     return res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
-    })
+    });
   }
 };
 

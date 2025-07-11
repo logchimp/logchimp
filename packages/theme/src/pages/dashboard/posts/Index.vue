@@ -19,8 +19,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardPosts",
-}
+  name: "DashboardPosts",
+};
 </script>
 
 <script setup lang="ts">

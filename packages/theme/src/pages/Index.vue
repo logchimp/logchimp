@@ -18,8 +18,8 @@
 
 <script lang="ts">
 export default {
-	name: "Homepage"
-}
+  name: "Homepage",
+};
 </script>
 
 <script setup lang="ts">
