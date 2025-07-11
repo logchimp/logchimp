@@ -40,8 +40,8 @@
 
 <script lang="ts">
 export default {
-	name: "SetupBoard",
-}
+  name: "SetupBoard",
+};
 </script>
 
 <script setup lang="ts">

@@ -28,51 +28,51 @@ import { useHead } from "@vueuse/head";
 
 import packageJson from "../package.json";
 
-import { useSettingStore } from "./store/settings"
-import { useUserStore } from "./store/user"
-import { useAlertStore } from "./store/alert"
+import { useSettingStore } from "./store/settings";
+import { useUserStore } from "./store/user";
+import { useAlertStore } from "./store/alert";
 import { getPermissions } from "./modules/users";
 import tokenError from "./utils/tokenError";
 
 // components
 import { Alert } from "./components/ui/Alert";
 
-const settingsStore = useSettingStore()
-const { getAlerts, remove: removeAlert } = useAlertStore()
-const userStore = useUserStore()
+const settingsStore = useSettingStore();
+const { getAlerts, remove: removeAlert } = useAlertStore();
+const userStore = useUserStore();
 
 const logchimpVersion = computed(() => packageJson.version);
 
 function getSiteSettings() {
-	axios({
-		method: "get",
-		url: "/api/v1/settings/site"
-	})
-		.then(response => {
-			settingsStore.update(response.data.settings);
-		})
-		.catch(error => {
-			console.error(error);
-		});
+  axios({
+    method: "get",
+    url: "/api/v1/settings/site",
+  })
+    .then((response) => {
+      settingsStore.update(response.data.settings);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 onMounted(async () => {
-	getSiteSettings();
+  getSiteSettings();
 
-	// set google analytics
-	if (settingsStore.get.googleAnalyticsId) {
-		setOptions({
-			config: {
-				id: settingsStore.get.googleAnalyticsId
-			}
-		});
+  // set google analytics
+  if (settingsStore.get.googleAnalyticsId) {
+    setOptions({
+      config: {
+        id: settingsStore.get.googleAnalyticsId,
+      },
+    });
 
-		// bootstrap(gtag).then();
-	}
+    // bootstrap(gtag).then();
+  }
 
-	const user = localStorage.getItem("user");
-	if (user) {
-		userStore.setUser(JSON.parse(user));
+  const user = localStorage.getItem("user");
+  if (user) {
+    userStore.setUser(JSON.parse(user));
 
     /**
      * Handling an edge-case when the user not found,
@@ -82,62 +82,63 @@ onMounted(async () => {
       const permissions = await getPermissions();
       userStore.setPermissions(permissions.data.permissions);
     } catch (error) {
-      tokenError(error)
+      tokenError(error);
     }
-	}
-})
+  }
+});
 
 useHead({
-	titleTemplate: (title) => `${title ? `${title} • ` : ""}${settingsStore.get.title}`,
+  titleTemplate: (title) =>
+    `${title ? `${title} • ` : ""}${settingsStore.get.title}`,
   htmlAttrs: {
     lang: "en",
   },
-	meta: [
-		{
-			name: "generator",
-			content: () => `LogChimp v${logchimpVersion.value}`
-		},
-		{
-			name: "description",
-			content: () => `${settingsStore.get.description}. Powered By LogChimp.`
-		},
-		{
-			name: "robots",
-			content: "index, follow"
-		},
-		// {
-		// 	rel: "canonical",
-		// 	href: "this.$route.fullPath"
-		// },
-		{
-			name: "language",
-			content: "es"
-		},
-		{
-			name: "copyright",
-			content: settingsStore.get.title
-		},
+  meta: [
+    {
+      name: "generator",
+      content: () => `LogChimp v${logchimpVersion.value}`,
+    },
+    {
+      name: "description",
+      content: () => `${settingsStore.get.description}. Powered By LogChimp.`,
+    },
+    {
+      name: "robots",
+      content: "index, follow",
+    },
+    // {
+    // 	rel: "canonical",
+    // 	href: "this.$route.fullPath"
+    // },
+    {
+      name: "language",
+      content: "es",
+    },
+    {
+      name: "copyright",
+      content: settingsStore.get.title,
+    },
 
-		// openGraph
-		{
-			name: "og:type",
-			content: "website"
-		},
-		{
-			name: "og:description",
-			content: () => `${settingsStore.get.description}. Powered By LogChimp.`
-		},
+    // openGraph
+    {
+      name: "og:type",
+      content: "website",
+    },
+    {
+      name: "og:description",
+      content: () => `${settingsStore.get.description}. Powered By LogChimp.`,
+    },
 
     {
       name: "theme-color",
-      content: settingsStore.get.accentColor
+      content: settingsStore.get.accentColor,
     },
     {
       name: "msapplication-TileColor",
-      content: settingsStore.get.accentColor
-    }
-	]
-})
+      content: settingsStore.get.accentColor,
+    },
+  ],
+});
 </script>
 
 <style lang='sass'>

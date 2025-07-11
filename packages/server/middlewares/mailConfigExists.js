@@ -1,7 +1,7 @@
 // services
 const { mail } = require("../services/mail");
 
-module.exports = async (req, res, next) => {
+module.exports = async (_, res, next) => {
   if (!mail) {
     return res.status(501).send({
       message: "Mail configuration missing",

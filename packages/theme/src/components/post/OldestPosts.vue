@@ -19,43 +19,46 @@ import { ref } from "vue";
 import { getPosts } from "../../modules/posts";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../ui/InfiniteScroll.vue";
 import PostItem from "../post/PostItem.vue";
 
 const props = defineProps({
-	board: {
-		type: Object,
-		default: () => {
-			return {};
-		}
-	}
+  board: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
 });
 
-const posts = ref<any>([]);
+// TODO: Add TS types
+const posts = ref<unknown>([]);
 const page = ref<number>(1);
-const state = ref<InfiniteScrollStateType>()
+const state = ref<InfiniteScrollStateType>();
 
 async function getMorePosts() {
-	const boardId = props.board.boardId;
-  state.value = 'LOADING'
+  const boardId = props.board.boardId;
+  state.value = "LOADING";
 
-	try {
-		const response = await getPosts({
-			page: page.value,
-			sort: "ASC",
-			boardId: [boardId],
-		});
+  try {
+    const response = await getPosts({
+      page: page.value,
+      sort: "ASC",
+      boardId: [boardId],
+    });
 
-		if (response.data.posts.length) {
-			posts.value.push(...response.data.posts);
-			page.value += 1;
-			state.value = 'LOADED';
-		} else {
-			state.value = 'COMPLETED';
-		}
-	} catch (error) {
-		console.error(error);
-		state.value = 'ERROR';
-	}
+    if (response.data.posts.length) {
+      posts.value.push(...response.data.posts);
+      page.value += 1;
+      state.value = "LOADED";
+    } else {
+      state.value = "COMPLETED";
+    }
+  } catch (error) {
+    console.error(error);
+    state.value = "ERROR";
+  }
 }
 </script>

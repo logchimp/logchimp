@@ -41,8 +41,8 @@
 
 <script lang="ts">
 export default {
-	name: "ForgetPassword",
-}
+  name: "ForgetPassword",
+};
 </script>
 
 <script setup lang="ts">

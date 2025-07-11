@@ -109,8 +109,8 @@
 
 <script lang="ts">
 export default {
-	name: "Roadmaps"
-}
+  name: "Roadmaps",
+};
 </script>
 
 <script setup lang="ts">
@@ -197,7 +197,7 @@ async function createRoadmapHandler() {
 	}
 }
 
-function moveItem(event: any) {
+function moveItem(event: unknown) {
 	// current
 	sort.value.to = {
 		id: event.draggedContext.element.id,

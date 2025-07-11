@@ -50,8 +50,8 @@
 
 <script lang="ts">
 export default {
-	name: "Join"
-}
+  name: "Join",
+};
 </script>
 
 <script setup lang="ts">

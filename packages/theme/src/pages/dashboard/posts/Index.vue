@@ -19,8 +19,8 @@
 
 <script lang="ts">
 export default {
-	name: "DashboardPosts",
-}
+  name: "DashboardPosts",
+};
 </script>
 
 <script setup lang="ts">
@@ -37,7 +37,8 @@ import PostItem from "../../../components/post/PostItem.vue";
 import Loader from "../../../components/ui/Loader.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
-const posts = ref<any>([])
+// TODO: Add TS types
+const posts = ref<unknown>([])
 const page = ref<number>(1);
 
 const state = ref<InfiniteScrollStateType>()

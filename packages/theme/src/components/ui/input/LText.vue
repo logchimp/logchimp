@@ -42,39 +42,39 @@ import { formBaseProps } from "./formBaseProps";
 import { formInputBind } from "./formInputBind";
 
 const props = defineProps({
-	type: {
-		type: String,
-		default: "text"
-	},
-	...formBaseProps,
-	...formInputBind,
+  type: {
+    type: String,
+    default: "text",
+  },
+  ...formBaseProps,
+  ...formInputBind,
 });
 
 const emit = defineEmits<{
-	(e: 'hide-error', event: FormFieldErrorType): void
-	(e: 'keyup-enter', event?: any): void
-	(e: 'keyup', event?: any): void
-	(e: 'update:modelValue', event?: any): void
-}>()
+  (e: "hide-error", event: FormFieldErrorType): void;
+  (e: "keyup-enter", event?: unknown): void;
+  (e: "keyup", event?: unknown): void;
+  (e: "update:modelValue", event?: unknown): void;
+}>();
 
-function input(event: any) {
-	emit('update:modelValue', event.target.value)
+function input(event: unknown) {
+  emit("update:modelValue", event.target.value);
 }
 
 function hideError() {
-	emit("hide-error", {
-		show: false,
-		message: ""
-	});
+  emit("hide-error", {
+    show: false,
+    message: "",
+  });
 }
 
 function keyUpEnter() {
-	if (props.disabled) return;
-	emit("keyup-enter");
+  if (props.disabled) return;
+  emit("keyup-enter");
 }
 
-function keyup(event: any) {
-	if (props.disabled) return;
-	emit("keyup", event);
+function keyup(event: unknown) {
+  if (props.disabled) return;
+  emit("keyup", event);
 }
 </script>

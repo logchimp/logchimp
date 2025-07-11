@@ -5,7 +5,7 @@ export default {
   component: Avatar,
 };
 
-const Template = (args, { argTypes }) => ({
+const Template = (_, { argTypes }) => ({
   components: { Avatar },
   props: Object.keys(argTypes),
   template: '<avatar v-bind="$props" />',

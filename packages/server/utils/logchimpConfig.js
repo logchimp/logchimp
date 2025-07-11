@@ -44,7 +44,7 @@ const config = () => {
 
   return {
     theme: {
-      standalone: themeStandalone === "true" ? true : false,
+      standalone: themeStandalone === "true",
     },
     server: {
       port: serverPort,
@@ -56,7 +56,7 @@ const config = () => {
       password: databasePassword,
       name: databaseName,
       port: databasePort,
-      ssl: databaseSsl === "true" ? true : false,
+      ssl: databaseSsl === "true",
     },
     mail: {
       service: mailService,

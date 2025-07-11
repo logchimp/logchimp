@@ -18,8 +18,8 @@
 
 <script lang="ts">
 export default {
-	name: "Homepage"
-}
+  name: "Homepage",
+};
 </script>
 
 <script setup lang="ts">
@@ -43,7 +43,7 @@ const settingsStore = useSettingStore()
 const userStore = useUserStore()
 
 // TODO: Add TS type
-const posts = ref<any>([]);
+const posts = ref<unknown>([]);
 const page = ref<number>(1);
 const showSiteSetupCard = ref<boolean>(false)
 const state = ref<InfiniteScrollStateType>()

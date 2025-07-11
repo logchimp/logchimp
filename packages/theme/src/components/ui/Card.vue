@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { useSlots, computed } from "vue"
+import { useSlots, computed } from "vue";
 
 const hasHeaderSlot = computed(() => {
-	return useSlots().title || useSlots().label
-})
+  return useSlots().title || useSlots().label;
+});
 </script>
 
 <style module>

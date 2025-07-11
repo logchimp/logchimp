@@ -34,7 +34,7 @@
 <script lang="ts">
 export default {
   name: "DashboardSettings",
-}
+};
 </script>
 
 <script setup lang="ts">
@@ -116,7 +116,7 @@ function selectFileHandler() {
   // $refs.fileSelector.click();
 }
 
-async function uploadFile(event: any) {
+async function uploadFile(event: unknown) {
   const logo = event.target.files[0];
 
   const formData = new FormData();

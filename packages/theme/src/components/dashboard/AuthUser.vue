@@ -21,27 +21,27 @@
 import { Avatar } from "../ui/Avatar";
 
 export default {
-	name: "DashboardAuthUser",
-	components: {
-		// components
-		Avatar,
-	},
-	props: {
-		name: String,
-		username: {
-			type: String,
-			required: true,
-		},
-		email: {
-			type: String,
-			required: true,
-		},
-		avatar: {
-			type: String,
-			required: true,
-		},
-	}
-}
+  name: "DashboardAuthUser",
+  components: {
+    // components
+    Avatar,
+  },
+  props: {
+    name: String,
+    username: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    avatar: {
+      type: String,
+      required: true,
+    },
+  },
+};
 </script>
 
 <style lang='sass' module>

@@ -106,8 +106,8 @@
 
 <script lang="ts">
 export default {
-	name: "PostView"
-}
+  name: "PostView",
+};
 </script>
 
 <script setup lang="ts">

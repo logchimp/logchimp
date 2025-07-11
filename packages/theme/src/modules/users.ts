@@ -1,10 +1,10 @@
-// packges
-import axios, { AxiosResponse } from "axios";
+// packages
+import axios, { type AxiosResponse } from "axios";
 
 // store
 import { useUserStore } from "../store/user";
 
-import { ApiPaginationType } from "../types";
+import type { ApiPaginationType } from "../types";
 
 interface UpdateUserSettingsArgs {
   name?: string;

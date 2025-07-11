@@ -1,70 +1,69 @@
 {
-	"general": {
-		"serverError": "Something went wrong!"
-	},
-	"middleware": {
-		"auth": {
-			"accessDenied": "Access denied",
-			"authorizationFailed": "Unable to determine the authenticated user",
-			"internalServerError": "Internal server error",
-			"invalidAuthHeaderFormat": "Authorization header format is \"authorization: Bearer [token]\"",
-			"invalidAuthHeader": "Authorization header missing",
-			"invalidToken": "Invalid JWT token"
-		},
-		"user": {
-			"userNotFound": "User not found",
-			"userBlocked": "User is Blocked",
-			"incorrectPassword": "Incorect password",
-			"userExists": "User exists"
-		}
-	},
-	"api": {
-		"authentication": {
-			"invalidEmail": "Enter valid email",
-			"noPasswordProvided": "No password provided",
-			"setupAlreadyCompleted": "Setup has already been completed."
-		},
-		"roles": {
-			"roleNotFound": "Role not found",
-			"notEnoughPermission": "You do not have permission to perform this action."
-		},
-		"user": {
-			"userNotFound": "User not found"
-		},
-		"emailVerify": {
-			"emailAlreadyVerified": "Your email has already been verified.",
-			"tokenMissing": "Email verification token missing",
-			"invalidToken": "Email verification token is invalid",
-			"tokenExpired": "Email verification link is expired"
-		},
-		"passwordReset": {
-			"expired": "Your password reset link has expired",
-			"invalidToken": "Invalid password reset link",
-			"missingToken": "Password reset token is missing"
-
+  "general": {
+    "serverError": "Something went wrong!"
+  },
+  "middleware": {
+    "auth": {
+      "accessDenied": "Access denied",
+      "authorizationFailed": "Unable to determine the authenticated user",
+      "internalServerError": "Internal server error",
+      "invalidAuthHeaderFormat": "Authorization header format is \"authorization: Bearer [token]\"",
+      "invalidAuthHeader": "Authorization header missing",
+      "invalidToken": "Invalid JWT token"
     },
-		"posts": {
-			"titleMissing": "Post title missing",
-			"postNotFound": "Post not found",
-			"notAnAuthor": "You are not the author of the post"
-		},
-		"boards": {
-			"nameMissing": "Board name missing",
-			"urlMissing": "Board url cannot be empty",
-			"boardIdMissing": "Board ID missing",
-			"exists": "Board already exists",
-			"boardNotFound": "Board not found"
-		},
-		"roadmaps": {
-			"urlMissing": "Roadmap url cannot be empty",
-			"roadmapNotFound": "Roadmap not found"
-		},
-		"votes": {
-			"exists": "Vote already exists",
-			"voteNotFound": "Vote not found"
-		},
-		"labs": {
-			"disabled": "This feature is disabled"
-		}
-	}
+    "user": {
+      "userNotFound": "User not found",
+      "userBlocked": "User is Blocked",
+      "incorrectPassword": "Incorect password",
+      "userExists": "User exists"
+    }
+  },
+  "api": {
+    "authentication": {
+      "invalidEmail": "Enter valid email",
+      "noPasswordProvided": "No password provided",
+      "setupAlreadyCompleted": "Setup has already been completed."
+    },
+    "roles": {
+      "roleNotFound": "Role not found",
+      "notEnoughPermission": "You do not have permission to perform this action."
+    },
+    "user": {
+      "userNotFound": "User not found"
+    },
+    "emailVerify": {
+      "emailAlreadyVerified": "Your email has already been verified.",
+      "tokenMissing": "Email verification token missing",
+      "invalidToken": "Email verification token is invalid",
+      "tokenExpired": "Email verification link is expired"
+    },
+    "passwordReset": {
+      "expired": "Your password reset link has expired",
+      "invalidToken": "Invalid password reset link",
+      "missingToken": "Password reset token is missing"
+    },
+    "posts": {
+      "titleMissing": "Post title missing",
+      "postNotFound": "Post not found",
+      "notAnAuthor": "You are not the author of the post"
+    },
+    "boards": {
+      "nameMissing": "Board name missing",
+      "urlMissing": "Board url cannot be empty",
+      "boardIdMissing": "Board ID missing",
+      "exists": "Board already exists",
+      "boardNotFound": "Board not found"
+    },
+    "roadmaps": {
+      "urlMissing": "Roadmap url cannot be empty",
+      "roadmapNotFound": "Roadmap not found"
+    },
+    "votes": {
+      "exists": "Vote already exists",
+      "voteNotFound": "Vote not found"
+    },
+    "labs": {
+      "disabled": "This feature is disabled"
+    }
+  }
 }

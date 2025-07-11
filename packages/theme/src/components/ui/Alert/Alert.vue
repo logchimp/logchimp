@@ -45,43 +45,45 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, useSlots } from 'vue';
+import { onMounted, computed, useSlots } from "vue";
 import {
   CheckCircle2 as SuccessIcon,
   AlertTriangle as WarningIcon,
   XCircle as ErrorIcon,
-} from "lucide-vue"
+} from "lucide-vue";
 
 const props = defineProps({
-	title: {
-		type: String,
-		required: true
-	},
-	description: {
-		type: String,
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
     default: "",
-	},
-	type: {
-		type: String,
-		required: true
-	},
-	timeout: {
-		type: Number,
-		default: 2000
-	},
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  timeout: {
+    type: Number,
+    default: 2000,
+  },
   isToast: {
     type: Boolean,
     default: false,
-  }
-})
+  },
+});
 
-const hasDescription = computed(() => props.description || useSlots().description)
-const hasFooter = computed(() => hasDescription || useSlots().cta)
-const emit = defineEmits(['remove'])
+const hasDescription = computed(
+  () => props.description || useSlots().description,
+);
+const hasFooter = computed(() => hasDescription || useSlots().cta);
+const emit = defineEmits(["remove"]);
 
 onMounted(() => {
-	setTimeout(() => emit("remove"), props.timeout);
-})
+  setTimeout(() => emit("remove"), props.timeout);
+});
 </script>
 
 <style lang='scss' module>

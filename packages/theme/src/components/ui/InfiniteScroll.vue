@@ -24,7 +24,11 @@
 </template>
 
 <script lang="ts">
-export type InfiniteScrollStateType = 'LOADING' | 'LOADED' | 'COMPLETED' | 'ERROR'
+export type InfiniteScrollStateType =
+  | "LOADING"
+  | "LOADED"
+  | "COMPLETED"
+  | "ERROR";
 </script>
 
 <script setup lang="ts">
