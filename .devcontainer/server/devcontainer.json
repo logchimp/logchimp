@@ -16,11 +16,17 @@
   ],
   "portsAttributes": {
     "8000": {
-      "label": "API Server"
+      "label": "API Server",
+      "onAutoForward": "notify"
     }
   },
 
   "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md"
+      ]
+    },
     "vscode": {
       "extensions": [
         "biomejs.biome",

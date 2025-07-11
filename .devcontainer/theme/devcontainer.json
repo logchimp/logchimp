@@ -11,7 +11,8 @@
   ],
   "portsAttributes": {
     "3000": {
-      "label": "Theme"
+      "label": "Theme",
+      "onAutoForward": "openBrowser"
     }
   },
 
