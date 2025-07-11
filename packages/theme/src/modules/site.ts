@@ -106,16 +106,8 @@ export const updateSettings = async (site: SiteSettingsType) => {
   });
 };
 
-/**
- * upload site logo
- *
- * @param {FormData} logo logo (image file)
- *
- * @returns {object} response
- */
-// TODO: Add TS types
-// biome-ignore lint: Add TS types
-export const uploadSiteLogo = async (logo: any) => {
+// Upload site logo
+export const uploadSiteLogo = async (logo: FormData) => {
   const { authToken } = useUserStore();
 
   return await axios({

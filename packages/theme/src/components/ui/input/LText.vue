@@ -73,7 +73,7 @@ function keyUpEnter() {
   emit("keyup-enter");
 }
 
-function keyup(event: any) {
+function keyup(event: unknown) {
   if (props.disabled) return;
   emit("keyup", event);
 }

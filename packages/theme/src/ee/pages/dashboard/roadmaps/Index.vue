@@ -197,7 +197,7 @@ async function createRoadmapHandler() {
 	}
 }
 
-function moveItem(event: any) {
+function moveItem(event: unknown) {
 	// current
 	sort.value.to = {
 		id: event.draggedContext.element.id,

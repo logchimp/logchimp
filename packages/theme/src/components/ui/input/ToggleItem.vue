@@ -55,7 +55,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<(e: "update:modelValue", event?: any) => void>();
+const emit = defineEmits<(e: "update:modelValue", event?: unknown) => void>();
 
 function input(checked: boolean) {
   emit("update:modelValue", checked);

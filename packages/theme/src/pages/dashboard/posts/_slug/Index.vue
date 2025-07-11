@@ -265,7 +265,7 @@ async function postBySlug() {
   }
 }
 
-async function suggestBoard(event: any) {
+async function suggestBoard(event: unknown) {
   const name = event.target.value;
 	if (!name) {
 		boards.search = "";
@@ -281,7 +281,7 @@ async function suggestBoard(event: any) {
 	}
 }
 
-async function suggestRoadmap(event: any) {
+async function suggestRoadmap(event: unknown) {
   const name = event.target.value;
 	if (!name) {
 		roadmaps.search = "";
