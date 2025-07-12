@@ -48,7 +48,8 @@
         "editorconfig.editorconfig",
         "ZixuanChen.vitest-explorer",
         "syler.sass-indented",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "actboy168.tasks"
       ]
     }
   },
