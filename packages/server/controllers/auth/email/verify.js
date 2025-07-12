@@ -4,10 +4,15 @@ const verifyEmail = require("../../../services/auth/verifyEmail");
 // utils
 const logger = require("../../../utils/logger");
 const error = require("../../../errorResponse.json");
-
+const { isDomainBlacklisted } = require("../domainBlacklist");
 exports.verify = async (req, res) => {
   const { userId, email, isVerified } = req.user;
-
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
   if (isVerified) {
     return res.status(409).send({
       message: error.api.emailVerify.emailAlreadyVerified,
