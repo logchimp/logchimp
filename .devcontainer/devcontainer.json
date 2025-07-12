@@ -1,5 +1,6 @@
 {
-  "name": "LogChimp Theme",
+  "name": "LogChimp",
+  "image": "mcr.microsoft.com/devcontainers/universal",
 
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
@@ -7,16 +8,37 @@
   },
 
   "forwardPorts": [
-    "3000:3000"
+    "8000:8000",
+    "3000:3000",
+    "5432:5432",
+    "1080:1080",
+    "1025:1025"
   ],
   "portsAttributes": {
+    "8000": {
+      "label": "Server"
+    },
     "3000": {
       "label": "Theme",
       "onAutoForward": "openBrowser"
+    },
+    "5432": {
+      "label": "PostgreSQL Database"
+    },
+    "1080": {
+      "label": "Email client"
+    },
+    "1025": {
+      "label": "SMTP server"
     }
   },
 
   "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md"
+      ]
+    },
     "vscode": {
       "extensions": [
         "biomejs.biome",
@@ -29,5 +51,8 @@
         "eamodio.gitlens"
       ]
     }
-  }
+  },
+
+  "initializeCommand": "bash ./.devcontainer/initializeCommand.sh",
+  "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh"
 }
