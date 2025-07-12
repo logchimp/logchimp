@@ -6,6 +6,8 @@ COPY ./package.json ./pnpm-lock.yaml ./
 
 WORKDIR /app/packages/server
 
+ENV NODE_ENV=development
+
 RUN \
     npm i -g pnpm; \
     pnpm install
