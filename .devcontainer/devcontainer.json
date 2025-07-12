@@ -1,28 +1,26 @@
 {
-  "name": "logchimp",
-  "build": {
-    "dockerfile": "../.gitpod.Dockerfile"
-  },
+  "name": "LogChimp",
+  "image": "mcr.microsoft.com/devcontainers/universal",
 
   "features": {
-    "ghcr.io/devcontainers/features/sshd:1": {
-      "version": "latest"
-    }
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {}
   },
 
   "forwardPorts": [
-    "8080:8080",
+    "8000:8000",
     "3000:3000",
     "5432:5432",
     "1080:1080",
     "1025:1025"
   ],
   "portsAttributes": {
-    "8080": {
-      "label": "Theme"
+    "8000": {
+      "label": "Server"
     },
     "3000": {
-      "label": "API Server"
+      "label": "Theme",
+      "onAutoForward": "openBrowser"
     },
     "5432": {
       "label": "PostgreSQL Database"
@@ -31,20 +29,31 @@
       "label": "Email client"
     },
     "1025": {
-      "label": "Email injection"
+      "label": "SMTP server"
     }
   },
 
-  "extensions": [
-    "biomejs.biome",
-    "wix.vscode-import-cost",
-    "bradlc.vscode-tailwindcss",
-    "Vue.volar",
-    "editorconfig.editorconfig",
-    "ZixuanChen.vitest-explorer",
-    "syler.sass-indented",
-    "eamodio.gitlens"
-  ],
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md"
+      ]
+    },
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "wix.vscode-import-cost",
+        "bradlc.vscode-tailwindcss",
+        "Vue.volar",
+        "editorconfig.editorconfig",
+        "ZixuanChen.vitest-explorer",
+        "syler.sass-indented",
+        "eamodio.gitlens",
+        "actboy168.tasks"
+      ]
+    }
+  },
 
-  "postCreateCommand": "bash ../scripts/gitpod-init.sh"
+  "initializeCommand": "bash ./.devcontainer/initializeCommand.sh",
+  "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh"
 }
