@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "LogChimp Theme Dev",
+      "type": "shell",
+      "command": "pnpm dev",
+      "options": {
+        "cwd": "${workspaceFolder}/packages/theme"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

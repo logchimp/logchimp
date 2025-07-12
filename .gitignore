@@ -28,7 +28,6 @@ npm-debug.log*
 coverage
 
 # Editor directories and files
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
