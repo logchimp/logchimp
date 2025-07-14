@@ -18,7 +18,7 @@
     "lucide-vue": "npm:lucide-vue-next@0.525.0",
     "pinia": "2.1.7",
     "uuid": "9.0.1",
-    "vue": "3.3.4",
+    "vue": "3.5.17",
     "vue-gtag": "2.0.1",
     "vue-infinite-loading": "github:nvitius/vue-infinite-loading#next",
     "vue-router": "4.2.5",
