@@ -1,5 +1,3 @@
 {
-  "tasks.autoRun": [
-    "LogChimp Theme Dev"
-  ]
+  "tasks.autoRun": ["LogChimp Theme Dev"]
 }
