@@ -90,6 +90,12 @@ jobs:
           fi
 
           cd ./packages/$SERVICE_COMMON_NAME
+          echo "====="
+          echo "pwd"
+          echo $(pwd)
+          echo "====="
+          echo "ls"
+          echo $(ls)
           pnpm docker:build
 
       - name: Tag and Push docker image
