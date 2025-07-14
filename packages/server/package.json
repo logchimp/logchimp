@@ -11,7 +11,8 @@
     "test:integration": "vitest --config ./vitest.config.integration.ts",
     "db:migrate": "knex --knexfile ./database/config.js migrate:latest",
     "db:migrate:create": "knex --knexfile ./database/config.js migrate:make",
-    "db:seed:run": "knex --knexfile ./database/config.js seed:run"
+    "db:seed:run": "knex --knexfile ./database/config.js seed:run",
+    "docker:build": "docker buildx build --load -t server - $DOCKER_BUILD_ARGUMENTS"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
