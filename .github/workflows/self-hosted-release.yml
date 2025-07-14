@@ -49,13 +49,12 @@ jobs:
 
       - name: Get pnpm store directory
         id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+        run: echo "PNPM_CACHE_DIR=$(pnpm store path)" >> $GITHUB_ENV
 
       - name: Cache .pnpm-store
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          path: ${{ env.PNPM_CACHE_DIR }}
           key: ubuntu-node-v${{ env.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ubuntu-node-v${{ env.node }}-pnpm-v${{ env.pnpm-version }}-
@@ -85,17 +84,18 @@ jobs:
             --output=type=image,name=ghcr.io/${{ env.REGISTRY_OWNER }}/${{ env.SERVICE_NAME }},push-by-digest=true,name-canonical=true
         run: |
           # change 'api' to 'server'
-          if [ $SERVICE_COMMON_NAME == "api" ]; then
-            $SERVICE_COMMON_NAME=server
+          SERVICE_COMMON_NAME_LOCAL=$SERVICE_COMMON_NAME
+          if [ "$SERVICE_COMMON_NAME_LOCAL" == "api" ]; then
+            SERVICE_COMMON_NAME_LOCAL=server
           fi
 
-          cd ./packages/$SERVICE_COMMON_NAME
-          pnpm docker:build
+          docker buildx build --load -f ./packages/$SERVICE_COMMON_NAME_LOCAL/Dockerfile -t logchimp-$SERVICE_COMMON_NAME . $DOCKER_BUILD_ARGUMENTS
+          docker images
 
       - name: Tag and Push docker image
         shell: bash
         run: |
-          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:${{ env.LATEST_VERSION }}
-          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:latest
-          docker push ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:${{ env.LATEST_VERSION }}
-          docker push ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:latest
+          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ env.LATEST_VERSION }}
+          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
+          docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ env.LATEST_VERSION }}
+          docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
