@@ -29,6 +29,7 @@ jobs:
           service=${{ matrix.name }}
           LATEST_VERSION=$(jq -r '.version'  packages/server/package.json)
           SERVICE_NAME=$(basename "${service//-/-}")
+          SERVICE_COMMON_NAME=$(echo "$SERVICE_NAME" | sed 's/-ee$//')
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
           echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
           echo "SERVICE_COMMON_NAME=$SERVICE_COMMON_NAME" >> $GITHUB_ENV
