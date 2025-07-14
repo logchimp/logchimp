@@ -84,18 +84,12 @@ jobs:
             --output=type=image,name=ghcr.io/${{ env.REGISTRY_OWNER }}/${{ env.SERVICE_NAME }},push-by-digest=true,name-canonical=true
         run: |
           # change 'api' to 'server'
-          if [ "$SERVICE_COMMON_NAME" == "api" ]; then
-            SERVICE_COMMON_NAME=server
+          SERVICE_COMMON_NAME_LOCAL=$SERVICE_COMMON_NAME
+          if [ "SERVICE_COMMON_NAME_LOCAL" == "api" ]; then
+            SERVICE_COMMON_NAME_LOCAL=server
           fi
 
-          cd ./packages/$SERVICE_COMMON_NAME
-          echo "====="
-          echo "pwd"
-          echo $(pwd)
-          echo "====="
-          echo "ls"
-          echo $(ls)
-          pnpm docker:build
+          docker buildx build --load -f ./packages/$SERVICE_COMMON_NAME_LOCAL/Dockerfile -t $SERVICE_COMMON_NAME . $DOCKER_BUILD_ARGUMENTS
 
       - name: Tag and Push docker image
         shell: bash
