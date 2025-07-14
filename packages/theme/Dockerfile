@@ -13,7 +13,7 @@ FROM caddy:latest
 
 WORKDIR /app
 
-COPY ./docker/community/theme.Caddyfile ./Caddyfile
+COPY ./packages/theme/Caddyfile ./Caddyfile
 
 RUN caddy fmt Caddyfile --overwrite
 
