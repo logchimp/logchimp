@@ -10,9 +10,6 @@ content/images/*.jpeg
 content/images/*.svg
 content/logs/*.log
 
-# Server
-server/public
-
 # local env files
 .env
 .env.local
