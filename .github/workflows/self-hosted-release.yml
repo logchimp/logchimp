@@ -86,7 +86,7 @@ jobs:
         run: |
           # change 'api' to 'server'
           if [ $SERVICE_COMMON_NAME == "api" ]; then
-            $SERVICE_COMMON_NAME=server
+            $SERVICE_COMMON_NAME="server"
           fi
 
           cd ./packages/$SERVICE_COMMON_NAME
