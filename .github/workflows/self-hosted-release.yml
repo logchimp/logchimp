@@ -85,8 +85,8 @@ jobs:
             --output=type=image,name=ghcr.io/${{ env.REGISTRY_OWNER }}/${{ env.SERVICE_NAME }},push-by-digest=true,name-canonical=true
         run: |
           # change 'api' to 'server'
-          if [ $SERVICE_COMMON_NAME == "api" ]; then
-            $SERVICE_COMMON_NAME="server"
+          if [ "$SERVICE_COMMON_NAME" == "api" ]; then
+            SERVICE_COMMON_NAME=server
           fi
 
           cd ./packages/$SERVICE_COMMON_NAME
