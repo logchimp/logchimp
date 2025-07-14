@@ -7,7 +7,7 @@ COPY . .
 RUN \
     npm i -g pnpm && \
     pnpm install --frozen-lockfile --prod=false && \
-    pnpm vite build;
+    pnpm --filter="@logchimp/theme" exec pnpm vite build;
 
 FROM caddy:latest
 
