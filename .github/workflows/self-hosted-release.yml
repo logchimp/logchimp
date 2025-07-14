@@ -90,11 +90,12 @@ jobs:
           fi
 
           docker buildx build --load -f ./packages/$SERVICE_COMMON_NAME_LOCAL/Dockerfile -t $SERVICE_COMMON_NAME . $DOCKER_BUILD_ARGUMENTS
+          docker images
 
       - name: Tag and Push docker image
         shell: bash
         run: |
-          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:${{ env.LATEST_VERSION }}
-          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:latest
-          docker push ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:${{ env.LATEST_VERSION }}
-          docker push ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:latest
+          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ env.LATEST_VERSION }}
+          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
+          docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ env.LATEST_VERSION }}
+          docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
