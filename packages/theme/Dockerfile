@@ -13,6 +13,8 @@ FROM caddy:latest
 
 WORKDIR /app
 
+COPY ./packages/theme/Caddyfile ./Caddyfile
+
 RUN caddy fmt Caddyfile --overwrite
 
 COPY --from=build-stage /app/packages/theme/dist ./dist
