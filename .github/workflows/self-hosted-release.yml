@@ -1,0 +1,100 @@
+name: Self Hosted Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+
+permissions:
+  packages: write
+
+env:
+  node: 22
+  pnpm-version: 10
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        name: [ 'logchimp/api', 'logchimp/theme' ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Variables
+        run: |
+          service=${{ matrix.name }}
+          LATEST_VERSION=$(jq -r '.version'  packages/server/package.json)
+          SERVICE_NAME=$(basename "${service//-/-}")
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
+          echo "SERVICE_COMMON_NAME=$SERVICE_COMMON_NAME" >> $GITHUB_ENV
+          echo "REGISTRY_OWNER=logchimp" >> $GITHUB_ENV
+          echo "This is the service name: $SERVICE_NAME and release version: $LATEST_VERSION"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node }}
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Cache .pnpm-store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ubuntu-node-v${{ env.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ubuntu-node-v${{ env.node }}-pnpm-v${{ env.pnpm-version }}-
+
+      - name: Install packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build ${{ env.SERVICE_NAME }} Community Docker Image
+        shell: bash
+        env:
+          DOCKER_BUILD_ARGUMENTS: >
+            --cache-from type=registry,ref=ghcr.io/${{ env.REGISTRY_OWNER }}/cache:build-cache-${{ env.SERVICE_NAME }}-community
+            --cache-to type=registry,ref=ghcr.io/${{ env.REGISTRY_OWNER }}/cache:build-cache-${{ env.SERVICE_NAME }}-community,mode=max
+            --output=type=image,name=ghcr.io/${{ env.REGISTRY_OWNER }}/${{ env.SERVICE_NAME }},push-by-digest=true,name-canonical=true
+        run: |
+          # change 'api' to 'server'
+          if [ $SERVICE_COMMON_NAME == "api" ]; then
+            $SERVICE_COMMON_NAME=server
+          fi
+
+          cd ./packages/$SERVICE_COMMON_NAME
+          pnpm docker:build
+
+      - name: Tag and Push docker image
+        shell: bash
+        run: |
+          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:${{ env.LATEST_VERSION }}
+          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:latest
+          docker push ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:${{ env.LATEST_VERSION }}
+          docker push ghcr.io/$REGISTRY_OWNER/${{ matrix.name }}:latest
