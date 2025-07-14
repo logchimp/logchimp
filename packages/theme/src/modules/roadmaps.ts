@@ -19,7 +19,7 @@ export interface Roadmap {
 export const getAllRoadmaps = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/roadmaps",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps`,
   });
 };
 
@@ -33,7 +33,7 @@ export const getAllRoadmaps = async () => {
 export const getRoadmapByUrl = async (url: string) => {
   return await axios({
     method: "GET",
-    url: `/api/v1/roadmaps/${url}`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps/${url}`,
   });
 };
 
@@ -49,7 +49,7 @@ export const searchRoadmap = async (name: string) => {
 
   return await axios({
     method: "GET",
-    url: `/api/v1/roadmaps/search/${name}`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps/search/${name}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

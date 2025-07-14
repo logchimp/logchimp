@@ -46,7 +46,7 @@ const logchimpVersion = computed(() => packageJson.version);
 function getSiteSettings() {
   axios({
     method: "get",
-    url: "/api/v1/settings/site",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/site`,
   })
     .then((response) => {
       settingsStore.update(response.data.settings);

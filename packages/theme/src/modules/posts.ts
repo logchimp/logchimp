@@ -57,7 +57,7 @@ export const createPost = async (boardId: string, post: CreatePostArgs) => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/posts",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/posts`,
     data: {
       title: post.title,
       contentMarkdown: post.contentMarkdown,
@@ -93,7 +93,7 @@ export const getPosts = async ({
 
   return await axios({
     method: "POST",
-    url: "/api/v1/posts/get",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/get`,
     data: {
       page,
       limit,
@@ -117,7 +117,7 @@ export const getPostBySlug = async (slug: string) => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/posts/slug",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/slug`,
     data: {
       slug,
       userId: getUserId,
@@ -144,7 +144,7 @@ export const updatePost = async (post: UpdatePostArgs) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/posts",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/posts`,
     data: {
       ...post,
     },
@@ -164,7 +164,7 @@ export const updatePost = async (post: UpdatePostArgs) => {
 export const postActivity = async ({ post_id, sort }: PostActivityArgs) => {
   return await axios({
     method: "GET",
-    url: `/api/v1/posts/${post_id}/activity`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/${post_id}/activity`,
     params: {
       sort,
     },
@@ -187,7 +187,7 @@ export const addComment = async ({
 
   return await axios({
     method: "POST",
-    url: `/api/v1/posts/${post_id}/comments`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/${post_id}/comments`,
     data: {
       body,
       is_internal,

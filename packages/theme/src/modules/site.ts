@@ -45,7 +45,7 @@ export const siteSetup = async ({
 }: SiteSetupArgs) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/setup",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/auth/setup`,
     data: {
       siteTitle,
       name,
@@ -63,7 +63,7 @@ export const siteSetup = async ({
 export const isSiteSetup = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/auth/setup",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/auth/setup`,
   });
 };
 
@@ -75,7 +75,7 @@ export const isSiteSetup = async () => {
 export const getSettings = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/settings/site",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/site`,
   });
 };
 
@@ -96,7 +96,7 @@ export const updateSettings = async (site: SiteSettingsType) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/settings/site",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/site`,
     data: {
       ...site,
     },
@@ -112,7 +112,7 @@ export const uploadSiteLogo = async (logo: FormData) => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/settings/update-logo",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/update-logo`,
     data: logo,
     headers: {
       Authorization: `Bearer ${authToken}`,
@@ -129,7 +129,7 @@ export const uploadSiteLogo = async (logo: FormData) => {
 export const getLabsSettings = async () => {
   return await axios({
     method: "GET",
-    url: "/api/v1/settings/labs",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/labs`,
   });
 };
 
@@ -145,7 +145,7 @@ export const updateLabsSettings = async (labs: LabsType) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/settings/labs",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/labs`,
     data: labs,
     headers: {
       Authorization: `Bearer ${authToken}`,

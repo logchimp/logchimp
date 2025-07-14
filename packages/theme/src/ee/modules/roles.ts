@@ -14,7 +14,7 @@ interface UpdateRoleArgs {
 }
 
 /**
- *	Get all roles
+ * Get all roles
  *
  * @returns {object} response
  */
@@ -23,7 +23,7 @@ export const getAllRoles = async () => {
 
   return await axios({
     method: "GET",
-    url: "/api/v1/roles",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roles`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -31,7 +31,7 @@ export const getAllRoles = async () => {
 };
 
 /**
- *	Get role by UUID
+ * Get role by UUID
  *
  * @param {string} id role id
  *
@@ -42,7 +42,7 @@ export const getRole = async (id: string) => {
 
   return await axios({
     method: "GET",
-    url: `/api/v1/roles/${id}`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roles/${id}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -50,7 +50,7 @@ export const getRole = async (id: string) => {
 };
 
 /**
- *	Create role
+ * Create role
  *
  * @returns {object} response
  */
@@ -65,7 +65,7 @@ export const createRole = async (): Promise<
 
   return await axios({
     method: "POST",
-    url: "/api/v1/roles",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roles`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -73,7 +73,7 @@ export const createRole = async (): Promise<
 };
 
 /**
- * Updatae a role
+ * Update a role
  *
  * @param {object} role update role
  * @param {string} role.id role id
@@ -88,7 +88,7 @@ export const updateRole = async (role: UpdateRoleArgs) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/roles",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roles`,
     data: {
       ...role,
     },

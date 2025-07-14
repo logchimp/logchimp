@@ -22,7 +22,7 @@ export const addVote = async (postId: string) => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/votes",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/votes`,
     data: {
       userId: getUserId,
       postId,
@@ -45,7 +45,7 @@ export const deleteVote = async (postId: string) => {
 
   return await axios({
     method: "DELETE",
-    url: "/api/v1/votes",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/votes`,
     data: {
       userId: getUserId,
       postId,

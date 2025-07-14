@@ -37,7 +37,7 @@ export const getPublicBoards = async ({
 }: ApiPaginationType) => {
   return await axios({
     method: "GET",
-    url: "/api/v1/boards",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards`,
     params: {
       page,
       limit,
@@ -61,7 +61,7 @@ export const getAllBoards = async ({
 }: ApiPaginationType) => {
   return await axios({
     method: "GET",
-    url: "/api/v1/boards/get",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards/get`,
     params: {
       page,
       limit,
@@ -80,7 +80,7 @@ export const getAllBoards = async ({
 export const getBoardByUrl = async (url: string) => {
   return await axios({
     method: "GET",
-    url: `/api/v1/boards/${url}`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards/${url}`,
   });
 };
 
@@ -96,7 +96,7 @@ export const searchBoard = async (name: string) => {
 
   return await axios({
     method: "GET",
-    url: `/api/v1/boards/search/${name}`,
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards/search/${name}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -113,7 +113,7 @@ export const createBoard = async ({ name, display }: CreateBoardArgs) => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/boards",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards`,
     data: {
       name,
       display,
@@ -141,7 +141,7 @@ export const updateBoard = async (board: UpdateBoardArgs) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/boards",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards`,
     data: {
       ...board,
     },
@@ -163,7 +163,7 @@ export const deleteBoard = async (boardId: string) => {
 
   return await axios({
     method: "DELETE",
-    url: "/api/v1/boards",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards`,
     data: {
       boardId,
     },
@@ -185,7 +185,7 @@ export const checkBoardName = async (name: string) => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/boards/check-name",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/boards/check-name`,
     data: {
       name,
     },

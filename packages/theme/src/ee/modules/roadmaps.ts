@@ -20,7 +20,7 @@ export const createRoadmap = async () => {
 
   return await axios({
     method: "POST",
-    url: "/api/v1/roadmaps",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -43,7 +43,7 @@ export const updateRoadmap = async (roadmap: UpdateRoadmapArgs) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/roadmaps",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps`,
     data: {
       ...roadmap,
     },
@@ -71,7 +71,7 @@ export const sortRoadmap = async ({ from, to }: DraggableSortFromToType) => {
 
   return await axios({
     method: "PATCH",
-    url: "/api/v1/roadmaps/sort",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps/sort`,
     data: {
       from,
       to,
@@ -94,7 +94,7 @@ export const deleteRoadmap = async (id: string) => {
 
   return await axios({
     method: "DELETE",
-    url: "/api/v1/roadmaps",
+    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps`,
     data: {
       id,
     },
