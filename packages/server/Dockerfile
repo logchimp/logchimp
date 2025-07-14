@@ -2,8 +2,7 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY ./packages/server/ ./packages/server/
-COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
+COPY . .
 
 WORKDIR /app/packages/server
 
