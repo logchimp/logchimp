@@ -1,5 +1,5 @@
-const logger = require("../../utils/logger");
-
+// Inside domainBlacklist.js
+const logger = require('../../utils/logger');
 function isValidDomain(domain) {
   if (typeof domain !== 'string') return false;
 
