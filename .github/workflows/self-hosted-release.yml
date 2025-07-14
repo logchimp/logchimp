@@ -85,7 +85,7 @@ jobs:
         run: |
           # change 'api' to 'server'
           SERVICE_COMMON_NAME_LOCAL=$SERVICE_COMMON_NAME
-          if [ "SERVICE_COMMON_NAME_LOCAL" == "api" ]; then
+          if [ "$SERVICE_COMMON_NAME_LOCAL" == "api" ]; then
             SERVICE_COMMON_NAME_LOCAL=server
           fi
 
