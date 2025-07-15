@@ -7,6 +7,7 @@ COPY . .
 RUN \
     npm i -g pnpm && \
     pnpm install --frozen-lockfile --prod=false && \
+    # TODO: use pnpm build script which does typescript check
     pnpm --filter="@logchimp/theme" exec pnpm vite build;
 
 FROM caddy:latest
@@ -18,5 +19,9 @@ COPY ./packages/theme/Caddyfile ./Caddyfile
 RUN caddy fmt Caddyfile --overwrite
 
 COPY --from=build-stage /app/packages/theme/dist ./dist
+
+# Inject app env
+COPY --from=build-stage /app/packages/theme/inject-app-env.sh .
+RUN sh ./inject-app-env.sh
 
 CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
