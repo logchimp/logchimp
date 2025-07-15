@@ -60,7 +60,7 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV}
       PORT: ${THEME_PORT:-3000}
-      LOGCHIMP_API_URL: http://api:${API_PORT:-8000}
+      VITE_API_URL: http://api:${API_PORT:-8000}
     ports:
       - "${THEME_PORT:-3000}:${THEME_PORT:-3000}"
     networks:

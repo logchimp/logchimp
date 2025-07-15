@@ -1,6 +1,8 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
+
 import type { UserType } from "./users";
+import { VITE_API_URL } from "../constants";
 
 interface AuthenticateUserArgs {
   email: string;
@@ -34,7 +36,7 @@ export const signin = async ({
 > => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/login",
+    url: `${VITE_API_URL}/api/v1/auth/login`,
     data: {
       email,
       password,
@@ -52,7 +54,7 @@ export const signin = async ({
 export const signup = async ({ email, password }: AuthenticateUserArgs) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/signup",
+    url: `${VITE_API_URL}/api/v1/auth/signup`,
     data: {
       email,
       password,
@@ -69,7 +71,7 @@ export const signup = async ({ email, password }: AuthenticateUserArgs) => {
 export const resendUserVerificationEmail = async (email: string) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/email/verify",
+    url: `${VITE_API_URL}/api/v1/auth/email/verify`,
     data: {
       email,
     },
@@ -86,7 +88,7 @@ export const resendUserVerificationEmail = async (email: string) => {
 export const verifyUserEmail = async (token: string) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/email/validate",
+    url: `${VITE_API_URL}/api/v1/auth/email/validate`,
     data: {
       token,
     },
@@ -103,7 +105,7 @@ export const verifyUserEmail = async (token: string) => {
 export const requestPasswordReset = async (email: string) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/password/reset",
+    url: `${VITE_API_URL}/api/v1/auth/password/reset`,
     data: {
       email,
     },
@@ -120,7 +122,7 @@ export const requestPasswordReset = async (email: string) => {
 export const validateResetPasswordToken = async (token: string) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/password/validateToken",
+    url: `${VITE_API_URL}/api/v1/auth/password/validateToken`,
     data: {
       token,
     },
@@ -141,7 +143,7 @@ export const setNewPassword = async ({
 }: SetNewPasswordArgs) => {
   return await axios({
     method: "POST",
-    url: "/api/v1/auth/password/set",
+    url: `${VITE_API_URL}/api/v1/auth/password/set`,
     data: {
       token,
       password,
