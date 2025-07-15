@@ -16,44 +16,40 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-       - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     networks:
       - logchimp
 
   api:
-     build:
-       dockerfile: ./packages/server/Dockerfile
-       context: .
-     restart: unless-stopped
-     depends_on:
-       - db
-     environment:
-       NODE_ENV: ${NODE_ENV}
-       PORT: ${API_PORT:-8000}
-       LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
+    image: ghcr.io/logchimp/logchimp/api:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${API_PORT:-8000}
+      LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
 
-       # Database
-       LOGCHIMP_DB_HOST: db
-       LOGCHIMP_DB_DATABASE: ${POSTGRES_DB}
-       LOGCHIMP_DB_PORT: 5432
-       LOGCHIMP_DB_USER: ${POSTGRES_USER}
-       LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
-       LOGCHIMP_DB_SSL: ${LOGCHIMP_DB_SSL:-false}
+      # Database
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: ${POSTGRES_DB}
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: ${POSTGRES_USER}
+      LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      LOGCHIMP_DB_SSL: ${LOGCHIMP_DB_SSL:-false}
 
-       # Mail
-       LOGCHIMP_MAIL_HOST: ${LOGCHIMP_MAIL_HOST}
-       LOGCHIMP_MAIL_USER: ${LOGCHIMP_MAIL_USER}
-       LOGCHIMP_MAIL_PASSWORD: ${LOGCHIMP_MAIL_PASSWORD}
-       LOGCHIMP_MAIL_PORT: ${LOGCHIMP_MAIL_PORT}
-     ports:
-       - "${API_PORT:-8000}:${API_PORT:-8000}"
-     networks:
-       - logchimp
+      # Mail
+      LOGCHIMP_MAIL_HOST: ${LOGCHIMP_MAIL_HOST}
+      LOGCHIMP_MAIL_USER: ${LOGCHIMP_MAIL_USER}
+      LOGCHIMP_MAIL_PASSWORD: ${LOGCHIMP_MAIL_PASSWORD}
+      LOGCHIMP_MAIL_PORT: ${LOGCHIMP_MAIL_PORT}
+    ports:
+      - "${API_PORT:-8000}:${API_PORT:-8000}"
+    networks:
+      - logchimp
 
   theme:
-    build:
-      dockerfile: ./packages/theme/Dockerfile
-      context: .
+    image: ghcr.io/logchimp/logchimp/theme:latest
     restart: unless-stopped
     depends_on:
       - api
