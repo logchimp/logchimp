@@ -1,0 +1,49 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://lefthook.dev/configuration/
+
+# pre-push:
+#   jobs:
+#     - name: packages audit
+#       tags:
+#         - frontend
+#         - security
+#       run: yarn audit
+#
+#     - name: gems audit
+#       tags:
+#         - backend
+#         - security
+#       run: bundle audit
+
+pre-commit:
+  parallel: true
+  jobs:
+    - run: |
+        if [ -x "$(command -v pnpm)" ]; then
+          pnpm biome format --write {staged_files}
+        else 
+          pkgx +nodejs.org@20 +pnpm.io \
+            pnpm biome format --write {staged_files}
+        fi
+      glob: "*.{js,ts,vue,json,md}"
+      stage_fixed: true
+
+#     - name: rubocop
+#       glob: "*.rb"
+#       exclude:
+#         - config/application.rb
+#         - config/routes.rb
+#       run: bundle exec rubocop --force-exclusion {all_files}
+#
+#     - name: govet
+#       files: git ls-files -m
+#       glob: "*.go"
+#       run: go vet {files}
+#
+#     - script: "hello.js"
+#       runner: node
+#
+#     - script: "hello.go"
+#       runner: go run
