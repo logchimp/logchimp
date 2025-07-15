@@ -22,6 +22,10 @@ COPY --from=build-stage /app/packages/theme/dist ./dist
 
 # Inject app env
 COPY --from=build-stage /app/packages/theme/inject-app-env.sh .
-RUN sh ./inject-app-env.sh
+RUN chmod +x /app/inject-app-env.sh
+ENTRYPOINT [ "/app/inject-app-env.sh" ]
+
+# Expose the port the app runs on
+EXPOSE 3000
 
 CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
