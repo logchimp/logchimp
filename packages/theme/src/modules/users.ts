@@ -5,6 +5,7 @@ import axios, { type AxiosResponse } from "axios";
 import { useUserStore } from "../store/user";
 
 import type { ApiPaginationType } from "../types";
+import { VITE_API_URL } from "../constants";
 
 interface UpdateUserSettingsArgs {
   name?: string;
@@ -35,7 +36,7 @@ export const getUserSettings = async () => {
 
   return await axios({
     method: "GET",
-    url: "/api/v1/users/profile",
+    url: `${VITE_API_URL}/api/v1/users/profile`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -55,7 +56,7 @@ export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
 
   return await axios({
     method: "patch",
-    url: "/api/v1/users/profile",
+    url: `${VITE_API_URL}/api/v1/users/profile`,
     data: {
       name,
     },
@@ -75,7 +76,7 @@ export const getPermissions = async (): Promise<
 
   return await axios({
     method: "GET",
-    url: "/api/v1/users/permissions",
+    url: `${VITE_API_URL}/api/v1/users/permissions`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -93,7 +94,7 @@ export const getPermissions = async (): Promise<
 export const getAllUsers = async ({ page, sort }: ApiPaginationType) => {
   return await axios({
     method: "GET",
-    url: "/api/v1/users",
+    url: `${VITE_API_URL}/api/v1/users`,
     params: {
       page,
       created: sort,
@@ -111,7 +112,7 @@ export const checkUserDashboardAccess = async () => {
 
   return await axios({
     method: "GET",
-    url: "/api/v1/users/dashboard",
+    url: `${VITE_API_URL}/api/v1/users/dashboard`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

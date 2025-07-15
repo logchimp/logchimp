@@ -27,8 +27,8 @@ tasks:
     openMode: tab-after
     command: |
       gp sync-await setup
-      # export 'APP_SERVER_URL' ENV to file
-      echo APP_SERVER_URL=http://localhost:3000 > .env
+      # export 'VITE_API_URL' ENV to file
+      echo VITE_API_URL=http://localhost:3000 > .env
 
       pnpm --filter @logchimp/theme dev
 
