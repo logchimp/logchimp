@@ -27,6 +27,7 @@ import gtag, { setOptions, bootstrap } from "vue-gtag";
 import { useHead } from "@vueuse/head";
 
 import packageJson from "../package.json";
+import { VITE_API_URL } from "./constants";
 
 import { useSettingStore } from "./store/settings";
 import { useUserStore } from "./store/user";
@@ -46,7 +47,7 @@ const logchimpVersion = computed(() => packageJson.version);
 function getSiteSettings() {
   axios({
     method: "get",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/settings/site`,
+    url: `${VITE_API_URL}/api/v1/settings/site`,
   })
     .then((response) => {
       settingsStore.update(response.data.settings);

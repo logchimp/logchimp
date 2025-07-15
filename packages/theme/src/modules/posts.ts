@@ -1,9 +1,11 @@
 // packages
 import axios from "axios";
 
+import { VITE_API_URL } from "../constants";
+import type { ApiPaginationType, ApiSortType } from "../types";
+
 // store
 import { useUserStore } from "../store/user";
-import type { ApiPaginationType, ApiSortType } from "../types";
 
 export interface PostType {
   postId: string;
@@ -57,7 +59,7 @@ export const createPost = async (boardId: string, post: CreatePostArgs) => {
 
   return await axios({
     method: "POST",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/posts`,
+    url: `${VITE_API_URL}/api/v1/posts`,
     data: {
       title: post.title,
       contentMarkdown: post.contentMarkdown,
@@ -93,7 +95,7 @@ export const getPosts = async ({
 
   return await axios({
     method: "POST",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/get`,
+    url: `${VITE_API_URL}/api/v1/posts/get`,
     data: {
       page,
       limit,
@@ -117,7 +119,7 @@ export const getPostBySlug = async (slug: string) => {
 
   return await axios({
     method: "POST",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/slug`,
+    url: `${VITE_API_URL}/api/v1/posts/slug`,
     data: {
       slug,
       userId: getUserId,
@@ -144,7 +146,7 @@ export const updatePost = async (post: UpdatePostArgs) => {
 
   return await axios({
     method: "PATCH",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/posts`,
+    url: `${VITE_API_URL}/api/v1/posts`,
     data: {
       ...post,
     },
@@ -164,7 +166,7 @@ export const updatePost = async (post: UpdatePostArgs) => {
 export const postActivity = async ({ post_id, sort }: PostActivityArgs) => {
   return await axios({
     method: "GET",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/${post_id}/activity`,
+    url: `${VITE_API_URL}/api/v1/posts/${post_id}/activity`,
     params: {
       sort,
     },
@@ -187,7 +189,7 @@ export const addComment = async ({
 
   return await axios({
     method: "POST",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/posts/${post_id}/comments`,
+    url: `${VITE_API_URL}/api/v1/posts/${post_id}/comments`,
     data: {
       body,
       is_internal,

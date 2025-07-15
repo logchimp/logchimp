@@ -8,9 +8,15 @@ declare module "*.vue" {
   export default component;
 }
 
-interface ImportMetaEnv {
+interface RuntimeEnv {
   readonly VITE_API_URL: string;
 }
+
+interface Window {
+  __APP_ENV__: Partial<RuntimeEnv>;
+}
+
+interface ImportMetaEnv extends RuntimeEnv {}
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;

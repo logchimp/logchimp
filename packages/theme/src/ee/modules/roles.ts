@@ -1,6 +1,8 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
 
+import { VITE_API_URL } from "../../constants";
+
 // store
 import { useUserStore } from "../../store/user";
 
@@ -23,7 +25,7 @@ export const getAllRoles = async () => {
 
   return await axios({
     method: "GET",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roles`,
+    url: `${VITE_API_URL}/api/v1/roles`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -42,7 +44,7 @@ export const getRole = async (id: string) => {
 
   return await axios({
     method: "GET",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roles/${id}`,
+    url: `${VITE_API_URL}/api/v1/roles/${id}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -65,7 +67,7 @@ export const createRole = async (): Promise<
 
   return await axios({
     method: "POST",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roles`,
+    url: `${VITE_API_URL}/api/v1/roles`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -88,7 +90,7 @@ export const updateRole = async (role: UpdateRoleArgs) => {
 
   return await axios({
     method: "PATCH",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roles`,
+    url: `${VITE_API_URL}/api/v1/roles`,
     data: {
       ...role,
     },

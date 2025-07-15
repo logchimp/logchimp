@@ -1,8 +1,11 @@
 // packages
 import axios from "axios";
 
+// store
 import { useUserStore } from "../store/user";
+
 import type { UserType } from "./users";
+import { VITE_API_URL } from "../constants";
 
 export interface PostVoteType extends UserType {
   voteId: string;
@@ -22,7 +25,7 @@ export const addVote = async (postId: string) => {
 
   return await axios({
     method: "POST",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/votes`,
+    url: `${VITE_API_URL}/api/v1/votes`,
     data: {
       userId: getUserId,
       postId,
@@ -45,7 +48,7 @@ export const deleteVote = async (postId: string) => {
 
   return await axios({
     method: "DELETE",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/votes`,
+    url: `${VITE_API_URL}/api/v1/votes`,
     data: {
       userId: getUserId,
       postId,

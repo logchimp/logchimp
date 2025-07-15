@@ -1,6 +1,8 @@
 // packages
 import axios from "axios";
 
+import { VITE_API_URL } from "../constants";
+
 // store
 import { useUserStore } from "../store/user";
 
@@ -19,7 +21,7 @@ export interface Roadmap {
 export const getAllRoadmaps = async () => {
   return await axios({
     method: "GET",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps`,
+    url: `${VITE_API_URL}/api/v1/roadmaps`,
   });
 };
 
@@ -33,7 +35,7 @@ export const getAllRoadmaps = async () => {
 export const getRoadmapByUrl = async (url: string) => {
   return await axios({
     method: "GET",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps/${url}`,
+    url: `${VITE_API_URL}/api/v1/roadmaps/${url}`,
   });
 };
 
@@ -49,7 +51,7 @@ export const searchRoadmap = async (name: string) => {
 
   return await axios({
     method: "GET",
-    url: `${import.meta.env.VITE_API_URL}/api/v1/roadmaps/search/${name}`,
+    url: `${VITE_API_URL}/api/v1/roadmaps/search/${name}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
