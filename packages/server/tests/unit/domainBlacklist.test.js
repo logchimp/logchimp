@@ -58,7 +58,7 @@ describe('isDomainBlacklisted', () => {
     if (originalEnvBlacklistedDomains !== undefined) {
       process.env.LOGCHIMP_BLACKLISTED_DOMAINS = originalEnvBlacklistedDomains;
     } else {
-      delete process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
+     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = undefined;
     }
   });
 
@@ -70,18 +70,18 @@ describe('isDomainBlacklisted', () => {
   });
 
   it('should return false for non-blacklisted domains', () => {
-    expect(isDomainBlacklisted('hello@good.com')).toBeFalsy();
-    expect(isDomainBlacklisted('admin@other.org')).toBeFalsy();
+    expect(isDomainBlacklisted('hello@good.com')).toBeFalsy()
+    expect(isDomainBlacklisted('admin@other.org')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
   it('should return false for invalid email formats', () => {
-    expect(isDomainBlacklisted('not-an-email')).toBeFalsy();
-    expect(isDomainBlacklisted('user@@spam.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@')).toBeFalsy();
-    expect(isDomainBlacklisted('@domain.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@domain')).toBeFalsy();
+    expect(isDomainBlacklisted('not-an-email')).toBeFalsy()
+    expect(isDomainBlacklisted('user@@spam.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@')).toBeFalsy()
+    expect(isDomainBlacklisted('@domain.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@domain')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
@@ -93,17 +93,17 @@ describe('isDomainBlacklisted', () => {
   });
 
   it('should return false for non-string input', () => {
-    expect(isDomainBlacklisted(null)).toBeFalsy();
-    expect(isDomainBlacklisted(undefined)).toBeFalsy();
-    expect(isDomainBlacklisted(42)).toBeFalsy();
-    expect(isDomainBlacklisted([])).toBeFalsy();
-    expect(isDomainBlacklisted({})).toBeFalsy();
+    expect(isDomainBlacklisted(null)).toBeFalsy()
+    expect(isDomainBlacklisted(undefined)).toBeFalsy()
+    expect(isDomainBlacklisted(42)).toBeFalsy()
+    expect(isDomainBlacklisted([])).toBeFalsy()
+    expect(isDomainBlacklisted({})).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
   it('should handle blacklisted domains with subdomains (should be false unless specifically blacklisted)', () => {
-    expect(isDomainBlacklisted('user@sub.example.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@another.test.com')).toBeFalsy();
+    expect(isDomainBlacklisted('user@sub.example.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@another.test.com')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
@@ -117,14 +117,14 @@ describe('isDomainBlacklisted', () => {
   it('should return false if blacklisted domains environment variable is empty or invalid', () => {
    
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
-    expect(isDomainBlacklisted('user@example.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@test.com')).toBeFalsy();
+    expect(isDomainBlacklisted('user@example.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@test.com')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled(); 
 
    
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'invalid-domain-!!, another.com';
     mockLogger.warn.mockClear(); 
-    expect(isDomainBlacklisted('user@invalid-domain-!!.com')).toBeFalsy();
+    expect(isDomainBlacklisted('user@invalid-domain-!!.com')).toBeFalsy()
     expect(isDomainBlacklisted('user@another.com')).toBeTruthy();
     expect(mockLogger.warn).toHaveBeenCalledTimes(1);
     expect(mockLogger.warn).toHaveBeenCalledWith('Invalid domain in blacklist config: "invalid-domain-!!"');
@@ -135,15 +135,15 @@ describe('isDomainBlacklisted', () => {
     expect(isDomainBlacklisted('user@domain1.com')).toBeTruthy();
     expect(isDomainBlacklisted('user@domain2.org')).toBeTruthy();
     expect(isDomainBlacklisted('user@domain3.net')).toBeTruthy();
-    expect(isDomainBlacklisted('user@domain4.xyz')).toBeFalsy();
-    expect(isDomainBlacklisted('user@domain1.net')).toBeFalsy();
+    expect(isDomainBlacklisted('user@domain4.xyz')).toBeFalsy()
+    expect(isDomainBlacklisted('user@domain1.net')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
   it('should return false for valid domains not in the blacklist', () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'foo.com, bar.net';
-    expect(isDomainBlacklisted('user@baz.org')).toBeFalsy();
-    expect(isDomainBlacklisted('info@qux.io')).toBeFalsy();
+    expect(isDomainBlacklisted('user@baz.org')).toBeFalsy()
+    expect(isDomainBlacklisted('info@qux.io')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
@@ -151,15 +151,15 @@ describe('isDomainBlacklisted', () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'shorttld.co, longtld.museum';
     expect(isDomainBlacklisted('user@shorttld.co')).toBeTruthy();
     expect(isDomainBlacklisted('user@longtld.museum')).toBeTruthy();
-    expect(isDomainBlacklisted('user@onetld.x')).toBeFalsy();
+    expect(isDomainBlacklisted('user@onetld.x')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 
   it('should treat an invalid domain in email as non-blacklisted even if it looks like a blacklisted one', () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com';
-    expect(isDomainBlacklisted('user@-example.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@.test.com')).toBeFalsy();
-    expect(isDomainBlacklisted('user@spam.com.')).toBeFalsy();
+    expect(isDomainBlacklisted('user@-example.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@.test.com')).toBeFalsy()
+    expect(isDomainBlacklisted('user@spam.com.')).toBeFalsy()
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
 });
@@ -167,82 +167,82 @@ describe('isDomainBlacklisted', () => {
 
 describe('isValidDomain', () => {
   it('should return true for valid simple domains', () => {
-    expect(isValidDomain('example.com')).toBe(true);
-    expect(isValidDomain('test.org')).toBe(true);
-    expect(isValidDomain('sub.domain.net')).toBe(true);
-    expect(isValidDomain('another-site.info')).toBe(true);
-    expect(isValidDomain('long-domain-name-with-hyphens.co.uk')).toBe(true);
+    expect(isValidDomain('example.com')).toBeTruthy();
+    expect(isValidDomain('test.org')).toBeTruthy();
+    expect(isValidDomain('sub.domain.net')).toBeTruthy();
+    expect(isValidDomain('another-site.info')).toBeTruthy();
+    expect(isValidDomain('long-domain-name-with-hyphens.co.uk')).toBeTruthy();
   });
 
   it('should handle case insensitivity', () => {
-    expect(isValidDomain('EXAMPLE.COM')).toBe(true);
-    expect(isValidDomain('TeSt.oRg')).toBe(true);
+    expect(isValidDomain('EXAMPLE.COM')).toBeTruthy();
+    expect(isValidDomain('TeSt.oRg')).toBeTruthy();
   });
 
   it('should return true for domains with numbers', () => {
-    expect(isValidDomain('123example.com')).toBe(true);
-    expect(isValidDomain('domain-123.net')).toBe(true);
+    expect(isValidDomain('123example.com')).toBeTruthy();
+    expect(isValidDomain('domain-123.net')).toBeTruthy();
   });
 
   it('should return false for null, undefined, or non-string input', () => {
-    expect(isValidDomain(null)).toBe(false);
-    expect(isValidDomain(undefined)).toBe(false);
-    expect(isValidDomain(123)).toBe(false);
-    expect(isValidDomain({})).toBe(false);
-    expect(isValidDomain([])).toBe(false);
+    expect(isValidDomain(null)).toBeFalsy()
+    expect(isValidDomain(undefined)).toBeFalsy()
+    expect(isValidDomain(123)).toBeFalsy()
+    expect(isValidDomain({})).toBeFalsy()
+    expect(isValidDomain([])).toBeFalsy()
   });
 
   it('should return false for empty string or only spaces', () => {
-    expect(isValidDomain('')).toBe(false);
-    expect(isValidDomain('   ')).toBe(false);
+    expect(isValidDomain('')).toBeFalsy()
+    expect(isValidDomain('   ')).toBeFalsy()
   });
 
   it('should return false for domains with invalid characters', () => {
-    expect(isValidDomain('bad@domain.com')).toBe(false);
-    expect(isValidDomain('domain!.com')).toBe(false);
-    expect(isValidDomain('dom_ain.com')).toBe(false);
-    expect(isValidDomain('with space.com')).toBe(false);
+    expect(isValidDomain('bad@domain.com')).toBeFalsy()
+    expect(isValidDomain('domain!.com')).toBeFalsy()
+    expect(isValidDomain('dom_ain.com')).toBeFalsy()
+    expect(isValidDomain('with space.com')).toBeFalsy()
   });
 
   it('should return false for domains starting/ending with hyphens', () => {
-    expect(isValidDomain('-example.com')).toBe(false);
-    expect(isValidDomain('example-.com')).toBe(false);
+    expect(isValidDomain('-example.com')).toBeFalsy()
+    expect(isValidDomain('example-.com')).toBeFalsy()
   });
 
   it('should return false for domains starting/ending with dots', () => {
-    expect(isValidDomain('.example.com')).toBe(false);
-    expect(isValidDomain('example.com.')).toBe(false);
+    expect(isValidDomain('.example.com')).toBeFalsy()
+    expect(isValidDomain('example.com.')).toBeFalsy()
   });
 
   it('should return false for domains with empty labels', () => {
-    expect(isValidDomain('example..com')).toBe(false);
-    expect(isValidDomain('example.com.')).toBe(false);
-    expect(isValidDomain('.example.com')).toBe(false);
+    expect(isValidDomain('example..com')).toBeFalsy();
+    expect(isValidDomain('example.com.')).toBeFalsy();
+    expect(isValidDomain('.example.com')).toBeFalsy();
   });
 
   it('should return false for invalid TLDs (too short or missing)', () => {
-    expect(isValidDomain('example.c')).toBe(false);
-    expect(isValidDomain('example')).toBe(false);
-    expect(isValidDomain('example.')).toBe(false);
+    expect(isValidDomain('example.c')).toBeFalsy();
+    expect(isValidDomain('example')).toBeFalsy();
+    expect(isValidDomain('example.')).toBeFalsy();
   });
 
   it('should return false for labels starting/ending with hyphens', () => {
-    expect(isValidDomain('sub-.example.com')).toBe(false);
-    expect(isValidDomain('-sub.example.com')).toBe(false);
-    expect(isValidDomain('example.-com')).toBe(false);
+    expect(isValidDomain('sub-.example.com')).toBeFalsy();
+    expect(isValidDomain('-sub.example.com')).toBeFalsy();
+    expect(isValidDomain('example.-com')).toBeFalsy();
   });
 
   it('should return false for labels exceeding 63 characters', () => {
     const longLabel = 'a'.repeat(64);
-    expect(isValidDomain(`${longLabel}.com`)).toBe(false);
+    expect(isValidDomain(`${longLabel}.com`)).toBeFalsy();
   });
 
   it('should return false for an IP address', () => {
-    expect(isValidDomain('192.168.1.1')).toBe(false);
+    expect(isValidDomain('192.168.1.1')).toBeFalsy();
   });
 
   it('should return false for localhost', () => {
-    expect(isValidDomain('localhost')).toBe(false);
+    expect(isValidDomain('localhost')).toBeFalsy();
   });
 });
 
