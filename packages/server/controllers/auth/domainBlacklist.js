@@ -12,24 +12,7 @@ function isValidDomain(domain) {
   if (!domainRegex.test(trimmed)) {
     return false;
   }
-
-  const labels = trimmed.split('.');
-
-  for (const label of labels) {
-    if (label.length === 0) { 
-      return false;
-    }
- 
-    if (label.startsWith('-') || label.endsWith('-')) {
-      return false;
-    }
- 
-    if (label.length >63) {
-      return false;
-    }
-  }
-
-  return true;
+return true;
 
 }
 
@@ -57,20 +40,18 @@ const getBlacklistedDomains = () =>
   parseBlacklistedDomains(process.env.LOGCHIMP_BLACKLISTED_DOMAINS);
 
 const isDomainBlacklisted = (email) => {
- if (typeof email !== 'string') return false;
+   if (typeof email !== 'string') return false;
 
-  
-  const trimmedEmail = email.trim(); 
+   const trimmedEmail = email.trim(); 
 
-  const parts = trimmedEmail.split('@'); 
-  if (parts.length !== 2) return false;
+   const parts = trimmedEmail.split('@'); 
+   if (parts.length !== 2) return false;
 
-  const domain = parts[1].toLowerCase();
- 
-  if (!isValidDomain(domain)) return false;
+   const domain = parts[1].trim().toLowerCase(); 
+   
+   if (!isValidDomain(domain)) return false;
 
-  
-  return getBlacklistedDomains().has(domain);
+   return getBlacklistedDomains().has(domain);
 };
 
-module.exports = { isDomainBlacklisted, parseBlacklistedDomains,isValidDomain };
+module.exports = { isDomainBlacklisted, parseBlacklistedDomains, isValidDomain };
