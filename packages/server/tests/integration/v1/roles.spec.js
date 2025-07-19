@@ -6,7 +6,7 @@ import { faker } from "@faker-js/faker";
 const app = require("../../../app");
 const database = require("../../../database");
 import { getUser } from "../../utils/getUser";
-const { hashPassword } = require("../../../helpers");
+const { hashPassword } = require("../../../utils/password");
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
