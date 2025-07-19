@@ -2,11 +2,7 @@ import { describe, it, expect } from "vitest";
 import _ from "lodash";
 import generatePassword from "omgopass";
 
-import {
-  validEmail,
-  validUUID,
-  generateHexColor
-} from "../../helpers";
+import { validEmail, validUUID, generateHexColor } from "../../helpers";
 
 describe("validate email", () => {
   it('should be a valid email "yashu@codecarrot.net"', () => {

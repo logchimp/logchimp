@@ -47,9 +47,6 @@ const generateHexColor = () => {
   return (~~(random * (1 << 24))).toString(16);
 };
 
-
-
-
 /**
  * Sanitise username
  *
