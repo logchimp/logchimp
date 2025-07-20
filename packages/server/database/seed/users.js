@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 
-const { hashPassword } = require("../../helpers");
+const { hashPassword } = require("../../utils/password");
 
 /**
  * @param { import("knex").Knex } knex

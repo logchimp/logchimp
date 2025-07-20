@@ -1,24 +1,24 @@
-// modules
 const bcrypt = require("bcryptjs");
 
 exports.hashPassword = (password) => {
-  if (password) {
-    const bcryptSaltRounds = 10;
-    const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
-    const hashPassword = bcrypt.hashSync(password, bcryptSalt);
-
-    return hashPassword;
+  if (typeof password !== "string" || !password.trim()) {
+    return null;
   }
-  return undefined;
+
+  const bcryptSaltRounds = 10;
+  const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
+  return bcrypt.hashSync(password, bcryptSalt);
 };
 
 exports.validatePassword = async (password, hash) => {
-  if (password) {
-    if (hash) {
-      const result = await bcrypt.compare(password, hash);
-      return result;
-    }
-    return undefined;
+  if (
+    typeof password !== "string" ||
+    typeof hash !== "string" ||
+    !password.trim() ||
+    !hash.trim()
+  ) {
+    return false;
   }
-  return undefined;
+
+  return await bcrypt.compare(password, hash);
 };
