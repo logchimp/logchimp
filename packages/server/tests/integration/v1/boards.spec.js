@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 
 const app = require("../../../app");
 const database = require("../../../database");
-const { hashPassword } = require("../../../helpers");
+const { hashPassword } = require("../../../utils/password");
 import { board as generateBoards } from "../../utils/generators";
 const { getUser } = require("../../utils/getUser");
 
