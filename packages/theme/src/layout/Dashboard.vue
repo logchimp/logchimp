@@ -3,7 +3,7 @@
     <aside>
       <Sidebar />
     </aside>
-    <main class="container-view">
+    <main class="w-full px-12 py-8">
       <router-view />
 
       <power-by v-if="siteSettings.isPoweredBy" />

@@ -70,4 +70,9 @@ import RoadmapIcon from "./icons/Roadmap.vue";
 
   .navbar-item-content
     color: var(--color-white)
+
+@media (min-width: 1152px)
+  .navbar
+    padding-left: 1.5rem
+    padding-right: 1.5rem
 </style>

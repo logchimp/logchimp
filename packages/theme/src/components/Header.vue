@@ -1,7 +1,7 @@
 <template>
   <header class="header">
-    <div class="container">
-      <div class="header-container">
+    <div class="w-full max-w-6xl mx-auto">
+      <div class="flex items-center py-4 px-6">
         <site-branding :title="settingsStore.get.title" :logo="settingsStore.get.logo" text-color="white" />
         <nav class="header-nav">
           <dropdown-wrapper v-if="userStore.user.userId" class="nav-item">
@@ -113,12 +113,9 @@ const version = computed(() => {
 .header
   background-color: var(--color-brand-color)
 
-.header-container, .nav-item
+.nav-item
   display: flex
   align-items: center
-
-.header-container
-  padding: 1rem 0
 
 // nav
 .header-nav
