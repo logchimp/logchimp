@@ -156,18 +156,18 @@ export const updateBoard = async (board: UpdateBoardArgs) => {
 /**
  * delete board
  *
- * @param {string} id board id
+ * @param {string} boardId board id
  *
  * @returns {object} response
  */
-export const deleteBoard = async (id: string) => {
+export const deleteBoard = async (boardId: string) => {
   const { authToken } = useUserStore();
 
   return await axios({
     method: "DELETE",
     url: `${VITE_API_URL}/api/v1/boards`,
     data: {
-      id,
+      boardId,
     },
     headers: {
       Authorization: `Bearer ${authToken}`,
