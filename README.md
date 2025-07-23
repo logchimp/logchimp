@@ -40,6 +40,9 @@
   <a href="https://twitter.com/logchimp">
     <img src="https://img.shields.io/twitter/follow/logchimp?style=flat" alt="Follow @logchimp on Twitter">
   </a>
+  <a href="https://codespaces.new/logchimp/logchimp?devcontainer_path=.devcontainer/devcontainer.json">
+    <img src="https://github.com/codespaces/badge.svg" alt="Open in GitHub Codespaces" />
+  </a>
 </p>
 
 ## Features
