@@ -46,15 +46,21 @@ async function getRoadmaps() {
 
   try {
     const response = await getAllRoadmaps();
-    roadmaps.value = response.data.roadmaps;
 
-    if (response.data.roadmaps.length) {
-			roadmaps.value.push(...response.data.roadmaps);
-			page.value += 1;
-			state.value = "LOADED"
-		} else {
-			state.value = "COMPLETED";
-		}
+    const newRoadmaps = response.data.roadmaps;
+
+    if (newRoadmaps.length > 0) {
+      if (page.value === 1) {
+        roadmaps.value = newRoadmaps;
+      } else {
+        roadmaps.value.push(...newRoadmaps);
+      }
+
+      page.value += 1;
+      state.value = "LOADED";
+    } else {
+      state.value = "COMPLETED";
+    }
   } catch (err) {
     console.error(err);
     state.value = "ERROR";
