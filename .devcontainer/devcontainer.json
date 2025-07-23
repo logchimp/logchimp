@@ -3,7 +3,7 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
 
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker": {},
     "ghcr.io/devcontainers/features/common-utils:2": {}
   },
 
