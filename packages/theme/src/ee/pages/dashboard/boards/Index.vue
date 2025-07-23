@@ -210,7 +210,7 @@ async function deleteBoardHandler(id: string, index: number) {
 		const response = await deleteBoard(id);
 
 		if (response.status === 204) {
-			boards.splice(index, 1);
+			boards.value.splice(index, 1);
 			console.log(`[Dashboard] Delete board (${id})`);
 		}
 	} catch (error) {
