@@ -1,14 +1,10 @@
 <template>
-  <div class="breadcrumbs">
+  <div class="flex items-center">
     <slot />
   </div>
 </template>
 
 <style lang='sass'>
-.breadcrumbs
-	display: flex
-	align-items: center
-
 .breadcrum-item, .breadcrum-divider
 	font-weight: 500
 

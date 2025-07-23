@@ -1,41 +1,27 @@
 <template>
-  <div class="tab-item" @click="$emit('click')">
-    <div class="tab-item-icon">
+  <div :class="[
+    'px-6 py-3 flex items-center border-b-[3px] cursor-pointer',
+    active ? 'border-(--color-brand-color)' : 'border-(--color-white)'
+  ]" @click="$emit('click')">
+    <div :class="[
+      'flex mr-2.5 [&>svg]:size-5',
+      active ? '[&>svg]:stroke-(--color-brand-color)' : '[&>svg]:stroke-(--color-gray-70)',
+    ]">
       <slot name="icon" />
     </div>
-    <h6 class="tab-item-content">
+    <h6 :class="['mb-0',
+      active ? 'text-(--color-brand-color)' : 'text-(--color-gray-70)',
+    ]">
       <slot />
     </h6>
   </div>
 </template>
 
-<style lang='sass'>
-.tab-item
-	padding: 0.75rem 1.5rem
-	display: flex
-	align-items: center
-	border-bottom: 3px solid var(--color-white)
-	cursor: pointer
-
-.tab-item-icon
-	display: flex
-	margin-right: 0.625rem
-
-	svg
-		stroke: var(--color-gray-70)
-		width: 1.125rem
-		height: 1.125rem
-
-.tab-item-content
-	color: var(--color-gray-70)
-	margin-bottom: 0
-
-.tab-item-active
-	border-color: var(--color-brand-color)
-
-	.tab-item-icon svg
-		stroke: var(--color-brand-color)
-
-	.tab-item-content
-		color: var(--color-brand-color)
-</style>
+<script setup lang="ts">
+defineProps({
+  active: {
+    type: Boolean,
+    default: false,
+  },
+});
+</script>

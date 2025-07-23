@@ -1,13 +1,13 @@
 <template>
-  <header class="header">
+  <header class="header bg-(--color-brand-color)">
     <div class="w-full max-w-6xl mx-auto">
-      <div class="flex items-center py-4 px-6">
+      <div class="flex items-center justify-between py-4 px-6">
         <site-branding :title="settingsStore.get.title" :logo="settingsStore.get.logo" text-color="white" />
-        <nav class="header-nav">
+        <nav>
           <dropdown-wrapper v-if="userStore.user.userId" class="nav-item">
             <template #toggle>
               <avatar
-                class="nav-profile"
+                class="cursor-pointer"
                 :src="userStore.user.avatar"
                 :name="userStore.user.name || userStore.user.username"
               />
@@ -53,7 +53,10 @@
           </div>
         </nav>
       </div>
-      <navbar />
+
+      <div class="mt-2">
+        <navbar />
+      </div>
     </div>
   </header>
 </template>
@@ -110,16 +113,9 @@ const version = computed(() => {
 </script>
 
 <style lang='sass'>
-.header
-  background-color: var(--color-brand-color)
-
 .nav-item
   display: flex
   align-items: center
-
-// nav
-.header-nav
-  margin-left: auto
 
 .nav-item
   margin-left: 1.5rem

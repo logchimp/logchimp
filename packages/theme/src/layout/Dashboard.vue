@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="flex">
     <aside>
       <Sidebar />
     </aside>
@@ -23,8 +23,4 @@ const { get: siteSettings } = useSettingStore();
 
 <style lang='scss'>
 @import "../styles/ui/table.sass";
-
-.dashboard {
-  display: flex;
-}
 </style>

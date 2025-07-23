@@ -2,7 +2,7 @@
   <router-link
     data-test="board-item"
     :to="`/boards/${url}`"
-    class="board-item"
+    class="flex items-center gap-2.5 select-none rounded-md bg-(--color-gray-97) hover:bg-(--color-gray-95) px-6 py-4"
   >
     <div
       class="color-dot"
@@ -11,11 +11,11 @@
         backgroundColor: `#${color}`
       }"
     />
-    <div class="board-item-name-and-posts">
-      <div data-test="board-item-name" class="board-item-name">
+    <div class="flex items-center justify-between w-full overflow-hidden">
+      <div data-test="board-item-name" class="text-(--color-gray-40) font-medium truncate">
         {{ name }}
       </div>
-      <div data-test="board-item-postcount" class="board-item-postcount">
+      <div data-test="board-item-postcount" class="text-(--color-gray-60) font-semibold text-sm ml-4">
         {{ postCount }}
       </div>
     </div>
@@ -45,33 +45,3 @@ defineProps({
   },
 });
 </script>
-
-<style lang='sass'>
-.board-item
-	display: flex
-	align-items: center
-	padding: 1rem
-	background-color: var(--color-gray-97)
-	border-radius: var(--border-radius-default)
-	user-select: none
-
-	&:hover
-		background-color: var(--color-gray-95)
-
-.board-item-name-and-posts
-	margin-left: 0.625rem
-	display: flex
-	justify-content: space-between
-	align-items: center
-	width: 100%
-
-.board-item-name
-	color: var(--color-gray-40)
-	font-weight: 500
-
-.board-item-postcount
-	color: var(--color-gray-60)
-	font-size: 0.875rem
-	font-weight: 600
-	margin-left: 1rem
-</style>
