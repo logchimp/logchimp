@@ -1,6 +1,6 @@
 {
   "name": "LogChimp",
-  "image": "mcr.microsoft.com/devcontainers/node:22",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
 
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
