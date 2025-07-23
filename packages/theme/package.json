@@ -19,7 +19,7 @@
     "pinia": "2.1.7",
     "uuid": "9.0.1",
     "vue": "3.5.17",
-    "vue-gtag": "2.0.1",
+    "vue-gtag": "2.1.2",
     "vue-infinite-loading": "github:nvitius/vue-infinite-loading#next",
     "vue-router": "4.2.5",
     "vuedraggable": "4.1.0"
