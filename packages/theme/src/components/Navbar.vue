@@ -1,5 +1,5 @@
 <template>
-	<div class="mt-2 flex items-center navbar">
+	<div class="flex items-center navbar">
 		<router-link to="/" class="navbar-item">
 			<div class="navbar-item-icon">
 				<home-icon />

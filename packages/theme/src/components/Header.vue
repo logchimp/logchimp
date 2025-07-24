@@ -54,9 +54,7 @@
         </nav>
       </div>
 
-      <div class="mt-2">
-        <navbar />
-      </div>
+      <navbar class="mt-2" />
     </div>
   </header>
 </template>
