@@ -60,13 +60,7 @@ describe("PATCH /api/v1/users/profile", () => {
       .send({ name: newName });
 
     expect(response.status).toBe(200);
-    expect(response.body.user).toMatchObject({
-      userId: user.userId,
-      name: newName,
-      email: user.email,
-      username: user.username,
-    });
-
+    expect(response.body.user).toBe(user);
     const dbUser = await database("users")
       .where({ userId: user.userId })
       .first();
