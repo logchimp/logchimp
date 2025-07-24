@@ -4,7 +4,6 @@
       <roadmap-column
         v-for="roadmap in roadmaps"
         :key="roadmap.id"
-        class="roadmap-view"
         :roadmap="roadmap"
       />
     </div>
