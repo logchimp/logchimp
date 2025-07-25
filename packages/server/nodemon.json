@@ -1,3 +1,4 @@
 {
-  "watch": ["./**/*.ts", "./**/*.js", ".env"]
+  "watch": ["./**/*.ts", "./**/*.js", ".env"],
+  "exec": "node ./index.js"
 }
