@@ -1,9 +1,6 @@
-import { createRequire } from "module"
+import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
-const { mail, generateContent } = require("./index.js")
+const { mail, generateContent } = require("./index.js");
 
-export {
-  mail,
-  generateContent
-}
+export { mail, generateContent };
