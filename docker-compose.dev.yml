@@ -34,7 +34,6 @@ services:
       context: .
       args:
         DOCKER_BUILDKIT: 1
-    command: ['pnpm', 'nodemon', 'index.js']
     volumes:
       - ./:/app
     depends_on:

@@ -9,7 +9,7 @@ const error = require("../../../../errorResponse.json");
 module.exports = async (req, res) => {
   const permissions = req.user.permissions;
 
-  const id = validUUID(req.body.id);
+  const boardId = validUUID(req.body.boardId);
 
   const checkPermission = permissions.includes("board:destroy");
   if (!checkPermission) {
@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
 
   try {
     await database.delete().from("boards").where({
-      boardId: id,
+      boardId,
     });
 
     res.sendStatus(204);

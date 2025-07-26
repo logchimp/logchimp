@@ -4,7 +4,7 @@
   "version": "0.7.0-beta.4",
   "main": "./index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon",
     "start": "node index.js",
     "format": "prettier --write \"**/*.{js}\"",
     "test:unit": "vitest --config ./vitest.config.unit.ts",
