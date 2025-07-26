@@ -22,10 +22,16 @@ set_env_var "LOGCHIMP_SECRET_KEY" "$LC_SECRET" "packages/server/.env"
 set_env_var "VITE_API_URL" "http://localhost:8000" "packages/theme/.env"
 
 
+#############################
+# Wait4X
+#############################
 
+ARCHIVE="wait4x-linux-amd64.tar.gz"
+DOWNLOAD_URL="https://github.com/wait4x/wait4x/releases/latest/download/${ARCHIVE}"
 
-# Install Wait4X CLI
-curl -LO https://github.com/wait4x/wait4x/releases/latest/download/wait4x-linux-amd64.tar.gz
-tar -xf wait4x-linux-amd64.tar.gz -C /tmp
-sudo mv /tmp/wait4x-linux-amd64/wait4x /usr/local/bin/
+mkdir -p ./tmp
+curl -sSL -o "$ARCHIVE" "$DOWNLOAD_URL"
 
+tar -xf "$ARCHIVE" -C ./tmp
+sudo mv ./tmp/wait4x /usr/local/bin/
+rm -r ./tmp $ARCHIVE
