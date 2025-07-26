@@ -1,10 +1,10 @@
 <template>
   <div>
     <Header />
-    <div class="container container-view">
+    <div class="w-full max-w-6xl mx-auto px-6 my-8">
       <router-view />
 
-			<power-by v-if="settingsStore.get.isPoweredBy" />
+      <power-by v-if="settingsStore.get.isPoweredBy" />
     </div>
   </div>
 </template>

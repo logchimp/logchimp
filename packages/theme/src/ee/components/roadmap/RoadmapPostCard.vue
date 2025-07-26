@@ -53,7 +53,7 @@
     <div
       v-if="isExpanded"
       data-test="post-card-extra"
-      class="post-card-extra"
+      class="flex items-center justify-between p-3 border-t border-(--color-gray-95) overflow-hidden"
     >
       <avatar-stack
         :avatars="post.voters.votes"
@@ -146,13 +146,4 @@ function updateVoters(voters: VoteEventType) {
 	color: var(--color-gray-40)
 	font-size: 0.875rem
 	margin-top: 0.5rem
-
-.post-card-extra
-	padding: 0.75rem
-	border-top: 1px solid var(--color-gray-95)
-	display: flex
-	align-items: center
-
-	.board-badge
-		margin-left: auto
 </style>

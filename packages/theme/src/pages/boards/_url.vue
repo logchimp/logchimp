@@ -3,11 +3,9 @@
     <div v-if="isBoardExist">
       <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
         <main class="grow-[2] shrink basis-0">
-          <tab>
+          <tab class="mb-5">
             <tab-item
-              :class="{
-                'tab-item-active': tab === 'latest'
-              }"
+              :active="tab === 'latest'"
               @click="updateTab('latest')"
             >
               <template #icon>
@@ -16,9 +14,7 @@
               Latest
             </tab-item>
             <tab-item
-              :class="{
-                'tab-item-active': tab === 'oldest'
-              }"
+              :active="tab === 'oldest'"
               @click="updateTab('oldest')"
             >
               <template #icon>
