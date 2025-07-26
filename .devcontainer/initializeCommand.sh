@@ -21,5 +21,5 @@ set_env_var() {
 set_env_var "LOGCHIMP_SECRET_KEY" "$LC_SECRET" "packages/server/.env"
 
 # Theme
-set_env_var "VITE_API_URL" "$GH_CS_PUBLIC_THEME_HOST" "packages/theme/.env"
-set_env_var "VITE_API_URL_PROXY" "$GH_CS_PUBLIC_API_HOST" "packages/theme/.env"
+set_env_var "VITE_API_URL" "$GH_CS_PUBLIC_API_HOST" "packages/theme/.env"
+set_env_var "VITE_API_URL_PROXY" "$GH_CS_PUBLIC_THEME_HOST" "packages/theme/.env"
