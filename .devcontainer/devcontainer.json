@@ -35,7 +35,19 @@
 
   "customizations": {
     "codespaces": {
-      "openFiles": ["README.md"]
+      "openFiles": ["README.md"],
+      "tasks": [
+        {
+          "label": "LogChimp Theme Dev",
+          "type": "shell",
+          "command": "pnpm dev",
+          "options": {
+            "cwd": "${workspaceFolder}/packages/theme"
+          },
+          "isBackground": true,
+          "problemMatcher": []
+        }
+      ]
     },
     "vscode": {
       "extensions": [
