@@ -15,7 +15,7 @@ cmd = "echo 'No build step needed'"
 # Binary file yields from `cmd`.
 #bin = "tmp/main"
 # Customize binary, can setup environment variables when run your app.
-full_bin = "pnpm ts-node ./index.js"
+full_bin = "pnpm node ./index.js"
 # Add additional arguments when running binary (bin/full_bin). Will run './tmp/main hello world'.
 args_bin = []
 # Watch these filename extensions.
