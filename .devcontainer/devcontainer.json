@@ -47,7 +47,8 @@
         "ZixuanChen.vitest-explorer",
         "syler.sass-indented",
         "eamodio.gitlens",
-        "actboy168.tasks"
+        "actboy168.tasks",
+        "tamasfe.even-better-toml"
       ]
     }
   },
