@@ -9,7 +9,7 @@ set_env_var() {
   local file="$3"
 
   # delete all existing line matching the key
-  sed -i '' "/^${key}=.*/d" "$file"
+  sed -i "/^${key}=.*/d" "$file"
 
   # insert the key
   echo "${key}=${value}" >> "$file"
