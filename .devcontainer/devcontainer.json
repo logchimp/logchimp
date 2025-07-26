@@ -53,6 +53,6 @@
     }
   },
 
-  "initializeCommand": "bash ./.devcontainer/initializeCommand.sh",
-  "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh"
+  "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
+  "postStartCommand": "bash ./.devcontainer/postStartCommand.sh"
 }

@@ -1,6 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-pnpm i;
+LC_SECRET=$(openssl rand -base64 12)
 
-docker-compose -f ./docker-compose.dev.yml \
-  up -d
+echo "LOGCHIMP_SECRET_KEY=$LC_SECRET" >> packages/server/.env
+
+GH_CS_PUBLIC_HOST="https://${CODESPACE_NAME}-8000.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
+
+echo "VITE_API_URL=$GH_CS_PUBLIC_HOST" >> packages/theme/.env
