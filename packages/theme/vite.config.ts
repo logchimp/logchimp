@@ -3,7 +3,8 @@ import vue from "@vitejs/plugin-vue";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const apiUrl = env.VITE_API_URL;
+  // Vite server config should only work in DEV mode
+  const apiUrl = env.VITE_API_URL_PROXY || env.VITE_API_URL;
 
   return {
     plugins: [vue()],
