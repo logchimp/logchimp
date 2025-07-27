@@ -103,13 +103,20 @@ describe("PATCH /api/v1/users/profile", () => {
   });
 
   it("should throw error USER_BLOCK", async () => {
-    const response = await supertest(app).patch("/api/v1/users/profile").send({
-      email: "user_blocked@example.com",
-      password: "strongPassword",
-    });
+    const user = generateUser();
+    user.isBlocked = true;
+    user.isOwner = true;
+
+    await database("users").insert(user);
+    const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
+
+    const response = await supertest(app)
+      .patch("/api/v1/users/profile")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ name: "new Name" });
 
     expect(response.statusCode).toEqual(403);
-    expect(response.body.code).toEqual("USER_BLOCKED");
+    expect(response.body.code).toEqual("USER_BLOCK");
   });
 
   it("should throw error ACCESS_DENIED", async () => {
