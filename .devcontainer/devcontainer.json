@@ -35,7 +35,19 @@
 
   "customizations": {
     "codespaces": {
-      "openFiles": ["README.md"]
+      "openFiles": ["README.md"],
+      "tasks": [
+        {
+          "label": "LogChimp Theme Dev",
+          "type": "shell",
+          "command": "pnpm dev",
+          "options": {
+            "cwd": "${workspaceFolder}/packages/theme"
+          },
+          "isBackground": true,
+          "problemMatcher": []
+        }
+      ]
     },
     "vscode": {
       "extensions": [
@@ -47,11 +59,12 @@
         "ZixuanChen.vitest-explorer",
         "syler.sass-indented",
         "eamodio.gitlens",
-        "actboy168.tasks"
+        "actboy168.tasks",
+        "tamasfe.even-better-toml"
       ]
     }
   },
 
-  "initializeCommand": "bash ./.devcontainer/initializeCommand.sh",
-  "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh"
+  "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
+  "postStartCommand": "bash ./.devcontainer/postStartCommand.sh"
 }
