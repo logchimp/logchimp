@@ -1,58 +1,19 @@
 import { describe, it, expect } from "vitest";
 const supertest = require("supertest");
 const { v4: uuid } = require("uuid");
-import { faker } from "@faker-js/faker";
 
 const app = require("../../../app");
 const database = require("../../../database");
-import { getUser } from "../../utils/getUser";
-const { hashPassword } = require("../../../utils/password");
+import { createUser } from "../../utils/seed/user";
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
   it("should not have permission 'role:read'", async () => {
-    const userId = uuid();
-    const randomEmail = faker.internet.email("no-permission");
-    const username = randomEmail.split("@")[0];
-
-    // create simple user (without any permissions) for getting roles
-    const createUser = await database
-      .insert([
-        {
-          userId,
-          email: randomEmail,
-          password: hashPassword("strongPassword"),
-          username,
-        },
-      ])
-      .into("users")
-      .returning(["userId"]);
-
-    // assign '@everyone' role to user
-    await database.raw(
-      `
-      INSERT INTO roles_users (id, role_id, user_id)
-      VALUES(:uuid, (
-          SELECT
-            id FROM roles
-          WHERE
-            name = '@everyone'
-          ), :userId)
-    `,
-      {
-        uuid: uuid(),
-        userId: createUser[0].userId,
-      },
-    );
-
-    const user = await getUser({
-      email: randomEmail,
-      password: "strongPassword",
-    });
+    const { user } = await createUser();
 
     const response = await supertest(app)
       .get("/api/v1/roles")
-      .set("Authorization", `Bearer ${user.body.user.authToken}`);
+      .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
@@ -61,22 +22,10 @@ describe("GET /api/v1/roles", () => {
 
   // 2. get all roles
   it("should get all the roles", async () => {
-    const userId = uuid();
-    const randomEmail = faker.internet.email("role-read-user");
-    const username = randomEmail.split("@")[0];
+    // delete all roles, except '@everyone' role
+    await database.del().from("roles").where("name", "!=", "@everyone");
 
-    // role:read
-    const createUser = await database
-      .insert([
-        {
-          userId,
-          email: randomEmail,
-          password: hashPassword("strongPassword"),
-          username,
-        },
-      ])
-      .into("users")
-      .returning(["userId"]);
+    const { user } = await createUser();
 
     const roleId = uuid();
     await database
@@ -107,22 +56,17 @@ describe("GET /api/v1/roles", () => {
       .insert({
         id: uuid(),
         role_id: roleId,
-        user_id: createUser[0].userId,
+        user_id: user.userId,
       })
       .into("roles_users");
 
-    const authUser = await getUser({
-      email: randomEmail,
-      password: "strongPassword",
-    });
-
     const response = await supertest(app)
       .get("/api/v1/roles")
-      .set("Authorization", `Bearer ${authUser.body.user.authToken}`);
+      .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.roles.length).toBeGreaterThanOrEqual(3);
+    expect(response.body.roles.length).toEqual(2);
   });
 });
 

@@ -5,9 +5,8 @@ import { faker } from "@faker-js/faker";
 
 const app = require("../../../app");
 const database = require("../../../database");
-const { hashPassword } = require("../../../utils/password");
 import { board as generateBoards } from "../../utils/generators";
-const { getUser } = require("../../utils/getUser");
+const { createUser } = require("../../utils/seed/user");
 
 // Get all boards
 describe("GET /api/v1/boards", () => {
@@ -57,48 +56,11 @@ describe("GET /boards/search/:name", () => {
   });
 
   it("should throw error not having 'board:read' permission", async () => {
-    const userId = uuid();
-    const randomEmail = faker.internet.email();
-    const username = randomEmail.split("@")[0];
-
-    // seed users with no "board:read permission"
-    await database
-      .insert([
-        {
-          userId,
-          email: randomEmail,
-          password: hashPassword("strongPassword"),
-          username,
-        },
-      ])
-      .into("users")
-      .returning(["userId"]);
-
-    // assign '@everyone' role to user
-    await database.raw(
-      `
-      INSERT INTO roles_users (id, role_id, user_id)
-      VALUES(:uuid, (
-          SELECT
-            id FROM roles
-          WHERE
-            name = '@everyone'
-          ), :userId)
-    `,
-      {
-        uuid: uuid(),
-        userId,
-      },
-    );
-
-    const authUser = await getUser({
-      email: randomEmail,
-      password: "strongPassword",
-    });
+    const { user: authUser } = await createUser();
 
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
-      .set("Authorization", `Bearer ${authUser.body.user.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
@@ -106,20 +68,9 @@ describe("GET /boards/search/:name", () => {
   });
 
   it("should return 0 boards", async () => {
-    // seed users with "board:read permission"
-    const createUser = await database
-      .insert([
-        {
-          userId: uuid(),
-          email: "serchBoard_board-read-permission@example.com",
-          password: hashPassword("strongPassword"),
-          username: "permission",
-        },
-      ])
-      .into("users")
-      .returning(["userId"]);
+    const { user: authUser } = await createUser();
 
-    // create a new role
+    // assign "board:read" permission to user
     const newRoleId = uuid();
     await database
       .insert({
@@ -153,18 +104,13 @@ describe("GET /boards/search/:name", () => {
       .insert({
         id: uuid(),
         role_id: newRoleId,
-        user_id: createUser[0].userId,
+        user_id: authUser.userId,
       })
       .into("roles_users");
 
-    const authUser = await getUser({
-      email: "serchBoard_board-read-permission@example.com",
-      password: "strongPassword",
-    });
-
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
-      .set("Authorization", `Bearer ${authUser.body.user.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
@@ -183,44 +129,11 @@ describe("POST /api/v1/boards", () => {
   });
 
   it("should throw error not having 'board:create' permission", async () => {
-    // seed users with no "board:create permission"
-    const createUser = await database
-      .insert([
-        {
-          userId: uuid(),
-          email: "boards_createBoard@example.com",
-          password: hashPassword("strongPassword"),
-          username: "boards_createBoard",
-        },
-      ])
-      .into("users")
-      .returning(["userId"]);
-
-    // assign '@everyone' role to user
-    await database.raw(
-      `
-      INSERT INTO roles_users (id, role_id, user_id)
-      VALUES(:uuid, (
-          SELECT
-            id FROM roles
-          WHERE
-            name = '@everyone'
-          ), :userId)
-    `,
-      {
-        uuid: uuid(),
-        userId: createUser[0].userId,
-      },
-    );
-
-    const authUser = await getUser({
-      email: "boards_createBoard@example.com",
-      password: "strongPassword",
-    });
+    const { user: authUser } = await createUser();
 
     const response = await supertest(app)
       .post("/api/v1/boards")
-      .set("Authorization", `Bearer ${authUser.body.user.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
