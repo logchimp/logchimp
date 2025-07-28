@@ -29,13 +29,14 @@
     "nanoid": "^3.3.2",
     "nodemailer": "^6.7.3",
     "pg": "^8.7.1",
-    "supertest": "^6.1.6",
+    "supertest": "^7.1.4",
     "uuid": "^9.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.0",
     "@types/express": "^5.0.3",
+    "@types/supertest": "^6.0.3",
     "avatar-generator": "2.0.4",
     "nodemon": "^3.1.7",
     "omgopass": "3.2.1",
