@@ -46,7 +46,7 @@ describe("GET /boards/:url", () => {
 });
 
 // Search board by name
-describe.only("GET /boards/search/:name", () => {
+describe("GET /boards/search/:name", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/boards/search/name");
 
