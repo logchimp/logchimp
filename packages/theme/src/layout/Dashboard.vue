@@ -1,9 +1,9 @@
 <template>
-  <div class="dashboard">
+  <div class="flex">
     <aside>
       <Sidebar />
     </aside>
-    <main class="container-view">
+    <main class="w-full px-12 py-8">
       <router-view />
 
       <power-by v-if="siteSettings.isPoweredBy" />
@@ -23,8 +23,4 @@ const { get: siteSettings } = useSettingStore();
 
 <style lang='scss'>
 @import "../styles/ui/table.sass";
-
-.dashboard {
-  display: flex;
-}
 </style>
