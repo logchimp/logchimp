@@ -28,7 +28,7 @@ describe("PATCH /api/v1/users/profile", () => {
   it("should throw error NAME_LENGTH if name exceeds 30 characters", async () => {
     const user = generateUser();
     user.isBlocked = false;
-    user.isOwner = true;
+    user.isOwner = false;
 
     await database("users").insert(user);
     const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
@@ -40,14 +40,12 @@ describe("PATCH /api/v1/users/profile", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("NAME_LENGTH");
-
-    await database("users").where({ userId: user.userId }).del();
   });
 
   it("should update user's profile name", async () => {
     const user = generateUser();
     user.isBlocked = false;
-    user.isOwner = true;
+    user.isOwner = false;
 
     await database("users").insert(user);
     const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
@@ -72,8 +70,6 @@ describe("PATCH /api/v1/users/profile", () => {
       .first();
 
     expect(dbUser.name).toBe(newName);
-
-    await database("users").where({ userId: user.userId }).del();
   });
 
   it("should throw INVALID_JWT", async () => {
@@ -90,7 +86,7 @@ describe("PATCH /api/v1/users/profile", () => {
     const nonExistentUserId = uuidv4();
     const token = createToken(
       { userId: nonExistentUserId },
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
 
     const response = await supertest(app)
@@ -105,7 +101,7 @@ describe("PATCH /api/v1/users/profile", () => {
   it("should throw error USER_BLOCK", async () => {
     const user = generateUser();
     user.isBlocked = true;
-    user.isOwner = true;
+    user.isOwner = false;
 
     await database("users").insert(user);
     const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
@@ -134,7 +130,5 @@ describe("PATCH /api/v1/users/profile", () => {
 
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("ACCESS_DENIED");
-
-    await database("users").where({ userId: user.userId }).del();
   });
 });
