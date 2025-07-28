@@ -1,205 +1,383 @@
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
-import path from 'path';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
+const supertest = require('supertest');
+const app = require('../../../../app');
+const database = require('../../../../database');
+const { hashPassword } = require('../../../../utils/password');
+import { v4 as uuidv4 } from 'uuid';
 
-const mockLogger = {
-  warn: vi.fn(),
-  info: vi.fn(),
-  error: vi.fn(),
-};
+import passwordReset from '../../../../services/auth/passwordReset';
+vi.mock('../../../../services/auth/passwordReset', () => {
+  return {
+    __esModule: true,
+    default: vi.fn().mockResolvedValue(true),
+  };
+});
 
-const loggerAbsolutePath = path.resolve(
-  __dirname,
-  '../../../../utils/logger.js' 
-);
+describe('API Endpoints - Domain Blacklist Integration', () => {
+  let originalEnvBlacklistedDomains;
+  const testEmailPrefix = 'testuser_blacklist';
+  const testPassword = 'SecurePassword123!';
 
-let isDomainBlacklisted;
-let parseBlacklistedDomainsModule; 
+  beforeAll(async () => {
+    originalEnvBlacklistedDomains = process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
 
-describe('Integration: isDomainBlacklisted with LOGCHIMP_BLACKLISTED_DOMAINS and Logger', () => {
-    let originalEnvBlacklistedDomains; 
-    beforeAll(async () => { 
-        originalEnvBlacklistedDomains = process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
+    await database('settings')
+      .update({
+        allowSignup: true,
+      });
+  });
 
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
+  afterAll(async () => {
+    if (originalEnvBlacklistedDomains !== undefined) {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = originalEnvBlacklistedDomains;
+    } else {
+      delete process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
+    }
 
-        require.cache[loggerAbsolutePath] = { exports: mockLogger };
+    await database('users')
+      .where('email', 'like', `${testEmailPrefix}%`)
+      .del();
+  });
 
-        vi.resetModules(); 
+  beforeEach(async () => {
+    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
 
-        const domainBlacklistModule = await vi.importActual('../../../../controllers/auth/domainBlacklist');
+    await database('users')
+      .where('email', 'like', `${testEmailPrefix}%`)
+      .del();
 
-        isDomainBlacklisted = domainBlacklistModule.isDomainBlacklisted;
-        parseBlacklistedDomainsModule = domainBlacklistModule.parseBlacklistedDomains; 
+    await database('settings').update({ allowSignup: true });
+
+    passwordReset.mockClear();
+  });
+
+  describe('POST /api/v1/auth/signup - Domain Blacklist', () => {
+
+    it('should prevent signup for a blacklisted domain', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'blocked.com';
+      const email = `${testEmailPrefix}_signup_1@blocked.com`;
+      const username = 'blockeduser_signup_1';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/signup')
+        .send({
+          email,
+          username,
+          password: testPassword,
+          confirmPassword: testPassword,
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('EMAIL_DOMAIN_BLACKLISTED');
+      expect(response.body.message).toBe('Email domain is not allowed to sign up.');
     });
 
-    beforeEach(() => {
-        mockLogger.warn.mockClear();
-        mockLogger.info.mockClear();
-        mockLogger.error.mockClear();
+    it('should allow signup for a non-blacklisted domain', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'other-blocked.com';
+      const email = `${testEmailPrefix}_signup_2@allowed.com`;
+      const username = 'alloweduser_signup_2';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/signup')
+        .send({
+          email,
+          username,
+          password: testPassword,
+          confirmPassword: testPassword,
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.email).toBe(email);
     });
 
-    afterEach(() => {
-        delete require.cache[loggerAbsolutePath];
-        vi.restoreAllMocks(); 
+    it('should return EMAIL_INVALID for malformed emails before blacklist check', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'blocked.com';
+      const email = 'malformed@';
+      const username = 'malformeduser';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/signup')
+        .send({
+          email,
+          username,
+          password: testPassword,
+          confirmPassword: testPassword,
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe('EMAIL_INVALID');
     });
 
-    afterAll(() => {
-        if (originalEnvBlacklistedDomains !== undefined) {
-            process.env.LOGCHIMP_BLACKLISTED_DOMAINS = originalEnvBlacklistedDomains;
-        } else {
-            delete process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
-        }
+    it('should return PASSWORD_MISSING if password is not provided', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
+      const email = `${testEmailPrefix}_signup_no_pass@example.com`;
+      const username = 'nopassuser';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/signup')
+        .send({
+          email,
+          username,
+          password: '',
+          confirmPassword: '',
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe('PASSWORD_MISSING');
+    });
+  });
+
+  describe('POST /api/v1/auth/login - Domain Blacklist', () => {
+    const blacklistedLoginEmail = `${testEmailPrefix}_login_1@blocked-login.com`;
+    const blacklistedLoginPassword = 'LoginPassword123';
+    let blacklistedUser;
+
+    beforeEach(async () => {
+
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
+
+      const hashedPassword = await hashPassword(blacklistedLoginPassword);
+      const [user] = await database('users').insert({
+        email: blacklistedLoginEmail,
+        username: 'blockedloginuser',
+        password: hashedPassword,
+        userId: uuidv4(),
+        name: null,
+        avatar: null,
+        isBlocked: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning('*');
+      blacklistedUser = user;
+
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'blocked-login.com';
     });
 
-    it('should correctly determine blacklisted status based on the configured environment variable', () => {
-        expect(isDomainBlacklisted('user@example.com')).toBeTruthy();
-        expect(isDomainBlacklisted('test@test.com')).toBeTruthy();
-        expect(isDomainBlacklisted('admin@spam.com')).toBeTruthy();
-        
-        expect(isDomainBlacklisted('hello@good.com')).toBeFalsy();
-        expect(isDomainBlacklisted('admin@other.org')).toBeFalsy();
-        
-        expect(mockLogger.warn).not.toHaveBeenCalled(); 
+    afterEach(async () => {
+      if (blacklistedUser && blacklistedUser.userId) {
+        await database('users').where({ userId: blacklistedUser.userId }).del();
+      }
     });
 
-    it('should log warnings for invalid domains defined in LOGCHIMP_BLACKLISTED_DOMAINS env variable', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'valid.com, invalid!.com, another.org, .start.net, long' + 'a'.repeat(60) + 'label.com';
+    it('should prevent login for an already registered user with a blacklisted domain', async () => {
+      const response = await supertest(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: blacklistedLoginEmail,
+          password: blacklistedLoginPassword,
+        });
 
-        parseBlacklistedDomainsModule(process.env.LOGCHIMP_BLACKLISTED_DOMAINS);
-
-        expect(mockLogger.warn).toHaveBeenCalledTimes(3); 
-        expect(mockLogger.warn).toHaveBeenCalledWith('Invalid domain in blacklist config: "invalid!.com"');
-        expect(mockLogger.warn).toHaveBeenCalledWith('Invalid domain in blacklist config: ".start.net"');
-        expect(mockLogger.warn).toHaveBeenCalledWith(`Invalid domain in blacklist config: "long${'a'.repeat(60)}label.com"`);
-
-        expect(isDomainBlacklisted('user@valid.com')).toBeTruthy();
-        expect(isDomainBlacklisted('user@invalid!.com')).toBeFalsy(); 
-        expect(isDomainBlacklisted('user@another.org')).toBeTruthy();
-        expect(isDomainBlacklisted('user@.start.net')).toBeFalsy();
-        expect(isDomainBlacklisted('user@long' + 'a'.repeat(60) + 'label.com')).toBeFalsy();
-
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('EMAIL_DOMAIN_BLACKLISTED');
+      expect(response.body.message).toBe('Email domain is not allowed to login.');
     });
 
-    it('should correctly handle an empty LOGCHIMP_BLACKLISTED_DOMAINS env variable (no domains blacklisted)', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
+    it('should allow login for a non-blacklisted user', async () => {
+      const allowedLoginEmail = `${testEmailPrefix}_login_allowed@normal.com`;
+      const allowedLoginPassword = 'NormalPassword123';
+      const hashedPassword = await hashPassword(allowedLoginPassword);
 
-        expect(isDomainBlacklisted('user@example.com')).toBeFalsy();
-        expect(isDomainBlacklisted('user@test.com')).toBeFalsy();
-        expect(isDomainBlacklisted('any@domain.com')).toBeFalsy();
-        
-        expect(mockLogger.warn).not.toHaveBeenCalled(); 
+      const [allowedUser] = await database('users').insert({
+        email: allowedLoginEmail,
+        username: 'allowedloginuser',
+        password: hashedPassword,
+        userId: uuidv4(),
+        name: null,
+        avatar: null,
+        isBlocked: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning('*');
 
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'someother.com';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: allowedLoginEmail,
+          password: allowedLoginPassword,
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.email).toBe(allowedLoginEmail);
+
+      await database('users').where({ userId: allowedUser.userId }).del();
     });
 
-    it('should handle email with invalid domain format itself (e.g., user@.com) not being blacklisted', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'test.com'; 
-        
-        expect(isDomainBlacklisted('user@.com')).toBeFalsy();
-        expect(isDomainBlacklisted('user@invalid!')).toBeFalsy();
-        
-        expect(mockLogger.warn).not.toHaveBeenCalled(); 
+    it('should return USER_BLOCKED if user is blocked (precedes blacklist check)', async () => {
+      const blockedEmail = `${testEmailPrefix}_blocked@example.com`;
+      const blockedPassword = 'BlockedUserPass';
+      const hashedPassword = await hashPassword(blockedPassword);
+
+      const [blockedUser] = await database('users').insert({
+        email: blockedEmail,
+        username: 'blockeduser',
+        password: hashedPassword,
+        userId: uuidv4(),
+        name: null,
+        avatar: null,
+        isBlocked: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning('*');
+
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: blockedEmail,
+          password: blockedPassword,
+        });
+
+      expect(response.statusCode).toEqual(403);
+      expect(response.body.code).toEqual("USER_BLOCKED");
+
+      await database('users').where({ userId: blockedUser.userId }).del();
+    });
+
+    it('should return PASSWORD_MISSING if password is not provided for login', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
+      const email = `${testEmailPrefix}_login_no_pass@example.com`;
+      const username = 'login_nopassuser';
+      const hashedPassword = await hashPassword(testPassword);
+
+      const [tempUser] = await database('users').insert({
+        email,
+        username,
+        password: hashedPassword,
+        userId: uuidv4(),
+        name: null, avatar: null, isBlocked: false, createdAt: new Date(), updatedAt: new Date(),
+      }).returning('*');
+
+      const response = await supertest(app).post("/api/v1/auth/login").send({
+        email: email,
+        password: "",
+      });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("PASSWORD_MISSING");
+
+      await database('users').where({ userId: tempUser.userId }).del();
+    });
+
+    it('should return INCORRECT_PASSWORD for wrong password', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
+      const email = `${testEmailPrefix}_login_wrong_pass@example.com`;
+      const username = 'login_wrongpassuser';
+      const hashedPassword = await hashPassword(testPassword);
+
+      const [tempUser] = await database('users').insert({
+        email,
+        username,
+        password: hashedPassword,
+        userId: uuidv4(),
+        name: null, avatar: null, isBlocked: false, createdAt: new Date(), updatedAt: new Date(),
+      }).returning('*');
+
+      const response = await supertest(app).post("/api/v1/auth/login").send({
+        email: email,
+        password: "wrongPassword",
+      });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe("INCORRECT_PASSWORD");
+
+      await database('users').where({ userId: tempUser.userId }).del();
+    });
+  });
+
+  describe('POST /api/v1/auth/password/reset - Initial Request Blacklist', () => {
+    const resetEmailBlacklisted = `${testEmailPrefix}_pwdreset_blocked@blocked-for-reset.com`;
+    const resetEmailAllowed = `${testEmailPrefix}_pwdreset_allowed@allowed-for-reset.com`;
+    let userForBlacklistedReset;
+    let existingUserForAllowedReset;
+
+    beforeEach(async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = '';
+
+      const hashedPasswordBlacklisted = await hashPassword(testPassword);
+      const [blockedUser] = await database('users').insert({
+        email: resetEmailBlacklisted,
+        username: 'pwdresetblockeduser',
+        password: hashedPasswordBlacklisted,
+        userId: uuidv4(),
+        name: null, avatar: null, isBlocked: false, createdAt: new Date(), updatedAt: new Date(),
+      }).returning('*');
+      userForBlacklistedReset = blockedUser;
+
+      const hashedPasswordAllowed = await hashPassword(testPassword);
+      const [allowedUser] = await database('users').insert({
+        email: resetEmailAllowed,
+        username: 'pwdresetalloweduser',
+        password: hashedPasswordAllowed,
+        userId: uuidv4(),
+        name: null, avatar: null, isBlocked: false, createdAt: new Date(), updatedAt: new Date(),
+      }).returning('*');
+      existingUserForAllowedReset = allowedUser;
+    });
+
+    afterEach(async () => {
+      if (userForBlacklistedReset && userForBlacklistedReset.userId) {
+        await database('users').where({ userId: userForBlacklistedReset.userId }).del();
+      }
+      if (existingUserForAllowedReset && existingUserForAllowedReset.userId) {
+        await database('users').where({ userId: existingUserForAllowedReset.userId }).del();
+      }
+    });
+
+    it('should prevent initial password reset request for a blacklisted domain (user exists)', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'blocked-for-reset.com';
+
+      const response = await supertest(app)
+        .post('/api/v1/auth/password/reset')
+        .set('Origin', 'http://localhost:3000')
+        .send({ email: resetEmailBlacklisted });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('DOMAIN_BLACKLISTED');
+      expect(response.body.message).toBe('The domain of the email is not allowed.'); 
     });
 
 
-    it('should return false if LOGCHIMP_BLACKLISTED_DOMAINS environment variable is not set', () => {
-        delete process.env.LOGCHIMP_BLACKLISTED_DOMAINS;
-        
-        mockLogger.warn.mockClear(); 
+    it('should return USER_NOT_FOUND if email is not registered, even if domain is not blacklisted', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = ''; 
 
-        expect(isDomainBlacklisted('user@anydomain.com')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled(); 
+      const nonExistentEmail = `${testEmailPrefix}_nonexistent@nonexistent.com`;
 
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
+      const response = await supertest(app)
+        .post('/api/v1/auth/password/reset')
+        .set('Origin', 'http://localhost:3000') 
+        .send({ email: nonExistentEmail });
+
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe('USER_NOT_FOUND'); 
     });
 
-    it('should correctly handle a blacklist with only one valid domain', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'singledomain.com';
-        
-        expect(isDomainBlacklisted('user@singledomain.com')).toBeTruthy();
-        expect(isDomainBlacklisted('user@other.com')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
+    it('should return EMAIL_INVALID for malformed email for reset request', async () => {
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'blocked-for-reset.com';
 
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
+      const response = await supertest(app)
+        .post('/api/v1/auth/password/reset')
+        .set('Origin', 'http://localhost:3000')
+        .send({ email: 'malformed@@email' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe('EMAIL_INVALID');
     });
 
-    it('should correctly handle a blacklist with many valid domains', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'domain1.com, domain2.net, domain3.org, domain4.io, domain5.co';
-        
-        expect(isDomainBlacklisted('user@domain1.com')).toBeTruthy();
-        expect(isDomainBlacklisted('user@domain3.org')).toBeTruthy();
-        expect(isDomainBlacklisted('user@domain6.xyz')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
+  });
 
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
-    });
-
-    it('should be case insensitive for email domains', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'case.com';
-        
-        expect(isDomainBlacklisted('user@CASE.COM')).toBeTruthy();
-        expect(isDomainBlacklisted('user@cAsE.cOm')).toBeTruthy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
-
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
-    });
-
-    it('should trim spaces from the email domain before checking blacklist', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'trim.com';
-        
-        expect(isDomainBlacklisted('user@ trim.com')).toBeTruthy();
-        expect(isDomainBlacklisted('user@trim.com ')).toBeTruthy();
-        expect(isDomainBlacklisted('user@ trim.com ')).toBeTruthy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
-
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
-    });
-
-    it('should not blacklist subdomains unless explicitly listed', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'parent.com';
-
-        expect(isDomainBlacklisted('user@parent.com')).toBeTruthy();
-        expect(isDomainBlacklisted('user@sub.parent.com')).toBeFalsy(); 
-        expect(isDomainBlacklisted('user@another.sub.parent.com')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
-
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
-    });
-
-    it('should filter out invalid domains from the blacklist and log warnings', () => {
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'valid1.com, invalid@domain, valid2.net, .badtld, good.org';
-        
-        parseBlacklistedDomainsModule(process.env.LOGCHIMP_BLACKLISTED_DOMAINS);
-
-        expect(mockLogger.warn).toHaveBeenCalledTimes(2); 
-        expect(mockLogger.warn).toHaveBeenCalledWith('Invalid domain in blacklist config: "invalid@domain"');
-        expect(mockLogger.warn).toHaveBeenCalledWith('Invalid domain in blacklist config: ".badtld"');
-
-        expect(isDomainBlacklisted('user@valid1.com')).toBeTruthy();
-        expect(isDomainBlacklisted('user@valid2.net')).toBeTruthy();
-        expect(isDomainBlacklisted('user@good.org')).toBeTruthy();
-        expect(isDomainBlacklisted('user@invalid@domain')).toBeFalsy(); 
-        expect(isDomainBlacklisted('user@.badtld')).toBeFalsy();
-        expect(isDomainBlacklisted('user@nonexistent.com')).toBeFalsy();
-
-        process.env.LOGCHIMP_BLACKLISTED_DOMAINS = 'example.com, test.com, spam.com, badsite.org';
-    });
-
-    it('should return false for email without an @ symbol', () => {
-        expect(isDomainBlacklisted('justanemail')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
-    });
-
-   
-    it('should return false for email with multiple @ symbols', () => {
-        expect(isDomainBlacklisted('user@domain@example.com')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
-    });
-
-   
-    it('should return false for email with empty domain part', () => {
-        expect(isDomainBlacklisted('user@')).toBeFalsy();
-        expect(mockLogger.warn).not.toHaveBeenCalled();
-    });
+  describe('POST /api/v1/auth/password-reset - Authenticated Reset Blacklist (Using req.user)', () => {
+      it('should NOT be found as the route is not defined', async () => {
+        const response = await supertest(app)
+            .post('/api/v1/auth/password-reset')
+            .send({});
+        expect(response.status).toBe(404);
+      });
+  });
 });
