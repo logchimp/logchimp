@@ -1,9 +1,10 @@
 <template>
-	<div class="logchimp-poweredby">
+	<div class="flex justify-center mt-8">
 		<a
 			:href="
 				`https://logchimp.codecarrot.net/?utm_source=${source}&utm_medium=powered&company=${siteSettings.title}`
 			"
+      class="text-sm text-(--color-gray-70)"
 		>
 			Powered by LogChimp
 		</a>
@@ -21,14 +22,3 @@ const { get: siteSettings } = useSettingStore();
 
 const source = computed(() => route.name?.toString());
 </script>
-
-<style lang='sass'>
-.logchimp-poweredby
-	display: flex
-	justify-content: center
-	margin-top: 2rem
-
-	a
-		font-size: 0.875rem
-		color: var(--color-gray-70)
-</style>

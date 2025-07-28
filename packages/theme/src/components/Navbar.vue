@@ -1,5 +1,5 @@
 <template>
-	<div class="navbar">
+	<div class="flex items-center navbar">
 		<router-link to="/" class="navbar-item">
 			<div class="navbar-item-icon">
 				<home-icon />
@@ -36,10 +36,7 @@ import RoadmapIcon from "./icons/Roadmap.vue";
 </script>
 
 <style lang='sass'>
-.navbar
-  margin-top: 0.5rem
-
-.navbar, .navbar-item
+.navbar-item
   display: flex
   align-items: center
 
@@ -70,4 +67,9 @@ import RoadmapIcon from "./icons/Roadmap.vue";
 
   .navbar-item-content
     color: var(--color-white)
+
+@media (min-width: 1152px)
+  .navbar
+    padding-left: 1.5rem
+    padding-right: 1.5rem
 </style>
