@@ -2,7 +2,7 @@
 import database from "../../database";
 
 // services
-import getUsers from "../../services/users/getUsers";
+import { getUsers } from "../../services/users/getUsers";
 
 // utils
 import logger from "../../utils/logger";

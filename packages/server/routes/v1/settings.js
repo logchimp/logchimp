@@ -25,7 +25,7 @@ const upload = multer({
 import * as settings from "../../controllers/settings";
 
 // middleware
-import middlewares from "../../middlewares";
+import * as middlewares from "../../middlewares";
 
 router.get("/settings/site", settings.siteSettings);
 router.patch("/settings/site", middlewares.apiAuth, settings.update);

@@ -1,8 +1,8 @@
 import database from "../../database";
 
 // services
-import getBoardById from "../../services/boards/getBoardById";
-import getVotes from "../../services/votes/getVotes";
+import { getBoardById } from "../../services/boards/getBoardById";
+import { getVotes } from "../../services/votes/getVotes";
 
 // utils
 import { validUUID } from "../../helpers";

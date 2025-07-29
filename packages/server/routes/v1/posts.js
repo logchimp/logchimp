@@ -6,16 +6,16 @@ const router = express.Router();
 import * as post from "../../controllers/post";
 
 // middleware
-import middleware from "../../middlewares";
-import exists from "../../middlewares/postExists";
+import * as middleware from "../../middlewares";
+import { postExists } from "../../middlewares/postExists";
 
 router.post("/posts/get", post.filterPost);
-router.post("/posts/slug", exists, post.postBySlug);
+router.post("/posts/slug", postExists, post.postBySlug);
 
 router.post("/posts", middleware.apiAuth, post.create);
-router.patch("/posts", middleware.apiAuth, exists, post.updatePost);
+router.patch("/posts", middleware.apiAuth, postExists, post.updatePost);
 
-router.delete("/posts", middleware.apiAuth, exists, post.deleteById);
+router.delete("/posts", middleware.apiAuth, postExists, post.deleteById);
 
 // post activity
 router.get("/posts/:post_id/activity", post.activity.get);

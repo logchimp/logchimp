@@ -1,5 +1,5 @@
 // services
-import verifyEmail from "../../../services/auth/verifyEmail";
+import { verifyEmail } from "../../../services/auth/verifyEmail";
 
 // utils
 import logger from "../../../utils/logger";

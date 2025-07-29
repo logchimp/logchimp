@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import database from "../../database";
 
 // services
-import getVotes from "../../services/votes/getVotes";
+import { getVotes } from "../../services/votes/getVotes";
 
 // utils
 import { validUUID } from "../../helpers";

@@ -7,7 +7,7 @@ import * as roles from "../../controllers/v1/roles";
 
 // middleware
 import * as middleware from "../../../middlewares";
-import roleExists from "../../middleware/roleExists";
+import { roleExists } from "../../middleware/roleExists";
 
 router.get("/roles", middleware.apiAuth, roles.get);
 router.get("/roles/:id", middleware.apiAuth, roleExists, roles.getOne);

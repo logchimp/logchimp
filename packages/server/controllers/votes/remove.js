@@ -2,7 +2,7 @@
 import database from "../../database";
 
 // services
-import getVotes from "../../services/votes/getVotes";
+import { getVotes } from "../../services/votes/getVotes";
 
 // utils
 import { validUUID } from "../../helpers";

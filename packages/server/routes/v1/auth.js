@@ -6,22 +6,27 @@ const router = express.Router();
 import * as auth from "../../controllers/auth";
 
 // middleware
-import exists from "../../middlewares/userExists";
-import mailConfigExists from "../../middlewares/mailConfigExists";
-import validateEmailToken from "../../middlewares/validateEmailToken";
+import { userExists } from "../../middlewares/userExists";
+import { mailConfigExists } from "../../middlewares/mailConfigExists";
+import { validateEmailToken } from "../../middlewares/validateEmailToken";
 
 router.post("/auth/signup", mailConfigExists, auth.signup);
-router.post("/auth/login", exists, auth.login);
+router.post("/auth/login", userExists, auth.login);
 
 router.post("/auth/setup", mailConfigExists, auth.setup);
 router.get("/auth/setup", auth.isSiteSetup);
 
 // email
-router.post("/auth/email/verify", mailConfigExists, exists, auth.email.verify);
+router.post(
+  "/auth/email/verify",
+  mailConfigExists,
+  userExists,
+  auth.email.verify,
+);
 router.post(
   "/auth/email/validate",
   validateEmailToken,
-  exists,
+  userExists,
   auth.email.validate,
 );
 
@@ -29,19 +34,19 @@ router.post(
 router.post(
   "/auth/password/reset",
   mailConfigExists,
-  exists,
+  userExists,
   auth.password.reset,
 );
 router.post(
   "/auth/password/validateToken",
   validateEmailToken,
-  exists,
+  userExists,
   auth.password.validateToken,
 );
 router.post(
   "/auth/password/set",
   validateEmailToken,
-  exists,
+  userExists,
   auth.password.set,
 );
 

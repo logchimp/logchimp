@@ -6,7 +6,7 @@ const router = express.Router();
 // import users from "../../../controllers/users";
 
 // middleware
-// import middleware from "../../../middlewares";
+// import * as middleware from "../../../middlewares";
 
 // TODO: create permission for user:read, user:update, user:create, user:delete
 // router.get("/users/get", middleware.apiAuth, users.accessDashboard);

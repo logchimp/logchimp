@@ -1,5 +1,5 @@
 // services
-import passwordResetEmail from "../../../services/auth/passwordReset";
+import { passwordReset as passwordResetEmail } from "../../../services/auth/passwordReset";
 
 // utils
 import logger from "../../../utils/logger";
