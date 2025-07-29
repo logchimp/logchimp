@@ -9,6 +9,14 @@ on:
       - "tests/**"
       - "package.json"
       - "pnpm-lock.yaml"
+  pull_request:
+    paths:
+      - ".github/workflows/test.yml"
+      - "packages/**"
+      - "server/**"
+      - "tests/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
   workflow_dispatch:
 
 permissions:
