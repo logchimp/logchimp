@@ -1,7 +1,7 @@
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
+import logger from "../../utils/logger";
 
 const getBoardById = async (boardId) => {
   try {

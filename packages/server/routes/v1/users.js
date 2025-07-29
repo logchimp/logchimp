@@ -1,12 +1,12 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const users = require("../../controllers/users");
+import * as users from "../../controllers/users";
 
 // middleware
-const middleware = require("../../middlewares");
+import * as middleware from "../../middlewares";
 
 router.get("/users", users.filter);
 router.get("/users/profile", middleware.apiAuth, users.getProfile);

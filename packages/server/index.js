@@ -1,11 +1,11 @@
 const startTime = Date.now();
 
-const database = require("./database");
-const app = require("./app");
+import database from "./database";
+import app from "./app";
 
 // utils
-const logger = require("./utils/logger");
-const logchimpConfig = require("./utils/logchimpConfig");
+import logger from "./utils/logger";
+import logchimpConfig from "./utils/logchimpConfig";
 
 // run database migrations
 database.migrate

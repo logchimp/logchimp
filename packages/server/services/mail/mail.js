@@ -1,10 +1,10 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+import nodemailer from "nodemailer";
+import("dotenv").config();
 
 // utils
-const logchimpConfig = require("../../utils/logchimpConfig");
+import logchimpConfig from "../../utils/logchimpConfig";
 const config = logchimpConfig();
-const logger = require("../../utils/logger");
+import logger from "../../utils/logger";
 
 function getMailConfig() {
   const mailConfig = {
@@ -30,4 +30,4 @@ function getMailConfig() {
   return nodemailer.createTransport(mailConfig);
 }
 
-module.exports = getMailConfig();
+export const mail = getMailConfig();

@@ -1,12 +1,12 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // services
-const { mail, generateContent } = require("../../services/mail");
-const { createToken } = require("../../services/token.service");
+import { mail, generateContent } from "../mail";
+import { createToken } from "../token.service";
 
 // utils
-const logger = require("../../utils/logger");
+import logger from "../../utils/logger";
 
 const passwordReset = async (url, tokenPayload) => {
   const token = createToken(tokenPayload, {

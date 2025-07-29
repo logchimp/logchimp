@@ -1,13 +1,13 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const roles = require("../../controllers/v1/roles");
+import * as roles from "../../controllers/v1/roles";
 
 // middleware
-const middleware = require("../../../middlewares");
-const roleExists = require("../../middleware/roleExists");
+import * as middleware from "../../../middlewares";
+import roleExists from "../../middleware/roleExists";
 
 router.get("/roles", middleware.apiAuth, roles.get);
 router.get("/roles/:id", middleware.apiAuth, roleExists, roles.getOne);

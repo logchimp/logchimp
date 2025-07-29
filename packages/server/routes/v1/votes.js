@@ -1,12 +1,12 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const votes = require("../../controllers/votes");
+import * as votes from "../../controllers/votes";
 
 // middleware
-const middleware = require("../../middlewares");
+import * as middleware from "../../middlewares";
 
 router.post("/votes", middleware.apiAuth, votes.add);
 router.delete("/votes", middleware.apiAuth, votes.remove);

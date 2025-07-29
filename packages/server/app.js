@@ -1,13 +1,13 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
 
-const routes = require("./routes");
+import routes from "./routes";
 
 const app = express();
 app.disable("x-powered-by");
 
 // utils
-const logchimpConfig = require("./utils/logchimpConfig");
+import logchimpConfig from "./utils/logchimpConfig";
 const config = logchimpConfig();
 if (!config) {
   console.log(

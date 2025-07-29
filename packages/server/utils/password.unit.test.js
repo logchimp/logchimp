@@ -1,8 +1,8 @@
 import { test, expect } from "vitest";
-const generatePassword = require("omgopass");
+import generatePassword from "omgopass";
 
 // utils
-const { hashPassword, validatePassword } = require("./password");
+import { hashPassword, validatePassword } from "./password";
 
 test("Hash empty string as password", () => {
   const hash = hashPassword("");

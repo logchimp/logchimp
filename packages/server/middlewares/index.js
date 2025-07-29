@@ -1,4 +1,4 @@
-const authenticate = require("./authenticate");
-const authorize = require("./authorize");
+import authenticate from "./authenticate";
+import authorize from "./authorize";
 
-module.exports.apiAuth = [authenticate, authorize];
+export const apiAuth = [authenticate, authorize];

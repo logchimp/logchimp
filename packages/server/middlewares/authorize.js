@@ -1,4 +1,4 @@
-const error = require("../errorResponse.json");
+import error from "../errorResponse.json";
 
 const authorize = (req, res, next) => {
   const hasUser = req.user?.userId;

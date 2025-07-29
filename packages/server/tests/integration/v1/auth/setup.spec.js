@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
+import supertest from "supertest";
 
 import { cleanDb } from "../../../utils/db";
-const app = require("../../../../app");
+import app from "../../../../app";
 
 describe("GET /api/v1/auth/setup", () => {
   it("should not have site setup", async () => {

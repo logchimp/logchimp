@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
+import supertest from "supertest";
 
-const app = require("../../../../app");
-const { verifyToken } = require("../../../../services/token.service");
+import app from "../../../../app";
+import { verifyToken } from "../../../../services/token.service";
 
 describe("POST /api/v1/auth/login", () => {
   it('should throw error "EMAIL_INVALID"', async () => {

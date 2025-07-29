@@ -1,6 +1,6 @@
 // modules
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 /**
  * Following image formats are allowed (they're case sensitive):
@@ -9,7 +9,7 @@ const path = require("path");
  * - png
  * - svg
  */
-const serveImages = (req, res) => {
+export function serveImages(req, res) {
   const imagePathRegex = /^\/(.+)(?:pn|jpe?|sv)g$/gim;
   const filterImagePath = req.url.match(imagePathRegex);
 
@@ -29,6 +29,4 @@ const serveImages = (req, res) => {
       }
     },
   );
-};
-
-module.exports = serveImages;
+}

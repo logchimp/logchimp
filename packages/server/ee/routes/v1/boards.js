@@ -1,13 +1,13 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const boards = require("../../controllers/v1/boards");
+import * as boards from "../../controllers/v1/boards";
 
 // middleware
-const middleware = require("../../../middlewares");
-const exists = require("../../middleware/boardExists");
+import * as middleware from "../../../middlewares";
+import exists from "../../middleware/boardExists";
 
 router.get("/boards", boards.filter);
 router.get("/boards/get", boards.get);

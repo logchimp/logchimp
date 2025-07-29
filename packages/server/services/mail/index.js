@@ -1,2 +1,2 @@
-exports.mail = require("./mail");
-exports.generateContent = require("./generateContent");
+export { mail } from "./mail";
+export { generateContent } from "./generateContent";

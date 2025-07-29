@@ -1,8 +1,8 @@
-const database = require("../database");
+import database from "../database";
 
 // utils
-const { validUUID } = require("../helpers");
-const error = require("../errorResponse.json");
+import { validUUID } from "../helpers";
+import error from "../errorResponse.json";
 
 module.exports = async (req, res, next) => {
   const id = validUUID(req.body.id);

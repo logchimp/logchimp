@@ -1,6 +1,6 @@
-const path = require("path");
-const fs = require("fs");
-const fsExtra = require("fs-extra");
+import path from "path";
+import fs from "fs";
+import fsExtra from "fs-extra";
 
 function config() {
   // read logchimp.config.json from file-system
@@ -69,4 +69,4 @@ function config() {
   };
 }
 
-module.exports = config;
+export default config;

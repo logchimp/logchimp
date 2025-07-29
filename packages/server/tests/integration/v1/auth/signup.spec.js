@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
+import supertest from "supertest";
 
 import { faker } from "@faker-js/faker";
-const app = require("../../../../app");
-const database = require("../../../../database");
+import app from "../../../../app";
+import database from "../../../../database";
 
 describe("POST /api/v1/auth/signup", () => {
   it('should throw error "EMAIL_INVALID"', async () => {

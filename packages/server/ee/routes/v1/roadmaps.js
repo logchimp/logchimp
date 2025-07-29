@@ -1,13 +1,13 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const roadmaps = require("../../controllers/v1/roadmaps");
+import * as roadmaps from "../../controllers/v1/roadmaps";
 
 // middleware
-const middleware = require("../../../middlewares");
-const exists = require("../../../middlewares/roadmapExists");
+import * as middleware from "../../../middlewares";
+import exists from "../../../middlewares/roadmapExists";
 
 router.post("/roadmaps", middleware.apiAuth, roadmaps.create);
 

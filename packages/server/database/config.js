@@ -1,11 +1,11 @@
-const isBoolean = require("lodash/isBoolean");
+import isBoolean from "lodash/isBoolean";
 
 // modules
-const path = require("path");
+import path from "path";
 
 // utils
-const logger = require("../utils/logger");
-const logchimpConfig = require("../utils/logchimpConfig");
+import logger from "../utils/logger";
+import logchimpConfig from "../utils/logchimpConfig";
 const config = logchimpConfig();
 
 const ssl =
@@ -17,7 +17,7 @@ const ssl =
       }
     : {};
 
-module.exports = {
+export const dbConfig = {
   client: "pg",
   version: "12.4",
   connection: {

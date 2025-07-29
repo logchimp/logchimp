@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
+import supertest from "supertest";
 
-const app = require("../../../../app");
-const database = require("../../../../database");
-const { createToken } = require("../../../../services/token.service");
+import app from "../../../../app";
+import database from "../../../../database";
+import { createToken } from "../../../../services/token.service";
 import { user as generateUser } from "../../../utils/generators";
 
 describe("POST /api/v1/auth/email/validate", () => {

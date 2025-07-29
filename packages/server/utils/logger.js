@@ -1,6 +1,6 @@
 // modules
-const path = require("path");
-const { createLogger, format, transports } = require("winston");
+import path from "path";
+import { createLogger, format, transports } from "winston";
 
 const oneLineForamt = format.printf(({ level, code, message, timestamp }) => {
   return `${timestamp} ${level.toUpperCase()}: ${code ? `[${code}] ` : ""}${message}`;
@@ -34,4 +34,4 @@ const logger = createLogger({
   ],
 });
 
-module.exports = logger;
+export default logger;

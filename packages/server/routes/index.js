@@ -1,13 +1,13 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const rateLimit = require("express-rate-limit");
+import rateLimit from "express-rate-limit";
 
 // controller
-const serveImages = require("../controllers/serveImages");
+import { serveImages } from "../controllers/serveImages";
 
 // v1 APIs
-const v1 = require("./v1");
+import v1 from "./v1";
 
 // server images
 /**

@@ -1,13 +1,13 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 // database
-const database = require("../database");
+import database from "../database";
 
 // utils
-const logger = require("../utils/logger");
-const logchimpConfig = require("../utils/logchimpConfig");
+import logger from "../utils/logger";
+import logchimpConfig from "../utils/logchimpConfig";
 const config = logchimpConfig();
-const error = require("../errorResponse.json");
+import error from "../errorResponse.json";
 
 module.exports = async (req, res, next) => {
   const token = req.body.token;

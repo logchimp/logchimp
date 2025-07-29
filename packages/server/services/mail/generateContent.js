@@ -1,9 +1,9 @@
-const _ = require("lodash");
-const path = require("path");
-const fs = require("fs-extra");
-const { htmlToText } = require("html-to-text");
+import _ from "lodash";
+import path from "path";
+import fs from "fs-extra";
+import { htmlToText } from "html-to-text";
 
-const generateContent = async (templateName, options) => {
+export async function generateContent(templateName, options) {
   const mailTemplateFilePath = path.resolve(
     __dirname,
     "templates",
@@ -29,6 +29,4 @@ const generateContent = async (templateName, options) => {
   } catch (error) {
     console.error(error);
   }
-};
-
-module.exports = generateContent;
+}

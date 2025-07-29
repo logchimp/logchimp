@@ -1,10 +1,10 @@
-const jwt = require("jsonwebtoken");
-const database = require("../database");
-const error = require("../errorResponse.json");
+import jwt from "jsonwebtoken";
+import database from "../database";
+import error from "../errorResponse.json";
 
 // utils
-const logger = require("../utils/logger");
-const logchimpConfig = require("../utils/logchimpConfig");
+import logger from "../utils/logger";
+import logchimpConfig from "../utils/logchimpConfig";
 const config = logchimpConfig();
 
 const extractTokenFromHeader = (header) => {

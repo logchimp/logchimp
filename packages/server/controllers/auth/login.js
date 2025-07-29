@@ -1,10 +1,10 @@
 // service
-const { createToken } = require("../../services/token.service");
+import { createToken } from "../../services/token.service";
 
 // utils
-const { validatePassword } = require("../../utils/password");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validatePassword } from "../../utils/password";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
 export async function login(req, res) {
   const user = req.user;

@@ -1,5 +1,5 @@
 // services
-const { mail } = require("../services/mail");
+import { mail } from "../services/mail";
 
 module.exports = async (_, res, next) => {
   if (!mail) {

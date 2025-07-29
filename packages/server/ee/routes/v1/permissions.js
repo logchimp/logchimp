@@ -1,12 +1,12 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-// const users = require("../../../controllers/users");
+// import users from "../../../controllers/users";
 
 // middleware
-// const middleware = require("../../../middlewares");
+// import middleware from "../../../middlewares";
 
 // TODO: create permission for user:read, user:update, user:create, user:delete
 // router.get("/users/get", middleware.apiAuth, users.accessDashboard);

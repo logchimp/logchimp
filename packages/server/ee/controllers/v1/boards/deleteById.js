@@ -1,10 +1,10 @@
 // database
-const database = require("../../../../database");
+import database from "../../../../database";
 
 // utils
-const { validUUID } = require("../../../../helpers");
-const logger = require("../../../../utils/logger");
-const error = require("../../../../errorResponse.json");
+import { validUUID } from "../../../../helpers";
+import logger from "../../../../utils/logger";
+import error from "../../../../errorResponse.json";
 
 module.exports = async (req, res) => {
   const permissions = req.user.permissions;

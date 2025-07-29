@@ -1,6 +1,6 @@
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 
-exports.hashPassword = (password) => {
+export function hashPassword(password) {
   if (typeof password !== "string" || !password.trim()) {
     return null;
   }
@@ -8,9 +8,9 @@ exports.hashPassword = (password) => {
   const bcryptSaltRounds = 10;
   const bcryptSalt = bcrypt.genSaltSync(bcryptSaltRounds);
   return bcrypt.hashSync(password, bcryptSalt);
-};
+}
 
-exports.validatePassword = async (password, hash) => {
+export async function validatePassword(password, hash) {
   if (
     typeof password !== "string" ||
     typeof hash !== "string" ||
@@ -21,4 +21,4 @@ exports.validatePassword = async (password, hash) => {
   }
 
   return await bcrypt.compare(password, hash);
-};
+}

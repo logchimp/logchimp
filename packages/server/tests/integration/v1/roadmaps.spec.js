@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
+import supertest from "supertest";
 
-const app = require("../../../app");
+import app from "../../../app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
-const database = require("../../../database");
+import database from "../../../database";
 
 // Get all roadmaps
 describe("GET /api/v1/roadmaps", () => {

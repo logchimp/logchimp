@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
+import supertest from "supertest";
 
 import database from "../../../database";
-const app = require("../../../app");
+import app from "../../../app";
 
 describe("GET /api/v1/settings/site", () => {
   it("should get all settings", async () => {

@@ -1,7 +1,8 @@
-const _ = require("lodash");
-const jwt = require("jsonwebtoken");
+import _ from "lodash";
+import jwt from "jsonwebtoken";
 
-const config = require("../utils/logchimpConfig")();
+import logchimpConfig from "../utils/logchimpConfig";
+const config = logchimpConfig();
 
 /**
  * Generate JWT token
@@ -33,7 +34,4 @@ const verifyToken = (token) => {
   return jwt.verify(token, secretKey);
 };
 
-module.exports = {
-  createToken,
-  verifyToken,
-};
+export { createToken, verifyToken };

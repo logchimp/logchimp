@@ -1,6 +1,6 @@
 import { it, expect } from "vitest";
-const app = require("../../app");
-const supertest = require("supertest");
+import app from "../../app";
+import supertest from "supertest";
 
 it("GET /api", async () => {
   const response = await supertest(app).get("/api");

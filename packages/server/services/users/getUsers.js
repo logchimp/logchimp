@@ -1,8 +1,8 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
+import logger from "../../utils/logger";
 
 const getUsers = async (created, limit, page) => {
   try {

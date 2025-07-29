@@ -1,4 +1,4 @@
-const { addPermission, removePermission } = require("../utils");
+import { addPermission, removePermission } from "../utils";
 
 const permissions = [
   "post:read",

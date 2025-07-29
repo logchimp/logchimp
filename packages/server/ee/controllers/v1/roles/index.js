@@ -1,15 +1,6 @@
-const get = require("./get");
-const create = require("./create");
-const getOne = require("./getOne");
-const update = require("./update");
-const addRoleToUser = require("./addRoleToUser");
-const deleteRoleFromUser = require("./deleteRoleFromUser");
-
-module.exports = {
-  get,
-  create,
-  getOne,
-  update,
-  addRoleToUser,
-  deleteRoleFromUser,
-};
+export { get } from "./get";
+export { create } from "./create";
+export { getOne } from "./getOne";
+export { update } from "./update";
+export { addRoleToUser } from "./addRoleToUser";
+export { deleteRoleFromUser } from "./deleteRoleFromUser";

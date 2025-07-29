@@ -1,5 +1,5 @@
 // utils
-const logger = require("../../utils/logger");
+import logger from "../../utils/logger";
 
 /**
  * IF EXISTS used as fail-safe for dropping the CONSTRAINT 'role_id_user_id_unique_index'

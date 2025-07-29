@@ -1,5 +1,5 @@
-const _ = require("lodash");
-const { validate: validateUUID } = require("uuid");
+import _ from "lodash";
+import { validate as validateUUID } from "uuid";
 
 /**
  * Check value is valid email
@@ -97,7 +97,7 @@ const toSlug = (value) => {
     .join("-");
 };
 
-module.exports = {
+export {
   validEmail,
   validUUID,
   generateHexColor,
