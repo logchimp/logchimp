@@ -90,7 +90,7 @@ describe("PATCH /api/v1/users/profile", () => {
 
   describe("Name", () => {
     it("should throw error NAME_LENGTH if name exceeds 30 characters", async () => {
-      const { user } = await createUser({ isBlocked: false });
+      const { user } = await createUser();
 
       const response = await supertest(app)
         .patch("/api/v1/users/profile")
@@ -102,7 +102,7 @@ describe("PATCH /api/v1/users/profile", () => {
     });
 
     it("should update user's profile name", async () => {
-      const { user } = await createUser({ isBlocked: false });
+      const { user } = await createUser();
 
       const newName = "Updated Name";
 
