@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <div v-if="roadmaps.length > 0" class="roadmap">
-      <roadmap-column
-        v-for="roadmap in roadmaps"
-        :key="roadmap.id"
-        :roadmap="roadmap"
-      />
-    </div>
-
-    <infinite-scroll @infinite="getRoadmaps" :state="state">
-      <template #no-results>
-        <p>There are no roadmaps.</p>
-      </template>
-    </infinite-scroll>
+  <div
+    v-if="roadmaps.length > 0"
+    :class="[
+      'overflow-x-auto h-[500px]',
+      'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]'
+    ]"
+  >
+    <roadmap-column
+      v-for="roadmap in roadmaps"
+      :key="roadmap.id"
+      :roadmap="roadmap"
+    />
   </div>
+
+  <infinite-scroll @infinite="getRoadmaps" :state="state">
+    <template #no-results>
+      <p>There are no roadmaps.</p>
+    </template>
+  </infinite-scroll>
 </template>
 
 <script lang="ts">
@@ -31,12 +35,12 @@ import { getAllRoadmaps } from "../modules/roadmaps";
 import { useSettingStore } from "../store/settings"
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 const { get: siteSettings } = useSettingStore()
 // TODO: Add TS types
-const roadmaps = ref<unknown>([])
+const roadmaps = ref<unknown[]>([])
 const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>();
 
@@ -76,12 +80,3 @@ useHead({
 	]
 })
 </script>
-
-<style lang='sass'>
-.roadmap
-	display: grid
-	grid-auto-flow: column
-	grid-auto-columns: minmax(22rem, 24rem)
-	grid-column-gap: 1rem
-	overflow-x: scroll
-</style>
