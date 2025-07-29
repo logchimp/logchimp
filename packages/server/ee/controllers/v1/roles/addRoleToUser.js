@@ -1,12 +1,12 @@
-const { v4: uuid } = require("uuid");
+import { v4 as uuid } from "uuid";
 
-const database = require("../../../../database");
+import database from "../../../../database";
 
 // utils
-const logger = require("../../../../utils/logger");
-const error = require("../../../../errorResponse.json");
+import logger from "../../../../utils/logger";
+import error from "../../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function addRoleToUser(req, res) {
   const permissions = req.user.permissions;
   const { role_id, user_id } = req.params;
 
@@ -42,4 +42,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

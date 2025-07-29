@@ -1,9 +1,3 @@
-const create = require("./create");
-const update = require("./update");
-const destroy = require("./destroy");
-
-module.exports = {
-  create,
-  update,
-  destroy,
-};
+export { create } from "./create";
+export { update } from "./update";
+export { destroy } from "./destroy";

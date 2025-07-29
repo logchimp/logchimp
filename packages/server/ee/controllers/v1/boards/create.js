@@ -1,14 +1,14 @@
 // modules
-const { nanoid } = require("nanoid");
-const { v4: uuidv4 } = require("uuid");
+import { nanoid } from "nanoid";
+import { v4 as uuidv4 } from "uuid";
 
 // database
-const database = require("../../../../database");
+import database from "../../../../database";
 
 // utils
-const { generateHexColor } = require("../../../../helpers");
-const logger = require("../../../../utils/logger");
-const error = require("../../../../errorResponse.json");
+import { generateHexColor } from "../../../../helpers";
+import logger from "../../../../utils/logger";
+import error from "../../../../errorResponse.json";
 
 exports.create = async (req, res) => {
   const permissions = req.user.permissions;

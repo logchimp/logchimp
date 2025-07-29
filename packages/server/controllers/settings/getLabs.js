@@ -1,11 +1,11 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.getLabs = async (_, res) => {
+export async function getLabs(_, res) {
   try {
     const { labs } = await database
       .select(database.raw("labs::json"))
@@ -26,4 +26,4 @@ exports.getLabs = async (_, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

@@ -1,12 +1,12 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const roadmaps = require("../../controllers/roadmaps");
+import * as roadmaps from "../../controllers/roadmaps";
 
 // middleware
-const middleware = require("../../middlewares");
-const exists = require("../../middlewares/roadmapExists");
+import middleware from "../../middlewares";
+import exists from "../../middlewares/roadmapExists";
 
 router.get("/roadmaps", roadmaps.filter);
 router.get("/roadmaps/:url", exists, roadmaps.roadmapByUrl);

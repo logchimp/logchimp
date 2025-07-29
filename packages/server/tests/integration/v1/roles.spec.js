@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
-const { v4: uuid } = require("uuid");
+import supertest from "supertest";
+import { v4 as uuid } from "uuid";
 
-const app = require("../../../app");
-const database = require("../../../database");
+import app from "../../../app";
+import database from "../../../database";
 import { createUser } from "../../utils/seed/user";
 
 // Get all roles

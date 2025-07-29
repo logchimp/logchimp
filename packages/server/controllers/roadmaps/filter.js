@@ -1,10 +1,10 @@
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-module.exports = async (_, res) => {
+export async function filter(_, res) {
   try {
     const roadmaps = await database
       .select("id", "name", "url", "color", "display", "index")
@@ -22,4 +22,4 @@ module.exports = async (_, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

@@ -6,7 +6,7 @@ const { validatePassword } = require("../../utils/password");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
-exports.login = async (req, res) => {
+export async function login(req, res) {
   const user = req.user;
   const password = req.body.password;
 
@@ -66,4 +66,4 @@ exports.login = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

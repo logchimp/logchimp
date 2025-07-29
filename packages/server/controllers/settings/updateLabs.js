@@ -1,15 +1,15 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
 /**
  * This API doesn't update the existing labs value
  * instead overrides the existing value with req.body.labs
  */
-exports.updateLabs = async (req, res) => {
+export async function updateLabs(req, res) {
   const permissions = req.user.permissions;
 
   const labs = req.body;
@@ -48,4 +48,4 @@ exports.updateLabs = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

@@ -1,7 +1,7 @@
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 
 // utils
-const logger = require("../utils/logger");
+import logger from "../utils/logger";
 
 const permissionExists = async (database, permission) => {
   return await database

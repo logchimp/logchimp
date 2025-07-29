@@ -1,21 +1,21 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // requiring all routes
-const auth = require("./auth");
-const posts = require("./posts");
-const votes = require("./votes");
-const users = require("./users");
-const settings = require("./settings");
+import auth from "./auth";
+import posts from "./posts";
+import votes from "./votes";
+import users from "./users";
+import settings from "./settings";
 
-const roadmaps = require("./roadmaps");
+import roadmaps from "./roadmaps";
 
 // EE routes
-const eeRoadmaps = require("./../../ee/routes/v1/roadmaps");
-const boards = require("../../ee/routes/v1/boards");
-const roles = require("../../ee/routes/v1/roles");
-// const permissions = require("../../ee/routes/v1/permissions");
+import eeRoadmaps from "./../../ee/routes/v1/roadmaps";
+import boards from "../../ee/routes/v1/boards";
+import roles from "../../ee/routes/v1/roles";
+// import permissions from "../../ee/routes/v1/permissions";
 
 router.use(
   "/api/v1",

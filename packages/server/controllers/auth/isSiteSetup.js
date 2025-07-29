@@ -1,11 +1,11 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-const isSiteSetup = async (_, res) => {
+export async function isSiteSetup(_, res) {
   try {
     const isSetup = await database
       .select("userId")
@@ -28,6 +28,4 @@ const isSiteSetup = async (_, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
-
-module.exports = isSiteSetup;
+}

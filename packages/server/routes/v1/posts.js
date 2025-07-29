@@ -1,13 +1,13 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const post = require("../../controllers/post");
+import * as post from "../../controllers/post";
 
 // middleware
-const middleware = require("../../middlewares");
-const exists = require("../../middlewares/postExists");
+import middleware from "../../middlewares";
+import exists from "../../middlewares/postExists";
 
 router.post("/posts/get", post.filterPost);
 router.post("/posts/slug", exists, post.postBySlug);

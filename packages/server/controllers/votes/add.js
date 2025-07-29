@@ -1,17 +1,17 @@
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // services
-const getVotes = require("../../services/votes/getVotes");
+import getVotes from "../../services/votes/getVotes";
 
 // utils
-const { validUUID } = require("../../helpers");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validUUID } from "../../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function add(req, res) {
   const userId = req.user.userId;
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("vote:create");
@@ -64,4 +64,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

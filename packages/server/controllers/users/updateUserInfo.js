@@ -1,10 +1,10 @@
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-const getUserInfo = async (req, res) => {
+export async function updateUserInfo(req, res) {
   const { user_id } = req.params;
   const { username, name, notes } = req.body;
 
@@ -33,6 +33,6 @@ const getUserInfo = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}
 
 module.exports = getUserInfo;

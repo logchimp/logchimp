@@ -1,12 +1,12 @@
 // database
-const database = require("../../../database");
+import database from "../../../database";
 
 // utils
-const { hashPassword } = require("../../../utils/password");
-const logger = require("../../../utils/logger");
-const error = require("../../../errorResponse.json");
+import { hashPassword } from "../../../utils/password";
+import logger from "../../../utils/logger";
+import error from "../../../errorResponse.json";
 
-exports.set = async (req, res) => {
+export async function set(req, res) {
   const { userId, email } = req.user;
   const { password } = req.body;
 
@@ -53,4 +53,4 @@ exports.set = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

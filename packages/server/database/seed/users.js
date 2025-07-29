@@ -1,6 +1,6 @@
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 
-const { hashPassword } = require("../../utils/password");
+import { hashPassword } from "../../utils/password";
 
 /**
  * @param { import("knex").Knex } knex

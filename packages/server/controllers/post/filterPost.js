@@ -1,15 +1,15 @@
-const database = require("../../database");
+import database from "../../database";
 
 // services
-const getBoardById = require("../../services/boards/getBoardById");
-const getVotes = require("../../services/votes/getVotes");
+import getBoardById from "../../services/boards/getBoardById";
+import getVotes from "../../services/votes/getVotes";
 
 // utils
-const { validUUID } = require("../../helpers");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validUUID } from "../../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.filterPost = async (req, res) => {
+export async function filterPost(req, res) {
   const userId = validUUID(req.body.userId);
   const boardId = validUUID(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
@@ -99,4 +99,4 @@ exports.filterPost = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

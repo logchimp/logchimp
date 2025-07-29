@@ -1,7 +1,7 @@
 // utils
-const error = require("../../errorResponse.json");
+import error from "../../errorResponse.json";
 
-exports.accessDashboard = (req, res) => {
+export function accessDashboard(req, res) {
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("dashboard:read");
 
@@ -15,4 +15,4 @@ exports.accessDashboard = (req, res) => {
   res.status(200).send({
     access: true,
   });
-};
+}

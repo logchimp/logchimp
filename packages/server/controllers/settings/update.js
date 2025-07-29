@@ -1,11 +1,11 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.update = async (req, res) => {
+export async function update(req, res) {
   const permissions = req.user.permissions;
 
   const checkPermission = permissions.find(
@@ -56,4 +56,4 @@ exports.update = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

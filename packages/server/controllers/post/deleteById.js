@@ -1,11 +1,11 @@
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const { validUUID } = require("../../helpers");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validUUID } from "../../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.deleteById = async (req, res) => {
+export async function deleteById(req, res) {
   const permissions = req.user.permissions;
 
   const id = validUUID(req.body.id);
@@ -34,4 +34,4 @@ exports.deleteById = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

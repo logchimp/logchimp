@@ -1,14 +1,14 @@
 // modules
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // controller
-const auth = require("../../controllers/auth");
+import * as auth from "../../controllers/auth";
 
 // middleware
-const exists = require("../../middlewares/userExists");
-const mailConfigExists = require("../../middlewares/mailConfigExists");
-const validateEmailToken = require("../../middlewares/validateEmailToken");
+import exists from "../../middlewares/userExists";
+import mailConfigExists from "../../middlewares/mailConfigExists";
+import validateEmailToken from "../../middlewares/validateEmailToken";
 
 router.post("/auth/signup", mailConfigExists, auth.signup);
 router.post("/auth/login", exists, auth.login);

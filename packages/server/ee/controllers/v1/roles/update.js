@@ -1,11 +1,11 @@
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 
 // database
-const database = require("../../../../database");
+import database from "../../../../database";
 
 // utils
-const error = require("../../../../errorResponse.json");
-const logger = require("../../../../utils/logger");
+import error from "../../../../errorResponse.json";
+import logger from "../../../../utils/logger";
 
 module.exports = async (req, res) => {
   const role = req.body;

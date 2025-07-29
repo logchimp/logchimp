@@ -1,8 +1,8 @@
 // modules
-const path = require("path");
-const express = require("express");
+import path from "path";
+import express from "express";
 const router = express.Router();
-const multer = require("multer");
+import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -22,10 +22,10 @@ const upload = multer({
 });
 
 // controller
-const settings = require("../../controllers/settings");
+import * as settings from "../../controllers/settings";
 
 // middleware
-const middlewares = require("../../middlewares");
+import middlewares from "../../middlewares";
 
 router.get("/settings/site", settings.siteSettings);
 router.patch("/settings/site", middlewares.apiAuth, settings.update);

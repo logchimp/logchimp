@@ -1,11 +1,11 @@
 // services
-const passwordResetEmail = require("../../../services/auth/passwordReset");
+import passwordResetEmail from "../../../services/auth/passwordReset";
 
 // utils
-const logger = require("../../../utils/logger");
-const error = require("../../../errorResponse.json");
+import logger from "../../../utils/logger";
+import error from "../../../errorResponse.json";
 
-exports.reset = async (req, res) => {
+export async function reset(req, res) {
   const { userId, email } = req.user;
 
   try {
@@ -44,4 +44,4 @@ exports.reset = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

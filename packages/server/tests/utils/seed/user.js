@@ -1,10 +1,10 @@
-const { v4: uuid } = require("uuid");
-const { faker } = require("@faker-js/faker");
-const supertest = require("supertest");
+import { v4 as uuid } from "uuid";
+import { faker } from "@faker-js/faker";
+import supertest from "supertest";
 
-const app = require("../../../app");
-const database = require("../../../database");
-const { hashPassword } = require("../../../utils/password");
+import app from "../../../app";
+import database from "../../../database";
+import { hashPassword } from "../../../utils/password";
 
 /**
  * NOTE: this function by-passes 'allowSignup' settings

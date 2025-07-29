@@ -1,14 +1,14 @@
 // services
-const createUser = require("../../services/auth/createUser");
+import createUser from "../../services/auth/createUser";
 
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const { validEmail } = require("../../helpers");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validEmail } from "../../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.signup = async (req, res, next) => {
+export async function signup(req, res, next) {
   const { email, password } = req.body;
 
   if (!validEmail(email)) {
@@ -52,4 +52,4 @@ exports.signup = async (req, res, next) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

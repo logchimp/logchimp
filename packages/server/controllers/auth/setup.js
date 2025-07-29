@@ -1,15 +1,15 @@
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // services
-const createUser = require("../../services/auth/createUser");
+import createUser from "../../services/auth/createUser";
 
 // utils
-const { validEmail } = require("../../helpers");
-const error = require("../../errorResponse.json");
-const logger = require("../../utils/logger");
+import { validEmail } from "../../helpers";
+import error from "../../errorResponse.json";
+import logger from "../../utils/logger";
 
-module.exports = async (req, res, next) => {
+export async function setup(req, res, next) {
   const { siteTitle, name, email, password } = req.body;
 
   if (!validEmail(email)) {
@@ -76,4 +76,4 @@ module.exports = async (req, res, next) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

@@ -1,14 +1,14 @@
-const database = require("../../database");
+import database from "../../database";
 
 // services
-const getVotes = require("../../services/votes/getVotes");
+import getVotes from "../../services/votes/getVotes";
 
 // utils
-const { validUUID } = require("../../helpers");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validUUID } from "../../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.postBySlug = async (req, res) => {
+export async function postBySlug(req, res) {
   const userId = validUUID(req.body.userId);
   const post = req.post;
 
@@ -63,4 +63,4 @@ exports.postBySlug = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

@@ -1,17 +1,7 @@
-const filter = require("./filter");
-const getProfile = require("./getProfile");
-const updateProfile = require("./updateProfile");
-const accessDashboard = require("./accessDashboard");
-const getUserPermissions = require("./getUserPermissions");
-const getUserInfo = require("./getUserInfo");
-const updateUserInfo = require("./updateUserInfo");
-
-module.exports = {
-  ...filter,
-  getProfile,
-  updateProfile,
-  ...accessDashboard,
-  getUserPermissions,
-  getUserInfo,
-  updateUserInfo,
-};
+export { filter } from "./filter";
+export { getProfile } from "./getProfile";
+export { updateProfile } from "./updateProfile";
+export { accessDashboard } from "./accessDashboard";
+export { getUserPermissions } from "./getUserPermissions";
+export { getUserInfo } from "./getUserInfo";
+export { updateUserInfo } from "./updateUserInfo";

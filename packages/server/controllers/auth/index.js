@@ -1,15 +1,7 @@
-const login = require("./login");
-const signup = require("./signup");
-const setup = require("./setup");
-const isSiteSetup = require("./isSiteSetup");
-const email = require("./email");
-const password = require("./password");
+export { login } from "./login";
+export { signup } from "./signup";
+export { setup } from "./setup";
+export { isSiteSetup } from "./isSiteSetup";
 
-module.exports = {
-  ...login,
-  ...signup,
-  setup,
-  isSiteSetup,
-  email,
-  password,
-};
+export * as email from "./email";
+export * as password from "./password";

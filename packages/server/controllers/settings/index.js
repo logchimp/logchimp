@@ -1,13 +1,5 @@
-const siteSettings = require("./siteSettings");
-const update = require("./update");
-const updateLogo = require("./updateLogo");
-const getLabs = require("./getLabs");
-const updateLabs = require("./updateLabs");
-
-module.exports = {
-  ...siteSettings,
-  ...update,
-  ...updateLogo,
-  ...getLabs,
-  ...updateLabs,
-};
+export { siteSettings } from "./siteSettings";
+export { update } from "./update";
+export { updateLogo } from "./updateLogo";
+export { getLabs } from "./getLabs";
+export { updateLabs } from "./updateLabs";

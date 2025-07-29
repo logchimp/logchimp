@@ -1,4 +1,4 @@
-exports.validateToken = async (req, res) => {
+export async function validateToken(req, res) {
   const emailToken = req.emailToken;
 
   /**
@@ -18,4 +18,4 @@ exports.validateToken = async (req, res) => {
       ...__token,
     },
   });
-};
+}

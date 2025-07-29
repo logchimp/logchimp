@@ -1,11 +1,11 @@
-const database = require("../../database");
+import database from "../../database";
 
 // utils
-const { validUUID } = require("../../helpers");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { validUUID } from "../../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
-exports.updatePost = async (req, res) => {
+export async function updatePost(req, res) {
   const userId = req.user.userId;
   const permissions = req.user.permissions;
   const authorId = req.post.userId;
@@ -62,4 +62,4 @@ exports.updatePost = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

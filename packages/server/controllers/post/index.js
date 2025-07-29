@@ -1,18 +1,8 @@
-const create = require("./create");
-const filterPost = require("./filterPost");
-const postBySlug = require("./postBySlug");
-const updatePost = require("./updatePost");
-const deleteById = require("./deleteById");
+export { create } from "./create";
+export { filterPost } from "./filterPost";
+export { postBySlug } from "./postBySlug";
+export { updatePost } from "./updatePost";
+export { deleteById } from "./deleteById";
 
-const activity = require("./activity");
-const comments = require("./comments");
-
-module.exports = {
-  ...create,
-  ...filterPost,
-  ...postBySlug,
-  ...updatePost,
-  ...deleteById,
-  activity,
-  comments,
-};
+export * as activity from "./activity";
+export * as comments from "./comments";

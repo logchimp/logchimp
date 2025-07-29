@@ -1,10 +1,10 @@
-const database = require("../../../database");
+import database from "../../../database";
 
 // utils
-const logger = require("../../../utils/logger");
-const error = require("../../../errorResponse.json");
+import logger from "../../../utils/logger";
+import error from "../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function update(req, res) {
   const { comment_id } = req.params;
   const { body, is_internal, is_spam } = req.body;
 
@@ -48,4 +48,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

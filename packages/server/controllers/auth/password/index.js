@@ -1,9 +1,3 @@
-const reset = require("./reset");
-const validateToken = require("./validateToken");
-const set = require("./set");
-
-module.exports = {
-  ...reset,
-  ...validateToken,
-  ...set,
-};
+export { reset } from "./reset";
+export { validateToken } from "./validateToken";
+export { set } from "./set";

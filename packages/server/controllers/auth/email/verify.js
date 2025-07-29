@@ -1,11 +1,11 @@
 // services
-const verifyEmail = require("../../../services/auth/verifyEmail");
+import verifyEmail from "../../../services/auth/verifyEmail";
 
 // utils
-const logger = require("../../../utils/logger");
-const error = require("../../../errorResponse.json");
+import logger from "../../../utils/logger";
+import error from "../../../errorResponse.json";
 
-exports.verify = async (req, res) => {
+export async function verify(req, res) {
   const { userId, email, isVerified } = req.user;
 
   if (isVerified) {
@@ -51,4 +51,4 @@ exports.verify = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

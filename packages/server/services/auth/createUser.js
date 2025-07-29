@@ -1,18 +1,18 @@
 // modules
-const { v4: uuidv4 } = require("uuid");
-const md5 = require("md5");
+import { v4 as uuidv4 } from "uuid";
+import md5 from "md5";
 
 // database
-const database = require("../../database");
+import database from "../../database";
 
 // services
-const verifyEmail = require("../../services/auth/verifyEmail");
-const { createToken } = require("../../services/token.service");
+import verifyEmail from "../../services/auth/verifyEmail";
+import { createToken } from "../token.service";
 
 // utils
-const { hashPassword } = require("../../utils/password");
-const logger = require("../../utils/logger");
-const error = require("../../errorResponse.json");
+import { hashPassword } from "../../utils/password";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
 
 /**
  * Add user to 'users' database table

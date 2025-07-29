@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-const { v4: uuid } = require("uuid");
-const generatePassword = require("omgopass");
-const { nanoid } = require("nanoid");
+import { v4 as uuid } from "uuid";
+import generatePassword from "omgopass";
+import { nanoid } from "nanoid";
 
 import {
   generateHexColor,
