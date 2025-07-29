@@ -44,6 +44,7 @@
     "nodemon": "^3.1.7",
     "omgopass": "3.2.1",
     "supertest": "^7.1.4",
+    "ts-node": "^10.9.2",
     "typescript": "5.4.5",
     "vitest": "0.34.6"
   },
