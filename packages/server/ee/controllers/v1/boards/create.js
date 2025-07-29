@@ -10,7 +10,7 @@ import { generateHexColor } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-exports.create = async (req, res) => {
+export async function create(req, res) {
   const permissions = req.user.permissions;
   const name = req.body.name || "new board";
   const display = req.body.display;
@@ -49,4 +49,4 @@ exports.create = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

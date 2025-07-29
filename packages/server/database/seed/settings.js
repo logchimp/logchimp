@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.seed = async (knex) => {
+export async function seed(knex) {
   // Deletes ALL existing entries
   await knex("settings").del();
   await knex("settings").insert([
@@ -15,4 +15,4 @@ exports.seed = async (knex) => {
       isPoweredBy: true,
     },
   ]);
-};
+}

@@ -3,17 +3,16 @@ import { v4 as uuidv4 } from "uuid";
 // utils
 import logger from "../utils/logger";
 
-const permissionExists = async (database, permission) => {
-  return await database
+const permissionExists = async (database, permission) =>
+  database
     .select()
     .from("permissions")
     .where({
       ...permission,
     })
     .first();
-};
 
-exports.addPermission = (database, permissions) => {
+function addPermission(database, permissions) {
   return permissions.forEach(async (permission) => {
     const type = permission.split(":")[0];
     const action = permission.split(":")[1];
@@ -39,9 +38,9 @@ exports.addPermission = (database, permissions) => {
 
     logger.info(`Adding permission ${type}:${action}`);
   });
-};
+}
 
-exports.removePermission = async (database, permissions) => {
+async function removePermission(database, permissions) {
   return await permissions.forEach(async (permission) => {
     const type = permission.split(":")[0];
     const action = permission.split(":")[1];
@@ -53,4 +52,6 @@ exports.removePermission = async (database, permissions) => {
 
     logger.info(`Removing permission ${type}:${action}`);
   });
-};
+}
+
+export { addPermission, removePermission };

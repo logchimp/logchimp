@@ -4,7 +4,7 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-exports.filter = async (req, res) => {
+export async function filter(req, res) {
   const created = req.query.created;
   const page = req.query.page - 1;
   const limit = req.query.limit || 10;
@@ -35,4 +35,4 @@ exports.filter = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

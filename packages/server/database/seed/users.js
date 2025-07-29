@@ -6,7 +6,7 @@ import { hashPassword } from "../../utils/password";
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.seed = async (knex) => {
+export default async function seed(knex) {
   // Deletes ALL existing entries
   await knex("users").del();
   await knex("users").insert([
@@ -24,4 +24,4 @@ exports.seed = async (knex) => {
       isBlocked: true,
     },
   ]);
-};
+}
