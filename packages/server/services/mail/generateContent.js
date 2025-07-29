@@ -1,6 +1,6 @@
 import _ from "lodash";
 import path from "path";
-import fs from "fs-extra";
+import fs from "fs";
 import { htmlToText } from "html-to-text";
 
 export async function generateContent(templateName, options) {
