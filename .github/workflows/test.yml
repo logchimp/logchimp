@@ -200,7 +200,6 @@ jobs:
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
-    needs: [api-unit]
 
     strategy:
       matrix:
