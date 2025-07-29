@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <header data-test="roadmap-header" class="roadmap-header">
+  <div class="flex flex-col gap-2.5">
+    <header data-test="roadmap-header" class="flex items-center gap-x-1.5">
       <div
         class="color-dot"
         :style="{
           backgroundColor: `#${roadmap.color}`
         }"
       />
-      <h6>{{ roadmap.name }}</h6>
+      <div data-test="roadmap-name" class="text-sm text-(--color-gray-60)">{{ roadmap.name }}</div>
     </header>
-    <div data-test="roadmap-column" class="roadmap-column">
+    <div data-test="roadmap-column" class="rounded-md bg-(--color-gray-95) p-3 flex-grow">
       <roadmap-post-card
         v-for="post in posts"
         :key="post.postId"
@@ -36,7 +36,7 @@ const props = defineProps({
 });
 
 // TODO: Add TS types
-const posts = ref<unknown>([]);
+const posts = ref<unknown[]>([]);
 
 async function getRoadmapPosts() {
   const roadmapId = props.roadmap.id;
@@ -57,23 +57,3 @@ async function getRoadmapPosts() {
 onMounted(() => getRoadmapPosts());
 </script>
 
-<style lang='sass'>
-.roadmap-header
-	display: flex
-	align-items: center
-	margin-bottom: 0.625rem
-
-	.color-dot
-		margin-right: 0.375rem
-
-	h6
-		font-weight: 400
-		font-size: 0.875rem
-		margin-bottom: 0
-		color: var(--color-gray-60)
-
-.roadmap-column
-	border-radius: var(--border-radius-default)
-	background-color: var(--color-gray-95)
-	padding: 0.75rem
-</style>
