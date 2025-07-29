@@ -125,4 +125,4 @@ const token = (req, res, next) => {
   authenticateWithToken(req, res, next, token);
 };
 
-module.exports = token;
+export { token };

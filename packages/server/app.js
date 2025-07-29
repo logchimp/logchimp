@@ -28,4 +28,4 @@ app.use(cors());
 // import all routes
 app.use(routes);
 
-module.exports = app;
+export default app;

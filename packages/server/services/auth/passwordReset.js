@@ -8,7 +8,7 @@ import { createToken } from "../token.service";
 // utils
 import logger from "../../utils/logger";
 
-const passwordReset = async (url, tokenPayload) => {
+export async function passwordReset(url, tokenPayload) {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -55,6 +55,4 @@ const passwordReset = async (url, tokenPayload) => {
   } catch (err) {
     logger.error(err);
   }
-};
-
-module.exports = passwordReset;
+}

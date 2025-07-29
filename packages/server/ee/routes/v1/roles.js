@@ -34,4 +34,4 @@ router.delete(
   roles.deleteRoleFromUser,
 );
 
-module.exports = router;
+export default router;

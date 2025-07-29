@@ -5,7 +5,7 @@ import database from "../../../../database";
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 
-module.exports = async (req, res) => {
+export async function get(req, res) {
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
@@ -29,4 +29,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

@@ -8,7 +8,7 @@ import { createToken } from "../token.service";
 // utils
 import logger from "../../utils/logger";
 
-const verifyEmail = async (url, tokenPayload) => {
+export async function verifyEmail(url, tokenPayload) {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -54,6 +54,4 @@ const verifyEmail = async (url, tokenPayload) => {
   } catch (err) {
     logger.error(err.message);
   }
-};
-
-module.exports = verifyEmail;
+}

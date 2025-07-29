@@ -77,9 +77,4 @@ const board = () => {
   };
 };
 
-module.exports = {
-  user,
-  roadmap,
-  post,
-  board,
-};
+export { user, roadmap, post, board };

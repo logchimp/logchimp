@@ -11,4 +11,4 @@ import * as middleware from "../../middlewares";
 router.post("/votes", middleware.apiAuth, votes.add);
 router.delete("/votes", middleware.apiAuth, votes.remove);
 
-module.exports = router;
+export default router;

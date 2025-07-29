@@ -4,7 +4,7 @@ import database from "../database";
 import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
 
-module.exports = async (req, res, next) => {
+export async function postExists(req, res, next) {
   const id = validUUID(req.body.id);
   const slug = req.body.slug;
 
@@ -28,4 +28,4 @@ module.exports = async (req, res, next) => {
 
   req.post = post;
   next();
-};
+}

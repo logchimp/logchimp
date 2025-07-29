@@ -2,7 +2,7 @@
 import database from "../../database";
 
 // services
-import createUser from "../../services/auth/createUser";
+import { createUser } from "../../services/auth/createUser";
 
 // utils
 import { validEmail } from "../../helpers";

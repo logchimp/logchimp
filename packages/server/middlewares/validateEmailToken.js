@@ -9,7 +9,7 @@ import logchimpConfig from "../utils/logchimpConfig";
 const config = logchimpConfig();
 import error from "../errorResponse.json";
 
-module.exports = async (req, res, next) => {
+export async function validateEmailToken(req, res, next) {
   const token = req.body.token;
 
   if (!token) {
@@ -67,4 +67,4 @@ module.exports = async (req, res, next) => {
       });
     }
   }
-};
+}

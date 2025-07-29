@@ -4,7 +4,7 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 
-const getUsers = async (created, limit, page) => {
+export async function getUsers(created, limit, page) {
   try {
     const users = await database
       .select("userId", "name", "email", "username", "avatar", "isVerified")
@@ -25,6 +25,4 @@ const getUsers = async (created, limit, page) => {
       message: err,
     });
   }
-};
-
-module.exports = getUsers;
+}

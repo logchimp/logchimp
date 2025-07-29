@@ -6,7 +6,7 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function deleteById(req, res) {
   const permissions = req.user.permissions;
 
   const boardId = validUUID(req.body.boardId);
@@ -35,4 +35,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

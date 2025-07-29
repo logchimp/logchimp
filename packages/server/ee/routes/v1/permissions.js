@@ -17,4 +17,4 @@ const router = express.Router();
 // 	users.updateUserInfo
 // );
 
-module.exports = router;
+export default router;

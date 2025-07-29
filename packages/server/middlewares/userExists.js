@@ -5,7 +5,7 @@ import { validEmail } from "../helpers";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
-module.exports = async (req, res, next) => {
+export async function userExists(req, res, next) {
   const email =
     (req.body ? req.body.email : "") || (req.user ? req.user.email : "");
 
@@ -44,4 +44,4 @@ module.exports = async (req, res, next) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

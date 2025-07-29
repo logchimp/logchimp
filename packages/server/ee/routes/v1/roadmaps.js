@@ -16,4 +16,4 @@ router.patch("/roadmaps/sort", middleware.apiAuth, roadmaps.sort);
 
 router.delete("/roadmaps", middleware.apiAuth, exists, roadmaps.deleteById);
 
-module.exports = router;
+export default router;

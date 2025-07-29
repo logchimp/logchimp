@@ -37,4 +37,4 @@ router.delete(
   post.comments.destroy,
 );
 
-module.exports = router;
+export default router;

@@ -4,7 +4,7 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function get(req, res) {
   const created = req.query.created;
   const page = req.query.page - 1;
   const limit = req.query.limit || 10;
@@ -37,4 +37,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

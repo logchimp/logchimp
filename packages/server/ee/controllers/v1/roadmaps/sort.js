@@ -5,7 +5,7 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function sort(req, res) {
   const { from, to } = req.body;
   const permissions = req.user.permissions;
 
@@ -49,4 +49,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

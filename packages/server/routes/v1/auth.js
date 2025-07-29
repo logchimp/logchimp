@@ -45,4 +45,4 @@ router.post(
   auth.password.set,
 );
 
-module.exports = router;
+export default router;

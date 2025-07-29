@@ -12,7 +12,7 @@ import { hashPassword } from "../../../utils/password";
  *
  * @param user
  */
-const createUser = async (user = undefined) => {
+export async function createUser(user = undefined) {
   const userId = uuid();
   const email = user?.email || faker.internet.email();
   const username = email.split("@")[0];
@@ -52,8 +52,4 @@ const createUser = async (user = undefined) => {
   });
 
   return response.body;
-};
-
-module.exports = {
-  createUser,
-};
+}

@@ -27,4 +27,4 @@ router.get("/api", (_, res) => {
 // v1 APIs
 router.use(v1);
 
-module.exports = router;
+export default router;

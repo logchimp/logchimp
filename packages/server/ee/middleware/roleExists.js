@@ -3,7 +3,7 @@ import database from "../../database";
 // utils
 import error from "../../errorResponse.json";
 
-module.exports = async (req, res, next) => {
+export async function roleExists(req, res, next) {
   const id = req.body.id || req.params.id;
 
   const role = await database
@@ -23,4 +23,4 @@ module.exports = async (req, res, next) => {
 
   req.role = role;
   next();
-};
+}

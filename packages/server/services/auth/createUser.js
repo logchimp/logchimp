@@ -6,7 +6,7 @@ import md5 from "md5";
 import database from "../../database";
 
 // services
-import verifyEmail from "../../services/auth/verifyEmail";
+import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 
 // utils
@@ -130,4 +130,4 @@ const createUser = async (req, res, _next, userData) => {
   }
 };
 
-module.exports = createUser;
+export { createUser };

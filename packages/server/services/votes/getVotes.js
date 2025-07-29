@@ -3,7 +3,7 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 
-const getVotes = async (postId, userId) => {
+export async function getVotes(postId, userId) {
   try {
     const votesCount = await database
       .count("voteId")
@@ -42,6 +42,4 @@ const getVotes = async (postId, userId) => {
       message: err,
     });
   }
-};
-
-module.exports = getVotes;
+}

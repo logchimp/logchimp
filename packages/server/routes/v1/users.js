@@ -15,4 +15,4 @@ router.patch("/users/profile", middleware.apiAuth, users.updateProfile);
 router.get("/users/permissions", middleware.apiAuth, users.getUserPermissions);
 router.get("/users/dashboard", middleware.apiAuth, users.accessDashboard);
 
-module.exports = router;
+export default router;

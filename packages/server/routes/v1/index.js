@@ -32,4 +32,4 @@ router.use(
   roles,
 );
 
-module.exports = router;
+export default router;

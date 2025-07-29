@@ -1,5 +1,5 @@
 // services
-import createUser from "../../services/auth/createUser";
+import { createUser } from "../../services/auth/createUser";
 
 import database from "../../database";
 

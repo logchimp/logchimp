@@ -34,5 +34,3 @@ export async function updateUserInfo(req, res) {
     });
   }
 }
-
-module.exports = getUserInfo;

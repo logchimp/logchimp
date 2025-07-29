@@ -7,7 +7,7 @@ import database from "../../../../database";
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 
-module.exports = async (req, res) => {
+export async function update(req, res) {
   const role = req.body;
 
   const permissions = req.user.permissions;
@@ -82,4 +82,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

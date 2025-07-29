@@ -5,7 +5,7 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function updateRoadmap(req, res) {
   const id = req.roadmap.id;
 
   const { name, url, color, display } = req.body;
@@ -53,4 +53,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}

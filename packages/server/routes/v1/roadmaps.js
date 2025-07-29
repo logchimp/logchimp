@@ -16,4 +16,4 @@ router.get(
   roadmaps.searchRoadmap,
 );
 
-module.exports = router;
+export default router;

@@ -38,4 +38,4 @@ router.post(
 router.get("/settings/labs", settings.getLabs);
 router.patch("/settings/labs", middlewares.apiAuth, settings.updateLabs);
 
-module.exports = router;
+export default router;

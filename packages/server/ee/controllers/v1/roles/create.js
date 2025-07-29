@@ -7,7 +7,7 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-module.exports = async (req, res) => {
+export async function create(req, res) {
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:create");
   if (!checkPermission) {
@@ -41,4 +41,4 @@ module.exports = async (req, res) => {
       code: "SERVER_ERROR",
     });
   }
-};
+}
