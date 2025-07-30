@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 
 import { cleanDb } from "../../../utils/db";
-import app from "../../../../app";
+import app from "../../../../src/app";
 
 describe("GET /api/v1/auth/setup", () => {
   it("should not have site setup", async () => {

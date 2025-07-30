@@ -3,8 +3,8 @@ import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 
-import app from "../../../app";
-import database from "../../../database";
+import app from "../../../src/app";
+import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 

@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 
-import app from "../../../../app";
-import { verifyToken } from "../../../../services/token.service";
+import app from "../../../../src/app";
+import { verifyToken } from "../../../../src/services/token.service";
 
 describe("POST /api/v1/auth/login", () => {
   it('should throw error "EMAIL_INVALID"', async () => {

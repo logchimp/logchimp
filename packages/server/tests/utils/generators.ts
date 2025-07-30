@@ -8,7 +8,7 @@ import {
   sanitiseUsername,
   sanitiseURL,
   toSlug,
-} from "../../helpers";
+} from "../../src/helpers";
 
 const user = () => {
   return {

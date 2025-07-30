@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 
-import database from "../../../database";
-import app from "../../../app";
+import database from "../../../src/database";
+import app from "../../../src/app";
 
 describe("GET /api/v1/settings/site", () => {
   it("should get all settings", async () => {

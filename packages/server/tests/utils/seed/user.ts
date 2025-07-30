@@ -2,9 +2,9 @@ import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 import supertest from "supertest";
 
-import app from "../../../app";
-import database from "../../../database";
-import { hashPassword } from "../../../utils/password";
+import app from "../../../src/app";
+import database from "../../../src/database";
+import { hashPassword } from "../../../src/utils/password";
 
 /**
  * NOTE: this function by-passes 'allowSignup' settings

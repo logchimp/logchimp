@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 
-import app from "../../../app";
+import app from "../../../src/app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
-import database from "../../../database";
+import database from "../../../src/database";
 
 // Get all roadmaps
 describe("GET /api/v1/roadmaps", () => {

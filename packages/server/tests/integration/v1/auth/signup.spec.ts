@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 
 import { faker } from "@faker-js/faker";
-import app from "../../../../app";
-import database from "../../../../database";
+import app from "../../../../src/app";
+import database from "../../../../src/database";
 
 describe("POST /api/v1/auth/signup", () => {
   it('should throw error "EMAIL_INVALID"', async () => {

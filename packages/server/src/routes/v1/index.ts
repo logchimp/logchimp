@@ -12,7 +12,7 @@ import settings from "./settings";
 import roadmaps from "./roadmaps";
 
 // EE routes
-import eeRoadmaps from "./../../ee/routes/v1/roadmaps";
+import eeRoadmaps from "../../ee/routes/v1/roadmaps";
 import boards from "../../ee/routes/v1/boards";
 import roles from "../../ee/routes/v1/roles";
 // import permissions from "../../ee/routes/v1/permissions";

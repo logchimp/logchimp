@@ -1,4 +1,4 @@
-import database from "../../database";
+import database from "../../src/database";
 
 export const cleanDb = async () => {
   await database.from("posts_activity").del();

@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 
-import app from "../../../../app";
-import database from "../../../../database";
-import { createToken } from "../../../../services/token.service";
+import app from "../../../../src/app";
+import database from "../../../../src/database";
+import { createToken } from "../../../../src/services/token.service";
 import { user as generateUser } from "../../../utils/generators";
 
 describe("POST /api/v1/auth/email/validate", () => {

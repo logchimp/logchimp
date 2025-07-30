@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import app from "../../app";
+import app from "../../src/app";
 import supertest from "supertest";
 
 it("GET /api", async () => {

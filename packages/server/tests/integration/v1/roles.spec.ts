@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 
-import app from "../../../app";
-import database from "../../../database";
+import app from "../../../src/app";
+import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 
 // Get all roles

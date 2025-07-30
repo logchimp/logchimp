@@ -4,12 +4,15 @@ import fsExtra from "fs-extra";
 
 function config() {
   // read logchimp.config.json from file-system
-  const configPath = path.resolve(__dirname, "../../../logchimp.config.json");
+  const configPath = path.resolve(
+    __dirname,
+    "../../../../logchimp.config.json",
+  );
   const isConfigExists = fs.existsSync(configPath);
 
   if (isConfigExists) {
     const config = fsExtra.readJsonSync(
-      path.resolve(__dirname, "../../../logchimp.config.json"),
+      path.resolve(__dirname, "../../../../logchimp.config.json"),
     );
 
     if (config.mail.service) {
