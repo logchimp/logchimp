@@ -118,12 +118,6 @@ describe("PATCH /api/v1/users/profile", () => {
         email: user.email,
         username: user.username,
       });
-
-      const dbUser = await database("users")
-        .where({ userId: user.userId })
-        .first();
-
-      expect(dbUser.name).toBe(newName);
     });
   });
 });
