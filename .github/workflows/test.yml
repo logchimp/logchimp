@@ -254,13 +254,13 @@ jobs:
       - name: Testing
         run: |
           # Compile Typescript
-          pnpm --filter @logchimp/api tsc
+          pnpm --filter @logchimp/api exec pnpm tsc
 
           # Run database migrations
-          pnpm --filter @logchimp/api knex --knexfile ./dist/database/config.js migrate:latest
+          pnpm --filter @logchimp/api exec pnpm knex --knexfile ./dist/database/config.js migrate:latest
 
           # Seeding database
-          pnpm --filter @logchimp/api knex --knexfile ./dist/database/config.js seed:run
+          pnpm --filter @logchimp/api exec pnpm knex --knexfile ./dist/database/config.js seed:run
 
           # Running integration test
           pnpm --filter @logchimp/api test:integration
