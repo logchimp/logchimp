@@ -254,7 +254,7 @@ jobs:
       - name: Testing
         run: |
           # Compile Typescript
-          pnpm --filter @logchimp/api exec pnpm tsc
+          pnpm --filter @logchimp/api exec pnpm tsc --noEmitOnError
 
           # Run database migrations
           pnpm --filter @logchimp/api exec pnpm knex --knexfile ./dist/database/config.js migrate:latest
