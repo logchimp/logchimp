@@ -22,9 +22,9 @@ describe("board item", () => {
   });
 
   it("color is 'rgb(171, 202, 188)'", () => {
-    expect(
-      wrapper.find("[data-test=board-item-color]").attributes("style"),
-    ).toBe("background-color: rgb(171, 202, 188);");
+    expect(wrapper.find("[data-test=color-dot]").attributes("style")).toBe(
+      "background-color: rgb(171, 202, 188);",
+    );
   });
 
   it("name is 'Feature requests'", () => {

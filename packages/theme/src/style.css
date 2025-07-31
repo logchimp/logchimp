@@ -52,12 +52,6 @@
     color: var(--color-brand-color);
   }
 
-  .color-dot {
-    min-width: 0.625rem;
-    min-height: 0.625rem;
-    border-radius: 1rem;
-  }
-
   svg {
     fill: none;
     stroke-width: 2;
