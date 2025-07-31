@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { createPinia } from "pinia";
 import { shallowMount } from "@vue/test-utils";
 
@@ -20,11 +21,9 @@ describe("roadmap view", () => {
   });
 
   it("has color dot", () => {
-    expect(
-      wrapper
-        .find("[data-test=roadmap-header] [data-test=color-dot]")
-        .attributes("style"),
-    ).toBe("background-color: rgb(221, 116, 121);");
+    expect(wrapper.find("[data-test=color-dot]").attributes("style")).toBe(
+      "background-color: rgb(221, 116, 121);",
+    );
   });
 
   it("has title 'Planned'", () => {
