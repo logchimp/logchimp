@@ -1,12 +1,6 @@
 <template>
 	<div class="board-suggestion" @click="$emit('click')">
-		<div
-			class="color-dot"
-			data-test="board-suggestion-color"
-			:style="{
-				backgroundColor: `#${board.color}`
-			}"
-		/>
+    <color-dot :color="board.color" />
 		<div class="board-suggestion-content">
 			<h5 data-test="board-suggestion-name">
 				{{ board.name }}
@@ -17,6 +11,8 @@
 </template>
 
 <script setup lang="ts">
+import ColorDot from "../ColorDot.vue";
+
 defineProps({
   board: {
     type: Object,

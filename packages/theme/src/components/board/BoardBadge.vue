@@ -6,13 +6,7 @@
     :to="`/boards/${url}`"
   >
     <div class="flex items-center px-2.5 py-1 bg-(--color-gray-95) rounded-full">
-      <div
-        class="color-dot"
-        data-test="board-badge-color"
-        :style="{
-          backgroundColor: `#${color}`
-        }"
-      />
+      <color-dot :color="color" />
       <p class="ml-1.5 text-(--color-gray-50)" data-test="board-badge-name">
         {{ name }}
       </p>
@@ -21,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import ColorDot from "../ColorDot.vue";
+
 defineProps({
   name: {
     type: String,

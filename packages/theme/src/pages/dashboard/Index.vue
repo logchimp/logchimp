@@ -40,12 +40,7 @@
           class="table-row"
         >
           <div class="table-data boards-table-color">
-            <div
-              class="color-dot"
-              :style="{
-                backgroundColor: `#${board.color}`
-              }"
-            />
+            <color-dot :color="board.color" />
           </div>
           <div class="table-data boards-table-name">
             {{ board.name }}
@@ -79,6 +74,7 @@ import { getAllBoards } from "../../ee/modules/boards";
 // components
 import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
+import ColorDot from "../../components/ColorDot.vue";
 
 // TODO: Add TS types
 const posts = ref<unknown>([])

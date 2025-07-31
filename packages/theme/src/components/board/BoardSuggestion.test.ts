@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 
 import BoardSuggestion from "./BoardSuggestion.vue";
@@ -14,9 +15,9 @@ describe("board badge", () => {
   });
 
   it("color is 'rgb(171, 202, 188)'", () => {
-    expect(
-      wrapper.find("[data-test=board-suggestion-color]").attributes("style"),
-    ).toBe("background-color: rgb(171, 202, 188);");
+    expect(wrapper.find("[data-test=color-dot]").attributes("style")).toBe(
+      "background-color: rgb(171, 202, 188);",
+    );
   });
 
   it("name is 'Feature requests'", () => {
