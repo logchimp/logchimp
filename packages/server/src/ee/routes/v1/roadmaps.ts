@@ -7,13 +7,23 @@ import * as roadmaps from "../../controllers/v1/roadmaps";
 
 // middleware
 import * as middleware from "../../../middlewares";
-import exists from "../../../middlewares/roadmapExists";
+import { roadmapExists } from "../../../middlewares/roadmapExists";
 
 router.post("/roadmaps", middleware.apiAuth, roadmaps.create);
 
-router.patch("/roadmaps", middleware.apiAuth, exists, roadmaps.updateRoadmap);
+router.patch(
+  "/roadmaps",
+  middleware.apiAuth,
+  roadmapExists,
+  roadmaps.updateRoadmap,
+);
 router.patch("/roadmaps/sort", middleware.apiAuth, roadmaps.sort);
 
-router.delete("/roadmaps", middleware.apiAuth, exists, roadmaps.deleteById);
+router.delete(
+  "/roadmaps",
+  middleware.apiAuth,
+  roadmapExists,
+  roadmaps.deleteById,
+);
 
 export default router;
