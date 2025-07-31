@@ -1,9 +1,10 @@
 import { describe, it, expect } from "vitest";
-const supertest = require("supertest");
-const { v4: uuidv4 } = require("uuid");
-const app = require("../../../../app");
-const database = require("../../../../database");
-const { createToken } = require("../../../../services/token.service");
+import supertest from "supertest";
+import { v4 as uuidv4 } from "uuid";
+
+import app from "../../../../src/app";
+import database from "../../../../src/database";
+import { createToken } from "../../../../src/services/token.service";
 import { user as generateUser } from "../../../utils/generators";
 import { createUser } from "../../../utils/seed/user";
 
