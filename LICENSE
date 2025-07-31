@@ -3,6 +3,7 @@ Copyright (c) 2020-present Shinkly Private Limited
 Portions of this software – namely all files that reside under the following directories of this repository – are licensed under the license defined in "packages/server/ee/LICENSE".
 
 * packages/server/ee
+* packages/theme/src/ee
 
 All third party components incorporated into the LogChimp Software are licensed under the original license provided by the owner of the applicable component.
 
