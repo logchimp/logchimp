@@ -200,6 +200,7 @@ jobs:
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
+    needs: [api-unit]
     env:
       NODE_ENV: "testing"
       LOGCHIMP_DB_DATABASE: db
@@ -283,7 +284,11 @@ jobs:
 
       - name: Output logs
         if: always()
-        run: cat ./content/logs/logchimp-all.log
+        run: |
+          LOG_PATH="content/logs/logchimp-all.log"
+          if [ -f "$LOG_PATH" ]; then
+            cat "$LOG_PATH"
+          fi
 
       - name: Store Code Coverage
         uses: actions/upload-artifact@v4
