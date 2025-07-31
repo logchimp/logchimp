@@ -8,6 +8,9 @@ const { validEmail } = require("../../helpers");
 const logger = require("../../utils/logger");
 const error = require("../../errorResponse.json");
 
+// Importing Blacklisted Domains function
+const { isDomainBlacklisted } = require("./domainBlacklist");
+
 exports.signup = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -15,6 +18,14 @@ exports.signup = async (req, res, next) => {
     return res.status(400).send({
       message: error.api.authentication.invalidEmail,
       code: "EMAIL_INVALID",
+    });
+  }
+
+  // Check if email domain is blacklisted
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed to sign up.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
     });
   }
 
