@@ -1,13 +1,14 @@
 const path = require("path");
-const fs = require("fs-extra");
+const fs = require("fs");
+const fsExtra = require("fs-extra");
 
-const config = () => {
+function config() {
   // read logchimp.config.json from file-system
   const configPath = path.resolve(__dirname, "../../../logchimp.config.json");
   const isConfigExists = fs.existsSync(configPath);
 
   if (isConfigExists) {
-    const config = fs.readJsonSync(
+    const config = fsExtra.readJsonSync(
       path.resolve(__dirname, "../../../logchimp.config.json"),
     );
 
@@ -66,6 +67,6 @@ const config = () => {
       port: mailPort,
     },
   };
-};
+}
 
 module.exports = config;
