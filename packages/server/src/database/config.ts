@@ -17,7 +17,7 @@ const ssl =
       }
     : {};
 
-export const dbConfig = {
+const dbConfig = {
   client: "pg",
   version: "12.4",
   connection: {
@@ -66,3 +66,8 @@ export const dbConfig = {
     },
   },
 };
+
+export default dbConfig;
+
+// NOTE: backward compatible with common.js for knex
+module.exports = dbConfig;
