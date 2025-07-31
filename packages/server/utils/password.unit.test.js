@@ -1,4 +1,4 @@
-// modules
+import { test, expect } from "vitest";
 const generatePassword = require("omgopass");
 
 // utils
