@@ -65,10 +65,10 @@ export async function setup(req, res, next) {
       .from("settings");
 
     res.status(201).send({ user });
-  } catch (error) {
+  } catch (err) {
     logger.log({
       level: "error",
-      message: error,
+      message: err,
     });
 
     res.status(500).send({

@@ -1,10 +1,11 @@
+import type { Request, Response } from "express";
 import database from "../../../database";
 
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function update(req, res) {
+export async function update(req: Request, res: Response) {
   const { comment_id } = req.params;
   const { body, is_internal, is_spam } = req.body;
 
@@ -14,6 +15,7 @@ export async function update(req, res) {
       .from("settings")
       .first();
 
+    // @ts-ignore
     if (!labSettings.labs.comments) {
       return res.status(403).send({
         message: error.api.labs.disabled,

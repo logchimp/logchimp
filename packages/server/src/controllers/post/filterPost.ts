@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // services
@@ -5,13 +6,13 @@ import { getBoardById } from "../../services/boards/getBoardById";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
-import { validUUID } from "../../helpers";
+import { validUUID, validUUIDs } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function filterPost(req, res) {
+export async function filterPost(req: Request, res: Response) {
   const userId = validUUID(req.body.userId);
-  const boardId = validUUID(req.body.boardId);
+  const boardId = validUUIDs(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
   /**
    * top, latest, oldest, trending

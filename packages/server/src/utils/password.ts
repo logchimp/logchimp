@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-export function hashPassword(password) {
+export function hashPassword(password: string): string {
   if (typeof password !== "string" || !password.trim()) {
     return null;
   }
@@ -10,7 +10,10 @@ export function hashPassword(password) {
   return bcrypt.hashSync(password, bcryptSalt);
 }
 
-export async function validatePassword(password, hash) {
+export async function validatePassword(
+  password: string,
+  hash: string,
+): Promise<boolean> {
   if (
     typeof password !== "string" ||
     typeof hash !== "string" ||

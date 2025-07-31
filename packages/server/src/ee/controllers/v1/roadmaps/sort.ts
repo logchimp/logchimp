@@ -1,12 +1,13 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function sort(req, res) {
+export async function sort(req: Request, res: Response) {
   const { from, to } = req.body;
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const checkPermission = permissions.includes("roadmap:update");

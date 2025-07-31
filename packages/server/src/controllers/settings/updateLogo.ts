@@ -1,12 +1,13 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function updateLogo(req, res) {
+export async function updateLogo(req: Request, res: Response) {
   const host = req.headers.host;
+  // @ts-ignore
   const imagePath = req.file.path.split("content/images")[1];
 
   const imageUrl = `//${host}/content/images${imagePath}`;

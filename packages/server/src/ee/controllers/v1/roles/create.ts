@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 // database
@@ -7,7 +8,8 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function create(req, res) {
+export async function create(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:create");
   if (!checkPermission) {

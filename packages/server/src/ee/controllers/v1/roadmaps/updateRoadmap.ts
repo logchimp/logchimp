@@ -1,11 +1,12 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function updateRoadmap(req, res) {
+export async function updateRoadmap(req: Request, res: Response) {
+  // @ts-ignore
   const id = req.roadmap.id;
 
   const { name, url, color, display } = req.body;

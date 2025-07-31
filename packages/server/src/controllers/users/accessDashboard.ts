@@ -1,7 +1,10 @@
+import type { Request, Response } from "express";
+
 // utils
 import error from "../../errorResponse.json";
 
-export function accessDashboard(req, res) {
+export function accessDashboard(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("dashboard:read");
 

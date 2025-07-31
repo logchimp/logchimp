@@ -1,4 +1,4 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // services
@@ -9,8 +9,10 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function remove(req, res) {
+export async function remove(req: Request, res: Response) {
+  // @ts-ignore
   const userId = req.user.userId;
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("vote:destroy");
 

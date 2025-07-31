@@ -1,13 +1,14 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function getOne(req, res) {
+export async function getOne(req: Request, res: Response) {
   const { id } = req.params;
 
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
@@ -47,6 +48,7 @@ export async function getOne(req, res) {
     res.status(200).send({
       role: {
         ...role,
+        // @ts-ignore
         permissions: permissions.permissions || [],
       },
     });

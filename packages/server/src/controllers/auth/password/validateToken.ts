@@ -1,4 +1,7 @@
-export async function validateToken(req, res) {
+import type { Request, Response } from "express";
+
+export async function validateToken(req: Request, res: Response) {
+  // @ts-ignore
   const emailToken = req.emailToken;
 
   /**

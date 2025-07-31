@@ -1,4 +1,4 @@
-// modules
+import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,8 +10,10 @@ import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
 
-export async function create(req, res) {
+export async function create(req: Request, res: Response) {
+  // @ts-ignore
   const userId = req.user.userId;
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const title = req.body.title;

@@ -7,6 +7,7 @@ import error from "../../errorResponse.json";
 
 export async function getLabs(_, res) {
   try {
+    // @ts-ignore
     const { labs } = await database
       .select(database.raw("labs::json"))
       .from("settings")
@@ -15,7 +16,7 @@ export async function getLabs(_, res) {
     res.status(200).send({
       labs,
     });
-  } catch (error) {
+  } catch (err) {
     logger.log({
       level: "error",
       message: err,

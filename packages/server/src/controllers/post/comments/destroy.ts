@@ -1,10 +1,11 @@
+import type { Request, Response } from "express";
 import database from "../../../database";
 
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function destroy(req, res) {
+export async function destroy(req: Request, res: Response) {
   const { comment_id } = req.params;
 
   try {
@@ -13,6 +14,7 @@ export async function destroy(req, res) {
       .from("settings")
       .first();
 
+    // @ts-ignore
     if (!labSettings.labs.comments) {
       return res.status(403).send({
         message: error.api.labs.disabled,

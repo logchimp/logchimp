@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
@@ -5,10 +6,14 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function updatePost(req, res) {
+export async function updatePost(req: Request, res: Response) {
+  // @ts-ignore
   const userId = req.user.userId;
+  // @ts-ignore
   const permissions = req.user.permissions;
+  // @ts-ignore
   const authorId = req.post.userId;
+  // @ts-ignore
   const slugId = req.post.slugId;
 
   const id = validUUID(req.body.id);

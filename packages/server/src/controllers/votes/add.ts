@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 // database
@@ -11,8 +12,10 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function add(req, res) {
+export async function add(req: Request, res: Response) {
+  // @ts-ignore
   const userId = req.user.userId;
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("vote:create");
 

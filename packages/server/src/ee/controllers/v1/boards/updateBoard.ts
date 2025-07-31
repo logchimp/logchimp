@@ -1,11 +1,14 @@
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function updateBoard(req, res) {
+export async function updateBoard(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
+  // @ts-ignore
   const boardId = req.board.boardId;
 
   const { name, url, color, view_voters, display } = req.body;

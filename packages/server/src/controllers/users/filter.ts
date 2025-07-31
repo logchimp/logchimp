@@ -1,4 +1,4 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // services
@@ -8,8 +8,9 @@ import { getUsers } from "../../services/users/getUsers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function filter(req, res) {
+export async function filter(req: Request, res: Response) {
   const created = req.query.created;
+  // @ts-ignore
   const page = req.query.page - 1;
   const limit = req.query.limit || 10;
 

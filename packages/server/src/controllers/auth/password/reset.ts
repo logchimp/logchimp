@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 // services
 import { passwordReset as passwordResetEmail } from "../../../services/auth/passwordReset";
 
@@ -5,7 +7,8 @@ import { passwordReset as passwordResetEmail } from "../../../services/auth/pass
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function reset(req, res) {
+export async function reset(req: Request, res: Response) {
+  // @ts-ignore
   const { userId, email } = req.user;
 
   try {

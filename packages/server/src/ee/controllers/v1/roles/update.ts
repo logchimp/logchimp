@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 // database
@@ -7,9 +8,10 @@ import database from "../../../../database";
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 
-export async function update(req, res) {
+export async function update(req: Request, res: Response) {
   const role = req.body;
 
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:update");
   if (!checkPermission) {

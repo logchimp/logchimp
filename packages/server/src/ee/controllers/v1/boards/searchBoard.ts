@@ -1,11 +1,13 @@
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function searchBoard(req, res) {
+export async function searchBoard(req: Request, res: Response) {
   const { name } = req.params;
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const checkPermission = permissions.includes("board:read");

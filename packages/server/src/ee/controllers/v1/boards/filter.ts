@@ -1,11 +1,13 @@
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function filter(req, res) {
+export async function filter(req: Request, res: Response) {
   const created = req.query.created;
+  // @ts-ignore
   const page = req.query.page - 1;
   const limit = req.query.limit || 10;
 
@@ -19,8 +21,11 @@ export async function filter(req, res) {
         display: true,
       })
       .groupBy("boards.boardId")
+      // @ts-ignore
       .orderBy("boards.createdAt", created)
+      // @ts-ignore
       .limit(limit)
+      // @ts-ignore
       .offset(limit * page);
 
     res.status(200).send({ boards });

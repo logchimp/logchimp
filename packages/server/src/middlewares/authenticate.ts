@@ -27,6 +27,7 @@ const computePermissions = async (user) => {
       .from("permissions AS p")
       .first();
 
+    // @ts-ignore
     return perms.permissions;
   }
 
@@ -44,6 +45,7 @@ const computePermissions = async (user) => {
     .whereIn("roles.id", roles)
     .first();
 
+  // @ts-ignore
   return perms.permissions;
 };
 
@@ -58,6 +60,7 @@ const authenticateWithToken = async (req, res, next, token) => {
     });
   }
 
+  // @ts-ignore
   const userId = decoded.payload.userId;
 
   try {

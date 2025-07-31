@@ -1,10 +1,12 @@
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function checkName(req, res) {
+export async function checkName(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const name = req.body.name;

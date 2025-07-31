@@ -1,10 +1,12 @@
+import type { Request, Response } from "express";
+
 import database from "../../../database";
 
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function get(req, res) {
+export async function get(req: Request, res: Response) {
   const { post_id } = req.params;
   const { per_page = 10, page = 1 } = req.query;
 

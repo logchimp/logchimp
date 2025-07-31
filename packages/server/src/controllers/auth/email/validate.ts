@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 // database
 import database from "../../../database";
 
@@ -5,8 +7,10 @@ import database from "../../../database";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function validate(req, res) {
+export async function validate(req: Request, res: Response) {
+  // @ts-ignore
   const { isVerified } = req.user;
+  // @ts-ignore
   const { email } = req.emailToken;
 
   if (isVerified) {

@@ -20,14 +20,14 @@ test("Validate hash random password", async () => {
 
 test("Validate hash random password with missing hash", async () => {
   const password = generatePassword();
-  const validPassword = await validatePassword(password);
+  const validPassword = await validatePassword(password, "");
 
   expect(validPassword).toBe(false);
 });
 
 test("Validate hash random password with missing password", async () => {
   const hash = hashPassword("");
-  const validPassword = await validatePassword(hash);
+  const validPassword = await validatePassword("", hash);
 
   expect(validPassword).toBe(false);
 });

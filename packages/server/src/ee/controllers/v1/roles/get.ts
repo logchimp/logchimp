@@ -1,11 +1,12 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../../../database";
 
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 
-export async function get(req, res) {
+export async function get(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {

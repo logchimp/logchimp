@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 // services
 import { verifyEmail } from "../../../services/auth/verifyEmail";
 
@@ -5,7 +7,8 @@ import { verifyEmail } from "../../../services/auth/verifyEmail";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function verify(req, res) {
+export async function verify(req: Request, res: Response) {
+  // @ts-ignore
   const { userId, email, isVerified } = req.user;
 
   if (isVerified) {

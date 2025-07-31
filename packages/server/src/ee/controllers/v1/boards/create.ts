@@ -1,4 +1,4 @@
-// modules
+import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,7 +10,8 @@ import { generateHexColor } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function create(req, res) {
+export async function create(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
   const name = req.body.name || "new board";
   const display = req.body.display;

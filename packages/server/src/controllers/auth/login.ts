@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 // service
 import { createToken } from "../../services/token.service";
 
@@ -6,7 +8,8 @@ import { validatePassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function login(req, res) {
+export async function login(req: Request, res: Response) {
+  // @ts-ignore
   const user = req.user;
   const password = req.body.password;
 

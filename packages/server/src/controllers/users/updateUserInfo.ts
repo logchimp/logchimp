@@ -1,10 +1,11 @@
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function updateUserInfo(req, res) {
+export async function updateUserInfo(req: Request, res: Response) {
   const { user_id } = req.params;
   const { username, name, notes } = req.body;
 
@@ -23,9 +24,9 @@ export async function updateUserInfo(req, res) {
     res.status(200).send({
       user,
     });
-  } catch (error) {
+  } catch (err) {
     logger.error({
-      message: error,
+      message: err,
     });
 
     res.status(500).send({

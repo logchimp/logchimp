@@ -1,4 +1,4 @@
-// modules
+import type { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 
@@ -9,7 +9,7 @@ import path from "path";
  * - png
  * - svg
  */
-export function serveImages(req, res) {
+export function serveImages(req: Request, res: Response) {
   const imagePathRegex = /^\/(.+)(?:pn|jpe?|sv)g$/gim;
   const filterImagePath = req.url.match(imagePathRegex);
 

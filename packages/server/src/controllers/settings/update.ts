@@ -1,11 +1,12 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function update(req, res) {
+export async function update(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const checkPermission = permissions.find(
@@ -13,7 +14,8 @@ export async function update(req, res) {
   );
   if (!checkPermission) {
     return res.status(403).send({
-      message: error.api.posts.notEnoughPermission,
+      // @ts-ignore
+      message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
   }

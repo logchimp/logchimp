@@ -33,7 +33,8 @@ export async function getVotes(postId, userId) {
 
     return {
       votes,
-      votesCount: parseInt(votesCount.count),
+      // @ts-ignore
+      votesCount: Number.parseInt(votesCount.count, 10),
       viewerVote: viewerVote,
     };
   } catch (err) {

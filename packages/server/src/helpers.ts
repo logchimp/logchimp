@@ -18,7 +18,7 @@ const validEmail = (email) =>
  * @param {*} value The value to check
  * @returns {*} Returns valid UUID
  */
-const validUUID = (value) => {
+const validUUID = (value?: string | string[] | null): string | string[] => {
   if (value == null) {
     return "";
   }
@@ -35,12 +35,26 @@ const validUUID = (value) => {
 };
 
 /**
+ * Validates a list of UUIDs
+ */
+function validUUIDs(value: Array<string>): string[] {
+  const _value = validUUID(value);
+
+  if (typeof _value === "string") {
+    return [_value];
+  }
+
+  return _value;
+}
+
+/**
  * Create random 6 digital HEX color
  *
  * @returns Return HEX color
  */
 const generateHexColor = () => {
   let random = Math.random();
+  // @ts-ignore
   const exponent = --random.toExponential().split("-")[1];
   // Make sure random number is between 1.0 and 0.1 to assure correct hex values.
   random *= 10 ** exponent;
@@ -100,6 +114,7 @@ const toSlug = (value) => {
 export {
   validEmail,
   validUUID,
+  validUUIDs,
   generateHexColor,
   sanitiseUsername,
   sanitiseURL,

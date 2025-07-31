@@ -1,4 +1,4 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../../database";
 
 // utils
@@ -6,7 +6,8 @@ import { hashPassword } from "../../../utils/password";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function set(req, res) {
+export async function set(req: Request, res: Response) {
+  // @ts-ignore
   const { userId, email } = req.user;
   const { password } = req.body;
 

@@ -1,4 +1,4 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
@@ -9,7 +9,8 @@ import error from "../../errorResponse.json";
  * This API doesn't update the existing labs value
  * instead overrides the existing value with req.body.labs
  */
-export async function updateLabs(req, res) {
+export async function updateLabs(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const labs = req.body;
@@ -20,7 +21,8 @@ export async function updateLabs(req, res) {
   );
   if (!checkPermission) {
     return res.status(403).send({
-      message: error.api.posts.notEnoughPermission,
+      // @ts-ignore
+      message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
   }

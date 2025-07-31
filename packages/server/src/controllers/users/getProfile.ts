@@ -1,11 +1,12 @@
-// database
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function getProfile(req, res) {
+export async function getProfile(req: Request, res: Response) {
+  // @ts-ignore
   const { userId } = req.user;
 
   try {

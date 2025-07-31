@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
 
 import database from "../../../database";
@@ -6,7 +7,8 @@ import database from "../../../database";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function create(req, res) {
+export async function create(req: Request, res: Response) {
+  // @ts-ignore
   const userId = req.user.userId;
   const { post_id } = req.params;
   const { parent_id, is_internal, body } = req.body;
@@ -20,6 +22,7 @@ export async function create(req, res) {
       .from("settings")
       .first();
 
+    // @ts-ignore
     if (!labSettings.labs.comments) {
       return res.status(403).send({
         message: error.api.labs.disabled,

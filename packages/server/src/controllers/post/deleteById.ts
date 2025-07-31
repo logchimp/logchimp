@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
@@ -5,7 +6,8 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function deleteById(req, res) {
+export async function deleteById(req: Request, res: Response) {
+  // @ts-ignore
   const permissions = req.user.permissions;
 
   const id = validUUID(req.body.id);
