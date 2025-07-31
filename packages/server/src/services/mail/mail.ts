@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import("dotenv").config();
+import("dotenv");
 
 // utils
 import logchimpConfig from "../../utils/logchimpConfig";
