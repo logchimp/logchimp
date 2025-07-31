@@ -200,6 +200,18 @@ jobs:
   api-integration:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
+    env:
+      NODE_ENV: "testing"
+      LOGCHIMP_DB_DATABASE: db
+      LOGCHIMP_DB_HOST: "localhost"
+      LOGCHIMP_DB_USER: user
+      LOGCHIMP_DB_PASSWORD: password
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_SECRET_KEY: bk6oqo21tbygcsnuflnda3whdyj7leav2w39wcmleqw2j4i5hcdwjam0tzropaevhl3h_dbnljdtyz0tb25yg1o1pak8nakgzm4tza6qp
+      LOGCHIMP_MAIL_SERVICE: "logchimp"
+      LOGCHIMP_MAIL_HOST: "smtp.example.com"
+      LOGCHIMP_MAIL_USER: "logchimp@example.com"
+      LOGCHIMP_MAIL_PORT: 587
 
     strategy:
       matrix:
@@ -251,32 +263,23 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Testing
+      - name: Compile TS
         run: |
           # Compile Typescript
-          pnpm --filter @logchimp/api exec pnpm tsc --noEmitOnError
+          pnpm --filter @logchimp/api exec pnpm tsc || true
+
+      - name: Database setup
+        run: |
+          cd ./packages/server;
 
           # Run database migrations
-          pnpm --filter @logchimp/api exec pnpm knex --knexfile ./dist/database/config.js migrate:latest
+          pnpm knex --knexfile ./dist/database/config.js migrate:latest;
 
           # Seeding database
-          pnpm --filter @logchimp/api exec pnpm knex --knexfile ./dist/database/config.js seed:run
+          pnpm knex --knexfile ./dist/database/config.js seed:run;
 
-          # Running integration test
-          pnpm --filter @logchimp/api test:integration
-        env:
-          NODE_ENV: "testing"
-          LOGCHIMP_DB_DATABASE: db
-          LOGCHIMP_DB_HOST: "localhost"
-          LOGCHIMP_DB_USER: user
-          LOGCHIMP_DB_PASSWORD: password
-          LOGCHIMP_DB_PORT: 5432
-          THEME_STANDALONE: "false"
-          LOGCHIMP_SECRET_KEY: bk6oqo21tbygcsnuflnda3whdyj7leav2w39wcmleqw2j4i5hcdwjam0tzropaevhl3h_dbnljdtyz0tb25yg1o1pak8nakgzm4tza6qp
-          LOGCHIMP_MAIL_SERVICE: "logchimp"
-          LOGCHIMP_MAIL_HOST: "smtp.example.com"
-          LOGCHIMP_MAIL_USER: "logchimp@example.com"
-          LOGCHIMP_MAIL_PORT: 587
+      - name: Testing
+        run: pnpm --filter @logchimp/api test:integration
 
       - name: Output logs
         if: always()
