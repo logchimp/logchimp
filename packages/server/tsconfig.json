@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "exclude": ["*.ts", "tests", "dist"]
+  "exclude": ["*.ts", "tests", "dist", "node_modules"]
 }
