@@ -35,7 +35,7 @@ export async function filterPost(req: Request, res: Response) {
         FROM
           posts
         ${
-          boardId
+          boardId.length > 0
             ? `WHERE "boardId" IN (${boardId.map((item) => {
                 return `'${item}'`;
               })})`

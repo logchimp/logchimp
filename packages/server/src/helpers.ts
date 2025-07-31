@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { validate as validateUUID } from "uuid";
+import fs from "fs";
 
 /**
  * Check value is valid email
@@ -38,13 +39,7 @@ const validUUID = (value?: string | string[] | null): string | string[] => {
  * Validates a list of UUIDs
  */
 function validUUIDs(value: Array<string>): string[] {
-  const _value = validUUID(value);
-
-  if (typeof _value === "string") {
-    return [_value];
-  }
-
-  return _value;
+  return value.filter((item) => validateUUID(item));
 }
 
 /**
@@ -111,6 +106,17 @@ const toSlug = (value) => {
     .join("-");
 };
 
+function readFile(path: string): Promise<string | Error> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, "utf-8", (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data);
+    });
+  });
+}
+
 export {
   validEmail,
   validUUID,
@@ -119,4 +125,5 @@ export {
   sanitiseUsername,
   sanitiseURL,
   toSlug,
+  readFile,
 };

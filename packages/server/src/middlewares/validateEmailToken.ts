@@ -29,8 +29,9 @@ export async function validateEmailToken(req, res, next) {
     // validate JWT token
     const secretKey =
       process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
-    const decoded = await jwt.verify(token, secretKey);
+    const decoded = jwt.verify(token, secretKey);
 
+    // @ts-ignore
     const tokenType = decoded.type;
     const emailToken = await database
       .select()
