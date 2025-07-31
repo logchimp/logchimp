@@ -264,13 +264,9 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Compile TS
-        run: |
-          # Compile Typescript
-          pnpm --filter @logchimp/api exec pnpm tsc || true
-
       - name: Database setup
         run: |
+          pnpm --filter @logchimp/api exec pnpm tsc
           cd ./packages/server;
 
           # Run database migrations
