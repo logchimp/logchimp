@@ -26,9 +26,11 @@ describe("roadmap view", () => {
   });
 
   it("has title 'Planned'", () => {
-    expect(wrapper.find("[data-test=roadmap-header] h6").text()).toBe(
-      "Planned",
-    );
+    expect(
+      wrapper
+        .find("[data-test=roadmap-header] [data-test=roadmap-name]")
+        .text(),
+    ).toBe("Planned");
   });
 
   it("roadmap column exists", () => {
