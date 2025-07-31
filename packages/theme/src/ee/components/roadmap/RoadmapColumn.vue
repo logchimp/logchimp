@@ -1,13 +1,8 @@
 <template>
   <div class="flex flex-col gap-2.5">
     <header data-test="roadmap-header" class="flex items-center gap-x-1.5">
-      <div
-        class="color-dot"
-        :style="{
-          backgroundColor: `#${roadmap.color}`
-        }"
-      />
       <div data-test="roadmap-name" class="text-sm text-(--color-gray-60)">{{ roadmap.name }}</div>
+      <color-dot :color="roadmap.color" />
     </header>
     <div data-test="roadmap-column" class="rounded-md bg-(--color-gray-95) p-3 flex-grow">
       <roadmap-post-card
@@ -27,6 +22,7 @@ import { getPosts } from "../../../modules/posts";
 
 // components
 import RoadmapPostCard from "./RoadmapPostCard.vue";
+import ColorDot from "../../../components/ColorDot.vue";
 
 const props = defineProps({
   roadmap: {

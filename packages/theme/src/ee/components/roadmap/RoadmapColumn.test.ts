@@ -21,7 +21,9 @@ describe("roadmap view", () => {
 
   it("has color dot", () => {
     expect(
-      wrapper.find("[data-test=roadmap-header] .color-dot").attributes("style"),
+      wrapper
+        .find("[data-test=roadmap-header] [data-test=color-dot]")
+        .attributes("style"),
     ).toBe("background-color: rgb(221, 116, 121);");
   });
 

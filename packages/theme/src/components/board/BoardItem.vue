@@ -4,13 +4,7 @@
     :to="`/boards/${url}`"
     class="flex items-center gap-2.5 select-none rounded-md bg-(--color-gray-97) hover:bg-(--color-gray-95) px-6 py-4"
   >
-    <div
-      class="color-dot"
-      data-test="board-item-color"
-      :style="{
-        backgroundColor: `#${color}`
-      }"
-    />
+    <color-dot :color="color" />
     <div class="flex items-center justify-between w-full overflow-hidden">
       <div data-test="board-item-name" class="text-(--color-gray-40) font-medium truncate">
         {{ name }}
@@ -23,6 +17,8 @@
 </template>
 
 <script setup lang="ts">
+import ColorDot from "../ColorDot.vue";
+
 defineProps({
   name: {
     type: String,
