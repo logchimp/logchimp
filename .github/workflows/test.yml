@@ -113,7 +113,7 @@ jobs:
         run: pnpm --filter @logchimp/theme build
 
   api-typecheck:
-    name: Typecheck - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    name: API / Typecheck - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
 
     strategy:
