@@ -1,10 +1,11 @@
+import { describe, it, expect } from "vitest";
 import { createPinia } from "pinia";
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 
 import RoadmapColumn from "./RoadmapColumn.vue";
 
 describe("roadmap view", () => {
-  const wrapper = shallowMount(RoadmapColumn, {
+  const wrapper = mount(RoadmapColumn, {
     global: {
       plugins: [createPinia()],
     },
@@ -20,15 +21,21 @@ describe("roadmap view", () => {
   });
 
   it("has color dot", () => {
-    expect(
-      wrapper.find("[data-test=roadmap-header] .color-dot").attributes("style"),
-    ).toBe("background-color: rgb(221, 116, 121);");
+    const colorDot = wrapper.find(
+      "[data-test=roadmap-header] [data-test=color-dot]",
+    );
+    expect(colorDot.exists()).toBeTruthy();
+    expect(colorDot.attributes("style")).toBe(
+      "background-color: rgb(221, 116, 121);",
+    );
   });
 
   it("has title 'Planned'", () => {
-    expect(wrapper.find("[data-test=roadmap-header] h6").text()).toBe(
-      "Planned",
+    const roadmapName = wrapper.find(
+      "[data-test=roadmap-header] [data-test=roadmap-name]",
     );
+    expect(roadmapName.exists()).toBeTruthy();
+    expect(roadmapName.text()).toBe("Planned");
   });
 
   it("roadmap column exists", () => {

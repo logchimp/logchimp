@@ -1,8 +1,8 @@
 <template>
-	<div class="navbar">
+	<div class="flex items-center navbar">
 		<router-link to="/" class="navbar-item">
 			<div class="navbar-item-icon">
-				<home-icon />
+				<home-icon aria-hidden="true" />
 			</div>
 			<div class="navbar-item-content">
 				Home
@@ -18,7 +18,7 @@
 		</router-link>
 		<router-link to="/boards" class="navbar-item">
 			<div class="navbar-item-icon">
-				<board-icon />
+				<board-icon aria-hidden="true" />
 			</div>
 			<div class="navbar-item-content">
 				Boards
@@ -36,10 +36,7 @@ import RoadmapIcon from "./icons/Roadmap.vue";
 </script>
 
 <style lang='sass'>
-.navbar
-  margin-top: 0.5rem
-
-.navbar, .navbar-item
+.navbar-item
   display: flex
   align-items: center
 
@@ -70,4 +67,9 @@ import RoadmapIcon from "./icons/Roadmap.vue";
 
   .navbar-item-content
     color: var(--color-white)
+
+@media (min-width: 1152px)
+  .navbar
+    padding-left: 1.5rem
+    padding-right: 1.5rem
 </style>

@@ -56,11 +56,13 @@
 
 ## Getting started
 
-To get started you can read our [deployment docs](https://logchimp.codecarrot.net/docs/install) for self-hosting with Ubuntu or cloud hosting with one click deploy button.
+To get started you can read our [deployment docs](https://logchimp.codecarrot.net/docs/install) for self-hosting with
+Ubuntu or cloud hosting with one click deploy button.
 
 ## 🤝🏻 Community
 
-Stay up to date on the development of LogChimp you can star this repository, follow us on Twitter or reach out to the community with these helpful resources.
+Stay up to date on the development of LogChimp you can star this repository, follow us on Twitter or reach out to the
+community with these helpful resources.
 
 - Follow [@logchimp](https://twitter.com/@logchimp) on Twitter.
 - Join the official [LogChimp Discord](https://discord.gg/A7mztcC)
@@ -77,7 +79,9 @@ Contributing to LogChimp project is fairly easy.
 
 ## 🎁 LogChimp Sponsors
 
-Big shout-out to our [sponsors and partners](https://logchimp.codecarrot.net/partners). If you're interested in sponsoring LogChimp and supporting the project, please reach out to us on [LogChimp Discord server](https://discordapp.com/invite/A7mztcC/).
+Big shout-out to our [sponsors and partners](https://logchimp.codecarrot.net/partners). If you're interested in
+sponsoring LogChimp and supporting the project, please reach out to us
+on [LogChimp Discord server](https://discordapp.com/invite/A7mztcC/).
 
 <a href="https://codecarrot.net/?utm_source=github&utm_medium=referral&utm_campaign=logchimp-sponsorship">
 	<img width="200" src="https://codecarrot.net/images/codecarrot_logo.svg" alt="CodeCarrot logo">
