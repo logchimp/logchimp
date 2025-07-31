@@ -20,7 +20,7 @@
     "pinia": "2.1.7",
     "tailwindcss": "^4.1.11",
     "uuid": "9.0.1",
-    "vue": "3.5.17",
+    "vue": "3.5.18",
     "vue-gtag": "3.5.2",
     "vue-infinite-loading": "github:nvitius/vue-infinite-loading#next",
     "vue-router": "4.5.1",
