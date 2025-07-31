@@ -2,7 +2,7 @@
 	<div class="flex items-center navbar">
 		<router-link to="/" class="navbar-item">
 			<div class="navbar-item-icon">
-				<home-icon />
+				<home-icon aria-hidden="true" />
 			</div>
 			<div class="navbar-item-content">
 				Home
@@ -18,7 +18,7 @@
 		</router-link>
 		<router-link to="/boards" class="navbar-item">
 			<div class="navbar-item-icon">
-				<board-icon />
+				<board-icon aria-hidden="true" />
 			</div>
 			<div class="navbar-item-content">
 				Boards
