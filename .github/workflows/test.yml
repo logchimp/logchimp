@@ -113,7 +113,7 @@ jobs:
         run: pnpm --filter @logchimp/theme build
 
   api-typecheck:
-    name: Typecheck - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    name: API / Typecheck - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -201,6 +201,18 @@ jobs:
     name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
     runs-on: ${{ matrix.os }}
     needs: [api-unit]
+    env:
+      NODE_ENV: "testing"
+      LOGCHIMP_DB_DATABASE: db
+      LOGCHIMP_DB_HOST: "localhost"
+      LOGCHIMP_DB_USER: user
+      LOGCHIMP_DB_PASSWORD: password
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_SECRET_KEY: bk6oqo21tbygcsnuflnda3whdyj7leav2w39wcmleqw2j4i5hcdwjam0tzropaevhl3h_dbnljdtyz0tb25yg1o1pak8nakgzm4tza6qp
+      LOGCHIMP_MAIL_SERVICE: "logchimp"
+      LOGCHIMP_MAIL_HOST: "smtp.example.com"
+      LOGCHIMP_MAIL_USER: "logchimp@example.com"
+      LOGCHIMP_MAIL_PORT: 587
 
     strategy:
       matrix:
@@ -252,33 +264,27 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Testing
+      - name: Database setup
         run: |
+          pnpm --filter @logchimp/api exec pnpm tsc
+          cd ./packages/server;
+
           # Run database migrations
-          pnpm --filter @logchimp/api db:migrate
+          pnpm knex --knexfile ./dist/database/config.js migrate:latest;
 
           # Seeding database
-          pnpm --filter @logchimp/api db:seed:run
+          pnpm knex --knexfile ./dist/database/config.js seed:run;
 
-          # Running integration test
-          pnpm --filter @logchimp/api test:integration
-        env:
-          NODE_ENV: "testing"
-          LOGCHIMP_DB_DATABASE: db
-          LOGCHIMP_DB_HOST: "localhost"
-          LOGCHIMP_DB_USER: user
-          LOGCHIMP_DB_PASSWORD: password
-          LOGCHIMP_DB_PORT: 5432
-          THEME_STANDALONE: "false"
-          LOGCHIMP_SECRET_KEY: bk6oqo21tbygcsnuflnda3whdyj7leav2w39wcmleqw2j4i5hcdwjam0tzropaevhl3h_dbnljdtyz0tb25yg1o1pak8nakgzm4tza6qp
-          LOGCHIMP_MAIL_SERVICE: "logchimp"
-          LOGCHIMP_MAIL_HOST: "smtp.example.com"
-          LOGCHIMP_MAIL_USER: "logchimp@example.com"
-          LOGCHIMP_MAIL_PORT: 587
+      - name: Testing
+        run: pnpm --filter @logchimp/api test:integration
 
       - name: Output logs
         if: always()
-        run: cat ./content/logs/logchimp-all.log
+        run: |
+          LOG_PATH="content/logs/logchimp-all.log"
+          if [ -f "$LOG_PATH" ]; then
+            cat "$LOG_PATH"
+          fi
 
       - name: Store Code Coverage
         uses: actions/upload-artifact@v4
