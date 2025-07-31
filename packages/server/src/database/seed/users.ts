@@ -25,3 +25,6 @@ export default async function seed(knex) {
     },
   ]);
 }
+
+// NOTE: backward compatible with common.js for knex
+exports.seed = seed;
