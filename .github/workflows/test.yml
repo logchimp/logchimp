@@ -10,6 +10,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
   pull_request:
+    types: [opened]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
