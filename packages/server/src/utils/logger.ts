@@ -21,14 +21,14 @@ const logger = createLogger({
     new transports.File({
       filename: path.resolve(
         __dirname,
-        "../../../content/logs/logchimp-error.log",
+        "../../../../content/logs/logchimp-error.log",
       ),
       level: "error",
     }),
     new transports.File({
       filename: path.resolve(
         __dirname,
-        "../../../content/logs/logchimp-all.log",
+        "../../../../content/logs/logchimp-all.log",
       ),
     }),
   ],
