@@ -10,3 +10,11 @@ export interface IBoard {
 export interface IBoardPrivate extends IBoard {
   display: boolean;
 }
+
+export type TBoardCheckNameBody = {
+  name: string;
+};
+
+export type TBoardCheckNameResponse = {
+  readonly available: boolean;
+};

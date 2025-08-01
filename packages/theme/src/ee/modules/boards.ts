@@ -1,6 +1,9 @@
 // packages
-import axios from "axios";
-import type { ApiPaginationType } from "@logchimp/types";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  ApiPaginationType,
+  TBoardCheckNameResponse,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
@@ -177,12 +180,10 @@ export const deleteBoard = async (boardId: string) => {
 
 /**
  * Check board name
- *
- * @param {string} name board name
- *
- * @returns {object} response
  */
-export const checkBoardName = async (name: string) => {
+export const checkBoardName = async (
+  name: string,
+): Promise<AxiosResponse<TBoardCheckNameResponse>> => {
   const { authToken } = useUserStore();
 
   return await axios({
