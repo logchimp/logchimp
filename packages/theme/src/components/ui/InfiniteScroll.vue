@@ -32,7 +32,7 @@ export type InfiniteScrollStateType =
 </script>
 
 <script setup lang="ts">
-import { ref, onMounted, PropType, watch, computed } from "vue"
+import { ref, onMounted, type PropType, watch, computed } from "vue"
 import { useInfiniteScroll } from '@vueuse/core'
 
 // components

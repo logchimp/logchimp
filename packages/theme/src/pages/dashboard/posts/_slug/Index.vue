@@ -133,11 +133,11 @@ import { useHead } from "@vueuse/head";
 // modules
 import { router } from "../../../../router"
 
-import { PostType, getPostBySlug, updatePost } from "../../../../modules/posts";
-import { Board, searchBoard } from "../../../../ee/modules/boards";
-import { Roadmap, searchRoadmap } from "../../../../modules/roadmaps";
-import { UserType } from "../../../../modules/users";
-import { PostVoteType } from "../../../../modules/votes";
+import { type PostType, getPostBySlug, updatePost } from "../../../../modules/posts";
+import { type Board, searchBoard } from "../../../../ee/modules/boards";
+import { type Roadmap, searchRoadmap } from "../../../../modules/roadmaps";
+import { type UserType } from "../../../../modules/users";
+import { type PostVoteType } from "../../../../modules/votes";
 
 import { useUserStore } from "../../../../store/user";
 

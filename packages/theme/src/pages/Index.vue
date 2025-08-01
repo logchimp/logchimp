@@ -34,7 +34,7 @@ import { useSettingStore } from "../store/settings"
 import { useUserStore } from "../store/user"
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import LoginCard from "../components/auth/LoginCard.vue";

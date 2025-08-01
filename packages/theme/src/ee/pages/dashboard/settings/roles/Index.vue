@@ -90,7 +90,7 @@ import { getAllRoles, createRole } from "../../../../modules/roles";
 import { useCopyText } from "../../../../../hooks";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../../components/ui/Button.vue";
 import DropdownWrapper from "../../../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../../../components/ui/dropdown/Dropdown.vue";
