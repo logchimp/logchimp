@@ -151,7 +151,10 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
+      - name: logchimp/type typecheck
+        run: pnpm --filter @logchimp/types exec pnpm tsc
+
+      - name: API typecheck
         run: pnpm --filter @logchimp/api exec pnpm tsc --noEmit
 
   api-unit:
