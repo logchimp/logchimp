@@ -41,7 +41,7 @@
 
         <div class="form-column">
           <l-text
-            v-model="slimUrl"
+            v-model="slugUrl"
             label="Slug"
             placeholder="Board slug url"
             :error="{
@@ -122,7 +122,7 @@ const createBoardPermissionDisabled = computed(() => {
 	return !checkPermission;
 });
 
-const slimUrl = computed({
+const slugUrl = computed({
 	get() {
 		return board.url;
 	},

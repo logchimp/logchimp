@@ -26,7 +26,7 @@ export const getAllRoadmaps = async () => {
 };
 
 /**
- *	Get board by URL
+ * Get board by URL
  *
  * @param {string} url board url
  *

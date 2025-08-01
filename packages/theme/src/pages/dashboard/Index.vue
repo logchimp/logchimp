@@ -72,7 +72,7 @@ import { getPosts } from "../../modules/posts";
 import { getAllBoards } from "../../ee/modules/boards";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
 import ColorDot from "../../components/ColorDot.vue";
 

@@ -80,7 +80,7 @@ import { useUserStore } from "../../store/user"
 // components
 import AuthLayout from "../../layout/AuthForm.vue"
 import Card from "../../components/ui/Card.vue";
-import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";

@@ -1,11 +1,15 @@
 import type { Request, Response } from "express";
+import type { TBoardUpdateBody } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function updateBoard(req: Request, res: Response) {
+export async function updateBoard(
+  req: Request<unknown, unknown, TBoardUpdateBody>,
+  res: Response,
+) {
   // @ts-ignore
   const permissions = req.user.permissions;
   // @ts-ignore

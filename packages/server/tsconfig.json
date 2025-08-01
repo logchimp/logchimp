@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
@@ -7,11 +8,10 @@
     "rootDir": "./src",
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "strict": false,
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "exclude": ["*.ts", "tests", "dist"]
+  "exclude": ["*.ts", "tests", "dist", "node_modules"]
 }

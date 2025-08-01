@@ -1,11 +1,11 @@
 // packages
 import axios from "axios";
+import type { DraggableSortFromToType } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
 // store
 import { useUserStore } from "../../store/user";
-import type { DraggableSortFromToType } from "../../types";
 import type { Roadmap } from "../../modules/roadmaps";
 
 interface UpdateRoadmapArgs extends Roadmap {
@@ -57,16 +57,6 @@ export const updateRoadmap = async (roadmap: UpdateRoadmapArgs) => {
 
 /**
  * Sort roadmap
- *
- * @param {object} roadmap two roadmap objects which will swap places
- * @param {object} roadmap.from from roadmap object
- * @param {string} roadmap.from.id from roadmap UUID
- * @param {number} roadmap.from.index from roadmap index
- * @param {object} roadmap.to to roadmap object
- * @param {string} roadmap.to.id to roadmap UUID
- * @param {number} roadmap.to.index to roadmap index
- *
- * @returns {object} response
  */
 export const sortRoadmap = async ({ from, to }: DraggableSortFromToType) => {
   const { authToken } = useUserStore();

@@ -35,7 +35,7 @@ import { getPublicBoards } from "../../ee/modules/boards";
 import { useSettingStore } from "../../store/settings"
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import BoardItem from "../../components/board/BoardItem.vue";
 
 const { get: siteSettings } = useSettingStore()

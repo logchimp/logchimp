@@ -57,7 +57,7 @@ import { useUserStore } from "../../../store/user"
 import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
-import { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
 import Loader from "../../../components/ui/Loader.vue";
 import LText from "../../../components/ui/input/LText.vue";
 import LTextarea from "../../../components/ui/input/LTextarea.vue";
