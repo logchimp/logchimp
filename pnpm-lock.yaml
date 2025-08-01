@@ -20,6 +20,9 @@ importers:
 
   packages/server:
     dependencies:
+      '@logchimp/types':
+        specifier: workspace:*
+        version: link:../types
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -127,7 +130,7 @@ importers:
   packages/theme:
     dependencies:
       '@logchimp/types':
-        specifier: link:../types
+        specifier: workspace:*
         version: link:../types
       '@tailwindcss/vite':
         specifier: ^4.1.11
