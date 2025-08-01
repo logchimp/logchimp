@@ -11,18 +11,54 @@ export interface Roadmap {
   name: string;
   url: string;
   color: string;
+  display: string;
+  index: number;
+}
+
+// New interface for pagination parameters
+export interface GetRoadmapsParams {
+  first?: number;
+  after?: string;
+}
+
+// New interface for the paginated response
+export interface PaginatedRoadmapsResponse {
+  data: Roadmap[];
+  page_info: {
+    count: number;
+    current_page: number;
+    has_next_page: boolean;
+  };
+  total_pages?: number | null;
+  total_count?: number | null;
 }
 
 /**
- *	Get all roadmaps
+ * Get all roadmaps with cursor-based pagination
  *
- * @returns {object} response
+ * @param {GetRoadmapsParams} params - Pagination parameters
+ * @returns {Promise<PaginatedRoadmapsResponse>} response
  */
-export const getAllRoadmaps = async () => {
-  return await axios({
+export const getAllRoadmaps = async (params: GetRoadmapsParams = {}): Promise<PaginatedRoadmapsResponse> => {
+  // Build query parameters
+  const searchParams = new URLSearchParams();
+
+  if (params.first !== undefined) {
+    searchParams.append('first', params.first.toString());
+  }
+
+  if (params.after) {
+    searchParams.append('after', params.after);
+  }
+
+  const url = `${VITE_API_URL}/api/v1/roadmaps${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+
+  const response = await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/roadmaps`,
+    url,
   });
+
+  return response.data;
 };
 
 /**

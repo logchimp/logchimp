@@ -1,5 +1,4 @@
-import { describe, it, expect } from "vitest";
-import supertest from "supertest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";import supertest from "supertest";
 
 import app from "../../../src/app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
@@ -51,5 +50,32 @@ describe("POST /api/v1/roadmaps", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+  });
+});
+// pagination tests
+describe("GET /api/v1/roadmaps pagination", () => {
+  beforeAll(async () => {
+    // seed 10 roadmaps for predictable counts
+    for (let i = 0; i < 10; i++) {
+      await database.insert(generateRoadmap()).into("roadmaps");
+    }
+  });
+
+  afterAll(async () => {
+    await database("roadmaps").truncate();
+  });
+
+  it("returns 5 items and correct meta structure", async () => {
+    const res = await supertest(app).get("/api/v1/roadmaps?first=5");
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(5);
+    expect(res.body.page_info.has_next_page).toBe(true);
+    expect(res.body.total_count).toBeGreaterThanOrEqual(5);
+  });
+
+  it("returns 400 for invalid first", async () => {
+    const res = await supertest(app).get("/api/v1/roadmaps?first=999");
+    expect(res.status).toBe(400);
   });
 });
