@@ -1,10 +1,11 @@
+import type { Response, NextFunction } from "express";
 import database from "../../database";
 
 // utils
 import { validUUID } from "../../helpers";
 import error from "../../errorResponse.json";
 
-export async function boardExists(req, res, next) {
+export async function boardExists(req, res: Response, next: NextFunction) {
   const id = validUUID(req.body.boardId);
   const url = req.params.url;
 

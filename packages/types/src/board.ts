@@ -3,12 +3,9 @@ export interface IBoard {
   name: string;
   url: string;
   color: string;
-  createdAt: Date;
-  post_count: string;
-}
-
-export interface IBoardPrivate extends IBoard {
   display: boolean;
+  view_voters: boolean;
+  createdAt: Date;
 }
 
 export type TBoardCheckNameBody = {
@@ -17,4 +14,21 @@ export type TBoardCheckNameBody = {
 
 export type TBoardCheckNameResponse = {
   readonly available: boolean;
+};
+
+export type TBoardCreateBody = {
+  name: string;
+  display: boolean;
+};
+
+export type TBoardUpdateBody = {
+  name: string;
+  url: string;
+  color: string;
+  view_voters: boolean;
+  display: boolean;
+};
+
+export type TBoardDeleteBody = {
+  boardId: string;
 };
