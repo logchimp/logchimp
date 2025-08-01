@@ -9,9 +9,11 @@ import logger from "../../utils/logger";
 function getMailConfig() {
   const mailConfig = {
     host: process.env.LOGCHIMP_MAIL_HOST || config.mail?.host,
-    port: process.env.LOGCHIMP_MAIL_PORT || config.mail?.port,
-    secure: false,
-    ignoreTLS: process.env.NODE_ENV === "development",
+    port: Number.parseInt(
+      process.env.LOGCHIMP_MAIL_PORT || config.mail?.port || "465",
+      10,
+    ),
+    secure: process.env.SMTP_PORT === "465",
     auth: {
       user: process.env.LOGCHIMP_MAIL_USER || config.mail?.user,
       pass: process.env.LOGCHIMP_MAIL_PASSWORD || config.mail?.password,
