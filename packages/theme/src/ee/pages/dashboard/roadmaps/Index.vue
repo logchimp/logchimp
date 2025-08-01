@@ -127,10 +127,10 @@ import {
 } from "lucide-vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
+import type { DraggableSortFromToType } from "@logchimp/types"
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
-import type { DraggableSortFromToType } from "../../../../types"
 import type { Roadmap } from "../../../../modules/roadmaps"
 import { router } from "../../../../router";
 import { useSettingStore } from "../../../../store/settings";
@@ -146,7 +146,7 @@ import {
 import { useCopyText } from "../../../../hooks";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";

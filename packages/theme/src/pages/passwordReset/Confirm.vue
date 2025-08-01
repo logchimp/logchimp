@@ -76,7 +76,7 @@ import { useSettingStore } from "../../store/settings";
 
 // component
 import AuthForm from "../../layout/AuthForm.vue";
-import { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import Loader from "../../components/ui/Loader.vue";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";

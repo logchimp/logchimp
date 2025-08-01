@@ -1,27 +1,23 @@
 // packages
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  ApiPaginationType,
+  IBoard,
+  TBoardCheckNameResponse,
+  TBoardCreateBody,
+  TBoardUpdateBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
 // store
 import { useUserStore } from "../../store/user";
-import type { ApiPaginationType } from "../../types";
-
-interface CreateBoardArgs {
-  name?: string;
-  display?: boolean;
-}
 
 export interface Board {
   boardId: string;
   name: string;
   url: string;
   color: string;
-}
-
-interface UpdateBoardArgs extends Board {
-  view_voters: boolean;
-  display: boolean;
 }
 
 /**
@@ -107,10 +103,15 @@ export const searchBoard = async (name: string) => {
 
 /**
  * Create new board
- *
- * @returns {object} response
+ * @param {object} arg0
+ * @param {string} arg0.name
+ * @param {string} arg0.display
+ * @returns {Promise<AxiosResponse<TBoardCreateBody>>} response
  */
-export const createBoard = async ({ name, display }: CreateBoardArgs) => {
+export const createBoard = async ({
+  name,
+  display,
+}: TBoardCreateBody): Promise<AxiosResponse<IBoard>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -128,17 +129,17 @@ export const createBoard = async ({ name, display }: CreateBoardArgs) => {
 
 /**
  * Update board
- *
  * @param {object} board update board data
  * @param {string} board.name board name
  * @param {string} board.url board url
  * @param {string} board.color board color
  * @param {boolean} board.view_voters view voters in this board
  * @param {boolean} board.display display board on the site
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IBoard>>} response
  */
-export const updateBoard = async (board: UpdateBoardArgs) => {
+export const updateBoard = async (
+  board: TBoardUpdateBody,
+): Promise<AxiosResponse<IBoard>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -155,12 +156,12 @@ export const updateBoard = async (board: UpdateBoardArgs) => {
 
 /**
  * delete board
- *
  * @param {string} boardId board id
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<string>>} response
  */
-export const deleteBoard = async (boardId: string) => {
+export const deleteBoard = async (
+  boardId: string,
+): Promise<AxiosResponse<string>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -177,12 +178,10 @@ export const deleteBoard = async (boardId: string) => {
 
 /**
  * Check board name
- *
- * @param {string} name board name
- *
- * @returns {object} response
  */
-export const checkBoardName = async (name: string) => {
+export const checkBoardName = async (
+  name: string,
+): Promise<AxiosResponse<TBoardCheckNameResponse>> => {
   const { authToken } = useUserStore();
 
   return await axios({

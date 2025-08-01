@@ -1,11 +1,15 @@
 import type { Request, Response } from "express";
+import type { TBoardCheckNameBody } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function checkName(req: Request, res: Response) {
+export async function checkName(
+  req: Request<unknown, unknown, TBoardCheckNameBody>,
+  res: Response,
+) {
   // @ts-ignore
   const permissions = req.user.permissions;
 
@@ -13,23 +17,19 @@ export async function checkName(req: Request, res: Response) {
 
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   if (!name) {
-    return res.status(400).send({
-      errors: [
-        name
-          ? ""
-          : {
-              message: error.api.boards.nameMissing,
-              code: "BOARD_NAME_MISSING",
-            },
-      ],
+    res.status(400).send({
+      message: error.api.boards.nameMissing,
+      code: "BOARD_NAME_MISSING",
     });
+    return;
   }
 
   const slimUrl = name

@@ -32,7 +32,7 @@ import { useHead } from "@vueuse/head";
 import { getPosts } from "../../../modules/posts";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue"
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue"
 import PostItem from "../../../components/post/PostItem.vue";
 import Loader from "../../../components/ui/Loader.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";

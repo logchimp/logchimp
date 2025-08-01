@@ -13,6 +13,7 @@ RUN go version
 RUN go install github.com/air-verse/air@latest;
 
 WORKDIR /app
+COPY ./packages/types/ ./packages/types/
 COPY ./packages/server/ ./packages/server/
 COPY ./package.json ./pnpm-lock.yaml ./
 
@@ -22,6 +23,7 @@ ENV NODE_ENV=development
 
 RUN \
     npm i -g pnpm; \
-    pnpm install
+    pnpm install; \
+    pnpm --filter="@logchimp/types" build;
 
 CMD ["air", "-c", ".air.toml"]

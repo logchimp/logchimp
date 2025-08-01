@@ -114,7 +114,7 @@ import {
 } from "../../../modules/site";
 
 // components
-import { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
 import LText from "../../../components/ui/input/LText.vue";
 import Button from "../../../components/ui/Button.vue";
 import ColorInput from "../../../components/ui/ColorInput.vue";

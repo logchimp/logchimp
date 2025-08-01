@@ -51,7 +51,7 @@ import {
 } from "../../../../modules/site";
 
 // components
-import { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import { Alert } from "../../../../components/ui/Alert";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 

@@ -91,7 +91,7 @@ import { getAllUsers } from "../../modules/users";
 import { useCopyText } from "../../hooks";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
 import { Avatar } from "../../components/ui/Avatar";
 import DropdownWrapper from "../../components/ui/dropdown/DropdownWrapper.vue";

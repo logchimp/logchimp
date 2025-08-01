@@ -67,7 +67,7 @@ import { useUserStore } from "../store/user"
 
 // component
 import AuthForm from "../layout/AuthForm.vue";
-import { FormFieldErrorType } from "../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
