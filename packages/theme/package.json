@@ -10,6 +10,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@logchimp/types": "workspace:*",
     "@tailwindcss/vite": "^4.1.11",
     "@vueuse/components": "9.13.0",
     "@vueuse/core": "9.13.0",

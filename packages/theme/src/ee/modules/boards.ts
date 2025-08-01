@@ -1,11 +1,11 @@
 // packages
 import axios from "axios";
+import type { ApiPaginationType } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
 // store
 import { useUserStore } from "../../store/user";
-import type { ApiPaginationType } from "../../types";
 
 interface CreateBoardArgs {
   name?: string;

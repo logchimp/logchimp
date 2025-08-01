@@ -1,10 +1,10 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
+import type { ApiPaginationType } from "@logchimp/types";
 
 // store
 import { useUserStore } from "../store/user";
 
-import type { ApiPaginationType } from "../types";
 import { VITE_API_URL } from "../constants";
 
 interface UpdateUserSettingsArgs {
