@@ -50,7 +50,9 @@ async function getRoadmaps() {
   try {
     const response = await getAllRoadmaps();
 
-    const newRoadmaps = response.data.roadmaps;
+    const newRoadmaps = response.data.roadmaps.filter(
+      (roadmap: any) => roadmap.display !== false
+    );
 
     if (newRoadmaps.length > 0) {
       if (page.value === 1) {
