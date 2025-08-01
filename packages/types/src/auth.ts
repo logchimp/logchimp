@@ -7,10 +7,18 @@ export interface IAuthUser {
   authToken: string;
 }
 
+export interface IAuthUserProfileResponse<T> {
+  user: T;
+}
+
 export interface IAuthUserProfile {
   userId: string;
   name: string;
   username: string;
   email: string;
   isVerified: boolean;
+}
+
+export interface IUpdateUserSettingsArgs {
+  name?: string;
 }

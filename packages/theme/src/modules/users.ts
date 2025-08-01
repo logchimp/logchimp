@@ -1,15 +1,16 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
-import type { ApiPaginationType } from "@logchimp/types";
+import type {
+  ApiPaginationType,
+  IAuthUserProfile,
+  IAuthUserProfileResponse,
+  IUpdateUserSettingsArgs,
+} from "@logchimp/types";
 
 // store
 import { useUserStore } from "../store/user";
 
 import { VITE_API_URL } from "../constants";
-
-interface UpdateUserSettingsArgs {
-  name?: string;
-}
 
 export interface UserType {
   userId: string;
@@ -26,12 +27,11 @@ interface GetPermissions {
 
 /**
  * Get user settings
- *
- * @param {string} userId user UUID
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>>} response
  */
-export const getUserSettings = async () => {
+export const getUserSettings = async (): Promise<
+  AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -45,13 +45,15 @@ export const getUserSettings = async () => {
 
 /**
  *	Update user settings
- *
  * @param {object} user update user data
  * @param {string} user.name user's name
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>>} response
  */
-export const updateUserSettings = async ({ name }: UpdateUserSettingsArgs) => {
+export const updateUserSettings = async ({
+  name,
+}: IUpdateUserSettingsArgs): Promise<
+  AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({
