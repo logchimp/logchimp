@@ -29,5 +29,8 @@
   ],
   "engines": {
     "node": ">=22 < 23"
+  },
+  "dependencies": {
+    "zod": "^4.0.14"
   }
 }

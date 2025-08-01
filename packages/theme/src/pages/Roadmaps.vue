@@ -1,4 +1,5 @@
 <template>
+  <!-- Show roadmaps grid only when we have roadmaps -->
   <div
     v-if="roadmaps.length > 0"
     :class="[
@@ -13,12 +14,28 @@
     />
   </div>
 
-  <infinite-scroll @infinite="getRoadmaps" :state="state">
+  <!-- Show infinite scroll component with proper conditions -->
+  <infinite-scroll
+    @infinite="getRoadmaps"
+    :state="state"
+    :has-items="roadmaps.length > 0"
+  >
     <template #no-results>
-      <p>There are no roadmaps.</p>
+      <!-- Only show "no roadmaps" when we truly have no data -->
+      <div v-if="roadmaps.length === 0 && state === 'COMPLETED'">
+        <p>There are no roadmaps.</p>
+      </div>
+    </template>
+
+    <!-- Optional: Add loading indicator -->
+    <template #loading>
+      <div v-if="state === 'LOADING'">
+        <p>Loading roadmaps...</p>
+      </div>
     </template>
   </infinite-scroll>
 </template>
+
 
 <script lang="ts">
 export default {
@@ -27,7 +44,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
@@ -38,45 +55,98 @@ import { useSettingStore } from "../store/settings"
 import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
-const { get: siteSettings } = useSettingStore()
-// TODO: Add TS types
-const roadmaps = ref<unknown[]>([])
-const page = ref<number>(1)
+// Types
+interface Roadmap {
+  id: string;
+  name: string;
+  url: string;
+  color: string;
+  display: string;
+  index: number;
+}
+
+interface PaginationResponse {
+  data: Roadmap[];
+  page_info: {
+    count: number;
+    current_page: number;
+    has_next_page: boolean;
+  };
+  total_pages?: number;
+  total_count?: number;
+}
+
+const { get: siteSettings } = useSettingStore();
+
+// Cursor-based pagination state
+const roadmaps = ref<Roadmap[]>([]);
+const currentCursor = ref<string | null>(null);
+const pageSize = ref<number>(20);
+const hasNextPage = ref<boolean>(true);
 const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
+  // Don't fetch if we've reached the end
+  if (!hasNextPage.value) {
+    state.value = "COMPLETED";
+    return;
+  }
+
   state.value = "LOADING";
 
   try {
-    const response = await getAllRoadmaps();
+    const response: PaginationResponse = await getAllRoadmaps({
+      first: pageSize.value,
+      after: currentCursor.value
+    });
 
-    const newRoadmaps = response.data.roadmaps;
+    const newRoadmaps = response.data;
 
     if (newRoadmaps.length > 0) {
-      if (page.value === 1) {
-        roadmaps.value = newRoadmaps;
-      } else {
-        roadmaps.value.push(...newRoadmaps);
-      }
+      // Filter out duplicates based on ID (safety measure)
+      const existingIds = new Set(roadmaps.value.map(r => r.id));
+      const uniqueNewRoadmaps = newRoadmaps.filter(r => !existingIds.has(r.id));
 
-      page.value += 1;
-      state.value = "LOADED";
+      roadmaps.value.push(...uniqueNewRoadmaps);
+
+      // Update cursor to the last item's ID for next page
+      const lastRoadmap = newRoadmaps[newRoadmaps.length - 1];
+      currentCursor.value = lastRoadmap.id;
+
+      // Update pagination state
+      hasNextPage.value = response.page_info.has_next_page;
+
+      state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
     } else {
       state.value = "COMPLETED";
+      hasNextPage.value = false;
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching roadmaps:", err);
     state.value = "ERROR";
   }
 }
 
+// Reset and fetch initial data
+function resetAndFetch() {
+  roadmaps.value = [];
+  currentCursor.value = null;
+  hasNextPage.value = true;
+  getRoadmaps();
+}
+
+// Fetch initial data on component mount
+onMounted(() => {
+  resetAndFetch();
+});
+
 useHead({
-	title: "Roadmaps",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Roadmaps • ${siteSettings.title}`
-		}
-	]
-})
+  title: "Roadmaps",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Roadmaps • ${siteSettings.title}`
+    }
+  ]
+});
 </script>
