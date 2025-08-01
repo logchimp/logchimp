@@ -140,7 +140,7 @@ import {
 import { useCopyText } from "../../../../hooks";
 
 // components
-import InfiniteScroll, { InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import Table from "../../../../components/ui/Table.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";

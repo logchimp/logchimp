@@ -57,7 +57,7 @@ import { useHead } from "@vueuse/head";
 import { useSettingStore } from "../../../store/settings"
 import { useUserStore } from "../../../store/user"
 import {
-	LabsType,
+	type LabsType,
   getLabsSettings,
   updateLabsSettings
 } from "../../../modules/site";

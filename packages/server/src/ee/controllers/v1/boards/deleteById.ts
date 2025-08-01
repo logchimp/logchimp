@@ -1,16 +1,26 @@
 import type { Request, Response } from "express";
+import { validate as validateUUID } from "uuid";
+import type { TBoardDeleteBody } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
-import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function deleteById(req: Request, res: Response) {
+export async function deleteById(
+  req: Request<unknown, unknown, TBoardDeleteBody>,
+  res: Response,
+) {
   // @ts-ignore
   const permissions = req.user.permissions;
 
-  const boardId = validUUID(req.body.boardId);
+  const boardId = req.body.boardId;
+  if (!validateUUID(boardId)) {
+    res.status(403).send({
+      message: error.api.boards.boardIdMissing,
+      code: "BOARD_ID_MISSING",
+    });
+  }
 
   const checkPermission = permissions.includes("board:destroy");
   if (!checkPermission) {

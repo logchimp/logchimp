@@ -1,8 +1,8 @@
 // packages
 import axios from "axios";
+import type { ApiPaginationType, ApiSortType } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
-import type { ApiPaginationType, ApiSortType } from "../types";
 
 // store
 import { useUserStore } from "../store/user";

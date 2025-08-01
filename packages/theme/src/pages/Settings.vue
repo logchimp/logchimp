@@ -78,7 +78,7 @@ import Loader from "../components/ui/Loader.vue";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
-import { FormFieldErrorType } from "../components/ui/input/formBaseProps";
+import { type FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import AccountVerificationAlert from "../components/account/VerificationAlert.vue";
 
 const { get: siteSettings } = useSettingStore()
