@@ -15,7 +15,7 @@
 import { useSettingStore } from "../store/settings";
 
 // components
-import Sidebar from "../components/dashboard/Sidebar.vue";
+import Sidebar from "../components/dashboard/Sidebar/Sidebar.vue";
 import PowerBy from "../components/PowerBy.vue";
 
 const { get: siteSettings } = useSettingStore();
