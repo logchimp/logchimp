@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col px-2 py-4">
-    <div class="mb-4 px-3">
+  <div class="flex flex-col px-2 pt-6 pb-2">
+    <div class="px-3">
       <site-branding
         :title="siteSettings.title"
         :logo="siteSettings.logo"
