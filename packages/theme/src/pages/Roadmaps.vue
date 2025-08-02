@@ -36,7 +36,6 @@
   </infinite-scroll>
 </template>
 
-
 <script lang="ts">
 export default {
   name: "Roadmaps",
@@ -55,26 +54,15 @@ import { useSettingStore } from "../store/settings"
 import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
-// Types
-interface Roadmap {
-  id: string;
-  name: string;
-  url: string;
-  color: string;
-  display: string;
-  index: number;
-}
+//  Import types from centralized location
+import type {
+  Roadmap,
+  PaginatedRoadmapsResponse
+} from "../type/src"; // or "../types/src" depending on your structure
 
-interface PaginationResponse {
-  data: Roadmap[];
-  page_info: {
-    count: number;
-    current_page: number;
-    has_next_page: boolean;
-  };
-  total_pages?: number;
-  total_count?: number;
-}
+// Remove these local interface definitions
+// interface Roadmap { ... }
+// interface PaginationResponse { ... }
 
 const { get: siteSettings } = useSettingStore();
 
@@ -95,12 +83,15 @@ async function getRoadmaps() {
   state.value = "LOADING";
 
   try {
-    const response: PaginationResponse = await getAllRoadmaps({
+    //  The response is now AxiosResponse<PaginatedRoadmapsResponse>
+    const response = await getAllRoadmaps({
       first: pageSize.value,
       after: currentCursor.value
     });
 
-    const newRoadmaps = response.data;
+    //  Access .data to get the actual PaginatedRoadmapsResponse
+    const paginatedData: PaginatedRoadmapsResponse = response.data;
+    const newRoadmaps = paginatedData.data; // The actual roadmaps array
 
     if (newRoadmaps.length > 0) {
       // Filter out duplicates based on ID (safety measure)
@@ -113,8 +104,8 @@ async function getRoadmaps() {
       const lastRoadmap = newRoadmaps[newRoadmaps.length - 1];
       currentCursor.value = lastRoadmap.id;
 
-      // Update pagination state
-      hasNextPage.value = response.page_info.has_next_page;
+      //  Access pagination info from the correct location
+      hasNextPage.value = paginatedData.page_info.has_next_page;
 
       state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
     } else {
