@@ -1,20 +1,20 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <h5 class="breadcrum-item">Settings</h5>
-      </breadcrumbs>
+  <DashboardPageHeader>
+    <Breadcrumbs>
+      <BreadcrumbItem>Settings</BreadcrumbItem>
+    </Breadcrumbs>
 
-      <Button
-        type="primary"
-        :loading="updateSettingsButtonLoading"
-        :disabled="updateSettingsPermissionDisabled"
-        @click="updateSettingsHandler"
-      >
-        Save
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :loading="updateSettingsButtonLoading"
+      :disabled="updateSettingsPermissionDisabled"
+      @click="updateSettingsHandler"
+    >
+      Save
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -122,6 +122,8 @@ import Button from "../../../components/ui/Button.vue";
 import ColorInput from "../../../components/ui/ColorInput.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 
 const { update } = useSettingStore()

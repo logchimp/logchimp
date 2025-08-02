@@ -1,25 +1,25 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <h5 class="breadcrum-item">
-          Roadmaps
-        </h5>
-      </breadcrumbs>
+  <DashboardPageHeader>
+    <Breadcrumbs>
+      <BreadcrumbItem>
+        Roadmaps
+      </BreadcrumbItem>
+    </Breadcrumbs>
 
-      <Button
-        type="primary"
-        :disabled="createRoadmapButtonDisabled"
-        :loading="createRoadmapButtonLoading"
-        @click="createRoadmapHandler"
-      >
-<!--        <div>-->
-<!--          <PhCrownSimple :size="32" color="#d8f218" weight="fill" />-->
-<!--        </div>-->
-        Create roadmap
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :disabled="createRoadmapButtonDisabled"
+      :loading="createRoadmapButtonLoading"
+      @click="createRoadmapHandler"
+    >
+      <!-- <div>-->
+      <!--   <PhCrownSimple :size="32" color="#d8f218" weight="fill" />-->
+      <!-- </div>-->
+      Create roadmap
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="table-container">
       <div class="table-header">
         <div class="w-14" />
@@ -153,6 +153,8 @@ import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
 import DropdownSpacer from "../../../../components/ui/dropdown/DropdownSpacer.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 const { settings } = useSettingStore()
 const { permissions } = useUserStore()

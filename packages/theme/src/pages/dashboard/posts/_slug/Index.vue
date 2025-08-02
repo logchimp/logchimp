@@ -1,32 +1,30 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <router-link to="/dashboard/posts" class="breadcrum-item">
-          Posts
-        </router-link>
+  <DashboardPageHeader>
+    <Breadcrumbs>
+      <BreadcrumbItem to="/dashboard/posts">
+        Posts
+      </BreadcrumbItem>
 
-        <!-- Show divider & title once data loaded -->
-        <template v-if="postData.title">
-          <div class="breadcrum-divider">
-            /
-          </div>
-          <h5 class="breadcrum-item">
-            {{ postData.title }}
-          </h5>
-        </template>
-      </breadcrumbs>
+      <!-- Show divider & title once data loaded -->
+      <template v-if="postData.title">
+        <BreadcrumbDivider />
+        <BreadcrumbItem>
+          {{ postData.title }}
+        </BreadcrumbItem>
+      </template>
+    </Breadcrumbs>
 
-      <Button
-        type="primary"
-        :loading="loading.updatePostButton"
-        :disabled="updatePostPermissionDisabled"
-        @click="updatePostHandler"
-      >
-        Save
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :loading="loading.updatePostButton"
+      :disabled="updatePostPermissionDisabled"
+      @click="updatePostHandler"
+    >
+      Save
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -150,6 +148,9 @@ import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
 import BoardSuggestion from "../../../../components/board/BoardSuggestion.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
+import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
+import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 
 interface GetPostType extends PostType {
   author: UserType

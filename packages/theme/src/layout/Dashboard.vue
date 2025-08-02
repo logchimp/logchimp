@@ -3,8 +3,8 @@
     <aside class="w-[220px] h-dvh overflow-hidden sticky top-0 bottom-0 overflow-y-auto">
       <Sidebar />
     </aside>
-    <main class="md:p-2 flex-grow">
-      <div class="h-full px-12 py-8 bg-white rounded-xl">
+    <main class="md:py-2 md:pr-2 flex-grow">
+      <div class="h-full bg-white rounded-xl">
         <router-view />
         <power-by v-if="siteSettings.isPoweredBy" />
       </div>
