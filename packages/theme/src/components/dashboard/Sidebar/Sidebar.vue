@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col sticky top-0 bottom-0 h-dvh w-[200px] px-2 py-4 overflow-y-auto bg-(--color-brand-color)">
+  <div class="flex flex-col px-2 py-4">
     <header class="mb-4 px-3">
       <site-branding
         :title="siteSettings.title"
