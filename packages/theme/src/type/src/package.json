@@ -1,0 +1,13 @@
+{
+  "name": "@logchimp/types",
+  "version": "1.0.0",
+  "description": "TypeScript type definitions for LogChimp",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": ["types", "typescript", "logchimp"],
+  "author": "LogChimp Team",
+  "license": "MIT"
+}

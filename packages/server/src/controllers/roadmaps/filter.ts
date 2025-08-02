@@ -1,11 +1,18 @@
+import { z } from "zod"; // Add this import
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
+// Move the schema from route to controller
+const querySchema = z.object({
+  first: z.coerce.number().min(1).max(100).default(20),
+  after: z.string().uuid().optional()
+});
+
 export async function filter(req, res) {
   try {
-    // Get validated parameters from res.locals
-    const { first, after } = res.locals.query;
+    // Validate query parameters at the start of controller
+    const { first, after } = querySchema.parse(req.query);
 
     // Build cursor query
     let query = database
@@ -24,21 +31,23 @@ export async function filter(req, res) {
     const hasNextPage = rows.length > first;
     const data = hasNextPage ? rows.slice(0, first) : rows;
 
-    // Alternative approach using raw SQL for more predictable results
+    // Get total count (only on first page for performance)
     let totalCount: number | null = null;
     let totalPages: number | null = null;
 
     if (!after) {
-      const countResult = await database.raw('SELECT COUNT(*) as count FROM roadmaps');
-      // Extract count from the raw result (format depends on your database)
-      totalCount = Number(countResult[0]?.count || countResult.rows?.[0]?.count || 0);
+      const countResult = await database('roadmaps').count('* as count');
+      totalCount = Number(countResult[0].count);
       totalPages = Math.ceil(totalCount / first);
     }
 
+    // Calculate current page
     let currentPage = 1;
     if (after) {
-      const afterCountResult = await database.raw('SELECT COUNT(*) as count FROM roadmaps WHERE id <= ?', [after]);
-      const afterCount = Number(afterCountResult[0]?.count || afterCountResult.rows?.[0]?.count || 0);
+      const afterCountResult = await database('roadmaps')
+        .where('id', '<=', after)
+        .count('* as count');
+      const afterCount = Number(afterCountResult[0].count);
       currentPage = Math.floor(afterCount / first) + 1;
     }
 
@@ -54,6 +63,15 @@ export async function filter(req, res) {
       total_count: totalCount,
     });
   } catch (err) {
+    // Handle validation errors specifically
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid query parameters',
+        errors: err.issues
+      });
+    }
+
     logger.error({ message: err });
     res.status(500).json({
       message: error.general.serverError,

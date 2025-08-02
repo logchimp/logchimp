@@ -1,45 +1,32 @@
 // packages
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 import { VITE_API_URL } from "../constants";
 
 // store
 import { useUserStore } from "../store/user";
 
-export interface Roadmap {
-  id: string;
-  name: string;
-  url: string;
-  color: string;
-  display: string;
-  index: number;
-}
+// Import types from your centralized types structure
+import type {
+  Roadmap,
+  PaginatedRoadmapsResponse,
+  GetRoadmapsParams
+} from "../type/src";
 
-// New interface for pagination parameters
-export interface GetRoadmapsParams {
-  first?: number;
-  after?: string;
-}
-
-// New interface for the paginated response
-export interface PaginatedRoadmapsResponse {
-  data: Roadmap[];
-  page_info: {
-    count: number;
-    current_page: number;
-    has_next_page: boolean;
-  };
-  total_pages?: number | null;
-  total_count?: number | null;
-}
+// Remove these local interface definitions since they're now imported:
+// export interface Roadmap { ... } // ← DELETE THIS
+// export interface GetRoadmapsParams { ... } // ← DELETE THIS
+// export interface PaginatedRoadmapsResponse { ... } // ← DELETE THIS
 
 /**
  * Get all roadmaps with cursor-based pagination
  *
  * @param {GetRoadmapsParams} params - Pagination parameters
- * @returns {Promise<PaginatedRoadmapsResponse>} response
+ * @returns {Promise<AxiosResponse<PaginatedRoadmapsResponse>>} response
  */
-export const getAllRoadmaps = async (params: GetRoadmapsParams = {}): Promise<PaginatedRoadmapsResponse> => {
+export const getAllRoadmaps = async (
+  params: GetRoadmapsParams = {}
+): Promise<AxiosResponse<PaginatedRoadmapsResponse>> => {
   // Build query parameters
   const searchParams = new URLSearchParams();
 
@@ -51,24 +38,24 @@ export const getAllRoadmaps = async (params: GetRoadmapsParams = {}): Promise<Pa
     searchParams.append('after', params.after);
   }
 
-  const url = `${VITE_API_URL}/api/v1/roadmaps${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+  const url = `${VITE_API_URL}/api/v1/roadmaps${
+    searchParams.toString() ? '?' + searchParams.toString() : ''
+  }`;
 
-  const response = await axios({
+  return await axios({
     method: "GET",
     url,
   });
-
-  return response.data;
+  // Note: Remove "return response.data;" since we're now returning the full AxiosResponse
 };
 
 /**
  * Get board by URL
  *
  * @param {string} url board url
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<any>>} response
  */
-export const getRoadmapByUrl = async (url: string) => {
+export const getRoadmapByUrl = async (url: string): Promise<AxiosResponse<any>> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps/${url}`,
@@ -79,10 +66,9 @@ export const getRoadmapByUrl = async (url: string) => {
  * Search roadmap by name
  *
  * @param {string} name roadmap name
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<any>>} response
  */
-export const searchRoadmap = async (name: string) => {
+export const searchRoadmap = async (name: string): Promise<AxiosResponse<any>> => {
   const { authToken } = useUserStore();
 
   return await axios({
