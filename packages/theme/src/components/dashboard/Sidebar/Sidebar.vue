@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col px-2 py-4">
-    <header class="mb-4 px-3">
+    <div class="mb-4 px-3">
       <site-branding
         :title="siteSettings.title"
         :logo="siteSettings.logo"
         :dashboard="true"
-        text-color="white"
+        text-color="black"
       />
-    </header>
+    </div>
 
     <SidebarList>
       <SidebarListHeading>Manage</SidebarListHeading>
