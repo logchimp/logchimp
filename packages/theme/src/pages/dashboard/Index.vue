@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-overview-posts-and-boards">
+  <div class="flex items-start px-3 lg:px-6 py-6">
     <div class="dashboard-overview-posts">
       <div class="table-heading">Posts</div>
       <Table>
@@ -123,10 +123,6 @@ useHead({
 </script>
 
 <style lang='sass'>
-.dashboard-overview-posts-and-boards
-  display: flex
-  align-items: flex-start
-
 .dashboard-overview-posts
   flex: 2
   margin-right: 1rem

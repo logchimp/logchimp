@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <h5 class="breadcrum-item">Billing</h5>
-      </breadcrumbs>
-    </header>
+  <DashboardPageHeader>
+    <Breadcrumbs>
+      <BreadcrumbItem>Billing</BreadcrumbItem>
+    </Breadcrumbs>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="form-section">
       <alert
         title="We are working on defining its pricing model at the moment."
@@ -54,6 +54,8 @@ import {
 import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import { Alert } from "../../../../components/ui/Alert";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()

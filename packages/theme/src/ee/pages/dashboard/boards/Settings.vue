@@ -1,32 +1,29 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <router-link to="/dashboard/boards" class="breadcrum-item">
-          Boards
-        </router-link>
+  <DashboardPageHeader>
+    <Breadcrumbs>
+      <BreadcrumbItem to="/dashboard/boards">
+        Boards
+      </BreadcrumbItem>
 
-        <!-- Show divider & title once data loaded -->
-        <template v-if="title">
-          <div class="breadcrum-divider">
-            /
-          </div>
-          <h5 class="breadcrum-item">
-            {{ title }}
-          </h5>
-        </template>
-      </breadcrumbs>
+      <template v-if="title">
+        <BreadcrumbDivider />
+        <BreadcrumbItem>
+          {{ title }}
+        </BreadcrumbItem>
+      </template>
+    </Breadcrumbs>
 
-      <Button
-        type="primary"
-        :loading="saveButtonLoading"
-        :disabled="createBoardPermissionDisabled"
-        @click="update"
-      >
-        Save
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :loading="saveButtonLoading"
+      :disabled="createBoardPermissionDisabled"
+      @click="update"
+    >
+      Save
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -102,6 +99,9 @@ import LText from "../../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
 import ColorInput from "../../../../components/ui/ColorInput.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
 const title = ref("")
 const board = reactive({

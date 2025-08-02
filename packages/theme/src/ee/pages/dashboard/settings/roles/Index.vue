@@ -1,20 +1,20 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <div class="breadcrum-item">Roles</div>
-      </breadcrumbs>
+  <DashboardPageHeader>
+    <Breadcrumbs>
+      <BreadcrumbItem>Roles</BreadcrumbItem>
+    </Breadcrumbs>
 
-      <Button
-        type="primary"
-        :loading="createRoleButtonLoading"
-        :disabled="createRoleButtonDisabled"
-        @click="createRoleHandler"
-      >
-        Create
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :loading="createRoleButtonLoading"
+      :disabled="createRoleButtonDisabled"
+      @click="createRoleHandler"
+    >
+      Create
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="table-container">
       <div class="table-header">
         <div class="table-header-item flex-1">name</div>
@@ -96,6 +96,8 @@ import DropdownWrapper from "../../../../../components/ui/dropdown/DropdownWrapp
 import Dropdown from "../../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../../../components/ui/dropdown/DropdownItem.vue";
 import Breadcrumbs from "../../../../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 const { settings } = useSettingStore()
 const { permissions  } = useUserStore()
