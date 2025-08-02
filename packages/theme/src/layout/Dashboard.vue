@@ -1,12 +1,13 @@
 <template>
-  <div class="flex">
-    <aside>
+  <div class="flex bg-neutral-200">
+    <aside class="w-[220px] h-dvh overflow-hidden sticky top-0 bottom-0 overflow-y-auto">
       <Sidebar />
     </aside>
-    <main class="w-full px-12 py-8">
-      <router-view />
-
-      <power-by v-if="siteSettings.isPoweredBy" />
+    <main class="md:p-2 flex-grow">
+      <div class="h-full px-12 py-8 bg-white rounded-xl">
+        <router-view />
+        <power-by v-if="siteSettings.isPoweredBy" />
+      </div>
     </main>
   </div>
 </template>
