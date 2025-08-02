@@ -9,13 +9,13 @@ defineProps<{
 <template>
   <router-link
     :class="[
-      'flex items-center py-2 px-3 rounded-lg',
-      '[&>svg]:stroke-(--color-white) [&>svg]:size-4 [&>svg]:mr-1.5',
-      '[&>p]:text-(--color-white)',
+      'flex items-center gap-x-2 py-2 px-3 rounded-lg',
+      'hover:bg-neutral-800/5',
+      '[&>svg]:stroke-neutral-700 [&>svg]:size-4',
+      '[&>p]:text-neutral-700 [&>p]:text-sm [&>p]:font-medium',
       // active
-      'aria-[current=page]:bg-white/10',
-      'aria-[current=page][&>p]:font-semibold',
-      'aria-[current=page][&>p]:text-pink-500',
+      'aria-[current=page]:bg-white',
+      'aria-[current=page]:[&>p]:font-semibold',
     ]"
     :to="to"
   >

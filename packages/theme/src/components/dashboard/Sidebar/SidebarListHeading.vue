@@ -1,5 +1,5 @@
 <template>
-  <div class="text-xs font-medium uppercase text-white/80 tracking-widest px-3">
+  <div class="text-sm font-medium text-neutral-700/70 tracking-wide px-3">
     <slot />
   </div>
 </template>

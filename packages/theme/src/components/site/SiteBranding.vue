@@ -1,21 +1,22 @@
 <template>
-	<router-link :to="link" :class="$style.branding">
-		<div :class="$style.placeholder">
-			<img :class="$style.image"
+	<router-link :to="link" class="flex items-center gap-x-2.5 select-none">
+		<div class="size-7 bg-neutral-100 rounded-full overflow-hidden">
+			<img
+        class="size-7 rounded-full"
 				:src="logo"
 				:alt="title"
 			>
 		</div>
-		<h5
+		<p
 			v-if="title"
 			:class="{
-				[$style.name]: true,
-				[$style['name-black']]: textColor === 'black',
-				[$style['name-white']]: textColor === 'white'
+        'font-semibold text-lg': true,
+				'text-neutral-800': textColor === 'black',
+				'text-white': textColor === 'white'
 			}"
 		>
 			{{ title }}
-		</h5>
+		</p>
 	</router-link>
 </template>
 
@@ -44,32 +45,3 @@ const props = defineProps({
 
 const link = computed(() => (props.dashboard ? "/dashboard" : "/"));
 </script>
-
-<style lang='sass' module>
-.branding
-	--logo-size: 2rem
-	display: flex
-	align-items: center
-	user-select: none
-
-.placeholder
-	width: var(--logo-size)
-	height: var(--logo-size)
-	background-color: var(--color-gray-97)
-	border-radius: 3rem
-	cursor: pointer
-	user-select: none
-
-.image
-	width: var(--logo-size)
-
-.name
-	margin-left: 0.625rem
-	margin-bottom: 0
-
-.name-black
-	color: var(--color-text-black)
-
-.name-white
-	color: var(--color-white)
-</style>
