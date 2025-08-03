@@ -16,7 +16,7 @@
 <script setup lang="ts">
 // packages
 import axios from "axios";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 // import gtag, { setOptions, bootstrap } from "vue-gtag";
 import { useHead } from "@vueuse/head";
 
