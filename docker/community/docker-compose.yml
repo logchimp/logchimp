@@ -29,6 +29,7 @@ services:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${API_PORT:-8000}
       LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
+      LOGCHIMP_MACHINE_SIGNATURE: ${LOGCHIMP_MACHINE_SIGNATURE}
 
       # Database
       LOGCHIMP_DB_HOST: db
