@@ -91,6 +91,8 @@
         </div>
       </div>
     </div>
+
+    <SettingsTelemetryForm />
   </div>
 </template>
 
@@ -120,6 +122,7 @@ import Button from "../../../components/ui/Button.vue";
 import ColorInput from "../../../components/ui/ColorInput.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
+import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
