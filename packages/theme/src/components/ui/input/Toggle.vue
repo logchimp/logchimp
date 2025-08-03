@@ -1,72 +1,42 @@
 <template>
-  <div
-    class="toggle"
+  <SwitchRoot
+    :id="id"
+    :class="[
+      'toggle w-10 h-6 rounded-2xl relative overflow-hidden',
+      'data-[state=unchecked]:bg-neutral-300 data-[state=checked]:bg-(--color-brand-color) transition-[background]',
+      // 'focus-within:outline-none focus-within:shadow-[0_0_0_1px] focus-within:border-stone-800 focus-within:shadow-stone-800',
+      disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
+    ]"
     data-test="toggle"
-    :aria-disabled="disabled ? 'true' : undefined"
-    :style="{
-      backgroundColor: modelValue ? `var(--color-brand-color)` : `#999`,
-      justifyContent: modelValue ? `flex-end` : ''
-    }"
-    :class="{
-      'opacity-60': disabled
-    }"
+    :model-value="modelValue || checked"
+    @update:modelValue="$emit('update:modelValue', $event)"
+    :disabled="disabled"
+    :required="required"
   >
-    <div class="toggle-slider" />
-    <input
-      type="checkbox"
-      data-test="toggle-checkbox"
-      :checked="modelValue"
-      :disabled="disabled"
-      @input="click"
-    >
-  </div>
+    <SwitchThumb
+      :class="[
+        'size-[18px] my-auto bg-white text-xs flex items-center justify-center shadow-xl rounded-full',
+        'transition-transform translate-x-[3px] will-change-transform data-[state=checked]:translate-x-full'
+      ]"
+    />
+  </SwitchRoot>
 </template>
 
 <script setup lang="ts">
-defineProps({
-  checked: {
-    type: Boolean,
-    default: false,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
+import { SwitchRoot, SwitchThumb, type SwitchRootProps } from "reka-ui";
+
+interface ToggleProps extends SwitchRootProps {
+  // Kept for backward compatibility
+  // TODO: Use `modelValue` props
+  checked?: boolean;
+}
+
+withDefaults(defineProps<ToggleProps>(), {
+  checked: false,
+  disabled: false,
+  modelValue: false,
+  required: false,
 });
 
-const emit = defineEmits<(e: "update:modelValue", event?: unknown) => void>();
-
-// TODO: Add TS types
-function click(value: unknown) {
-  // if (props.disabled) return;
-  emit("update:modelValue", value.target.checked);
-}
+defineEmits<(e: "update:modelValue", event: boolean) => void>();
 </script>
-
-<style lang='sass'>
-.toggle
-	position: relative
-	width: 2.5rem
-	height: 1.5rem
-	border-radius: 1rem
-	display: flex
-	cursor: pointer
-
-	input
-		cursor: pointer
-		position: absolute
-		opacity: 0
-		width: 100%
-		height: 100%
-
-.toggle-slider
-	width: 1.125rem
-	height: 1.125rem
-	background-color: var(--color-white)
-	border-radius: 1rem
-	margin: 3px
-</style>
