@@ -13,11 +13,6 @@ import type {
   GetRoadmapsParams
 } from "../type/src";
 
-// Remove these local interface definitions since they're now imported:
-// export interface Roadmap { ... } // ← DELETE THIS
-// export interface GetRoadmapsParams { ... } // ← DELETE THIS
-// export interface PaginatedRoadmapsResponse { ... } // ← DELETE THIS
-
 /**
  * Get all roadmaps with cursor-based pagination
  *
@@ -27,7 +22,6 @@ import type {
 export const getAllRoadmaps = async (
   params: GetRoadmapsParams = {}
 ): Promise<AxiosResponse<PaginatedRoadmapsResponse>> => {
-  // Build query parameters
   const searchParams = new URLSearchParams();
 
   if (params.first !== undefined) {
@@ -46,16 +40,15 @@ export const getAllRoadmaps = async (
     method: "GET",
     url,
   });
-  // Note: Remove "return response.data;" since we're now returning the full AxiosResponse
 };
 
 /**
  * Get board by URL
  *
  * @param {string} url board url
- * @returns {Promise<AxiosResponse<any>>} response
+ * @returns {object} response
  */
-export const getRoadmapByUrl = async (url: string): Promise<AxiosResponse<any>> => {
+export const getRoadmapByUrl = async (url: string) => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps/${url}`,
@@ -66,9 +59,9 @@ export const getRoadmapByUrl = async (url: string): Promise<AxiosResponse<any>> 
  * Search roadmap by name
  *
  * @param {string} name roadmap name
- * @returns {Promise<AxiosResponse<any>>} response
+ * @returns {object} response
  */
-export const searchRoadmap = async (name: string): Promise<AxiosResponse<any>> => {
+export const searchRoadmap = async (name: string) => {
   const { authToken } = useUserStore();
 
   return await axios({

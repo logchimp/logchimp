@@ -1,11 +1,11 @@
-import { z } from "zod"; // Add this import
+import { z } from "zod";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-// Move the schema from route to controller
+
 const querySchema = z.object({
-  first: z.coerce.number().min(1).max(100).default(20),
+  first: z.coerce.number().min(1).max(20).default(20),
   after: z.string().uuid().optional()
 });
 
@@ -14,7 +14,7 @@ export async function filter(req, res) {
     // Validate query parameters at the start of controller
     const { first, after } = querySchema.parse(req.query);
 
-    // Build cursor query
+
     let query = database
       .select("id", "name", "url", "color", "display", "index")
       .from("roadmaps")
@@ -31,7 +31,7 @@ export async function filter(req, res) {
     const hasNextPage = rows.length > first;
     const data = hasNextPage ? rows.slice(0, first) : rows;
 
-    // Get total count (only on first page for performance)
+    // Get total count
     let totalCount: number | null = null;
     let totalPages: number | null = null;
 
@@ -51,9 +51,10 @@ export async function filter(req, res) {
       currentPage = Math.floor(afterCount / first) + 1;
     }
 
-    // Response with consistent format
+
     res.status(200).json({
       data,
+      roadmaps: data,
       page_info: {
         count: data.length,
         current_page: currentPage,
@@ -63,7 +64,7 @@ export async function filter(req, res) {
       total_count: totalCount,
     });
   } catch (err) {
-    // Handle validation errors specifically
+
     if (err instanceof z.ZodError) {
       return res.status(400).json({
         code: 'VALIDATION_ERROR',
