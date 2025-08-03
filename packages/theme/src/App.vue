@@ -1,22 +1,16 @@
 <template>
-  <div
-    :style="{
-      '--color-brand-color': `#${settingsStore.get.accentColor}`
-    }"
-  >
-    <div class="alerts">
-      <Alert
-        v-for="(alert, index) in getAlerts"
-        :key="alert.time"
-        :title="alert.title"
-        :type="alert.type"
-        :timeout="alert.timeout"
-        @remove="removeAlert(index)"
-        :is-toast="true"
-      />
-    </div>
-    <router-view />
+  <div class="alerts">
+    <Alert
+      v-for="(alert, index) in getAlerts"
+      :key="alert.time"
+      :title="alert.title"
+      :type="alert.type"
+      :timeout="alert.timeout"
+      @remove="removeAlert(index)"
+      :is-toast="true"
+    />
   </div>
+  <router-view />
 </template>
 
 <script setup lang="ts">
@@ -56,6 +50,23 @@ function getSiteSettings() {
       console.error(error);
     });
 }
+
+watch(
+  () => settingsStore.get.accentColor,
+  () => {
+    if (typeof window !== "undefined") {
+      const body = document.getElementsByTagName("body")[0];
+      if (!body) return;
+      const style = body.getAttribute("style");
+      if (settingsStore.get.accentColor) {
+        body.setAttribute(
+          "style",
+          `${style} --color-brand-color: #${settingsStore.get.accentColor};`,
+        );
+      }
+    }
+  },
+);
 
 onMounted(async () => {
   getSiteSettings();
