@@ -36,10 +36,10 @@ import ColorDot from "../../components/ColorDot.vue";
 const boards = ref([]);
 
 onMounted(async () => {
-	const response = await getPublicBoards({
-		page: 1,
-		limit: 5,
-	});
-	boards.value = response.data.boards;
+  const response = await getPublicBoards({
+    page: 1,
+    limit: 5,
+  });
+  boards.value = response.data.boards;
 });
 </script>
