@@ -10,6 +10,7 @@ declare module "*.vue" {
 
 interface RuntimeEnv {
   readonly VITE_API_URL: string;
+  readonly VITE_IS_SELF_HOSTED: string | undefined;
 }
 
 interface Window {
