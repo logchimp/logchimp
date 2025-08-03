@@ -1,18 +1,20 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem to="/dashboard/posts">
-        Posts
-      </BreadcrumbItem>
-
-      <!-- Show divider & title once data loaded -->
-      <template v-if="postData.title">
-        <BreadcrumbDivider />
-        <BreadcrumbItem>
-          {{ postData.title }}
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem to="/dashboard/posts">
+          Posts
         </BreadcrumbItem>
-      </template>
-    </Breadcrumbs>
+
+        <!-- Show divider & title once data loaded -->
+        <template v-if="postData.title">
+          <BreadcrumbDivider />
+          <BreadcrumbItem>
+            {{ postData.title }}
+          </BreadcrumbItem>
+        </template>
+      </Breadcrumbs>
+    </template>
 
     <Button
       type="primary"

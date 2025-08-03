@@ -1,17 +1,19 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem to="/dashboard/settings/roles">
-        Roles
-      </BreadcrumbItem>
-
-      <template v-if="title">
-        <BreadcrumbDivider />
-        <BreadcrumbItem>
-          {{ title }}
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem to="/dashboard/settings/roles">
+          Roles
         </BreadcrumbItem>
-      </template>
-    </Breadcrumbs>
+
+        <template v-if="title">
+          <BreadcrumbDivider />
+          <BreadcrumbItem>
+            {{ title }}
+          </BreadcrumbItem>
+        </template>
+      </Breadcrumbs>
+    </template>
 
     <Button
       type="primary"

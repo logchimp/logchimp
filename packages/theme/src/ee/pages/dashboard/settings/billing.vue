@@ -1,8 +1,10 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem>Billing</BreadcrumbItem>
-    </Breadcrumbs>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem>Billing</BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">

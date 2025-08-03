@@ -1,8 +1,10 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem>Boards</BreadcrumbItem>
-    </Breadcrumbs>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem>Boards</BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
 
     <Button
       type="primary"

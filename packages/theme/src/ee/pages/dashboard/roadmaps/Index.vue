@@ -1,10 +1,12 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem>
-        Roadmaps
-      </BreadcrumbItem>
-    </Breadcrumbs>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem>
+          Roadmaps
+        </BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
 
     <Button
       type="primary"

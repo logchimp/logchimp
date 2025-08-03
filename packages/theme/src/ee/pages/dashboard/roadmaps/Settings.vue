@@ -1,18 +1,20 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem to="/dashboard/roadmaps">
-        Roadmaps
-      </BreadcrumbItem>
-
-      <!-- Show divider & title once data loaded -->
-      <template v-if="title">
-        <BreadcrumbDivider />
-        <BreadcrumbItem>
-          {{ title }}
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem to="/dashboard/roadmaps">
+          Roadmaps
         </BreadcrumbItem>
-      </template>
-    </Breadcrumbs>
+
+        <!-- Show divider & title once data loaded -->
+        <template v-if="title">
+          <BreadcrumbDivider />
+          <BreadcrumbItem>
+            {{ title }}
+          </BreadcrumbItem>
+        </template>
+      </Breadcrumbs>
+    </template>
 
     <Button
       type="primary"

@@ -1,14 +1,16 @@
 <template>
   <DashboardPageHeader>
-    <Breadcrumbs>
-      <BreadcrumbItem to="/dashboard/settings">
-        Settings
-      </BreadcrumbItem>
-      <BreadcrumbDivider />
-      <BreadcrumbItem>
-        Labs
-      </BreadcrumbItem>
-    </Breadcrumbs>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem to="/dashboard/settings">
+          Settings
+        </BreadcrumbItem>
+        <BreadcrumbDivider />
+        <BreadcrumbItem>
+          Labs
+        </BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
 
     <Button
       type="primary"

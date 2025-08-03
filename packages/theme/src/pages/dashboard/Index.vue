@@ -1,4 +1,6 @@
 <template>
+<!--  <DashboardPageHeader class="md:hidden" />-->
+
   <div class="flex items-start px-3 lg:px-6 py-6">
     <div class="dashboard-overview-posts">
       <div class="table-heading">Posts</div>
@@ -75,6 +77,7 @@ import { getAllBoards } from "../../ee/modules/boards";
 import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
 import ColorDot from "../../components/ColorDot.vue";
+// import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 
 // TODO: Add TS types
 const posts = ref<unknown>([])
