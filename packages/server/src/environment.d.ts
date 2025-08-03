@@ -2,6 +2,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     NODE_ENV: "production" | "staging" | "ci" | "testing" | "development";
     readonly PORT: string | undefined;
+    readonly LOGCHIMP_IS_SELF_HOSTED: string | undefined;
     // readonly ORIGIN: string | undefined;
 
     readonly LOGCHIMP_SECRET_KEY: string | undefined;
