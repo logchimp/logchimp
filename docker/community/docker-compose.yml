@@ -26,7 +26,7 @@ services:
     depends_on:
       - db
     environment:
-      NODE_ENV: ${NODE_ENV}
+      NODE_ENV: ${NODE_ENV:-production}
       PORT: ${API_PORT:-8000}
       LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
 
@@ -54,7 +54,7 @@ services:
     depends_on:
       - api
     environment:
-      NODE_ENV: ${NODE_ENV}
+      NODE_ENV: ${NODE_ENV:-production}
       PORT: ${THEME_PORT:-3000}
       VITE_API_URL: http://api:${API_PORT:-8000}
     ports:
