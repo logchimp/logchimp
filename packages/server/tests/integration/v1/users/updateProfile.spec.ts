@@ -121,4 +121,62 @@ describe("PATCH /api/v1/users/profile", () => {
       });
     });
   });
+
+ describe("Username Validation", () => {
+    it("should throw error USERNAME_LENGTH if username exceeds 30 characters", async () => {
+      const { user } = await createUser();
+
+      const response = await supertest(app)
+        .patch("/api/v1/users/profile")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send({ username: "a".repeat(31) });
+
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("USERNAME_LENGTH");
+      expect(response.body.username).toBe("Username cannot execed 30 characters");
+    });
+
+    it("should throw error USERNAME_CONTENT if username contains invalid content", async () => {
+      const { user } = await createUser();
+      const testCases = [
+        { username: "<script>alert('xss')</script>", description: "Include complete script tags" },
+        { username: "<div>test</div>", description: "Include HTML tags" },
+        { username: "SELECT * FROM users", description: "Contains SQL statements" },
+        { username: "user<script>", description: "Contains incomplete script tags" },
+        { username: "&lt;script&gt;", description: "Script containing HTML entity encoding" }
+      ];
+
+      for (const { username, description } of testCases) {
+        const response = await supertest(app)
+          .patch("/api/v1/users/profile")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .send({ username });
+
+        expect(response.status).toBe(400);
+        expect(response.body.code).toBe("USERNAME_CONTENT");
+        expect(response.body.username).toBe("The username cannot contain HTML, JavaScript, or SQL content");
+      }
+    });
+
+    it("should update user's profile username with valid value", async () => {
+      const { user } = await createUser();
+      const newUsername = "valid_new_user123";
+
+      const response = await supertest(app)
+        .patch("/api/v1/users/profile")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send({ username: newUsername });
+      console.log(response.status)
+      console.log(response.body)
+
+
+      expect(response.status).toBe(200);
+      expect(response.body.user).toMatchObject({
+        userId: user.userId,
+        name: user.name,
+        email: user.email,
+        username: newUsername,
+      });
+    });
+  });
 });

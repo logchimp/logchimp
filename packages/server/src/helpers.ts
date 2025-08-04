@@ -89,6 +89,7 @@ const validUsername = (value) => {
         /insert\s+into/gi,
         /update\s+.+set/gi,
         /delete\s+from/gi,
+        /select\s+.+from/gi,
         /drop\s+(table|database)/gi,
         /exec\s*\(/gi,
         /xp_cmdshell/gi,
