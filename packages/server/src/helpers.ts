@@ -71,6 +71,36 @@ const sanitiseUsername = (value) => {
 };
 
 /**
+ * Check if the username contains illegal content (HTML, JavaScript, SQL)
+ * @param {string} value username
+ * @returns {boolean} - If it contains illegal content, return true; otherwise, return false
+ */
+const validUsername = (value) => {
+    // HTML, JS, and SQL injection features
+    const invalidPatterns = [
+        // HTML
+        /<\/?[^>]+>/gi,
+        // JavaScript
+        /script\s*:/gi,
+        /javascript:/gi,
+        /on\w+\s*=/gi,
+        // SQL
+        /union\s+select/gi,
+        /insert\s+into/gi,
+        /update\s+.+set/gi,
+        /delete\s+from/gi,
+        /drop\s+(table|database)/gi,
+        /exec\s*\(/gi,
+        /xp_cmdshell/gi,
+        /--/gi,
+        /;/gi,
+        /'/gi,
+        /"/gi
+    ];
+    return invalidPatterns.some(pattern => pattern.test(value));
+}
+
+/**
  * Sanitise URL
  *
  * @param {string} value url
@@ -121,6 +151,7 @@ export {
   validEmail,
   validUUID,
   validUUIDs,
+  validUsername,
   generateHexColor,
   sanitiseUsername,
   sanitiseURL,
