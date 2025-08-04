@@ -1,6 +1,7 @@
 #!/bin/bash
 
 LC_SECRET=$(openssl rand -base64 12)
+LOGCHIMP_MACHINE_SIGNATURE=$(openssl rand -base64 64)
 
 # helper function to write or replace .env vars
 set_env_var() {
@@ -17,9 +18,12 @@ set_env_var() {
 
 # API (Server)
 set_env_var "LOGCHIMP_SECRET_KEY" "$LC_SECRET" "packages/server/.env"
+set_env_var "LOGCHIMP_MACHINE_SIGNATURE" "$LOGCHIMP_MACHINE_SIGNATURE" "packages/server/.env"
+set_env_var "LOGCHIMP_IS_SELF_HOSTED" "true" "packages/server/.env"
 
 # Theme
 set_env_var "VITE_API_URL" "http://localhost:8000" "packages/theme/.env"
+set_env_var "VITE_IS_SELF_HOSTED" "true" "packages/theme/.env"
 
 
 #############################
