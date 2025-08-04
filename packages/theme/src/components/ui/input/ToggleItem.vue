@@ -6,9 +6,11 @@
     }"
     :aria-disabled="disabled ? 'true' : undefined"
   >
-    <div class="toggle-item-row">
+    <div class="flex items-center justify-between">
       <label
+        :for="id"
         data-test="toggle-item-label"
+        class="select-none font-medium"
         :class="{
           'cursor-pointer': !disabled
         }"
@@ -16,16 +18,16 @@
         {{ label }}
       </label>
       <toggle
-        ref="toggleRefs"
+        :id="id"
         :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
         :disabled="disabled"
-        @update:modelValue="input"
       />
     </div>
     <p
       v-if="note"
       data-test="toggle-item-note"
-      class="toggle-item-note"
+      class="mt-2 text-sm text-(--color-gray-50)"
     >
       {{ note }}
     </p>
@@ -33,51 +35,29 @@
 </template>
 
 <script setup lang="ts">
-// components
+import { useId, computed } from "vue";
+import type { SwitchRootProps } from "reka-ui";
 import Toggle from "./Toggle.vue";
 
-const props = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  note: {
-    type: String,
-    default: "",
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
+interface ToggleItemProps extends SwitchRootProps {
+  id?: string;
+  label: string;
+  note?: string;
+}
+
+const props = withDefaults(defineProps<ToggleItemProps>(), {
+  disabled: false,
+  modelValue: false,
+  required: false,
 });
 
-const emit = defineEmits<(e: "update:modelValue", event?: unknown) => void>();
+const id = computed(() => props.id || useId());
 
-function input(checked: boolean) {
-  emit("update:modelValue", checked);
-}
+defineEmits<(e: "update:modelValue", event: boolean) => void>();
 </script>
 
 <style lang='sass'>
 .toggle-item
-	&:not(:last-child)
-		margin-bottom: 1rem
-
-.toggle-item-row
-	display: flex
-	justify-content: space-between
-	align-items: center
-	margin-bottom: 0.5rem
-
-	label
-		font-weight: 500
-		user-select: none
-
-.toggle-item-note
-	font-size: 0.875rem
-	color: var(--color-gray-50)
+  &:not(:last-child)
+    margin-bottom: 1rem
 </style>
