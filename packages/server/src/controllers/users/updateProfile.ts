@@ -9,11 +9,20 @@ export async function updateProfile(req: Request, res: Response) {
   // @ts-ignore
   const userId = req.user.userId;
   const name = req.body.name;
+  const username = req.body.username;
 
   if (name?.length >= 30) {
     res.status(400).send({
       name: "Name cannot execed 30 characters",
       code: "NAME_LENGTH",
+    });
+    return;
+  }
+
+  if (username?.length >= 30) {
+    res.status(400).send({
+      username: "Username cannot execed 30 characters",
+      code: "USERNAME_LENGTH",
     });
     return;
   }
