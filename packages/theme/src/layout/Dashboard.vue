@@ -2,8 +2,8 @@
   <div class="bg-neutral-200 min-h-screen md:grid md:grid-cols-[min-content_minmax(0,1fr)]">
     <Sidebar />
 
-    <main class="md:py-2 md:pr-2">
-      <div class="max-md:min-h-screen md:h-full bg-white md:rounded-xl">
+    <main class="md:py-2 md:pr-2 h-screen">
+      <div class="h-full bg-white md:rounded-xl">
         <router-view />
 
         <div class="mt-8 mb-4 px-3 lg:px-6">
