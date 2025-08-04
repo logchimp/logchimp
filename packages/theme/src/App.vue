@@ -54,16 +54,14 @@ function getSiteSettings() {
 watch(
   () => settingsStore.get.accentColor,
   () => {
-    if (typeof window !== "undefined") {
-      const body = document.getElementsByTagName("body")[0];
-      if (!body) return;
-      const style = body.getAttribute("style");
-      if (settingsStore.get.accentColor) {
-        body.setAttribute(
-          "style",
-          `${style} --color-brand-color: #${settingsStore.get.accentColor};`,
-        );
-      }
+    if (typeof window === "undefined") return;
+    const body = document.getElementsByTagName("body")[0];
+    if (!body) return;
+    if (settingsStore.get.accentColor) {
+      body.style.setProperty(
+        "--color-brand-color",
+        `#${settingsStore.get.accentColor}`,
+      );
     }
   },
 );
