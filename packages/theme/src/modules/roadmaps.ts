@@ -3,6 +3,7 @@ import axios, { type AxiosResponse } from "axios";
 
 import { VITE_API_URL } from "../constants";
 
+// store
 import { useUserStore } from "../store/user";
 
 import type {
@@ -44,6 +45,7 @@ export const getAllRoadmaps = async (
  * Get board by URL
  *
  * @param {string} url board url
+ *
  * @returns {object} response
  */
 export const getRoadmapByUrl = async (url: string) => {
@@ -57,6 +59,7 @@ export const getRoadmapByUrl = async (url: string) => {
  * Search roadmap by name
  *
  * @param {string} name roadmap name
+ *
  * @returns {object} response
  */
 export const searchRoadmap = async (name: string) => {

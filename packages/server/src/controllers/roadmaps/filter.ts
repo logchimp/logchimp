@@ -1,19 +1,17 @@
 import { z } from "zod";
+import { Request, Response } from "express";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-
 
 const querySchema = z.object({
   first: z.coerce.number().min(1).max(20).default(20),
   after: z.string().uuid().optional()
 });
 
-export async function filter(req, res) {
+export async function filter(req: Request, res: Response) {
   try {
-    // Validate query parameters at the start of controller
     const { first, after } = querySchema.parse(req.query);
-
 
     let query = database
       .select("id", "name", "url", "color", "display", "index")
@@ -27,11 +25,9 @@ export async function filter(req, res) {
 
     const rows = await query;
 
-    // Determine pagination flags
     const hasNextPage = rows.length > first;
     const data = hasNextPage ? rows.slice(0, first) : rows;
 
-    // Get total count
     let totalCount: number | null = null;
     let totalPages: number | null = null;
 
@@ -41,7 +37,6 @@ export async function filter(req, res) {
       totalPages = Math.ceil(totalCount / first);
     }
 
-    // Calculate current page
     let currentPage = 1;
     if (after) {
       const afterCountResult = await database('roadmaps')
@@ -50,7 +45,6 @@ export async function filter(req, res) {
       const afterCount = Number(afterCountResult[0].count);
       currentPage = Math.floor(afterCount / first) + 1;
     }
-
 
     res.status(200).json({
       data,
@@ -64,7 +58,6 @@ export async function filter(req, res) {
       total_count: totalCount,
     });
   } catch (err) {
-
     if (err instanceof z.ZodError) {
       return res.status(400).json({
         code: 'VALIDATION_ERROR',
@@ -80,3 +73,4 @@ export async function filter(req, res) {
     });
   }
 }
+

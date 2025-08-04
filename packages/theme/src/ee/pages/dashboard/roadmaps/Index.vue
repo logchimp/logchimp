@@ -234,6 +234,8 @@ async function getRoadmaps() {
 		const response = await getAllRoadmaps();
 
 		roadmaps.value = response.data.roadmaps;
+    const list = response.data.roadmaps ?? response.data.data ?? [];
+    roadmaps.value = list;
     state.value = "COMPLETED";
 	} catch (err) {
 		console.error(err);
