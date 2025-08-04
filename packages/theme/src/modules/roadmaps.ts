@@ -3,10 +3,8 @@ import axios, { type AxiosResponse } from "axios";
 
 import { VITE_API_URL } from "../constants";
 
-// store
 import { useUserStore } from "../store/user";
 
-// Import types from your centralized types structure
 import type {
   Roadmap,
   PaginatedRoadmapsResponse,
@@ -72,3 +70,5 @@ export const searchRoadmap = async (name: string) => {
     },
   });
 };
+
+

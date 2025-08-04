@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      zod:
-        specifier: ^4.0.14
-        version: 4.0.14
     devDependencies:
       '@biomejs/biome':
         specifier: 2.1.3
@@ -78,6 +74,9 @@ importers:
       winston:
         specifier: ^3.3.3
         version: 3.17.0
+      zod:
+        specifier: ^4.0.14
+        version: 4.0.14
     devDependencies:
       '@faker-js/faker':
         specifier: ^8.0.0
