@@ -31,6 +31,7 @@ export async function updateProfile(req: Request, res: Response) {
     const users = await database
       .update({
         name,
+        username,
         updatedAt: new Date().toJSON(),
       })
       .from("users")
