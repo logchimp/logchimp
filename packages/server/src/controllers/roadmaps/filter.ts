@@ -33,7 +33,7 @@ export async function filter(req: Request, res: Response) {
 
     if (!after) {
       const countResult = await database('roadmaps').count('* as count');
-      totalCount = Number(countResult[0].count);
+      totalCount = totalCount = Number.parseInt(String(countResult[0].count), 10);
       totalPages = Math.ceil(totalCount / first);
     }
 
