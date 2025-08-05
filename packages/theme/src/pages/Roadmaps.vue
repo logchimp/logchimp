@@ -59,9 +59,6 @@ import type {
   IRoadmapPrivate as Roadmap,
   PaginatedRoadmapsResponse
 } from "../../../types/src";
-
-
-
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
