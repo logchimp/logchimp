@@ -58,7 +58,7 @@ import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 import type {
   IRoadmapPrivate as Roadmap,
   PaginatedRoadmapsResponse
-} from "../../../types/src";
+} from "@logchimp/types";
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
