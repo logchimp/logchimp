@@ -10,7 +10,7 @@ import type {
   IRoadmapPrivate as Roadmap,
   PaginatedRoadmapsResponse,
   GetRoadmapsParams
-} from "../../../types/src";
+} from "@logchimp/types";
 
 /**
  * Get all roadmaps with cursor-based pagination
