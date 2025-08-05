@@ -42,7 +42,7 @@ export async function filter(req: Request, res: Response) {
       const afterCountResult = await database('roadmaps')
         .where('id', '<=', after)
         .count('* as count');
-      const afterCount = Number(afterCountResult[0].count);
+      const afterCount = Number.parseInt(String(afterCountResult[0].count), 10);
       currentPage = Math.floor(afterCount / first) + 1;
     }
 

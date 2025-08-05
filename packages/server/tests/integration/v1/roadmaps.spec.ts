@@ -23,8 +23,8 @@ describe("GET /api/v1/roadmaps", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.roadmaps).toHaveLength(0); // back-compat field
-    expect(response.body.data).toHaveLength(0);     // new field
+    expect(response.body.roadmaps).toHaveLength(0);
+    expect(response.body.data).toHaveLength(0);
   });
 
   it("returns default list when no first param", async () => {
