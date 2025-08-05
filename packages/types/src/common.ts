@@ -6,6 +6,25 @@ export interface ApiPaginationType {
   sort?: ApiSortType;
 }
 
+export interface CursorPaginationParams {
+  first?: number;
+  after?: string;
+}
+
+export interface PageInfo {
+  count: number;
+  current_page: number;
+  has_next_page: boolean;
+}
+
+export interface CursorPaginatedResponse<T> {
+  data: T[];
+  roadmaps: T[];
+  page_info: PageInfo;
+  total_pages?: number | null;
+  total_count?: number | null;
+}
+
 export interface DraggableSortFromToType {
   from: {
     id: string;
@@ -16,3 +35,4 @@ export interface DraggableSortFromToType {
     index: string;
   };
 }
+

@@ -7,10 +7,10 @@ import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
 
 import type {
-  Roadmap,
+  IRoadmapPrivate as Roadmap,
   PaginatedRoadmapsResponse,
   GetRoadmapsParams
-} from "../type/src";
+} from "../../../types/src";
 
 /**
  * Get all roadmaps with cursor-based pagination

@@ -54,15 +54,13 @@ import { useSettingStore } from "../store/settings"
 import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
-//  Import types from centralized location
-import type {
-  Roadmap,
-  PaginatedRoadmapsResponse
-} from "../type/src"; // or "../types/src" depending on your structure
 
-// Remove these local interface definitions
-// interface Roadmap { ... }
-// interface PaginationResponse { ... }
+import type {
+  IRoadmapPrivate as Roadmap,
+  PaginatedRoadmapsResponse
+} from "../../../types/src";
+
+
 
 const { get: siteSettings } = useSettingStore();
 
@@ -74,7 +72,7 @@ const hasNextPage = ref<boolean>(true);
 const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
-  // Don't fetch if we've reached the end
+
   if (!hasNextPage.value) {
     state.value = "COMPLETED";
     return;
@@ -83,7 +81,7 @@ async function getRoadmaps() {
   state.value = "LOADING";
 
   try {
-    //  The response is now AxiosResponse<PaginatedRoadmapsResponse>
+
     const response = await getAllRoadmaps({
       first: pageSize.value,
       after: currentCursor.value
@@ -118,7 +116,6 @@ async function getRoadmaps() {
   }
 }
 
-// Reset and fetch initial data
 function resetAndFetch() {
   roadmaps.value = [];
   currentCursor.value = null;
@@ -126,7 +123,7 @@ function resetAndFetch() {
   getRoadmaps();
 }
 
-// Fetch initial data on component mount
+
 onMounted(() => {
   resetAndFetch();
 });
