@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
