@@ -1,28 +1,22 @@
 <template>
-  <div
-    :style="{
-      '--color-brand-color': `#${settingsStore.get.accentColor}`
-    }"
-  >
-    <div class="alerts">
-      <Alert
-        v-for="(alert, index) in getAlerts"
-        :key="alert.time"
-        :title="alert.title"
-        :type="alert.type"
-        :timeout="alert.timeout"
-        @remove="removeAlert(index)"
-        :is-toast="true"
-      />
-    </div>
-    <router-view />
+  <div class="alerts">
+    <Alert
+      v-for="(alert, index) in getAlerts"
+      :key="alert.time"
+      :title="alert.title"
+      :type="alert.type"
+      :timeout="alert.timeout"
+      @remove="removeAlert(index)"
+      :is-toast="true"
+    />
   </div>
+  <router-view />
 </template>
 
 <script setup lang="ts">
 // packages
 import axios from "axios";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 // import gtag, { setOptions, bootstrap } from "vue-gtag";
 import { useHead } from "@vueuse/head";
 
@@ -56,6 +50,21 @@ function getSiteSettings() {
       console.error(error);
     });
 }
+
+watch(
+  () => settingsStore.get.accentColor,
+  () => {
+    if (typeof window === "undefined") return;
+    const body = document.getElementsByTagName("body")[0];
+    if (!body) return;
+    if (settingsStore.get.accentColor) {
+      body.style.setProperty(
+        "--color-brand-color",
+        `#${settingsStore.get.accentColor}`,
+      );
+    }
+  },
+);
 
 onMounted(async () => {
   getSiteSettings();
