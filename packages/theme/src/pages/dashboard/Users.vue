@@ -24,47 +24,7 @@
         :key="user.userId"
         class="table-row"
       >
-        <div class="table-data users-table-user">
-          <div class="users-table-user-avatar">
-            <avatar :src="user.avatar" :name="user.name || user.username" />
-          </div>
-          <h6 class="users-table-user-name">
-            {{ user.name || user.username }}
-          </h6>
-        </div>
-        <div class="table-data users-table-posts">
-          {{ user.posts }}
-        </div>
-        <div class="table-data users-table-votes">
-          {{ user.votes }}
-        </div>
-        <div v-if="settings.developer_mode" class="table-icon-group boards-table-icons">
-          <dropdown-wrapper>
-            <template #toggle>
-              <div
-                class="
-                  table-data table-data-icon
-                  boards-table-icon-settings
-                  dropdown-menu-icon
-                "
-              >
-                <more-icon />
-              </div>
-            </template>
-            <template #default="dropdown">
-              <dropdown v-if="dropdown.active" class="sw">
-                <dropdown-item
-                  @click="useCopyText(user.userId)"
-                >
-                  <template #icon>
-                    <copy-icon />
-                  </template>
-                  Copy ID
-                </dropdown-item>
-              </dropdown>
-            </template>
-          </dropdown-wrapper>
-        </div>
+        <DashboardUsersTabularItem :user="user" :settings="settings" />
       </div>
 
       <infinite-scroll @infinite="getUsers" :state="state" />
@@ -82,26 +42,18 @@ export default {
 // packages
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import {
-  Clipboard as CopyIcon,
-  MoreHorizontal as MoreIcon
-} from "lucide-vue";
 
 // modules
 import { useSettingStore } from "../../store/settings";
 import { getAllUsers } from "../../modules/users";
-import { useCopyText } from "../../hooks";
 
 // components
 import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
-import { Avatar } from "../../components/ui/Avatar";
-import DropdownWrapper from "../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../components/ui/dropdown/DropdownItem.vue";
 import Breadcrumbs from "../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import DashboardUsersTabularItem from "../../ee/components/dashboard/users/TabularItem.vue";
 
 const { settings } = useSettingStore()
 
