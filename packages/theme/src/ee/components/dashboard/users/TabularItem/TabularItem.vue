@@ -7,6 +7,11 @@
       {{ user.name || user.username }}
     </h6>
   </div>
+  <div class="table-data">
+    <div v-for="role in user.roles">
+      <RoleBadge :role="role" :key="role.user_role_id" />
+    </div>
+  </div>
   <div class="table-data users-table-posts">
     {{ user.posts }}
   </div>
@@ -46,11 +51,12 @@
 import { Clipboard as CopyIcon, MoreHorizontal as MoreIcon } from "lucide-vue";
 import type { IUser, ISettings } from "@logchimp/types";
 
-import { useCopyText } from "../../../../hooks";
-import { Avatar } from "../../../../components/ui/Avatar";
-import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
+import { useCopyText } from "../../../../../hooks";
+import { Avatar } from "../../../../../components/ui/Avatar";
+import DropdownWrapper from "../../../../../components/ui/dropdown/DropdownWrapper.vue";
+import Dropdown from "../../../../../components/ui/dropdown/Dropdown.vue";
+import DropdownItem from "../../../../../components/ui/dropdown/DropdownItem.vue";
+import RoleBadge from "../../../RoleBadge.vue";
 
 interface Props {
   user: IUser;
