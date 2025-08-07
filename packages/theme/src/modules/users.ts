@@ -1,15 +1,16 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
 import type {
-  ApiPaginationType,
   IAuthUserProfile,
   IAuthUserProfileResponse,
+  IGetAllUsers,
   IUpdateUserSettingsArgs,
 } from "@logchimp/types";
 
 // store
 import { useUserStore } from "../store/user";
 
+import { APIService } from "./api";
 import { VITE_API_URL } from "../constants";
 
 export interface UserType {
@@ -86,25 +87,6 @@ export const getPermissions = async (): Promise<
 };
 
 /**
- *	Get all users
- *
- * @param {number} page page number default to 1
- * @param {string} sort sort type asc or desc
- *
- * @returns {object} response
- */
-export const getAllUsers = async ({ page, sort }: ApiPaginationType) => {
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/users`,
-    params: {
-      page,
-      created: sort,
-    },
-  });
-};
-
-/**
  *	Check if user have access to dashboard
  *
  * @returns {object} response
@@ -120,3 +102,21 @@ export const checkUserDashboardAccess = async () => {
     },
   });
 };
+
+export class Users extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  /**
+   * @param {object} [params={}] - URL parameters
+   * @returns {Promise<IGetAllUsers>}
+   */
+  async getAll(params = {}): Promise<IGetAllUsers> {
+    return this.get(`/v1/users`, params)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+}

@@ -20,14 +20,14 @@
       </template>
 
       <div
-        v-for="user in users"
+        v-for="user in dashboardUsers.users"
         :key="user.userId"
         class="table-row"
       >
         <DashboardUsersTabularItem :user="user" :settings="settings" />
       </div>
 
-      <infinite-scroll @infinite="getUsers" :state="state" />
+      <infinite-scroll @infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
     </Table>
   </div>
 </template>
@@ -39,16 +39,14 @@ export default {
 </script>
 
 <script setup lang="ts">
-// packages
-import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
 import { useSettingStore } from "../../store/settings";
-import { getAllUsers } from "../../modules/users";
+import { useDashboardUsers } from "../../store/dashboard/users";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
 import Breadcrumbs from "../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
@@ -56,33 +54,7 @@ import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardUsersTabularItem from "../../ee/components/dashboard/users/TabularItem.vue";
 
 const { settings } = useSettingStore()
-
-// TODO: Add TS types
-const users = ref<unknown>([])
-const page = ref<number>(1)
-const state = ref<InfiniteScrollStateType>()
-
-async function getUsers() {
-  state.value = "LOADING"
-
-	try {
-		const response = await getAllUsers({
-			page: page.value,
-			sort: "DESC",
-		});
-
-		if (response.data.users.length) {
-			users.value.push(...response.data.users);
-			page.value += 1;
-			state.value = "LOADED"
-		} else {
-			state.value = "COMPLETED"
-		}
-	} catch (error: any) {
-		console.error(error);
-		state.value = "ERROR"
-	}
-}
+const dashboardUsers = useDashboardUsers()
 
 useHead({
 	title: "Users • Dashboard"
