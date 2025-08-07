@@ -31,10 +31,23 @@ export async function filter(req: Request, res: Response) {
           .count()
           .from("votes")
           .where({ userId });
+        const roles = await database
+          .select({
+            id: "roles.id",
+            name: "roles.name",
+            // user role ID
+            user_role_id: "roles_users.role_id",
+          })
+          .from("roles_users")
+          .innerJoin("roles", "roles.id", "roles_users.role_id")
+          .where({
+            user_id: userId,
+          });
 
         users.push({
           votes: votesCount[0].count,
           posts: postsCount[0].count,
+          roles,
           ...userData[i],
         });
       } catch (err) {
