@@ -19,7 +19,7 @@ export interface PageInfo {
 
 export interface CursorPaginatedResponse<T> {
   data: T[];
-  roadmaps: T[];
+
   page_info: PageInfo;
   total_pages?: number | null;
   total_count?: number | null;
