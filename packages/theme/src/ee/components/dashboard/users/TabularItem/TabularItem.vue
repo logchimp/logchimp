@@ -18,45 +18,18 @@
   <div class="table-data users-table-votes">
     {{ user.votes }}
   </div>
-  <div v-if="settings.developer_mode" class="table-icon-group boards-table-icons">
-    <dropdown-wrapper>
-      <template #toggle>
-        <div
-          :class="[
-            'table-data table-data-icon',
-            'boards-table-icon-settings',
-            'dropdown-menu-icon',
-          ]"
-        >
-          <more-icon />
-        </div>
-      </template>
-      <template #default="dropdown">
-        <dropdown v-if="dropdown.active" class="sw">
-          <dropdown-item
-            @click="useCopyText(user.userId)"
-          >
-            <template #icon>
-              <copy-icon />
-            </template>
-            Copy ID
-          </dropdown-item>
-        </dropdown>
-      </template>
-    </dropdown-wrapper>
-  </div>
+  <MoreOptionsDropdown
+    v-if="settings.developer_mode"
+    :user-id="user.userId"
+  />
 </template>
 
 <script setup lang="ts">
-import { Clipboard as CopyIcon, MoreHorizontal as MoreIcon } from "lucide-vue";
 import type { IUser, ISettings } from "@logchimp/types";
 
-import { useCopyText } from "../../../../../hooks";
 import { Avatar } from "../../../../../components/ui/Avatar";
-import DropdownWrapper from "../../../../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../../../../components/ui/dropdown/DropdownItem.vue";
 import RoleBadge from "../../../RoleBadge.vue";
+import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 
 interface Props {
   user: IUser;
