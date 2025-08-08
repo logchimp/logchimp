@@ -20,23 +20,26 @@
   </div>
   <MoreOptionsDropdown
     v-if="settings.developer_mode"
-    :user-id="user.userId"
   />
 </template>
 
 <script setup lang="ts">
+import { provide } from "vue";
 import type { IUser, ISettings } from "@logchimp/types";
 
 import { Avatar } from "../../../../../components/ui/Avatar";
 import RoleBadge from "../../../RoleBadge.vue";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
+import { userIdKey } from "./options";
 
 interface Props {
   user: IUser;
   settings: ISettings;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+provide(userIdKey, props.user.userId);
 
 defineOptions({
   name: "DashboardUsersTabularItem",

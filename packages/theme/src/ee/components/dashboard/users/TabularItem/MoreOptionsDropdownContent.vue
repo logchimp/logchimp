@@ -1,6 +1,7 @@
 <template>
   <dropdown-item
-    @click="useCopyText(userId)"
+    @click="userId ? useCopyText(userId) : undefined"
+    :disabled="!userId"
   >
     <template #icon>
       <copy-icon aria-hidden="true" />
@@ -11,14 +12,12 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from "vue";
 import { CopyIcon } from "lucide-vue";
 
 import { useCopyText } from "../../../../../hooks";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
+import { userIdKey } from "./options";
 
-interface Props {
-  userId: string;
-}
-
-defineProps<Props>();
+const userId = inject(userIdKey);
 </script>

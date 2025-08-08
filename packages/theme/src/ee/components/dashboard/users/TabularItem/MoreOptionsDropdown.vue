@@ -18,7 +18,7 @@
       side="bottom"
       :loop="true"
     >
-      <MoreOptionsDropdownContent :userId="userId" />
+      <MoreOptionsDropdownContent />
     </DropdownV2Content>
   </DropdownV2>
 </template>
@@ -30,10 +30,4 @@ import { DropdownMenuTrigger } from "reka-ui";
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 import MoreOptionsDropdownContent from "./MoreOptionsDropdownContent.vue";
-
-interface Props {
-  userId: string;
-}
-
-defineProps<Props>();
 </script>
