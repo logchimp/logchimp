@@ -1,28 +1,28 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <router-link to="/dashboard/settings" class="breadcrum-item">
+  <DashboardPageHeader>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem to="/dashboard/settings">
           Settings
-        </router-link>
-        <div class="breadcrum-divider">
-          /
-        </div>
-        <h5 class="breadcrum-item">
+        </BreadcrumbItem>
+        <BreadcrumbDivider />
+        <BreadcrumbItem>
           Labs
-        </h5>
-      </breadcrumbs>
+        </BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
 
-      <Button
-        type="primary"
-        :loading="updateSettingsButtonLoading"
-        :disabled="updateSettingsPermissionDisabled"
-        @click="updateSettings"
-      >
-        Save
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :loading="updateSettingsButtonLoading"
+      :disabled="updateSettingsPermissionDisabled"
+      @click="updateSettings"
+    >
+      Save
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="form-section">
       <p class="form-section-title">
         Beta features
@@ -66,6 +66,10 @@ import {
 import Button from "../../../components/ui/Button.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
+import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import PageNotFound from "../../pageNotFound.vue";
+import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
+import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
 const { update } = useSettingStore()
 const { permissions } = useUserStore()
