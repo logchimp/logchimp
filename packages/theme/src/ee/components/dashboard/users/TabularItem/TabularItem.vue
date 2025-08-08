@@ -7,10 +7,13 @@
       {{ user.name || user.username }}
     </h6>
   </div>
-  <div class="table-data">
-    <div v-for="role in user.roles">
-      <RoleBadge :role="role" :key="role.user_role_id" />
-    </div>
+  <div class="table-header-item users-table-user flex items-center gap-x-1.5">
+    <RoleBadge
+      v-for="role in user.roles"
+      :role="role"
+      :key="role.user_role_id"
+    />
+    <AssignRoleUserDropdown />
   </div>
   <div class="table-data users-table-posts">
     {{ user.posts }}
@@ -30,7 +33,8 @@ import type { IUser, ISettings } from "@logchimp/types";
 import { Avatar } from "../../../../../components/ui/Avatar";
 import RoleBadge from "../../../RoleBadge.vue";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
-import { userIdKey } from "./options";
+import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
+import { userIdKey, userRolesKey } from "./options";
 
 interface Props {
   user: IUser;
@@ -40,6 +44,7 @@ interface Props {
 const props = defineProps<Props>();
 
 provide(userIdKey, props.user.userId);
+provide(userRolesKey, props.user.roles);
 
 defineOptions({
   name: "DashboardUsersTabularItem",

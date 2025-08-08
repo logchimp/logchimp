@@ -11,6 +11,7 @@
     <Table class="users-table">
       <template #header>
         <div class="table-header-item users-table-user">name</div>
+        <div class="table-header-item users-table-user">roles</div>
         <div class="table-header-item users-table-posts">posts</div>
         <div class="table-header-item users-table-votes">votes</div>
         <div
