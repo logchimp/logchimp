@@ -74,6 +74,9 @@ importers:
       winston:
         specifier: ^3.3.3
         version: 3.17.0
+      zod:
+        specifier: ^4.0.14
+        version: 4.0.14
     devDependencies:
       '@faker-js/faker':
         specifier: ^8.0.0
@@ -3080,6 +3083,9 @@ packages:
   zhead@2.2.4:
     resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
 
+  zod@4.0.14:
+    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -5788,3 +5794,5 @@ snapshots:
   yocto-queue@1.2.1: {}
 
   zhead@2.2.4: {}
+
+  zod@4.0.14: {}
