@@ -1,11 +1,13 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <h5 class="breadcrum-item">Users</h5>
-      </breadcrumbs>
-    </header>
+  <DashboardPageHeader>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem>Users</BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <Table class="users-table">
       <template #header>
         <div class="table-header-item users-table-user">name</div>
@@ -78,7 +80,7 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 import {
   Clipboard as CopyIcon,
@@ -98,6 +100,8 @@ import DropdownWrapper from "../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../components/ui/dropdown/DropdownItem.vue";
 import Breadcrumbs from "../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 const { settings } = useSettingStore()
 

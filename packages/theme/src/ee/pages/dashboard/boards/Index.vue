@@ -1,20 +1,22 @@
 <template>
-	<div>
-		<header class="form-header">
-			<breadcrumbs>
-				<h5 class="breadcrum-item">Boards</h5>
-			</breadcrumbs>
+  <DashboardPageHeader>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem>Boards</BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
 
-			<Button
-				type="primary"
-				:disabled="createBoardPermissionDisabled"
-				:loading="createBoardButtonLoading"
-				@click="createBoardHandler"
-			>
-				Create board
-			</Button>
-		</header>
+    <Button
+      type="primary"
+      :disabled="createBoardPermissionDisabled"
+      :loading="createBoardButtonLoading"
+      @click="createBoardHandler"
+    >
+      Create board
+    </Button>
+  </DashboardPageHeader>
 
+	<div class="px-3 lg:px-6">
 		<Table class="boards-table">
 			<template #header>
 				<div class="w-14" />
@@ -148,6 +150,8 @@ import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
 import DropdownSpacer from "../../../../components/ui/dropdown/DropdownSpacer.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
+import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
+import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 const { settings } = useSettingStore()
 const { permissions } = useUserStore()

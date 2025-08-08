@@ -1,11 +1,13 @@
 <template>
-	<div>
-		<header class="form-header">
-			<breadcrumbs>
-				<h5 class="breadcrum-item">Posts</h5>
-			</breadcrumbs>
-		</header>
+  <DashboardPageHeader>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem>Posts</BreadcrumbItem>
+      </Breadcrumbs>
+    </template>
+  </DashboardPageHeader>
 
+	<div class="px-3 lg:px-6">
     <post-item
       v-for="post in posts"
       :key="post.postId"
@@ -32,10 +34,12 @@ import { useHead } from "@vueuse/head";
 import { getPosts } from "../../../modules/posts";
 
 // components
+import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import InfiniteScroll, { type InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue"
 import PostItem from "../../../components/post/PostItem.vue";
 import Loader from "../../../components/ui/Loader.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
+import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 // TODO: Add TS types
 const posts = ref<unknown>([])
