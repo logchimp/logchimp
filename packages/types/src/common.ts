@@ -15,11 +15,12 @@ export interface PageInfo {
   count: number;
   current_page: number;
   has_next_page: boolean;
+  endCursor: string | null;
+  startCursor: string | null;
 }
 
 export interface CursorPaginatedResponse<T> {
-  data: T[];
-
+  results: T[];
   page_info: PageInfo;
   total_pages?: number | null;
   total_count?: number | null;
@@ -35,4 +36,3 @@ export interface DraggableSortFromToType {
     index: string;
   };
 }
-

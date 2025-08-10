@@ -54,11 +54,11 @@ import { useSettingStore } from "../store/settings"
 import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
-
 import type {
   IRoadmapPrivate as Roadmap,
   PaginatedRoadmapsResponse
 } from "@logchimp/types";
+
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
@@ -69,7 +69,6 @@ const hasNextPage = ref<boolean>(true);
 const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
-
   if (!hasNextPage.value) {
     state.value = "COMPLETED";
     return;
@@ -78,28 +77,19 @@ async function getRoadmaps() {
   state.value = "LOADING";
 
   try {
-
     const response = await getAllRoadmaps({
       first: pageSize.value,
       after: currentCursor.value
     });
 
-    //  Access .data to get the actual PaginatedRoadmapsResponse
     const paginatedData: PaginatedRoadmapsResponse = response.data;
-    const newRoadmaps = paginatedData.data; // The actual roadmaps array
+    const newRoadmaps = paginatedData.results;
 
     if (newRoadmaps.length > 0) {
-      // Filter out duplicates based on ID (safety measure)
-      const existingIds = new Set(roadmaps.value.map(r => r.id));
-      const uniqueNewRoadmaps = newRoadmaps.filter(r => !existingIds.has(r.id));
+      roadmaps.value.push(...newRoadmaps);
 
-      roadmaps.value.push(...uniqueNewRoadmaps);
-
-      // Update cursor to the last item's ID for next page
-      const lastRoadmap = newRoadmaps[newRoadmaps.length - 1];
-      currentCursor.value = lastRoadmap.id;
-
-      //  Access pagination info from the correct location
+      // Use backend-provided cursor
+      currentCursor.value = paginatedData.page_info.endCursor;
       hasNextPage.value = paginatedData.page_info.has_next_page;
 
       state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
@@ -119,7 +109,6 @@ function resetAndFetch() {
   hasNextPage.value = true;
   getRoadmaps();
 }
-
 
 onMounted(() => {
   resetAndFetch();
