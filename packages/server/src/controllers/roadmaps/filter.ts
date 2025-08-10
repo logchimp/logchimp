@@ -4,7 +4,7 @@ import type { Request, Response } from "express";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { getUserFromRequest } from "src/utils/getUserFromRequest";
+import { getUserFromRequest } from "../../utils/getUserFromRequest";
 import { computePermissions } from "../../utils/computePermissions";
 
 export async function filter(req: Request, res: Response) {
