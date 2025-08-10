@@ -42,3 +42,13 @@ export interface IGetUserInfoRequestParams {
 export type TGetUserInfoResponseBody = {
   user: IUserInfo;
 };
+
+export type TUserAssignRoleResponse =
+// UserAssignRoleResponseSuccess
+  | ({
+  success: 1;
+} & IUserRole)
+  // UserAssignRoleResponseError
+  | {
+  success: 0;
+};

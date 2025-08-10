@@ -30,6 +30,13 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     }
   }
 
+  function updateUserRole(userId: string, role: IUserRole) {
+    const usrIdx = users.value.findIndex((usr) => usr.userId === userId);
+    if (usrIdx === -1) return;
+
+    users.value[usrIdx].roles.push(role);
+  }
+
   return {
     users,
 
@@ -38,5 +45,6 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     error,
 
     fetchUsers,
+    updateUserRole,
   };
 });

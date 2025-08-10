@@ -16,29 +16,57 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, inject } from "vue";
+import { onMounted, inject, ref } from "vue";
 
-import { useDashboardRoles } from "../../../../../store/dashboard/roles.ts";
+import { useDashboardRoles } from "../../../../../store/dashboard/roles";
+import { useDashboardUsers } from "../../../../../store/dashboard/users";
 import DropdownV2CheckboxItem from "../../../../../components/ui/DropdownV2/CheckboxItem.vue";
-import { userRolesKey } from "./options";
+import { userRolesKey, userIdKey } from "./options";
+import { UsersEe } from "../../../../modules/users";
 
 const dashboardRoles = useDashboardRoles();
+const dashboardUsers = useDashboardUsers();
+const usersEeServices = new UsersEe();
 
 onMounted(() => {
   dashboardRoles.fetchRoles();
 });
 
-const msg = inject(userRolesKey, []);
-const assignedRoles = new Map<string, boolean>();
+const roles = inject(userRolesKey, []);
+const userId = inject(userIdKey);
+const assignedRoles = ref(new Map<string, boolean>());
 onMounted(() => {
-  for (let i = 0; i < msg.length; i++) {
-    assignedRoles.set(msg[i].id, true);
+  for (let i = 0; i < roles.length; i++) {
+    assignedRoles.value.set(roles[i].id, true);
   }
 });
 
-// how would I know the role ID, inside this function???
+// assign role handler
+async function assignRoleHandler(roleId: string) {
+  if (!userId) return;
+
+  try {
+    const response = await usersEeServices.assignRole(roleId, userId);
+    if (response.success === 1) {
+      assignedRoles.value.set(roleId, true);
+      dashboardUsers.updateUserRole(userId, {
+        id: response.id,
+        name: response.name,
+        user_role_id: response.user_role_id,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function updateRoleHandler(roleId: string, e: boolean) {
-  // TODO: assign & un-assign roles
+  console.log(roleId, e);
+  if (e) {
+    assignRoleHandler(roleId);
+  } else {
+    // unassignRoleHandler(roleId);
+  }
 }
 
 defineOptions({
