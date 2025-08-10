@@ -8,6 +8,8 @@ import type {
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { getUserFromRequest } from "src/utils/getUserFromRequest";
+import { computePermissions } from "../../utils/computePermissions";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
 
 const querySchema = z.object({
