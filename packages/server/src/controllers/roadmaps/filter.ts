@@ -8,7 +8,7 @@ import type {
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { getUserFromRequest } from "src/utils/getUserFromRequest";
+import { getUserFromRequest } from "../../utils/getUserFromRequest";
 import { computePermissions } from "../../utils/computePermissions";
 
 const querySchema = z.object({
