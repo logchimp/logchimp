@@ -72,6 +72,9 @@ setup_worktree() {
       pkgx +nodejs.org@22 +pnpm.io pnpm install
     fi
 
+    # Build @logchimp/types package
+    pnpm --filter="@logchimp/types" build
+
     # Set dynamic project name for Docker Compose
     export DOCKER_COMPOSE_PROJECT_NAME="${clean_branch_name}"
     export DOCKER_BUILDKIT=1

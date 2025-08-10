@@ -1,32 +1,31 @@
 <template>
-  <div>
-    <header class="form-header">
-      <breadcrumbs>
-        <router-link to="/dashboard/settings/roles" class="breadcrum-item">
+  <DashboardPageHeader>
+    <template v-slot:left>
+      <Breadcrumbs>
+        <BreadcrumbItem to="/dashboard/settings/roles">
           Roles
-        </router-link>
+        </BreadcrumbItem>
 
-        <!-- Show divider & title once data loaded -->
         <template v-if="title">
-          <div class="breadcrum-divider">
-            /
-          </div>
-          <h5 class="breadcrum-item">
+          <BreadcrumbDivider />
+          <BreadcrumbItem>
             {{ title }}
-          </h5>
+          </BreadcrumbItem>
         </template>
-      </breadcrumbs>
+      </Breadcrumbs>
+    </template>
 
-      <Button
-        type="primary"
-        :loading="updateRoleButtonLoading"
-        :disabled="updateRoleButtonDisabled"
-        @click="updateRoleHandler"
-      >
-        Save
-      </Button>
-    </header>
+    <Button
+      type="primary"
+      :loading="updateRoleButtonLoading"
+      :disabled="updateRoleButtonDisabled"
+      @click="updateRoleHandler"
+    >
+      Save
+    </Button>
+  </DashboardPageHeader>
 
+  <div class="px-3 lg:px-6">
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -178,6 +177,9 @@ import LText from "../../../../../components/ui/input/LText.vue";
 import LTextarea from "../../../../../components/ui/input/LTextarea.vue";
 import ToggleItem from "../../../../../components/ui/input/ToggleItem.vue";
 import Breadcrumbs from "../../../../../components/Breadcrumbs.vue";
+import BreadcrumbDivider from "../../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
+import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.vue";
 
 const { permissions: userPermissions } = useUserStore()
 

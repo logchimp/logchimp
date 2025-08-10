@@ -4,7 +4,9 @@
     <div class="w-full max-w-6xl mx-auto px-6 my-8">
       <router-view />
 
-      <power-by v-if="settingsStore.get.isPoweredBy" />
+      <div class="mt-8 mb-4 px-3 lg:px-6">
+        <power-by v-if="settingsStore.get.isPoweredBy" />
+      </div>
     </div>
   </div>
 </template>

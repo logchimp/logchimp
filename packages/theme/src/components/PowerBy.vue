@@ -1,14 +1,18 @@
 <template>
-	<div class="flex justify-center mt-8">
-		<a
-			:href="
+	<div class="flex justify-center">
+    <div class="hover:bg-neutral-200/70 rounded-lg">
+      <a
+        :href="
 				`https://logchimp.codecarrot.net/?utm_source=${source}&utm_medium=powered&company=${siteSettings.title}`
 			"
-      class="text-sm text-(--color-gray-70)"
-		>
-			Powered by LogChimp
-		</a>
-	</div>
+        :class="['text-xs font-medium text-(--color-gray-70)',
+        'px-2 py-0.5'
+        ]"
+      >
+        Powered by LogChimp
+      </a>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
