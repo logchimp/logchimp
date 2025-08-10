@@ -21,3 +21,13 @@ export interface IUserRole {
   name: string;
   user_role_id: string;
 }
+
+export type TUserAssignRoleResponse =
+  // UserAssignRoleResponseSuccess
+  | ({
+      success: 1;
+    } & IUserRole)
+  // UserAssignRoleResponseError
+  | {
+      success: 0;
+    };
