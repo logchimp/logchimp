@@ -129,11 +129,10 @@ import {
 } from "lucide-vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType } from "@logchimp/types"
+import type { DraggableSortFromToType, IRoadmap } from "@logchimp/types"
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
-import type { Roadmap } from "../../../../modules/roadmaps"
 import { router } from "../../../../router";
 import { useSettingStore } from "../../../../store/settings";
 import { useUserStore } from "../../../../store/user";
@@ -161,7 +160,7 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 const { settings } = useSettingStore()
 const { permissions } = useUserStore()
 
-const roadmaps = ref<Roadmap[]>([])
+const roadmaps = ref<IRoadmap[]>([])
 const createRoadmapButtonLoading = ref(false)
 const sort = ref<DraggableSortFromToType>({
 	from: {
