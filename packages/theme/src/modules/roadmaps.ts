@@ -7,9 +7,8 @@ import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
 
 import type {
-  IRoadmapPrivate as Roadmap,
   PaginatedRoadmapsResponse,
-  GetRoadmapsParams
+  GetRoadmapsParams,
 } from "@logchimp/types";
 
 /**
@@ -19,20 +18,20 @@ import type {
  * @returns {Promise<AxiosResponse<PaginatedRoadmapsResponse>>} response
  */
 export const getAllRoadmaps = async (
-  params: GetRoadmapsParams = {}
+  params: GetRoadmapsParams = {},
 ): Promise<AxiosResponse<PaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
   if (params.first !== undefined) {
-    searchParams.append('first', params.first.toString());
+    searchParams.append("first", params.first.toString());
   }
 
   if (params.after) {
-    searchParams.append('after', params.after);
+    searchParams.append("after", params.after);
   }
 
   const url = `${VITE_API_URL}/api/v1/roadmaps${
-    searchParams.toString() ? '?' + searchParams.toString() : ''
+    searchParams.toString() ? "?" + searchParams.toString() : ""
   }`;
 
   return await axios({
@@ -73,5 +72,3 @@ export const searchRoadmap = async (name: string) => {
     },
   });
 };
-
-
