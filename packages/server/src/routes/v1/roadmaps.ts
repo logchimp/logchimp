@@ -12,7 +12,7 @@ router.get("/roadmaps/:url", roadmapExists, roadmaps.roadmapByUrl);
 router.get(
   "/roadmaps/search/:name",
   middleware.apiAuth,
-  roadmaps.searchRoadmap
+  roadmaps.searchRoadmap,
 );
 
 export default router;

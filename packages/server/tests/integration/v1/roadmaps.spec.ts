@@ -34,8 +34,8 @@ describe("GET /api/v1/roadmaps", () => {
     expect(res.body.results).toHaveLength(15);
     expect(res.body.roadmaps).toHaveLength(15);
     expect(res.body.page_info.has_next_page).toBe(false);
-    expect(res.body.page_info.endCursor).toBeTypeOf('string');
-    expect(res.body.page_info.startCursor).toBeTypeOf('string');
+    expect(res.body.page_info.endCursor).toBeTypeOf("string");
+    expect(res.body.page_info.startCursor).toBeTypeOf("string");
     expect(res.body.total_count).toBe(15);
   });
 
@@ -47,9 +47,11 @@ describe("GET /api/v1/roadmaps", () => {
     expect(res.body.roadmaps).toHaveLength(5);
     expect(res.body.page_info.count).toBe(5);
     expect(res.body.page_info.has_next_page).toBe(true);
-    expect(res.body.page_info.endCursor).toBeTypeOf('string');
-    expect(res.body.page_info.startCursor).toBeTypeOf('string');
-    expect(res.body.page_info.endCursor).not.toBe(res.body.page_info.startCursor);
+    expect(res.body.page_info.endCursor).toBeTypeOf("string");
+    expect(res.body.page_info.startCursor).toBeTypeOf("string");
+    expect(res.body.page_info.endCursor).not.toBe(
+      res.body.page_info.startCursor,
+    );
     expect(res.body.total_pages).toBe(3);
     expect(res.body.total_count).toBe(15);
   });
@@ -59,13 +61,13 @@ describe("GET /api/v1/roadmaps", () => {
     const lastId = res1.body.results[2].id;
 
     const res2 = await supertest(app).get(
-      `/api/v1/roadmaps?first=3&after=${lastId}`
+      `/api/v1/roadmaps?first=3&after=${lastId}`,
     );
 
     expect(res2.status).toBe(200);
     expect(res2.body.results).toHaveLength(3);
-    expect(res2.body.page_info.endCursor).toBeTypeOf('string');
-    expect(res2.body.page_info.startCursor).toBeTypeOf('string');
+    expect(res2.body.page_info.endCursor).toBeTypeOf("string");
+    expect(res2.body.page_info.startCursor).toBeTypeOf("string");
 
     const ids1 = res1.body.results.map((r) => r.id);
     const ids2 = res2.body.results.map((r) => r.id);
@@ -97,16 +99,16 @@ describe("GET /api/v1/roadmaps", () => {
     expect(res.status).toBe(200);
     expect(res.body.results).toHaveLength(15);
     expect(res.body.page_info.has_next_page).toBe(false);
-    expect(res.body.page_info.endCursor).toBeTypeOf('string');
-    expect(res.body.page_info.startCursor).toBeTypeOf('string');
+    expect(res.body.page_info.endCursor).toBeTypeOf("string");
+    expect(res.body.page_info.startCursor).toBeTypeOf("string");
     expect(res.body.total_count).toBe(15);
   });
 
   it("edge cases for first param", async () => {
     const min = await supertest(app).get("/api/v1/roadmaps?first=1");
     expect(min.body.results).toHaveLength(1);
-    expect(min.body.page_info.endCursor).toBeTypeOf('string');
-    expect(min.body.page_info.startCursor).toBeTypeOf('string');
+    expect(min.body.page_info.endCursor).toBeTypeOf("string");
+    expect(min.body.page_info.startCursor).toBeTypeOf("string");
 
     const max = await supertest(app).get("/api/v1/roadmaps?first=20");
     expect(max.body.results).toHaveLength(15);
@@ -132,7 +134,7 @@ describe("GET /roadmaps/:url", () => {
     await database.insert(roadmap).into("roadmaps");
 
     const res = await supertest(app).get(
-      "/api/v1/roadmaps/create-existing-roadmap"
+      "/api/v1/roadmaps/create-existing-roadmap",
     );
 
     expect(res.status).toBe(200);

@@ -1,7 +1,4 @@
-import type {
-  CursorPaginationParams,
-  CursorPaginatedResponse
-} from "./common";
+import type { CursorPaginationParams, CursorPaginatedResponse } from "./common";
 
 export interface IRoadmap {
   id: string;
