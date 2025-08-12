@@ -31,7 +31,8 @@
     "nodemailer": "^6.7.3",
     "pg": "^8.7.1",
     "uuid": "^9.0.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.0",
