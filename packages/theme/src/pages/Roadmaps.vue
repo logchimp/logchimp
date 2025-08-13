@@ -63,7 +63,7 @@ const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
 const roadmaps = ref<Roadmap[]>([]);
-const currentCursor = ref<string | null>(null);
+const currentCursor = ref<string | undefined>();
 const pageSize = ref<number>(20);
 const hasNextPage = ref<boolean>(true);
 const state = ref<InfiniteScrollStateType>();
@@ -89,7 +89,7 @@ async function getRoadmaps() {
       roadmaps.value.push(...newRoadmaps);
 
       // Use backend-provided cursor
-      currentCursor.value = paginatedData.page_info.endCursor;
+      currentCursor.value = paginatedData.page_info.endCursor || undefined;
       hasNextPage.value = paginatedData.page_info.has_next_page;
 
       state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
@@ -105,7 +105,7 @@ async function getRoadmaps() {
 
 function resetAndFetch() {
   roadmaps.value = [];
-  currentCursor.value = null;
+  currentCursor.value = undefined;
   hasNextPage.value = true;
   getRoadmaps();
 }
