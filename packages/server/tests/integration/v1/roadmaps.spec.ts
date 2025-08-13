@@ -1,24 +1,25 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import supertest from "supertest";
 
 import app from "../../../src/app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
 import database from "../../../src/database";
+import { cleanDb } from "../../utils/db";
 
 // Get all roadmaps
 describe("GET /api/v1/roadmaps", () => {
-  beforeAll(async () => {
-    await database("roadmaps").truncate();
-    for (let i = 0; i < 15; i++) {
-      await database.insert(generateRoadmap()).into("roadmaps");
-    }
-  });
-
-  afterAll(async () => {
-    await database("roadmaps").truncate();
+  beforeEach(async () => {
+    await cleanDb();
+    await database.transaction(async (trx) => {
+      for (let i = 0; i < 15; i++) {
+        await trx.insert(generateRoadmap()).into("roadmaps");
+      }
+    });
   });
 
   it("should get 0 roadmaps", async () => {
+    await cleanDb();
+
     const response = await supertest(app).get("/api/v1/roadmaps");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -71,7 +72,7 @@ describe("GET /api/v1/roadmaps", () => {
 
     const ids1 = res1.body.results.map((r) => r.id);
     const ids2 = res2.body.results.map((r) => r.id);
-    expect(ids1.some((id) => ids2.includes(id))).toBe(false);
+    expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
   });
 
   it("returns 400 for first > 20", async () => {
