@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, useSlots, defineProps } from "vue";
+import { h, useSlots } from "vue";
 import { RouterLink, type RouteLocationRaw } from "vue-router";
 
 const props = defineProps<{
