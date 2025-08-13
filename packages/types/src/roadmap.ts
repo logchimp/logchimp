@@ -12,9 +12,9 @@ export interface IRoadmapPrivate extends IRoadmap {
   display: boolean;
 }
 
-export type GetRoadmapsParams = CursorPaginationParams;
+export type TGetRoadmapsParams = CursorPaginationParams;
 
-export interface PaginatedRoadmapsResponse
+export interface IPaginatedRoadmapsResponse
   extends CursorPaginatedResponse<IRoadmapPrivate> {
   roadmaps: IRoadmapPrivate[];
 }

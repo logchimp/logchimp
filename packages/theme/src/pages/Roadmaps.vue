@@ -56,7 +56,7 @@ import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 import type {
   IRoadmapPrivate as Roadmap,
-  PaginatedRoadmapsResponse
+  IPaginatedRoadmapsResponse
 } from "@logchimp/types";
 
 const { get: siteSettings } = useSettingStore();
@@ -82,7 +82,7 @@ async function getRoadmaps() {
       after: currentCursor.value
     });
 
-    const paginatedData: PaginatedRoadmapsResponse = response.data;
+    const paginatedData: IPaginatedRoadmapsResponse = response.data;
     const newRoadmaps = paginatedData.results;
 
     if (newRoadmaps.length > 0) {
