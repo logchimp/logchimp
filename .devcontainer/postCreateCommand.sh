@@ -1,7 +1,11 @@
 #!/bin/bash
 
-LC_SECRET=$(openssl rand -base64 12)
-LOGCHIMP_MACHINE_SIGNATURE=$(openssl rand -base64 64)
+# helper function to generate random string
+generate_random_string() {
+  local length="$1"
+
+  echo $(openssl rand -base64 $length | tr -dc 'a-zA-Z0-9' | cut -c1-$lenght)
+}
 
 # helper function to write or replace .env vars
 set_env_var() {
@@ -13,8 +17,11 @@ set_env_var() {
   sed -i "/^${key}=.*/d" "$file"
 
   # insert the key
-  echo "${key}=${value}" >> "$file"
+  echo "${key}=\"${value}\"" >> "$file"
 }
+
+LC_SECRET=$(generate_random_string 12)
+LOGCHIMP_MACHINE_SIGNATURE=$(generate_random_string 64)
 
 # API (Server)
 set_env_var "LOGCHIMP_SECRET_KEY" "$LC_SECRET" "packages/server/.env"
