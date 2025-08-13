@@ -7,19 +7,19 @@ import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
 
 import type {
-  PaginatedRoadmapsResponse,
-  GetRoadmapsParams,
+  IPaginatedRoadmapsResponse,
+  TGetRoadmapsParams,
 } from "@logchimp/types";
 
 /**
  * Get all roadmaps with cursor-based pagination
  *
- * @param {GetRoadmapsParams} params - Pagination parameters
- * @returns {Promise<AxiosResponse<PaginatedRoadmapsResponse>>} response
+ * @param {TGetRoadmapsParams} params - Pagination parameters
+ * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
  */
 export const getAllRoadmaps = async (
-  params: GetRoadmapsParams = {},
-): Promise<AxiosResponse<PaginatedRoadmapsResponse>> => {
+  params: TGetRoadmapsParams = {},
+): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
   if (params.first !== undefined) {
