@@ -22,7 +22,7 @@ import { getPosts } from "../../../modules/posts";
 
 // components
 import RoadmapPostCard from "./RoadmapPostCard.vue";
-import ColorDot from "../../../components/ColorDot.vue";
+import ColorDot from "../../../components/ui/ColorDot/ColorDot.vue";
 
 const props = defineProps({
   roadmap: {
