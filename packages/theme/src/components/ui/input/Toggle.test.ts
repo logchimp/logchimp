@@ -45,6 +45,7 @@ describe("toggle", () => {
 
     // Toggle state updated
     console.log(component.attributes("data-state"));
+    // TODO: should have to toggle state 'checked'
     // expect(component.attributes("data-state")).toEqual("checked");
   });
 });
