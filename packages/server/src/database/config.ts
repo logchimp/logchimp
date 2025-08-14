@@ -68,6 +68,3 @@ const dbConfig = {
 };
 
 export default dbConfig;
-
-// NOTE: backward compatible with common.js for knex
-module.exports = dbConfig;
