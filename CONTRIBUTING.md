@@ -29,14 +29,32 @@ git clone git@github.com:logchimp/logchimp.git <folder-name>
 cd <folder-name>
 ```
 
-2. Start the Docker containers
+2. Prep the `.env` files
+
+Run this command from the root directory.
 
 ```shell
-# run this command from the root directory
+cp ./packages/server/.env.example ./packages/server/.env; \
+  cp ./packages/theme/.env.example ./packages/theme/.env
+```
+
+3. Build the LogChimp Types package
+
+_We're still trying to figure out to automate this step.
+
+```shell
+pnpm --filter="@logchimp/types" build
+```
+
+4. Start the Docker containers
+
+Run this command from the root directory.
+
+```shell
 docker compose -f ./docker-compose.dev.yml up -d
 ```
 
-3. Start the LogChimp theme
+5. Start the LogChimp theme
 
 If opening inside VSCode, open the command (`Ctrl` / `Command` + `Shift` + `P`), type `Tasks: Run Task` and hit enter, you will find the task in the list `LogChimp Theme Dev` and hit enter.
 
