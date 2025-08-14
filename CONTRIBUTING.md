@@ -40,7 +40,7 @@ cp ./packages/server/.env.example ./packages/server/.env; \
 
 3. Build the LogChimp Types package
 
-_We're still trying to figure out to automate this step.
+_We're still trying to figure out how to automate this step._
 
 ```shell
 pnpm --filter="@logchimp/types" build
