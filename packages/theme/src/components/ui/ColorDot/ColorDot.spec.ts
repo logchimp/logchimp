@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import ColorDot from './ColorDot.vue';
 
-describe('ColorDot.vue', () => {
+describe('ColorDot', () => {
   it.each([
     ['ff0000', 'rgb(255, 0, 0)'],
     ['00ff00', 'rgb(0, 255, 0)'],
