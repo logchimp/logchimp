@@ -76,7 +76,7 @@ import { getAllBoards } from "../../ee/modules/boards";
 // components
 import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
-import ColorDot from "../../components/ColorDot.vue";
+import ColorDot from "../../components/ui/ColorDot.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 
 // TODO: Add TS types

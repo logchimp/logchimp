@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import ColorDot from "../ColorDot.vue";
+import ColorDot from "../ui/ColorDot.vue";
 
 defineProps({
   board: {
