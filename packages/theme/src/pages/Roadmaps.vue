@@ -64,7 +64,6 @@ const { get: siteSettings } = useSettingStore();
 // Cursor-based pagination state
 const roadmaps = ref<Roadmap[]>([]);
 const currentCursor = ref<string | undefined>();
-const pageSize = ref<number>(20);
 const hasNextPage = ref<boolean>(true);
 const state = ref<InfiniteScrollStateType>();
 
@@ -78,7 +77,6 @@ async function getRoadmaps() {
 
   try {
     const response = await getAllRoadmaps({
-      first: pageSize.value,
       after: currentCursor.value
     });
 
