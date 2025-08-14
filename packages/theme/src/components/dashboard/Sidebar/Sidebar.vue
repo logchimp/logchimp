@@ -20,7 +20,7 @@ function away() {
   <DialogBackdrop :is-visible="dashboard.isSidebarOpen" />
   <div
     :class="[
-      'z-50 md:z-auto w-[220px] h-screen overflow-y-auto bg-neutral-200',
+      'z-50 md:z-auto w-[220px] h-screen overflow-x-hidden overflow-y-auto bg-neutral-200',
       'fixed md:sticky left-0 top-0 transition-transform md:translate-x-0',
       dashboard.isSidebarOpen ? '' : '-translate-x-full',
     ]"
