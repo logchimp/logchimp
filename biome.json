@@ -20,8 +20,8 @@
     "includes": [
       "**",
       "!.idea",
-      "!packages/theme/dist",
-      "!packages/server/dist"
+      "!packages/server/dist",
+      "!packages/types/dist"
     ]
   },
   "linter": {
@@ -32,21 +32,8 @@
     "includes": [
       "**",
       "!.idea",
-      "!packages/theme/dist",
-      "!packages/server/dist"
+      "!packages/server/dist",
+      "!packages/types/dist"
     ]
-  },
-  "overrides": [
-    {
-      "includes": ["**/*.vue"],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "noUnusedVariables": "off",
-            "noUnusedImports": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
