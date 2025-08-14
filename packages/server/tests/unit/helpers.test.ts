@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import _ from "lodash";
-import generatePassword from "omgopass";
 
 import { validEmail, validUUID, generateHexColor } from "../../src/helpers";
 

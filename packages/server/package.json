@@ -9,9 +9,9 @@
     "format": "prettier --write \"**/*.{js}\"",
     "test:unit": "vitest --config ./vitest.config.unit.ts",
     "test:integration": "vitest --config ./vitest.config.integration.ts",
-    "db:migrate": "knex --knexfile ./database/config.ts migrate:latest",
-    "db:migrate:create": "knex --knexfile ./database/config.ts migrate:make",
-    "db:seed:run": "knex --knexfile ./database/config.ts seed:run"
+    "db:migrate": "knex --knexfile ./src/database/config.ts migrate:latest",
+    "db:migrate:create": "knex --knexfile ./src/database/config.ts migrate:make",
+    "db:seed:run": "knex --knexfile ./src/database/config.ts seed:run"
   },
   "dependencies": {
     "@logchimp/types": "workspace:*",
@@ -50,7 +50,7 @@
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "5.4.5",
-    "vitest": "0.34.6"
+    "vitest": "3.2.4"
   },
   "engines": {
     "node": ">=22 < 23"
