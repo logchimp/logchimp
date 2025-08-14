@@ -266,9 +266,8 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Compile Typescript
-        run: |
-          pnpm --filter @logchimp/types exec pnpm build;
+      - name: Compile LogChimp Types package
+        run: pnpm --filter="@logchimp/types" build;
 
       - name: Database setup
         run: |
