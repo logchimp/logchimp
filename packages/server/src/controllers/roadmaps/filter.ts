@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Request, Response } from "express";
+import type { IRoadmapPrivate } from "@logchimp/types";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -13,9 +14,8 @@ export async function filter(req: Request, res: Response) {
   try {
     const { first, after } = querySchema.parse(req.query);
 
-    let query = database
+    let query = database<IRoadmapPrivate[]>("roadmaps")
       .select("id", "name", "url", "color", "display", "index")
-      .from("roadmaps")
       .orderBy("id", "asc")
       .limit(first + 1);
 
