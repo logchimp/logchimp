@@ -2,7 +2,7 @@
   <router-link
     v-if="showBoard"
     data-test="board-badge"
-    class="block select-none truncate"
+    class="block w-fit select-none truncate"
     :to="`/boards/${url}`"
   >
     <div class="flex items-center px-2.5 py-1 bg-(--color-gray-95) rounded-full">
