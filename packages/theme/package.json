@@ -18,7 +18,7 @@
     "axios": "1.11.0",
     "dayjs": "1.11.13",
     "lucide-vue": "npm:lucide-vue-next@0.536.0",
-    "pinia": "2.1.7",
+    "pinia": "2.3.1",
     "reka-ui": "^2.4.1",
     "tailwindcss": "^4.1.11",
     "uuid": "9.0.1",
