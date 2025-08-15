@@ -19,9 +19,14 @@ export interface Roadmap {
  * @returns {object} response
  */
 export const getAllRoadmaps = async () => {
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps`,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
