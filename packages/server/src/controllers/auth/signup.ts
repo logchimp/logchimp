@@ -41,8 +41,7 @@ export async function signup(req, res, next) {
     });
 
     // if user already exists, createUser returns null
-    if(!user)
-      return
+    if(!user) return;
 
     res.status(201).send({ user });
   } catch (err) {
