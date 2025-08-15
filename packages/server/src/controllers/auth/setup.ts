@@ -48,6 +48,10 @@ export async function setup(req, res, next) {
       name,
     });
 
+    // if user already exists, createUser returns null
+    if(!user)
+      return
+
     // set user as owner
     await database
       .update({
