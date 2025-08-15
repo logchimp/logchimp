@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col px-2 pt-6 pb-2 h-full">
+  <div class="flex flex-col px-2 pt-6 pb-2 min-h-full">
     <div class="px-3">
       <site-branding
         :title="siteSettings.title"
