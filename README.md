@@ -61,7 +61,7 @@ Ubuntu or cloud hosting with one click deploy button.
 
 ## 🤝🏻 Community
 
-Stay up to date on the development of LogChimp you can star this repository, follow us on Twitter or reach out to the
+To stay up to date on the development of LogChimp, you can star this repository. follow us on Twitter or reach out to the
 community with these helpful resources.
 
 - Follow [@logchimp](https://twitter.com/@logchimp) on Twitter.
