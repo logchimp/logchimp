@@ -10,6 +10,7 @@ import fs from "node:fs";
  */
 
 const validEmail = (email: string): boolean => {
+  if (!email) return false;
   // RFC email max length = 254
   if (email.length > 254) return false;
 
@@ -85,7 +86,21 @@ const sanitiseUsername = (value) => {
     return "";
   }
 
-  return value.replace(/^_+|\W+|[^\w]|\s/g, "");
+  return value.replace(/^_+|\W+|[^\w.]|\s/g, "");
+};
+
+/**
+ * Sanitise name
+ *
+ * @param {string} value name
+ * @returns {string} Return name without any special character
+ */
+const sanitiseName = (value) => {
+  if (value == null || !_.isString(value)) {
+    return "";
+  }
+
+  return value.replace(/^_+|[^\w .]/g, "");
 };
 
 /**
@@ -141,6 +156,7 @@ export {
   validUUIDs,
   generateHexColor,
   sanitiseUsername,
+  sanitiseName,
   sanitiseURL,
   toSlug,
   readFile,
