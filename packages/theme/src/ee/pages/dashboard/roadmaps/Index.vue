@@ -41,65 +41,7 @@
           @end="initialiseSort"
         >
           <template #item="{ element: roadmap }">
-						<div class="table-row">
-							<div class="grip-handler table-data-icon px-5 py-4">
-								<grip-icon />
-							</div>
-							<div class="table-data flex-1">
-								{{ roadmap.name }}
-							</div>
-							<div class="table-icon-group boards-table-icons">
-								<div class="table-data table-data-icon">
-									<eye-icon v-if="roadmap.display" />
-									<eye-off-icon v-else />
-								</div>
-								<dropdown-wrapper>
-									<template #toggle>
-										<div
-											class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
-										>
-											<more-icon />
-										</div>
-									</template>
-									<template #default="dropdown">
-										<dropdown v-if="dropdown.active">
-											<dropdown-item
-												@click="
-													router.push(
-														`/dashboard/roadmaps/${roadmap.url}/settings`
-													)
-												"
-											>
-												<template #icon>
-													<settings-icon />
-												</template>
-												Settings
-											</dropdown-item>
-											<dropdown-item
-												v-if="settings.developer_mode"
-												@click="useCopyText(roadmap.id)"
-											>
-												<template #icon>
-													<copy-icon />
-												</template>
-												Copy ID
-											</dropdown-item>
-											<dropdown-spacer />
-											<dropdown-item
-												:disabled="deleteRoadmapPermissionDisabled"
-												class="color-danger"
-												@click="deleteRoadmapHandler(roadmap.id)"
-											>
-												<template #icon>
-													<delete-icon />
-												</template>
-												Delete
-											</dropdown-item>
-										</dropdown>
-									</template>
-								</dropdown-wrapper>
-							</div>
-						</div>
+            <DashboardRoadmapTabularItem :roadmap="roadmap" />
 					</template>
         </draggable>
 
@@ -118,24 +60,13 @@ export default {
 <script setup lang="ts">
 // packages
 import { computed, ref } from "vue";
-import {
-  GripVertical as GripIcon,
-  Eye as EyeIcon,
-  EyeOff as EyeOffIcon,
-  MoreHorizontal as MoreIcon,
-  Clipboard as CopyIcon,
-  Trash2 as DeleteIcon,
-  Settings as SettingsIcon
-} from "lucide-vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType } from "@logchimp/types"
+import type { DraggableSortFromToType, IRoadmap } from "@logchimp/types"
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
-import type { Roadmap } from "../../../../modules/roadmaps"
 import { router } from "../../../../router";
-import { useSettingStore } from "../../../../store/settings";
 import { useUserStore } from "../../../../store/user";
 import {
   getAllRoadmaps,
@@ -143,25 +74,19 @@ import {
 import {
   createRoadmap,
   sortRoadmap,
-  deleteRoadmap
 } from "../../../modules/roadmaps";
-import { useCopyText } from "../../../../hooks";
 
 // components
 import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
-import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
-import DropdownSpacer from "../../../../components/ui/dropdown/DropdownSpacer.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import DashboardRoadmapTabularItem from "../../../components/dashboard/roadmap/TabularItem/TabularItem.vue";
 
-const { settings } = useSettingStore()
 const { permissions } = useUserStore()
 
-const roadmaps = ref<Roadmap[]>([])
+const roadmaps = ref<IRoadmap[]>([])
 const createRoadmapButtonLoading = ref(false)
 const sort = ref<DraggableSortFromToType>({
 	from: {
@@ -178,11 +103,6 @@ const state = ref<InfiniteScrollStateType>()
 
 const createRoadmapButtonDisabled = computed(() => {
 	const checkPermission = permissions.includes("roadmap:create");
-	return !checkPermission;
-})
-
-const deleteRoadmapPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("roadmap:destroy");
 	return !checkPermission;
 })
 
@@ -221,7 +141,7 @@ async function initialiseSort() {
 
 		if (response.status === 200) {
 			drag.value = false;
-			getRoadmaps();
+			await getRoadmaps();
 		}
 	} catch (err) {
 		console.error(err);
@@ -238,23 +158,12 @@ async function getRoadmaps() {
 		const response = await getAllRoadmaps();
 
 		roadmaps.value = response.data.roadmaps;
+    const list = response.data.roadmaps ?? response.data.data ?? [];
+    roadmaps.value = list;
     state.value = "COMPLETED";
 	} catch (err) {
 		console.error(err);
     state.value = "ERROR";
-	}
-}
-
-async function deleteRoadmapHandler(id: string) {
-	try {
-		const response = await deleteRoadmap(id);
-
-		if (response.status === 204) {
-			getRoadmaps();
-			console.log(`[Dashboard] Delete roadmap (${id})`);
-		}
-	} catch (error) {
-		console.error(error);
 	}
 }
 
