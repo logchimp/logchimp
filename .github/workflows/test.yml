@@ -2,6 +2,7 @@ name: Test
 
 on:
   push:
+    branches: [main]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -10,7 +11,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
