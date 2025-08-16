@@ -28,26 +28,9 @@
 	</button>
 </template>
 
-<script lang="ts">
-interface UserVoteType {
-  voteId: string;
-  userId: string;
-  postId: string;
-  createdAt: string;
-  name?: string;
-  username?: string;
-  avatar?: string;
-}
-
-export interface VoteEventType {
-  votes: UserVoteType[];
-  votesCount: number;
-  viewerVote: boolean;
-}
-</script>
-
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import type { IPostVote } from "@logchimp/types"
 
 // modules
 import { addVote, deleteVote } from "../../modules/votes";
@@ -77,7 +60,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-	(e: 'update-voters', voters: VoteEventType): void
+	(e: 'update-voters', voters: IPostVote): void
 }>()
 
 const loading = ref<boolean>(false);

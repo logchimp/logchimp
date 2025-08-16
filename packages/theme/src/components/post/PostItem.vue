@@ -25,7 +25,7 @@
       >
         {{ postData.roadmap.name }}
       </p>
-      <p data-test="post-description" class="post-content-description">
+      <p v-if="postData.contentMarkdown" data-test="post-description" class="post-content-description">
         {{ useTrim(postData.contentMarkdown, 120) }}
       </p>
       <board-badge
@@ -41,15 +41,16 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import type { IPostVote, IPostItem } from "@logchimp/types";
 
 import { useTrim } from "../../hooks";
 
 // components
-import Vote, { type VoteEventType } from "../vote/Vote.vue";
+import Vote from "../vote/Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
 interface Props {
-  post: unknown;
+  post: IPostItem;
   dashboard?: boolean;
   showBoard?: boolean;
 }
@@ -65,8 +66,7 @@ const isVoted = computed<boolean>(() =>
   Boolean(props.post.voters?.viewerVote?.voteId),
 );
 
-// TODO: Add TS types
-function updateVoters(voters: VoteEventType) {
+function updateVoters(voters: IPostVote) {
   postData.value.voters.votesCount = voters.votesCount;
   postData.value.voters.viewerVote = voters.viewerVote;
 }

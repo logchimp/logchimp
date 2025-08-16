@@ -117,7 +117,7 @@ import { useHead } from "@vueuse/head";
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
-import type { ApiSortType } from "@logchimp/types";
+import type { ApiSortType, IPostVote } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
@@ -127,7 +127,7 @@ import { getPostBySlug, addComment, postActivity } from "../../../modules/posts"
 
 // components
 import Loader from "../../../components/ui/Loader.vue";
-import Vote, { type VoteEventType } from "../../../components/vote/Vote.vue";
+import Vote from "../../../components/vote/Vote.vue";
 import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
@@ -260,7 +260,7 @@ async function submitComment() {
 	}
 }
 
-function updateVoters(voters: VoteEventType) {
+function updateVoters(voters: IPostVote) {
 	post.voters.votesCount = voters.votesCount;
 	post.voters.viewerVote = voters.viewerVote;
 }
