@@ -39,6 +39,23 @@ describe("POST /api/v1/auth/signup", () => {
     expect(user.email).toEqual(randomEmail);
   });
 
+  it("should not create new user and throws 'USER EXISTS'", async () => {
+    const randomEmail = faker.internet.email();
+
+    await supertest(app).post("/api/v1/auth/signup").send({
+      email: randomEmail,
+      password: "password",
+    });
+
+    const response = await supertest(app).post("/api/v1/auth/signup").send({
+      email: randomEmail,
+      password: "password",
+    });
+
+    expect(response.status).toBe(409);
+    expect(response.body.code).toBe("USER_EXISTS");
+  });
+
   it("should not be allow to create account", async () => {
     // set allowSignup to false in settings table
     await database
