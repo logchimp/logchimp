@@ -191,8 +191,8 @@ importers:
         specifier: 2.4.3
         version: 2.4.3(@vue/server-renderer@3.5.18(vue@3.5.18(typescript@5.9.2)))(vue@3.5.18(typescript@5.9.2))
       '@vue/tsconfig':
-        specifier: ^0.7.0
-        version: 0.7.0(typescript@5.9.2)(vue@3.5.18(typescript@5.9.2))
+        specifier: ^0.8.0
+        version: 0.8.0(typescript@5.9.2)(vue@3.5.18(typescript@5.9.2))
       jsdom:
         specifier: ^20.0.1
         version: 20.0.3
@@ -1237,8 +1237,8 @@ packages:
       '@vue/server-renderer':
         optional: true
 
-  '@vue/tsconfig@0.7.0':
-    resolution: {integrity: sha512-ku2uNz5MaZ9IerPPUyOHzyjhXoX2kVJaVf7hL315DC17vS6IiZRmmCPfggNbU16QTvM80+uYYy3eYJB59WCtvg==}
+  '@vue/tsconfig@0.8.0':
+    resolution: {integrity: sha512-HqJDMjxk9D3mbXAcO9IxqKPeKlVnRWvzyHtgY35L/VoLKubqn7zX80UeiD3jfS/gf+qS7ZlO5KmfXMUrsQtOeQ==}
     peerDependencies:
       typescript: 5.x
       vue: ^3.4.0
@@ -4505,7 +4505,7 @@ snapshots:
     optionalDependencies:
       '@vue/server-renderer': 3.5.18(vue@3.5.18(typescript@5.9.2))
 
-  '@vue/tsconfig@0.7.0(typescript@5.9.2)(vue@3.5.18(typescript@5.9.2))':
+  '@vue/tsconfig@0.8.0(typescript@5.9.2)(vue@3.5.18(typescript@5.9.2))':
     optionalDependencies:
       typescript: 5.9.2
       vue: 3.5.18(typescript@5.9.2)
