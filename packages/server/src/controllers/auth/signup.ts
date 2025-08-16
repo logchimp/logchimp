@@ -1,6 +1,7 @@
+import type { Request, Response, NextFunction} from "express";
+
 // services
 import { createUser } from "../../services/auth/createUser";
-
 import database from "../../database";
 
 // utils
@@ -8,7 +9,7 @@ import { validEmail } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function signup(req, res, next) {
+export async function signup(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body;
 
   if (!validEmail(email)) {
@@ -41,7 +42,7 @@ export async function signup(req, res, next) {
     });
 
     // if user already exists, createUser returns null
-    if(!user) return;
+    if (!user) return;
 
     res.status(201).send({ user });
   } catch (err) {
