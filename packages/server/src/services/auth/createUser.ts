@@ -10,7 +10,7 @@ import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 
 // utils
-import { sanitiseUsername } from "../../helpers";
+import { sanitiseUsername, sanitiseName } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -32,7 +32,7 @@ const createUser = async (req, res, _next, userData) => {
   const userId = uuidv4(userData.email);
 
   // sanitise the name
-  const name = sanitiseUsername(userData.name);
+  const name = sanitiseName(userData.name);
 
   // get username from email address after truncating to first 30 characters and sanitise
   const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
