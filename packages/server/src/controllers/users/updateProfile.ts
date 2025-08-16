@@ -4,11 +4,13 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUsername } from "../../helpers";
 
 export async function updateProfile(req: Request, res: Response) {
   // @ts-ignore
   const userId = req.user.userId;
   const name = req.body.name;
+  const username = req.body.username;
 
   if (name?.length >= 30) {
     res.status(400).send({
@@ -18,10 +20,27 @@ export async function updateProfile(req: Request, res: Response) {
     return;
   }
 
+  if (username?.length >= 30) {
+    res.status(400).send({
+      username: "Username cannot execed 30 characters",
+      code: "USERNAME_LENGTH",
+    });
+    return;
+  }
+
+  if (username && validUsername(username)) {
+    res.status(400).send({
+      username: "The username cannot contain HTML, JavaScript, or SQL content",
+      code: "USERNAME_CONTENT",
+    });
+    return;
+  }
+
   try {
     const users = await database
       .update({
         name,
+        username,
         updatedAt: new Date().toJSON(),
       })
       .from("users")
