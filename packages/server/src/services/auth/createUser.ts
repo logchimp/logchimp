@@ -10,6 +10,7 @@ import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 
 // utils
+import { sanitiseUsername, sanitiseName } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -30,10 +31,11 @@ const createUser = async (req, res, _next, userData) => {
   // generate user unique identification
   const userId = uuidv4(userData.email);
 
-  const name = userData.name;
+  // sanitise the name
+  const name = sanitiseName(userData.name);
 
-  // get username from email address
-  const username = userData.email.split("@")[0];
+  // get username from email address after truncating to first 30 characters and sanitise
+  const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
 
   // get avatar by hashing email
   const userMd5Hash = md5(userData.email);
