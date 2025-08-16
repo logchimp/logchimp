@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 
@@ -28,37 +28,40 @@ describe("GET /api/v1/roles", () => {
     const { user } = await createUser();
 
     const roleId = uuid();
-    await database
-      .insert({
-        id: roleId,
-        name: "CreateRole",
-      })
-      .into("roles");
 
-    const readRolePerms = await database
-      .select("id")
-      .from("permissions")
-      .where({
-        type: "role",
-        action: "read",
-      })
-      .first();
+    await database.transaction(async (trx) => {
+      await trx
+        .insert({
+          id: roleId,
+          name: "CreateRole",
+        })
+        .into("roles");
 
-    await database
-      .insert({
-        id: uuid(),
-        role_id: roleId,
-        permission_id: readRolePerms.id,
-      })
-      .into("permissions_roles");
+      const readRolePerms = await trx
+        .select("id")
+        .from("permissions")
+        .where({
+          type: "role",
+          action: "read",
+        })
+        .first();
 
-    await database
-      .insert({
-        id: uuid(),
-        role_id: roleId,
-        user_id: user.userId,
-      })
-      .into("roles_users");
+      await trx
+        .insert({
+          id: uuid(),
+          role_id: roleId,
+          permission_id: readRolePerms.id,
+        })
+        .into("permissions_roles");
+
+      await trx
+        .insert({
+          id: uuid(),
+          role_id: roleId,
+          user_id: user.userId,
+        })
+        .into("roles_users");
+    });
 
     const response = await supertest(app)
       .get("/api/v1/roles")
