@@ -1,4 +1,5 @@
 import { mount, RouterLinkStub } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
 import { createPinia } from "pinia";
 
 import { useUserStore } from "../../store/user";

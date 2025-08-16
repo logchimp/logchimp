@@ -1,4 +1,5 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
 
 import PostItem from "./PostItem.vue";
 
