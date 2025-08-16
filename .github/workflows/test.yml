@@ -2,6 +2,7 @@ name: Test
 
 on:
   push:
+    branches: [main,master]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -10,7 +11,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -108,6 +109,9 @@ jobs:
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
+
+      - name: Compile LogChimp Types package
+        run: pnpm --filter="@logchimp/types" build;
 
       - name: Build theme
         run: pnpm --filter @logchimp/theme build
