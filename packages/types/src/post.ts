@@ -1,4 +1,4 @@
-import type { ICurrentUserVote, IUserVoter } from "./vote";
+import type { IPostVote } from "./vote";
 
 export interface IPost extends IPostInfo {
   board: {
@@ -20,20 +20,12 @@ export interface IPost extends IPostInfo {
     color: "cde55b";
   };
   updatedAt: "2025-07-31T18:35:20.747Z";
-  voters: {
-    votes: Array<IUserVoter>;
-    votesCount: number;
-    viewerVote: ICurrentUserVote;
-  };
+  voters: IPostVote
 }
 
 export interface IPostItem extends IPostInfo {
   board: IPostBoard;
-  voters: {
-    votes: Array<IUserVoter>;
-    votesCount: number;
-    viewerVote: ICurrentUserVote;
-  };
+  voters: IPostVote
 }
 
 interface IPostInfo {
