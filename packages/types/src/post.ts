@@ -1,4 +1,5 @@
 import type { IPostVote } from "./vote";
+import type { IRoadmap } from "./roadmap";
 
 export interface IPost extends IPostInfo {
   board: {
@@ -25,6 +26,7 @@ export interface IPost extends IPostInfo {
 
 export interface IPostItem extends IPostInfo {
   board: IPostBoard;
+  roadmap?: IRoadmap
   voters: IPostVote
 }
 
@@ -32,7 +34,7 @@ interface IPostInfo {
   postId: string;
   title: string;
   slug: string;
-  contentMarkdown?: string;
+  contentMarkdown: string | null;
   createdAt: Date;
 }
 
