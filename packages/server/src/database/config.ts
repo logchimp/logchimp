@@ -7,7 +7,7 @@ import path from "path";
 import logger from "../utils/logger";
 import logchimpConfig from "../utils/logchimpConfig";
 const config = logchimpConfig();
-
+const dbUrl = process.env.LOGCHIMP_DB_URL;
 const ssl =
   isBoolean(process.env.LOGCHIMP_DB_SSL) || config?.database?.ssl
     ? {
@@ -20,7 +20,9 @@ const ssl =
 const dbConfig = {
   client: "pg",
   version: "12.4",
-  connection: {
+  connection: dbUrl ? 
+    dbUrl
+    : {
     host: process.env.LOGCHIMP_DB_HOST || config.database.host,
     user: process.env.LOGCHIMP_DB_USER || config.database.user,
     password: process.env.LOGCHIMP_DB_PASSWORD || config.database.password,
