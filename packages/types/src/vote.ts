@@ -1,7 +1,7 @@
 export interface IUserVoter extends ICurrentUserVote {
-  name: string;
+  name: string | null;
   username: string;
-  avatar: string;
+  avatar: string | null;
 }
 
 export interface ICurrentUserVote {
@@ -9,4 +9,10 @@ export interface ICurrentUserVote {
   userId: string;
   postId: string;
   createdAt: Date;
+}
+
+export interface IPostVote {
+  votes: IUserVoter[];
+  votesCount: number;
+  viewerVote: ICurrentUserVote;
 }
