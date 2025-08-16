@@ -38,7 +38,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -81,7 +81,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -126,7 +126,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -172,7 +172,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -241,7 +241,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
