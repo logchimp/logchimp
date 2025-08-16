@@ -1,20 +1,31 @@
 <template>
-	<div
-		class="post-voters"
+	<button
 		data-test="vote"
-		:class="{
-			'post-voters-loading': loading,
-			'post-voters-disabled': disabled
-		}"
+		:class="[
+      'group flex flex-col items-center select-none rounded-md pt-[5px] px-2 pb-2',
+      'border border-(--color-gray-90) hover:border-(--color-gray-80) cursor-pointer',
+      // loading
+			loading && 'opacity-80 cursor-wait',
+      // disabled
+      'disabled:bg-(--color-gray-95) disabled:border-(--color-gray-95)',
+      'disabled:cursor-default disabled:opacity-70',
+      // look into these styles
+      'mr-4'
+		]"
 		@click="changeVote"
+    type="button"
+    :aria-disabled="disabled ? 'true' : undefined"
+    :disabled="disabled ? 'true' : undefined"
 	>
 		<arrow-icon
-			class="post-voters-arrow"
 			data-test="vote-arrow"
-			:class="{ 'post-voters-vote': isVoted }"
+			:class="[
+        'mb-[3px] group-disabled:fill-(--color-gray-80)',
+        isVoted ? 'fill-(--color-brand-color)' : 'fill-(--color-gray-90)'
+      ]"
 		/>
 		<span data-test="vote-count">{{ votesCount }}</span>
-	</div>
+	</button>
 </template>
 
 <script lang="ts">
@@ -108,42 +119,3 @@ async function changeVote() {
 	}
 }
 </script>
-
-<style lang='sass'>
-.post-voters
-	margin-right: 1rem
-	display: flex
-	flex-direction: column
-	align-items: center
-	padding: 0.312rem 0.5rem 0.5rem
-	border: 1px solid var(--color-gray-90)
-	border-radius: var(--border-radius-default)
-	cursor: pointer
-	user-select: none
-
-	&:hover
-		border-color: var(--color-gray-80)
-
-.post-voters-arrow
-	margin-bottom: 0.185rem
-	fill: var(--color-gray-90)
-
-.post-voters-vote
-	fill: var(--color-brand-color)
-
-.post-voters-loading
-	opacity: 0.8
-	cursor: wait
-
-.post-voters-disabled
-	background-color: var(--color-gray-95)
-	border-color: var(--color-gray-95)
-	cursor: default
-	opacity: 0.7
-
-	&:hover
-		border-color: var(--color-gray-95)
-
-	.post-voters-arrow
-		fill: var(--color-gray-80)
-</style>
