@@ -87,7 +87,7 @@ async function getRoadmaps() {
       roadmaps.value.push(...newRoadmaps);
 
       // Use backend-provided cursor
-      currentCursor.value = paginatedData.page_info.endCursor || undefined;
+      currentCursor.value = paginatedData.page_info.end_cursor || undefined;
       hasNextPage.value = paginatedData.page_info.has_next_page;
 
       state.value = hasNextPage.value ? "LOADED" : "COMPLETED";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Request, Response } from "express";
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { IRoadmapPrivate, CursorPaginatedResponse} from "@logchimp/types";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -10,7 +10,7 @@ const querySchema = z.object({
   after: z.string().uuid().optional(),
 });
 
-export async function filter(req: Request, res: Response) {
+export async function filter(req: Request, res: Response<CursorPaginatedResponse<IRoadmapPrivate>>) {
   try {
     const { first, after } = querySchema.parse(req.query);
 
@@ -56,8 +56,8 @@ export async function filter(req: Request, res: Response) {
         count: data.length,
         current_page: currentPage,
         has_next_page: hasNextPage,
-        endCursor: data.length > 0 ? data[data.length - 1].id : null,
-        startCursor: data.length > 0 ? data[0].id : null,
+        end_cursor: data.length > 0 ? data[data.length - 1].id : null,
+        start_cursor: data.length > 0 ? data[0].id : null,
       },
       total_pages: totalPages,
       total_count: totalCount,

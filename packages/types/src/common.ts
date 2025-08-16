@@ -15,8 +15,8 @@ export interface PageInfo {
   count: number;
   current_page: number;
   has_next_page: boolean;
-  endCursor: string | null;
-  startCursor: string | null;
+  end_cursor: string | null;
+  start_cursor: string | null;
 }
 
 export interface CursorPaginatedResponse<T> {
