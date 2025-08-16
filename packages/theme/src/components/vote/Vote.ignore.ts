@@ -1,5 +1,6 @@
 import { createPinia } from "pinia";
 import { mount } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
 
 import { useUserStore } from "../../store/user";
 import Vote from "./Vote.vue";
