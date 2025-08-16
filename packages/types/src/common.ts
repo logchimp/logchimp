@@ -26,6 +26,12 @@ export interface CursorPaginatedResponse<T> {
   total_count?: number | null;
 }
 
+export interface IApiErrorResponse {
+  message: string;
+  code: string;
+  errors?: unknown;
+}
+
 export interface DraggableSortFromToType {
   from: {
     id: string;

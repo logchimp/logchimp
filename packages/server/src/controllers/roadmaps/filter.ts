@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Request, Response } from "express";
-import type { IRoadmapPrivate, CursorPaginatedResponse} from "@logchimp/types";
+import type { CursorPaginatedResponse, IApiErrorResponse, IRoadmapPrivate } from "@logchimp/types";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -10,7 +10,13 @@ const querySchema = z.object({
   after: z.string().uuid().optional(),
 });
 
-export async function filter(req: Request, res: Response<CursorPaginatedResponse<IRoadmapPrivate>>) {
+type ResponseBody =
+  | (CursorPaginatedResponse<IRoadmapPrivate> & {
+      roadmaps: IRoadmapPrivate[];
+    })
+  | IApiErrorResponse;
+
+export async function filter(req: Request, res: Response<ResponseBody>) {
   try {
     const { first, after } = querySchema.parse(req.query);
 
