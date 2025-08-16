@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { validate as validateUUID } from "uuid";
-import fs from "fs";
+import fs from "node:fs";
 
 /**
  * Check value is valid email
@@ -8,10 +8,28 @@ import fs from "fs";
  * @param {string} email
  * @returns boolean
  */
-const validEmail = (email) =>
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi.test(
-    email,
-  );
+
+const validEmail = (email: string): boolean => {
+  // RFC email max length = 254
+  if (email.length > 254) return false;
+
+  // Split into local and domain
+  const emailParts = email.split("@");
+  if (emailParts.length !== 2) return false;
+
+  const [local, domain] = emailParts;
+
+  // local max length = 64
+  if (local.length > 64) return false;
+
+  // domain max length = 255
+  if (domain.length > 255) return false;
+
+  const emailRegex =
+    /^(([^<>()[\]\\.,;:\s@|"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}))$/i;
+
+  return emailRegex.test(email);
+};
 
 /**
  * Check value is valid UUID or not
