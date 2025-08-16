@@ -197,6 +197,9 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
+      - name: Compile LogChimp Types package
+        run: pnpm --filter="@logchimp/types" build;
+
       - name: Testing
         run: pnpm --filter @logchimp/api test:unit
 
