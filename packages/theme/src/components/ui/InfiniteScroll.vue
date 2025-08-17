@@ -32,29 +32,32 @@ export type InfiniteScrollStateType =
 </script>
 
 <script setup lang="ts">
-import { ref, onMounted, type PropType, watch, computed } from "vue"
+import { ref, watch, computed } from "vue"
 import { useInfiniteScroll } from '@vueuse/core'
 
 // components
 import ClientError from "./ClientError.vue";
 import Loader from "./Loader.vue";
 
-const props = defineProps({
+interface Props {
   /**
    * The minimum distance between the bottom of the element and the bottom of the viewport
    *
    * @default 20
    */
-  distance: {
-    type: Number,
-    default: 20,
-  },
-  state: {
-    type: String as PropType<InfiniteScrollStateType>
-  },
-  onInfinite: {
-    type: Function
-  }
+  distance?: number
+  /**
+   * @default LOADING
+   */
+  state?: InfiniteScrollStateType
+  onInfinite: () => void
+  canLoadMore?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  distance: 20,
+  state: "LOADING",
+  canLoadMore: true,
 })
 
 const isFirstLoad = ref(true);
@@ -76,10 +79,10 @@ function executeInfiniteScroll() {
   }
 }
 
-onMounted(() => executeInfiniteScroll())
-useInfiniteScroll(window, () => executeInfiniteScroll(), {
+useInfiniteScroll(window, executeInfiniteScroll, {
   distance: props.distance,
-  direction: 'bottom'
+  direction: 'bottom',
+  canLoadMore: () => !noMoreResults.value || !error.value,
 })
 </script>
 
