@@ -55,7 +55,7 @@
 import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType, IRoadmap } from "@logchimp/types";
+import type { DraggableSortFromToType, IRoadmapPrivate } from "@logchimp/types";
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
@@ -79,7 +79,7 @@ import DashboardRoadmapTabularItem from "../../../components/dashboard/roadmap/T
 
 const { permissions } = useUserStore()
 
-const roadmaps = ref<IRoadmap[]>([])
+const roadmaps = ref<IRoadmapPrivate[]>([])
 const currentCursor = ref<string | undefined>()
 const hasNextPage = ref<boolean>(false)
 
