@@ -51,18 +51,11 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Roadmaps",
-};
-</script>
-
 <script setup lang="ts">
-// packages
 import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType, IRoadmap } from "@logchimp/types"
+import type { DraggableSortFromToType, IRoadmap } from "@logchimp/types";
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
@@ -87,6 +80,9 @@ import DashboardRoadmapTabularItem from "../../../components/dashboard/roadmap/T
 const { permissions } = useUserStore()
 
 const roadmaps = ref<IRoadmap[]>([])
+const currentCursor = ref<string | undefined>()
+const hasNextPage = ref<boolean>(false)
+
 const createRoadmapButtonLoading = ref(false)
 const sort = ref<DraggableSortFromToType>({
 	from: {
@@ -124,13 +120,17 @@ async function createRoadmapHandler() {
 function moveItem(event: unknown) {
 	// current
 	sort.value.to = {
+    // @ts-ignore
 		id: event.draggedContext.element.id,
+    // @ts-ignore
 		index: event.draggedContext.futureIndex + 1
 	};
 
 	// replaced with
 	sort.value.from = {
+    // @ts-ignore
 		id: event.relatedContext.element.id,
+    // @ts-ignore
 		index: event.draggedContext.index + 1
 	};
 }
@@ -141,7 +141,8 @@ async function initialiseSort() {
 
 		if (response.status === 200) {
 			drag.value = false;
-			await getRoadmaps();
+      // TODO: update cache
+			// await getRoadmaps();
 		}
 	} catch (err) {
 		console.error(err);
@@ -152,23 +153,41 @@ async function initialiseSort() {
 }
 
 async function getRoadmaps() {
+  if (state.value === "COMPLETED") return;
+
   state.value = "LOADING";
 
-	try {
-		const response = await getAllRoadmaps();
+  try {
+    const response = await getAllRoadmaps({
+      after: currentCursor.value
+    });
 
-		roadmaps.value = response.data.roadmaps;
-    const list = response.data.roadmaps ?? response.data.data ?? [];
-    roadmaps.value = list;
-    state.value = "COMPLETED";
-	} catch (err) {
-		console.error(err);
+    const results = response.data.results;
+    const pageInfo = response.data.page_info;
+
+    if (results.length > 0) {
+      roadmaps.value.push(...results);
+
+      currentCursor.value = pageInfo.end_cursor || undefined;
+      hasNextPage.value = pageInfo.has_next_page;
+
+      state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
+    } else {
+      state.value = "COMPLETED";
+      hasNextPage.value = false;
+    }
+  } catch (err) {
+    console.error("Error fetching roadmaps:", err);
     state.value = "ERROR";
-	}
+  }
 }
 
 useHead({
 	title: "Roadmaps • Dashboard"
+})
+
+defineOptions({
+  name: "DashboardRoadmaps"
 })
 </script>
 
