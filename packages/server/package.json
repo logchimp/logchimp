@@ -51,7 +51,7 @@
     "omgopass": "3.2.1",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "5.4.5",
+    "typescript": "5.9.2",
     "vitest": "3.2.4"
   },
   "engines": {
