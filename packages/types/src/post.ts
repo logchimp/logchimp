@@ -21,13 +21,13 @@ export interface IPost extends IPostInfo {
     color: "cde55b";
   };
   updatedAt: "2025-07-31T18:35:20.747Z";
-  voters: IPostVote
+  voters: IPostVote;
 }
 
 export interface IPostItem extends IPostInfo {
   board: IPostBoard;
-  roadmap?: IRoadmap
-  voters: IPostVote
+  roadmap?: IRoadmap;
+  voters: IPostVote;
 }
 
 interface IPostInfo {
