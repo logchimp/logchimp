@@ -30,11 +30,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { IPostVote } from "@logchimp/types"
+import type { IPostVote } from "@logchimp/types";
 
 // modules
 import { addVote, deleteVote } from "../../modules/votes";
-import { useUserStore } from "../../store/user"
+import { useUserStore } from "../../store/user";
 
 // components
 import ArrowIcon from "../icons/Arrow.vue";
@@ -44,61 +44,60 @@ import validateUUID from "../../utils/validateUUID";
 import tokenError from "../../utils/tokenError";
 
 const props = defineProps({
-	postId: {
-		type: String,
-		required: true,
-		validator: validateUUID
-	},
-	votesCount: {
-		type: Number,
-		default: 0
-	},
-	isVoted: {
-		type: Boolean,
-		default: false
-	}
-})
+  postId: {
+    type: String,
+    required: true,
+    validator: validateUUID,
+  },
+  votesCount: {
+    type: Number,
+    default: 0,
+  },
+  isVoted: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const emit = defineEmits<{
-	(e: 'update-voters', voters: IPostVote): void
-}>()
+  (e: "update-voters", voters: IPostVote): void;
+}>();
 
 const loading = ref<boolean>(false);
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 const disabled = computed(() => {
-	if (!userStore.getUserId) return false;
+  if (!userStore.getUserId) return false;
 
-	const checkPermission = userStore.permissions.includes("vote:create");
-	return !checkPermission;
-})
+  const checkPermission = userStore.permissions.includes("vote:create");
+  return !checkPermission;
+});
 
 async function changeVote() {
-	if (loading.value || disabled.value) return;
+  if (loading.value || disabled.value) return;
 
+  loading.value = true;
 
-	loading.value = true;
+  if (props.isVoted) {
+    try {
+      const response = await deleteVote(props.postId);
 
-	if (props.isVoted) {
-		try {
-			const response = await deleteVote(props.postId);
+      emit("update-voters", response.data.voters);
+      loading.value = false;
+    } catch (error) {
+      tokenError(error);
+      loading.value = false;
+    }
+  } else {
+    try {
+      const response = await addVote(props.postId);
 
-			emit("update-voters", response.data.voters);
-			loading.value = false;
-		} catch (error) {
-			tokenError(error);
-			loading.value = false;
-		}
-	} else {
-		try {
-			const response = await addVote(props.postId);
-
-			emit("update-voters", response.data.voters);
-			loading.value = false;
-		} catch (error) {
-			tokenError(error);
-			loading.value = false;
-		}
-	}
+      emit("update-voters", response.data.voters);
+      loading.value = false;
+    } catch (error) {
+      tokenError(error);
+      loading.value = false;
+    }
+  }
 }
 </script>

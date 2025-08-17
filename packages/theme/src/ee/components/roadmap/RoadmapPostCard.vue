@@ -86,7 +86,7 @@ import { AvatarStack } from "../../../components/ui/Avatar";
 dayjs.extend(relativeTime);
 
 interface Props {
-  post: IPostItem
+  post: IPostItem;
 }
 
 const props = defineProps<Props>();
