@@ -9,7 +9,6 @@ import { isEmail } from "validator";
  * @param {string} email
  * @returns boolean
  */
-
 const validEmail = (email: string): boolean => {
   if (!email) return false;
   return isEmail(email);
@@ -65,11 +64,11 @@ const generateHexColor = () => {
  * @returns {string} Return username without any special character
  */
 const sanitiseUsername = (value) => {
-  if (value == null || !_.isString(value)) {
+  if (value == null || !_.isString(value) || value.length > 30) {
     return "";
   }
 
-  return value.replace(/^_+|\W+|[^\w.]|\s/g, "");
+  return value.replace(/^_+/, "").replace(/[^a-zA-Z0-9._-]/g, "");
 };
 
 /**
@@ -83,7 +82,7 @@ const sanitiseName = (value) => {
     return "";
   }
 
-  return value.replace(/^_+|[^\w .]/g, "");
+  return value.replace(/[^a-zA-Z .'-]/g, "").trim();
 };
 
 /**
