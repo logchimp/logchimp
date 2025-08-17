@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { validate as validateUUID } from "uuid";
 import fs from "fs";
+import { isEmail } from "validator";
 
 /**
  * Check value is valid email
@@ -8,10 +9,10 @@ import fs from "fs";
  * @param {string} email
  * @returns boolean
  */
-const validEmail = (email) =>
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi.test(
-    email,
-  );
+const validEmail = (email: string): boolean => {
+  if (!email) return false;
+  return isEmail(email);
+};
 
 /**
  * Check value is valid UUID or not
@@ -63,11 +64,25 @@ const generateHexColor = () => {
  * @returns {string} Return username without any special character
  */
 const sanitiseUsername = (value) => {
+  if (value == null || !_.isString(value) || value.length > 30) {
+    return "";
+  }
+
+  return value.replace(/^_+/, "").replace(/[^a-zA-Z0-9._-]/g, "");
+};
+
+/**
+ * Sanitise name
+ *
+ * @param {string} value name
+ * @returns {string} Return name without any special character
+ */
+const sanitiseName = (value) => {
   if (value == null || !_.isString(value)) {
     return "";
   }
 
-  return value.replace(/^_+|\W+|[^\w]|\s/g, "");
+  return value.replace(/[^a-zA-Z .'-]/g, "").trim();
 };
 
 /**
@@ -123,6 +138,7 @@ export {
   validUUIDs,
   generateHexColor,
   sanitiseUsername,
+  sanitiseName,
   sanitiseURL,
   toSlug,
   readFile,
