@@ -21,7 +21,8 @@
       "**",
       "!.idea",
       "!packages/theme/dist",
-      "!packages/server/dist"
+      "!packages/server/dist",
+      "!packages/types/dist"
     ]
   },
   "linter": {
@@ -33,7 +34,8 @@
       "**",
       "!.idea",
       "!packages/theme/dist",
-      "!packages/server/dist"
+      "!packages/server/dist",
+      "!packages/types/dist"
     ]
   },
   "overrides": [
