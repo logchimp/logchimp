@@ -138,7 +138,7 @@ async function join() {
 		}
 
     if (error.response.data.code === "EMAIL_INVALID"){
-      emailError.show = "true";
+      emailError.show = true;
       emailError.message = "Invalid email";
 		}
 
