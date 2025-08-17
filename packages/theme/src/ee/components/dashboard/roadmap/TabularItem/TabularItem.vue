@@ -69,7 +69,7 @@ import {
   GripVertical as GripIcon,
   MoreHorizontal as MoreIcon,
   Settings as SettingsIcon,
-  Trash2 as DeleteIcon
+  Trash2 as DeleteIcon,
 } from "lucide-vue";
 import type { IRoadmapPrivate } from "@logchimp/types";
 

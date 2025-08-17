@@ -1,6 +1,10 @@
 import { z } from "zod";
 import type { Request, Response } from "express";
-import type { IApiErrorResponse, IPaginatedRoadmapsResponse, IRoadmapPrivate } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  IPaginatedRoadmapsResponse,
+  IRoadmapPrivate,
+} from "@logchimp/types";
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -31,7 +35,7 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
     if (metadataResults) {
       totalCount = metadataResults.totalCount;
       totalPages = Math.ceil(metadataResults.totalCount / first);
-      hasNextPage = (metadataResults.remainingResultsCount - first ) > 0;
+      hasNextPage = metadataResults.remainingResultsCount - first > 0;
 
       if (after) {
         const seenResults = totalCount - metadataResults.remainingResultsCount;

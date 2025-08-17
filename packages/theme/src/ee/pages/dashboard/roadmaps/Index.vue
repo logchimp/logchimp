@@ -61,95 +61,91 @@ import type { DraggableSortFromToType, IRoadmapPrivate } from "@logchimp/types";
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
-import {
-  getAllRoadmaps,
-} from "../../../../modules/roadmaps";
-import {
-  createRoadmap,
-  sortRoadmap,
-} from "../../../modules/roadmaps";
+import { getAllRoadmaps } from "../../../../modules/roadmaps";
+import { createRoadmap, sortRoadmap } from "../../../modules/roadmaps";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardRoadmapTabularItem from "../../../components/dashboard/roadmap/TabularItem/TabularItem.vue";
 
-const { permissions } = useUserStore()
+const { permissions } = useUserStore();
 
-const roadmaps = ref<IRoadmapPrivate[]>([])
-const currentCursor = ref<string | undefined>()
-const hasNextPage = ref<boolean>(false)
+const roadmaps = ref<IRoadmapPrivate[]>([]);
+const currentCursor = ref<string | undefined>();
+const hasNextPage = ref<boolean>(false);
 
-const createRoadmapButtonLoading = ref(false)
+const createRoadmapButtonLoading = ref(false);
 const sort = ref<DraggableSortFromToType>({
-	from: {
-		id: "",
-		index: ""
-	},
-	to: {
-		id: "",
-		index: ""
-	},
-})
-const drag = ref(false)
-const state = ref<InfiniteScrollStateType>()
+  from: {
+    id: "",
+    index: "",
+  },
+  to: {
+    id: "",
+    index: "",
+  },
+});
+const drag = ref(false);
+const state = ref<InfiniteScrollStateType>();
 
 const createRoadmapButtonDisabled = computed(() => {
-	const checkPermission = permissions.includes("roadmap:create");
-	return !checkPermission;
-})
+  const checkPermission = permissions.includes("roadmap:create");
+  return !checkPermission;
+});
 
 async function createRoadmapHandler() {
   createRoadmapButtonLoading.value = true;
 
-	try {
-		const response = await createRoadmap();
+  try {
+    const response = await createRoadmap();
 
-		const url = response.data.roadmap.url;
-		router.push(`/dashboard/roadmaps/${url}/settings`);
-	} catch (err) {
+    const url = response.data.roadmap.url;
+    router.push(`/dashboard/roadmaps/${url}/settings`);
+  } catch (err) {
     createRoadmapButtonLoading.value = false;
 
-		console.error(err);
-	}
+    console.error(err);
+  }
 }
 
 function moveItem(event: unknown) {
-	// current
-	sort.value.to = {
+  // current
+  sort.value.to = {
     // @ts-ignore
-		id: event.draggedContext.element.id,
+    id: event.draggedContext.element.id,
     // @ts-ignore
-		index: event.draggedContext.futureIndex + 1
-	};
+    index: event.draggedContext.futureIndex + 1,
+  };
 
-	// replaced with
-	sort.value.from = {
+  // replaced with
+  sort.value.from = {
     // @ts-ignore
-		id: event.relatedContext.element.id,
+    id: event.relatedContext.element.id,
     // @ts-ignore
-		index: event.draggedContext.index + 1
-	};
+    index: event.draggedContext.index + 1,
+  };
 }
 
 async function initialiseSort() {
-	try {
-		const response = await sortRoadmap(sort.value);
+  try {
+    const response = await sortRoadmap(sort.value);
 
-		if (response.status === 200) {
-			drag.value = false;
+    if (response.status === 200) {
+      drag.value = false;
       // TODO: update cache
-			// await getRoadmaps();
-		}
-	} catch (err) {
-		console.error(err);
-	} finally {
-		drag.value = false;
-
-	}
+      // await getRoadmaps();
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    drag.value = false;
+  }
 }
 
 async function getRoadmaps() {
@@ -159,7 +155,7 @@ async function getRoadmaps() {
 
   try {
     const response = await getAllRoadmaps({
-      after: currentCursor.value
+      after: currentCursor.value,
     });
 
     const results = response.data.results;
@@ -183,12 +179,12 @@ async function getRoadmaps() {
 }
 
 useHead({
-	title: "Roadmaps • Dashboard"
-})
+  title: "Roadmaps • Dashboard",
+});
 
 defineOptions({
-  name: "DashboardRoadmaps"
-})
+  name: "DashboardRoadmaps",
+});
 </script>
 
 <style lang='scss'>

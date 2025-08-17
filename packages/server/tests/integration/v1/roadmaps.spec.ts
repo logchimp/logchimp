@@ -93,11 +93,11 @@ describe("GET /api/v1/roadmaps", () => {
     const res = await supertest(app).get("/api/v1/roadmaps?after=");
 
     expect(res.status).toBe(400);
-    expect(res.body.code).toEqual("VALIDATION_ERROR")
-    expect(res.body.message).toEqual("Invalid query parameters")
+    expect(res.body.code).toEqual("VALIDATION_ERROR");
+    expect(res.body.message).toEqual("Invalid query parameters");
 
     // invalid ?=after query param
-    expect(res.body.errors[0].message).toEqual("Invalid UUID")
+    expect(res.body.errors[0].message).toEqual("Invalid UUID");
   });
 
   it("returns correct info for last page", async () => {

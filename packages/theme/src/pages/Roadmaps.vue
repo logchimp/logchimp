@@ -45,7 +45,9 @@ import { getAllRoadmaps } from "../modules/roadmaps";
 import { useSettingStore } from "../store/settings";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
@@ -65,7 +67,7 @@ async function getRoadmaps() {
 
   try {
     const response = await getAllRoadmaps({
-      after: currentCursor.value
+      after: currentCursor.value,
     });
 
     const paginatedData: IPaginatedRoadmapsResponse = response.data;
@@ -94,12 +96,12 @@ useHead({
   meta: [
     {
       name: "og:title",
-      content: () => `Roadmaps • ${siteSettings.title}`
-    }
-  ]
+      content: () => `Roadmaps • ${siteSettings.title}`,
+    },
+  ],
 });
 
 defineOptions({
   name: "Roadmaps",
-})
+});
 </script>
