@@ -134,6 +134,11 @@ async function login() {
 	} catch (error: any) {
 		buttonLoading.value = false;
 
+    if (error.response.data.code === "EMAIL_INVALID") {
+      emailError.show = true;
+      emailError.message = "Invalid email";
+		}
+
 		if (error.response.data.code === "USER_NOT_FOUND") {
 			emailError.show = true;
 			emailError.message = "User not found";

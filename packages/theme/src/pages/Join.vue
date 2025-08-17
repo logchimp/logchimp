@@ -137,6 +137,11 @@ async function join() {
 			serverError.value = true;
 		}
 
+    if (error.response.data.code === "EMAIL_INVALID") {
+      emailError.show = true;
+      emailError.message = "Invalid email";
+		}
+
 		if (error.response.data.code === "USER_EXISTS") {
 			emailError.show = true;
 			emailError.message = "Exists";
