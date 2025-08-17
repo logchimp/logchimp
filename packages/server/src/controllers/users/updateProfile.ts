@@ -2,17 +2,18 @@ import type { Request, Response } from "express";
 import database from "../../database";
 
 // utils
+import { sanitiseName } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
 export async function updateProfile(req: Request, res: Response) {
   // @ts-ignore
   const userId = req.user.userId;
-  const name = req.body.name;
+  const name = sanitiseName(req.body.name);
 
-  if (name?.length >= 30) {
+  if (name?.length > 30) {
     res.status(400).send({
-      name: "Name cannot execed 30 characters",
+      name: "Name cannot execeed 30 characters",
       code: "NAME_LENGTH",
     });
     return;
