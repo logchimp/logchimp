@@ -1,7 +1,14 @@
 import { describe, it, expect } from "vitest";
 import _ from "lodash";
 
-import { validEmail, validUUID, generateHexColor } from "../../src/helpers";
+import {
+  validEmail,
+  validUUID,
+  generateHexColor,
+  sanitiseName,
+  sanitiseUsername,
+  sanitiseURL,
+} from "../../src/helpers";
 
 describe("validate email", () => {
   it('should be a valid email "yashu@codecarrot.net"', () => {
@@ -147,5 +154,144 @@ describe("generateHexColor", () => {
     const result = /^#([a-fA-F0-9]){3}$|[a-fA-F0-9]{6}$/gi.test(color);
 
     expect(result).toBeTruthy();
+  });
+});
+
+describe("sanitise username", () => {
+  it('should return "Yashu.Code"', () => {
+    const res = sanitiseUsername("Yashu.Code");
+
+    expect(res).toEqual("Yashu.Code");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should strip spaces → "AlbertREW"', () => {
+    const res = sanitiseUsername("   Albert   REW    ");
+
+    expect(res).toEqual("AlbertREW");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should keep underscores → "john_doe"', () => {
+    const res = sanitiseUsername("john_doe");
+
+    expect(res).toEqual("john_doe");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should keep hyphens → "user-name"', () => {
+    const res = sanitiseUsername("user-name");
+
+    expect(res).toEqual("user-name");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should strip invalid chars → "badname"', () => {
+    const res = sanitiseUsername("bad|name!!");
+
+    expect(res).toEqual("badname");
+    expect(typeof res).toEqual("string");
+  });
+
+  it("should truncate usernames longer than 30 chars", () => {
+    const res = sanitiseUsername(
+      "averylllllllllllllooooooooonnnnnnngggggggggusername",
+    );
+
+    expect(res.length).toBeLessThanOrEqual(30);
+    expect(typeof res).toEqual("string");
+  });
+
+  it("should return empty string for null input", () => {
+    const res = sanitiseUsername(null);
+
+    expect(res).toEqual("");
+    expect(typeof res).toEqual("string");
+  });
+
+  it("should return empty string for non-string input (number)", () => {
+    const res = sanitiseUsername(12345);
+
+    expect(res).toEqual("");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should strip non-latin chars → "123"', () => {
+    const res = sanitiseUsername("超長用戶名123");
+
+    expect(res).toEqual("123");
+    expect(typeof res).toEqual("string");
+  });
+
+  it("should handle empty string input", () => {
+    const res = sanitiseUsername("");
+
+    expect(res).toEqual("");
+    expect(typeof res).toEqual("string");
+  });
+});
+
+describe("sanitise name", () => {
+  it('should return "Yash Code"', () => {
+    const res = sanitiseName("Yash Code");
+
+    expect(res).toEqual("Yash Code");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should return "Sydnee.Oconner"', () => {
+    const res = sanitiseName("Sydnee.Oconner");
+
+    expect(res).toEqual("Sydnee.Oconner");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should return "Anne-Marie"', () => {
+    const res = sanitiseName("Anne-Marie");
+
+    expect(res).toEqual("Anne-Marie");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should return "O\'Connor"', () => {
+    const res = sanitiseName("O'Connor");
+
+    expect(res).toEqual("O'Connor");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should trim spaces and return "John Doe"', () => {
+    const res = sanitiseName("   John Doe   ");
+
+    expect(res).toEqual("John Doe");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should remove symbols and return "MrSmith"', () => {
+    const res = sanitiseName("Mr.@Smith!");
+
+    expect(res).toEqual("Mr.Smith");
+    expect(typeof res).toEqual("string");
+  });
+
+  it('should keep multiple spaces inside and return "Mary Ann"', () => {
+    const res = sanitiseName("Mary   Ann");
+
+    expect(res).toEqual("Mary   Ann");
+    expect(typeof res).toEqual("string");
+  });
+
+  it("should return empty string for null", () => {
+    const res = sanitiseName(null);
+
+    expect(res).toEqual("");
+    expect(typeof res).toEqual("string");
+  });
+
+  it("should return empty string for numbers", () => {
+    const res = sanitiseName(12345);
+
+    expect(res).toEqual("");
+    expect(typeof res).toEqual("string");
   });
 });
