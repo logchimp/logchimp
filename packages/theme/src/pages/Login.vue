@@ -135,7 +135,7 @@ async function login() {
 		buttonLoading.value = false;
 
     if (error.response.data.code === "EMAIL_INVALID"){
-      emailError.show = "true";
+      emailError.show = true;
       emailError.message = "Invalid email";
 		}
 
