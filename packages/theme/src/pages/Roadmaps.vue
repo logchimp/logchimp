@@ -36,42 +36,30 @@
   </infinite-scroll>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Roadmaps",
-};
-</script>
-
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
 import { getAllRoadmaps } from "../modules/roadmaps";
-import { useSettingStore } from "../store/settings"
+import { useSettingStore } from "../store/settings";
 
 // components
 import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
-import type {
-  IRoadmapPrivate as Roadmap,
-  IPaginatedRoadmapsResponse
-} from "@logchimp/types";
+import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
-const roadmaps = ref<Roadmap[]>([]);
+const roadmaps = ref<IRoadmap[]>([]);
 const currentCursor = ref<string | undefined>();
-const hasNextPage = ref<boolean>(true);
+const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
-  if (!hasNextPage.value) {
-    state.value = "COMPLETED";
-    return;
-  }
+  if (state.value === "COMPLETED") return;
 
   state.value = "LOADING";
 
@@ -101,17 +89,6 @@ async function getRoadmaps() {
   }
 }
 
-function resetAndFetch() {
-  roadmaps.value = [];
-  currentCursor.value = undefined;
-  hasNextPage.value = true;
-  getRoadmaps();
-}
-
-onMounted(() => {
-  resetAndFetch();
-});
-
 useHead({
   title: "Roadmaps",
   meta: [
@@ -121,4 +98,8 @@ useHead({
     }
   ]
 });
+
+defineOptions({
+  name: "Roadmaps",
+})
 </script>
