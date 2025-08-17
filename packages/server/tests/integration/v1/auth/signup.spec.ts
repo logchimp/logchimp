@@ -65,7 +65,7 @@ describe("POST /api/v1/auth/signup", () => {
       .from("settings");
 
     const response = await supertest(app).post("/api/v1/auth/signup").send({
-      email: "user@example.com",
+      email: "user_blocked@example.com",
       password: "password",
     });
 
