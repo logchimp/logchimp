@@ -1,4 +1,5 @@
 <template>
+  <!-- Show roadmaps grid only when we have roadmaps -->
   <div
     v-if="roadmaps.length > 0"
     :class="[
@@ -13,18 +14,27 @@
     />
   </div>
 
-  <infinite-scroll @infinite="getRoadmaps" :state="state">
+  <!-- Show infinite scroll component with proper conditions -->
+  <infinite-scroll
+    @infinite="getRoadmaps"
+    :state="state"
+    :has-items="roadmaps.length > 0"
+  >
     <template #no-results>
-      <p>There are no roadmaps.</p>
+      <!-- Only show "no roadmaps" when we truly have no data -->
+      <div v-if="roadmaps.length === 0 && state === 'COMPLETED'">
+        <p>There are no roadmaps.</p>
+      </div>
+    </template>
+
+    <!-- Optional: Add loading indicator -->
+    <template #loading>
+      <div v-if="state === 'LOADING'">
+        <p>Loading roadmaps...</p>
+      </div>
     </template>
   </infinite-scroll>
 </template>
-
-<script lang="ts">
-export default {
-  name: "Roadmaps",
-};
-</script>
 
 <script setup lang="ts">
 import { ref } from "vue";
@@ -32,51 +42,66 @@ import { useHead } from "@vueuse/head";
 
 // modules
 import { getAllRoadmaps } from "../modules/roadmaps";
-import { useSettingStore } from "../store/settings"
+import { useSettingStore } from "../store/settings";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
-const { get: siteSettings } = useSettingStore()
-// TODO: Add TS types
-const roadmaps = ref<unknown[]>([])
-const page = ref<number>(1)
+import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
+
+const { get: siteSettings } = useSettingStore();
+
+// Cursor-based pagination state
+const roadmaps = ref<IRoadmap[]>([]);
+const currentCursor = ref<string | undefined>();
+const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
 
 async function getRoadmaps() {
+  if (state.value === "COMPLETED") return;
+
   state.value = "LOADING";
 
   try {
-    const response = await getAllRoadmaps();
+    const response = await getAllRoadmaps({
+      after: currentCursor.value,
+    });
 
-    const newRoadmaps = response.data.roadmaps;
+    const paginatedData: IPaginatedRoadmapsResponse = response.data;
+    const newRoadmaps = paginatedData.results;
 
     if (newRoadmaps.length > 0) {
-      if (page.value === 1) {
-        roadmaps.value = newRoadmaps;
-      } else {
-        roadmaps.value.push(...newRoadmaps);
-      }
+      roadmaps.value.push(...newRoadmaps);
 
-      page.value += 1;
-      state.value = "LOADED";
+      // Use backend-provided cursor
+      currentCursor.value = paginatedData.page_info.end_cursor || undefined;
+      hasNextPage.value = paginatedData.page_info.has_next_page;
+
+      state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
     } else {
       state.value = "COMPLETED";
+      hasNextPage.value = false;
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching roadmaps:", err);
     state.value = "ERROR";
   }
 }
 
 useHead({
-	title: "Roadmaps",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Roadmaps • ${siteSettings.title}`
-		}
-	]
-})
+  title: "Roadmaps",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Roadmaps • ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "Roadmaps",
+});
 </script>
