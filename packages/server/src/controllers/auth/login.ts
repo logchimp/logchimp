@@ -31,6 +31,13 @@ export async function login(
     });
   }
 
+  if (isDomainBlacklisted(user.email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed to login.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
+
   if (!password) {
     return res.status(400).send({
       message: error.api.authentication.noPasswordProvided,
