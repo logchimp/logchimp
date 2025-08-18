@@ -9,17 +9,28 @@ import { getVotes } from "../../services/votes/getVotes";
 import { validUUID, validUUIDs } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { queryPostsSchema } from "./zodValidation";
 
 export async function filterPost(req: Request, res: Response) {
-  const userId = validUUID(req.body.userId);
-  const boardId = validUUIDs(req.body.boardId);
-  const roadmapId = validUUID(req.body.roadmapId);
+
+  const response = queryPostsSchema.safeParse(req.body);
+  if(!response.success){
+    return res.status(400).json({
+      message:error.api.error.missed,
+    })
+  }
+
+  const {userid, boardid, roadmapid, create, pages, limits} = response.data || req.body
+  
+  const userId = validUUID(userid);
+  const boardId = validUUIDs(boardid);
+  const roadmapId = validUUID(roadmapid);
   /**
    * top, latest, oldest, trending
    */
-  const created = req.body.created;
-  const page = req.body.page - 1;
-  const limit = req.body.limit || 10;
+  const created = create;
+  const page = pages - 1;
+  const limit = limits || 10;
 
   try {
     const { rows: response } = await database.raw(

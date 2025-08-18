@@ -4,11 +4,18 @@ import database from "../../../database";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { BodySchema } from "../zodValidation";
 
 export async function update(req: Request, res: Response) {
   const { comment_id } = req.params;
-  const { body, is_internal, is_spam } = req.body;
-
+  // const { body, is_internal, is_spam } = req.body;
+  const response = BodySchema.safeParse(req.body);
+  if(!response.success){
+    return res.status(400).json({
+      message:error.api.error.missed,
+      success:false,
+    })
+  }
   try {
     const labSettings = await database
       .select(database.raw("labs::json"))

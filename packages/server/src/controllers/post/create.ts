@@ -9,6 +9,7 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
+import { createPostSchema } from "./zodValidation";
 
 export async function create(req: Request, res: Response) {
   // @ts-ignore
@@ -16,9 +17,14 @@ export async function create(req: Request, res: Response) {
   // @ts-ignore
   const permissions = req.user.permissions;
 
-  const title = req.body.title;
-  const contentMarkdown = req.body.contentMarkdown;
-  const boardId = validUUID(req.body.boardId);
+  const response = createPostSchema.safeParse(req.body);
+  if(!response.success){
+    return res.status(400).json({
+      message:error.api.error.missed
+    })
+  }
+  const {title, contentMarkdown, boardid} = response.data || req.body
+  const boardId = validUUID(boardid);
 
   const checkPermission = permissions.includes("post:create");
   if (!checkPermission) {
