@@ -13,10 +13,10 @@ import {
 const user = () => {
   return {
     userId: uuid(),
-    name: faker.name.fullName(),
+    name: faker.person.fullName(),
     email: faker.internet.email(),
     password: generatePassword(),
-    username: sanitiseUsername(faker.internet.userName()),
+    username: sanitiseUsername(faker.internet.username()),
     avatar: faker.image.avatar(),
     isVerified: faker.datatype.boolean(),
     isOwner: faker.datatype.boolean(),
@@ -33,7 +33,7 @@ const roadmap = () => {
     id: uuid(),
     name,
     url: `${sanitiseURL(name)}-${nanoid(10)}`,
-    index: faker.datatype.number(),
+    index: faker.number.int({ min: 1, max: 100000 }),
     color: generateHexColor(),
     display: faker.datatype.boolean(),
     created_at: new Date().toJSON(),
@@ -42,7 +42,7 @@ const roadmap = () => {
 };
 
 const post = () => {
-  const title = faker.name.title;
+  const title = faker.commerce.productName();
 
   // generate slug unique indentification
   const slugId = nanoid(20);
@@ -50,7 +50,7 @@ const post = () => {
 
   return {
     postId: uuid(),
-    title: faker.name.title(),
+    title,
     slug: slug,
     slugId: slugId,
     contentMarkdown: faker.lorem.text,
@@ -63,7 +63,7 @@ const post = () => {
 };
 
 const board = () => {
-  const name = faker.commerce.product();
+  const name = faker.commerce.productName();
 
   return {
     boardId: uuid(),
