@@ -40,6 +40,7 @@ describe("POST /api/v1/auth/email/validate", () => {
 
   it("should validate email token", async () => {
     const user = generateUser();
+    user.email = user.email.toLowerCase();
     user.isVerified = false;
 
     // generate and save token to database
@@ -70,7 +71,6 @@ describe("POST /api/v1/auth/email/validate", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    // expect(response.body.code).toBe("INVALID_TOKEN");
     expect(response.body.verify.success).toBeTruthy();
 
     // check if token still exists in database

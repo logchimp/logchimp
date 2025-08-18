@@ -16,12 +16,15 @@ export async function userExists(req, res, next) {
     });
   }
 
+  // change email to lowercase to avoid case-sensitivity
+  const lowerCaseEmail = email.toLowerCase();
+
   try {
     const user = await database
       .select()
       .from("users")
       .where({
-        email,
+        email: lowerCaseEmail,
       })
       .first();
 

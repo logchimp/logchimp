@@ -24,7 +24,7 @@ export async function createUser(user = undefined) {
   await database
     .insert({
       userId,
-      email,
+      email: email.toLowerCase(),
       password: hashPassword(password),
       username,
       isVerified,

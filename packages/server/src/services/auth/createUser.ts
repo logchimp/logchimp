@@ -28,8 +28,11 @@ import error from "../../errorResponse.json";
  * @returns {object|null} - Returning user data object from database or null
  */
 const createUser = async (req, res, _next, userData) => {
+  // change email to lowercase to avoid case-sensitivity
+  const lowerCaseEmail = userData.email.toLowerCase();
+
   // generate user unique identification
-  const userId = uuidv4(userData.email);
+  const userId = uuidv4(lowerCaseEmail);
 
   // sanitise the name
   const name = sanitiseName(userData.name);
@@ -38,7 +41,7 @@ const createUser = async (req, res, _next, userData) => {
   const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
 
   // get avatar by hashing email
-  const userMd5Hash = md5(userData.email);
+  const userMd5Hash = md5(lowerCaseEmail);
   const avatar = `https://www.gravatar.com/avatar/${userMd5Hash}`;
 
   // hash password
@@ -54,7 +57,7 @@ const createUser = async (req, res, _next, userData) => {
         )
       `,
       {
-        email: userData.email,
+        email: lowerCaseEmail,
       },
     );
 
@@ -73,7 +76,7 @@ const createUser = async (req, res, _next, userData) => {
         userId,
         name,
         username,
-        email: userData.email,
+        email: lowerCaseEmail,
         password: hashedPassword,
         avatar,
       })
