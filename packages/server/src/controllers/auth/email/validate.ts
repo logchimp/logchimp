@@ -12,6 +12,7 @@ import database from "../../../database";
 import type { ExpressRequestContext } from "../../../express";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 type ResponseBody =
   | IValidateEmailVerificationTokenResponseBody
@@ -28,6 +29,13 @@ export async function validate(
   // @ts-expect-error
   const { isVerified } = req.user;
   const { email } = req.ctx.token;
+
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
 
   if (isVerified) {
     return res.status(409).send({
