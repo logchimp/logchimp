@@ -1,27 +1,42 @@
 // packages
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 import { VITE_API_URL } from "../constants";
 
 // store
 import { useUserStore } from "../store/user";
 
-export interface Roadmap {
-  id: string;
-  name: string;
-  url: string;
-  color: string;
-}
+import type {
+  IPaginatedRoadmapsResponse,
+  TGetRoadmapsParams,
+} from "@logchimp/types";
 
 /**
- *	Get all roadmaps
+ * Get all roadmaps with cursor-based pagination
  *
- * @returns {object} response
+ * @param {TGetRoadmapsParams} params - Pagination parameters
+ * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
  */
-export const getAllRoadmaps = async () => {
+export const getAllRoadmaps = async (
+  params: TGetRoadmapsParams = {},
+): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
+  const searchParams = new URLSearchParams();
+
+  if (params.first !== undefined) {
+    searchParams.append("first", params.first.toString());
+  }
+
+  if (params.after) {
+    searchParams.append("after", params.after);
+  }
+
+  const url = `${VITE_API_URL}/api/v1/roadmaps${
+    searchParams.toString() ? "?" + searchParams.toString() : ""
+  }`;
+
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/roadmaps`,
+    url,
   });
 };
 
