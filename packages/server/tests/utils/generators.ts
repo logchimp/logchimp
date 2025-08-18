@@ -33,7 +33,7 @@ const roadmap = () => {
     id: uuid(),
     name,
     url: `${sanitiseURL(name)}-${nanoid(10)}`,
-    index: faker.number.int({ min: 1}),
+    index: faker.number.int({ min: 1, max: 100000 }),
     color: generateHexColor(),
     display: faker.datatype.boolean(),
     created_at: new Date().toJSON(),
