@@ -5,11 +5,19 @@ import database from "../../../database";
 import { hashPassword } from "../../../utils/password";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 export async function set(req: Request, res: Response) {
   // @ts-ignore
   const { userId, email } = req.user;
   const { password } = req.body;
+
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
 
   if (!password) {
     return res.status(400).send({
