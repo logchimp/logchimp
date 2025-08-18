@@ -41,65 +41,7 @@
           @end="initialiseSort"
         >
           <template #item="{ element: roadmap }">
-						<div class="table-row">
-							<div class="grip-handler table-data-icon px-5 py-4">
-								<grip-icon />
-							</div>
-							<div class="table-data flex-1">
-								{{ roadmap.name }}
-							</div>
-							<div class="table-icon-group boards-table-icons">
-								<div class="table-data table-data-icon">
-									<eye-icon v-if="roadmap.display" />
-									<eye-off-icon v-else />
-								</div>
-								<dropdown-wrapper>
-									<template #toggle>
-										<div
-											class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
-										>
-											<more-icon />
-										</div>
-									</template>
-									<template #default="dropdown">
-										<dropdown v-if="dropdown.active">
-											<dropdown-item
-												@click="
-													router.push(
-														`/dashboard/roadmaps/${roadmap.url}/settings`
-													)
-												"
-											>
-												<template #icon>
-													<settings-icon />
-												</template>
-												Settings
-											</dropdown-item>
-											<dropdown-item
-												v-if="settings.developer_mode"
-												@click="useCopyText(roadmap.id)"
-											>
-												<template #icon>
-													<copy-icon />
-												</template>
-												Copy ID
-											</dropdown-item>
-											<dropdown-spacer />
-											<dropdown-item
-												:disabled="deleteRoadmapPermissionDisabled"
-												class="color-danger"
-												@click="deleteRoadmapHandler(roadmap.id)"
-											>
-												<template #icon>
-													<delete-icon />
-												</template>
-												Delete
-											</dropdown-item>
-										</dropdown>
-									</template>
-								</dropdown-wrapper>
-							</div>
-						</div>
+            <DashboardRoadmapTabularItem :roadmap="roadmap" />
 					</template>
         </draggable>
 
@@ -109,158 +51,140 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Roadmaps",
-};
-</script>
-
 <script setup lang="ts">
-// packages
 import { computed, ref } from "vue";
-import {
-  GripVertical as GripIcon,
-  Eye as EyeIcon,
-  EyeOff as EyeOffIcon,
-  MoreHorizontal as MoreIcon,
-  Clipboard as CopyIcon,
-  Trash2 as DeleteIcon,
-  Settings as SettingsIcon
-} from "lucide-vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType } from "@logchimp/types"
+import type { DraggableSortFromToType, IRoadmapPrivate } from "@logchimp/types";
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
-import type { Roadmap } from "../../../../modules/roadmaps"
 import { router } from "../../../../router";
-import { useSettingStore } from "../../../../store/settings";
 import { useUserStore } from "../../../../store/user";
-import {
-  getAllRoadmaps,
-} from "../../../../modules/roadmaps";
-import {
-  createRoadmap,
-  sortRoadmap,
-  deleteRoadmap
-} from "../../../modules/roadmaps";
-import { useCopyText } from "../../../../hooks";
+import { getAllRoadmaps } from "../../../../modules/roadmaps";
+import { createRoadmap, sortRoadmap } from "../../../modules/roadmaps";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
-import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
-import DropdownSpacer from "../../../../components/ui/dropdown/DropdownSpacer.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import DashboardRoadmapTabularItem from "../../../components/dashboard/roadmap/TabularItem/TabularItem.vue";
 
-const { settings } = useSettingStore()
-const { permissions } = useUserStore()
+const { permissions } = useUserStore();
 
-const roadmaps = ref<Roadmap[]>([])
-const createRoadmapButtonLoading = ref(false)
+const roadmaps = ref<IRoadmapPrivate[]>([]);
+const currentCursor = ref<string | undefined>();
+const hasNextPage = ref<boolean>(false);
+
+const createRoadmapButtonLoading = ref(false);
 const sort = ref<DraggableSortFromToType>({
-	from: {
-		id: "",
-		index: ""
-	},
-	to: {
-		id: "",
-		index: ""
-	},
-})
-const drag = ref(false)
-const state = ref<InfiniteScrollStateType>()
+  from: {
+    id: "",
+    index: "",
+  },
+  to: {
+    id: "",
+    index: "",
+  },
+});
+const drag = ref(false);
+const state = ref<InfiniteScrollStateType>();
 
 const createRoadmapButtonDisabled = computed(() => {
-	const checkPermission = permissions.includes("roadmap:create");
-	return !checkPermission;
-})
-
-const deleteRoadmapPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("roadmap:destroy");
-	return !checkPermission;
-})
+  const checkPermission = permissions.includes("roadmap:create");
+  return !checkPermission;
+});
 
 async function createRoadmapHandler() {
   createRoadmapButtonLoading.value = true;
 
-	try {
-		const response = await createRoadmap();
+  try {
+    const response = await createRoadmap();
 
-		const url = response.data.roadmap.url;
-		router.push(`/dashboard/roadmaps/${url}/settings`);
-	} catch (err) {
+    const url = response.data.roadmap.url;
+    router.push(`/dashboard/roadmaps/${url}/settings`);
+  } catch (err) {
     createRoadmapButtonLoading.value = false;
 
-		console.error(err);
-	}
+    console.error(err);
+  }
 }
 
 function moveItem(event: unknown) {
-	// current
-	sort.value.to = {
-		id: event.draggedContext.element.id,
-		index: event.draggedContext.futureIndex + 1
-	};
+  // current
+  sort.value.to = {
+    // @ts-ignore
+    id: event.draggedContext.element.id,
+    // @ts-ignore
+    index: event.draggedContext.futureIndex + 1,
+  };
 
-	// replaced with
-	sort.value.from = {
-		id: event.relatedContext.element.id,
-		index: event.draggedContext.index + 1
-	};
+  // replaced with
+  sort.value.from = {
+    // @ts-ignore
+    id: event.relatedContext.element.id,
+    // @ts-ignore
+    index: event.draggedContext.index + 1,
+  };
 }
 
 async function initialiseSort() {
-	try {
-		const response = await sortRoadmap(sort.value);
+  try {
+    const response = await sortRoadmap(sort.value);
 
-		if (response.status === 200) {
-			drag.value = false;
-			getRoadmaps();
-		}
-	} catch (err) {
-		console.error(err);
-	} finally {
-		drag.value = false;
-
-	}
+    if (response.status === 200) {
+      drag.value = false;
+      // TODO: update cache
+      // await getRoadmaps();
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    drag.value = false;
+  }
 }
 
 async function getRoadmaps() {
+  if (state.value === "COMPLETED") return;
+
   state.value = "LOADING";
 
-	try {
-		const response = await getAllRoadmaps();
+  try {
+    const response = await getAllRoadmaps({
+      after: currentCursor.value,
+    });
 
-		roadmaps.value = response.data.roadmaps;
-    state.value = "COMPLETED";
-	} catch (err) {
-		console.error(err);
+    const results = response.data.results;
+    const pageInfo = response.data.page_info;
+
+    if (results.length > 0) {
+      roadmaps.value.push(...results);
+
+      currentCursor.value = pageInfo.end_cursor || undefined;
+      hasNextPage.value = pageInfo.has_next_page;
+
+      state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
+    } else {
+      state.value = "COMPLETED";
+      hasNextPage.value = false;
+    }
+  } catch (err) {
+    console.error("Error fetching roadmaps:", err);
     state.value = "ERROR";
-	}
-}
-
-async function deleteRoadmapHandler(id: string) {
-	try {
-		const response = await deleteRoadmap(id);
-
-		if (response.status === 204) {
-			getRoadmaps();
-			console.log(`[Dashboard] Delete roadmap (${id})`);
-		}
-	} catch (error) {
-		console.error(error);
-	}
+  }
 }
 
 useHead({
-	title: "Roadmaps • Dashboard"
-})
+  title: "Roadmaps • Dashboard",
+});
+
+defineOptions({
+  name: "DashboardRoadmaps",
+});
 </script>
 
 <style lang='scss'>
