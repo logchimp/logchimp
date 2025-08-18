@@ -6,5 +6,6 @@ export default defineConfig({
   ...baseConfig,
   test: {
     dir: "./tests/integration",
+    fileParallelism: false,
   },
 });
