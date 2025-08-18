@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
@@ -7,10 +7,13 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
+import { cleanDb } from "../../utils/db";
 
 // Get all boards
 describe("GET /api/v1/boards", () => {
   it("should get 0 boards", async () => {
+    await cleanDb()
+
     const response = await supertest(app).get("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
