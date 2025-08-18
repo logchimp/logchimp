@@ -6,12 +6,20 @@ import database from "../../../database";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 export async function validate(req: Request, res: Response) {
   // @ts-ignore
   const { isVerified } = req.user;
   // @ts-ignore
   const { email } = req.emailToken;
+
+  if (isDomainBlacklisted(email)) {
+    return res.status(403).send({
+      message: "Email domain is not allowed.",
+      code: "EMAIL_DOMAIN_BLACKLISTED",
+    });
+  }
 
   if (isVerified) {
     return res.status(409).send({
