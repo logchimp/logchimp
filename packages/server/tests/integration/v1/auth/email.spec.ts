@@ -4,7 +4,7 @@ import supertest from "supertest";
 import app from "../../../../src/app";
 import database from "../../../../src/database";
 import { createToken } from "../../../../src/services/token.service";
-import { user as generateUser } from "../../../utils/generators";
+import { createUser } from "../../../utils/seed/user";
 
 describe("POST /api/v1/auth/email/validate", () => {
   it('should throw error "MISSING_TOKEN"', async () => {
@@ -39,13 +39,7 @@ describe("POST /api/v1/auth/email/validate", () => {
   });
 
   it("should validate email token", async () => {
-    const user = generateUser();
-    user.email = user.email.toLowerCase();
-    user.isVerified = false;
-
-    // generate and save token to database
-    await database.insert(user).into("users");
-
+    const { user } = await createUser();
     const tokenPayload = {
       userId: user.userId,
       email: user.email,

@@ -14,6 +14,13 @@ import { sanitiseUsername, sanitiseName } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { NextFunction } from "express";
+
+interface UserData {
+  email: string;
+  password: string;
+  name: string | null;
+}
 
 /**
  * Add user to 'users' database table
@@ -27,12 +34,17 @@ import error from "../../errorResponse.json";
  * @param {string} userData.name - User name
  * @returns {object|null} - Returning user data object from database or null
  */
-const createUser = async (req, res, _next, userData) => {
+const createUser = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction,
+  userData: UserData,
+): Promise<object | null> => {
   // change email to lowercase to avoid case-sensitivity
-  const lowerCaseEmail = userData.email.toLowerCase();
+  const email = userData.email.toLowerCase();
 
   // generate user unique identification
-  const userId = uuidv4(lowerCaseEmail);
+  const userId = uuidv4();
 
   // sanitise the name
   const name = sanitiseName(userData.name);
@@ -41,7 +53,7 @@ const createUser = async (req, res, _next, userData) => {
   const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
 
   // get avatar by hashing email
-  const userMd5Hash = md5(lowerCaseEmail);
+  const userMd5Hash = md5(email);
   const avatar = `https://www.gravatar.com/avatar/${userMd5Hash}`;
 
   // hash password
@@ -57,7 +69,7 @@ const createUser = async (req, res, _next, userData) => {
         )
       `,
       {
-        email: lowerCaseEmail,
+        email,
       },
     );
 
@@ -76,7 +88,7 @@ const createUser = async (req, res, _next, userData) => {
         userId,
         name,
         username,
-        email: lowerCaseEmail,
+        email,
         password: hashedPassword,
         avatar,
       })

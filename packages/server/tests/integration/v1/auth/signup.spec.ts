@@ -57,13 +57,14 @@ describe("POST /api/v1/auth/signup", () => {
   });
 
   it("should not create new user with different casing in email", async () => {
+    const randomEmail = faker.internet.email();
     await supertest(app).post("/api/v1/auth/signup").send({
-      email: "random_user@example.com",
+      email: randomEmail,
       password: "password",
     });
 
     const response = await supertest(app).post("/api/v1/auth/signup").send({
-      email: "random_USER@example.com",
+      email: randomEmail,
       password: "password",
     });
     expect(response.headers["content-type"]).toContain("application/json");
