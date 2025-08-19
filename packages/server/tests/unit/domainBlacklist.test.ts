@@ -268,7 +268,7 @@ describe("parseBlacklistedDomains", () => {
       "valid1.com , invalid@bad , valid2.org, , -invalid.net , final.co.uk ";
     const result = parseBlacklistedDomains(input);
     expect(result).toEqual(
-      new Set(["valid1.com", "valid2.org", "final.co.uk"])
+      new Set(["valid1.com", "valid2.org", "final.co.uk"]),
     );
   });
 
@@ -287,7 +287,7 @@ describe("parseBlacklistedDomains", () => {
         "my-site-123.com",
         "24x7support.net",
         "domain-with-many-hyphens-and-numbers-123.info",
-      ])
+      ]),
     );
   });
 
