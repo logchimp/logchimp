@@ -14,12 +14,23 @@ import { sanitiseUsername, sanitiseName } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
 interface UserData {
   email: string;
   password: string;
-  name: string | null;
+  name?: string | null;
+}
+
+interface CreatedData {
+  authToken: string;
+  userId: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar: string;
+  message: string;
+  code: string;
 }
 
 /**
@@ -39,7 +50,7 @@ const createUser = async (
   res: Response,
   _next: NextFunction,
   userData: UserData,
-): Promise<object | null> => {
+): Promise<CreatedData | null> => {
   // change email to lowercase to avoid case-sensitivity
   const email = userData.email.toLowerCase();
 
@@ -140,10 +151,11 @@ const createUser = async (
       message: err,
     });
 
-    return res.status(500).send({
+    res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
     });
+    return null;
   }
 };
 
