@@ -8,6 +8,8 @@ import { createUser } from "../../../utils/seed/user";
 
 describe("POST /api/v1/auth/login", () => {
   it("should throw EMAIL_DOMAIN_BLACKLISTED", async () => {
+    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
+      "example.com, test.com, spam.com, badsite.org";
     const response = await supertest(app).post("/api/v1/auth/login").send({
       email: "test@test.com",
       password: "password",
