@@ -59,6 +59,10 @@
 To get started you can read our [deployment docs](https://logchimp.codecarrot.net/docs/install) for self-hosting with
 Ubuntu or cloud hosting with one click deploy button.
 
+## Let's talk
+
+<a href="https://cal.com/yashu/logchimp?utm_source=banner&utm_campaign=oss"><img alt="Book us with Cal.com" src="https://cal.com/book-with-cal-dark.svg" /></a>
+
 ## 🤝🏻 Community
 
 Stay up to date on the development of LogChimp you can star this repository, follow us on Twitter or reach out to the
