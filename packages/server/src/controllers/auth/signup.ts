@@ -13,7 +13,6 @@ import database from "../../database";
 import { validEmail } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 type ResponseBody = IAuthSignupResponseBody | IApiErrorResponse;
 
@@ -24,12 +23,6 @@ export async function signup(
 ) {
   const { email, password } = req.body;
 
-  if (isDomainBlacklisted(email)) {
-    return res.status(403).send({
-      message: "Email domain is not allowed.",
-      code: "EMAIL_DOMAIN_BLACKLISTED",
-    });
-  }
   if (!validEmail(email)) {
     return res.status(400).send({
       message: error.api.authentication.invalidEmail,

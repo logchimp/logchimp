@@ -12,7 +12,6 @@ import database from "../../../database";
 import type { ExpressRequestContext } from "../../../express";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 type ResponseBody =
   | IValidateEmailVerificationTokenResponseBody
