@@ -1,7 +1,12 @@
 <template>
   <DropdownV2 :modal="true">
     <template #trigger>
-      <DropdownMenuTrigger class="group-hover:block group-focus:block bg-neutral-300 rounded-md p-1 cursor-pointer">
+      <DropdownMenuTrigger
+        :class="[
+          'group-hover:block group-focus:block data-[state=open]:block',
+          'hidden bg-neutral-300 rounded-md p-1 cursor-pointer'
+        ]"
+      >
         <PlusIcon aria-hidden="true" class="stroke-neutral-700 size-5"/>
         <span class="sr-only">Add role</span>
       </DropdownMenuTrigger>

@@ -23,7 +23,7 @@
       <div
         v-for="user in dashboardUsers.users"
         :key="user.userId"
-        class="table-row"
+        class="table-row group"
       >
         <DashboardUsersTabularItem :user="user" :settings="settings" />
       </div>
