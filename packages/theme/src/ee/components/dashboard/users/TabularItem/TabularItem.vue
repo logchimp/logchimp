@@ -8,11 +8,7 @@
     </h6>
   </div>
   <div class="table-header-item users-table-user flex items-center gap-x-1.5">
-    <RoleBadge
-      v-for="role in user.roles"
-      :role="role"
-      :key="role.user_role_id"
-    />
+    <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
     <AssignRoleUserDropdown />
   </div>
   <div class="table-data users-table-posts">
@@ -31,10 +27,10 @@ import { provide } from "vue";
 import type { IUser, ISettings } from "@logchimp/types";
 
 import { Avatar } from "../../../../../components/ui/Avatar";
-import RoleBadge from "../../../RoleBadge.vue";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
 import { userIdKey, userRolesKey } from "./options";
+import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
 
 interface Props {
   user: IUser;
