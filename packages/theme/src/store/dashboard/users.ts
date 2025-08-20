@@ -31,22 +31,23 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
   }
 
   function appendUserRole(userId: string, role: IUserRole) {
-    const usrIdx = users.value.findIndex((item) => item.userId === userId);
-    if (usrIdx === -1) return;
-
-    users.value[usrIdx].roles.push(role);
+    const user = getUserById(userId);
+    if (!user) return;
+    user.roles.push(role);
   }
 
   function removeUserRole(userId: string, roleId: string) {
-    const usrIdx = users.value.findIndex((item) => item.userId === userId);
-    if (usrIdx === -1) return;
+    const user = getUserById(userId);
+    if (!user) return;
 
-    const userRoleIdx = users.value[usrIdx].roles.findIndex(
-      (item) => item.id === roleId,
-    );
+    const userRoleIdx = user.roles.findIndex((item) => item.id === roleId);
     if (userRoleIdx === -1) return;
 
-    users.value[usrIdx].roles.splice(userRoleIdx, 1);
+    user.roles.splice(userRoleIdx, 1);
+  }
+
+  function getUserById(userId: string) {
+    return users.value.find((item) => item.userId === userId);
   }
 
   return {
@@ -57,6 +58,7 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     error,
 
     fetchUsers,
+    getUserById,
     appendUserRole,
     removeUserRole,
   };

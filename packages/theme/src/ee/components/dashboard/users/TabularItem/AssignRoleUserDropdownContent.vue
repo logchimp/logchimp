@@ -6,8 +6,8 @@
 
     <DropdownV2CheckboxItem
       v-for="role in dashboardRoles.roles"
-      :model-value="assignedRoles.has(role.id)"
-      @update:model-value="(e) => updateRoleHandler(role.id, e)"
+      :model-value="userHasRole(role.id)"
+      @update:model-value="(checked) => updateRoleHandler(role.id, checked)"
       :key="role.id"
     >
       {{role.name}}
@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, inject, ref } from "vue";
+import { onMounted, inject, computed } from "vue";
 
 import { useDashboardRoles } from "../../../../../store/dashboard/roles";
 import { useDashboardUsers } from "../../../../../store/dashboard/users";
 import DropdownV2CheckboxItem from "../../../../../components/ui/DropdownV2/CheckboxItem.vue";
-import { userRolesKey, userIdKey } from "./options";
+import { userIdKey } from "./options";
 import { UsersEe } from "../../../../modules/users";
 
 const dashboardRoles = useDashboardRoles();
@@ -32,14 +32,18 @@ onMounted(() => {
   dashboardRoles.fetchRoles();
 });
 
-const roles = inject(userRolesKey, []);
 const userId = inject(userIdKey);
-const assignedRoles = ref(new Map<string, boolean>());
-onMounted(() => {
-  for (let i = 0; i < roles.length; i++) {
-    assignedRoles.value.set(roles[i].id, true);
-  }
+
+const assignedRoleIds = computed(() => {
+  if (!userId) return new Set<string>();
+
+  const user = dashboardUsers.getUserById(userId);
+  return new Set(user?.roles?.map((role) => role.id) || []);
 });
+
+function userHasRole(roleId: string): boolean {
+  return assignedRoleIds.value.has(roleId);
+}
 
 // assign role handler
 async function assignRoleHandler(roleId: string) {
@@ -48,7 +52,6 @@ async function assignRoleHandler(roleId: string) {
   try {
     const response = await usersEeServices.assignRole(roleId, userId);
     if (response.success === 1) {
-      assignedRoles.value.set(roleId, true);
       dashboardUsers.appendUserRole(userId, {
         id: response.id,
         name: response.name,
@@ -66,7 +69,6 @@ async function unassignRoleHandler(roleId: string) {
   try {
     const response = await usersEeServices.unassignRole(roleId, userId);
     if (response) {
-      assignedRoles.value.delete(roleId);
       dashboardUsers.removeUserRole(userId, roleId);
     }
   } catch (error) {

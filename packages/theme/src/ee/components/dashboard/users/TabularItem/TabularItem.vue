@@ -29,7 +29,7 @@ import type { IUser, ISettings } from "@logchimp/types";
 import { Avatar } from "../../../../../components/ui/Avatar";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
-import { userIdKey, userRolesKey } from "./options";
+import { userIdKey } from "./options";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
 
 interface Props {
@@ -40,7 +40,6 @@ interface Props {
 const props = defineProps<Props>();
 
 provide(userIdKey, props.user.userId);
-provide(userRolesKey, props.user.roles);
 
 defineOptions({
   name: "DashboardUsersTabularItem",
