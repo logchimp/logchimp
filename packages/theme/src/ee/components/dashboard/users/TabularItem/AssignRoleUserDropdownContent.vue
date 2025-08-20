@@ -49,7 +49,7 @@ async function assignRoleHandler(roleId: string) {
     const response = await usersEeServices.assignRole(roleId, userId);
     if (response.success === 1) {
       assignedRoles.value.set(roleId, true);
-      dashboardUsers.updateUserRole(userId, {
+      dashboardUsers.appendUserRole(userId, {
         id: response.id,
         name: response.name,
         user_role_id: response.user_role_id,
@@ -60,12 +60,25 @@ async function assignRoleHandler(roleId: string) {
   }
 }
 
+async function unassignRoleHandler(roleId: string) {
+  if (!userId) return;
+
+  try {
+    const response = await usersEeServices.unassignRole(roleId, userId);
+    if (response) {
+      assignedRoles.value.delete(roleId);
+      dashboardUsers.removeUserRole(userId, roleId);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function updateRoleHandler(roleId: string, e: boolean) {
-  console.log(roleId, e);
   if (e) {
     assignRoleHandler(roleId);
   } else {
-    // unassignRoleHandler(roleId);
+    unassignRoleHandler(roleId);
   }
 }
 

@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IUser } from "@logchimp/types";
+import type { IUser, IUserRole } from "@logchimp/types";
 
 import { Users } from "../../modules/users";
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
@@ -30,11 +30,23 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     }
   }
 
-  function updateUserRole(userId: string, role: IUserRole) {
-    const usrIdx = users.value.findIndex((usr) => usr.userId === userId);
+  function appendUserRole(userId: string, role: IUserRole) {
+    const usrIdx = users.value.findIndex((item) => item.userId === userId);
     if (usrIdx === -1) return;
 
     users.value[usrIdx].roles.push(role);
+  }
+
+  function removeUserRole(userId: string, roleId: string) {
+    const usrIdx = users.value.findIndex((item) => item.userId === userId);
+    if (usrIdx === -1) return;
+
+    const userRoleIdx = users.value[usrIdx].roles.findIndex(
+      (item) => item.id === roleId,
+    );
+    if (userRoleIdx === -1) return;
+
+    users.value[usrIdx].roles.splice(userRoleIdx, 1);
   }
 
   return {
@@ -45,6 +57,7 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     error,
 
     fetchUsers,
-    updateUserRole,
+    appendUserRole,
+    removeUserRole,
   };
 });

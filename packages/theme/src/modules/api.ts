@@ -39,4 +39,26 @@ export abstract class APIService {
       ...config,
     });
   }
+
+  /**
+   * Makes a PUT request to the specified URL
+   * @param {string} url - The endpoint URL
+   * @param {object} [data={}] - Request body data
+   * @param {AxiosRequestConfig} [config={}] - Additional axios configuration
+   * @returns {Promise} Axios response promise
+   */
+  put(url: string, data = {}, config: AxiosRequestConfig = {}) {
+    return this.axiosInstance.put(url, data, config);
+  }
+
+  /**
+   * Makes a DELETE request to the specified URL
+   * @param {string} url - The endpoint URL
+   * @param {any} [data] - Request body data
+   * @param {AxiosRequestConfig} [config={}] - Additional axios configuration
+   * @returns {Promise} Axios response promise
+   */
+  delete(url: string, data?: any, config: AxiosRequestConfig = {}) {
+    return this.axiosInstance.delete(url, { data, ...config });
+  }
 }

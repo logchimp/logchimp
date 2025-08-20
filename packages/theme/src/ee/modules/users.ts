@@ -25,4 +25,14 @@ export class UsersEe extends APIService {
         throw error;
       });
   }
+
+  async unassignRole(roleId: string, userId: string): Promise<boolean> {
+    return this.delete(`/v1/roles/${roleId}/users/${userId}`)
+      .then((response) => {
+        return response?.status === 204;
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
