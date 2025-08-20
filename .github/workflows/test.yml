@@ -216,7 +216,7 @@ jobs:
       LOGCHIMP_DB_PASSWORD: password
       LOGCHIMP_DB_PORT: 5432
       LOGCHIMP_SECRET_KEY: bk6oqo21tbygcsnuflnda3whdyj7leav2w39wcmleqw2j4i5hcdwjam0tzropaevhl3h_dbnljdtyz0tb25yg1o1pak8nakgzm4tza6qp
-      LOGCHIMP_MAIL_HOST: mail
+      LOGCHIMP_MAIL_HOST: 0.0.0.0
       LOGCHIMP_MAIL_USER: test
       LOGCHIMP_MAIL_PASSWORD: test
       LOGCHIMP_MAIL_PORT: 1025
