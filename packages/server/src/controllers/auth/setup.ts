@@ -10,17 +10,9 @@ import { createUser } from "../../services/auth/createUser";
 import { validEmail } from "../../helpers";
 import error from "../../errorResponse.json";
 import logger from "../../utils/logger";
-import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 export async function setup(req: Request, res: Response, next: NextFunction) {
   const { siteTitle, name, email, password } = req.body;
-
-  if (isDomainBlacklisted(email)) {
-    return res.status(403).send({
-      message: "Email domain is not allowed.",
-      code: "EMAIL_DOMAIN_BLACKLISTED",
-    });
-  }
 
   if (!validEmail(email)) {
     return res.status(400).send({

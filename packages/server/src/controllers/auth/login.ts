@@ -12,7 +12,6 @@ import { createToken } from "../../services/token.service";
 import { validatePassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 type ResponseBody = IAuthLoginResponseBody | IApiErrorResponse;
 
@@ -28,13 +27,6 @@ export async function login(
     return res.status(403).send({
       message: error.middleware.user.userBlocked,
       code: "USER_BLOCKED",
-    });
-  }
-
-  if (isDomainBlacklisted(user.email)) {
-    return res.status(403).send({
-      message: "Email domain is not allowed to login.",
-      code: "EMAIL_DOMAIN_BLACKLISTED",
     });
   }
 
