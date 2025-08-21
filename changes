@@ -1,0 +1,32 @@
+Home page ( Get started)
+Get started lets you experience LogChimp without guesswork. If a hosted demo is available, this button opens the live prototype so you can explore the product flow. If the demo is temporarily unavailable, it takes you to a concise setup guide that gets you running locally in a few minutes. Either path ensures you see the software in action before you dive deeper.
+
+Guide
+LogChimp is designed to help teams collect feedback, plan openly and communicate progress. You can explore a working prototype when a demo is available, or set up a local instance to try the full feature set. This guide walks you through installation, basic configuration and the core commands you will use every day, so first-time users and experienced developers can onboard with confidence.
+
+Getting started
+Before you begin, ensure you have the required prerequisites installed, then clone the repository and install dependencies. Use the provided CLI to create a site, start the development server, and build for production. The guide includes the exact commands in the order you need them, along with brief explanations of what each command does. If you run into issues, consult the troubleshooting notes for common errors, environment variables and workspace setup. An overview of the system architecture is included so you understand how the API, theme and admin surfaces interact, and where to add or modify features.
+
+Architecture
+The architecture overview explains the separation between the API layer, the web theme and the administrative dashboard. It shows how requests flow through the REST endpoints, how data models map to UI components and how authentication, roles and permissions are enforced. Links from this page take you to focused sections that describe the API resources, the client interactions and extension points, so you can contribute safely without breaking other packages.
+
+Features
+LogChimp brings feedback collection, roadmapping and release communication into one place. The feedback board captures ideas and votes from users and teammates and helps you prioritize what to build next. The roadmap lets you create or connect a product plan and keep it in sync with real progress. The changelog turns each release into a clear announcement that closes the loop with your community. A robust REST API enables integrations with your tools and workflows. The admin dashboard provides secure management of boards, posts, users and settings, with roles and permissions to keep access appropriate. Self-hosting and privacy controls put you in charge of your data while still allowing third-party integrations when you need them. Where a deeper explanation exists, each feature links to a dedicated page so readers can learn more without losing their place.
+
+CLI
+The CLI is the fastest way to work with LogChimp. The getting started section includes the essential commands to initialize a project, run a development server, build for production and preview a build locally. Each command appears alongside a short description of its purpose, expected output and the next step to take, so you can copy, run and move forward without cross-referencing multiple pages.
+
+Customize
+Customize controls your site’s look and voice. Here you adjust branding elements such as name, logo and accent color, and you configure public pages, email settings and analytics. This section focuses on presentation and communication so your LogChimp site matches your product identity and speaks consistently to your users.
+
+Dashboard
+The dashboard is your operational hub for day-to-day work. From here you manage boards, posts and comments, review and moderate activity, organize the roadmap and publish changelog entries. It also provides access to user management, roles and permissions and advanced settings. While Customize is about how your site looks and sounds, the dashboard is about how your team works.
+
+Principles and progress
+LogChimp follows a few simple principles: transparency in decision making, collaboration with your users and practicality in implementation. The roadmap reflects these principles and shows what is shipped, what is in progress and what is planned next. To make this page more engaging, each stage includes a short description and a visual example or screenshot. Where visuals are still being prepared, a temporary caption explains what will be shown and links to the relevant feature page so readers can still explore the functionality today.
+
+Troubleshooting
+If setup fails or a command does not behave as expected, this section lists common issues and their solutions, including dependency mismatches, workspace linking problems and environment variable configuration. Each entry points back to the step where the problem most often appears, so you can fix it quickly and continue.
+
+Status and availability
+Some areas of LogChimp are actively evolving. When a feature is in development, the page clearly indicates its status and links to the issue or pull request that tracks progress. This helps users understand what is available today, what is coming soon and where to contribute.
