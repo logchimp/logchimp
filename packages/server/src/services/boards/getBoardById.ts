@@ -3,7 +3,7 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 
-export async function getBoardById(boardId) {
+export async function getBoardById(boardId: string) {
   try {
     const boards = await database
       .select()

@@ -4,7 +4,8 @@ import type {
   ApiPaginationType,
   IBoard,
   TBoardCheckNameResponse,
-  TBoardCreateBody,
+  TBoardCreateRequestBody,
+  TBoardCreateResponseBody,
   TBoardUpdateBody,
 } from "@logchimp/types";
 
@@ -106,12 +107,14 @@ export const searchBoard = async (name: string) => {
  * @param {object} arg0
  * @param {string} arg0.name
  * @param {string} arg0.display
- * @returns {Promise<AxiosResponse<TBoardCreateBody>>} response
+ * @returns {Promise<AxiosResponse<TBoardCreateRequestBody>>} response
  */
 export const createBoard = async ({
   name,
   display,
-}: TBoardCreateBody): Promise<AxiosResponse<IBoard>> => {
+}: TBoardCreateRequestBody): Promise<
+  AxiosResponse<TBoardCreateResponseBody>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({

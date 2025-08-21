@@ -129,7 +129,7 @@ import {
   Settings as SettingsIcon
 } from "lucide-vue";
 import { useHead } from "@vueuse/head";
-
+import type { IBoard } from "@logchimp/types"
 // modules
 import { router } from "../../../../router";
 import { useSettingStore } from "../../../../store/settings";
@@ -157,8 +157,7 @@ const { settings } = useSettingStore()
 const { permissions } = useUserStore()
 
 const createBoardButtonLoading = ref(false)
-// TODO: Add TS types
-const boards = ref<unknown>([]);
+const boards = ref<IBoard[]>([]);
 const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>()
 
@@ -177,6 +176,9 @@ async function createBoardHandler() {
 
 	try {
 		const response = await createBoard({});
+
+    console.log('response');
+    console.log(response.data);
 
 		const url = response.data.board.url;
 		router.push(`/dashboard/boards/${url}/settings`);
