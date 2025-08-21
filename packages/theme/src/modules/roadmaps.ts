@@ -31,7 +31,7 @@ export const getAllRoadmaps = async (
   }
 
   const url = `${VITE_API_URL}/api/v1/roadmaps${
-    searchParams.toString() ? "?" + searchParams.toString() : ""
+    searchParams.toString() ? `?${searchParams.toString()}` : ""
   }`;
 
   return await axios({

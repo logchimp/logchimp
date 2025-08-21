@@ -59,9 +59,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{
-  (e: "update-voters", voters: IPostVote): void;
-}>();
+const emit = defineEmits<(e: "update-voters", voters: IPostVote) => void>();
 
 const loading = ref<boolean>(false);
 const userStore = useUserStore();
