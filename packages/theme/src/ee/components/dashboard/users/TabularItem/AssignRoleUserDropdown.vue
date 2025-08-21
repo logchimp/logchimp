@@ -19,6 +19,7 @@
       side="right"
       :sideOffset="10"
       :loop="true"
+      :max-height="200"
     >
       <AssignRoleUserDropdownContent />
     </DropdownV2Content>
