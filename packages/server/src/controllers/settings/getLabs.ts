@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 // database
 import database from "../../database";
 
@@ -5,7 +6,7 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function getLabs(_, res) {
+export async function getLabs(_: Request, res: Response) {
   try {
     // @ts-ignore
     const { labs } = await database
