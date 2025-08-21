@@ -2,6 +2,7 @@ Copyright (c) 2020-present Shinkly Private Limited
 
 Portions of this software – namely all files that reside under the following directories of this repository – are licensed under the license defined in "packages/server/ee/LICENSE".
 
+* packages/app-store
 * packages/server/ee
 * packages/theme/src/ee
 
