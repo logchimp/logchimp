@@ -1,4 +1,4 @@
-// modules
+import type { Request, Response, NextFunction } from "express";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 
@@ -14,7 +14,6 @@ import { sanitiseUsername, sanitiseName } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { Request, Response, NextFunction } from "express";
 
 interface UserData {
   email: string;
