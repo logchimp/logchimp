@@ -5,6 +5,7 @@ import type {
   IAuthUserProfileResponse,
   IGetAllUsers,
   IUpdateUserSettingsArgs,
+  IGetPermissionResponse,
 } from "@logchimp/types";
 
 // store
@@ -18,12 +19,6 @@ export interface UserType {
   name: string;
   username: string;
   avatar: string;
-}
-
-export type PermissionType = string[];
-
-interface GetPermissions {
-  permissions: PermissionType;
 }
 
 /**
@@ -73,7 +68,7 @@ export const updateUserSettings = async ({
  * Get authenticated user permissions
  */
 export const getPermissions = async (): Promise<
-  AxiosResponse<GetPermissions>
+  AxiosResponse<IGetPermissionResponse>
 > => {
   const { authToken } = useUserStore();
 
@@ -113,7 +108,7 @@ export class Users extends APIService {
    * @returns {Promise<IGetAllUsers>}
    */
   async getAll(params = {}): Promise<IGetAllUsers> {
-    return this.get(`/v1/users`, params)
+    return this.get("/v1/users", params)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
