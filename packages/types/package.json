@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@logchimp/types",
   "version": "0.7.0-beta.4",
   "private": true,
