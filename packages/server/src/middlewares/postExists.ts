@@ -1,10 +1,15 @@
+import type { Request, Response, NextFunction } from "express";
 import database from "../database";
 
 // utils
 import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
 
-export async function postExists(req, res, next) {
+export async function postExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const id = validUUID(req.body.id);
   const slug = req.body.slug;
 
@@ -26,6 +31,7 @@ export async function postExists(req, res, next) {
     });
   }
 
+  // @ts-expect-error
   req.post = post;
   next();
 }

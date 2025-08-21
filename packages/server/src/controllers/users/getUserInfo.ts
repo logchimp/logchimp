@@ -1,15 +1,26 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IGetUserInfoRequestParams,
+  IUserInfo,
+  TGetUserInfoResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function getUserInfo(req: Request, res: Response) {
+type ResponseBody = TGetUserInfoResponseBody | IApiErrorResponse;
+
+export async function getUserInfo(
+  req: Request<IGetUserInfoRequestParams>,
+  res: Response<ResponseBody>,
+) {
   const { user_id } = req.params;
 
   try {
-    const user = await database
+    const user = await database<IUserInfo>("users")
       .select(
         "userId",
         "name",
@@ -22,7 +33,6 @@ export async function getUserInfo(req: Request, res: Response) {
         "notes",
         "createdAt",
       )
-      .from("users")
       .where({
         userId: user_id,
       })
