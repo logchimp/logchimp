@@ -90,7 +90,7 @@ export class Roles extends APIService {
   }
 
   async getAll(): Promise<IGetAllRoles> {
-    return this.get(`/v1/roles`)
+    return this.get("/v1/roles")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
