@@ -6,8 +6,9 @@ import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
 export async function userExists(req, res, next) {
-  const email =
-    (req.body ? req.body.email : "") || (req.user ? req.user.email : "");
+  const email = (
+    (req.body ? req.body.email : "") || (req.user ? req.user.email : "")
+  ).toLowerCase();
 
   if (!validEmail(email)) {
     return res.status(400).send({

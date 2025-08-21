@@ -14,7 +14,7 @@ import { hashPassword } from "../../../src/utils/password";
  */
 export async function createUser(user = undefined) {
   const userId = uuid();
-  const email = user?.email || faker.internet.email();
+  const email = (user?.email || faker.internet.email()).toLowerCase();
   const username = email.split("@")[0];
   const password = user?.password || "password";
   const isVerified = user?.isVerified || false;
