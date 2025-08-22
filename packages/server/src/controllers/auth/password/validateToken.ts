@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { isDevTestEnv } from "../../../helpers";
 
 export async function validateToken(req: Request, res: Response) {
   // @ts-ignore
@@ -8,12 +9,11 @@ export async function validateToken(req: Request, res: Response) {
    * sending token as response for
    * development/testing/staging environment
    */
-  const __token =
-    process.env.NODE_ENV !== "production"
-      ? {
-          ...emailToken,
-        }
-      : "";
+  const __token = isDevTestEnv
+    ? {
+        ...emailToken,
+      }
+    : "";
 
   res.status(200).send({
     reset: {

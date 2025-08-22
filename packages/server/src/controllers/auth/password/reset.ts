@@ -6,6 +6,7 @@ import { passwordReset as passwordResetEmail } from "../../../services/auth/pass
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { isDevTestEnv } from "../../../helpers";
 
 export async function reset(req: Request, res: Response) {
   // @ts-ignore
@@ -24,12 +25,11 @@ export async function reset(req: Request, res: Response) {
      * sending token as response for
      * development/testing/staging environment
      */
-    const __token =
-      process.env.NODE_ENV !== "production"
-        ? {
-            ...passwordReset,
-          }
-        : "";
+    const __token = isDevTestEnv
+      ? {
+          ...passwordReset,
+        }
+      : "";
 
     res.status(200).send({
       reset: {
