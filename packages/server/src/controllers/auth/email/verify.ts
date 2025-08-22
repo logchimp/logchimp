@@ -6,6 +6,7 @@ import { verifyEmail } from "../../../services/auth/verifyEmail";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { isDevTestEnv } from "../../../helpers";
 
 export async function verify(req: Request, res: Response) {
   // @ts-ignore
@@ -31,14 +32,11 @@ export async function verify(req: Request, res: Response) {
      * sending token as response is for
      * development/testing environment
      */
-    const __token =
-      process.env.NODE_ENV === "development" ||
-      process.env.NODE_ENV === "testing" ||
-      process.env.NODE_ENV === "ci"
-        ? {
-            ...emailVerification,
-          }
-        : "";
+    const __token = isDevTestEnv
+      ? {
+          ...emailVerification,
+        }
+      : "";
 
     res.status(200).send({
       verify: {
