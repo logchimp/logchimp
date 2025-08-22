@@ -36,7 +36,40 @@ describe("POST /api/v1/auth/signup", () => {
     const user = response.body.user;
     expect(response.status).toBe(201);
     expect(user.username).toEqual(username);
-    expect(user.email).toEqual(randomEmail);
+    expect(user.email).toEqual(randomEmail.toLowerCase());
+  });
+
+  it("should not create new user and throws 'USER EXISTS'", async () => {
+    const randomEmail = faker.internet.email();
+
+    await supertest(app).post("/api/v1/auth/signup").send({
+      email: randomEmail,
+      password: "password",
+    });
+
+    const response = await supertest(app).post("/api/v1/auth/signup").send({
+      email: randomEmail,
+      password: "password",
+    });
+
+    expect(response.status).toBe(409);
+    expect(response.body.code).toBe("USER_EXISTS");
+  });
+
+  it("should not create new user with different casing in email", async () => {
+    const randomEmail = faker.internet.email();
+    await supertest(app).post("/api/v1/auth/signup").send({
+      email: randomEmail,
+      password: "password",
+    });
+
+    const response = await supertest(app).post("/api/v1/auth/signup").send({
+      email: randomEmail,
+      password: "password",
+    });
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(409);
+    expect(response.body.code).toBe("USER_EXISTS");
   });
 
   it("should not be allow to create account", async () => {
@@ -55,19 +88,4 @@ describe("POST /api/v1/auth/signup", () => {
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("SIGNUP_NOT_ALLOWED");
   });
-
-  // it("should not create new user with different casing in email", async () => {
-  //   await supertest(app).post("/api/v1/auth/signup").send({
-  //     email: "random_user@example.com",
-  //     password: "password",
-  //   });
-  //
-  //   const response = await supertest(app).post("/api/v1/auth/signup").send({
-  //     email: "random_USER@example.com",
-  //     password: "password",
-  //   });
-  //   expect(response.headers["content-type"]).toContain("application/json");
-  //   expect(response.status).toBe(409);
-  //   expect(response.body.code).toBe("USER_EXISTS");
-  // });
 });

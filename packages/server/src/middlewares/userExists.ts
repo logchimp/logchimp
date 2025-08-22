@@ -1,3 +1,4 @@
+import type { Request, Response, NextFunction } from "express";
 import database from "../database";
 
 // utils
@@ -5,9 +6,16 @@ import { validEmail } from "../helpers";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
-export async function userExists(req, res, next) {
-  const email =
-    (req.body ? req.body.email : "") || (req.user ? req.user.email : "");
+export async function userExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const email = (
+    (req.body ? req.body.email : "") ||
+    // @ts-expect-error
+    (req.user ? req.user.email : "")
+  ).toLowerCase();
 
   if (!validEmail(email)) {
     return res.status(400).send({
@@ -32,6 +40,7 @@ export async function userExists(req, res, next) {
       });
     }
 
+    // @ts-expect-error
     req.user = user;
     next();
   } catch (err) {

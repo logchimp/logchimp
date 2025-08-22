@@ -1,7 +1,11 @@
 import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
-import type { TBoardCreateBody } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  TBoardCreateRequestBody,
+  TBoardCreateResponseBody,
+} from "@logchimp/types";
 
 // database
 import database from "../../../../database";
@@ -11,11 +15,13 @@ import { generateHexColor } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+type ResponseBody = TBoardCreateResponseBody | IApiErrorResponse;
+
 export async function create(
-  req: Request<unknown, unknown, TBoardCreateBody>,
-  res: Response,
+  req: Request<unknown, unknown, TBoardCreateRequestBody>,
+  res: Response<ResponseBody>,
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   const permissions = req.user.permissions;
   const name = req.body.name || "new board";
   const display = req.body.display;

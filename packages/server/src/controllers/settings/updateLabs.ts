@@ -1,17 +1,29 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  TUpdateLabsRequestBody,
+  TUpdateLabsResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
+type ResponseBody = TUpdateLabsResponseBody | IApiErrorResponse;
+
 /**
  * This API doesn't update the existing labs value
  * instead overrides the existing value with req.body.labs
  */
-export async function updateLabs(req: Request, res: Response) {
-  // @ts-ignore
+export async function updateLabs(
+  req: Request<unknown, unknown, TUpdateLabsRequestBody>,
+  res: Response<ResponseBody>,
+) {
+  // @ts-expect-error
   const permissions = req.user.permissions;
+
+  console.log("body:", req.body);
 
   const labs = req.body;
   const stringify = JSON.stringify(labs);
@@ -21,7 +33,6 @@ export async function updateLabs(req: Request, res: Response) {
   );
   if (!checkPermission) {
     return res.status(403).send({
-      // @ts-ignore
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });

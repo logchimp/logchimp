@@ -1,3 +1,5 @@
+import type { Request, Response, NextFunction } from "express";
+
 // database
 import database from "../../database";
 
@@ -9,7 +11,7 @@ import { validEmail } from "../../helpers";
 import error from "../../errorResponse.json";
 import logger from "../../utils/logger";
 
-export async function setup(req, res, next) {
+export async function setup(req: Request, res: Response, next: NextFunction) {
   const { siteTitle, name, email, password } = req.body;
 
   if (!validEmail(email)) {
@@ -47,6 +49,9 @@ export async function setup(req, res, next) {
       password,
       name,
     });
+
+    // if user already exists, createUser returns null
+    if (!user) return;
 
     // set user as owner
     await database

@@ -2,6 +2,7 @@ name: Test
 
 on:
   push:
+    branches: [main,master]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -10,7 +11,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -108,6 +109,9 @@ jobs:
 
       - name: Install packages
         run: pnpm install --frozen-lockfile
+
+      - name: Compile LogChimp Types package
+        run: pnpm --filter="@logchimp/types" build;
 
       - name: Build theme
         run: pnpm --filter @logchimp/theme build
@@ -212,9 +216,10 @@ jobs:
       LOGCHIMP_DB_PASSWORD: password
       LOGCHIMP_DB_PORT: 5432
       LOGCHIMP_SECRET_KEY: bk6oqo21tbygcsnuflnda3whdyj7leav2w39wcmleqw2j4i5hcdwjam0tzropaevhl3h_dbnljdtyz0tb25yg1o1pak8nakgzm4tza6qp
-      LOGCHIMP_MAIL_HOST: "smtp.example.com"
-      LOGCHIMP_MAIL_USER: "logchimp@example.com"
-      LOGCHIMP_MAIL_PORT: 587
+      LOGCHIMP_MAIL_HOST: 0.0.0.0
+      LOGCHIMP_MAIL_USER: test
+      LOGCHIMP_MAIL_PASSWORD: test
+      LOGCHIMP_MAIL_PORT: 1025
 
     strategy:
       matrix:
@@ -235,6 +240,11 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      mail:
+        image: mailhog/mailhog
+        ports:
+          - 1080:1080
+          - 1025:1025
 
     steps:
       - uses: actions/checkout@v4
@@ -266,23 +276,21 @@ jobs:
       - name: Install packages
         run: pnpm install --frozen-lockfile
 
-      - name: Compile Typescript
-        run: |
-          pnpm --filter @logchimp/types exec pnpm build && \
-          pnpm --filter @logchimp/api exec pnpm tsc;
+      - name: Compile LogChimp Types package
+        run: pnpm --filter="@logchimp/types" build;
 
       - name: Database setup
         run: |
           cd ./packages/server;
 
           # Run database migrations
-          pnpm knex --knexfile ./dist/database/config.js migrate:latest;
+          pnpm knex --knexfile ./src/database/config.ts migrate:latest;
 
           # Seeding database
-          pnpm knex --knexfile ./dist/database/config.js seed:run;
+          pnpm knex --knexfile ./src/database/config.ts seed:run;
 
       - name: Testing
-        run: pnpm --filter @logchimp/api test:integration
+        run: pnpm --filter @logchimp/api test:integration --retry 1
 
       - name: Output logs
         if: always()

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@logchimp/api",
   "description": "LogChimp APIs",
   "version": "0.7.0-beta.4",
@@ -9,9 +10,9 @@
     "format": "prettier --write \"**/*.{js}\"",
     "test:unit": "vitest --config ./vitest.config.unit.ts",
     "test:integration": "vitest --config ./vitest.config.integration.ts",
-    "db:migrate": "knex --knexfile ./database/config.ts migrate:latest",
-    "db:migrate:create": "knex --knexfile ./database/config.ts migrate:make",
-    "db:seed:run": "knex --knexfile ./database/config.ts seed:run"
+    "db:migrate": "knex --knexfile ./src/database/config.ts migrate:latest",
+    "db:migrate:create": "knex --knexfile ./src/database/config.ts migrate:make",
+    "db:seed:run": "knex --knexfile ./src/database/config.ts seed:run"
   },
   "dependencies": {
     "@logchimp/types": "workspace:*",
@@ -31,10 +32,12 @@
     "nodemailer": "^6.7.3",
     "pg": "^8.7.1",
     "uuid": "^9.0.0",
-    "winston": "^3.3.3"
+    "validator": "^13.15.15",
+    "winston": "^3.3.3",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.0",
+    "@faker-js/faker": "^9.9.0",
     "@types/express": "^5.0.3",
     "@types/html-to-text": "^9.0.4",
     "@types/jsonwebtoken": "^9.0.10",
@@ -45,12 +48,13 @@
     "@types/omgopass": "^3.2.3",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "10.0.0",
+    "@types/validator": "^13.15.2",
     "nodemon": "^3.1.7",
     "omgopass": "3.2.1",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "5.4.5",
-    "vitest": "0.34.6"
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
   },
   "engines": {
     "node": ">=22 < 23"

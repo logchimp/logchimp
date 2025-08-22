@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 // database
 import database from "../../database";
 
@@ -5,7 +6,7 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function siteSettings(_, res) {
+export async function siteSettings(_: Request, res: Response) {
   try {
     const settings = await database
       .select(["*", database.raw("labs::json")])

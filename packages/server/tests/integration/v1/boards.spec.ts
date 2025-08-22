@@ -7,10 +7,13 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
+import { cleanDb } from "../../utils/db";
 
 // Get all boards
 describe("GET /api/v1/boards", () => {
   it("should get 0 boards", async () => {
+    await cleanDb();
+
     const response = await supertest(app).get("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -72,41 +75,44 @@ describe("GET /boards/search/:name", () => {
 
     // assign "board:read" permission to user
     const newRoleId = uuid();
-    await database
-      .insert({
-        id: newRoleId,
-        name: "board:read",
-        description: "this role has 'board:read' permission",
-      })
-      .into("roles");
 
-    // find "board:read" permission
-    const findPermission = await database
-      .select()
-      .from("permissions")
-      .where({
-        type: "board",
-        action: "read",
-      })
-      .first();
+    await database.transaction(async (trx) => {
+      await trx
+        .insert({
+          id: newRoleId,
+          name: "board:read",
+          description: "this role has 'board:read' permission",
+        })
+        .into("roles");
 
-    // assign 'board:read' permission to newly created role
-    await database
-      .insert({
-        id: uuid(),
-        role_id: newRoleId,
-        permission_id: findPermission.id,
-      })
-      .into("permissions_roles");
+      // find "board:read" permission
+      const findPermission = await trx
+        .select()
+        .from("permissions")
+        .where({
+          type: "board",
+          action: "read",
+        })
+        .first();
 
-    // assign the role to newly created user
-    await database
-      .insert({
-        id: uuid(),
-        role_id: newRoleId,
-        user_id: authUser.userId,
-      })
-      .into("roles_users");
+      // assign 'board:read' permission to newly created role
+      await trx
+        .insert({
+          id: uuid(),
+          role_id: newRoleId,
+          permission_id: findPermission.id,
+        })
+        .into("permissions_roles");
+
+      // assign the role to newly created user
+      await trx
+        .insert({
+          id: uuid(),
+          role_id: newRoleId,
+          user_id: authUser.userId,
+        })
+        .into("roles_users");
+    });
 
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
@@ -154,4 +160,82 @@ describe("POST /api/v1/boards", () => {
   //     .into("users")
   //     .returning(["userId"]);
   // });
+});
+
+// Delete boards by id
+describe("DELETE /api/v1/boards", () => {
+  it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
+    const board = generateBoards();
+
+    await database.insert(board).into("boards");
+    const { user: authUser } = await createUser();
+
+    const response = await supertest(app)
+      .delete(`/api/v1/boards/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+      });
+
+    expect(response.status).toBe(403);
+    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should delete the board", async () => {
+    const board = generateBoards();
+
+    await database.insert(board).into("boards");
+    const { user: authUser } = await createUser();
+
+    // assign "board:destroy" permission to user
+    const newRoleId = uuid();
+
+    await database.transaction(async (trx) => {
+      await trx
+        .insert({
+          id: newRoleId,
+          name: "board:destroy",
+          description: "this role has 'board:destroy' permission",
+        })
+        .into("roles");
+
+      // find "board:destroy" permission
+      const findPermission = await trx
+        .select()
+        .from("permissions")
+        .where({
+          type: "board",
+          action: "destroy",
+        })
+        .first();
+
+      // assign 'board:destroy' permission to newly created role
+      await trx
+        .insert({
+          id: uuid(),
+          role_id: newRoleId,
+          permission_id: findPermission.id,
+        })
+        .into("permissions_roles");
+
+      // assign the role to newly created user
+      await trx
+        .insert({
+          id: uuid(),
+          role_id: newRoleId,
+          user_id: authUser.userId,
+        })
+        .into("roles_users");
+    });
+
+    const response = await supertest(app)
+      .delete(`/api/v1/boards/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+      });
+
+    expect(response.status).toBe(204);
+    expect(response.body.code).toBeUndefined();
+  });
 });
