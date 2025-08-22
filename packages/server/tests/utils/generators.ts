@@ -14,7 +14,7 @@ const user = () => {
   return {
     userId: uuid(),
     name: faker.person.fullName(),
-    email: faker.internet.email(),
+    email: faker.internet.email().toLowerCase(),
     password: generatePassword(),
     username: sanitiseUsername(faker.internet.username()),
     avatar: faker.image.avatar(),

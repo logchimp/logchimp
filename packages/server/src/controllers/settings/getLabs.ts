@@ -1,3 +1,9 @@
+import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  TGetLabsResponseBody,
+  TUpdateLabsResponseBody,
+} from "@logchimp/types";
 // database
 import database from "../../database";
 
@@ -5,16 +11,17 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function getLabs(_, res) {
+type ResponseBody = TGetLabsResponseBody | IApiErrorResponse;
+
+export async function getLabs(_: Request, res: Response<ResponseBody>) {
   try {
-    // @ts-ignore
-    const { labs } = await database
+    const results = (await database
       .select(database.raw("labs::json"))
       .from("settings")
-      .first();
+      .first()) as unknown as TUpdateLabsResponseBody;
 
     res.status(200).send({
-      labs,
+      labs: results.labs,
     });
   } catch (err) {
     logger.log({

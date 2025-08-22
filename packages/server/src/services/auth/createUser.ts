@@ -1,4 +1,4 @@
-// modules
+import type { Request, Response, NextFunction } from "express";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 
@@ -15,6 +15,23 @@ import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
+interface UserData {
+  email: string;
+  password: string;
+  name?: string | null;
+}
+
+interface CreatedData {
+  authToken: string;
+  userId: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar: string;
+  message: string;
+  code: string;
+}
+
 /**
  * Add user to 'users' database table
  *
@@ -27,9 +44,17 @@ import error from "../../errorResponse.json";
  * @param {string} userData.name - User name
  * @returns {object|null} - Returning user data object from database or null
  */
-const createUser = async (req, res, _next, userData) => {
+const createUser = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction,
+  userData: UserData,
+): Promise<CreatedData | null> => {
+  // change email to lowercase to avoid case-sensitivity
+  const email = userData.email.toLowerCase();
+
   // generate user unique identification
-  const userId = uuidv4(userData.email);
+  const userId = uuidv4();
 
   // sanitise the name
   const name = sanitiseName(userData.name);
@@ -38,7 +63,7 @@ const createUser = async (req, res, _next, userData) => {
   const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
 
   // get avatar by hashing email
-  const userMd5Hash = md5(userData.email);
+  const userMd5Hash = md5(email);
   const avatar = `https://www.gravatar.com/avatar/${userMd5Hash}`;
 
   // hash password
@@ -54,7 +79,7 @@ const createUser = async (req, res, _next, userData) => {
         )
       `,
       {
-        email: userData.email,
+        email,
       },
     );
 
@@ -73,7 +98,7 @@ const createUser = async (req, res, _next, userData) => {
         userId,
         name,
         username,
-        email: userData.email,
+        email,
         password: hashedPassword,
         avatar,
       })
@@ -125,10 +150,11 @@ const createUser = async (req, res, _next, userData) => {
       message: err,
     });
 
-    return res.status(500).send({
+    res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
     });
+    return null;
   }
 };
 
