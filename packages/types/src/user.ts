@@ -44,11 +44,11 @@ export type TGetUserInfoResponseBody = {
 };
 
 export type TUserAssignRoleResponse =
-// UserAssignRoleResponseSuccess
+  // UserAssignRoleResponseSuccess
   | ({
-  success: 1;
-} & IUserRole)
+      success: 1;
+    } & IUserRole)
   // UserAssignRoleResponseError
   | {
-  success: 0;
-};
+      success: 0;
+    };
