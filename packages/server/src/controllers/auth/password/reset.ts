@@ -18,8 +18,7 @@ export async function reset(req: Request, res: Response) {
       email,
       type: "resetPassword",
     };
-    const url = req.headers.origin;
-    const passwordReset = await passwordResetEmail(url, tokenPayload);
+    const passwordReset = await passwordResetEmail(tokenPayload);
 
     /**
      * sending token as response for
