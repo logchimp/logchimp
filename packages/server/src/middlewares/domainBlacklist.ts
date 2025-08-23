@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
-function isValidDomain(domain: string) {
+export function isValidDomain(domain: string) {
   if (typeof domain !== "string") return false;
 
   const trimmed = domain.trim().toLowerCase();
@@ -15,7 +15,7 @@ function isValidDomain(domain: string) {
   return domainRegex.test(trimmed);
 }
 
-const parseBlacklistedDomains = (rawDomains: string) => {
+export const parseBlacklistedDomains = (rawDomains: string) => {
   const result = new Set<string>();
 
   if (!rawDomains || typeof rawDomains !== "string") return result;
