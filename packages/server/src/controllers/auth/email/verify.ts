@@ -25,8 +25,8 @@ export async function verify(req: Request, res: Response) {
       email,
       type: "emailVerification",
     };
-    const url = req.headers.origin;
-    const emailVerification = await verifyEmail(url, tokenPayload);
+
+    const emailVerification = await verifyEmail(tokenPayload);
 
     /**
      * sending token as response is for

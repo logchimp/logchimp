@@ -29,6 +29,7 @@ function config() {
   const serverSecretKey = process.env.LOGCHIMP_SECRET_KEY;
   const machineSignature = process.env.LOGCHIMP_MACHINE_SIGNATURE;
   const isSelfHosted = process.env.LOGCHIMP_IS_SELF_HOSTED === "true";
+  const webUrl = process.env.LOGCHIMP_WEB_URL;
 
   // Database
   const databaseHost = process.env.LOGCHIMP_DB_HOST;
@@ -45,15 +46,21 @@ function config() {
   const mailPassword = process.env.LOGCHIMP_MAIL_PASSWORD;
   const mailPort = process.env.LOGCHIMP_MAIL_PORT;
 
-  if (process.env.LOGCHIMP_MAIL_SERVICE) {
+  if (process.env?.LOGCHIMP_MAIL_SERVICE) {
     console.log(
       "'LOGCHIMP_MAIL_SERVICE' variable is deprecated and will be removed in next major release.",
     );
   }
 
-  if (process.env.LOGCHIMP_THEME_STANDALONE) {
+  if (process.env?.LOGCHIMP_THEME_STANDALONE) {
     console.log(
       "'LOGCHIMP_THEME_STANDALONE' variable is deprecated and will be removed in next major release.",
+    );
+  }
+
+  if (!webUrl?.trim()) {
+    console.log(
+      "'LOGCHIMP_WEB_URL' variable is missing, some functionality of the LogChimp may not work as intended.",
     );
   }
 
@@ -66,6 +73,7 @@ function config() {
       isSelfHosted,
       port: serverPort,
       secretKey: serverSecretKey,
+      webUrl,
     },
     database: {
       host: databaseHost,

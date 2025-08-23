@@ -6,9 +6,12 @@ import { mail, generateContent } from "../mail";
 import { createToken } from "../token.service";
 
 // utils
+import logchimpConfig from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 
-export async function verifyEmail(url, tokenPayload) {
+const config = logchimpConfig();
+
+export async function verifyEmail(tokenPayload) {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -32,7 +35,7 @@ export async function verifyEmail(url, tokenPayload) {
     const siteInfo = await database.select("title").from("settings");
     const siteTitle = siteInfo[0].title;
 
-    const urlObject = new URL(url);
+    const urlObject = new URL(config.server.webUrl);
     const onboardingMailContent = await generateContent("verify", {
       url: urlObject.origin,
       domain: urlObject.hostname,

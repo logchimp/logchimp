@@ -132,8 +132,7 @@ const createUser = async (
       type: "emailVerification",
     };
     // send email verification
-    const url = req.headers.origin;
-    await verifyEmail(url, tokenPayload);
+    await verifyEmail(tokenPayload);
 
     // create auth token
     const authToken = createToken(tokenPayload, {
