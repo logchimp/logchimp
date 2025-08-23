@@ -1,4 +1,8 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IAuthEmailVerifyResponseBody,
+} from "@logchimp/types";
 
 // services
 import { verifyEmail } from "../../../services/auth/verifyEmail";
@@ -7,9 +11,12 @@ import { verifyEmail } from "../../../services/auth/verifyEmail";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 import { isDevTestEnv } from "../../../helpers";
+import type { IVerifyEmailJwtPayload } from "../../../types";
 
-export async function verify(req: Request, res: Response) {
-  // @ts-ignore
+type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
+
+export async function verify(req: Request, res: Response<ResponseBody>) {
+  // @ts-expect-error
   const { userId, email, isVerified } = req.user;
 
   if (isVerified) {
@@ -20,7 +27,7 @@ export async function verify(req: Request, res: Response) {
   }
 
   try {
-    const tokenPayload = {
+    const tokenPayload: IVerifyEmailJwtPayload = {
       userId,
       email,
       type: "emailVerification",
@@ -36,7 +43,7 @@ export async function verify(req: Request, res: Response) {
       ? {
           ...emailVerification,
         }
-      : "";
+      : undefined;
 
     res.status(200).send({
       verify: {

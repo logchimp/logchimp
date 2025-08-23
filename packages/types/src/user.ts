@@ -1,3 +1,5 @@
+import type { ApiSortType } from "./common";
+
 export interface IUser {
   userId: string;
   name: string;
@@ -42,6 +44,12 @@ export interface IGetUserInfoRequestParams {
 export type TGetUserInfoResponseBody = {
   user: IUserInfo;
 };
+
+export interface IGetUsersRequestQuery {
+  page: string;
+  limit?: number;
+  created: ApiSortType;
+}
 
 export type TUserAssignRoleResponse =
   // UserAssignRoleResponseSuccess

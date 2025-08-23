@@ -1,4 +1,9 @@
 import type { Request, Response } from "express";
+import type {
+  IAuthLoginRequestBody,
+  IAuthLoginResponseBody,
+  IApiErrorResponse,
+} from "@logchimp/types";
 
 // service
 import { createToken } from "../../services/token.service";
@@ -8,8 +13,13 @@ import { validatePassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function login(req: Request, res: Response) {
-  // @ts-ignore
+type ResponseBody = IAuthLoginResponseBody | IApiErrorResponse;
+
+export async function login(
+  req: Request<unknown, unknown, IAuthLoginRequestBody>,
+  res: Response<ResponseBody>,
+) {
+  // @ts-expect-error
   const user = req.user;
   const password = req.body.password;
 
