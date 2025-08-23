@@ -1,10 +1,11 @@
-// packages
 import axios, { type AxiosResponse } from "axios";
+import type { IGetAllRoles } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
 // store
 import { useUserStore } from "../../store/user";
+import { APIService } from "../../modules/api.ts";
 
 interface UpdateRoleArgs {
   id: string;
@@ -14,23 +15,6 @@ interface UpdateRoleArgs {
   // biome-ignore lint: Add TS types
   permissions: any;
 }
-
-/**
- * Get all roles
- *
- * @returns {object} response
- */
-export const getAllRoles = async () => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/roles`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
 
 /**
  * Get role by UUID
@@ -99,3 +83,17 @@ export const updateRole = async (role: UpdateRoleArgs) => {
     },
   });
 };
+
+export class Roles extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  async getAll(): Promise<IGetAllRoles> {
+    return this.get("/v1/roles")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+}

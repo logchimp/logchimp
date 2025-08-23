@@ -1,15 +1,17 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
 import type {
-  ApiPaginationType,
   IAuthUserProfile,
   IAuthUserProfileResponse,
+  IGetAllUsers,
   IUpdateUserSettingsArgs,
+  IGetPermissionResponse,
 } from "@logchimp/types";
 
 // store
 import { useUserStore } from "../store/user";
 
+import { APIService } from "./api";
 import { VITE_API_URL } from "../constants";
 
 export interface UserType {
@@ -17,12 +19,6 @@ export interface UserType {
   name: string;
   username: string;
   avatar: string;
-}
-
-export type PermissionType = string[];
-
-interface GetPermissions {
-  permissions: PermissionType;
 }
 
 /**
@@ -72,7 +68,7 @@ export const updateUserSettings = async ({
  * Get authenticated user permissions
  */
 export const getPermissions = async (): Promise<
-  AxiosResponse<GetPermissions>
+  AxiosResponse<IGetPermissionResponse>
 > => {
   const { authToken } = useUserStore();
 
@@ -81,25 +77,6 @@ export const getPermissions = async (): Promise<
     url: `${VITE_API_URL}/api/v1/users/permissions`,
     headers: {
       Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- *	Get all users
- *
- * @param {number} page page number default to 1
- * @param {string} sort sort type asc or desc
- *
- * @returns {object} response
- */
-export const getAllUsers = async ({ page, sort }: ApiPaginationType) => {
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/users`,
-    params: {
-      page,
-      created: sort,
     },
   });
 };
@@ -120,3 +97,21 @@ export const checkUserDashboardAccess = async () => {
     },
   });
 };
+
+export class Users extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  /**
+   * @param {object} [params={}] - URL parameters
+   * @returns {Promise<IGetAllUsers>}
+   */
+  async getAll(params = {}): Promise<IGetAllUsers> {
+    return this.get("/v1/users", params)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+}
