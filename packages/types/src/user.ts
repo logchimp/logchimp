@@ -1,4 +1,4 @@
-import type { ApiSortType } from "./common";
+import type { ApiSortType, IApiStatus } from "./common";
 
 export interface IUser {
   userId: string;
@@ -49,6 +49,11 @@ export interface IGetUsersRequestQuery {
   page: string;
   limit?: number;
   created: ApiSortType;
+}
+
+export interface IGetUsersResponseBody {
+  status: IApiStatus;
+  users: IUserInfo[];
 }
 
 export type TUserAssignRoleResponse =
