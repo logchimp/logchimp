@@ -66,8 +66,12 @@ describe("POST /api/v1/auth/login", () => {
     const token = verifyToken(user.authToken);
 
     // check auth token
-    expect(token.email).toEqual(u.email);
-    expect(token.userId).toEqual(user.userId);
+    expect(typeof token).not.toBe("string");
+    expect(typeof token).toBe("object");
+    if (typeof token === "object") {
+      expect(token.email).toEqual(u.email);
+      expect(token.userId).toEqual(user.userId);
+    }
 
     expect(user.email).toEqual(u.email);
     expect(user.username).toEqual(u.username);
