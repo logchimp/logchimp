@@ -1,9 +1,8 @@
 import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
-import type { IAuthUser } from "@logchimp/types";
+import type { IAuthUser, TPermission } from "@logchimp/types";
 
 import { router } from "../router";
-import type { PermissionType } from "../modules/users";
 
 export const useUserStore = defineStore("user", () => {
   const authToken = ref<string>("");
@@ -14,7 +13,7 @@ export const useUserStore = defineStore("user", () => {
     email: "",
     avatar: "",
   });
-  const permissions = ref<string[]>([]);
+  const permissions = ref<TPermission[]>([]);
 
   const getUser = computed(() => user);
   const getUserId = computed(() => user.userId);
@@ -36,7 +35,7 @@ export const useUserStore = defineStore("user", () => {
     );
   }
 
-  function setPermissions(payload: PermissionType) {
+  function setPermissions(payload: TPermission[]) {
     permissions.value = payload;
   }
 
