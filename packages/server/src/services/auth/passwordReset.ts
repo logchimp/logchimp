@@ -6,9 +6,12 @@ import { mail, generateContent } from "../mail";
 import { createToken } from "../token.service";
 
 // utils
+import logchimpConfig from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 
-export async function passwordReset(url, tokenPayload) {
+const config = logchimpConfig();
+
+export async function passwordReset(tokenPayload) {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -33,7 +36,7 @@ export async function passwordReset(url, tokenPayload) {
     const siteInfo = await database.select("title").from("settings");
     const siteTitle = siteInfo[0].title;
 
-    const urlObject = new URL(url);
+    const urlObject = new URL(config.server.webUrl);
     const passwordResetMailContent = await generateContent("reset", {
       url: urlObject.origin,
       domain: urlObject.host,
