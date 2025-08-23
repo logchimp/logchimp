@@ -15,7 +15,6 @@
     "db:seed:run": "knex --knexfile ./src/database/config.ts seed:run"
   },
   "dependencies": {
-    "@logchimp/types": "workspace:*",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -38,6 +37,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
+    "@logchimp/types": "workspace:*",
     "@types/express": "^5.0.3",
     "@types/html-to-text": "^9.0.4",
     "@types/jsonwebtoken": "^9.0.10",

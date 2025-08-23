@@ -20,9 +20,6 @@ importers:
 
   packages/server:
     dependencies:
-      '@logchimp/types':
-        specifier: workspace:*
-        version: link:../types
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -84,6 +81,9 @@ importers:
       '@faker-js/faker':
         specifier: ^9.9.0
         version: 9.9.0
+      '@logchimp/types':
+        specifier: workspace:*
+        version: link:../types
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.3
