@@ -6,6 +6,7 @@ import type {
   IGetAllUsers,
   IUpdateUserSettingsArgs,
   IGetPermissionResponse,
+  TGetUserInfoResponseBody,
 } from "@logchimp/types";
 
 // store
@@ -109,6 +110,19 @@ export class Users extends APIService {
    */
   async getAll(params = {}): Promise<IGetAllUsers> {
     return this.get("/v1/users", params)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  /**
+   * Get a single user's detailed info by ID
+   * @param {string} user_id - User ID
+   * @returns {Promise<TGetUserInfoResponseBody>}
+   */
+  async getById(user_id: string): Promise<TGetUserInfoResponseBody> {
+    return this.get(`/v1/users/${user_id}`)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;

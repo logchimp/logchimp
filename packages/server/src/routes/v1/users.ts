@@ -15,4 +15,7 @@ router.patch("/users/profile", middleware.apiAuth, users.updateProfile);
 router.get("/users/permissions", middleware.apiAuth, users.getUserPermissions);
 router.get("/users/dashboard", middleware.apiAuth, users.accessDashboard);
 
+// user management routes
+router.get("/users/:user_id", middleware.apiAuth, users.getUserInfo);
+
 export default router;
