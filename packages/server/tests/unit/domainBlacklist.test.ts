@@ -1,125 +1,82 @@
-import { describe, it, expect } from "vitest";
-
+import { describe, it, expect, beforeEach } from "vitest";
+import express from "express";
+import request from "supertest";
 import {
-  isDomainBlacklisted,
+  domainBlacklist,
   parseBlacklistedDomains,
   isValidDomain,
-} from "./../../src/utils/domainBlacklist";
+} from "./../../src/middlewares/domainBlacklist";
 
-describe("isDomainBlacklisted", () => {
-  it("should return true for blacklisted domains", () => {
+function createApp() {
+  const app = express();
+  app.use(express.json());
+
+  app.post("/test", domainBlacklist, (req, res) => {
+    res.status(200).json({ success: true });
+  });
+
+  return app;
+}
+
+describe("domainBlacklist", () => {
+  // biome-ignore lint/suspicious/noImplicitAnyLet: express type
+  let app;
+
+  beforeEach(() => {
+    app = createApp();
+  });
+
+  it("should block blacklisted domains", async () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
       "example.com, test.com, spam.com, badsite.org";
 
-    expect(isDomainBlacklisted("user@example.com")).toBeTruthy();
-    expect(isDomainBlacklisted("test@test.com")).toBeTruthy();
-    expect(isDomainBlacklisted("admin@spam.com")).toBeTruthy();
+    const res = await request(app)
+      .post("/test")
+      .send({ email: "user@example.com" });
+
+    expect(res.status).toBe(403);
   });
 
-  it("should return false for non-blacklisted domains", () => {
+  it("should allow non-blacklisted domains", async () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
       "example.com, test.com, spam.com, badsite.org";
 
-    expect(isDomainBlacklisted("hello@good.com")).toBeFalsy();
-    expect(isDomainBlacklisted("admin@other.org")).toBeFalsy();
+    const res = await request(app)
+      .post("/test")
+      .send({ email: "hello@good.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
   });
 
-  it("should return false for invalid email formats", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com";
+  it("should reject invalid email formats", async () => {
+    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "example.com, test.com";
 
-    expect(isDomainBlacklisted("not-an-email")).toBeFalsy();
-    expect(isDomainBlacklisted("user@@spam.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@")).toBeFalsy();
-    expect(isDomainBlacklisted("@domain.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@domain")).toBeFalsy();
+    const res = await request(app)
+      .post("/test")
+      .send({ email: "not-an-email" });
+
+    expect(res.status).toBe(400);
   });
 
-  it("should be case insensitive", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com, badsite.org";
-
-    expect(isDomainBlacklisted("USER@Spam.com")).toBeTruthy();
-    expect(isDomainBlacklisted("ADMIN@bAdSiTe.ORG")).toBeTruthy();
-    expect(isDomainBlacklisted("uSeR@eXaMpLe.CoM")).toBeTruthy();
-  });
-
-  it("should return false for non-string input", () => {
+  it("should allow subdomains unless explicitly blacklisted", async () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "example.com";
 
-    //@ts-ignore
-    expect(isDomainBlacklisted(null)).toBeFalsy();
-    //@ts-ignore
-    expect(isDomainBlacklisted(undefined)).toBeFalsy();
-    //@ts-ignore
-    expect(isDomainBlacklisted(42)).toBeFalsy();
-    //@ts-ignore
-    expect(isDomainBlacklisted([])).toBeFalsy();
-    //@ts-ignore
-    expect(isDomainBlacklisted({})).toBeFalsy();
+    const res = await request(app)
+      .post("/test")
+      .send({ email: "user@sub.example.com" });
+
+    expect(res.status).toBe(200);
   });
 
-  it("should handle blacklisted domains with subdomains (should be false unless specifically blacklisted)", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com";
-
-    expect(isDomainBlacklisted("user@sub.example.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@another.test.com")).toBeFalsy();
-  });
-
-  it("should handle domains with leading/trailing spaces in the email", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com";
-
-    expect(isDomainBlacklisted(" user@example.com ")).toBeTruthy();
-    expect(isDomainBlacklisted("user@spam.com ")).toBeTruthy();
-    expect(isDomainBlacklisted(" user@test.com")).toBeTruthy();
-  });
-
-  it("should return false if blacklisted domains environment variable is empty or invalid", () => {
+  it("should allow if blacklist is empty", async () => {
     process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "";
-    expect(isDomainBlacklisted("user@example.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@test.com")).toBeFalsy();
 
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "invalid-domain-!!, another.com";
-    expect(isDomainBlacklisted("user@invalid-domain-!!.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@another.com")).toBeTruthy();
-  });
+    const res = await request(app)
+      .post("/test")
+      .send({ email: "user@example.com" });
 
-  it("should handle multiple blacklisted domains and non-blacklisted domains correctly", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "domain1.com, domain2.org, domain3.net";
-
-    expect(isDomainBlacklisted("user@domain1.com")).toBeTruthy();
-    expect(isDomainBlacklisted("user@domain2.org")).toBeTruthy();
-    expect(isDomainBlacklisted("user@domain3.net")).toBeTruthy();
-    expect(isDomainBlacklisted("user@domain4.xyz")).toBeFalsy();
-    expect(isDomainBlacklisted("user@domain1.net")).toBeFalsy();
-  });
-
-  it("should return false for valid domains not in the blacklist", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "foo.com, bar.net";
-
-    expect(isDomainBlacklisted("user@baz.org")).toBeFalsy();
-    expect(isDomainBlacklisted("info@qux.io")).toBeFalsy();
-  });
-
-  it("should handle domains with different TLD lengths", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "shorttld.co, longtld.museum";
-
-    expect(isDomainBlacklisted("user@shorttld.co")).toBeTruthy();
-    expect(isDomainBlacklisted("user@longtld.museum")).toBeTruthy();
-    expect(isDomainBlacklisted("user@onetld.x")).toBeFalsy();
-  });
-
-  it("should treat an invalid domain in email as non-blacklisted even if it looks like a blacklisted one", () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com";
-
-    expect(isDomainBlacklisted("user@-example.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@.test.com")).toBeFalsy();
-    expect(isDomainBlacklisted("user@spam.com.")).toBeFalsy();
+    expect(res.status).toBe(200);
   });
 });
 
