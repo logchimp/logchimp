@@ -12,7 +12,7 @@
       :disabled="createRoleButtonDisabled"
       @click="createRoleHandler"
     >
-      Create
+      Create role
     </Button>
   </DashboardPageHeader>
 
@@ -76,7 +76,7 @@ export default {
 
 <script setup lang="ts">
 // packages
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useHead } from "@vueuse/head";
 import {
   Settings as SettingsIcon,
@@ -103,8 +103,8 @@ import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.
 import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 const { settings } = useSettingStore()
-const { permissions  } = useUserStore()
-const dashboardRoles = useDashboardRoles();
+const { permissions } = useUserStore()
+const dashboardRoles = ref(useDashboardRoles());
 
 const createRoleButtonLoading = ref(false)
 
@@ -126,6 +126,10 @@ async function createRoleHandler() {
 		createRoleButtonLoading.value = false;
 	}
 }
+
+onMounted(async () => {
+  dashboardRoles.value.fetchRoles();
+})
 
 useHead({
 	title: "Roles • Settings • Dashboard"
