@@ -3,20 +3,10 @@
     <div class="users-table-user-avatar">
       <avatar :src="user.avatar" :name="(user.name || user.username) || ''" />
     </div>
-    <div class="flex items-center justify-between">
+  <div class="flex items-center justify-between">
       <h6 class="users-table-user-name">
         {{ user.name || user.username }}
       </h6>
-      <button
-        @click="openUserDialog"
-        class="ml-2 p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
-        title="View user details"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-      </button>
     </div>
   </div>
   <div class="table-header-item users-table-user flex items-center gap-x-1.5">
@@ -26,8 +16,30 @@
   <div class="table-data users-table-posts">
     {{ user.posts }}
   </div>
-  <div class="table-data users-table-votes">
-    {{ user.votes }}
+  <div class="table-data users-table-votes flex items-center justify-between gap-3">
+    <span>{{ user.votes }}</span>
+    <DropdownV2 class="table-icon-group users-table-icons">
+      <template #trigger>
+        <DropdownMenuTrigger
+          :class="[
+            'table-data-icon dropdown-menu-icon',
+          ]"
+          title="View options"
+        >
+          <EyeIcon aria-hidden="true" class="stroke-neutral-700 size-5" />
+          <span class="sr-only">View options</span>
+        </DropdownMenuTrigger>
+      </template>
+
+      <DropdownV2Content align="end" side="bottom" :loop="true">
+        <DropdownV2Item @click="openUserDialog">
+          <template #icon>
+            <EyeIcon aria-hidden="true" />
+          </template>
+          View details
+        </DropdownV2Item>
+      </DropdownV2Content>
+    </DropdownV2>
   </div>
   <MoreOptionsDropdown
     v-if="settings.developer_mode"
@@ -43,6 +55,11 @@ import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
 import { userIdKey } from "./options";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
+import { DropdownMenuTrigger } from "reka-ui";
+import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
+import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
+import DropdownV2Item from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
+import { MoreHorizontalIcon, EyeIcon } from "lucide-vue";
 
 interface Props {
   user: IUser;
