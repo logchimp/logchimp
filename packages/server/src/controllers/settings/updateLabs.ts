@@ -1,8 +1,9 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  TUpdateLabsRequestBody,
-  TUpdateLabsResponseBody,
+  TPermission,
+  TUpdateSiteSettingsLabRequestBody,
+  TUpdateSiteSettingsLabResponseBody,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -10,14 +11,14 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-type ResponseBody = TUpdateLabsResponseBody | IApiErrorResponse;
+type ResponseBody = TUpdateSiteSettingsLabResponseBody | IApiErrorResponse;
 
 /**
  * This API doesn't update the existing labs value
  * instead overrides the existing value with req.body.labs
  */
 export async function updateLabs(
-  req: Request<unknown, unknown, TUpdateLabsRequestBody>,
+  req: Request<unknown, unknown, TUpdateSiteSettingsLabRequestBody>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
@@ -29,7 +30,7 @@ export async function updateLabs(
   const stringify = JSON.stringify(labs);
 
   const checkPermission = permissions.find(
-    (item) => item === "settings:update",
+    (item: TPermission) => item === "settings:update",
   );
   if (!checkPermission) {
     return res.status(403).send({

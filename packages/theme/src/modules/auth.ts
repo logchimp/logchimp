@@ -1,39 +1,29 @@
-// packages
 import axios, { type AxiosResponse } from "axios";
+import type {
+  IAuthLoginRequestBody,
+  IAuthLoginResponseBody,
+  IAuthSignupResponseBody,
+  TAuthSignupRequestBody,
+} from "@logchimp/types";
 
-import type { UserType } from "./users";
 import { VITE_API_URL } from "../constants";
-
-interface AuthenticateUserArgs {
-  email: string;
-  password: string;
-}
 
 interface SetNewPasswordArgs {
   token: string;
   password: string;
 }
 
-interface AuthenticateUserType extends UserType {
-  email: string;
-  authToken: string;
-}
-
 /**
  * Sign in to user account
- *
- * @param {string} email user email address
- * @param {string} password user password
- * @returns {object} response
+ * @param {object} arg0
+ * @param {string} arg0.email user email address
+ * @param {string} arg0.password user password
+ * @returns {Promise<AxiosResponse<IAuthLoginResponseBody>>} response
  */
 export const signin = async ({
   email,
   password,
-}: AuthenticateUserArgs): Promise<
-  AxiosResponse<{
-    user: AuthenticateUserType;
-  }>
-> => {
+}: IAuthLoginRequestBody): Promise<AxiosResponse<IAuthLoginResponseBody>> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/login`,
@@ -46,12 +36,15 @@ export const signin = async ({
 
 /**
  * Create user account
- *
- * @param {string} email user email address
- * @param {string} password user password
- * @returns {object} response
+ * @param {object} arg0
+ * @param {string} arg0.email user email address
+ * @param {string} arg0.password user password
+ * @returns {Promise<AxiosResponse<IAuthSignupResponseBody>>} response
  */
-export const signup = async ({ email, password }: AuthenticateUserArgs) => {
+export const signup = async ({
+  email,
+  password,
+}: TAuthSignupRequestBody): Promise<AxiosResponse<IAuthSignupResponseBody>> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/signup`,
@@ -64,9 +57,7 @@ export const signup = async ({ email, password }: AuthenticateUserArgs) => {
 
 /**
  * Validate user email address
- *
  * @param {string} token email address verification token
- *
  * @returns {object} response
  */
 export const verifyUserEmail = async (token: string) => {
@@ -81,9 +72,7 @@ export const verifyUserEmail = async (token: string) => {
 
 /**
  * Request for password reset
- *
  * @param {string} email user email address
- *
  * @returns {object} response
  */
 export const requestPasswordReset = async (email: string) => {
@@ -98,9 +87,7 @@ export const requestPasswordReset = async (email: string) => {
 
 /**
  * Validate reset password token
- *
  * @param {string} token reset password token
- *
  * @returns {object} response
  */
 export const validateResetPasswordToken = async (token: string) => {
@@ -115,10 +102,9 @@ export const validateResetPasswordToken = async (token: string) => {
 
 /**
  * Set new password
- *
- * @param {string} token reset password token
- * @param {string} password new password
- *
+ * @param {object} arg0
+ * @param {string} arg0.token reset password token
+ * @param {string} arg0.password new password
  * @returns {object} response
  */
 export const setNewPassword = async ({

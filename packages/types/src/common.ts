@@ -34,7 +34,12 @@ export interface CursorPaginatedResponse<T> {
 export interface IApiErrorResponse {
   message: string;
   code: string;
+  // TODO: add TS type
   errors?: unknown;
+}
+
+export interface IApiValidationErrorResponse {
+  errors: IApiErrorResponse[];
 }
 
 export interface DraggableSortFromToType {
