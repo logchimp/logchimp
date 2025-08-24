@@ -1,10 +1,16 @@
+import type { ApiSortType } from "@logchimp/types";
+
 // database
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 
-export async function getUsers(created, limit, page) {
+export async function getUsers(
+  created: ApiSortType,
+  limit: number,
+  page: number,
+) {
   try {
     const users = await database
       .select("userId", "name", "email", "username", "avatar", "isVerified")

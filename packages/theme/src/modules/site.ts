@@ -1,5 +1,12 @@
-// packages
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  ISiteSetupResponseBody,
+  IUpdateSiteSettingsRequestBody,
+  TGetSiteSettingsLabResponseBody,
+  TUpdateSiteSettingsLabRequestBody,
+  TUpdateSiteSettingsLabResponseBody,
+  TUpdateSiteSettingsResponseBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
 
@@ -11,22 +18,6 @@ interface SiteSetupArgs {
   name: string;
   email: string;
   password: string;
-}
-
-export interface LabsType {
-  comments: boolean;
-}
-
-interface SiteSettingsType {
-  title: string;
-  description?: string;
-  logo?: string;
-  accentColor: string;
-  googleAnalyticsId: string;
-  isPoweredBy?: boolean;
-  allowSignup: boolean;
-  developer_mode: boolean;
-  labs?: LabsType;
 }
 
 /**
@@ -59,10 +50,11 @@ export const siteSetup = async ({
 
 /**
  * Get site settings
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<ISiteSetupResponseBody>>} response
  */
-export const isSiteSetup = async () => {
+export const isSiteSetup = async (): Promise<
+  AxiosResponse<ISiteSetupResponseBody>
+> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/auth/setup`,
@@ -71,10 +63,11 @@ export const isSiteSetup = async () => {
 
 /**
  * Get site settings
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<ISiteSetupResponseBody>>} response
  */
-export const getSettings = async () => {
+export const getSettings = async (): Promise<
+  AxiosResponse<ISiteSetupResponseBody>
+> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/settings/site`,
@@ -89,11 +82,13 @@ export const getSettings = async () => {
  * @param {string} site.description site description
  * @param {string} site.accentColor site accent color
  * @param {string} site.googleAnalyticsId site google analytics ID
- * @param {string} site.allowSignup allow user creating account
- *
- * @returns {object} response
+ * @param {boolean} site.allowSignup allow user creating account
+ * @param {boolean} site.developer_mode toggle developer mode
+ * @returns {Promise<AxiosResponse<TUpdateSiteSettingsResponseBody>>} response
  */
-export const updateSettings = async (site: SiteSettingsType) => {
+export const updateSettings = async (
+  site: IUpdateSiteSettingsRequestBody,
+): Promise<AxiosResponse<TUpdateSiteSettingsResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -125,10 +120,11 @@ export const uploadSiteLogo = async (logo: FormData) => {
 
 /**
  * Get labs settings
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<TGetSiteSettingsLabResponseBody>>} response
  */
-export const getLabsSettings = async () => {
+export const getLabsSettings = async (): Promise<
+  AxiosResponse<TGetSiteSettingsLabResponseBody>
+> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/settings/labs`,
@@ -137,12 +133,12 @@ export const getLabsSettings = async () => {
 
 /**
  * update labs settings
- *
  * @param {*} labs
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<TUpdateSiteSettingsLabResponseBody>>} response
  */
-export const updateLabsSettings = async (labs: LabsType) => {
+export const updateLabsSettings = async (
+  labs: TUpdateSiteSettingsLabRequestBody,
+): Promise<AxiosResponse<TUpdateSiteSettingsLabResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({
