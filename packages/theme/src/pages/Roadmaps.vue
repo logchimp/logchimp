@@ -60,15 +60,6 @@ const currentCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
 
-const filteredRoadmaps = computed(() => {
-  if (selectedFilter.value === "public") {
-    return roadmaps.value.filter((r: any) => r.display === true);
-  } else if (selectedFilter.value === "private") {
-    return roadmaps.value.filter((r: any) => r.display === false);
-  }
-  return roadmaps.value;
-});
-
 async function getRoadmaps() {
   if (state.value === "COMPLETED") return;
 
