@@ -6,12 +6,14 @@
       'overflow-x-auto h-[500px]',
       'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]'
     ]"
+    ref="scrollContainer"
   >
     <roadmap-column
       v-for="roadmap in roadmaps"
       :key="roadmap.id"
       :roadmap="roadmap"
     />
+      <div v-if="roadmapArr.length != roadmapCount" ref="target"></div>
   </div>
 
   <!-- Show infinite scroll component with proper conditions -->
@@ -37,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onUpdated } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
@@ -55,10 +57,15 @@ import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
+const roadmapArr = ref<IRoadmap[]>([]);
 const roadmaps = ref<IRoadmap[]>([]);
 const currentCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
+const roadmapCount = ref<int>(0);
+const scrollContainer = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver | null = null;
+const target = ref<HTMLElement | null>(null);
 
 async function getRoadmaps() {
   if (state.value === "COMPLETED") return;
@@ -71,10 +78,16 @@ async function getRoadmaps() {
     });
 
     const paginatedData: IPaginatedRoadmapsResponse = response.data;
-    const newRoadmaps = paginatedData.results;
+    roadmapArr.value = paginatedData.results;
 
-    if (newRoadmaps.length > 0) {
-      roadmaps.value.push(...newRoadmaps);
+    if (roadmapArr.value.length > 0) {
+      // fetch only the first 3 roadmap posts
+      for (
+        roadmapCount.value = 0;
+        roadmapCount.value < Math.min(roadmapArr.value.length, 3);
+      ) {
+        roadmaps.value.push(roadmapArr.value[roadmapCount.value++]);
+      }
 
       // Use backend-provided cursor
       currentCursor.value = paginatedData.page_info.end_cursor || undefined;
@@ -103,5 +116,23 @@ useHead({
 
 defineOptions({
   name: "Roadmaps",
+});
+
+onUpdated(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        if (roadmapCount.value < roadmapArr.value.length) {
+          roadmaps.value.push(roadmapArr.value[roadmapCount.value++]);
+          console.log("@31");
+        }
+      }
+    },
+    {
+      root: scrollContainer.value,
+      threshold: 0.05,
+    },
+  );
+  if (target.value) observer.observe(target.value);
 });
 </script>
