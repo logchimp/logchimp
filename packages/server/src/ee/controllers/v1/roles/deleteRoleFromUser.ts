@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { TPermission } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
@@ -10,7 +11,9 @@ export async function deleteRoleFromUser(req: Request, res: Response) {
   const permissions = req.user.permissions;
   const { role_id, user_id } = req.params;
 
-  const checkPermission = permissions.find((item) => item === "role:unassign");
+  const checkPermission = permissions.find(
+    (item: TPermission) => item === "role:unassign",
+  );
   if (!checkPermission) {
     return res.status(403).send({
       message: error.api.roles.notEnoughPermission,

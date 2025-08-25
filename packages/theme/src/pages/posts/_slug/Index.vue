@@ -110,7 +110,7 @@ import { useHead } from "@vueuse/head";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
-import type { ApiSortType, IPostVote } from "@logchimp/types";
+import type { ApiSortType, IPost, IPostVote } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
@@ -138,12 +138,13 @@ const { labs, get: siteSettings } = useSettingStore();
 dayjs.extend(relativeTime);
 
 // posts
-const post = reactive({
+const post = reactive<IPost>({
   postId: "",
   title: "",
   slug: "",
   contentMarkdown: "",
-  createdAt: "",
+  // TODO: what should be the default/empty value
+  createdAt: new Date(),
   author: {
     name: "",
     username: "",

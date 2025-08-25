@@ -2,6 +2,7 @@ import type { IPublicUserInfo } from "./user";
 import type { IPostVote } from "./vote";
 import type { IRoadmap } from "./roadmap";
 import type { IBoard } from "./board";
+import type { ApiSortType } from "./common";
 
 export interface IPost extends IPostInfo {
   board: IBoard;
@@ -37,4 +38,21 @@ interface IPostBoard {
   view_voters: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IFilterPostRequestBody {
+  userId: string;
+  boardId: string[];
+  roadmapId: string;
+  page: string;
+  limit?: number;
+  created: ApiSortType;
+}
+
+export interface IFilterPostResponseBody {
+  posts: IPost[];
+}
+
+export interface IGetPostBySlugResponseBody {
+  post: IPost;
 }

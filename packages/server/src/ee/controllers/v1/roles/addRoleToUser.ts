@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
-import type { IUserRole } from "@logchimp/types";
+import type { IUserRole, TPermission } from "@logchimp/types";
 
 import database from "../../../../database";
 
@@ -13,7 +13,9 @@ export async function addRoleToUser(req: Request, res: Response) {
   const permissions = req.user.permissions;
   const { role_id, user_id } = req.params;
 
-  const checkPermission = permissions.find((item) => item === "role:assign");
+  const checkPermission = permissions.find(
+    (item: TPermission) => item === "role:assign",
+  );
   if (!checkPermission) {
     return res.status(403).send({
       message: error.api.roles.notEnoughPermission,
