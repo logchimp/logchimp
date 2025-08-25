@@ -35,7 +35,12 @@ services:
       args:
         DOCKER_BUILDKIT: 1
     volumes:
-      - ./:/app
+      - .:/app
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/types/node_modules
+      - /app/packages/server/dist
+      - /app/packages/types/dist
     depends_on:
       - db
     networks:
