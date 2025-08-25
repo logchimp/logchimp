@@ -35,8 +35,24 @@ export const parseBlacklistedDomains = (rawDomains: string) => {
   return result;
 };
 
-const getBlacklistedDomains = () =>
-  parseBlacklistedDomains(process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "");
+export class BlacklistManager {
+  private cachedBlacklist: Set<string> | null = null;
+
+  constructor(
+    private rawDomains: string = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "",
+  ) {}
+
+  getBlacklistedDomains() {
+    if (!this.cachedBlacklist) {
+      this.cachedBlacklist = parseBlacklistedDomains(this.rawDomains);
+    }
+    return this.cachedBlacklist;
+  }
+
+  reset() {
+    this.cachedBlacklist = null;
+  }
+}
 
 export function domainBlacklist(
   req: Request,
@@ -69,7 +85,9 @@ export function domainBlacklist(
     });
   }
 
-  if (getBlacklistedDomains().has(domain)) {
+  const blacklistManager = new BlacklistManager();
+
+  if (blacklistManager.getBlacklistedDomains().has(domain)) {
     return res.status(403).send({
       message: error.api.authentication.emailDomainBlacklisted,
       code: "EMAIL_DOMAIN_BLACKLISTED",
