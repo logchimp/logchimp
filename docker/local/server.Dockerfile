@@ -15,15 +15,14 @@ RUN go install github.com/air-verse/air@latest;
 WORKDIR /app
 COPY ./packages/types/ ./packages/types/
 COPY ./packages/server/ ./packages/server/
-COPY ./package.json ./pnpm-lock.yaml ./
-
-WORKDIR /app/packages/server
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 
 ENV NODE_ENV=development
 
 RUN \
-    npm i -g pnpm; \
-    pnpm install; \
-    pnpm --filter="@logchimp/types" build;
+    npm i -g pnpm && \
+    pnpm install
 
-CMD ["air", "-c", ".air.toml"]
+WORKDIR /app/packages/server
+
+ENTRYPOINT ["sh", "docker-dev-entrypoint.sh"]
