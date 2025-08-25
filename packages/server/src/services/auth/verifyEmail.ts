@@ -1,4 +1,4 @@
-// database
+import type { TEmailVerification } from "@logchimp/types";
 import database from "../../database";
 
 // services
@@ -6,9 +6,15 @@ import { mail, generateContent } from "../mail";
 import { createToken } from "../token.service";
 
 // utils
+import logchimpConfig from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
+import type { IVerifyEmailJwtPayload } from "../../types";
 
-export async function verifyEmail(url, tokenPayload) {
+const config = logchimpConfig();
+
+export async function verifyEmail(
+  tokenPayload: IVerifyEmailJwtPayload,
+): Promise<TEmailVerification> {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -18,12 +24,13 @@ export async function verifyEmail(url, tokenPayload) {
       email: tokenPayload.email,
     });
 
-    const userEmailVerificationToken = await database
+    const userEmailVerificationToken = await database<TEmailVerification>(
+      "emailVerification",
+    )
       .insert({
         email: tokenPayload.email,
         token,
       })
-      .into("emailVerification")
       .returning("*");
 
     /**
@@ -32,7 +39,7 @@ export async function verifyEmail(url, tokenPayload) {
     const siteInfo = await database.select("title").from("settings");
     const siteTitle = siteInfo[0].title;
 
-    const urlObject = new URL(url);
+    const urlObject = new URL(config.server.webUrl);
     const onboardingMailContent = await generateContent("verify", {
       url: urlObject.origin,
       domain: urlObject.hostname,

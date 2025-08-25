@@ -31,6 +31,7 @@ services:
       LOGCHIMP_IS_SELF_HOSTED: true
       LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
       LOGCHIMP_MACHINE_SIGNATURE: ${LOGCHIMP_MACHINE_SIGNATURE}
+      LOGCHIMP_WEB_URL: ${LOGCHIMP_WEB_URL}
 
       # Database
       LOGCHIMP_DB_HOST: db
@@ -58,7 +59,7 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${THEME_PORT:-3000}
-      VITE_API_URL: http://api:${API_PORT:-8000}
+      VITE_API_URL: ${LOGCHIMP_API_URL}
       VITE_IS_SELF_HOSTED: true
     ports:
       - "${THEME_PORT:-3000}:${THEME_PORT:-3000}"

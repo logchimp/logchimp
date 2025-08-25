@@ -23,7 +23,7 @@
         <div class="table-header-item" />
       </div>
       <div class="table-body">
-        <div v-for="role in roles" :key="role.id" class="table-row">
+        <div v-for="role in dashboardRoles.roles" :key="role.id" class="table-row">
           <div class="table-data flex-1">
             {{ role.name }}
           </div>
@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <infinite-scroll @infinite="getRoles" :state="state" />
+        <infinite-scroll @infinite="dashboardRoles.fetchRoles" :state="dashboardRoles.state" />
       </div>
     </div>
   </div>
@@ -88,11 +88,12 @@ import {
 import { router } from "../../../../../router";
 import { useSettingStore } from "../../../../../store/settings"
 import { useUserStore } from "../../../../../store/user"
-import { getAllRoles, createRole } from "../../../../modules/roles";
+import { createRole } from "../../../../modules/roles";
 import { useCopyText } from "../../../../../hooks";
+import { useDashboardRoles } from "../../../../../store/dashboard/roles.ts";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll from "../../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../../components/ui/Button.vue";
 import DropdownWrapper from "../../../../../components/ui/dropdown/DropdownWrapper.vue";
 import Dropdown from "../../../../../components/ui/dropdown/Dropdown.vue";
@@ -103,11 +104,9 @@ import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbI
 
 const { settings } = useSettingStore()
 const { permissions  } = useUserStore()
+const dashboardRoles = useDashboardRoles();
 
-// TODO: Add TS types
-const roles = ref<unknown>([])
 const createRoleButtonLoading = ref(false)
-const state = ref<InfiniteScrollStateType>()
 
 const createRoleButtonDisabled = computed(() => {
 	const checkPermission = permissions.includes("role:create");
@@ -125,20 +124,6 @@ async function createRoleHandler() {
 		console.error(error);
 	} finally {
 		createRoleButtonLoading.value = false;
-	}
-}
-
-async function getRoles() {
-  state.value = 'LOADING'
-
-	try {
-		const response = await getAllRoles();
-
-		roles.value = response.data.roles;
-    state.value = 'COMPLETED'
-	} catch (error) {
-		console.error(error);
-    state.value = 'ERROR'
 	}
 }
 

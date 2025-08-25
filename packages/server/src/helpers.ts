@@ -132,6 +132,11 @@ function readFile(path: string): Promise<string | Error> {
   });
 }
 
+const isDevTestEnv =
+  process.env.NODE_ENV === "development" ||
+  process.env.NODE_ENV === "testing" ||
+  process.env.NODE_ENV === "ci";
+
 export {
   validEmail,
   validUUID,
@@ -142,4 +147,5 @@ export {
   sanitiseURL,
   toSlug,
   readFile,
+  isDevTestEnv,
 };

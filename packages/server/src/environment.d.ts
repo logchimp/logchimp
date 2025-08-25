@@ -7,6 +7,7 @@ declare namespace NodeJS {
 
     readonly LOGCHIMP_SECRET_KEY: string | undefined;
     readonly LOGCHIMP_MACHINE_SIGNATURE: string | undefined;
+    readonly LOGCHIMP_WEB_URL: string | undefined;
 
     // Database
     readonly LOGCHIMP_DB_SSL: string | undefined;

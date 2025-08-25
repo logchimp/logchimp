@@ -1,4 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
+import type {
+  IApiErrorResponse,
+  IAuthSignupResponseBody,
+  TAuthSignupRequestBody,
+} from "@logchimp/types";
 
 // services
 import { createUser } from "../../services/auth/createUser";
@@ -9,7 +14,13 @@ import { validEmail } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function signup(req: Request, res: Response, next: NextFunction) {
+type ResponseBody = IAuthSignupResponseBody | IApiErrorResponse;
+
+export async function signup(
+  req: Request<unknown, unknown, TAuthSignupRequestBody>,
+  res: Response<ResponseBody>,
+  next: NextFunction,
+) {
   const { email, password } = req.body;
 
   if (!validEmail(email)) {

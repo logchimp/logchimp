@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import type { IAuthUser, TAuthSignupRequestBody } from "@logchimp/types";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 
@@ -14,6 +15,7 @@ import { sanitiseUsername, sanitiseName } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import type { IVerifyEmailJwtPayload } from "../../types";
 
 interface UserData {
   email: string;
@@ -21,23 +23,12 @@ interface UserData {
   name?: string | null;
 }
 
-interface CreatedData {
-  authToken: string;
-  userId: string;
-  name: string;
-  username: string;
-  email: string;
-  avatar: string;
-  message: string;
-  code: string;
-}
-
 /**
  * Add user to 'users' database table
  *
- * @param {any} req
- * @param {any} res
- * @param {any} _next
+ * @param {Request} _
+ * @param {Response} res
+ * @param {NextFunction} _next
  * @param {object} userData - User data to create account
  * @param {string} userData.email - User email address
  * @param {string} userData.password - User password
@@ -45,11 +36,11 @@ interface CreatedData {
  * @returns {object|null} - Returning user data object from database or null
  */
 const createUser = async (
-  req: Request,
+  _: Request<unknown, unknown, TAuthSignupRequestBody>,
   res: Response,
   _next: NextFunction,
   userData: UserData,
-): Promise<CreatedData | null> => {
+): Promise<IAuthUser | null> => {
   // change email to lowercase to avoid case-sensitivity
   const email = userData.email.toLowerCase();
 
@@ -126,14 +117,13 @@ const createUser = async (
       })
       .into("roles_users");
 
-    const tokenPayload = {
+    const tokenPayload: IVerifyEmailJwtPayload = {
       userId: newUser.userId,
       email: newUser.email,
       type: "emailVerification",
     };
     // send email verification
-    const url = req.headers.origin;
-    await verifyEmail(url, tokenPayload);
+    await verifyEmail(tokenPayload);
 
     // create auth token
     const authToken = createToken(tokenPayload, {

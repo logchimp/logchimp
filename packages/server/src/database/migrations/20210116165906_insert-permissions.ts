@@ -1,6 +1,7 @@
+import type { TPermission } from "@logchimp/types";
 import { addPermission, removePermission } from "../utils";
 
-const permissions = [
+const permissions: TPermission[] = [
   "post:read",
   "post:create",
   "post:update",
