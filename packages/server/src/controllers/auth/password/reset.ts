@@ -14,25 +14,10 @@ import { isDevTestEnv } from "../../../helpers";
 import type { IPasswordResetJwtPayload } from "../../../types";
 
 type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
-import { isDomainBlacklisted } from "src/utils/domainBlacklist";
 
 export async function reset(req: Request, res: Response<ResponseBody>) {
   // @ts-expect-error
   const { userId, email } = req.user;
-
-  if (isDomainBlacklisted(email)) {
-    return res.status(403).send({
-      message: "The domain of the email is not allowed.",
-      code: "DOMAIN_BLACKLISTED",
-    });
-  }
-
-  if (isDomainBlacklisted(email)) {
-    return res.status(403).send({
-      message: "The domain of the email is not allowed.",
-      code: "DOMAIN_BLACKLISTED",
-    });
-  }
 
   try {
     const tokenPayload: IPasswordResetJwtPayload = {
