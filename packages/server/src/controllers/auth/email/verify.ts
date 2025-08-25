@@ -14,18 +14,10 @@ import { isDevTestEnv } from "../../../helpers";
 import type { IVerifyEmailJwtPayload } from "../../../types";
 
 type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
-// import { isDomainBlacklisted } from "../../../utils/domainBlacklist";
 
 export async function verify(req: Request, res: Response<ResponseBody>) {
   // @ts-expect-error
   const { userId, email, isVerified } = req.user;
-
-  // if (isDomainBlacklisted(email)) {
-  //   return res.status(403).send({
-  //     message: "Email domain is not allowed.",
-  //     code: "EMAIL_DOMAIN_BLACKLISTED",
-  //   });
-  // }
 
   if (isVerified) {
     return res.status(409).send({
