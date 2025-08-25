@@ -64,6 +64,9 @@
     },
     "labs": {
       "disabled": "This feature is disabled"
+    },
+    "error": {
+      "missed": "Something is missing"
     }
   }
 }

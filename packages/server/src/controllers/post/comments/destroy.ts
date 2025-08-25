@@ -24,7 +24,10 @@ export async function destroy(req: Request, res: Response) {
 
     await database.delete().from("posts_comments").where({ id: comment_id });
 
-    res.status(204);
+    res.status(204).json({
+      message:"like delete successfully",
+      success:true,
+    });
   } catch (err) {
     logger.log({
       level: "error",

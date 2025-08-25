@@ -1,8 +1,7 @@
 import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
-
 import database from "../../../database";
-
+import { Body1Schema } from "../zodValidation";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
@@ -11,7 +10,16 @@ export async function create(req: Request, res: Response) {
   // @ts-ignore
   const userId = req.user.userId;
   const { post_id } = req.params;
-  const { parent_id, is_internal, body } = req.body;
+  const response = Body1Schema.safeParse(req.body);
+  if(!response.success){
+    return res.status(400).json({
+      message:error.api.error.missed,
+      success:false,
+    })
+  }
+
+  const {parent_id, body, is_internal} = response.data || req.body
+
 
   // check auth user has required permission to set comment as internal
   // check the auth user has permission to comment
