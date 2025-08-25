@@ -25,12 +25,23 @@
         :key="user.userId"
         class="table-row group"
       >
-        <DashboardUsersTabularItem :user="user" :settings="settings" />
+        <DashboardUsersTabularItem 
+          :user="user" 
+          :settings="settings" 
+          @open-user-dialog="openUserDialog"
+        />
       </div>
 
       <infinite-scroll @infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
     </Table>
   </div>
+
+  <!-- User Info Dialog -->
+  <UserInfoDialog 
+    :user="selectedUser" 
+    :is-open="isDialogOpen" 
+    @close="closeDialog" 
+  />
 </template>
 
 <script lang="ts">
@@ -40,7 +51,9 @@ export default {
 </script>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IUser } from "@logchimp/types";
 
 // modules
 import { useSettingStore } from "../../store/settings";
@@ -53,9 +66,24 @@ import Breadcrumbs from "../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardUsersTabularItem from "../../ee/components/dashboard/users/TabularItem/TabularItem.vue";
+import UserInfoDialog from "../../components/dashboard/users/UserInfoDialog.vue";
 
 const { settings } = useSettingStore()
 const dashboardUsers = useDashboardUsers()
+
+// Dialog state
+const selectedUser = ref<IUser | null>(null)
+const isDialogOpen = ref(false)
+
+const openUserDialog = (user: IUser) => {
+  selectedUser.value = user
+  isDialogOpen.value = true
+}
+
+const closeDialog = () => {
+  isDialogOpen.value = false
+  selectedUser.value = null
+}
 
 useHead({
 	title: "Users • Dashboard"
