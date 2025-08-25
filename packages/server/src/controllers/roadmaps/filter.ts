@@ -75,7 +75,7 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
 
 function getRoadmapQuery(first: number, after?: string) {
   let query = database<IRoadmapPrivate>("roadmaps")
-    .select("id", "name", "url", "color", "display", "index")
+    .select("id", "name", "url", "color", "display", "index", "created_at")
     .orderBy("index", "asc")
     .limit(first);
 

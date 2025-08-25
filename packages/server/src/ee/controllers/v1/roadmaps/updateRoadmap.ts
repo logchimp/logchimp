@@ -1,13 +1,27 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
+import type {
+  IApiErrorResponse,
+  IApiValidationErrorResponse,
+  IUpdateRoadmapRequestBody,
+  TUpdateRoadmapResponseBody,
+} from "@logchimp/types";
+import type { ExpressRequestContext } from "../../../../express";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function updateRoadmap(req: Request, res: Response) {
-  // @ts-ignore
-  const id = req.roadmap.id;
+type ResponseBody =
+  | TUpdateRoadmapResponseBody
+  | IApiValidationErrorResponse
+  | IApiErrorResponse;
+
+export async function updateRoadmap(
+  req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
+  res: Response<ResponseBody>,
+) {
+  const id = req.ctx.roadmap.id;
 
   const { name, url, color, display } = req.body;
 
@@ -15,7 +29,7 @@ export async function updateRoadmap(req: Request, res: Response) {
     return res.status(400).send({
       errors: [
         url
-          ? ""
+          ? undefined
           : {
               message: error.api.roadmaps.urlMissing,
               code: "ROADMAP_URL_MISSING",
@@ -39,7 +53,15 @@ export async function updateRoadmap(req: Request, res: Response) {
       .where({
         id,
       })
-      .returning("*");
+      .returning([
+        "id",
+        "name",
+        "url",
+        "color",
+        "index",
+        "display",
+        "created_at",
+      ]);
 
     const roadmap = roadmaps[0];
 

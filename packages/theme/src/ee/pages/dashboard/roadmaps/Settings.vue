@@ -95,7 +95,7 @@ import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbD
 
 const { permissions } = useUserStore()
 
-const title = ref("");
+const title = ref<string>("");
 const roadmap = reactive({
 	id: "",
 	name: "",
@@ -103,9 +103,9 @@ const roadmap = reactive({
 	color: "",
 	display: false
 })
-const updateButtonLoading = ref(false)
+const updateButtonLoading = ref<boolean>(false)
 
-const updateRoadmapButtonDisabled = computed(() => {
+const updateRoadmapButtonDisabled = computed<boolean>(() => {
 	const checkPermission = permissions.includes("roadmap:update");
 	return !checkPermission;
 })

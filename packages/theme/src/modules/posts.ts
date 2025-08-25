@@ -1,6 +1,10 @@
 // packages
-import axios from "axios";
-import type { ApiPaginationType, ApiSortType } from "@logchimp/types";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  ApiPaginationType,
+  ApiSortType,
+  IGetPostBySlugResponseBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
 
@@ -48,10 +52,10 @@ interface AddCommentArgs {
 
 /**
  * Create post
- *
- * @param {boardId} string board UUID
- * @param {post} object post title and description
- *
+ * @param {string} boardId board UUID
+ * @param {object} post create post args
+ * @param {string} post.title
+ * @param {string} post.description
  * @returns {object} response
  */
 export const createPost = async (boardId: string, post: CreatePostArgs) => {
@@ -109,12 +113,12 @@ export const getPosts = async ({
 
 /**
  * Get post by slug
- *
- * @param {slug} string post slug
- *
- * @returns {object} response
+ * @param {string} slug post slug
+ * @returns {Promise<AxiosResponse<IGetPostBySlugResponseBody>>} response
  */
-export const getPostBySlug = async (slug: string) => {
+export const getPostBySlug = async (
+  slug: string,
+): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
   const { getUserId } = useUserStore();
 
   return await axios({

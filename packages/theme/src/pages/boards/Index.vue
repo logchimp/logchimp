@@ -26,9 +26,9 @@ export default {
 </script>
 
 <script setup lang="ts">
-// packages
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IBoard } from "@logchimp/types";
 
 // modules
 import { getPublicBoards } from "../../ee/modules/boards";
@@ -40,8 +40,7 @@ import BoardItem from "../../components/board/BoardItem.vue";
 
 const { get: siteSettings } = useSettingStore()
 
-// TODO: Add TS types
-const boards = ref<unknown>([])
+const boards = ref<IBoard[]>([])
 const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>()
 

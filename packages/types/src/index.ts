@@ -6,4 +6,4 @@ export * from "./roadmap";
 export * from "./vote";
 export * from "./post";
 export * from "./roles";
-export * from "./settings";
+export * from "./site";

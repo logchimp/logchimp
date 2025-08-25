@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  TGetLabsResponseBody,
-  TUpdateLabsResponseBody,
+  TGetSiteSettingsLabResponseBody,
+  TUpdateSiteSettingsLabResponseBody,
 } from "@logchimp/types";
 // database
 import database from "../../database";
@@ -11,14 +11,14 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-type ResponseBody = TGetLabsResponseBody | IApiErrorResponse;
+type ResponseBody = TGetSiteSettingsLabResponseBody | IApiErrorResponse;
 
 export async function getLabs(_: Request, res: Response<ResponseBody>) {
   try {
     const results = (await database
       .select(database.raw("labs::json"))
       .from("settings")
-      .first()) as unknown as TUpdateLabsResponseBody;
+      .first()) as unknown as TUpdateSiteSettingsLabResponseBody;
 
     res.status(200).send({
       labs: results.labs,
