@@ -1,4 +1,10 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IFilterPostRequestBody,
+  IFilterPostRequestQuery,
+  IFilterPostResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // services
@@ -10,7 +16,12 @@ import { validUUID, validUUIDs } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function filterPost(req: Request, res: Response) {
+type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
+
+export async function filterPost(
+  req: Request<unknown, unknown, IFilterPostRequestBody>,
+  res: Response<ResponseBody>,
+) {
   const userId = validUUID(req.body.userId);
   const boardId = validUUIDs(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);

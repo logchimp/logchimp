@@ -5,10 +5,13 @@ export interface IBoard {
   name: string;
   url: string;
   color: string;
-  display: boolean;
-  view_voters: boolean;
-  post_count: string;
+  post_count: string | undefined;
   createdAt: Date;
+}
+
+export interface IBoardPrivate extends IBoard {
+  display: boolean;
+  // view_voters: boolean;
 }
 
 export interface IGetBoardsRequestQuery {
@@ -18,13 +21,13 @@ export interface IGetBoardsRequestQuery {
 }
 
 export interface IGetBoardsResponseBody {
-  boards: IBoard[];
+  boards: IBoardPrivate[];
 }
 
 export type TFilterBoardRequestQuery = IGetBoardsRequestQuery;
 
 export interface IFilterBoardResponseBody {
-  boards: Pick<IBoard, "boardId" | "name" | "color" | "url">[];
+  boards: IBoard[];
 }
 
 export type TBoardCheckNameBody = {
