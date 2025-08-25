@@ -2,16 +2,16 @@ import axios, { type AxiosResponse } from "axios";
 import type {
   IAuthLoginRequestBody,
   IAuthLoginResponseBody,
+  IAuthPasswordResetResponseBody,
   IAuthSignupResponseBody,
+  IPasswordResetValidationTokenResponseBody,
+  ISetPasswordRequestBody,
+  ISetPasswordResponseBody,
+  IValidateEmailVerificationTokenResponseBody,
   TAuthSignupRequestBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
-
-interface SetNewPasswordArgs {
-  token: string;
-  password: string;
-}
 
 /**
  * Sign in to user account
@@ -58,9 +58,11 @@ export const signup = async ({
 /**
  * Validate user email address
  * @param {string} token email address verification token
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IValidateEmailVerificationTokenResponseBody>>} response
  */
-export const verifyUserEmail = async (token: string) => {
+export const verifyUserEmail = async (
+  token: string,
+): Promise<AxiosResponse<IValidateEmailVerificationTokenResponseBody>> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/email/validate`,
@@ -73,9 +75,11 @@ export const verifyUserEmail = async (token: string) => {
 /**
  * Request for password reset
  * @param {string} email user email address
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IAuthPasswordResetResponseBody>>} response
  */
-export const requestPasswordReset = async (email: string) => {
+export const requestPasswordReset = async (
+  email: string,
+): Promise<AxiosResponse<IAuthPasswordResetResponseBody>> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/password/reset`,
@@ -88,9 +92,11 @@ export const requestPasswordReset = async (email: string) => {
 /**
  * Validate reset password token
  * @param {string} token reset password token
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IPasswordResetValidationTokenResponseBody>>} response
  */
-export const validateResetPasswordToken = async (token: string) => {
+export const validateResetPasswordToken = async (
+  token: string,
+): Promise<AxiosResponse<IPasswordResetValidationTokenResponseBody>> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/password/validateToken`,
@@ -105,12 +111,14 @@ export const validateResetPasswordToken = async (token: string) => {
  * @param {object} arg0
  * @param {string} arg0.token reset password token
  * @param {string} arg0.password new password
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<ISetPasswordResponseBody>>} response
  */
 export const setNewPassword = async ({
   token,
   password,
-}: SetNewPasswordArgs) => {
+}: ISetPasswordRequestBody): Promise<
+  AxiosResponse<ISetPasswordResponseBody>
+> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/password/set`,

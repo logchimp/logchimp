@@ -1,5 +1,12 @@
 import type { ApiSortType, IApiStatus } from "./common";
 
+export interface IPublicUserInfo {
+  userId: string;
+  name: string | null;
+  avatar: string | null;
+  username: string;
+}
+
 export interface IUser {
   userId: string;
   name: string;
@@ -14,12 +21,8 @@ export interface IUser {
   roles: IUserRole[];
 }
 
-export interface IUserInfo {
-  userId: string;
-  name: string | null;
-  username: string;
+export interface IUserInfo extends IPublicUserInfo {
   email: string;
-  avatar: string | null;
   isVerified: boolean;
   isBlocked: boolean;
   isOwner: boolean;

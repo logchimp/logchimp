@@ -120,24 +120,22 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardPostView",
-};
-</script>
-
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
-import { router } from "../../../../router"
+import { router } from "../../../../router";
 
-import { type PostType, getPostBySlug, updatePost } from "../../../../modules/posts";
+import {
+  type PostType,
+  getPostBySlug,
+  updatePost,
+} from "../../../../modules/posts";
 import { type Board, searchBoard } from "../../../../ee/modules/boards";
-import { type Roadmap, searchRoadmap } from "../../../../modules/roadmaps";
-import { type UserType } from "../../../../modules/users";
-import { type PostVoteType } from "../../../../modules/votes";
+import { searchRoadmap, type Roadmap } from "../../../../modules/roadmaps";
+import type { UserType } from "../../../../modules/users";
+import type { PostVoteType } from "../../../../modules/votes";
 
 import { useUserStore } from "../../../../store/user";
 
@@ -155,46 +153,46 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 
 interface GetPostType extends PostType {
-  author: UserType
-  board: Board
-  roadmap: Roadmap
+  author: UserType;
+  board: Board;
+  roadmap: Roadmap;
   voters: {
-    votes: PostVoteType[]
-    votesCount: number
-    viewerVote: boolean
-  }
+    votes: PostVoteType[];
+    votesCount: number;
+    viewerVote: boolean;
+  };
 }
 
-const { permissions } = useUserStore()
+const { permissions } = useUserStore();
 
 const loading = reactive<{
-	post: boolean
-	updatePostButton: boolean
+  post: boolean;
+  updatePostButton: boolean;
 }>({
-	post: false,
-	updatePostButton: false
-})
+  post: false,
+  updatePostButton: false,
+});
 const postData = reactive<GetPostType>({
-	postId: "",
-	title: "",
-	slug: "",
-	slugId: "",
-	contentMarkdown: "",
-	createdAt: "",
-	updatedAt: "",
+  postId: "",
+  title: "",
+  slug: "",
+  slugId: "",
+  contentMarkdown: "",
+  createdAt: "",
+  updatedAt: "",
   author: {
     userId: "",
     name: "",
     username: "",
     avatar: "",
   },
-	board: {
+  board: {
     boardId: "",
     name: "",
     url: "",
     color: "",
   },
-	roadmap: {
+  roadmap: {
     id: "",
     name: "",
     url: "",
@@ -204,55 +202,55 @@ const postData = reactive<GetPostType>({
     votes: [],
     votesCount: 0,
     viewerVote: false,
-  }
-})
+  },
+});
 const boards = reactive<{
-	search: string
-	suggestions: Board[]
+  search: string;
+  suggestions: Board[];
 }>({
-	search: "",
-	suggestions: []
-})
+  search: "",
+  suggestions: [],
+});
 const roadmaps = reactive<{
-	search: string
-	suggestions: Roadmap[]
+  search: string;
+  suggestions: Roadmap[];
 }>({
-	search: "",
-	suggestions: []
-})
+  search: "",
+  suggestions: [],
+});
 
-const updatePostPermissionDisabled = computed(() =>  {
-	const checkPermission = permissions.includes("post:update");
-	return !checkPermission;
-})
+const updatePostPermissionDisabled = computed(() => {
+  const checkPermission = permissions.includes("post:update");
+  return !checkPermission;
+});
 
 async function updatePostHandler() {
-	loading.updatePostButton = true;
+  loading.updatePostButton = true;
 
-	try {
-		const response = await updatePost({
-			id: postData.postId,
-			title: postData.title,
-			contentMarkdown: postData.contentMarkdown,
-			slugId: postData.slugId,
-			userId: postData.author.userId,
-			boardId: postData.board ? postData.board.boardId : undefined,
-			roadmapId: postData.roadmap ? postData.roadmap.id : undefined
-		});
+  try {
+    const response = await updatePost({
+      id: postData.postId,
+      title: postData.title,
+      contentMarkdown: postData.contentMarkdown,
+      slugId: postData.slugId,
+      userId: postData.author.userId,
+      boardId: postData.board ? postData.board.boardId : undefined,
+      roadmapId: postData.roadmap ? postData.roadmap.id : undefined,
+    });
 
-		if (response.status === 200) {
-			router.push("/dashboard/posts");
-		}
-	} catch (err) {
-		console.error(err);
-	} finally {
-		loading.updatePostButton = false;
-	}
+    if (response.status === 200) {
+      router.push("/dashboard/posts");
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.updatePostButton = false;
+  }
 }
 
 async function postBySlug() {
-	loading.post = true;
-	const route = router.currentRoute.value;
+  loading.post = true;
+  const route = router.currentRoute.value;
 
   if (route.params.slug) {
     try {
@@ -270,55 +268,60 @@ async function postBySlug() {
 
 async function suggestBoard(event: unknown) {
   const name = event.target.value;
-	if (!name) {
-		boards.search = "";
-		boards.suggestions = []
-		return;
-	}
+  if (!name) {
+    boards.search = "";
+    boards.suggestions = [];
+    return;
+  }
 
-	try {
-		const response = await searchBoard(name);
-		boards.suggestions = response.data.boards;
-	} catch (err) {
-		console.error(err);
-	}
+  try {
+    const response = await searchBoard(name);
+    boards.suggestions = response.data.boards;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 async function suggestRoadmap(event: unknown) {
   const name = event.target.value;
-	if (!name) {
-		roadmaps.search = "";
-		roadmaps.suggestions = []
-		return;
-	}
+  if (!name) {
+    roadmaps.search = "";
+    roadmaps.suggestions = [];
+    return;
+  }
 
-	try {
-		const response = await searchRoadmap(name);
-		roadmaps.suggestions = response.data.roadmaps;
-	} catch (err) {
-		console.error(err);
-	}
+  try {
+    const response = await searchRoadmap(name);
+    roadmaps.suggestions = response.data.roadmaps;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function selectBoard(index: number) {
-	const item = boards.suggestions[index];
+  const item = boards.suggestions[index];
 
-  Object.assign(postData.board, item)
-	boards.search = "";
-	boards.suggestions = []
+  Object.assign(postData.board, item);
+  boards.search = "";
+  boards.suggestions = [];
 }
 
 function selectRoadmap(index: number) {
-	const item = roadmaps.suggestions[index];
+  const item = roadmaps.suggestions[index];
 
-  Object.assign(postData.roadmap, item)
-	roadmaps.search = "";
-	roadmaps.suggestions = []
+  Object.assign(postData.roadmap, item);
+  roadmaps.search = "";
+  roadmaps.suggestions = [];
 }
 
-onMounted(() => postBySlug())
+onMounted(() => postBySlug());
 
 useHead({
-	title: () => `${postData.title ? `${postData.title} • `: ''}Post • Dashboard`
-})
+  title: () =>
+    `${postData.title ? `${postData.title} • ` : ""}Post • Dashboard`,
+});
+
+defineOptions({
+  name: "DashboardPostView",
+});
 </script>

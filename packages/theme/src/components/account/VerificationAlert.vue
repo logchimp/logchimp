@@ -38,8 +38,9 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { CheckCircle2Icon, XCircleIcon } from "lucide-vue";
+import type { IAuthEmailVerifyResponseBody } from "@logchimp/types";
 
 import { Alert } from "../ui/Alert";
 import Button from "../ui/Button.vue";
@@ -62,13 +63,7 @@ async function sendEmailVerificationHandler() {
   loading.value = true;
 
   try {
-    const res = await axios({
-      method: "POST",
-      url: `${VITE_API_URL}/api/v1/auth/email/verify`,
-      data: {
-        email: getUser.email,
-      },
-    });
+    const res = await sendEmailVerification();
 
     requestStatus.isShown = true;
     if (res?.data?.verify?.success) {
@@ -89,6 +84,18 @@ async function sendEmailVerificationHandler() {
     loading.value = false;
     resetRequestStatus();
   }
+}
+
+async function sendEmailVerification(): Promise<
+  AxiosResponse<IAuthEmailVerifyResponseBody>
+> {
+  return axios({
+    method: "POST",
+    url: `${VITE_API_URL}/api/v1/auth/email/verify`,
+    data: {
+      email: getUser.email,
+    },
+  });
 }
 
 // Hide request status after timeout

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  ISiteSetupResponseBody,
+  IGetSiteSetupResponseBody,
 } from "@logchimp/types";
 
 // database
@@ -11,7 +11,7 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-type ResponseBody = ISiteSetupResponseBody | IApiErrorResponse;
+type ResponseBody = IGetSiteSetupResponseBody | IApiErrorResponse;
 
 export async function isSiteSetup(_: Request, res: Response<ResponseBody>) {
   try {
