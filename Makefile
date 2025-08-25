@@ -5,6 +5,7 @@ server-integration-test:
 	else \
 		pnpm_cmd="pkgx +nodejs.org@22 +pnpm.io pnpm"; \
 	fi && \
+	LOGCHIMP_SECRET_KEY="secret-key" \
 	LOGCHIMP_WEB_URL="http://localhost:3000" \
 	LOGCHIMP_DB_HOST=localhost \
 	LOGCHIMP_DB_DATABASE=db \
