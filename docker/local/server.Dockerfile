@@ -19,7 +19,9 @@ COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 
 ENV NODE_ENV=development
 
-RUN npm i -g pnpm && pnpm i && pnpm --filter="@logchimp/types" build
+RUN \
+    npm i -g pnpm && \
+    pnpm i
 
 WORKDIR /app/packages/server
 
