@@ -21,7 +21,7 @@ ENV NODE_ENV=development
 
 RUN \
     npm i -g pnpm && \
-    pnpm i
+    pnpm install
 
 WORKDIR /app/packages/server
 
