@@ -1,3 +1,3 @@
-export interface ISiteSetupResponseBody {
+export interface IGetSiteSetupResponseBody {
   is_setup: boolean;
 }

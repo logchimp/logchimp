@@ -1,24 +1,17 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
-  ISiteSetupResponseBody,
+  ICreateSiteSetupRequestBody,
+  IGetSiteSetupResponseBody,
   IUpdateSiteSettingsRequestBody,
+  TCreateSiteSetupResponseBody,
   TGetSiteSettingsLabResponseBody,
   TUpdateSiteSettingsLabRequestBody,
   TUpdateSiteSettingsLabResponseBody,
   TUpdateSiteSettingsResponseBody,
 } from "@logchimp/types";
 
-import { VITE_API_URL } from "../constants";
-
-// store
 import { useUserStore } from "../store/user";
-
-interface SiteSetupArgs {
-  siteTitle: string;
-  name: string;
-  email: string;
-  password: string;
-}
+import { VITE_API_URL } from "../constants";
 
 /**
  * Create owner account while setting up LogChimp site.
@@ -35,7 +28,9 @@ export const siteSetup = async ({
   name,
   email,
   password,
-}: SiteSetupArgs) => {
+}: ICreateSiteSetupRequestBody): Promise<
+  AxiosResponse<TCreateSiteSetupResponseBody>
+> => {
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/setup`,
@@ -50,10 +45,10 @@ export const siteSetup = async ({
 
 /**
  * Get site settings
- * @returns {Promise<AxiosResponse<ISiteSetupResponseBody>>} response
+ * @returns {Promise<AxiosResponse<IGetSiteSetupResponseBody>>} response
  */
 export const isSiteSetup = async (): Promise<
-  AxiosResponse<ISiteSetupResponseBody>
+  AxiosResponse<IGetSiteSetupResponseBody>
 > => {
   return await axios({
     method: "GET",
@@ -63,10 +58,10 @@ export const isSiteSetup = async (): Promise<
 
 /**
  * Get site settings
- * @returns {Promise<AxiosResponse<ISiteSetupResponseBody>>} response
+ * @returns {Promise<AxiosResponse<IGetSiteSetupResponseBody>>} response
  */
 export const getSettings = async (): Promise<
-  AxiosResponse<ISiteSetupResponseBody>
+  AxiosResponse<IGetSiteSetupResponseBody>
 > => {
   return await axios({
     method: "GET",
@@ -133,7 +128,7 @@ export const getLabsSettings = async (): Promise<
 
 /**
  * update labs settings
- * @param {*} labs
+ * @param {TUpdateSiteSettingsLabRequestBody} labs
  * @returns {Promise<AxiosResponse<TUpdateSiteSettingsLabResponseBody>>} response
  */
 export const updateLabsSettings = async (
