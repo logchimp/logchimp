@@ -23,4 +23,4 @@ RUN npm i -g pnpm && pnpm i && pnpm --filter="@logchimp/types" build
 
 WORKDIR /app/packages/server
 
-CMD ["air", "-c", ".air.toml"]
+ENTRYPOINT ["air", "-c", ".air.toml"]
