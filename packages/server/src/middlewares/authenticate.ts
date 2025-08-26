@@ -21,7 +21,7 @@ const extractTokenFromHeader = (header: string) => {
   }
 };
 
-const computePermissions = async (
+export const computePermissions = async (
   user: IAuthenticationMiddlewareUser,
 ): Promise<TPermission[]> => {
   // return all permission for owner
