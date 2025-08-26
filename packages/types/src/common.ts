@@ -1,5 +1,10 @@
 export type ApiSortType = "DESC" | "ASC";
 
+export interface IApiStatus {
+  code: number;
+  type: "success" | "error";
+}
+
 export interface ApiPaginationType {
   page: number;
   limit?: number;

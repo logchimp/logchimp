@@ -35,7 +35,12 @@ services:
       args:
         DOCKER_BUILDKIT: 1
     volumes:
-      - ./:/app
+      - .:/app
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/types/node_modules
+      - /app/packages/server/dist
+      - /app/packages/types/dist
     depends_on:
       - db
     networks:
@@ -51,6 +56,8 @@ services:
       # Mail
       LOGCHIMP_MAIL_HOST: mail
       LOGCHIMP_MAIL_PORT: 1025
+      LOGCHIMP_MAIL_USER: test
+      LOGCHIMP_MAIL_PASSWORD: test
     env_file:
       - packages/server/.env
     ports:

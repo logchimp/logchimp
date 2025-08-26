@@ -1,3 +1,6 @@
+// Set the default environment to be `development`
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
 import express from "express";
 import cors from "cors";
 
@@ -15,9 +18,6 @@ if (!config) {
   );
   process.exit(1);
 }
-
-// Set the default environment to be `development`
-process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
 // contains key-value pairs of data submitted in the request body
 app.use(express.json());

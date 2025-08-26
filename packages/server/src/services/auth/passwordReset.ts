@@ -1,4 +1,5 @@
-// database
+import type { TResetPassword } from "@logchimp/types";
+
 import database from "../../database";
 
 // services
@@ -8,10 +9,11 @@ import { createToken } from "../token.service";
 // utils
 import logchimpConfig from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
+import type { IPasswordResetJwtPayload } from "../../types";
 
 const config = logchimpConfig();
 
-export async function passwordReset(tokenPayload) {
+export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -22,12 +24,13 @@ export async function passwordReset(tokenPayload) {
       email: tokenPayload.email,
     });
 
-    const insertPasswordResetToken = await database
+    const insertPasswordResetToken = await database<TResetPassword>(
+      "resetPassword",
+    )
       .insert({
         email: tokenPayload.email,
         token,
       })
-      .into("resetPassword")
       .returning("*");
 
     /**
@@ -44,7 +47,7 @@ export async function passwordReset(tokenPayload) {
       siteTitle,
     });
 
-    const noReplyEmail = `noreply@${urlObject.host}`;
+    const noReplyEmail = `noreply@${urlObject.hostname}`;
 
     await mail.sendMail({
       from: noReplyEmail,
