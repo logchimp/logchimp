@@ -24,12 +24,12 @@
 import { ref } from "vue";
 
 // modules
-import { addComment } from "../../modules/posts";
-import tokenError from "../../utils/tokenError";
+import { addComment } from "../../../modules/posts.ts";
+import tokenError from "../../../utils/tokenError.ts";
 
 // components
-import LText from "../ui/input/LText.vue";
-import Button from "../ui/Button.vue";
+import LText from "../../../components/ui/input/LText.vue";
+import Button from "../../../components/ui/Button.vue";
 
 const props = defineProps({
   postId: {

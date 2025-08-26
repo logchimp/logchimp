@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import database from "../../../database";
+import database from "../../../../../database";
 
 // utils
-import logger from "../../../utils/logger";
-import error from "../../../errorResponse.json";
+import logger from "../../../../../utils/logger";
+import error from "../../../../../errorResponse.json";
 
 export async function destroy(req: Request, res: Response) {
   const { comment_id } = req.params;

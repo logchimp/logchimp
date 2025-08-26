@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
 
-import database from "../../../database";
+import database from "../../../../../database";
 
 // utils
-import logger from "../../../utils/logger";
-import error from "../../../errorResponse.json";
+import logger from "../../../../../utils/logger";
+import error from "../../../../../errorResponse.json";
 
 export async function get(req: Request, res: Response) {
   const { post_id } = req.params;

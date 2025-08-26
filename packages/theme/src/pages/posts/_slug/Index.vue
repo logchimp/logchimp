@@ -115,11 +115,8 @@ import type { ApiSortType, IPost, IPostVote } from "@logchimp/types";
 import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import {
-  getPostBySlug,
-  addComment,
-  postActivity,
-} from "../../../modules/posts";
+import { getPostBySlug } from "../../../modules/posts";
+import { addComment, postActivity } from "../../../ee/modules/posts";
 
 // components
 import Loader from "../../../components/ui/Loader.vue";
@@ -128,8 +125,8 @@ import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
 import { Avatar } from "../../../components/ui/Avatar";
-import AddComment from "../../../components/activity/AddComment.vue";
-import ActivityItem from "../../../components/activity/ActivityItem.vue";
+import AddComment from "../../../ee/components/activity/AddComment.vue";
+import ActivityItem from "../../../ee/components/activity/ActivityItem.vue";
 
 const { permissions, getUserId } = useUserStore();
 const { labs, get: siteSettings } = useSettingStore();

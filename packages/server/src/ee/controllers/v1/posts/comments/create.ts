@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
 
-import database from "../../../database";
+import database from "../../../../../database";
 
 // utils
-import logger from "../../../utils/logger";
-import error from "../../../errorResponse.json";
+import logger from "../../../../../utils/logger";
+import error from "../../../../../errorResponse.json";
 
 export async function create(req: Request, res: Response) {
   // @ts-ignore

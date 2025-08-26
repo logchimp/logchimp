@@ -22,7 +22,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Avatar } from "../ui/Avatar";
+import { Avatar } from "../../../components/ui/Avatar";
 
 dayjs.extend(relativeTime);
 
