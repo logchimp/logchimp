@@ -40,16 +40,21 @@ export class BlacklistManager {
 
   constructor(
     private rawDomains: string = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "",
-  ) {}
-
-  getBlacklistedDomains() {
-    if (!this.cachedBlacklist) {
-      this.cachedBlacklist = parseBlacklistedDomains(this.rawDomains);
-    }
-    return this.cachedBlacklist;
+  ) {
+    this.cachedBlacklist = null;
   }
 
-  reset() {
+  getBlacklistedDomains(): Set<string> {
+    if (this.cachedBlacklist) {
+      return this.cachedBlacklist;
+    }
+
+    const parsed = parseBlacklistedDomains(this.rawDomains);
+    this.cachedBlacklist = parsed;
+    return parsed;
+  }
+
+  reset(): void {
     this.cachedBlacklist = null;
   }
 }
