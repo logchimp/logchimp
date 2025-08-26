@@ -9,9 +9,10 @@
 
       <infinite-scroll @infinite="getBoardPosts" :state="state" />
     </main>
-    <aside class="flex-1 mb-6 lg:mb-0">
+    <aside class="flex-1 mb-6 lg:mb-0 grid grid-cols-1 gap-y-4">
       <site-setup-card v-if="showSiteSetupCard" />
       <login-card v-if="!userStore.getUserId && !showSiteSetupCard" />
+      <top-public-boards-list />
     </aside>
   </div>
 </template>
@@ -38,6 +39,7 @@ import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/I
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import LoginCard from "../components/auth/LoginCard.vue";
+import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
 
 const settingsStore = useSettingStore()
 const userStore = useUserStore()
