@@ -173,6 +173,8 @@ async function createAccount() {
       serverError.value = true;
     }
 
+    console.error(error);
+
     if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
       email.error.show = true;
       email.error.message = "Email domain blacklisted";
