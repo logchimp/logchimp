@@ -81,7 +81,7 @@ describe("GET /boards/search/:name", () => {
     // assign "board:read" permission to user
     await createRoleWithPermissions(
       [{ type: "board", action: "read" }],
-      undefined, // let helper create role
+      undefined,
       authUser.userId,
     );
     const response = await supertest(app)
