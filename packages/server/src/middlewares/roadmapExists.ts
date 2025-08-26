@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
 import type {
   IGetRoadmapByUrlRequestParam,
   IRoadmapPrivate,
@@ -23,8 +23,9 @@ export async function roadmapExists(
 
   const roadmap = await database<IRoadmapPrivate>("roadmaps")
     .select("id", "name", "display", "url", "color", "created_id", "index")
-    .where(() => {
-      this.where("id", id).orWhere("url", url);
+    .where((builder) => {
+      if (id) builder.where("id", id);
+      if (url) builder.orWhere("url", url);
     })
     .first();
 
