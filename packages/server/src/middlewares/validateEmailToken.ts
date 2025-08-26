@@ -71,10 +71,10 @@ export async function validateEmailToken(
     // @ts-ignore
     req.user = { email: emailToken.email };
 
-    req.ctx = {
-      ...req.ctx,
-      token: emailToken,
-    };
+    if (!req.ctx) {
+      req.ctx = {};
+    }
+    req.ctx.token = emailToken;
     next();
   } catch (err) {
     logger.error({

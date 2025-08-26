@@ -37,6 +37,9 @@ export async function roadmapExists(
     return;
   }
 
+  if (!req.ctx) {
+    req.ctx = {};
+  }
   req.ctx.roadmap = roadmap;
   next();
 }
