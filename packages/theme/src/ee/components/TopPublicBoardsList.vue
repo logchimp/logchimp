@@ -30,8 +30,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getPublicBoards } from "../modules/boards.ts";
-import ColorDot from "../../components/ColorDot.vue";
+import { getPublicBoards } from "../modules/boards";
+import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 
 const boards = ref([]);
 
