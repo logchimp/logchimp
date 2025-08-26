@@ -160,7 +160,7 @@ const routes = [
       },
       {
         path: "users",
-        name: "Dashbord users",
+        name: "Dashboard users",
         component: () => import("./pages/dashboard/Users.vue"),
       },
       {
@@ -180,19 +180,19 @@ const routes = [
       },
       {
         path: "settings/roles",
-        name: "Dashbord roles",
+        name: "Dashboard roles",
         component: () =>
           import("./ee/pages/dashboard/settings/roles/Index.vue"),
       },
       {
         path: "settings/roles/:id/settings",
-        name: "Dashbord roles settings",
+        name: "Dashboard roles settings",
         component: () =>
           import("./ee/pages/dashboard/settings/roles/Settings.vue"),
       },
       {
         path: "settings/labs",
-        name: "Dashbord labs",
+        name: "Dashboard labs",
         component: () => import("./pages/dashboard/settings/Labs.vue"),
       },
       {
