@@ -94,9 +94,6 @@ const authenticateWithToken = async (
       })
       .first()) as IAuthenticationMiddlewareUser;
 
-    console.log("get middleware user");
-    console.log(user);
-
     if (!user) {
       return res.status(404).send({
         message: error.middleware.user.userNotFound,

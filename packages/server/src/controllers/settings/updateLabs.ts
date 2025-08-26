@@ -24,8 +24,6 @@ export async function updateLabs(
   // @ts-expect-error
   const permissions = req.user.permissions;
 
-  console.log("body:", req.body);
-
   const labs = req.body;
   const stringify = JSON.stringify(labs);
 
