@@ -1,6 +1,15 @@
 // packages
-import axios from "axios";
-import type { ApiPaginationType, ApiSortType } from "@logchimp/types";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  ApiSortType,
+  ICreatePostRequestBody,
+  ICreatePostResponseBody,
+  IFilterPostRequestBody,
+  IFilterPostResponseBody,
+  IGetPostBySlugResponseBody,
+  IUpdatePostRequestBody,
+  TUpdatePostResponseBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
 
@@ -17,24 +26,6 @@ export interface PostType {
   updatedAt: string;
 }
 
-interface GetPostArgs extends ApiPaginationType {
-  boardId?: string[];
-  roadmapId?: string;
-}
-
-interface CreatePostArgs {
-  title: string;
-  contentMarkdown?: string;
-}
-
-export interface UpdatePostArgs extends CreatePostArgs {
-  id: string;
-  slugId: string;
-  userId: string;
-  boardId?: string;
-  roadmapId?: string;
-}
-
 interface PostActivityArgs {
   post_id: string;
   sort: ApiSortType;
@@ -48,13 +39,16 @@ interface AddCommentArgs {
 
 /**
  * Create post
- *
- * @param {boardId} string board UUID
- * @param {post} object post title and description
- *
- * @returns {object} response
+ * @param {string} boardId board UUID
+ * @param {object} post create post args
+ * @param {string} post.title
+ * @param {string} post.description
+ * @returns {Promise<AxiosResponse<ICreatePostResponseBody>>} response
  */
-export const createPost = async (boardId: string, post: CreatePostArgs) => {
+export const createPost = async (
+  boardId: string,
+  post: ICreatePostRequestBody,
+): Promise<AxiosResponse<ICreatePostResponseBody>> => {
   const { getUserId, authToken } = useUserStore();
 
   return await axios({
@@ -77,20 +71,19 @@ export const createPost = async (boardId: string, post: CreatePostArgs) => {
  *
  * @param {number} page number default to 1
  * @param {number} limit number of posts to fetch
- * @param {string} sort createdAt sort type ASC or DESC
+ * @param {ApiSortType} created createdAt sort type ASC or DESC
  * @param {string} userId logged in user UUID
  * @param {string[]} boardId array of board UUIDs
  * @param {string} roadmapId array of roadmap UUIDs
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IFilterPostResponseBody>>} response
  */
 export const getPosts = async ({
-  page = 1,
+  page = "1",
   limit = 10,
-  sort = "DESC",
+  created = "DESC",
   boardId = [],
   roadmapId = "",
-}: GetPostArgs) => {
+}: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
   const { getUserId } = useUserStore();
 
   return await axios({
@@ -99,7 +92,7 @@ export const getPosts = async ({
     data: {
       page,
       limit,
-      created: sort,
+      created,
       userId: getUserId,
       boardId,
       roadmapId,
@@ -109,12 +102,12 @@ export const getPosts = async ({
 
 /**
  * Get post by slug
- *
- * @param {slug} string post slug
- *
- * @returns {object} response
+ * @param {string} slug post slug
+ * @returns {Promise<AxiosResponse<IGetPostBySlugResponseBody>>} response
  */
-export const getPostBySlug = async (slug: string) => {
+export const getPostBySlug = async (
+  slug: string,
+): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
   const { getUserId } = useUserStore();
 
   return await axios({
@@ -129,7 +122,6 @@ export const getPostBySlug = async (slug: string) => {
 
 /**
  * Update post
- *
  * @param {object} post update post data
  * @param {string} post.id post UUID
  * @param {string} post.title post title
@@ -138,10 +130,11 @@ export const getPostBySlug = async (slug: string) => {
  * @param {string} post.userId post author UUID
  * @param {string} post.boardId post board UUID
  * @param {string} post.roadmapId post roadmap UUID
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<TUpdatePostResponseBody>>} response
  */
-export const updatePost = async (post: UpdatePostArgs) => {
+export const updatePost = async (
+  post: IUpdatePostRequestBody,
+): Promise<AxiosResponse<TUpdatePostResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({

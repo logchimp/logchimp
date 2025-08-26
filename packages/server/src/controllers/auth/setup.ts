@@ -1,4 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
+import type {
+  IApiErrorResponse,
+  ICreateSiteSetupRequestBody,
+  TCreateSiteSetupResponseBody,
+} from "@logchimp/types";
 
 // database
 import database from "../../database";
@@ -11,7 +16,13 @@ import { validEmail } from "../../helpers";
 import error from "../../errorResponse.json";
 import logger from "../../utils/logger";
 
-export async function setup(req: Request, res: Response, next: NextFunction) {
+type ResponseBody = TCreateSiteSetupResponseBody | IApiErrorResponse;
+
+export async function setup(
+  req: Request<unknown, unknown, ICreateSiteSetupRequestBody>,
+  res: Response<ResponseBody>,
+  next: NextFunction,
+) {
   const { siteTitle, name, email, password } = req.body;
 
   if (!validEmail(email)) {

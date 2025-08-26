@@ -1,4 +1,12 @@
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
+import type { Response, NextFunction } from "express";
+import type {
+  IApiErrorResponse,
+  IApiValidationErrorResponse,
+  ISetPasswordRequestBody,
+  IValidateEmailVerificationTokenRequestBody,
+  TEmailVerification,
+} from "@logchimp/types";
 
 // database
 import database from "../database";
@@ -6,17 +14,32 @@ import database from "../database";
 // utils
 import logger from "../utils/logger";
 import logchimpConfig from "../utils/logchimpConfig";
-const config = logchimpConfig();
+import type { ExpressRequestContext } from "../express";
 import error from "../errorResponse.json";
+import type {
+  IPasswordResetJwtPayload,
+  IVerifyEmailJwtPayload,
+} from "../types";
 
-export async function validateEmailToken(req, res, next) {
+const config = logchimpConfig();
+
+type RequestBody =
+  | IValidateEmailVerificationTokenRequestBody
+  | ISetPasswordRequestBody;
+type ResponseBody = IApiValidationErrorResponse | IApiErrorResponse;
+
+export async function validateEmailToken(
+  req: ExpressRequestContext<unknown, unknown, RequestBody>,
+  res: Response<ResponseBody>,
+  next: NextFunction,
+) {
   const token = req.body.token;
 
   if (!token) {
     return res.status(400).send({
       errors: [
         token
-          ? ""
+          ? undefined
           : {
               message: error.api.emailVerify.tokenMissing,
               code: "MISSING_TOKEN",
@@ -29,13 +52,12 @@ export async function validateEmailToken(req, res, next) {
     // validate JWT token
     const secretKey =
       process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
-    const decoded = jwt.verify(token, secretKey);
+    const decoded = jwt.verify(token, secretKey) as JwtPayload &
+      (IVerifyEmailJwtPayload | IPasswordResetJwtPayload);
 
-    // @ts-ignore
     const tokenType = decoded.type;
-    const emailToken = await database
+    const emailToken = await database<TEmailVerification>(tokenType)
       .select()
-      .from(tokenType)
       .where({ token })
       .first();
 
@@ -46,9 +68,13 @@ export async function validateEmailToken(req, res, next) {
       });
     }
 
+    // @ts-ignore
     req.user = { email: emailToken.email };
 
-    req.emailToken = emailToken;
+    if (!req.ctx) {
+      req.ctx = {};
+    }
+    req.ctx.token = emailToken;
     next();
   } catch (err) {
     logger.error({
@@ -56,10 +82,9 @@ export async function validateEmailToken(req, res, next) {
     });
 
     if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
-      return res.status(401).send({
+      res.status(401).send({
         message: error.middleware.auth.invalidToken,
         code: "INVALID_TOKEN",
-        err,
       });
     } else {
       res.status(500).send({

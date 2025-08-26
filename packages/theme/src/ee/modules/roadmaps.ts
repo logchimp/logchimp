@@ -1,16 +1,13 @@
-// packages
 import axios from "axios";
-import type { DraggableSortFromToType } from "@logchimp/types";
+import type {
+  DraggableSortFromToType,
+  IUpdateRoadmapRequestBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
 // store
 import { useUserStore } from "../../store/user";
-import type { Roadmap } from "../../modules/roadmaps";
-
-interface UpdateRoadmapArgs extends Roadmap {
-  display: boolean;
-}
 
 /**
  * Create new roadmap
@@ -37,10 +34,9 @@ export const createRoadmap = async () => {
  * @param {string} roadmap.url roadmap url
  * @param {string} roadmap.color roadmap color
  * @param {boolean} roadmap.display display roadmap on the site
- *
  * @returns {object} response
  */
-export const updateRoadmap = async (roadmap: UpdateRoadmapArgs) => {
+export const updateRoadmap = async (roadmap: IUpdateRoadmapRequestBody) => {
   const { authToken } = useUserStore();
 
   return await axios({

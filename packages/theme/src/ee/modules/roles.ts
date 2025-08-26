@@ -1,5 +1,11 @@
 import axios, { type AxiosResponse } from "axios";
-import type { IGetAllRoles } from "@logchimp/types";
+import type {
+  ICreateRoleResponseBody,
+  IGetAllRoles,
+  IGetRoleByIdResponseBody,
+  IUpdateRoleRequestBody,
+  IUpdateRoleResponseBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 
@@ -7,23 +13,14 @@ import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
 import { APIService } from "../../modules/api.ts";
 
-interface UpdateRoleArgs {
-  id: string;
-  name: string;
-  description: string;
-  // TODO: Add TS types
-  // biome-ignore lint: Add TS types
-  permissions: any;
-}
-
 /**
  * Get role by UUID
- *
  * @param {string} id role id
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IGetRoleByIdResponseBody>>} response
  */
-export const getRole = async (id: string) => {
+export const getRole = async (
+  id: string,
+): Promise<AxiosResponse<IGetRoleByIdResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -37,15 +34,10 @@ export const getRole = async (id: string) => {
 
 /**
  * Create role
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<ICreateRoleResponseBody>>} response
  */
 export const createRole = async (): Promise<
-  AxiosResponse<{
-    role: {
-      id: string;
-    };
-  }>
+  AxiosResponse<ICreateRoleResponseBody>
 > => {
   const { authToken } = useUserStore();
 
@@ -60,16 +52,16 @@ export const createRole = async (): Promise<
 
 /**
  * Update a role
- *
  * @param {object} role update role
  * @param {string} role.id role id
  * @param {string} role.name role name
  * @param {string} role.description role description
  * @param {string[]} role.permissions list of permission
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IUpdateRoleResponseBody>>} response
  */
-export const updateRole = async (role: UpdateRoleArgs) => {
+export const updateRole = async (
+  role: IUpdateRoleRequestBody,
+): Promise<AxiosResponse<IUpdateRoleResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({

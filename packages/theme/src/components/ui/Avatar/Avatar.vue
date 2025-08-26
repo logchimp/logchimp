@@ -20,26 +20,16 @@
         'flex items-center justify-center',
       ]"
     >
-      {{ initals }}
+      {{ name.slice(0, 1) }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+interface Props {
+  src?: string;
+  name: string;
+}
 
-const props = defineProps({
-  src: {
-    type: String,
-    default: "",
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-});
-
-const initals = computed(() => {
-  return props.name.slice(0, 1);
-});
+defineProps<Props>();
 </script>

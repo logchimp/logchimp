@@ -1,31 +1,45 @@
+import type { Response, NextFunction } from "express";
+import type {
+  IGetRoadmapByUrlRequestParam,
+  IRoadmapPrivate,
+} from "@logchimp/types";
+import type { ExpressRequestContext } from "../express";
+
 import database from "../database";
 
 // utils
 import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
 
-export async function roadmapExists(req, res, next) {
+type RequestParams = IGetRoadmapByUrlRequestParam;
+
+export async function roadmapExists(
+  req: ExpressRequestContext<RequestParams>,
+  res: Response,
+  next: NextFunction,
+) {
   const id = validUUID(req.body.id);
   const url = req.params.url;
 
-  const roadmap = await database
-    .select()
-    .from("roadmaps")
-    .where({
-      id: id || null,
-    })
-    .orWhere({
-      url: url || null,
+  const roadmap = await database<IRoadmapPrivate>("roadmaps")
+    .select("id", "name", "display", "url", "color", "created_at", "index")
+    .where((builder) => {
+      if (id) builder.where("id", id);
+      if (url) builder.orWhere("url", url);
     })
     .first();
 
   if (!roadmap) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.roadmaps.roadmapNotFound,
       code: "ROADMAP_NOT_FOUND",
     });
+    return;
   }
 
-  req.roadmap = roadmap;
+  if (!req.ctx) {
+    req.ctx = {};
+  }
+  req.ctx.roadmap = roadmap;
   next();
 }

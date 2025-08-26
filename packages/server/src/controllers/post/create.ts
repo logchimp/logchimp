@@ -1,6 +1,12 @@
 import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
+import type {
+  IApiErrorResponse,
+  IApiValidationErrorResponse,
+  ICreatePostRequestBody,
+  ICreatePostResponseBody,
+} from "@logchimp/types";
 
 import database from "../../database";
 
@@ -10,7 +16,15 @@ import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
 
-export async function create(req: Request, res: Response) {
+type ResponseBody =
+  | ICreatePostResponseBody
+  | IApiErrorResponse
+  | IApiValidationErrorResponse;
+
+export async function create(
+  req: Request<unknown, unknown, ICreatePostRequestBody>,
+  res: Response<ResponseBody>,
+) {
   // @ts-ignore
   const userId = req.user.userId;
   // @ts-ignore
@@ -32,13 +46,13 @@ export async function create(req: Request, res: Response) {
     return res.status(400).send({
       errors: [
         title
-          ? ""
+          ? undefined
           : {
               message: error.api.posts.titleMissing,
               code: "POST_TITLE_MISSING",
             },
         boardId
-          ? ""
+          ? undefined
           : {
               message: error.api.boards.boardIdMissing,
               code: "BOARD_ID_MISSING",

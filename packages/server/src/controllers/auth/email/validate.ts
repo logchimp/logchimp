@@ -1,17 +1,33 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
+import type {
+  IApiErrorResponse,
+  IValidateEmailVerificationTokenRequestBody,
+  IValidateEmailVerificationTokenResponseBody,
+} from "@logchimp/types";
 
 // database
 import database from "../../../database";
 
 // utils
+import type { ExpressRequestContext } from "../../../express";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
-export async function validate(req: Request, res: Response) {
-  // @ts-ignore
+type ResponseBody =
+  | IValidateEmailVerificationTokenResponseBody
+  | IApiErrorResponse;
+
+export async function validate(
+  req: ExpressRequestContext<
+    unknown,
+    unknown,
+    IValidateEmailVerificationTokenRequestBody
+  >,
+  res: Response<ResponseBody>,
+) {
+  // @ts-expect-error
   const { isVerified } = req.user;
-  // @ts-ignore
-  const { email } = req.emailToken;
+  const { email } = req.ctx.token;
 
   if (isVerified) {
     return res.status(409).send({
@@ -21,12 +37,11 @@ export async function validate(req: Request, res: Response) {
   }
 
   try {
-    const verifyUser = await database
+    const verifyUser = await database("users")
       .update({
         isVerified: true,
         updatedAt: new Date().toJSON(),
       })
-      .from("users")
       .where({
         email,
       })

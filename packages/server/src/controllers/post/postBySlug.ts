@@ -1,4 +1,9 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IGetPostBySlugRequestBody,
+  IGetPostBySlugResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // services
@@ -9,9 +14,14 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function postBySlug(req: Request, res: Response) {
+type ResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
+
+export async function postBySlug(
+  req: Request<unknown, unknown, IGetPostBySlugRequestBody>,
+  res: Response<ResponseBody>,
+) {
   const userId = validUUID(req.body.userId);
-  // @ts-ignore
+  // @ts-expect-error
   const post = req.post;
 
   try {
@@ -26,7 +36,7 @@ export async function postBySlug(req: Request, res: Response) {
     const voters = await getVotes(post.postId, userId);
 
     const board = await database
-      .select("boardId", "name", "url", "color")
+      .select("boardId", "name", "url", "color", "createdAt")
       .from("boards")
       .where({
         boardId: post.boardId,

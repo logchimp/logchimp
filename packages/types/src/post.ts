@@ -1,26 +1,13 @@
+import type { IPublicUserInfo } from "./user";
 import type { IPostVote } from "./vote";
 import type { IRoadmap } from "./roadmap";
+import type { IBoard } from "./board";
+import type { ApiSortType } from "./common";
 
 export interface IPost extends IPostInfo {
-  board: {
-    boardId: "61ae9848-8efa-4078-82b1-f923092f223e";
-    name: "new board";
-    url: "new-board-vgzylvf3cv";
-    color: "537509";
-  };
-  author: {
-    userId: "7aa15af0-1ede-46d2-9995-3738d3589cfc";
-    name: "admin";
-    username: "admin";
-    avatar: "https://www.gravatar.com/avatar/fc51027a642571734eaaefd103b2f00c";
-  };
-  roadmap: {
-    id: "9dacf604-e769-4e0d-bac8-ae49a21abbed";
-    name: "new roadmap";
-    url: "new-roadmap-pe2imoipp4";
-    color: "cde55b";
-  };
-  updatedAt: "2025-07-31T18:35:20.747Z";
+  board: IBoard;
+  author: IPublicUserInfo;
+  updatedAt: Date;
   voters: IPostVote;
 }
 
@@ -34,6 +21,8 @@ interface IPostInfo {
   postId: string;
   title: string;
   slug: string;
+  // slugId
+  // updatedAt
   contentMarkdown: string | null;
   createdAt: Date;
 }
@@ -49,4 +38,64 @@ interface IPostBoard {
   view_voters: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IFilterPostRequestBody {
+  userId: string;
+  boardId: string[];
+  roadmapId: string;
+  page: string;
+  limit?: number;
+  created: ApiSortType;
+}
+
+export interface IFilterPostResponseBody {
+  posts: IPost[];
+}
+
+export interface IGetPostBySlugRequestBody {
+  slug: string;
+  userId: string;
+}
+
+export interface IGetPostBySlugResponseBody {
+  post: IPost;
+}
+
+export interface ICreatePostRequestBody {
+  title: string;
+  contentMarkdown: string;
+  boardId: string;
+  roadmapId?: string;
+}
+
+export interface ICreatePostResponseBody {
+  post: {
+    postId: string;
+    title: string;
+    slug: string;
+    slugId: string;
+    contentMarkdown: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    boardId: string;
+    roadmap_id: string;
+  };
+}
+
+export interface IUpdatePostRequestBody {
+  id: string;
+  title: string;
+  contentMarkdown: string;
+  slugId: string;
+  userId: string;
+  boardId?: string;
+  roadmapId?: string;
+}
+
+export type TUpdatePostResponseBody = ICreatePostResponseBody;
+
+export interface IDeletePostByIdRequestBody {
+  id: string;
 }

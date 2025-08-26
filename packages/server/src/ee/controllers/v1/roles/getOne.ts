@@ -1,14 +1,24 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IGetRoleByIdRequestParams,
+  IGetRoleByIdResponseBody,
+} from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function getOne(req: Request, res: Response) {
+type ResponseBody = IGetRoleByIdResponseBody | IApiErrorResponse;
+
+export async function getOne(
+  req: Request<IGetRoleByIdRequestParams>,
+  res: Response<ResponseBody>,
+) {
   const { id } = req.params;
 
-  // @ts-ignore
+  // @ts-expect-error
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
@@ -27,7 +37,7 @@ export async function getOne(req: Request, res: Response) {
       })
       .first();
 
-    const permissions = await database
+    const permissions = (await database
       .select(
         database.raw("ARRAY_AGG(CONCAT(p.type, ':', p.action)) AS permissions"),
       )
@@ -36,7 +46,7 @@ export async function getOne(req: Request, res: Response) {
       .where({
         "pr.role_id": role.id,
       })
-      .first();
+      .first()) as unknown as { permissions: string[] | null };
 
     if (!role) {
       res.status(404).send({
@@ -48,7 +58,6 @@ export async function getOne(req: Request, res: Response) {
     res.status(200).send({
       role: {
         ...role,
-        // @ts-ignore
         permissions: permissions.permissions || [],
       },
     });

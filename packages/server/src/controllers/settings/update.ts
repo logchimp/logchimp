@@ -1,20 +1,30 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IUpdateSiteSettingsRequestBody,
+  TPermission,
+  TUpdateSiteSettingsResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function update(req: Request, res: Response) {
-  // @ts-ignore
+type ResponseBody = TUpdateSiteSettingsResponseBody | IApiErrorResponse;
+
+export async function update(
+  req: Request<unknown, unknown, IUpdateSiteSettingsRequestBody>,
+  res: Response<ResponseBody>,
+) {
+  // @ts-expect-error
   const permissions = req.user.permissions;
 
   const checkPermission = permissions.find(
-    (item) => item === "settings:update",
+    (item: TPermission) => item === "settings:update",
   );
   if (!checkPermission) {
     return res.status(403).send({
-      // @ts-ignore
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
@@ -40,7 +50,7 @@ export async function update(req: Request, res: Response) {
         developer_mode,
       })
       .from("settings")
-      .returning(["*", database.raw("labs::json")]);
+      .returning(["*", database.raw("labs::json as labs")]);
 
     const settings = updateSettings[0];
 

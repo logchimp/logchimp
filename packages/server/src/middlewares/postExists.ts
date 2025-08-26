@@ -1,12 +1,22 @@
 import type { Request, Response, NextFunction } from "express";
+import type {
+  IDeletePostByIdRequestBody,
+  IGetPostBySlugRequestBody,
+  IUpdatePostRequestBody,
+} from "@logchimp/types";
 import database from "../database";
 
 // utils
 import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
 
+type RequestBody =
+  | IGetPostBySlugRequestBody
+  | IUpdatePostRequestBody
+  | IDeletePostByIdRequestBody;
+
 export async function postExists(
-  req: Request,
+  req: Request<RequestBody>,
   res: Response,
   next: NextFunction,
 ) {

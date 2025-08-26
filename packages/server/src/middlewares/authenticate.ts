@@ -1,13 +1,19 @@
-import jwt from "jsonwebtoken";
+import type { Request, Response, NextFunction } from "express";
+import jwt, { type Jwt, type JwtPayload } from "jsonwebtoken";
+import type { IApiErrorResponse, TPermission } from "@logchimp/types";
 import database from "../database";
 import error from "../errorResponse.json";
 
 // utils
 import logger from "../utils/logger";
 import logchimpConfig from "../utils/logchimpConfig";
+import type {
+  IAuthenticationMiddlewareUser,
+  IAuthenticationTokenPayload,
+} from "../types";
 const config = logchimpConfig();
 
-const extractTokenFromHeader = (header) => {
+const extractTokenFromHeader = (header: string) => {
   const [scheme, token] = header.split(" ");
 
   if (/^Bearer$/i.test(scheme)) {
@@ -15,25 +21,25 @@ const extractTokenFromHeader = (header) => {
   }
 };
 
-const computePermissions = async (user) => {
+const computePermissions = async (
+  user: IAuthenticationMiddlewareUser,
+): Promise<TPermission[]> => {
   // return all permission for owner
   if (user.isOwner) {
-    const perms = await database
+    const perms = (await database("permissions AS p")
       .select(
         database.raw(
           "COALESCE( ARRAY_AGG(CONCAT(p.type, ':', p.action)), '{}') AS permissions",
         ),
       )
-      .from("permissions AS p")
-      .first();
+      .first()) as unknown as { permissions: TPermission[] };
 
-    // @ts-ignore
     return perms.permissions;
   }
 
   // get permissions for roles
   const roles = user.roles;
-  const perms = await database
+  const perms = (await database
     .select(
       database.raw(
         "COALESCE( ARRAY_AGG( DISTINCT( CONCAT( p.type, ':', p.action))), '{}') AS permissions",
@@ -43,14 +49,20 @@ const computePermissions = async (user) => {
     .innerJoin("permissions_roles", "roles.id", "permissions_roles.role_id")
     .innerJoin("permissions AS p", "permissions_roles.permission_id", "p.id")
     .whereIn("roles.id", roles)
-    .first();
+    .first()) as unknown as { permissions: TPermission[] };
 
-  // @ts-ignore
   return perms.permissions;
 };
 
-const authenticateWithToken = async (req, res, next, token) => {
-  const decoded = jwt.decode(token, { complete: true });
+const authenticateWithToken = async (
+  req: Request,
+  res: Response<IApiErrorResponse>,
+  next: NextFunction,
+  token: string,
+) => {
+  const decoded = jwt.decode(token, { complete: true }) as Jwt & {
+    payload: JwtPayload & IAuthenticationTokenPayload;
+  };
 
   // validate JWT token type
   if (!decoded?.header) {
@@ -60,11 +72,10 @@ const authenticateWithToken = async (req, res, next, token) => {
     });
   }
 
-  // @ts-ignore
   const userId = decoded.payload.userId;
 
   try {
-    const user = await database
+    const user = (await database
       .select(
         "u.userId",
         "u.name",
@@ -81,7 +92,7 @@ const authenticateWithToken = async (req, res, next, token) => {
       .where({
         userId,
       })
-      .first();
+      .first()) as IAuthenticationMiddlewareUser;
 
     if (!user) {
       return res.status(404).send({
@@ -99,6 +110,7 @@ const authenticateWithToken = async (req, res, next, token) => {
           process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
         jwt.verify(token, secretKey);
 
+        // @ts-expect-error
         req.user = {
           ...user,
           permissions,
@@ -112,7 +124,7 @@ const authenticateWithToken = async (req, res, next, token) => {
           return res.status(401).send({
             message: error.middleware.auth.invalidToken,
             code: "INVALID_TOKEN",
-            err,
+            // err,
           });
         } else {
           res.status(500).send({
@@ -138,7 +150,11 @@ const authenticateWithToken = async (req, res, next, token) => {
   }
 };
 
-const token = (req, res, next) => {
+const token = (
+  req: Request,
+  res: Response<IApiErrorResponse>,
+  next: NextFunction,
+) => {
   // check for authorization header
   if (!req.headers?.authorization) {
     return res.status(400).send({
