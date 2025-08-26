@@ -9,7 +9,7 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { getUserFromRequest } from "../../utils/getUserFromRequest";
-import { computePermissions } from "../../utils/computePermissions";
+import { computePermissions } from "../../middlewares/authenticate";
 
 const querySchema = z.object({
   first: z.coerce.number().min(1).max(20).default(20),
@@ -22,7 +22,8 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
   try {
     const { first, after } = querySchema.parse(req.query);
 
-    const decoded = getUserFromRequest(req);
+    const decoded = getUserFromRequest(req.headers.authorization);
+
     //@ts-ignore
     const userId = decoded?.userId;
     let withPermissions = true;
