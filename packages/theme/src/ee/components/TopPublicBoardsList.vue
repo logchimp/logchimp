@@ -4,11 +4,16 @@
 
     <div class="grid grid-cols-1 gap-y-1">
       <a
+        v-if="boards.length > 0"
         href="/boards"
         class="flex items-center gap-x-3 px-4 py-1.5 hover:bg-neutral-200 rounded-md font-medium text-neutral-700"
       >
         View all boards
       </a>
+      <p v-else class="text-sm text-neutral-700">
+        No boards available
+      </p>
+
       <a
         v-for="board in boards"
         :key="board.boardId"
