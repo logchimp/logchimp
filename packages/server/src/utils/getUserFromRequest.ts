@@ -1,11 +1,9 @@
-import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import logchimpConfig from "./logchimpConfig";
+import logger from "./logger";
 const config = logchimpConfig();
 
-export function getUserFromRequest(req: Request) {
-  const authHeader = req.headers.authorization;
-
+export function getUserFromRequest(authHeader?: string) {
   if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
 
   const token = authHeader.split(" ")[1];
@@ -16,8 +14,11 @@ export function getUserFromRequest(req: Request) {
     const decoded = jwt.verify(token, secretKey);
 
     return decoded;
-    // biome-ignore lint/correctness/noUnusedVariables: error intentionally ignored
   } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
     return null;
   }
 }
