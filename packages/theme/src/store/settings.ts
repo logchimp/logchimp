@@ -1,9 +1,9 @@
 import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
-import type { ISettings } from "@logchimp/types";
+import type { ISiteSettings } from "@logchimp/types";
 
 export const useSettingStore = defineStore("settings", () => {
-  const settings = reactive<ISettings>({
+  const settings = reactive<ISiteSettings>({
     title: "",
     description: "",
     logo: "",

@@ -10,6 +10,7 @@ export interface IRoadmap {
 export interface IRoadmapPrivate extends IRoadmap {
   index: number;
   display: boolean;
+  created_at: Date;
 }
 
 export type TGetRoadmapsParams = CursorPaginationParams;
@@ -17,4 +18,25 @@ export type TGetRoadmapsParams = CursorPaginationParams;
 export interface IPaginatedRoadmapsResponse
   extends CursorPaginatedResponse<IRoadmapPrivate> {
   roadmaps: IRoadmapPrivate[];
+}
+
+export interface IGetRoadmapByUrlRequestParam {
+  url: string;
+}
+
+export interface IGetRoadmapByUrlResponseBody {
+  roadmap: IRoadmapPrivate;
+}
+
+export interface IUpdateRoadmapRequestBody {
+  name: string;
+  url: string;
+  color: string;
+  display: boolean;
+}
+
+export type TUpdateRoadmapResponseBody = IGetRoadmapByUrlResponseBody;
+
+export interface IDeleteRoadmapRequestBody {
+  id: string;
 }

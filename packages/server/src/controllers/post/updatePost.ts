@@ -1,4 +1,9 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IUpdatePostRequestBody,
+  TUpdatePostResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // utils
@@ -6,7 +11,12 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function updatePost(req: Request, res: Response) {
+type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
+
+export async function updatePost(
+  req: Request<unknown, unknown, IUpdatePostRequestBody>,
+  res: Response<ResponseBody>,
+) {
   // @ts-ignore
   const userId = req.user.userId;
   // @ts-ignore

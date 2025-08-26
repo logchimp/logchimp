@@ -25,11 +25,11 @@ import { computed } from "vue";
 
 const props = defineProps({
   title: {
-    type: String,
+    type: [String, null],
     required: true,
   },
   logo: {
-    type: String,
+    type: [String, null],
     required: true,
   },
   dashboard: {

@@ -1,4 +1,9 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IGetSiteSettingsResponseBody,
+  ISiteSettings,
+} from "@logchimp/types";
 // database
 import database from "../../database";
 
@@ -6,11 +11,12 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function siteSettings(_: Request, res: Response) {
+type ResponseBody = IGetSiteSettingsResponseBody | IApiErrorResponse;
+
+export async function siteSettings(_: Request, res: Response<ResponseBody>) {
   try {
-    const settings = await database
-      .select(["*", database.raw("labs::json")])
-      .from("settings")
+    const settings = await database<ISiteSettings>("settings")
+      .select("*", database.raw("labs::json as labs"))
       .first();
 
     res.status(200).send({

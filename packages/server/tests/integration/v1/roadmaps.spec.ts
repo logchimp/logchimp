@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import supertest from "supertest";
+import { faker } from "@faker-js/faker";
+import type { IGetRoadmapByUrlResponseBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
@@ -136,16 +138,32 @@ describe("GET /roadmaps/:url", () => {
   });
 
   it("should get roadmap by url", async () => {
+    const roadmapUrl = faker.commerce
+      .productName()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .substring(0, 50)
+      .replace(/^-+|-+$/g, "");
     const roadmap = generateRoadmap();
-    roadmap.url = "create-existing-roadmap";
+    roadmap.url = roadmapUrl;
     await database.insert(roadmap).into("roadmaps");
 
-    const res = await supertest(app).get(
-      "/api/v1/roadmaps/create-existing-roadmap",
-    );
+    const res = await supertest(app).get(`/api/v1/roadmaps/${roadmapUrl}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.roadmap).toStrictEqual(roadmap);
+
+    const body = res.body as IGetRoadmapByUrlResponseBody;
+
+    expect(body.roadmap).not.toBeNull();
+    expect(body.roadmap).not.toBeUndefined();
+
+    expect(body.roadmap.id).toEqual(roadmap.id);
+    expect(body.roadmap.name).toEqual(roadmap.name);
+    expect(body.roadmap.url).toEqual(roadmap.url);
+    expect(body.roadmap.index).toEqual(roadmap.index);
+    expect(body.roadmap.display).toEqual(roadmap.display);
+    expect(body.roadmap.color).toEqual(roadmap.color);
+    expect(body.roadmap.created_at).toEqual(roadmap.created_at);
   });
 });
 

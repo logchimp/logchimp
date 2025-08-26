@@ -1,13 +1,28 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
+import type {
+  IApiErrorResponse,
+  IApiValidationErrorResponse,
+  ISetPasswordRequestBody,
+  ISetPasswordResponseBody,
+} from "@logchimp/types";
 import database from "../../../database";
 
 // utils
 import { hashPassword } from "../../../utils/password";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import type { ExpressRequestContext } from "../../../express";
 
-export async function set(req: Request, res: Response) {
-  // @ts-ignore
+type ResponseBody =
+  | ISetPasswordResponseBody
+  | IApiValidationErrorResponse
+  | IApiErrorResponse;
+
+export async function set(
+  req: ExpressRequestContext<unknown, unknown, ISetPasswordRequestBody>,
+  res: Response<ResponseBody>,
+) {
+  // @ts-expect-error
   const { userId, email } = req.user;
   const { password } = req.body;
 
@@ -15,7 +30,7 @@ export async function set(req: Request, res: Response) {
     return res.status(400).send({
       errors: [
         password
-          ? ""
+          ? undefined
           : {
               message: error.api.authentication.noPasswordProvided,
               code: "PASSWORD_MISSING",

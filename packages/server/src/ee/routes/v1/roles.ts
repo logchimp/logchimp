@@ -1,5 +1,6 @@
-// modules
 import express from "express";
+import type { IGetRoleByIdRequestParams } from "@logchimp/types";
+
 const router = express.Router();
 
 // controller
@@ -10,7 +11,13 @@ import * as middleware from "../../../middlewares";
 import { roleExists } from "../../middleware/roleExists";
 
 router.get("/roles", middleware.apiAuth, roles.get);
-router.get("/roles/:id", middleware.apiAuth, roleExists, roles.getOne);
+router.get<IGetRoleByIdRequestParams>(
+  "/roles/:id",
+  // @ts-expect-error
+  middleware.apiAuth,
+  roleExists,
+  roles.getOne,
+);
 
 router.post("/roles", middleware.apiAuth, roles.create);
 

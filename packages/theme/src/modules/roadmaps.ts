@@ -1,15 +1,13 @@
-// packages
 import axios, { type AxiosResponse } from "axios";
+import type {
+  IPaginatedRoadmapsResponse,
+  TGetRoadmapsParams,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
 
 // store
 import { useUserStore } from "../store/user";
-
-import type {
-  IPaginatedRoadmapsResponse,
-  TGetRoadmapsParams,
-} from "@logchimp/types";
 
 /**
  * Get all roadmaps with cursor-based pagination

@@ -25,7 +25,9 @@ export type TPermission =
   | "role:update"
   | "role:destroy"
   | "role:assign"
-  | "role:unassign";
+  | "role:unassign"
+  | "settings:read"
+  | "settings:update";
 
 export interface IGetPermissionResponse {
   permissions: TPermission[];

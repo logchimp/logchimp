@@ -45,6 +45,24 @@ export interface IAuthPasswordResetResponseBody {
   };
 }
 
+export interface IPasswordResetValidationTokenResponseBody {
+  reset: {
+    valid: boolean;
+    __token?: TResetPassword;
+  };
+}
+
+export interface ISetPasswordRequestBody {
+  token: string;
+  password: string;
+}
+
+export interface ISetPasswordResponseBody {
+  reset: {
+    success: boolean;
+  };
+}
+
 export interface IAuthLoginRequestBody {
   email: string;
   password: string;
@@ -57,3 +75,21 @@ export interface IAuthLoginResponseBody {
 export type TAuthSignupRequestBody = IAuthLoginRequestBody;
 
 export type IAuthSignupResponseBody = IAuthLoginResponseBody;
+
+export interface ICreateSiteSetupRequestBody {
+  siteTitle: string;
+  name: string;
+  email: string;
+  password: string;
+}
+export type TCreateSiteSetupResponseBody = IAuthLoginResponseBody;
+
+export interface IValidateEmailVerificationTokenRequestBody {
+  token: string;
+}
+
+export interface IValidateEmailVerificationTokenResponseBody {
+  verify: {
+    success: boolean;
+  };
+}

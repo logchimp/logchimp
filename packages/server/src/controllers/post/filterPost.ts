@@ -1,4 +1,9 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IFilterPostRequestBody,
+  IFilterPostResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // services
@@ -10,7 +15,12 @@ import { validUUID, validUUIDs } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function filterPost(req: Request, res: Response) {
+type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
+
+export async function filterPost(
+  req: Request<unknown, unknown, IFilterPostRequestBody>,
+  res: Response<ResponseBody>,
+) {
   const userId = validUUID(req.body.userId);
   const boardId = validUUIDs(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
@@ -18,8 +28,12 @@ export async function filterPost(req: Request, res: Response) {
    * top, latest, oldest, trending
    */
   const created = req.body.created;
-  const page = req.body.page - 1;
   const limit = req.body.limit || 10;
+
+  let page = 0;
+  if (req.body.page) {
+    page = Number.parseInt(req.body.page, 10) - 1;
+  }
 
   try {
     const { rows: response } = await database.raw(

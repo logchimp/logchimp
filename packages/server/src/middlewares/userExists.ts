@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import type { IApiErrorResponse } from "@logchimp/types";
 import database from "../database";
 
 // utils
@@ -8,7 +9,7 @@ import error from "../errorResponse.json";
 
 export async function userExists(
   req: Request,
-  res: Response,
+  res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
   const email = (

@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { provide } from "vue";
-import type { IUser, ISettings } from "@logchimp/types";
+import type { IUser, ISiteSettings } from "@logchimp/types";
 
 import { Avatar } from "../../../../../components/ui/Avatar";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
@@ -34,7 +34,7 @@ import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
 
 interface Props {
   user: IUser;
-  settings: ISettings;
+  settings: ISiteSettings;
 }
 
 const props = defineProps<Props>();

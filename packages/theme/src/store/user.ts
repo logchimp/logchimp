@@ -6,7 +6,9 @@ import { router } from "../router";
 
 export const useUserStore = defineStore("user", () => {
   const authToken = ref<string>("");
-  const user = reactive({
+  const user = reactive<
+    Pick<IAuthUser, "userId" | "name" | "email" | "username" | "avatar">
+  >({
     userId: "",
     name: "",
     username: "",
