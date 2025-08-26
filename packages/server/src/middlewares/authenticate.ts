@@ -113,6 +113,7 @@ const authenticateWithToken = async (
           process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
         jwt.verify(token, secretKey);
 
+        // @ts-expect-error
         req.user = {
           ...user,
           permissions,

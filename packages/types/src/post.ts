@@ -53,6 +53,49 @@ export interface IFilterPostResponseBody {
   posts: IPost[];
 }
 
+export interface IGetPostBySlugRequestBody {
+  slug: string;
+  userId: string;
+}
+
 export interface IGetPostBySlugResponseBody {
   post: IPost;
+}
+
+export interface ICreatePostRequestBody {
+  title: string;
+  contentMarkdown: string;
+  boardId: string;
+  roadmapId?: string;
+}
+
+export interface ICreatePostResponseBody {
+  post: {
+    postId: string;
+    title: string;
+    slug: string;
+    slugId: string;
+    contentMarkdown: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    boardId: string;
+    roadmap_id: string;
+  };
+}
+
+export interface IUpdatePostRequestBody {
+  id: string;
+  title: string;
+  contentMarkdown: string;
+  slugId: string;
+  userId: string;
+  boardId?: string;
+  roadmapId?: string;
+}
+
+export type TUpdatePostResponseBody = ICreatePostResponseBody;
+
+export interface IDeletePostByIdRequestBody {
+  id: string;
 }

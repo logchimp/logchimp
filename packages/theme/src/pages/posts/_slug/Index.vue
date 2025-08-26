@@ -18,14 +18,13 @@
 						<div class="viewpost__meta-author">
 							<avatar
 								class="viewpost__author-avatar"
-								:src="post.author.avatar"
+								:src="post.author.avatar || undefined"
 								:name="postAuthorName"
 							/>
 							{{ postAuthorName }}
 						</div>
 						<div class="viewpost__meta-divider">|</div>
 						<time
-							:datetime="post.createdAt"
 							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
 							class="post-date"
 						>
@@ -144,16 +143,27 @@ const post = reactive<IPost>({
   slug: "",
   contentMarkdown: "",
   // TODO: what should be the default/empty value
+  updatedAt: new Date(),
+  // TODO: what should be the default/empty value
   createdAt: new Date(),
   author: {
     name: "",
     username: "",
-    avatar: "",
+    avatar: null,
     userId: "",
+  },
+  board: {
+    boardId: "",
+    name: "",
+    color: "",
+    url: "",
+    createdAt: new Date(),
+    post_count: "",
   },
   voters: {
     votesCount: 0,
-    viewerVote: false,
+    viewerVote: undefined,
+    votes: [],
   },
 });
 const postContent = ref<string>("");
@@ -161,8 +171,8 @@ const postLoading = ref(false);
 const isPostExist = ref(false);
 
 // comments
-const commentInput = ref("");
-const submittingComment = ref(false);
+// const commentInput = ref("");
+// const submittingComment = ref(false);
 
 // activity
 const activity = reactive<{
@@ -176,7 +186,9 @@ const activity = reactive<{
   data: [],
 });
 
-const isVoted = computed(() => post.voters.hasOwnProperty("viewerVote"));
+const isVoted = computed<boolean>(
+  () => !!post.voters?.viewerVote?.voteId || false,
+);
 
 const postAuthorName = computed(() => post.author.name || post.author.username);
 
@@ -230,16 +242,17 @@ async function postBySlug() {
       Object.assign(post, response.data.post);
       isPostExist.value = true;
 
-      if (response.data.post.hasOwnProperty("contentMarkdown")) {
+      if (response.data.post?.contentMarkdown) {
         postContent.value = response.data.post.contentMarkdown.replace(
           /\n/g,
           "<br>",
         );
       }
 
-      getPostActivity();
-    } catch (error: any) {
-      if (error.response.data.code === "POST_NOT_FOUND") {
+      await getPostActivity();
+    } catch (error: unknown) {
+      // @ts-expect-error
+      if (error?.response?.data?.code === "POST_NOT_FOUND") {
         postLoading.value = false;
         isPostExist.value = false;
       }
@@ -247,22 +260,22 @@ async function postBySlug() {
   }
 }
 
-async function submitComment() {
-  if (!commentInput.value) return;
-
-  try {
-    const response = await addComment({
-      post_id: post.postId,
-      body: commentInput.value,
-      is_internal: false,
-    });
-
-    commentInput.value = "";
-    activity.data.unshift(response.data.comment);
-  } catch (error) {
-    console.log(error);
-  }
-}
+// async function submitComment() {
+//   if (!commentInput.value) return;
+//
+//   try {
+//     const response = await addComment({
+//       post_id: post.postId,
+//       body: commentInput.value,
+//       is_internal: false,
+//     });
+//
+//     commentInput.value = "";
+//     activity.data.unshift(response.data.comment);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 function updateVoters(voters: IPostVote) {
   post.voters.votesCount = voters.votesCount;

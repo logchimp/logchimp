@@ -2,10 +2,12 @@ import type { Request, Response, NextFunction } from "express";
 import error from "../errorResponse.json";
 
 const authorize = (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
   const hasUser = req.user?.userId;
 
   if (hasUser) {
     // user is blocked
+    // @ts-expect-error
     const isBlocked = req.user.isBlocked;
     if (isBlocked) {
       return res.status(403).send({
@@ -14,6 +16,7 @@ const authorize = (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
+    // @ts-expect-error
     const hasPermissions = req.user.permissions.length > 0;
     if (hasPermissions) {
       return next();

@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import type {
+  IApiErrorResponse,
+  ICreateRoleResponseBody,
+} from "@logchimp/types";
 
 // database
 import database from "../../../../database";
@@ -8,7 +12,9 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function create(req: Request, res: Response) {
+type ResponseBody = ICreateRoleResponseBody | IApiErrorResponse;
+
+export async function create(req: Request, res: Response<ResponseBody>) {
   // @ts-ignore
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("role:create");

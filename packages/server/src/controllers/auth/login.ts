@@ -20,6 +20,7 @@ export async function login(
   req: Request<unknown, unknown, IAuthLoginRequestBody>,
   res: Response<ResponseBody>,
 ) {
+  // @ts-expect-error
   const user = req.user;
   const password = req.body.password;
 

@@ -1,9 +1,14 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
 import type {
-  ApiPaginationType,
   ApiSortType,
+  ICreatePostRequestBody,
+  ICreatePostResponseBody,
+  IFilterPostRequestBody,
+  IFilterPostResponseBody,
   IGetPostBySlugResponseBody,
+  IUpdatePostRequestBody,
+  TUpdatePostResponseBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
@@ -19,24 +24,6 @@ export interface PostType {
   contentMarkdown?: string;
   createdAt: string;
   updatedAt: string;
-}
-
-interface GetPostArgs extends ApiPaginationType {
-  boardId?: string[];
-  roadmapId?: string;
-}
-
-interface CreatePostArgs {
-  title: string;
-  contentMarkdown?: string;
-}
-
-export interface UpdatePostArgs extends CreatePostArgs {
-  id: string;
-  slugId: string;
-  userId: string;
-  boardId?: string;
-  roadmapId?: string;
 }
 
 interface PostActivityArgs {
@@ -56,9 +43,12 @@ interface AddCommentArgs {
  * @param {object} post create post args
  * @param {string} post.title
  * @param {string} post.description
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<ICreatePostResponseBody>>} response
  */
-export const createPost = async (boardId: string, post: CreatePostArgs) => {
+export const createPost = async (
+  boardId: string,
+  post: ICreatePostRequestBody,
+): Promise<AxiosResponse<ICreatePostResponseBody>> => {
   const { getUserId, authToken } = useUserStore();
 
   return await axios({
@@ -81,20 +71,19 @@ export const createPost = async (boardId: string, post: CreatePostArgs) => {
  *
  * @param {number} page number default to 1
  * @param {number} limit number of posts to fetch
- * @param {string} sort createdAt sort type ASC or DESC
+ * @param {ApiSortType} created createdAt sort type ASC or DESC
  * @param {string} userId logged in user UUID
  * @param {string[]} boardId array of board UUIDs
  * @param {string} roadmapId array of roadmap UUIDs
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IFilterPostResponseBody>>} response
  */
 export const getPosts = async ({
-  page = 1,
+  page = "1",
   limit = 10,
-  sort = "DESC",
+  created = "DESC",
   boardId = [],
   roadmapId = "",
-}: GetPostArgs) => {
+}: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
   const { getUserId } = useUserStore();
 
   return await axios({
@@ -103,7 +92,7 @@ export const getPosts = async ({
     data: {
       page,
       limit,
-      created: sort,
+      created,
       userId: getUserId,
       boardId,
       roadmapId,
@@ -133,7 +122,6 @@ export const getPostBySlug = async (
 
 /**
  * Update post
- *
  * @param {object} post update post data
  * @param {string} post.id post UUID
  * @param {string} post.title post title
@@ -142,10 +130,11 @@ export const getPostBySlug = async (
  * @param {string} post.userId post author UUID
  * @param {string} post.boardId post board UUID
  * @param {string} post.roadmapId post roadmap UUID
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<TUpdatePostResponseBody>>} response
  */
-export const updatePost = async (post: UpdatePostArgs) => {
+export const updatePost = async (
+  post: IUpdatePostRequestBody,
+): Promise<AxiosResponse<TUpdatePostResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({

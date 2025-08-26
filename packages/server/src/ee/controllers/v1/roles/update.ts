@@ -1,5 +1,11 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import type {
+  IApiErrorResponse,
+  IRole,
+  IUpdateRoleResponseBody,
+  TPermission,
+} from "@logchimp/types";
 
 // database
 import database from "../../../../database";
@@ -8,7 +14,9 @@ import database from "../../../../database";
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 
-export async function update(req: Request, res: Response) {
+type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
+
+export async function update(req: Request, res: Response<ResponseBody>) {
   const role = req.body;
 
   // @ts-ignore
@@ -29,7 +37,7 @@ export async function update(req: Request, res: Response) {
       role_id: role.id,
     });
 
-    const updateRole = await database
+    const updateRoles = (await database
       .update({
         name: role.name,
         description: role.description,
@@ -39,7 +47,9 @@ export async function update(req: Request, res: Response) {
       .where({
         id: role.id,
       })
-      .returning("*");
+      .returning("*")) as IRole[];
+
+    const updateRole = updateRoles?.[0];
 
     // add new permissions to the role
     role.permissions.forEach(async (perm) => {
@@ -59,7 +69,7 @@ export async function update(req: Request, res: Response) {
         .into("permissions_roles");
     });
 
-    const updatedPermissions = await database
+    const updatedPermissions = (await database
       .select(
         database.raw("ARRAY_AGG(CONCAT(p.type, ':', p.action)) AS permissions"),
       )
@@ -68,11 +78,11 @@ export async function update(req: Request, res: Response) {
       .where({
         "pr.role_id": role.id,
       })
-      .first();
+      .first()) as unknown as { permissions: TPermission[] | null };
 
     res.status(200).send({
       role: updateRole,
-      ...updatedPermissions,
+      permissions: updatedPermissions?.permissions || [],
     });
   } catch (err) {
     logger.error({

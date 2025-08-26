@@ -14,5 +14,5 @@ export interface ICurrentUserVote {
 export interface IPostVote {
   votes: IUserVoter[];
   votesCount: number;
-  viewerVote: ICurrentUserVote;
+  viewerVote?: ICurrentUserVote;
 }
