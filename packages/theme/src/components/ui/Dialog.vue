@@ -58,15 +58,13 @@ import { computed } from 'vue'
 const open = defineModel<boolean>('open', { default: false })
 
 interface Props {
-  title?: string
+  title: string
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl'
   contentClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: '',
   maxWidth: 'lg',
-  contentClass: '',
 })
 
 defineEmits<{
