@@ -22,7 +22,7 @@ export async function roadmapExists(
   const url = req.params.url;
 
   const roadmap = await database<IRoadmapPrivate>("roadmaps")
-    .select("id", "name", "display", "url", "color", "created_id", "index")
+    .select("id", "name", "display", "url", "color", "created_at", "index")
     .where((builder) => {
       if (id) builder.where("id", id);
       if (url) builder.orWhere("url", url);
