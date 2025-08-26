@@ -34,7 +34,7 @@
                   Sign out
                 </dropdown-item>
                 <dropdown-item v-if="showVersion" :disabled="true">
-                  {{ version }}
+                  {{ VITE_LOGCHIMP_VERSION }}
                 </dropdown-item>
               </dropdown>
             </template>
@@ -71,6 +71,7 @@ import {
 import { router } from "../router";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
+import { VITE_LOGCHIMP_VERSION } from "../constants";
 
 // components
 import Navbar from "./Navbar.vue";
@@ -103,10 +104,6 @@ const showVersion = computed(() => {
     userStore.permissions.includes("dashboard:read") &&
     settingsStore.get.developer_mode
   );
-});
-
-const version = computed(() => {
-  return process.env.version;
 });
 </script>
 
