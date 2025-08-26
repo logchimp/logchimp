@@ -9,22 +9,25 @@ import * as auth from "../../controllers/auth";
 import { userExists } from "../../middlewares/userExists";
 import { mailConfigExists } from "../../middlewares/mailConfigExists";
 import { validateEmailToken } from "../../middlewares/validateEmailToken";
+import { domainBlacklist } from "../../middlewares/domainBlacklist";
 
-router.post("/auth/signup", mailConfigExists, auth.signup);
-router.post("/auth/login", userExists, auth.login);
+router.post("/auth/signup", domainBlacklist, mailConfigExists, auth.signup);
+router.post("/auth/login", domainBlacklist, userExists, auth.login);
 
-router.post("/auth/setup", mailConfigExists, auth.setup);
+router.post("/auth/setup", domainBlacklist, mailConfigExists, auth.setup);
 router.get("/auth/setup", auth.isSiteSetup);
 
 // email
 router.post(
   "/auth/email/verify",
+  domainBlacklist,
   mailConfigExists,
   userExists,
   auth.email.verify,
 );
 router.post(
   "/auth/email/validate",
+  domainBlacklist,
   validateEmailToken,
   userExists,
   auth.email.validate,
@@ -33,6 +36,7 @@ router.post(
 // password
 router.post(
   "/auth/password/reset",
+  domainBlacklist,
   mailConfigExists,
   userExists,
   auth.password.reset,
@@ -45,6 +49,7 @@ router.post(
 );
 router.post(
   "/auth/password/set",
+  domainBlacklist,
   validateEmailToken,
   userExists,
   auth.password.set,

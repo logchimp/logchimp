@@ -8,9 +8,9 @@ import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
 export async function validate(req: Request, res: Response) {
-  // @ts-ignore
+  // @ts-expect-error
   const { isVerified } = req.user;
-  // @ts-ignore
+  // @ts-expect-error
   const { email } = req.emailToken;
 
   if (isVerified) {

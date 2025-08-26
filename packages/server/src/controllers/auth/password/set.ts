@@ -7,7 +7,7 @@ import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
 export async function set(req: Request, res: Response) {
-  // @ts-ignore
+  // @ts-expect-error
   const { userId, email } = req.user;
   const { password } = req.body;
 
