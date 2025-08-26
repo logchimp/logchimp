@@ -12,6 +12,7 @@ import { createToken } from "../../services/token.service";
 import { validatePassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import type { IAuthenticationTokenPayload } from "../../types";
 
 type ResponseBody = IAuthLoginResponseBody | IApiErrorResponse;
 
@@ -19,7 +20,6 @@ export async function login(
   req: Request<unknown, unknown, IAuthLoginRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-expect-error
   const user = req.user;
   const password = req.body.password;
 
@@ -50,7 +50,7 @@ export async function login(
     }
 
     // generate authToken
-    const tokenPayload = {
+    const tokenPayload: IAuthenticationTokenPayload = {
       userId: user.userId,
       email: user.email,
     };

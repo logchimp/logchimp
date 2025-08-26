@@ -1,6 +1,7 @@
+import type { Request, Response, NextFunction } from "express";
 import error from "../errorResponse.json";
 
-const authorize = (req, res, next) => {
+const authorize = (req: Request, res: Response, next: NextFunction) => {
   const hasUser = req.user?.userId;
 
   if (hasUser) {

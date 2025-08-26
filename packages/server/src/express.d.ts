@@ -1,9 +1,21 @@
 import type { Request } from "express";
-import {
+import type {
   IRoadmapPrivate,
   TEmailVerification,
+  TPermission,
   TResetPassword,
 } from "@logchimp/types";
+import type { IAuthenticationMiddlewareUser } from "./types";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: IAuthenticationMiddlewareUser & {
+        permissions: TPermission[];
+      };
+    }
+  }
+}
 
 export interface ExpressRequestContext<
   P = core.ParamsDictionary,

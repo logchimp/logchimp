@@ -2,7 +2,6 @@ import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IFilterPostRequestBody,
-  IFilterPostRequestQuery,
   IFilterPostResponseBody,
 } from "@logchimp/types";
 import database from "../../database";
@@ -29,8 +28,12 @@ export async function filterPost(
    * top, latest, oldest, trending
    */
   const created = req.body.created;
-  const page = req.body.page - 1;
   const limit = req.body.limit || 10;
+
+  let page = 0;
+  if (req.body.page) {
+    page = Number.parseInt(req.body.page, 10) - 1;
+  }
 
   try {
     const { rows: response } = await database.raw(
