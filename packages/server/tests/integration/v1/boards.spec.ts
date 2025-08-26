@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
-import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -8,6 +7,7 @@ import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { cleanDb } from "../../utils/db";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Get all boards
 describe("GET /api/v1/boards", () => {
@@ -79,46 +79,11 @@ describe("GET /boards/search/:name", () => {
     const { user: authUser } = await createUser();
 
     // assign "board:read" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "board:read",
-          description: "this role has 'board:read' permission",
-        })
-        .into("roles");
-
-      // find "board:read" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "board",
-          action: "read",
-        })
-        .first();
-
-      // assign 'board:read' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
-    });
-
+    await createRoleWithPermissions(
+      [{ type: "board", action: "read" }],
+      undefined, // let helper create role
+      authUser.userId,
+    );
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
@@ -193,45 +158,11 @@ describe("DELETE /api/v1/boards", () => {
     const { user: authUser } = await createUser();
 
     // assign "board:destroy" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "board:destroy",
-          description: "this role has 'board:destroy' permission",
-        })
-        .into("roles");
-
-      // find "board:destroy" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "board",
-          action: "destroy",
-        })
-        .first();
-
-      // assign 'board:destroy' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
-    });
+    await createRoleWithPermissions(
+      [{ type: "board", action: "destroy" }],
+      undefined,
+      authUser.userId,
+    );
 
     const response = await supertest(app)
       .delete(`/api/v1/boards/`)
