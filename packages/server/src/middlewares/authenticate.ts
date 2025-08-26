@@ -15,7 +15,7 @@ const extractTokenFromHeader = (header) => {
   }
 };
 
-const computePermissions = async (user) => {
+export const computePermissions = async (user) => {
   // return all permission for owner
   if (user.isOwner) {
     const perms = await database
