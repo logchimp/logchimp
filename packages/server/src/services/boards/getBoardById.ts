@@ -1,28 +1,29 @@
+import type { IBoard } from "@logchimp/types";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 
-export async function getBoardById(boardId: string) {
+export async function getBoardById(boardId: string): Promise<IBoard | null> {
   try {
-    const boards = await database
-      .select()
-      .from("boards")
+    const board = await database("boards")
+      .select("boardId", "name", "url", "color", "createdAt")
       .where({
         boardId,
       })
-      .limit(1);
+      .first();
 
-    const board = boards[0];
     if (board) {
       return board;
-    } else {
-      return null;
     }
+
+    return null;
   } catch (err) {
     logger.log({
       level: "error",
       message: err,
     });
+
+    return null;
   }
 }

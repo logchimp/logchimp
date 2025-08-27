@@ -7,7 +7,7 @@
         :name="board.name"
         :color="board.color"
         :url="board.url"
-        :post-count="Number(board.post_count)"
+        :post-count="Number.parseInt(board.post_count, 10)"
       />
     </div>
 
@@ -28,7 +28,7 @@ export default {
 <script setup lang="ts">
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IBoard } from "@logchimp/types";
+import type { IBoardDetail } from "@logchimp/types";
 
 // modules
 import { getPublicBoards } from "../../ee/modules/boards";
@@ -40,15 +40,15 @@ import BoardItem from "../../components/board/BoardItem.vue";
 
 const { get: siteSettings } = useSettingStore()
 
-const boards = ref<IBoard[]>([])
+const boards = ref<IBoardDetail[]>([])
 const page = ref<number>(1)
 const state = ref<InfiniteScrollStateType>()
 
 async function getBoards() {
 	try {
 		const response = await getPublicBoards({
-      page: page.value,
-      sort: "DESC"
+      page: page.value.toString(),
+      created: "DESC"
     });
 
 		if (response.data.boards.length) {

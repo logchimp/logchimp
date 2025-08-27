@@ -26,7 +26,7 @@ export const useAlertStore = defineStore("alerts", () => {
     alert.value.push(alertObject);
   }
 
-  function remove(payload: unknown) {
+  function remove(payload: number) {
     alert.value.splice(payload, 1);
   }
 

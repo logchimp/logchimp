@@ -31,7 +31,8 @@ defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-function input(event: unknown) {
-  emit("update:modelValue", event.target.value);
+function input(event: Event) {
+  const target = event.target as HTMLTextAreaElement;
+  emit("update:modelValue", target.value);
 }
 </script>

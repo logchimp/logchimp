@@ -58,71 +58,70 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardOverview",
-};
-</script>
-
 <script setup lang="ts">
-// packages
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IBoardPrivate, IPost } from "@logchimp/types";
 
 // modules
 import { getPosts } from "../../modules/posts";
 import { getAllBoards } from "../../ee/modules/boards";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 
-// TODO: Add TS types
-const posts = ref<unknown>([])
-const postState = ref<InfiniteScrollStateType>()
-// TODO: Add TS types
-const boards = ref<unknown>([])
-const boardState = ref<InfiniteScrollStateType>()
+const posts = ref<IPost[]>([]);
+const postState = ref<InfiniteScrollStateType>();
+const boards = ref<IBoardPrivate[]>([]);
+const boardState = ref<InfiniteScrollStateType>();
 
 async function getRecentPosts() {
-  postState.value = 'LOADING'
+  postState.value = "LOADING";
 
-	try {
-		const response = await getPosts({
-			page: 1,
-			limit: 4,
-			sort: "DESC"
-		});
+  try {
+    const response = await getPosts({
+      page: "1",
+      limit: "4",
+      created: "DESC",
+      boardId: [],
+    });
 
-		posts.value = response.data.posts;
-		postState.value = 'COMPLETED'
-	} catch (error) {
-		console.error(error);
-		postState.value = 'ERROR'
-	}
+    posts.value = response.data.posts;
+    postState.value = "COMPLETED";
+  } catch (error) {
+    console.error(error);
+    postState.value = "ERROR";
+  }
 }
 
 async function getBoards() {
-	try {
-		const response = await getAllBoards({
-			page: 1,
-			limit: 4,
-			sort: "DESC"
-		});
+  try {
+    const response = await getAllBoards({
+      page: "1",
+      limit: "4",
+      created: "DESC",
+    });
 
-		boards.value = response.data.boards;
-		boardState.value = "COMPLETED";
-	} catch (error) {
-		console.error(error);
-		boardState.value = "ERROR";
-	}
+    boards.value = response.data.boards;
+    boardState.value = "COMPLETED";
+  } catch (error) {
+    console.error(error);
+    boardState.value = "ERROR";
+  }
 }
 
 useHead({
-	title: "Dashboard"
-})
+  title: "Dashboard",
+});
+
+defineOptions({
+  name: "DashboardOverview",
+});
 </script>
 
 <style lang='sass'>

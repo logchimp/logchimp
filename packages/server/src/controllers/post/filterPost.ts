@@ -4,6 +4,7 @@ import type {
   IFilterPostRequestBody,
   IFilterPostResponseBody,
 } from "@logchimp/types";
+import { validate } from "uuid";
 import database from "../../database";
 
 // services
@@ -21,7 +22,6 @@ export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  const userId = validUUID(req.body.userId);
   const boardId = validUUIDs(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
   /**
@@ -35,6 +35,11 @@ export async function filterPost(
     page = Number.parseInt(req.body.page, 10) - 1;
   }
 
+  let userId: string | null = null;
+  if (req.body?.userId && validate(req.body.userId)) {
+    userId = req.body.userId;
+  }
+
   try {
     const { rows: response } = await database.raw(
       `
@@ -45,7 +50,8 @@ export async function filterPost(
           "boardId",
           "roadmap_id",
           "contentMarkdown",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         FROM
           posts
         ${

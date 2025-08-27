@@ -12,8 +12,8 @@
 </template>
 
 <script setup lang="ts">
-// packages
 import { ref } from "vue";
+import type { IPost } from "@logchimp/types";
 
 // modules
 import { getPosts } from "../../modules/posts";
@@ -31,7 +31,7 @@ const props = defineProps({
   },
 });
 
-const posts = ref<unknown>([]);
+const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>();
 
@@ -41,8 +41,8 @@ async function getMorePosts() {
 
   try {
     const response = await getPosts({
-      page: page.value,
-      sort: "DESC",
+      page: page.value.toString(),
+      created: "DESC",
       boardId: [boardId],
     });
 

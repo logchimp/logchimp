@@ -4,13 +4,13 @@ import type {
   IGetPostBySlugRequestBody,
   IGetPostBySlugResponseBody,
 } from "@logchimp/types";
+import { validate } from "uuid";
 import database from "../../database";
 
 // services
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
-import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
@@ -20,9 +20,13 @@ export async function postBySlug(
   req: Request<unknown, unknown, IGetPostBySlugRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  const userId = validUUID(req.body.userId);
   // @ts-expect-error
   const post = req.post;
+
+  let userId: string | null = null;
+  if (req.body?.userId && validate(req.body.userId)) {
+    userId = req.body.userId;
+  }
 
   try {
     const author = await database

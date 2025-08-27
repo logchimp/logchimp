@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { validate as validateUUID } from "uuid";
-import type { TBoardDeleteBody } from "@logchimp/types";
+import type { IBoardDeleteRequestBody } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
@@ -8,7 +8,7 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
 export async function deleteById(
-  req: Request<unknown, unknown, TBoardDeleteBody>,
+  req: Request<unknown, unknown, IBoardDeleteRequestBody>,
   res: Response,
 ) {
   // @ts-ignore

@@ -1,14 +1,24 @@
 import type { Request, Response } from "express";
-import type { TBoardUpdateBody } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  IApiValidationErrorResponse,
+  IBoardUpdateRequestBody,
+  TBoardUpdateResponseBody,
+} from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+type ResponseBody =
+  | TBoardUpdateResponseBody
+  | IApiErrorResponse
+  | IApiValidationErrorResponse;
+
 export async function updateBoard(
-  req: Request<unknown, unknown, TBoardUpdateBody>,
-  res: Response,
+  req: Request<unknown, unknown, IBoardUpdateRequestBody>,
+  res: Response<ResponseBody>,
 ) {
   // @ts-ignore
   const permissions = req.user.permissions;
@@ -29,7 +39,7 @@ export async function updateBoard(
     return res.status(400).send({
       errors: [
         url
-          ? ""
+          ? undefined
           : {
               message: error.api.boards.urlMissing,
               code: "BOARD_URL_MISSING",

@@ -94,13 +94,12 @@ async function submitPost() {
   }
 
   loading.value = true;
-  const postObject = {
-    title: title.value,
-    contentMarkdown: description.value,
-  };
-
   try {
-    const response = await createPost(props.boardId, postObject);
+    const response = await createPost({
+      title: title.value,
+      contentMarkdown: description.value,
+      boardId: props.boardId,
+    });
 
     // redirect to post
     const slug = response.data.post.slug;

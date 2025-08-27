@@ -129,7 +129,8 @@ import {
   Settings as SettingsIcon
 } from "lucide-vue";
 import { useHead } from "@vueuse/head";
-import type { IBoard } from "@logchimp/types"
+import type { IBoardPrivate } from "@logchimp/types";
+
 // modules
 import { router } from "../../../../router";
 import { useSettingStore } from "../../../../store/settings";
@@ -157,7 +158,7 @@ const { settings } = useSettingStore()
 const { permissions } = useUserStore()
 
 const createBoardButtonLoading = ref(false)
-const boards = ref<IBoard[]>([]);
+const boards = ref<IBoardPrivate[]>([]);
 const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>()
 
@@ -194,8 +195,8 @@ async function getBoards() {
 
 	try {
 		const response = await getAllBoards({
-			page: page.value,
-			sort: "DESC"
+			page: page.value.toString(),
+			created: "DESC"
 		});
 
 		if (response.data.boards.length) {

@@ -1,22 +1,37 @@
-import type { Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
+import { validate } from "uuid";
+import type {
+  IApiErrorResponse,
+  IBoardDeleteRequestBody,
+  IGetBoardByUrlRequestParams,
+  TBoardUpdateResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // utils
-import { validUUID } from "../../helpers";
 import error from "../../errorResponse.json";
 
-export async function boardExists(req, res: Response, next: NextFunction) {
-  const id = validUUID(req.body.boardId);
+type RequestParams = IGetBoardByUrlRequestParams;
+type RequestBody = TBoardUpdateResponseBody | IBoardDeleteRequestBody;
+
+export async function boardExists(
+  req: Request<RequestParams, unknown, RequestBody>,
+  res: Response<IApiErrorResponse>,
+  next: NextFunction,
+) {
   const url = req.params.url;
 
+  let boardId: string | null = null;
+  if ("boardId" in req.body && validate(req.body.boardId)) {
+    boardId = req.body.boardId;
+  }
+
   const board = await database
-    .select()
+    .select("boardId")
     .from("boards")
-    .where({
-      boardId: id || null,
-    })
-    .orWhere({
-      url: url || null,
+    .where((builder) => {
+      if (boardId) builder.where("boardId", boardId);
+      if (url) builder.where("url", url);
     })
     .first();
 
@@ -27,6 +42,7 @@ export async function boardExists(req, res: Response, next: NextFunction) {
     });
   }
 
+  // @ts-expect-error
   req.board = board;
   next();
 }

@@ -137,6 +137,15 @@ const isDevTestEnv =
   process.env.NODE_ENV === "testing" ||
   process.env.NODE_ENV === "ci";
 
+function parseAndValidatePage(value: string) {
+  return value ? Math.max(+value - 1, 0) : 0;
+}
+
+function parseAndValidateLimit(value: string, max: number): number {
+  const parsedLimit = value ? +value : NaN;
+  return value && !Number.isNaN(parsedLimit) ? Math.min(parsedLimit, max) : max;
+}
+
 export {
   validEmail,
   validUUID,
@@ -148,4 +157,6 @@ export {
   toSlug,
   readFile,
   isDevTestEnv,
+  parseAndValidatePage,
+  parseAndValidateLimit,
 };

@@ -5,10 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IRole } from "@logchimp/types";
+import type { IUserRole } from "@logchimp/types";
 
 interface Props {
-  role: IRole;
+  role: IUserRole;
 }
 
 defineProps<Props>();

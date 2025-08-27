@@ -3,7 +3,7 @@ import type { TPermission } from "./permissions";
 export interface IRole {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -25,7 +25,7 @@ export interface IGetRoleByIdResponseBody {
 export interface IUpdateRoleRequestBody {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   permissions: TPermission[];
 }
 

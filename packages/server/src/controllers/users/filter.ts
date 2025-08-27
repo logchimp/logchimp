@@ -12,6 +12,8 @@ import { getUsers } from "../../services/users/getUsers";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { GET_USERS_FILTER_COUNT } from "../../constants";
+import { parseAndValidateLimit, parseAndValidatePage } from "../../helpers";
 
 type ResponseBody = IGetUsersResponseBody | IApiErrorResponse;
 
@@ -20,12 +22,8 @@ export async function filter(
   res: Response<ResponseBody>,
 ) {
   const created = req.query.created;
-  const limit = req.query.limit || 10;
-
-  let page = 0;
-  if (req.query.page) {
-    page = Number.parseInt(req.query.page, 10) - 1;
-  }
+  const limit = parseAndValidateLimit(req.query?.limit, GET_USERS_FILTER_COUNT);
+  const page = parseAndValidatePage(req.query?.page);
 
   try {
     const userData = await getUsers(created, limit, page);

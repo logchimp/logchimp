@@ -15,30 +15,45 @@ describe("post card", () => {
         slug: "post-title-qwJy9_3Sm9g3Qm3r9OQk",
         contentMarkdown: "What's this feature is all about?",
         // random createdAt date
-        createdAt: "2020-12-19T09:50:10.137Z",
+        updatedAt: new Date("2020-12-19T09:50:10.137Z"),
+        createdAt: new Date("2020-12-19T09:50:10.137Z"),
+        author: {
+          userId: "01982803-d099-4f03-8607-471f87d7c6e9",
+          name: "",
+          avatar: "https://www.gravatar.com/avatar/1",
+          username: "peg-legge",
+        },
         voters: {
-          isVoted: true,
           votesCount: 120,
           votes: [
             {
               // random UUID
+              voteId: "01982803-d099-4f03-8607-471f87d7c6e9",
               userId: "01982803-d099-4f03-8607-471f87d7c6e9",
+              name: "",
               avatar: "https://www.gravatar.com/avatar/1",
               username: "peg-legge",
+              postId: "",
+              createdAt: new Date(),
             },
             {
               // random UUID
+              voteId: "e1de47b3-7acb-4024-9635-1c7ebffc07c3",
               userId: "e1de47b3-7acb-4024-9635-1c7ebffc07c3",
+              name: "",
               avatar: "https://www.gravatar.com/avatar/2",
               username: "peter",
+              postId: "",
+              createdAt: new Date(),
             },
           ],
         },
         board: {
+          boardId: "",
           name: "Feature requests",
           color: "abcabc",
           url: "feature-requests",
-          showBoard: true,
+          createdAt: new Date(),
         },
       },
     },

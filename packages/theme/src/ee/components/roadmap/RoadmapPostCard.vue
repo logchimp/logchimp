@@ -4,7 +4,7 @@
       <Vote
         :post-id="post.postId"
         :votes-count="post.voters.votesCount"
-        :is-voted="post.voters.viewerVote"
+        :is-voted="isVoted"
         @update-voters="updateVoters"
       />
       <div style="width: 100%">
@@ -23,7 +23,6 @@
             <time
               v-else
               data-test="post-date"
-              :datetime="post.createdAt"
 							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
               class="post-date"
             >
@@ -42,11 +41,11 @@
           </div>
         </div>
         <p
-          v-if="isExpanded"
+          v-if="isExpanded && post.contentMarkdown"
           data-test="post-card-description"
           class="post-card-description"
         >
-          {{ useTrim(post.contentMarkdown, 120) }}
+          {{ useTrim(post.contentMarkdown || "", 120) }}
         </p>
       </div>
     </div>
@@ -70,11 +69,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { ChevronUp as ArrowTopIcon } from "lucide-vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import type { IPostItem, IPostVote } from "@logchimp/types";
+import type { IPost, IPostVote } from "@logchimp/types";
 
 import { useTrim } from "../../../hooks";
 
@@ -86,13 +85,16 @@ import { AvatarStack } from "../../../components/ui/Avatar";
 dayjs.extend(relativeTime);
 
 interface Props {
-  post: IPostItem;
+  post: IPost;
 }
 
 const props = defineProps<Props>();
 
 const isExpanded = ref(false);
 const postData = ref(props.post);
+const isVoted = computed<boolean>(() =>
+  Boolean(props.post.voters?.viewerVote?.voteId),
+);
 
 function updateVoters(voters: IPostVote) {
   postData.value.voters.votesCount = voters.votesCount;
