@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!postLoading">
-		<div v-if="isPostExist" class="viewpost">
-			<div class="viewpost__vote">
+		<div v-if="isPostExist" class="flex-2">
+			<div class="flex items-start">
 				<div>
 					<vote
 						:post-id="post.postId"
@@ -10,34 +10,33 @@
 						@update-voters="updateVoters"
 					/>
 				</div>
-				<div class="viewpost__content">
-					<h2 class="viewpost__title">
+				<div class="w-full">
+					<h1 class="font-medium text-4xl mb-2.5">
 						{{ post.title }}
-					</h2>
-					<div class="viewpost__meta">
-						<div class="viewpost__meta-author">
+					</h1>
+					<div class="flex items-center gap-x-4 mb-6">
+						<div class="flex items-center gap-x-2">
 							<avatar
-								class="viewpost__author-avatar"
 								:src="post.author.avatar || undefined"
 								:name="postAuthorName"
 							/>
 							{{ postAuthorName }}
 						</div>
-						<div class="viewpost__meta-divider">|</div>
+						<div class="bg-neutral-300 h-4 w-px" aria-hidden="true"/>
 						<time
 							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
-							class="post-date"
+							class="text-sm text-neutral-700"
 						>
 							{{ dayjs(post.createdAt).fromNow() }}
 						</time>
-						<dropdown-wrapper v-if="postAuthor" class="viewpost__menu">
+						<dropdown-wrapper v-if="postAuthor" class="ml-auto">
 							<template #toggle>
 								<div class="dropdown-menu-icon">
 									<more-icon />
 								</div>
 							</template>
 							<template #default="dropdown">
-								<dropdown v-if="dropdown.active" class="viewpost__menu-dropdown">
+								<dropdown v-if="dropdown.active" class="right-0">
 									<dropdown-item @click="editPost">
 										<template #icon>
 											<edit-icon />
@@ -206,115 +205,3 @@ defineOptions({
   name: "PostView",
 });
 </script>
-
-<style lang='sass'>
-.view
-	display: flex
-	flex-direction: column
-
-@media (min-width: 960px)
-	.view
-		flex-direction: row
-
-// content
-.viewpost
-	flex: 2
-
-	&__vote
-		display: flex
-
-	&__title
-		margin-bottom: 0.75rem
-
-	&__content
-		width: 100%
-
-	&__meta
-		display: flex
-		margin-bottom: 1.5rem
-		align-items: center
-
-		&-author
-			display: flex
-			align-items: center
-
-		&-divider
-			margin-left: 0.875rem
-			margin-right: 0.875rem
-			color: #BABABA
-
-		&-date
-			color: #CCCCCC
-
-	&__author-avatar
-		margin-right: 0.5rem
-
-	&__menu
-		margin-left: auto
-
-		&-dropdown
-			right: 0
-
-@media (min-width: 960px)
-	.viewpost
-		margin-right: 1.5rem
-
-// voters
-.viewvoters
-	flex: 1
-
-	&__container
-		padding: 1.5rem
-		background-color: #F5F5F5
-
-	&__users
-		margin-bottom: 1.5rem
-
-		&-heading
-			color: #A1A1A1
-			margin-bottom: 0.625rem
-
-		&-voters
-			display: flex
-
-		&-image
-			margin-right: -0.625rem
-			max-width: 2.25rem
-			border-radius: 1rem
-			border: 1px solid var(--color-white)
-
-@media (max-width: 960px)
-	.viewvoters
-		margin-top: 2rem
-
-@media (min-width: 960px)
-	.viewvoters
-		margin-left: 1.5rem
-
-// Post activity
-.activity-section, .activity-header
-	margin-top: 2rem
-
-.activity-header
-	display: flex
-	align-items: center
-	margin-bottom: 1.25rem
-	text-transform: uppercase
-	font-size: 0.875rem
-
-	h6
-		margin-bottom: 0
-		font-weight: 600
-
-	.activity-sort
-		display: flex
-		align-items: center
-		margin-left: auto
-
-		.sort-option
-			margin-left: 0.875rem
-			cursor: pointer
-
-		.sort-option-active
-			text-decoration: underline
-</style>

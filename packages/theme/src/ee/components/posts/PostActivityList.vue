@@ -1,24 +1,24 @@
 <template>
-  <div v-if="showPostActivity" class="activity-section">
+  <div v-if="showPostActivity" class="mt-8">
     <add-comment @add-comment="addComment" :post-id="postId" />
 
-    <header class="activity-header">
-      <h6>activity</h6>
+    <header class="mt-8 flex items-center mb-5">
+      <div class="font-semibold uppercase text-sm">activity</div>
 
-      <!-- <div class="activity-sort">
+      <!-- <div class="flex items-center ml-auto gap-x-3">
           <div
-            class="sort-option"
+            class="cursor-pointer"
             :class="{
-              'sort-option-active': activity.sort === 'desc'
+              'underline': activity.sort === 'desc'
             }"
             @click="activity.sort = 'desc'"
           >
             Newest
           </div>
           <div
-            class="sort-option"
+            class="cursor-pointer"
             :class="{
-              'sort-option-active': activity.sort === 'asc'
+              'underline': activity.sort === 'asc'
             }"
             @click="activity.sort = 'asc'"
           >
@@ -27,7 +27,7 @@
         </div> -->
     </header>
 
-    <div v-if="!activity.loading" class="activity-list">
+    <div v-if="!activity.loading" class="grid gap-y-5">
       <activity-item
         v-for="item in activity.data"
         :key="item.id"
