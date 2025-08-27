@@ -48,7 +48,7 @@ async function submitComment() {
   try {
     loading.value = true;
 
-    const response = await addComment(props.postId, {
+    await addComment(props.postId, {
       body: comment.value,
       is_internal: false,
     });
@@ -56,7 +56,8 @@ async function submitComment() {
     comment.value = "";
     loading.value = false;
 
-    emit("add-comment", response.data.comment);
+    // TODO: store post activity in global store
+    // emit("add-comment", response.data.comment);
   } catch (error) {
     tokenError(error);
     loading.value = false;
