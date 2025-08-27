@@ -24,7 +24,7 @@
 import { ref } from "vue";
 
 // modules
-import { addComment } from "../../../modules/posts.ts";
+import { addComment } from "../../modules/posts.ts";
 import tokenError from "../../../utils/tokenError.ts";
 
 // components
