@@ -6,18 +6,29 @@ type PermissionInput = {
   action: string;
 };
 
-export async function createRoleWithPermissions(
-  permissions: PermissionInput[],
-  roleId?: string,
-  userId?: string,
-): Promise<string> {
-  const finalRoleId = roleId ?? uuidv4();
+type RoleInput = {
+  roleId?: string;
+  roleName?: string;
+};
 
-  await database.transaction(async (trs) => {
-    if (!roleId) {
-      await trs("roles").insert({
-        id: finalRoleId,
-        name: permissions.map((p) => `${p.type}:${p.action}`).join(", "),
+export async function createRoleWithPermissions(
+  userId: string,
+  permissions: PermissionInput[],
+  role?: RoleInput,
+): Promise<string> {
+  const roleId = role?.roleId ?? uuidv4();
+
+  const roleName =
+    role?.roleName ??
+    permissions.map((p) => `${p.type}:${p.action}`).join(", ");
+
+  await database.transaction(async (trx) => {
+    const existingRole = await trx("roles").where({ id: roleId }).first();
+
+    if (!existingRole) {
+      await trx("roles").insert({
+        id: roleId,
+        name: roleName,
         description: `Role with permissions: ${permissions
           .map((p) => `${p.type}:${p.action}`)
           .join(", ")}`,
@@ -25,7 +36,7 @@ export async function createRoleWithPermissions(
     }
 
     for (const { type, action } of permissions) {
-      const permission = await trs("permissions")
+      const permission = await trx("permissions")
         .where({ type, action })
         .first();
 
@@ -33,21 +44,21 @@ export async function createRoleWithPermissions(
         throw new Error(`Permission not found: ${type}:${action}`);
       }
 
-      await trs("permissions_roles").insert({
+      await trx("permissions_roles").insert({
         id: uuidv4(),
-        role_id: finalRoleId,
+        role_id: roleId,
         permission_id: permission.id,
       });
     }
 
     if (userId) {
-      await trs("roles_users").insert({
+      await trx("roles_users").insert({
         id: uuidv4(),
-        role_id: finalRoleId,
+        role_id: roleId,
         user_id: userId,
       });
     }
   });
 
-  return finalRoleId;
+  return roleId;
 }
