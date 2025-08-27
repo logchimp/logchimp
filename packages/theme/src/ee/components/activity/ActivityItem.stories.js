@@ -1,4 +1,4 @@
-import ActivityItem from "./ActivityItem";
+import ActivityItem from "./ActivityItem.vue";
 
 export default {
   title: "UI/Activity Item",

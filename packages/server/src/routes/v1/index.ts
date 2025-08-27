@@ -12,6 +12,7 @@ import settings from "./settings";
 import roadmaps from "./roadmaps";
 
 // EE routes
+import eePosts from "../../ee/routes/v1/posts";
 import eeRoadmaps from "../../ee/routes/v1/roadmaps";
 import boards from "../../ee/routes/v1/boards";
 import roles from "../../ee/routes/v1/roles";
@@ -27,6 +28,7 @@ router.use(
   roadmaps,
 
   // EE
+  eePosts,
   boards,
   eeRoadmaps,
   roles,

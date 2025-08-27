@@ -1,20 +1,27 @@
 import type { Request, Response } from "express";
-import database from "../../../database";
+import type {
+  IApiErrorResponse,
+  ISiteSettingsLab,
+  TDeletePostCommentRequestParam,
+} from "@logchimp/types";
+import database from "../../../../../database";
 
 // utils
-import logger from "../../../utils/logger";
-import error from "../../../errorResponse.json";
+import logger from "../../../../../utils/logger";
+import error from "../../../../../errorResponse.json";
 
-export async function destroy(req: Request, res: Response) {
+export async function destroy(
+  req: Request<TDeletePostCommentRequestParam>,
+  res: Response<IApiErrorResponse>,
+) {
   const { comment_id } = req.params;
 
   try {
-    const labSettings = await database
+    const labSettings = (await database
       .select(database.raw("labs::json"))
       .from("settings")
-      .first();
+      .first()) as unknown as { labs: ISiteSettingsLab };
 
-    // @ts-ignore
     if (!labSettings.labs.comments) {
       return res.status(403).send({
         message: error.api.labs.disabled,

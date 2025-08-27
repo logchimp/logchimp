@@ -1,8 +1,8 @@
-import type { IPublicUserInfo } from "./user";
-import type { IPostVote } from "./vote";
-import type { IRoadmap } from "./roadmap";
-import type { IBoard } from "./board";
-import type { ApiSortType } from "./common";
+import type { IPublicUserInfo } from "../user";
+import type { IPostVote } from "../vote";
+import type { IRoadmap } from "../roadmap";
+import type { IBoard } from "../board";
+import type { ApiSortType } from "../common";
 
 export interface IPost extends IPostInfo {
   board: IBoard;

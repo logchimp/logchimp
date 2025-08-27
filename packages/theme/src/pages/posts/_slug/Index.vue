@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!postLoading">
-		<div v-if="isPostExist" class="viewpost">
-			<div class="viewpost__vote">
+		<div v-if="isPostExist" class="flex-2">
+			<div class="flex items-start">
 				<div>
 					<vote
 						:post-id="post.postId"
@@ -10,34 +10,33 @@
 						@update-voters="updateVoters"
 					/>
 				</div>
-				<div class="viewpost__content">
-					<h2 class="viewpost__title">
+				<div class="w-full">
+					<h1 class="font-medium text-4xl mb-2.5">
 						{{ post.title }}
-					</h2>
-					<div class="viewpost__meta">
-						<div class="viewpost__meta-author">
+					</h1>
+					<div class="flex items-center gap-x-4 mb-6">
+						<div class="flex items-center gap-x-2">
 							<avatar
-								class="viewpost__author-avatar"
 								:src="post.author.avatar || undefined"
 								:name="postAuthorName"
 							/>
 							{{ postAuthorName }}
 						</div>
-						<div class="viewpost__meta-divider">|</div>
+						<div class="bg-neutral-300 h-4 w-px" aria-hidden="true"/>
 						<time
 							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
-							class="post-date"
+							class="text-sm text-neutral-700"
 						>
 							{{ dayjs(post.createdAt).fromNow() }}
 						</time>
-						<dropdown-wrapper v-if="postAuthor" class="viewpost__menu">
+						<dropdown-wrapper v-if="postAuthor" class="ml-auto">
 							<template #toggle>
 								<div class="dropdown-menu-icon">
 									<more-icon />
 								</div>
 							</template>
 							<template #default="dropdown">
-								<dropdown v-if="dropdown.active" class="viewpost__menu-dropdown">
+								<dropdown v-if="dropdown.active" class="right-0">
 									<dropdown-item @click="editPost">
 										<template #icon>
 											<edit-icon />
@@ -54,45 +53,7 @@
 
 			<p v-html="postContent" />
 
-			<div v-if="showPostActivity" class="activity-section">
-				<add-comment @add-comment="addComment" :post-id="post.postId" />
-
-				<header class="activity-header">
-					<h6>activity</h6>
-
-					<!-- <div class="activity-sort">
-							<div
-								class="sort-option"
-								:class="{
-									'sort-option-active': activity.sort === 'desc'
-								}"
-								@click="activity.sort = 'desc'"
-							>
-								Newest
-							</div>
-							<div
-								class="sort-option"
-								:class="{
-									'sort-option-active': activity.sort === 'asc'
-								}"
-								@click="activity.sort = 'asc'"
-							>
-								Oldest
-							</div>
-						</div> -->
-				</header>
-
-				<div v-if="!activity.loading" class="activity-list">
-					<activity-item
-						v-for="item in activity.data"
-						:key="item.id"
-						:activity="item"
-					/>
-				</div>
-				<div v-else class="loader-container">
-					<loader />
-				</div>
-			</div>
+      <PostActivityList :post-id="post.postId" />
 		</div>
 		<p v-else>
 			There is no such post.
@@ -104,22 +65,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
-import type { ApiSortType, IPost, IPostVote } from "@logchimp/types";
+import type { IPost, IPostVote } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import {
-  getPostBySlug,
-  addComment,
-  postActivity,
-} from "../../../modules/posts";
+import { getPostBySlug } from "../../../modules/posts";
 
 // components
 import Loader from "../../../components/ui/Loader.vue";
@@ -128,11 +85,10 @@ import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue
 import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
 import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
 import { Avatar } from "../../../components/ui/Avatar";
-import AddComment from "../../../components/activity/AddComment.vue";
-import ActivityItem from "../../../components/activity/ActivityItem.vue";
+import PostActivityList from "../../../ee/components/posts/PostActivityList.vue";
 
 const { permissions, getUserId } = useUserStore();
-const { labs, get: siteSettings } = useSettingStore();
+const { get: siteSettings } = useSettingStore();
 
 dayjs.extend(relativeTime);
 
@@ -170,22 +126,6 @@ const postContent = ref<string>("");
 const postLoading = ref(false);
 const isPostExist = ref(false);
 
-// comments
-// const commentInput = ref("");
-// const submittingComment = ref(false);
-
-// activity
-const activity = reactive<{
-  loading: boolean;
-  sort: ApiSortType;
-  // TODO: Add TS types
-  data: any;
-}>({
-  loading: false,
-  sort: "DESC",
-  data: [],
-});
-
 const isVoted = computed<boolean>(
   () => !!post.voters?.viewerVote?.voteId || false,
 );
@@ -199,35 +139,6 @@ const postAuthor = computed(() => {
   if (!checkPermission && getUserId !== authorId) return false;
   return true;
 });
-
-const showPostActivity = computed(() => {
-  return labs.comments;
-});
-
-async function getPostActivity(sort: ApiSortType = "DESC") {
-  activity.loading = true;
-
-  try {
-    const response = await postActivity({
-      post_id: post.postId,
-      sort,
-    });
-
-    activity.data = response.data.activity;
-  } catch (error) {
-    console.log(error);
-  } finally {
-    activity.loading = false;
-  }
-}
-
-// Get post activity on changing sort
-watch(
-  () => activity.sort,
-  (value) => {
-    getPostActivity(value);
-  },
-);
 
 async function postBySlug() {
   postLoading.value = true;
@@ -248,8 +159,6 @@ async function postBySlug() {
           "<br>",
         );
       }
-
-      await getPostActivity();
     } catch (error: unknown) {
       // @ts-expect-error
       if (error?.response?.data?.code === "POST_NOT_FOUND") {
@@ -259,23 +168,6 @@ async function postBySlug() {
     }
   }
 }
-
-// async function submitComment() {
-//   if (!commentInput.value) return;
-//
-//   try {
-//     const response = await addComment({
-//       post_id: post.postId,
-//       body: commentInput.value,
-//       is_internal: false,
-//     });
-//
-//     commentInput.value = "";
-//     activity.data.unshift(response.data.comment);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 
 function updateVoters(voters: IPostVote) {
   post.voters.votesCount = voters.votesCount;
@@ -313,115 +205,3 @@ defineOptions({
   name: "PostView",
 });
 </script>
-
-<style lang='sass'>
-.view
-	display: flex
-	flex-direction: column
-
-@media (min-width: 960px)
-	.view
-		flex-direction: row
-
-// content
-.viewpost
-	flex: 2
-
-	&__vote
-		display: flex
-
-	&__title
-		margin-bottom: 0.75rem
-
-	&__content
-		width: 100%
-
-	&__meta
-		display: flex
-		margin-bottom: 1.5rem
-		align-items: center
-
-		&-author
-			display: flex
-			align-items: center
-
-		&-divider
-			margin-left: 0.875rem
-			margin-right: 0.875rem
-			color: #BABABA
-
-		&-date
-			color: #CCCCCC
-
-	&__author-avatar
-		margin-right: 0.5rem
-
-	&__menu
-		margin-left: auto
-
-		&-dropdown
-			right: 0
-
-@media (min-width: 960px)
-	.viewpost
-		margin-right: 1.5rem
-
-// voters
-.viewvoters
-	flex: 1
-
-	&__container
-		padding: 1.5rem
-		background-color: #F5F5F5
-
-	&__users
-		margin-bottom: 1.5rem
-
-		&-heading
-			color: #A1A1A1
-			margin-bottom: 0.625rem
-
-		&-voters
-			display: flex
-
-		&-image
-			margin-right: -0.625rem
-			max-width: 2.25rem
-			border-radius: 1rem
-			border: 1px solid var(--color-white)
-
-@media (max-width: 960px)
-	.viewvoters
-		margin-top: 2rem
-
-@media (min-width: 960px)
-	.viewvoters
-		margin-left: 1.5rem
-
-// Post activity
-.activity-section, .activity-header
-	margin-top: 2rem
-
-.activity-header
-	display: flex
-	align-items: center
-	margin-bottom: 1.25rem
-	text-transform: uppercase
-	font-size: 0.875rem
-
-	h6
-		margin-bottom: 0
-		font-weight: 600
-
-	.activity-sort
-		display: flex
-		align-items: center
-		margin-left: auto
-
-		.sort-option
-			margin-left: 0.875rem
-			cursor: pointer
-
-		.sort-option-active
-			text-decoration: underline
-</style>
