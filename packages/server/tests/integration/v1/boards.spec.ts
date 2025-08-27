@@ -65,7 +65,6 @@ describe("GET /boards/search/:name", () => {
 
   it("should throw error not having 'board:read' permission", async () => {
     const { user: authUser } = await createUser();
-
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
@@ -80,9 +79,9 @@ describe("GET /boards/search/:name", () => {
 
     // assign "board:read" permission to user
     await createRoleWithPermissions(
-      [{ type: "board", action: "read" }],
-      undefined,
       authUser.userId,
+      [{ type: "board", action: "read" }],
+      { roleId: undefined, roleName: "Board Reader" },
     );
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
@@ -159,9 +158,9 @@ describe("DELETE /api/v1/boards", () => {
 
     // assign "board:destroy" permission to user
     await createRoleWithPermissions(
-      [{ type: "board", action: "destroy" }],
-      undefined,
       authUser.userId,
+      [{ type: "board", action: "destroy" }],
+      { roleId: undefined, roleName: "Board destroyer" },
     );
 
     const response = await supertest(app)
