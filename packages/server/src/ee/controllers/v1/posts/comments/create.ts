@@ -1,5 +1,13 @@
 import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
+import type {
+  IApiErrorResponse,
+  ICreatePostCommentRequestBody,
+  TCreatePostCommentRequestParam,
+  ICreatePostCommentResponseBody,
+  IPublicUserInfo,
+  ISiteSettingsLab,
+} from "@logchimp/types";
 
 import database from "../../../../../database";
 
@@ -7,8 +15,17 @@ import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 
-export async function create(req: Request, res: Response) {
-  // @ts-ignore
+type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
+
+export async function create(
+  req: Request<
+    TCreatePostCommentRequestParam,
+    unknown,
+    ICreatePostCommentRequestBody
+  >,
+  res: Response<ResponseBody>,
+) {
+  // @ts-expect-error
   const userId = req.user.userId;
   const { post_id } = req.params;
   const { parent_id, is_internal, body } = req.body;
@@ -17,12 +34,10 @@ export async function create(req: Request, res: Response) {
   // check the auth user has permission to comment
 
   try {
-    const labSettings = await database
+    const labSettings = (await database("settings")
       .select(database.raw("labs::json"))
-      .from("settings")
-      .first();
+      .first()) as unknown as { labs: ISiteSettingsLab };
 
-    // @ts-ignore
     if (!labSettings.labs.comments) {
       return res.status(403).send({
         message: error.api.labs.disabled,
@@ -70,7 +85,7 @@ export async function create(req: Request, res: Response) {
 
       const activity = activities[0];
 
-      const author = await trx("users")
+      const author = await trx<IPublicUserInfo>("users")
         .select("userId", "name", "username", "avatar")
         .where({ userId })
         .first();

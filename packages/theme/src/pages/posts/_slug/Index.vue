@@ -201,13 +201,12 @@ const showPostActivity = computed(() => {
   return labs.comments;
 });
 
-async function getPostActivity(sort: ApiSortType = "DESC") {
+async function getPostActivity() {
   activity.loading = true;
 
   try {
-    const response = await postActivity({
-      post_id: post.postId,
-      sort,
+    const response = await postActivity(post.postId, {
+      page: "0",
     });
 
     activity.data = response.data.activity;

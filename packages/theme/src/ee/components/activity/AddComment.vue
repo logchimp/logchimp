@@ -7,7 +7,7 @@
 			@keyup-enter="submitComment"
 		/>
 
-		<div style="display: flex; justify-content: flex-end">
+		<div class="flex justify-end">
 			<Button
 				type="primary"
 				:loading="loading"
@@ -24,19 +24,18 @@
 import { ref } from "vue";
 
 // modules
-import { addComment } from "../../modules/posts.ts";
-import tokenError from "../../../utils/tokenError.ts";
+import { addComment } from "../../modules/posts";
+import tokenError from "../../../utils/tokenError";
 
 // components
 import LText from "../../../components/ui/input/LText.vue";
 import Button from "../../../components/ui/Button.vue";
 
-const props = defineProps({
-  postId: {
-    type: String,
-    required: true,
-  },
-});
+interface Props {
+  postId: string;
+}
+
+const props = defineProps<Props>();
 
 const emit = defineEmits(["add-comment"]);
 
@@ -49,8 +48,7 @@ async function submitComment() {
   try {
     loading.value = true;
 
-    const response = await addComment({
-      post_id: props.postId,
+    const response = await addComment(props.postId, {
       body: comment.value,
       is_internal: false,
     });

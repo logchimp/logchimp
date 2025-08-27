@@ -1,51 +1,48 @@
-import axios from "axios";
-import type { ApiSortType } from "@logchimp/types";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  ICreatePostCommentRequestBody,
+  ICreatePostCommentResponseBody,
+  IGetPostActivityRequestQuery,
+  IGetPostActivityResponseBody,
+} from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
-
-// store
 import { useUserStore } from "../../store/user";
-
-interface PostActivityArgs {
-  post_id: string;
-  sort: ApiSortType;
-}
-
-interface AddCommentArgs {
-  post_id: string;
-  body: string;
-  is_internal?: boolean;
-}
 
 /**
  * Get post activity
- *
+ * @param {string} post_id post UUID
  * @param {object} activity
- * @param {string} activity.post_id post UUID
- * @param {string} activity.sort sort type
+ * @param {string} activity.page page number
+ * @param {string} activity.limit number of items in a page
+ * @returns {Promise<AxiosResponse<IGetPostActivityResponseBody>>}
  */
-export const postActivity = async ({ post_id, sort }: PostActivityArgs) => {
+export const postActivity = async (
+  post_id: string,
+  { page, limit }: IGetPostActivityRequestQuery,
+): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/posts/${post_id}/activity`,
     params: {
-      sort,
+      page,
+      limit,
     },
   });
 };
 
 /**
  * Add comment to a post
- *
+ * @param {string} post_id
  * @param {object} comment
  * @param {string} comment.body
  * @param {boolean} comment.is_internal
+ * @returns {Promise<AxiosResponse<ICreatePostCommentResponseBody>>}
  */
-export const addComment = async ({
-  post_id,
-  body,
-  is_internal = false,
-}: AddCommentArgs) => {
+export const addComment = async (
+  post_id: string,
+  { body, is_internal = false }: ICreatePostCommentRequestBody,
+): Promise<AxiosResponse<ICreatePostCommentResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({

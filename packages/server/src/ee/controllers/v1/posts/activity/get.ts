@@ -1,4 +1,10 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IGetPostActivityRequestParam,
+  IGetPostActivityRequestQuery,
+  IGetPostActivityResponseBody,
+} from "@logchimp/types";
 
 import database from "../../../../../database";
 
@@ -6,9 +12,19 @@ import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 
-export async function get(req: Request, res: Response) {
+type ResponseBody = IGetPostActivityResponseBody | IApiErrorResponse;
+
+export async function get(
+  req: Request<
+    IGetPostActivityRequestParam,
+    unknown,
+    unknown,
+    IGetPostActivityRequestQuery
+  >,
+  res: Response<ResponseBody>,
+) {
   const { post_id } = req.params;
-  const { per_page = 10, page = 1 } = req.query;
+  const { limit = 10, page = 1 } = req.query;
 
   try {
     const activities = await database.raw(
@@ -55,7 +71,7 @@ export async function get(req: Request, res: Response) {
       OFFSET :offset
     ;`,
       {
-        limit: per_page,
+        limit,
         offset: page,
         post_id,
       },
