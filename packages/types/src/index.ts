@@ -4,6 +4,6 @@ export * from "./user";
 export * from "./board";
 export * from "./roadmap";
 export * from "./vote";
-export * from "./post";
+export * from "./posts";
 export * from "./roles";
 export * from "./site";
