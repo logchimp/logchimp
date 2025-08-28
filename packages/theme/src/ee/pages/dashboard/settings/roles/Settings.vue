@@ -127,6 +127,13 @@
 
     <div class="form-section">
       <p class="form-section-title">Roles permissions</p>
+      <alert 
+       v-if="permissions.role.assign" 
+       title="Alert: Critical Security Issue" 
+       description="The `role:assign` permission can cause critical security and access issues if misused." 
+       type="error" 
+       class="mb-6"
+      />
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.role.read" label="Read" />
@@ -177,6 +184,7 @@ import Breadcrumbs from "../../../../../components/Breadcrumbs.vue";
 import BreadcrumbDivider from "../../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.vue";
+import Alert from "../../../../../components/ui/Alert/Alert.vue";
 
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
