@@ -26,6 +26,13 @@
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
+     <alert 
+       v-if="permissions.role.assign" 
+       title="Important" 
+       description="The `role:assign` permission can cause critical security and access issues if misused." 
+       type="error" 
+       class="mb-6"
+      />
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -127,13 +134,6 @@
 
     <div class="form-section">
       <p class="form-section-title">Roles permissions</p>
-      <alert 
-       v-if="permissions.role.assign" 
-       title="Alert: Critical Security Issue" 
-       description="The `role:assign` permission can cause critical security and access issues if misused." 
-       type="error" 
-       class="mb-6"
-      />
       <div class="form-columns">
         <div class="form-column">
           <toggle-item v-model="permissions.role.read" label="Read" />
