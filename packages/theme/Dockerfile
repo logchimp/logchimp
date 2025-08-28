@@ -21,6 +21,9 @@ RUN caddy fmt Caddyfile --overwrite
 
 COPY --from=build-stage /app/packages/theme/dist ./dist
 
+ARG LOGCHIMP_VERSION=""
+ENV LOGCHIMP_VERSION=$LOGCHIMP_VERSION
+
 # Inject app env
 COPY --from=build-stage /app/packages/theme/inject-app-env.sh .
 RUN chmod +x /app/inject-app-env.sh

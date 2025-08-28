@@ -1,3 +1,7 @@
+export const VITE_LOGCHIMP_VERSION =
+  window.__APP_ENV__?.VITE_LOGCHIMP_VERSION ||
+  import.meta.env.VITE_LOGCHIMP_VERSION;
+
 export const VITE_API_URL =
   window.__APP_ENV__?.VITE_API_URL || import.meta.env.VITE_API_URL;
 
