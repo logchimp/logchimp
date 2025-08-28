@@ -89,7 +89,10 @@ jobs:
             SERVICE_COMMON_NAME_LOCAL=server
           fi
 
-          docker buildx build --load -f ./packages/$SERVICE_COMMON_NAME_LOCAL/Dockerfile -t logchimp-$SERVICE_COMMON_NAME . $DOCKER_BUILD_ARGUMENTS
+          docker buildx build \
+            --load -f ./packages/$SERVICE_COMMON_NAME_LOCAL/Dockerfile \
+            --build-arg LOGCHIMP_VERSION=${{ env.LATEST_VERSION }} \
+            -t logchimp-$SERVICE_COMMON_NAME . $DOCKER_BUILD_ARGUMENTS
           docker images
 
       - name: Tag and Push docker image
