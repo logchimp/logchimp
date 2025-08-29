@@ -44,7 +44,12 @@ describe("GET /boards/:url", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.board).toStrictEqual(board);
+
+    delete board.updatedAt;
+    expect(response.body.board).toStrictEqual({
+      ...board,
+      post_count: "0",
+    });
   });
 });
 
