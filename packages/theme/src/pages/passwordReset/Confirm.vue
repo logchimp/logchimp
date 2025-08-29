@@ -57,12 +57,6 @@
   </auth-form>
 </template>
 
-<script lang="ts">
-export default {
-  name: "SetNewPassword",
-};
-</script>
-
 <script setup lang="ts">
 // packages
 import { onMounted, reactive, ref } from "vue";
@@ -82,63 +76,63 @@ import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 import SiteBranding from "../../components/site/SiteBranding.vue";
 
-const { get: siteSettings } = useSettingStore()
+const { get: siteSettings } = useSettingStore();
 
 const password = reactive({
-	value: "",
-	error: {
-		show: false,
-		message: ""
-	}
-})
+  value: "",
+  error: {
+    show: false,
+    message: "",
+  },
+});
 const confirmPassword = reactive({
-	value: "",
-	error: {
-		show: false,
-		message: ""
-	}
-})
+  value: "",
+  error: {
+    show: false,
+    message: "",
+  },
+});
 const validToken = reactive({
-	loading: true,
-	success: false,
-	error: false
-})
+  loading: true,
+  success: false,
+  error: false,
+});
 const changePassword = reactive({
-	success: false,
-	error: false
-})
-const buttonLoading = ref(false)
+  success: false,
+  error: false,
+});
+const buttonLoading = ref(false);
 
 function hidePasswordError(event: FormFieldErrorType) {
-	password.error = event;
+  password.error = event;
 }
 
 function hideConfirmPasswordError(event: FormFieldErrorType) {
-	confirmPassword.error = event;
+  confirmPassword.error = event;
 }
 
 async function validateToken() {
-	// have reset password token
-	const route = router.currentRoute.value;
+  // have reset password token
+  const route = router.currentRoute.value;
 
-	if (!route.query.token) {
+  if (!route.query.token) {
     validToken.loading = false;
-		validToken.error = true;
-		return;
-	}
+    validToken.error = true;
+    return;
+  }
 
-	try {
+  try {
     const token = route.query.token.toString();
-		const response = await validateResetPasswordToken(token);
+    const response = await validateResetPasswordToken(token);
 
-		if (response.data.reset.valid) {
-			validToken.loading = false;
-			validToken.success = true;
-		}
-	} catch (error) {
-		validToken.loading = false;
-		validToken.error = true;
-	}
+    if (response.data.reset.valid) {
+      validToken.loading = false;
+      validToken.success = true;
+    }
+  } catch (error) {
+    validToken.loading = false;
+    validToken.error = true;
+  }
 }
 
 async function setPassword() {
@@ -148,58 +142,62 @@ async function setPassword() {
     return;
   }
 
-	if (!(password.value && confirmPassword.value)) {
-		if (!password.value) {
-			password.error.show = true;
-			password.error.message = "Required";
-		}
+  if (!(password.value && confirmPassword.value)) {
+    if (!password.value) {
+      password.error.show = true;
+      password.error.message = "Required";
+    }
 
-		if (!confirmPassword.value) {
-			confirmPassword.error.show = true;
-			confirmPassword.error.message = "Required";
-		}
-		return;
-	}
+    if (!confirmPassword.value) {
+      confirmPassword.error.show = true;
+      confirmPassword.error.message = "Required";
+    }
+    return;
+  }
 
-	// match password and confirm password
-	if (password.value !== confirmPassword.value) {
-		confirmPassword.error.show = true;
-		confirmPassword.error.message = "Password doesn't match";
-		return;
-	}
+  // match password and confirm password
+  if (password.value !== confirmPassword.value) {
+    confirmPassword.error.show = true;
+    confirmPassword.error.message = "Password doesn't match";
+    return;
+  }
 
-	const token = route.query.token.toString();
-	buttonLoading.value = true;
+  const token = route.query.token.toString();
+  buttonLoading.value = true;
 
-	try {
-		const response = await setNewPassword({
+  try {
+    const response = await setNewPassword({
       token,
-      password: password.value
+      password: password.value,
     });
 
-		if (response.data.reset.success) {
-			changePassword.success = true;
-		}
-	} catch (err) {
-		changePassword.error = true;
-	} finally {
-		buttonLoading.value = false;
-		// this.$store.dispatch("user/logout");
-	}
+    if (response.data.reset.success) {
+      changePassword.success = true;
+    }
+  } catch (err) {
+    changePassword.error = true;
+  } finally {
+    buttonLoading.value = false;
+    // this.$store.dispatch("user/logout");
+  }
 }
 
 onMounted(() => {
-	// validate reset password token
-	validateToken();
-})
+  // validate reset password token
+  validateToken();
+});
 
 useHead({
-	title: "Set new password",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Set new password • ${siteSettings.title}`
-		}
-	]
-})
+  title: "Set new password",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Set new password • ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "SetNewPassword",
+});
 </script>

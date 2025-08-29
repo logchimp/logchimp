@@ -33,12 +33,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardUsers",
-};
-</script>
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
 
@@ -54,12 +48,16 @@ import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardUsersTabularItem from "../../ee/components/dashboard/users/TabularItem/TabularItem.vue";
 
-const { settings } = useSettingStore()
-const dashboardUsers = useDashboardUsers()
+const { settings } = useSettingStore();
+const dashboardUsers = useDashboardUsers();
 
 useHead({
-	title: "Users • Dashboard"
-})
+  title: "Users • Dashboard",
+});
+
+defineOptions({
+  name: "DashboardUsers",
+});
 </script>
 
 <style lang='sass'>

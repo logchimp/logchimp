@@ -33,12 +33,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardSettings",
-};
-</script>
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
 
@@ -49,8 +43,12 @@ import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
 useHead({
-  title: "Billing • Settings • Dashboard"
-})
+  title: "Billing • Settings • Dashboard",
+});
+
+defineOptions({
+  name: "DashboardSettings",
+});
 </script>
 
 <style lang='sass'>

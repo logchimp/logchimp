@@ -110,12 +110,6 @@
 	</div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardBoards",
-};
-</script>
-
 <script setup lang="ts">
 // packages
 import { computed, ref } from "vue";
@@ -126,7 +120,7 @@ import {
   MoreHorizontal as MoreIcon,
   Clipboard as CopyIcon,
   Trash2 as DeleteIcon,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
 } from "lucide-vue";
 import { useHead } from "@vueuse/head";
 import type { IBoardPrivate } from "@logchimp/types";
@@ -138,12 +132,14 @@ import { useUserStore } from "../../../../store/user";
 import {
   getAllBoards,
   createBoard,
-  deleteBoard
+  deleteBoard,
 } from "../../../modules/boards";
 import { useCopyText } from "../../../../hooks";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import Table from "../../../../components/ui/Table.vue";
 import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
@@ -154,80 +150,84 @@ import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
-const { settings } = useSettingStore()
-const { permissions } = useUserStore()
+const { settings } = useSettingStore();
+const { permissions } = useUserStore();
 
-const createBoardButtonLoading = ref(false)
+const createBoardButtonLoading = ref(false);
 const boards = ref<IBoardPrivate[]>([]);
 const page = ref<number>(1);
-const state = ref<InfiniteScrollStateType>()
+const state = ref<InfiniteScrollStateType>();
 
 const createBoardPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("board:create");
-	return !checkPermission;
-})
+  const checkPermission = permissions.includes("board:create");
+  return !checkPermission;
+});
 
 const deleteBoardPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("board:destroy");
-	return !checkPermission;
-})
+  const checkPermission = permissions.includes("board:destroy");
+  return !checkPermission;
+});
 
 async function createBoardHandler() {
-	createBoardButtonLoading.value = true;
+  createBoardButtonLoading.value = true;
 
-	try {
-		const response = await createBoard({});
+  try {
+    const response = await createBoard({});
 
-    console.log('response');
+    console.log("response");
     console.log(response.data);
 
-		const url = response.data.board.url;
-		router.push(`/dashboard/boards/${url}/settings`);
-	} catch (err) {
-		console.error(err);
-	} finally {
-		createBoardButtonLoading.value = false;
-	}
+    const url = response.data.board.url;
+    router.push(`/dashboard/boards/${url}/settings`);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    createBoardButtonLoading.value = false;
+  }
 }
 
 async function getBoards() {
-  state.value = "LOADING"
+  state.value = "LOADING";
 
-	try {
-		const response = await getAllBoards({
-			page: page.value.toString(),
-			created: "DESC"
-		});
+  try {
+    const response = await getAllBoards({
+      page: page.value.toString(),
+      created: "DESC",
+    });
 
-		if (response.data.boards.length) {
-			boards.value.push(...response.data.boards);
-			page.value += 1;
-			state.value = "LOADED"
-		} else {
-			state.value = "COMPLETED"
-		}
-	} catch (error) {
-		console.error(error);
-		state.value = "ERROR"
-	}
+    if (response.data.boards.length) {
+      boards.value.push(...response.data.boards);
+      page.value += 1;
+      state.value = "LOADED";
+    } else {
+      state.value = "COMPLETED";
+    }
+  } catch (error) {
+    console.error(error);
+    state.value = "ERROR";
+  }
 }
 
 async function deleteBoardHandler(id: string, index: number) {
-	try {
-		const response = await deleteBoard(id);
+  try {
+    const response = await deleteBoard(id);
 
-		if (response.status === 204) {
-			boards.value.splice(index, 1);
-			console.log(`[Dashboard] Delete board (${id})`);
-		}
-	} catch (error) {
-		console.error(error);
-	}
+    if (response.status === 204) {
+      boards.value.splice(index, 1);
+      console.log(`[Dashboard] Delete board (${id})`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 useHead({
-	title: "Boards • Dashboard"
-})
+  title: "Boards • Dashboard",
+});
+
+defineOptions({
+  name: "DashboardBoards",
+});
 </script>
 
 <style lang='sass'>

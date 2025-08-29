@@ -41,19 +41,13 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "BoardView",
-};
-</script>
-
 <script setup lang="ts">
 // packages
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
-import type {  IBoardPrivate } from "@logchimp/types";
+import type { IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { getBoardByUrl } from "../../ee/modules/boards";
@@ -67,11 +61,11 @@ import OldestPosts from "../../components/post/OldestPosts.vue";
 import CreatePost from "../../components/post/CreatePost.vue";
 import LoginCard from "../../components/auth/LoginCard.vue";
 
-import { useSettingStore } from "../../store/settings"
-import { useUserStore } from "../../store/user"
+import { useSettingStore } from "../../store/settings";
+import { useUserStore } from "../../store/user";
 
 const route = useRoute();
-const tab = ref("latest")
+const tab = ref("latest");
 const board = reactive<IBoardPrivate>({
   boardId: "",
   name: "",
@@ -82,21 +76,21 @@ const board = reactive<IBoardPrivate>({
   post_count: "",
   createdAt: new Date(),
 });
-const loading = ref<boolean>(false)
-const isBoardExist = ref<boolean>(false)
+const loading = ref<boolean>(false);
+const isBoardExist = ref<boolean>(false);
 
-const { get: siteSettings } = useSettingStore()
-const { getUserId } = useUserStore()
+const { get: siteSettings } = useSettingStore();
+const { getUserId } = useUserStore();
 
 const activeTab = computed(() => {
   switch (tab.value) {
-  case "oldest":
-    return OldestPosts;
-  case "latest":
-  default:
-    return LatestPosts;
+    case "oldest":
+      return OldestPosts;
+    case "latest":
+    default:
+      return LatestPosts;
   }
-})
+});
 
 function updateTab(tabValue: string) {
   tab.value = tabValue;
@@ -111,7 +105,7 @@ async function getBoard() {
 
     isBoardExist.value = true;
     loading.value = false;
-    Object.assign(board, response.data.board)
+    Object.assign(board, response.data.board);
   } catch (error: any) {
     if (error.response.data.code === "BOARD_NOT_FOUND") {
       isBoardExist.value = false;
@@ -120,21 +114,25 @@ async function getBoard() {
   }
 }
 
-onMounted(() => getBoard())
+onMounted(() => getBoard());
 
 useHead({
-  title: () => `${board.name ? `${board.name} • ` : ''}Board`,
+  title: () => `${board.name ? `${board.name} • ` : ""}Board`,
   meta: [
     {
       name: "og:title",
-      content: () => `${board.name} • Board • ${siteSettings.title}`
+      content: () => `${board.name} • Board • ${siteSettings.title}`,
     },
     !board.display
       ? {
-        name: "robots",
-        content: "noindex"
-      }
-      : {}
-  ]
-})
+          name: "robots",
+          content: "noindex",
+        }
+      : {},
+  ],
+});
+
+defineOptions({
+  name: "BoardView",
+});
 </script>

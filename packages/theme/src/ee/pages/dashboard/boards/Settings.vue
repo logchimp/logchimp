@@ -76,12 +76,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "BoardSettings",
-};
-</script>
-
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -91,7 +85,7 @@ import { router } from "../../../../router";
 import {
   getBoardByUrl,
   updateBoard,
-  checkBoardName
+  checkBoardName,
 } from "../../../modules/boards";
 import { useUserStore } from "../../../../store/user";
 
@@ -105,91 +99,91 @@ import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
-const title = ref("")
+const title = ref("");
 const board = reactive({
-	boardId: "",
-	name: "",
-	url: "",
-	color: "",
-	view_voters: false,
-	display: false
-})
-const urlAvailableError = ref(false)
-const saveButtonLoading = ref(false)
+  boardId: "",
+  name: "",
+  url: "",
+  color: "",
+  view_voters: false,
+  display: false,
+});
+const urlAvailableError = ref(false);
+const saveButtonLoading = ref(false);
 
-const { permissions } = useUserStore()
+const { permissions } = useUserStore();
 
 const createBoardPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("board:update");
-	return !checkPermission;
+  const checkPermission = permissions.includes("board:update");
+  return !checkPermission;
 });
 
 const slugUrl = computed({
-	get() {
-		return board.url;
-	},
-	set(value) {
-		board.url = value
-			.trim()
-			.replace(/[^\w]+/gi, "-")
-			.toLowerCase();
-	}
-})
+  get() {
+    return board.url;
+  },
+  set(value) {
+    board.url = value
+      .trim()
+      .replace(/[^\w]+/gi, "-")
+      .toLowerCase();
+  },
+});
 
 async function validateBoardUrl(event: KeyboardEvent) {
-	const keyCode = event.keyCode;
+  const keyCode = event.keyCode;
 
-	// only accept letters, numbers, & numpad numbers
-	if (
-		!(
-			(keyCode > 65 && keyCode < 90) ||
-			(keyCode > 45 && keyCode < 57) ||
-			(keyCode > 96 && keyCode < 105) ||
-			keyCode === 8
-		)
-	)
-		return false;
+  // only accept letters, numbers, & numpad numbers
+  if (
+    !(
+      (keyCode > 65 && keyCode < 90) ||
+      (keyCode > 45 && keyCode < 57) ||
+      (keyCode > 96 && keyCode < 105) ||
+      keyCode === 8
+    )
+  )
+    return false;
 
-	urlAvailableError.value = false;
+  urlAvailableError.value = false;
 
-	try {
-		const response = await checkBoardName(board.url);
-		if (!response.data.available) {
-			urlAvailableError.value = true;
-		}
-	} catch (err) {
-		console.error(err);
-	}
+  try {
+    const response = await checkBoardName(board.url);
+    if (!response.data.available) {
+      urlAvailableError.value = true;
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 async function update() {
-	saveButtonLoading.value = true;
-	try {
-		await updateBoard({
-			boardId: board.boardId,
-			color: board.color,
-			name: board.name,
-			url: board.url,
-			view_voters: board.view_voters,
-			display: board.display
-		});
+  saveButtonLoading.value = true;
+  try {
+    await updateBoard({
+      boardId: board.boardId,
+      color: board.color,
+      name: board.name,
+      url: board.url,
+      view_voters: board.view_voters,
+      display: board.display,
+    });
 
-		router.push("/dashboard/boards");
-	} catch (error) {
-		console.error(error);
-	} finally {
-		saveButtonLoading.value = false;
-	}
+    router.push("/dashboard/boards");
+  } catch (error) {
+    console.error(error);
+  } finally {
+    saveButtonLoading.value = false;
+  }
 }
 
 async function getBoard() {
-	const route = router.currentRoute.value;
+  const route = router.currentRoute.value;
 
   try {
     const url = route.params.url.toString();
     const response = await getBoardByUrl(url);
 
-    Object.assign(board, response.data.board)
+    Object.assign(board, response.data.board);
     title.value = response.data.board.name;
   } catch (error) {
     console.error(error);
@@ -199,6 +193,10 @@ async function getBoard() {
 onMounted(() => getBoard());
 
 useHead({
-	title: () => `${title.value ? `${title.value} • ` : ''}Board • Dashboard`
+  title: () => `${title.value ? `${title.value} • ` : ""}Board • Dashboard`,
+});
+
+defineOptions({
+  name: "BoardSettings",
 });
 </script>

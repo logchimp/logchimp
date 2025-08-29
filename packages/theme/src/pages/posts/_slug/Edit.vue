@@ -41,12 +41,6 @@
   </p>
 </template>
 
-<script lang="ts">
-export default {
-  name: "PostEdit",
-};
-</script>
-
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -54,8 +48,8 @@ import type { IDashboardPost } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
-import { useSettingStore } from "../../../store/settings"
-import { useUserStore } from "../../../store/user"
+import { useSettingStore } from "../../../store/settings";
+import { useUserStore } from "../../../store/user";
 import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
@@ -65,8 +59,8 @@ import LText from "../../../components/ui/input/LText.vue";
 import LTextarea from "../../../components/ui/input/LTextarea.vue";
 import Button from "../../../components/ui/Button.vue";
 
-const { get: siteSettings } = useSettingStore()
-const { permissions, getUserId } = useUserStore()
+const { get: siteSettings } = useSettingStore();
+const { permissions, getUserId } = useUserStore();
 
 // posts
 const post = reactive<IDashboardPost>({
@@ -104,89 +98,93 @@ const post = reactive<IDashboardPost>({
     viewerVote: undefined,
   },
 });
-const postLoading = ref(false)
-const isPostExist = ref(true)
-const postSubmitting = ref(false)
+const postLoading = ref(false);
+const isPostExist = ref(true);
+const postSubmitting = ref(false);
 const postFieldError = reactive({
-	show: false,
-	message: ""
-})
+  show: false,
+  message: "",
+});
 
 const updatePostPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("post:update");
-	const authorId = post.author.userId;
-	if (!checkPermission && getUserId !== authorId) return true;
+  const checkPermission = permissions.includes("post:update");
+  const authorId = post.author.userId;
+  if (!checkPermission && getUserId !== authorId) return true;
 
-	return false;
-})
+  return false;
+});
 
 function hideTitleError(event: FormFieldErrorType) {
-	postFieldError.show = event.show;
-	postFieldError.message = event.message;
-};
+  postFieldError.show = event.show;
+  postFieldError.message = event.message;
+}
 
 async function getPost() {
-	postLoading.value = true;
+  postLoading.value = true;
 
-	const route = router.currentRoute.value;
-	const slug = route.params.slug.toString();
+  const route = router.currentRoute.value;
+  const slug = route.params.slug.toString();
 
-	try {
-		const response = await getPostBySlug(slug);
+  try {
+    const response = await getPostBySlug(slug);
 
-		post.title = response.data.post.title;
-		post.contentMarkdown = response.data.post.contentMarkdown;
-		post.postId = response.data.post.postId;
-		post.slugId = response.data.post.slugId;
-		post.author = response.data.post.author;
-	} catch (error: any) {
-		if (error.response.data.code === "POST_NOT_FOUND") {
-			isPostExist.value = false;
-		}
-	} finally {
-		postLoading.value = false;
-	}
+    post.title = response.data.post.title;
+    post.contentMarkdown = response.data.post.contentMarkdown;
+    post.postId = response.data.post.postId;
+    post.slugId = response.data.post.slugId;
+    post.author = response.data.post.author;
+  } catch (error: any) {
+    if (error.response.data.code === "POST_NOT_FOUND") {
+      isPostExist.value = false;
+    }
+  } finally {
+    postLoading.value = false;
+  }
 }
 
 async function savePost() {
-	if (!post.title) {
-		postFieldError.show = true;
-		postFieldError.message = "Please enter a valid post title";
-		return;
-	}
+  if (!post.title) {
+    postFieldError.show = true;
+    postFieldError.message = "Please enter a valid post title";
+    return;
+  }
 
-	postSubmitting.value = true;
+  postSubmitting.value = true;
 
-	const postData = {
-		id: post.postId,
-		title: post.title,
-		contentMarkdown: post.contentMarkdown,
-		slugId: post.slugId,
-		userId: post.author.userId
-	};
+  const postData = {
+    id: post.postId,
+    title: post.title,
+    contentMarkdown: post.contentMarkdown,
+    slugId: post.slugId,
+    userId: post.author.userId,
+  };
 
-	try {
-		const response = await updatePost(postData);
+  try {
+    const response = await updatePost(postData);
 
-		router.push(`/posts/${response.data.post.slug}`);
-	} catch (error) {
-		console.log(error);
-	} finally {
-		postSubmitting.value = false;
-	}
+    router.push(`/posts/${response.data.post.slug}`);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    postSubmitting.value = false;
+  }
 }
 
 onMounted(() => getPost());
 
 useHead({
-	title: "Edit post",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Edit post • ${siteSettings.title}`
-		}
-	]
-})
+  title: "Edit post",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Edit post • ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "PostEdit",
+});
 </script>
 
 <style lang='sass'>

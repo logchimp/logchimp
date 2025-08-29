@@ -67,12 +67,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardRoadmapSettings",
-};
-</script>
-
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -93,56 +87,56 @@ import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
-const { permissions } = useUserStore()
+const { permissions } = useUserStore();
 
 const title = ref<string>("");
 const roadmap = reactive({
-	id: "",
-	name: "",
-	url: "",
-	color: "",
-	display: false
-})
-const updateButtonLoading = ref<boolean>(false)
+  id: "",
+  name: "",
+  url: "",
+  color: "",
+  display: false,
+});
+const updateButtonLoading = ref<boolean>(false);
 
 const updateRoadmapButtonDisabled = computed<boolean>(() => {
-	const checkPermission = permissions.includes("roadmap:update");
-	return !checkPermission;
-})
+  const checkPermission = permissions.includes("roadmap:update");
+  return !checkPermission;
+});
 
 const slimUrl = computed(() => {
-	return roadmap.url
-		.replace(/[^\w]+/gi, "-")
-		.trim()
-		.toLowerCase();
-})
+  return roadmap.url
+    .replace(/[^\w]+/gi, "-")
+    .trim()
+    .toLowerCase();
+});
 
 async function updateHandler() {
-	updateButtonLoading.value = true;
+  updateButtonLoading.value = true;
 
-	try {
-		const response = await updateRoadmap({
-			...roadmap
-		});
+  try {
+    const response = await updateRoadmap({
+      ...roadmap,
+    });
 
-		if (response.status === 200) {
-			router.push("/dashboard/roadmaps");
-		}
-	} catch (err) {
-		console.error(err);
-	} finally {
-		updateButtonLoading.value = false;
-	}
+    if (response.status === 200) {
+      router.push("/dashboard/roadmaps");
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    updateButtonLoading.value = false;
+  }
 }
 
 async function getRoadmap() {
-	const route = router.currentRoute.value;
+  const route = router.currentRoute.value;
 
   const url = route.params.url.toString();
   try {
     const response = await getRoadmapByUrl(url);
 
-    Object.assign(roadmap, response.data.roadmap)
+    Object.assign(roadmap, response.data.roadmap);
     title.value = response.data.roadmap.name;
   } catch (err) {
     console.error(err);
@@ -152,6 +146,10 @@ async function getRoadmap() {
 onMounted(() => getRoadmap());
 
 useHead({
-	title: () => `${title.value ? `${title.value} • `: ''}Roadmap • Dashboard`
-})
+  title: () => `${title.value ? `${title.value} • ` : ""}Roadmap • Dashboard`,
+});
+
+defineOptions({
+  name: "DashboardRoadmapSettings",
+});
 </script>

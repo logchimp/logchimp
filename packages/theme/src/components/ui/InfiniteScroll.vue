@@ -23,21 +23,19 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, watch, computed } from "vue";
+import { useInfiniteScroll } from "@vueuse/core";
+
+// components
+import ClientError from "./ClientError.vue";
+import Loader from "./Loader.vue";
+
 export type InfiniteScrollStateType =
   | "LOADING"
   | "LOADED"
   | "COMPLETED"
   | "ERROR";
-</script>
-
-<script setup lang="ts">
-import { ref, watch, computed } from "vue"
-import { useInfiniteScroll } from '@vueuse/core'
-
-// components
-import ClientError from "./ClientError.vue";
-import Loader from "./Loader.vue";
 
 interface Props {
   /**
@@ -45,45 +43,56 @@ interface Props {
    *
    * @default 20
    */
-  distance?: number
+  distance?: number;
   /**
    * @default LOADING
    */
-  state?: InfiniteScrollStateType
-  onInfinite: () => void
-  canLoadMore?: boolean
+  state?: InfiniteScrollStateType;
+  onInfinite: () => void;
+  canLoadMore?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   distance: 20,
   state: "LOADING",
   canLoadMore: true,
-})
+});
 
 const isFirstLoad = ref(true);
 
 const loading = computed<boolean>(() => props.state === "LOADING");
-const noMoreResults = computed<boolean>(() => props.state === "COMPLETED" && !isFirstLoad.value);
-const noResults = computed<boolean>(() => props.state === "COMPLETED" && isFirstLoad.value);
+const noMoreResults = computed<boolean>(
+  () => props.state === "COMPLETED" && !isFirstLoad.value,
+);
+const noResults = computed<boolean>(
+  () => props.state === "COMPLETED" && isFirstLoad.value,
+);
 const error = computed<boolean>(() => props.state === "ERROR");
 
-watch(() => props.state, (newValue) => {
-  if (newValue === "LOADED") {
-    isFirstLoad.value = false;
-  }
-})
+watch(
+  () => props.state,
+  (newValue) => {
+    if (newValue === "LOADED") {
+      isFirstLoad.value = false;
+    }
+  },
+);
 
 function executeInfiniteScroll() {
-  if (typeof props.onInfinite === 'function' && props.state !== "COMPLETED" && props.state !== "ERROR") {
-    props.onInfinite()
+  if (
+    typeof props.onInfinite === "function" &&
+    props.state !== "COMPLETED" &&
+    props.state !== "ERROR"
+  ) {
+    props.onInfinite();
   }
 }
 
 useInfiniteScroll(window, executeInfiniteScroll, {
   distance: props.distance,
-  direction: 'bottom',
+  direction: "bottom",
   canLoadMore: () => !noMoreResults.value || !error.value,
-})
+});
 </script>
 
 <style module>
