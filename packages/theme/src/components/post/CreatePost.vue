@@ -64,7 +64,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  modalMode: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+const emit = defineEmits<{
+  'post-created': []
+}>();
 
 const title = reactive({
   value: "",
@@ -102,9 +110,18 @@ async function submitPost() {
   try {
     const response = await createPost(props.boardId, postObject);
 
-    // redirect to post
-    const slug = response.data.post.slug;
-    router.push(`${dashboardUrl.value}/posts/${slug}`);
+    if (props.modalMode) {
+      // In modal mode, emit event and clear form
+      emit('post-created');
+      
+      // Clear form
+      title.value = "";
+      description.value = "";
+    } else {
+      // redirect to post
+      const slug = response.data.post.slug;
+      router.push(`${dashboardUrl.value}/posts/${slug}`);
+    }
   } catch (error) {
     tokenError(error);
   } finally {
