@@ -14,12 +14,18 @@
         <success-icon
           v-if="type === 'success'"
           class="alert-icon alert-icon-success"
+          aria-hidden="true"
         />
         <warning-icon
           v-if="type === 'warning'"
           class="alert-icon alert-icon-warning"
+          aria-hidden="true"
         />
-        <error-icon v-if="type === 'error'" class="alert-icon alert-icon-error" />
+        <error-icon
+          v-if="type === 'error'"
+          class="alert-icon alert-icon-error"
+          aria-hidden="true"
+        />
       </div>
 
       <h6 :class="$style.title">
