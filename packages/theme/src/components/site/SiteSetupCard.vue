@@ -23,15 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import { router } from "../../router";
-
 // components
 import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
-
-function setupSite() {
-  router.push("/setup/welcome");
-}
 </script>
 
 <style module>

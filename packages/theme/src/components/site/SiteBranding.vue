@@ -1,10 +1,10 @@
 <template>
 	<router-link :to="link" class="flex items-center gap-x-2.5 select-none">
-		<div class="size-7 bg-neutral-100 rounded-full overflow-hidden">
+		<div v-if="logo" class="size-7 bg-neutral-100 rounded-full overflow-hidden">
 			<img
         class="size-7 rounded-full"
 				:src="logo"
-				:alt="title"
+				:alt="title || undefined"
 			>
 		</div>
 		<p

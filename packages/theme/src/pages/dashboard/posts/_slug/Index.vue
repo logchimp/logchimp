@@ -7,10 +7,10 @@
         </BreadcrumbItem>
 
         <!-- Show divider & title once data loaded -->
-        <template v-if="postData.title">
+        <template v-if="post.title">
           <BreadcrumbDivider />
           <BreadcrumbItem>
-            {{ postData.title }}
+            {{ post.title }}
           </BreadcrumbItem>
         </template>
       </Breadcrumbs>
@@ -31,13 +31,14 @@
       <div class="form-columns">
         <div class="form-column">
           <l-text
-            v-model="postData.title"
+            v-model="post.title"
             label="Title"
             placeholder="Name of the feature"
           />
 
           <l-textarea
-            v-model="postData.contentMarkdown"
+            :model-value="post.contentMarkdown ?? undefined"
+            @update:model-value="(value) => post.contentMarkdown = value ?? null"
             label="Description"
             rows="4"
             placeholder="What would you use it for?"
@@ -50,7 +51,7 @@
               Preview
             </p>
             <div class="card">
-              <post-item v-if="!loading.post" :post="postData" />
+              <post-item v-if="!loading.post" :post="post" />
             </div>
           </div>
         </div>
@@ -123,19 +124,18 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 import { useHead } from "@vueuse/head";
+import type {
+  IBoardPrivate,
+  IDashboardPost,
+  IRoadmapPrivate,
+} from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
 
-import {
-  type PostType,
-  getPostBySlug,
-  updatePost,
-} from "../../../../modules/posts";
-import { type Board, searchBoard } from "../../../../ee/modules/boards";
-import { searchRoadmap, type Roadmap } from "../../../../modules/roadmaps";
-import type { UserType } from "../../../../modules/users";
-import type { PostVoteType } from "../../../../modules/votes";
+import { getPostBySlug, updatePost } from "../../../../modules/posts";
+import { searchBoard } from "../../../../ee/modules/boards";
+import { searchRoadmap } from "../../../../modules/roadmaps";
 
 import { useUserStore } from "../../../../store/user";
 
@@ -152,17 +152,6 @@ import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbD
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 
-interface GetPostType extends PostType {
-  author: UserType;
-  board: Board;
-  roadmap: Roadmap;
-  voters: {
-    votes: PostVoteType[];
-    votesCount: number;
-    viewerVote: boolean;
-  };
-}
-
 const { permissions } = useUserStore();
 
 const loading = reactive<{
@@ -172,14 +161,16 @@ const loading = reactive<{
   post: false,
   updatePostButton: false,
 });
-const postData = reactive<GetPostType>({
+const post = reactive<IDashboardPost>({
   postId: "",
   title: "",
   slug: "",
   slugId: "",
   contentMarkdown: "",
-  createdAt: "",
-  updatedAt: "",
+  // TODO: what should be the default/empty value
+  updatedAt: new Date(),
+  // TODO: what should be the default/empty value
+  createdAt: new Date(),
   author: {
     userId: "",
     name: "",
@@ -191,6 +182,7 @@ const postData = reactive<GetPostType>({
     name: "",
     url: "",
     color: "",
+    createdAt: new Date(),
   },
   roadmap: {
     id: "",
@@ -201,19 +193,19 @@ const postData = reactive<GetPostType>({
   voters: {
     votes: [],
     votesCount: 0,
-    viewerVote: false,
+    viewerVote: undefined,
   },
 });
 const boards = reactive<{
   search: string;
-  suggestions: Board[];
+  suggestions: IBoardPrivate[];
 }>({
   search: "",
   suggestions: [],
 });
 const roadmaps = reactive<{
   search: string;
-  suggestions: Roadmap[];
+  suggestions: IRoadmapPrivate[];
 }>({
   search: "",
   suggestions: [],
@@ -229,13 +221,13 @@ async function updatePostHandler() {
 
   try {
     const response = await updatePost({
-      id: postData.postId,
-      title: postData.title,
-      contentMarkdown: postData.contentMarkdown,
-      slugId: postData.slugId,
-      userId: postData.author.userId,
-      boardId: postData.board ? postData.board.boardId : undefined,
-      roadmapId: postData.roadmap ? postData.roadmap.id : undefined,
+      id: post.postId,
+      title: post.title,
+      contentMarkdown: post.contentMarkdown,
+      slugId: post.slugId,
+      userId: post.author.userId,
+      boardId: post.board ? post.board.boardId : undefined,
+      roadmapId: post.roadmap ? post.roadmap.id : undefined,
     });
 
     if (response.status === 200) {
@@ -257,7 +249,7 @@ async function postBySlug() {
       const slug = route.params.slug.toString();
       const response = await getPostBySlug(slug);
 
-      Object.assign(postData, response.data.post);
+      Object.assign(post, response.data.post);
       loading.post = false;
     } catch (err) {
       console.error(err);
@@ -266,8 +258,9 @@ async function postBySlug() {
   }
 }
 
-async function suggestBoard(event: unknown) {
-  const name = event.target.value;
+async function suggestBoard(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const name = target.value;
   if (!name) {
     boards.search = "";
     boards.suggestions = [];
@@ -282,8 +275,9 @@ async function suggestBoard(event: unknown) {
   }
 }
 
-async function suggestRoadmap(event: unknown) {
-  const name = event.target.value;
+async function suggestRoadmap(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const name = target.value;
   if (!name) {
     roadmaps.search = "";
     roadmaps.suggestions = [];
@@ -301,7 +295,7 @@ async function suggestRoadmap(event: unknown) {
 function selectBoard(index: number) {
   const item = boards.suggestions[index];
 
-  Object.assign(postData.board, item);
+  Object.assign(post.board, item);
   boards.search = "";
   boards.suggestions = [];
 }
@@ -309,7 +303,9 @@ function selectBoard(index: number) {
 function selectRoadmap(index: number) {
   const item = roadmaps.suggestions[index];
 
-  Object.assign(postData.roadmap, item);
+  Object.assign(post, {
+    roadmap: item,
+  });
   roadmaps.search = "";
   roadmaps.suggestions = [];
 }
@@ -317,8 +313,7 @@ function selectRoadmap(index: number) {
 onMounted(() => postBySlug());
 
 useHead({
-  title: () =>
-    `${postData.title ? `${postData.title} • ` : ""}Post • Dashboard`,
+  title: () => `${post.title ? `${post.title} • ` : ""}Post • Dashboard`,
 });
 
 defineOptions({

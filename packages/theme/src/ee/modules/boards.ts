@@ -1,82 +1,78 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
 import type {
-  ApiPaginationType,
-  IBoard,
+  IFilterBoardResponseBody,
+  IGetBoardsRequestQuery,
+  IGetBoardsResponseBody,
   TBoardCheckNameResponse,
   TBoardCreateRequestBody,
   TBoardCreateResponseBody,
-  TBoardUpdateBody,
+  IBoardUpdateRequestBody,
+  TFilterBoardRequestQuery,
+  TBoardUpdateResponseBody,
+  IGetBoardsByUrlResponseBody,
+  ISearchBoardResponseBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
-
-// store
 import { useUserStore } from "../../store/user";
-
-export interface Board {
-  boardId: string;
-  name: string;
-  url: string;
-  color: string;
-}
 
 /**
  *	Get public boards
- *
- * @param {number} page page number default to 1
- * @param {string} sort sort type asc or desc
- *
- * @returns {object} response
+ * @param {string} page page number default to 1
+ * @param {string} limit number of items per page
+ * @param {ApiSortType} created sort type asc or desc
+ * @returns {Promise<AxiosResponse<IFilterBoardResponseBody>>} response
  */
 export const getPublicBoards = async ({
-  page = 1,
-  limit,
-  sort = "DESC",
-}: ApiPaginationType) => {
+  page = "1",
+  limit = "10",
+  created = "DESC",
+}: TFilterBoardRequestQuery): Promise<
+  AxiosResponse<IFilterBoardResponseBody>
+> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards`,
     params: {
       page,
       limit,
-      created: sort,
+      created,
     },
   });
 };
 
 /**
  *	Get all boards
- *
- * @param {number} page page number default to 1
- * @param {string} sort sort type asc or desc
- *
- * @returns {object} response
+ * @param {string} page page number default to 1
+ * @param {string} limit number of items per page
+ * @param {ApiSortType} created sort type asc or desc
+ * @returns {Promise<AxiosResponse<IGetBoardsResponseBody>>} response
  */
 export const getAllBoards = async ({
-  page = 1,
-  limit,
-  sort = "DESC",
-}: ApiPaginationType) => {
+  page = "1",
+  limit = "10",
+  created = "DESC",
+}: IGetBoardsRequestQuery): Promise<AxiosResponse<IGetBoardsResponseBody>> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards/get`,
     params: {
       page,
       limit,
-      created: sort,
+      created,
     },
   });
 };
 
 /**
  *	Get board by URL
- *
  * @param {string} url board url
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IGetBoardsByUrlResponseBody>>} response
  */
-export const getBoardByUrl = async (url: string) => {
+export const getBoardByUrl = async (
+  url: string,
+): Promise<AxiosResponse<IGetBoardsByUrlResponseBody>> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards/${url}`,
@@ -85,12 +81,12 @@ export const getBoardByUrl = async (url: string) => {
 
 /**
  * Search board by name
- *
  * @param {string} name board name
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<ISearchBoardResponseBody>>} response
  */
-export const searchBoard = async (name: string) => {
+export const searchBoard = async (
+  name: string,
+): Promise<AxiosResponse<ISearchBoardResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -133,16 +129,17 @@ export const createBoard = async ({
 /**
  * Update board
  * @param {object} board update board data
+ * @param {string} board.boardId board ID
  * @param {string} board.name board name
  * @param {string} board.url board url
  * @param {string} board.color board color
  * @param {boolean} board.view_voters view voters in this board
  * @param {boolean} board.display display board on the site
- * @returns {Promise<AxiosResponse<IBoard>>} response
+ * @returns {Promise<AxiosResponse<TBoardUpdateResponseBody>>} response
  */
 export const updateBoard = async (
-  board: TBoardUpdateBody,
-): Promise<AxiosResponse<IBoard>> => {
+  board: IBoardUpdateRequestBody,
+): Promise<AxiosResponse<TBoardUpdateResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({

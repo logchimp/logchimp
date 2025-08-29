@@ -35,15 +35,17 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import type { IBoardDetail } from "@logchimp/types";
 import { getPublicBoards } from "../modules/boards";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 
-const boards = ref([]);
+const boards = ref<IBoardDetail[]>([]);
 
 onMounted(async () => {
   const response = await getPublicBoards({
-    page: 1,
-    limit: 5,
+    page: "1",
+    limit: "5",
+    created: "DESC",
   });
   boards.value = response.data.boards;
 });

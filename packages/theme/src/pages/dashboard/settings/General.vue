@@ -21,7 +21,8 @@
       <div class="form-columns">
         <div class="form-column">
           <l-text
-            v-model="siteName.value"
+            :model-value="siteName.value ?? undefined"
+            @update:model-value="(value) => siteName.value = value ?? null"
             label="Site name"
             placeholder="Enter board name"
             :error="siteName.error"
@@ -29,7 +30,8 @@
           />
 
           <l-text
-            v-model="description.value"
+            :model-value="description.value ?? undefined"
+            @update:model-value="(value) => description.value = value ?? null"
             label="Description"
             placeholder="Site description"
             :error="description.error"
@@ -48,13 +50,14 @@
             <label class="input-field-label" for="logo">Logo</label>
             <div class="dashboard-settings-logo-placeholder">
               <img
+                v-if="logo"
                 :src="logo"
-                :alt="siteName.value"
+                :alt="siteName.value || ''"
                 @click="selectFileHandler"
               />
             </div>
             <input
-              ref="fileSelector"
+              ref="logoInputRef"
               accept="image/jpg,image/jpeg,image/png,image/svg+xml"
               type="file"
               name="logo"
@@ -67,10 +70,13 @@
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">Apperences</h6>
+      <h6 class="form-section-title">Appearances</h6>
       <div class="form-columns">
         <div class="form-column">
-          <color-input v-model="accentColor.value" />
+          <color-input
+            :model-value="accentColor.value ?? undefined"
+            @update:model-value="(value) => accentColor.value = value ?? null"
+          />
         </div>
       </div>
     </div>
@@ -80,7 +86,8 @@
       <div class="form-columns">
         <div class="form-column">
           <l-text
-            v-model="googleAnalyticsId.value"
+            :model-value="googleAnalyticsId.value ?? undefined"
+            @update:model-value="(value) => googleAnalyticsId.value = value ?? null"
             label="Google Analytics"
             placeholder="UA-12345678-0"
             :error="googleAnalyticsId.error"
@@ -98,23 +105,17 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "DashboardSettings",
-};
-</script>
-
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
-import { useSettingStore } from "../../../store/settings"
-import { useUserStore } from "../../../store/user"
+import { useSettingStore } from "../../../store/settings";
+import { useUserStore } from "../../../store/user";
 import {
   getSettings,
   updateSettings,
-  uploadSiteLogo
+  uploadSiteLogo,
 } from "../../../modules/site";
 
 // components
@@ -128,46 +129,55 @@ import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 
-const { update } = useSettingStore()
-const { permissions } = useUserStore()
+const { update } = useSettingStore();
+const { permissions } = useUserStore();
 
-const siteName = reactive({
+type TextInputField = {
+  value: string | null;
+  error: {
+    show: boolean;
+    message: string;
+  };
+};
+
+const siteName = reactive<TextInputField>({
   value: "",
   error: {
     show: false,
-    message: ""
-  }
-})
-const logo = ref("")
-const description = reactive ({
+    message: "",
+  },
+});
+const logo = ref<string | null>("");
+const logoInputRef = ref<HTMLInputElement | null>(null);
+const description = reactive<TextInputField>({
   value: "",
   error: {
     show: false,
-    message: ""
-  }
-})
-const allowSignup = ref(false)
-const accentColor = reactive({
+    message: "",
+  },
+});
+const allowSignup = ref(false);
+const accentColor = reactive<TextInputField>({
   value: "484d7c",
   error: {
     show: false,
-    message: ""
-  }
+    message: "",
+  },
 });
-const googleAnalyticsId = reactive({
+const googleAnalyticsId = reactive<TextInputField>({
   value: "",
   error: {
     show: false,
-    message: ""
-  }
+    message: "",
+  },
 });
-const developer_mode = ref(false)
-const updateSettingsButtonLoading = ref(false)
+const developer_mode = ref(false);
+const updateSettingsButtonLoading = ref(false);
 
-const updateSettingsPermissionDisabled = computed(() =>  {
+const updateSettingsPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("settings:update");
   return !checkPermission;
-})
+});
 
 function hideSiteNameError(event: FormFieldErrorType) {
   siteName.error = event;
@@ -177,29 +187,32 @@ function hideDescriptionError(event: FormFieldErrorType) {
   description.error = event;
 }
 
-function hideAccentColorError(event: FormFieldErrorType) {
-  accentColor.error = event;
-}
+// function hideAccentColorError(event: FormFieldErrorType) {
+//   accentColor.error = event;
+// }
 
 function hideGoogleAnalyticsError(event: FormFieldErrorType) {
   googleAnalyticsId.error = event;
 }
 
 function selectFileHandler() {
-  // $refs.fileSelector.click();
+  if (!logoInputRef.value) return;
+  logoInputRef.value.click();
 }
 
-async function uploadFile(event: unknown) {
-  const logo = event.target.files[0];
+async function uploadFile(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files.length === 0) return;
+  const file = (target.files || [])[0];
 
   const formData = new FormData();
-  formData.append("logo", logo);
+  formData.append("logo", file);
 
   try {
     const response = await uploadSiteLogo(formData);
 
     logo.value = response.data.settings.logo;
-    update(response.data.settings.logo)
+    update(response.data.settings.logo);
   } catch (error) {
     console.error(error);
   }
@@ -226,7 +239,7 @@ async function updateSettingsHandler() {
     accentColor: accentColor.value,
     googleAnalyticsId: googleAnalyticsId.value,
     allowSignup: allowSignup.value,
-    developer_mode: developer_mode.value
+    developer_mode: developer_mode.value,
   };
 
   try {
@@ -266,8 +279,12 @@ async function getSettingsHandler() {
 onMounted(() => getSettingsHandler());
 
 useHead({
-  title: "General • Settings • Dashboard"
-})
+  title: "General • Settings • Dashboard",
+});
+
+defineOptions({
+  name: "DashboardSettings",
+});
 </script>
 
 <style lang='sass'>

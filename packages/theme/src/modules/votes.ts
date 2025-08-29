@@ -1,26 +1,20 @@
-// packages
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
+import type {
+  IAddVoteResponseBody,
+  TRemoveVoteResponseBody,
+} from "@logchimp/types";
 
-// store
 import { useUserStore } from "../store/user";
-
-import type { UserType } from "./users";
 import { VITE_API_URL } from "../constants";
-
-export interface PostVoteType extends UserType {
-  voteId: string;
-  postId: string;
-  createdAt: string;
-}
 
 /**
  * Add vote to a post
- *
  * @param {string} postId post UUID
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IAddVoteResponseBody>>} response
  */
-export const addVote = async (postId: string) => {
+export const addVote = async (
+  postId: string,
+): Promise<AxiosResponse<IAddVoteResponseBody>> => {
   const { getUserId, authToken } = useUserStore();
 
   return await axios({
@@ -38,12 +32,12 @@ export const addVote = async (postId: string) => {
 
 /**
  * Delete vote from a post
- *
  * @param {string} postId post UUID
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<TRemoveVoteResponseBody>>} response
  */
-export const deleteVote = async (postId: string) => {
+export const deleteVote = async (
+  postId: string,
+): Promise<AxiosResponse<TRemoveVoteResponseBody>> => {
   const { getUserId, authToken } = useUserStore();
 
   return await axios({

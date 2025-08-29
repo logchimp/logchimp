@@ -27,7 +27,7 @@ export interface IGetPostActivityRequestParam {
 
 export interface IGetPostActivityRequestQuery {
   page: string;
-  limit?: number;
+  limit?: string;
 }
 
 export interface IGetPostActivityResponseBody {

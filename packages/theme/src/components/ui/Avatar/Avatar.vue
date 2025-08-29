@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 interface Props {
-  src?: string;
+  src?: string | null;
   name: string;
 }
 

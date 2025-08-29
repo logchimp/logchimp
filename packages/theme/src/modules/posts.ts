@@ -11,30 +11,17 @@ import type {
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
-
-// store
 import { useUserStore } from "../store/user";
-
-export interface PostType {
-  postId: string;
-  title: string;
-  slug: string;
-  slugId: string;
-  contentMarkdown?: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 /**
  * Create post
- * @param {string} boardId board UUID
  * @param {object} post create post args
+ * @param {string} post.boardId board UUID
  * @param {string} post.title
  * @param {string} post.description
  * @returns {Promise<AxiosResponse<ICreatePostResponseBody>>} response
  */
 export const createPost = async (
-  boardId: string,
   post: ICreatePostRequestBody,
 ): Promise<AxiosResponse<ICreatePostResponseBody>> => {
   const { getUserId, authToken } = useUserStore();
@@ -46,7 +33,7 @@ export const createPost = async (
       title: post.title,
       contentMarkdown: post.contentMarkdown,
       userId: getUserId,
-      boardId,
+      boardId: post.boardId,
     },
     headers: {
       Authorization: `Bearer ${authToken}`,
@@ -56,21 +43,20 @@ export const createPost = async (
 
 /**
  * Get posts
- *
- * @param {number} page number default to 1
- * @param {number} limit number of posts to fetch
- * @param {ApiSortType} created createdAt sort type ASC or DESC
- * @param {string} userId logged in user UUID
- * @param {string[]} boardId array of board UUIDs
- * @param {string} roadmapId array of roadmap UUIDs
+ * @param {object} arg0
+ * @param {number} arg0.page number default to 1
+ * @param {number} arg0.limit number of posts to fetch
+ * @param {ApiSortType} arg0.created createdAt sort type ASC or DESC
+ * @param {string[]} arg0.boardId array of board UUIDs
+ * @param {string} arg0.roadmapId array of roadmap UUIDs
  * @returns {Promise<AxiosResponse<IFilterPostResponseBody>>} response
  */
 export const getPosts = async ({
   page = "1",
-  limit = 10,
+  limit = "10",
   created = "DESC",
   boardId = [],
-  roadmapId = "",
+  roadmapId = undefined,
 }: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
   const { getUserId } = useUserStore();
 

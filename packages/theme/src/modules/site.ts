@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
   ICreateSiteSetupRequestBody,
+  IGetSiteSettingsResponseBody,
   IGetSiteSetupResponseBody,
   IUpdateSiteSettingsRequestBody,
   TCreateSiteSetupResponseBody,
@@ -61,7 +62,7 @@ export const isSiteSetup = async (): Promise<
  * @returns {Promise<AxiosResponse<IGetSiteSetupResponseBody>>} response
  */
 export const getSettings = async (): Promise<
-  AxiosResponse<IGetSiteSetupResponseBody>
+  AxiosResponse<IGetSiteSettingsResponseBody>
 > => {
   return await axios({
     method: "GET",

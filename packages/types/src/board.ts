@@ -5,18 +5,21 @@ export interface IBoard {
   name: string;
   url: string;
   color: string;
-  post_count: string | undefined;
   createdAt: Date;
 }
 
-export interface IBoardPrivate extends IBoard {
+export interface IBoardDetail extends IBoard {
+  post_count: string;
+}
+
+export interface IBoardPrivate extends IBoardDetail {
   display: boolean;
-  // view_voters: boolean;
+  view_voters: boolean;
 }
 
 export interface IGetBoardsRequestQuery {
   page: string;
-  limit?: number;
+  limit?: string;
   created: ApiSortType;
 }
 
@@ -27,7 +30,15 @@ export interface IGetBoardsResponseBody {
 export type TFilterBoardRequestQuery = IGetBoardsRequestQuery;
 
 export interface IFilterBoardResponseBody {
-  boards: IBoard[];
+  boards: IBoardDetail[];
+}
+
+export interface IGetBoardByUrlRequestParams {
+  url: string;
+}
+
+export interface IGetBoardsByUrlResponseBody {
+  board: IBoardPrivate;
 }
 
 export type TBoardCheckNameBody = {
@@ -43,18 +54,27 @@ export type TBoardCreateRequestBody = {
   display?: boolean;
 };
 
-export type TBoardCreateResponseBody = {
-  board: IBoard;
-};
+export type TBoardCreateResponseBody = IGetBoardsByUrlResponseBody;
 
-export type TBoardUpdateBody = {
+export interface IBoardUpdateRequestBody {
+  boardId: string;
   name: string;
   url: string;
   color: string;
   view_voters: boolean;
   display: boolean;
-};
+}
 
-export type TBoardDeleteBody = {
+export type TBoardUpdateResponseBody = IGetBoardsByUrlResponseBody;
+
+export interface IBoardDeleteRequestBody {
   boardId: string;
-};
+}
+
+export interface ISearchBoardRequestParams {
+  name: string;
+}
+
+export interface ISearchBoardResponseBody {
+  boards: IBoardPrivate[];
+}

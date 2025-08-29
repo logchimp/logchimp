@@ -5,7 +5,7 @@
 			:key="avatar.userId"
 			data-test="avatar-stack-image"
 			class="pointer-events-none border border-(--color-white) min-w-8 min-h-8 max-h-8 max-w-8 rounded-full"
-			:src="avatar.avatar"
+			:src="avatar.avatar || ''"
 			:alt="avatar.username"
 		>
 		<div
@@ -22,27 +22,25 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from "vue";
+
 interface AvatarType {
   userId: string;
-  avatar: string;
-  username?: string;
+  avatar: string | null;
+  username: string;
 }
-</script>
-
-<script setup lang="ts">
-import { computed } from 'vue';
 
 const props = defineProps<{
-	avatars: AvatarType[]
-	totalCount: number
-}>()
+  avatars: AvatarType[];
+  totalCount: number;
+}>();
 
 const hideMoreStack = computed(() => {
-	return props.totalCount <= 6;
+  return props.totalCount <= 6;
 });
 
 const moreStack = computed(() => {
-	return props.totalCount - 6;
-})
+  return props.totalCount - 6;
+});
 </script>

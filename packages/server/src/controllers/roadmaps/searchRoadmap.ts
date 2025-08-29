@@ -1,11 +1,22 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IRoadmapPrivate,
+  ISearchRoadmapRequestParam,
+  ISearchRoadmapResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-export async function searchRoadmap(req: Request, res: Response) {
+type ResponseBody = ISearchRoadmapResponseBody | IApiErrorResponse;
+
+export async function searchRoadmap(
+  req: Request<ISearchRoadmapRequestParam>,
+  res: Response<ResponseBody>,
+) {
   const { name } = req.params;
   // @ts-ignore
   const permissions = req.user.permissions;
@@ -19,9 +30,8 @@ export async function searchRoadmap(req: Request, res: Response) {
   }
 
   try {
-    const roadmaps = await database
-      .select("id", "name", "url", "color")
-      .from("roadmaps")
+    const roadmaps = await database<IRoadmapPrivate>("roadmaps")
+      .select()
       .where("name", "ILIKE", `${name}%`);
 
     res.status(200).send({

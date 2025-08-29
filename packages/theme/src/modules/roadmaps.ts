@@ -1,12 +1,12 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
+  IGetRoadmapByUrlResponseBody,
   IPaginatedRoadmapsResponse,
+  ISearchRoadmapResponseBody,
   TGetRoadmapsParams,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
-
-// store
 import { useUserStore } from "../store/user";
 
 /**
@@ -40,12 +40,12 @@ export const getAllRoadmaps = async (
 
 /**
  * Get board by URL
- *
  * @param {string} url board url
- *
- * @returns {object} response
+ * @returns {Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>>} response
  */
-export const getRoadmapByUrl = async (url: string) => {
+export const getRoadmapByUrl = async (
+  url: string,
+): Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>> => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps/${url}`,
@@ -54,12 +54,12 @@ export const getRoadmapByUrl = async (url: string) => {
 
 /**
  * Search roadmap by name
- *
  * @param {string} name roadmap name
- *
  * @returns {object} response
  */
-export const searchRoadmap = async (name: string) => {
+export const searchRoadmap = async (
+  name: string,
+): Promise<AxiosResponse<ISearchRoadmapResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({

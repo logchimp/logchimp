@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
   IRole,
+  IUpdateRoleRequestBody,
   IUpdateRoleResponseBody,
   TPermission,
 } from "@logchimp/types";
@@ -16,7 +17,10 @@ import logger from "../../../../utils/logger";
 
 type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
 
-export async function update(req: Request, res: Response<ResponseBody>) {
+export async function update(
+  req: Request<unknown, unknown, IUpdateRoleRequestBody>,
+  res: Response<ResponseBody>,
+) {
   const role = req.body;
 
   // @ts-ignore

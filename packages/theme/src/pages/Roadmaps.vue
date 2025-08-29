@@ -16,7 +16,7 @@
 
   <!-- Show infinite scroll component with proper conditions -->
   <infinite-scroll
-    @infinite="getRoadmaps"
+    :on-infinite="getRoadmaps"
     :state="state"
     :has-items="roadmaps.length > 0"
   >

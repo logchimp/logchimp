@@ -11,7 +11,6 @@ describe("vote", () => {
       plugins: [createPinia()],
     },
     props: {
-      // random UUID
       postId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
     },
   });
@@ -22,8 +21,12 @@ describe("vote", () => {
    * Scaffold data to User store
    */
   userStore.setUser({
-    // random UUID
     userId: "d33e4e05-9c8b-4255-9838-b59085d081a0",
+    email: "faker@example.com",
+    name: "abc",
+    username: "abc",
+    avatar: "http://example.com/avatar.png",
+    authToken: "authToken",
   });
   userStore.setPermissions(["vote:create"]);
 
@@ -92,7 +95,14 @@ describe("vote", () => {
 
   it("enabled with user logged out", async () => {
     const userStore = useUserStore();
-    userStore.setUser({});
+    userStore.setUser({
+      userId: "",
+      name: "",
+      username: "",
+      email: "",
+      avatar: "",
+      authToken: "",
+    });
 
     expect(
       wrapper.find("[data-test=vote]").classes("post-voters-disabled"),

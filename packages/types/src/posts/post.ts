@@ -7,45 +7,29 @@ import type { ApiSortType } from "../common";
 export interface IPost extends IPostInfo {
   board: IBoard;
   author: IPublicUserInfo;
-  updatedAt: Date;
+  roadmap?: IRoadmap;
   voters: IPostVote;
 }
 
-export interface IPostItem extends IPostInfo {
-  board: IPostBoard;
-  roadmap?: IRoadmap;
-  voters: IPostVote;
+export interface IDashboardPost extends IPost {
+  slugId: string;
 }
 
 interface IPostInfo {
   postId: string;
   title: string;
   slug: string;
-  // slugId
-  // updatedAt
+  updatedAt: Date;
   contentMarkdown: string | null;
   createdAt: Date;
 }
 
-// TODO: needs to be replaced with IBoard
-interface IPostBoard {
-  boardId: string;
-  name: string;
-  url: string;
-  color: string;
-  display: boolean;
-  // TODO: this property needs to be removed from APIs
-  view_voters: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface IFilterPostRequestBody {
-  userId: string;
+  userId?: string;
   boardId: string[];
-  roadmapId: string;
+  roadmapId?: string;
   page: string;
-  limit?: number;
+  limit?: string;
   created: ApiSortType;
 }
 
@@ -55,16 +39,16 @@ export interface IFilterPostResponseBody {
 
 export interface IGetPostBySlugRequestBody {
   slug: string;
-  userId: string;
+  userId?: string;
 }
 
 export interface IGetPostBySlugResponseBody {
-  post: IPost;
+  post: IDashboardPost;
 }
 
 export interface ICreatePostRequestBody {
   title: string;
-  contentMarkdown: string;
+  contentMarkdown: string | null;
   boardId: string;
   roadmapId?: string;
 }
@@ -75,7 +59,7 @@ export interface ICreatePostResponseBody {
     title: string;
     slug: string;
     slugId: string;
-    contentMarkdown: string;
+    contentMarkdown: string | null;
     userId: string;
     createdAt: string;
     updatedAt: string;
@@ -87,7 +71,7 @@ export interface ICreatePostResponseBody {
 export interface IUpdatePostRequestBody {
   id: string;
   title: string;
-  contentMarkdown: string;
+  contentMarkdown: string | null;
   slugId: string;
   userId: string;
   boardId?: string;

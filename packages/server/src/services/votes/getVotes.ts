@@ -3,15 +3,15 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 
-export async function getVotes(postId, userId) {
+export async function getVotes(postId: string, userId: string) {
   try {
-    const votesCount = await database
+    const votesCount = (await database
       .count("voteId")
       .from("votes")
       .where({
         postId,
       })
-      .first();
+      .first()) as { count: string };
 
     const votes = await database
       .select("votes.*", "users.name", "users.username", "users.avatar")
@@ -33,7 +33,6 @@ export async function getVotes(postId, userId) {
 
     return {
       votes,
-      // @ts-ignore
       votesCount: Number.parseInt(votesCount.count, 10),
       viewerVote: viewerVote,
     };

@@ -16,3 +16,17 @@ export interface IPostVote {
   votesCount: number;
   viewerVote?: ICurrentUserVote;
 }
+
+export interface IAddVoteRequestBody {
+  postId: string;
+}
+
+export interface IAddVoteResponseBody {
+  voters: IPostVote;
+}
+
+export interface IRemoveVoteRequestBody {
+  postId: string;
+}
+
+export type TRemoveVoteResponseBody = IAddVoteResponseBody;

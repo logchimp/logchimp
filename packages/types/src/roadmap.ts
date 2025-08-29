@@ -28,6 +28,14 @@ export interface IGetRoadmapByUrlResponseBody {
   roadmap: IRoadmapPrivate;
 }
 
+export interface ISearchRoadmapRequestParam {
+  name: string;
+}
+
+export interface ISearchRoadmapResponseBody {
+  roadmaps: IRoadmapPrivate[];
+}
+
 export interface IUpdateRoadmapRequestBody {
   name: string;
   url: string;

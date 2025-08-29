@@ -43,7 +43,7 @@ const props = defineProps({
   ...formInputBind,
 });
 
-const emit = defineEmits<(e: "update:modelValue", event?: unknown) => void>();
+const emit = defineEmits<(e: "update:modelValue", event: string) => void>();
 
 const error = reactive({
   show: false,
@@ -62,8 +62,9 @@ function hideError() {
   error.show = false;
 }
 
-function input(event: unknown) {
-  emit("update:modelValue", event.target.value);
+function input(event: Event) {
+  const target = event.target as HTMLInputElement;
+  emit("update:modelValue", target.value);
 }
 </script>
 

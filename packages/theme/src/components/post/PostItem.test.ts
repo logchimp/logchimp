@@ -10,20 +10,29 @@ describe("post", () => {
         // random UUID
         postId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
         title: "Post title",
-        // random slug ID
         slug: "post-title-qwJy9_3Sm9g3Qm3r9OQk",
         contentMarkdown: "What's this feature is all about?",
+        createdAt: new Date(),
+        updatedAt: new Date(),
         voters: {
-          isVoted: true,
-          voteCount: 120,
+          votes: [],
+          votesCount: 120,
+        },
+        author: {
+          userId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
+          name: "abc",
+          avatar: "http://example.com/avatar.png",
+          username: "abc",
         },
         board: {
+          boardId: "69136892-b8c8-41c7-9e8f-a2eb212e5311",
           name: "Feature requests",
           color: "abcabc",
           url: "feature-requests",
-          showBoard: true,
+          createdAt: new Date(),
         },
       },
+      showBoard: true,
     },
     stubs: {
       RouterLink: RouterLinkStub,

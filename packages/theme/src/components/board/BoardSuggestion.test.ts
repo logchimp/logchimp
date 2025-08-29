@@ -10,6 +10,11 @@ describe("board badge", () => {
         name: "Feature requests",
         color: "abcabc",
         url: "feature-requests",
+        display: true,
+        post_count: "0",
+        boardId: "test-board-id",
+        createdAt: new Date(),
+        view_voters: true,
       },
     },
   });

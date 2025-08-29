@@ -52,13 +52,14 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: "hide-error", event: FormFieldErrorType): void;
-  (e: "keyup-enter", event?: unknown): void;
-  (e: "keyup", event?: unknown): void;
-  (e: "update:modelValue", event?: unknown): void;
+  (e: "keyup-enter", event: KeyboardEvent): void;
+  (e: "keyup", event: KeyboardEvent): void;
+  (e: "update:modelValue", event: string): void;
 }>();
 
-function input(event: unknown) {
-  emit("update:modelValue", event.target.value);
+function input(event: Event) {
+  const target = event.target as HTMLInputElement;
+  emit("update:modelValue", target.value);
 }
 
 function hideError() {
@@ -68,12 +69,12 @@ function hideError() {
   });
 }
 
-function keyUpEnter() {
+function keyUpEnter(event: KeyboardEvent) {
   if (props.disabled) return;
-  emit("keyup-enter");
+  emit("keyup-enter", event);
 }
 
-function keyup(event: unknown) {
+function keyup(event: KeyboardEvent) {
   if (props.disabled) return;
   emit("keyup", event);
 }

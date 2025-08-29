@@ -1,4 +1,5 @@
 import express from "express";
+import type { ISearchRoadmapRequestParam } from "@logchimp/types";
 
 const router = express.Router();
 
@@ -9,8 +10,9 @@ import { roadmapExists } from "../../middlewares/roadmapExists";
 router.get("/roadmaps", roadmaps.filter);
 
 router.get("/roadmaps/:url", roadmapExists, roadmaps.roadmapByUrl);
-router.get(
+router.get<ISearchRoadmapRequestParam>(
   "/roadmaps/search/:name",
+  // @ts-expect-error
   middleware.apiAuth,
   roadmaps.searchRoadmap,
 );

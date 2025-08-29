@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import type { IPost } from "@logchimp/types";
 
 // modules
 import { getPosts } from "../../../modules/posts";
@@ -31,16 +32,16 @@ const props = defineProps({
   },
 });
 
-// TODO: Add TS types
-const posts = ref<unknown[]>([]);
+const posts = ref<IPost[]>([]);
 
 async function getRoadmapPosts() {
   const roadmapId = props.roadmap.id;
   try {
     const response = await getPosts({
-      page: 1,
-      limit: 20,
-      sort: "DESC",
+      page: "1",
+      limit: "20",
+      created: "DESC",
+      boardId: [],
       roadmapId,
     });
 

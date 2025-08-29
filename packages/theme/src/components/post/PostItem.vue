@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { IPostVote, IPostItem } from "@logchimp/types";
+import type { IPostVote, IPost } from "@logchimp/types";
 
 import { useTrim } from "../../hooks";
 
@@ -50,7 +50,7 @@ import Vote from "../vote/Vote.vue";
 import BoardBadge from "../board/BoardBadge.vue";
 
 interface Props {
-  post: IPostItem;
+  post: IPost;
   dashboard?: boolean;
   showBoard?: boolean;
 }

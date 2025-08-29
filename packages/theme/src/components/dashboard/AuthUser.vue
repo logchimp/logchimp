@@ -20,10 +20,12 @@
 <script setup lang="ts">
 import { Avatar } from "../ui/Avatar";
 
-defineProps<{
-  name: string;
+interface Props {
+  name: string | null;
   username: string;
   email: string;
-  avatar: string;
-}>();
+  avatar: string | null;
+}
+
+defineProps<Props>();
 </script>

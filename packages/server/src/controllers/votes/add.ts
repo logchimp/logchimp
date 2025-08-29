@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import type {
+  IAddVoteRequestBody,
+  IAddVoteResponseBody,
+  IApiErrorResponse,
+} from "@logchimp/types";
 
 // database
 import database from "../../database";
@@ -8,11 +13,16 @@ import database from "../../database";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
-import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
-export async function add(req: Request, res: Response) {
+type ResponseBody = IAddVoteResponseBody | IApiErrorResponse;
+
+export async function add(
+  req: Request<unknown, unknown, IAddVoteRequestBody>,
+  res: Response<ResponseBody>,
+) {
   // @ts-ignore
   const userId = req.user.userId;
   // @ts-ignore
@@ -20,6 +30,13 @@ export async function add(req: Request, res: Response) {
   const checkPermission = permissions.includes("vote:create");
 
   const postId = validUUID(req.body.postId);
+  if (!postId) {
+    res.status(400).send({
+      message: "Invalid Post ID",
+      code: "INVALID_POST_ID",
+    });
+    return;
+  }
 
   if (!checkPermission) {
     return res.status(403).send({

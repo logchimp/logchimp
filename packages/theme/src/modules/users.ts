@@ -3,9 +3,9 @@ import axios, { type AxiosResponse } from "axios";
 import type {
   IAuthUserProfile,
   IAuthUserProfileResponse,
-  IGetAllUsers,
   IUpdateUserSettingsArgs,
   IGetPermissionResponse,
+  IGetUsersResponseBody,
 } from "@logchimp/types";
 
 // store
@@ -13,13 +13,6 @@ import { useUserStore } from "../store/user";
 
 import { APIService } from "./api";
 import { VITE_API_URL } from "../constants";
-
-export interface UserType {
-  userId: string;
-  name: string;
-  username: string;
-  avatar: string;
-}
 
 /**
  * Get user settings
@@ -105,9 +98,9 @@ export class Users extends APIService {
 
   /**
    * @param {object} [params={}] - URL parameters
-   * @returns {Promise<IGetAllUsers>}
+   * @returns {Promise<AxiosResponse<IGetUsersResponseBody>>}
    */
-  async getAll(params = {}): Promise<IGetAllUsers> {
+  async getAll(params = {}): Promise<IGetUsersResponseBody> {
     return this.get("/v1/users", params)
       .then((response) => response?.data)
       .catch((error) => {

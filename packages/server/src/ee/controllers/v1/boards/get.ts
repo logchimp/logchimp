@@ -9,6 +9,11 @@ import database from "../../../../database";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
+import {
+  parseAndValidateLimit,
+  parseAndValidatePage,
+} from "../../../../helpers";
 
 type ResponseBody = IGetBoardsResponseBody | IApiErrorResponse;
 
@@ -17,12 +22,11 @@ export async function get(
   res: Response<ResponseBody>,
 ) {
   const created = req.query.created;
-  const limit = req.query.limit || 10;
-
-  let page = 0;
-  if (req.query.page) {
-    page = Number.parseInt(req.query.page, 10) - 1;
-  }
+  const limit = parseAndValidateLimit(
+    req.query?.limit,
+    GET_BOARDS_FILTER_COUNT,
+  );
+  const page = parseAndValidatePage(req.query?.page);
 
   try {
     const boards = await database
@@ -32,6 +36,7 @@ export async function get(
         "boards.color",
         "boards.url",
         "boards.display",
+        "boards.view_voters",
         "boards.createdAt",
       )
       .count("posts", { as: "post_count" })

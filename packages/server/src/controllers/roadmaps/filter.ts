@@ -8,9 +8,14 @@ import type {
 import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
 
 const querySchema = z.object({
-  first: z.coerce.number().min(1).max(20).default(20),
+  first: z.coerce
+    .number()
+    .min(1)
+    .max(GET_ROADMAPS_FILTER_COUNT)
+    .default(GET_ROADMAPS_FILTER_COUNT),
   after: z.string().uuid().optional(),
 });
 
