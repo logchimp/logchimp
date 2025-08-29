@@ -14,5 +14,6 @@ defineProps({
     :style="{
       backgroundColor: `#${color}`
     }"
+    aria-hidden="true"
   />
 </template>
