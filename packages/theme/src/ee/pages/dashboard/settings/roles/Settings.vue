@@ -32,6 +32,7 @@
        description="The `role:assign` permission can cause critical security and access issues if misused." 
        type="error" 
        class="mb-6"
+       :icon="ShieldAlert"
       />
     <div class="form-section">
       <div class="form-columns">
@@ -172,6 +173,7 @@ export default {
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { ShieldAlert } from "lucide-vue";
 
 // modules
 import { router } from "../../../../../router"
