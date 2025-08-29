@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <infinite-scroll on-infinite="getBoards" :state="boardState" />
+        <infinite-scroll :on-infinite="getBoards" :state="boardState" />
       </Table>
     </div>
   </div>
