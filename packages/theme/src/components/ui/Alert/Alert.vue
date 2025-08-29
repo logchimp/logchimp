@@ -11,6 +11,9 @@
   >
     <div :class="$style.header">
       <div :class="$style.icon">
+        <component :is="props.icon" v-if="props.icon" class="alert-icon"/>
+
+        <template v-else>
         <success-icon
           v-if="type === 'success'"
           class="alert-icon alert-icon-success"
@@ -26,6 +29,7 @@
           class="alert-icon alert-icon-error"
           aria-hidden="true"
         />
+        </template>
       </div>
 
       <h6 :class="$style.title">
@@ -78,6 +82,10 @@ const props = defineProps({
   isToast: {
     type: Boolean,
     default: false,
+  },
+  icon: {
+    type: Function,
+    default: null,
   },
 });
 
