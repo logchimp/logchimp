@@ -5,7 +5,6 @@ import type {
   IAddVoteResponseBody,
   IApiErrorResponse,
 } from "@logchimp/types";
-import { validate } from "uuid";
 
 // database
 import database from "../../database";
@@ -16,6 +15,7 @@ import { getVotes } from "../../services/votes/getVotes";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
 type ResponseBody = IAddVoteResponseBody | IApiErrorResponse;
 
@@ -29,8 +29,8 @@ export async function add(
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("vote:create");
 
-  const postId = req.body.postId;
-  if (!validate(req.body.postId)) {
+  const postId = validUUID(req.body.postId);
+  if (!postId) {
     res.status(400).send({
       message: "Invalid Post ID",
       code: "INVALID_POST_ID",

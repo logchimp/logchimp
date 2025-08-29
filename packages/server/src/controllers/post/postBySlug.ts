@@ -4,7 +4,6 @@ import type {
   IGetPostBySlugRequestBody,
   IGetPostBySlugResponseBody,
 } from "@logchimp/types";
-import { validate } from "uuid";
 import database from "../../database";
 
 // services
@@ -13,6 +12,7 @@ import { getVotes } from "../../services/votes/getVotes";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
 type ResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
 
@@ -22,11 +22,7 @@ export async function postBySlug(
 ) {
   // @ts-expect-error
   const post = req.post;
-
-  let userId: string | null = null;
-  if (req.body?.userId && validate(req.body.userId)) {
-    userId = req.body.userId;
-  }
+  const userId = validUUID(req.body?.userId);
 
   try {
     const author = await database

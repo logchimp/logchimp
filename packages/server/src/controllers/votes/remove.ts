@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { validate } from "uuid";
 import type {
   IApiErrorResponse,
   IRemoveVoteRequestBody,
@@ -13,6 +12,7 @@ import { getVotes } from "../../services/votes/getVotes";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
 type ResponseBody = TRemoveVoteResponseBody | IApiErrorResponse;
 
@@ -26,8 +26,8 @@ export async function remove(
   const permissions = req.user.permissions;
   const checkPermission = permissions.includes("vote:destroy");
 
-  const postId = req.body.postId;
-  if (!validate(req.body.postId)) {
+  const postId = validUUID(req.body.postId);
+  if (!postId) {
     res.status(400).send({
       message: "Invalid Post ID",
       code: "INVALID_POST_ID",

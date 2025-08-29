@@ -1,13 +1,14 @@
 import type { Request, Response } from "express";
-import { validate } from "uuid";
 import type {
   IApiErrorResponse,
   IGetBoardByUrlRequestParams,
   IGetBoardsByUrlResponseBody,
 } from "@logchimp/types";
+
 import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { validUUID } from "../../../../helpers";
 
 type ResponseBody = IGetBoardsByUrlResponseBody | IApiErrorResponse;
 
@@ -16,12 +17,13 @@ export async function boardByUrl(
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const boardId = req.board.boardId;
-  if (!validate(boardId)) {
+  const boardId = validUUID(req.board?.boardId);
+  if (!boardId) {
     res.status(403).send({
       message: error.api.boards.boardIdMissing,
       code: "BOARD_ID_MISSING",
     });
+    return;
   }
 
   try {

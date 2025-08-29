@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from "express";
-import { validate } from "uuid";
 import type {
   IApiErrorResponse,
   IBoardDeleteRequestBody,
@@ -10,6 +9,7 @@ import database from "../../database";
 
 // utils
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
 type RequestParams = IGetBoardByUrlRequestParams;
 type RequestBody = TBoardUpdateResponseBody | IBoardDeleteRequestBody;
@@ -21,10 +21,7 @@ export async function boardExists(
 ) {
   const url = req.params.url;
 
-  let boardId: string | null = null;
-  if ("boardId" in req.body && validate(req.body.boardId)) {
-    boardId = req.body.boardId;
-  }
+  const boardId = "boardId" in req.body ? validUUID(req.body?.boardId) : null;
 
   const board = await database
     .select("boardId")

@@ -20,27 +20,22 @@ const validEmail = (email: string): boolean => {
  * @param {*} value The value to check
  * @returns {*} Returns valid UUID
  */
-const validUUID = (value?: string | string[] | null): string | string[] => {
-  if (value == null) {
-    return "";
-  }
-
-  if (_.isArray(value)) {
-    const arr = value.map((item) => (validateUUID(item) ? item : ""));
-    const newArr = _.filter(arr);
-    return _.isEmpty(newArr) ? "" : newArr;
-  }
-
-  if (typeof value === "string") {
-    return validateUUID(value) ? value : "";
-  }
-};
+const validUUID = (value?: string | null): string | null =>
+  value && validateUUID(value) ? value : null;
 
 /**
  * Validates a list of UUIDs
  */
 function validUUIDs(value: Array<string>): string[] {
-  return value.filter((item) => validateUUID(item));
+  if (!value.length) return [];
+
+  const result: string[] = [];
+  for (let i = 0, len = value.length; i < len; i++) {
+    if (validateUUID(value[i])) {
+      result.push(value[i]);
+    }
+  }
+  return result;
 }
 
 /**
