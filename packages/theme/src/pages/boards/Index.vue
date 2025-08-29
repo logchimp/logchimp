@@ -19,12 +19,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Boards",
-};
-</script>
-
 <script setup lang="ts">
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -32,47 +26,53 @@ import type { IBoardDetail } from "@logchimp/types";
 
 // modules
 import { getPublicBoards } from "../../ee/modules/boards";
-import { useSettingStore } from "../../store/settings"
+import { useSettingStore } from "../../store/settings";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../../components/ui/InfiniteScroll.vue";
 import BoardItem from "../../components/board/BoardItem.vue";
 
-const { get: siteSettings } = useSettingStore()
+const { get: siteSettings } = useSettingStore();
 
-const boards = ref<IBoardDetail[]>([])
-const page = ref<number>(1)
-const state = ref<InfiniteScrollStateType>()
+const boards = ref<IBoardDetail[]>([]);
+const page = ref<number>(1);
+const state = ref<InfiniteScrollStateType>();
 
 async function getBoards() {
-	try {
-		const response = await getPublicBoards({
+  try {
+    const response = await getPublicBoards({
       page: page.value.toString(),
-      created: "DESC"
+      created: "DESC",
     });
 
-		if (response.data.boards.length) {
-			boards.value.push(...response.data.boards);
-			page.value += 1;
-			state.value = "LOADED"
-		} else {
-			state.value = "COMPLETED";
-		}
-	} catch (error) {
-		console.error(error);
-		state.value = "ERROR"
-	}
+    if (response.data.boards.length) {
+      boards.value.push(...response.data.boards);
+      page.value += 1;
+      state.value = "LOADED";
+    } else {
+      state.value = "COMPLETED";
+    }
+  } catch (error) {
+    console.error(error);
+    state.value = "ERROR";
+  }
 }
 
 useHead({
-	title: "Boards",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Boards • ${siteSettings.title}`
-		}
-	]
-})
+  title: "Boards",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Boards • ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "Boards",
+});
 </script>
 
 <style lang='sass'>

@@ -55,12 +55,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "UserSettings",
-};
-</script>
-
 <script setup lang="ts">
 // packages
 import { onMounted, reactive, ref } from "vue";
@@ -69,8 +63,8 @@ import { useHead } from "@vueuse/head";
 // modules
 import { router } from "../router";
 import { getUserSettings, updateUserSettings } from "../modules/users";
-import { useSettingStore } from "../store/settings"
-import { useUserStore } from "../store/user"
+import { useSettingStore } from "../store/settings";
+import { useUserStore } from "../store/user";
 import tokenError from "../utils/tokenError";
 
 // components
@@ -81,90 +75,94 @@ import Button from "../components/ui/Button.vue";
 import { type FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import AccountVerificationAlert from "../components/account/VerificationAlert.vue";
 
-const { get: siteSettings } = useSettingStore()
-const { getUserId } = useUserStore()
+const { get: siteSettings } = useSettingStore();
+const { getUserId } = useUserStore();
 
 const user = reactive({
-	username: "",
-	email: "",
+  username: "",
+  email: "",
 });
 
 const name = reactive({
   value: "",
   error: {
     show: false,
-    message: ""
-  }
-})
+    message: "",
+  },
+});
 
 const loading = ref<boolean>(false);
 const isVerified = ref<boolean>(false);
 const serverError = ref<boolean>(false);
-const updateUserButtonLoading = ref<boolean>(false)
+const updateUserButtonLoading = ref<boolean>(false);
 
 async function getUser() {
-	loading.value = true;
+  loading.value = true;
 
-	try {
-		const response = await getUserSettings();
+  try {
+    const response = await getUserSettings();
 
-		name.value = response.data.user.name;
-		user.username = response.data.user.username;
-		user.email = response.data.user.email;
-		isVerified.value = response.data.user.isVerified;
-	} catch (error) {
-		tokenError(error);
-	} finally {
-		loading.value = false;
-	}
+    name.value = response.data.user.name;
+    user.username = response.data.user.username;
+    user.email = response.data.user.email;
+    isVerified.value = response.data.user.isVerified;
+  } catch (error) {
+    tokenError(error);
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function updateSettings() {
-	updateUserButtonLoading.value = true;
+  updateUserButtonLoading.value = true;
 
-	try {
-		const response = await updateUserSettings({
-			name: name.value,
-		});
+  try {
+    const response = await updateUserSettings({
+      name: name.value,
+    });
 
-		name.value = response.data.user.name;
-		updateUserButtonLoading.value = false;
+    name.value = response.data.user.name;
+    updateUserButtonLoading.value = false;
     // TODO: Add TS types
     // biome-ignore lint: Add TS types
-	} catch (error: any) {
-		updateUserButtonLoading.value = false;
+  } catch (error: any) {
+    updateUserButtonLoading.value = false;
 
     Object.assign(name.error, {
       message: error.response.data.name,
       show: true,
-    })
-	}
+    });
+  }
 }
 
 function hideNameError(value: FormFieldErrorType) {
-  Object.assign(name.error, value)
+  Object.assign(name.error, value);
 }
 
 onMounted(() => {
-	if (getUserId) {
-		getUser();
-	} else {
-		router.push({
-			path: "/login",
-			query: {
-				redirect: "/settings"
-			}
-		});
-	}
-})
+  if (getUserId) {
+    getUser();
+  } else {
+    router.push({
+      path: "/login",
+      query: {
+        redirect: "/settings",
+      },
+    });
+  }
+});
 
 useHead({
-	title: "User settings",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `User settings • ${siteSettings.title}`
-		}
-	]
-})
+  title: "User settings",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `User settings • ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "UserSettings",
+});
 </script>

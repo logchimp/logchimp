@@ -37,12 +37,6 @@
   </auth-form>
 </template>
 
-<script lang="ts">
-export default {
-  name: "EmailVerification",
-};
-</script>
-
 <script setup lang="ts">
 // packages
 import { onMounted, ref } from "vue";
@@ -51,7 +45,7 @@ import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 
 // modules
 import { router } from "../router";
-import { useSettingStore } from "../store/settings"
+import { useSettingStore } from "../store/settings";
 import { verifyUserEmail } from "../modules/auth";
 
 // components
@@ -59,49 +53,53 @@ import AuthForm from "../layout/AuthForm.vue";
 import Loader from "../components/ui/Loader.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";
 
-const { get: siteSettings } = useSettingStore()
+const { get: siteSettings } = useSettingStore();
 
-const loading = ref(true)
-const success = ref(false)
-const error = ref(false)
+const loading = ref(true);
+const success = ref(false);
+const error = ref(false);
 
 async function verifyEmail() {
-	const route = router.currentRoute.value;
-	if (!route.query.token) {
+  const route = router.currentRoute.value;
+  if (!route.query.token) {
     loading.value = false;
-		error.value = true;
-		return;
-	}
+    error.value = true;
+    return;
+  }
 
-	try {
+  try {
     const token = route.query.token.toString();
-		const response = await verifyUserEmail(token);
+    const response = await verifyUserEmail(token);
 
-		if (response.data.verify.success) {
+    if (response.data.verify.success) {
       success.value = true;
       loading.value = false;
     }
-	} catch (error: any) {
-		if (error.response.data.code === "USER_ALREADY_VERIFIED") {
-			return router.push("/");
-		}
+  } catch (error: any) {
+    if (error.response.data.code === "USER_ALREADY_VERIFIED") {
+      return router.push("/");
+    }
 
-		error.value = true;
-		loading.value = false;
-	}
+    error.value = true;
+    loading.value = false;
+  }
 }
 
-onMounted(() => verifyEmail())
+onMounted(() => verifyEmail());
 
 useHead({
-	title: "Email verification",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Email verification · ${siteSettings.title}`
-		}
-	]
-})
+  title: "Email verification",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Email verification · ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "EmailVerification",
+});
 </script>
 
 <style lang='sass'>

@@ -7,15 +7,12 @@
 	</div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "ServerError",
-};
-</script>
-
 <script setup lang="ts">
-// packages
 import { X as CloseIcon } from "lucide-vue";
+
+defineOptions({
+  name: "ServerError",
+});
 </script>
 
 <style lang='sass'>

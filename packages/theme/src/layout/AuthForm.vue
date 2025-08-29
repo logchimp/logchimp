@@ -4,10 +4,10 @@
 	</div>
 </template>
 
-<script lang="ts">
-export default {
+<script setup lang="ts">
+defineOptions({
   name: "AuthFormLayout",
-};
+});
 </script>
 
 <style lang='sass'>

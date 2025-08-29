@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
+  <div class="flex flex-col-reverse lg:flex-row mb-16 lg:gap-x-8">
     <main class="grow-[2] shrink basis-0">
       <post-item
         v-for="post in posts"
@@ -17,12 +17,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Homepage",
-};
-</script>
-
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -31,65 +25,71 @@ import type { IPost } from "@logchimp/types";
 // modules
 import { isSiteSetup } from "../modules/site";
 import { getPosts } from "../modules/posts";
-import { useSettingStore } from "../store/settings"
-import { useUserStore } from "../store/user"
+import { useSettingStore } from "../store/settings";
+import { useUserStore } from "../store/user";
 
 // components
-import InfiniteScroll, { type InfiniteScrollStateType } from "../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../components/ui/InfiniteScroll.vue";
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import LoginCard from "../components/auth/LoginCard.vue";
 import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
 
-const settingsStore = useSettingStore()
-const userStore = useUserStore()
+const settingsStore = useSettingStore();
+const userStore = useUserStore();
 
 const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
-const showSiteSetupCard = ref<boolean>(false)
-const state = ref<InfiniteScrollStateType>()
+const showSiteSetupCard = ref<boolean>(false);
+const state = ref<InfiniteScrollStateType>();
 
 async function isSetup() {
-	try {
-		const response = await isSiteSetup();
-		showSiteSetupCard.value = !response.data.is_setup;
-	} catch (error) {
-		console.error(error);
-	}
+  try {
+    const response = await isSiteSetup();
+    showSiteSetupCard.value = !response.data.is_setup;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getBoardPosts() {
-  state.value = 'LOADING'
+  state.value = "LOADING";
 
   try {
     const response = await getPosts({
-			page: page.value.toString(),
-			created: "DESC",
+      page: page.value.toString(),
+      created: "DESC",
       boardId: [],
-		});
+    });
 
     if (response.data.posts.length) {
       posts.value.push(...response.data.posts);
       page.value += 1;
-      state.value = 'LOADED'
+      state.value = "LOADED";
     } else {
-      state.value = 'COMPLETED'
+      state.value = "COMPLETED";
     }
   } catch (error) {
     console.error(error);
-    state.value = 'ERROR'
+    state.value = "ERROR";
   }
 }
 
 onMounted(() => isSetup());
 
 useHead({
-	title: "Home",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Home • ${settingsStore.get.title}`
-		}
-	]
-})
+  title: "Home",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Home • ${settingsStore.get.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "Homepage",
+});
 </script>

@@ -38,12 +38,6 @@
   </auth-form>
 </template>
 
-<script lang="ts">
-export default {
-  name: "SetupBoard",
-};
-</script>
-
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -61,55 +55,59 @@ import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 
 const boardName = reactive({
-	value: "",
-	error: {
-		show: false,
-		message: ""
-	}
-})
-const buttonLoading = ref(false)
+  value: "",
+  error: {
+    show: false,
+    message: "",
+  },
+});
+const buttonLoading = ref(false);
 
-const { get: siteSettings } = useSettingStore()
-const { permissions } = useUserStore()
+const { get: siteSettings } = useSettingStore();
+const { permissions } = useUserStore();
 
 const createBoardPermissionDisabled = computed(() => {
-	const checkPermission = permissions.includes("board:create");
-	return !checkPermission;
-})
+  const checkPermission = permissions.includes("board:create");
+  return !checkPermission;
+});
 
 function hideBoardNameError(event: FormFieldErrorType) {
-	boardName.error = event;
+  boardName.error = event;
 }
 
 async function create() {
-	if (!boardName.value) {
-		boardName.error.show = true;
-		boardName.error.message = "Required";
-		return;
-	}
+  if (!boardName.value) {
+    boardName.error.show = true;
+    boardName.error.message = "Required";
+    return;
+  }
 
-	buttonLoading.value = true;
+  buttonLoading.value = true;
 
-	try {
-		await createBoard({
-			name: boardName.value,
+  try {
+    await createBoard({
+      name: boardName.value,
       display: true,
-		});
+    });
 
-		router.push("/dashboard");
-	} catch (error) {
-		console.error(error);
-		buttonLoading.value = false;
-	}
+    router.push("/dashboard");
+  } catch (error) {
+    console.error(error);
+    buttonLoading.value = false;
+  }
 }
 
 useHead({
-	title: "Create board • Onboarding",
-	meta: [
-		{
-			name: "og:title",
-			content: () => `Create board • Onboarding • ${siteSettings.title}`
-		}
-	]
-})
+  title: "Create board • Onboarding",
+  meta: [
+    {
+      name: "og:title",
+      content: () => `Create board • Onboarding • ${siteSettings.title}`,
+    },
+  ],
+});
+
+defineOptions({
+  name: "SetupBoard",
+});
 </script>
