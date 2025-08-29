@@ -11,9 +11,15 @@ import { getBoardById } from "../../services/boards/getBoardById";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
-import { validUUID, validUUIDs } from "../../helpers";
+import {
+  parseAndValidateLimit,
+  parseAndValidatePage,
+  validUUID,
+  validUUIDs,
+} from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { GET_POSTS_FILTER_COUNT } from "../../constants";
 
 type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
 
@@ -21,19 +27,16 @@ export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  const userId = validUUID(req.body.userId);
   const boardId = validUUIDs(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
   /**
    * top, latest, oldest, trending
    */
   const created = req.body.created;
-  const limit = req.body.limit || 10;
+  const limit = parseAndValidateLimit(req.body?.limit, GET_POSTS_FILTER_COUNT);
+  const page = parseAndValidatePage(req.body?.page);
 
-  let page = 0;
-  if (req.body.page) {
-    page = Number.parseInt(req.body.page, 10) - 1;
-  }
+  const userId = validUUID(req.body?.userId);
 
   try {
     const { rows: response } = await database.raw(
@@ -45,7 +48,8 @@ export async function filterPost(
           "boardId",
           "roadmap_id",
           "contentMarkdown",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         FROM
           posts
         ${

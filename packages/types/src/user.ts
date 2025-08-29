@@ -9,10 +9,10 @@ export interface IPublicUserInfo {
 
 export interface IUser {
   userId: string;
-  name: string;
+  name: string | null;
   email: string;
-  avatar: string;
-  username?: string;
+  avatar: string | null;
+  username: string;
   isVerified: boolean;
   // vote count
   votes: string;
@@ -28,10 +28,6 @@ export interface IUserInfo extends IPublicUserInfo {
   isOwner: boolean;
   notes: string | null;
   createdAt: Date;
-}
-
-export interface IGetAllUsers {
-  users: IUser[];
 }
 
 export interface IUserRole {
@@ -50,13 +46,13 @@ export type TGetUserInfoResponseBody = {
 
 export interface IGetUsersRequestQuery {
   page: string;
-  limit?: number;
+  limit?: string;
   created: ApiSortType;
 }
 
 export interface IGetUsersResponseBody {
   status: IApiStatus;
-  users: IUserInfo[];
+  users: IUser[];
 }
 
 export type TUserAssignRoleResponse =

@@ -7,7 +7,7 @@
         :post="post"
       />
 
-      <infinite-scroll @infinite="getBoardPosts" :state="state" />
+      <infinite-scroll :on-infinite="getBoardPosts" :state="state" />
     </main>
     <aside class="flex-1 mb-6 lg:mb-0 grid grid-cols-1 gap-y-4">
       <site-setup-card v-if="showSiteSetupCard" />
@@ -24,9 +24,9 @@ export default {
 </script>
 
 <script setup lang="ts">
-// packages
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IPost } from "@logchimp/types";
 
 // modules
 import { isSiteSetup } from "../modules/site";
@@ -44,8 +44,7 @@ import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
 const settingsStore = useSettingStore()
 const userStore = useUserStore()
 
-// TODO: Add TS type
-const posts = ref<unknown>([]);
+const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
 const showSiteSetupCard = ref<boolean>(false)
 const state = ref<InfiniteScrollStateType>()
@@ -64,8 +63,9 @@ async function getBoardPosts() {
 
   try {
     const response = await getPosts({
-			page: page.value,
-			sort: "DESC"
+			page: page.value.toString(),
+			created: "DESC",
+      boardId: [],
 		});
 
     if (response.data.posts.length) {

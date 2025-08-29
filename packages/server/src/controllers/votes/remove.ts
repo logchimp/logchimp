@@ -1,15 +1,25 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IRemoveVoteRequestBody,
+  TRemoveVoteResponseBody,
+} from "@logchimp/types";
 import database from "../../database";
 
 // services
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
-import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
-export async function remove(req: Request, res: Response) {
+type ResponseBody = TRemoveVoteResponseBody | IApiErrorResponse;
+
+export async function remove(
+  req: Request<unknown, unknown, IRemoveVoteRequestBody>,
+  res: Response<ResponseBody>,
+) {
   // @ts-ignore
   const userId = req.user.userId;
   // @ts-ignore
@@ -17,6 +27,13 @@ export async function remove(req: Request, res: Response) {
   const checkPermission = permissions.includes("vote:destroy");
 
   const postId = validUUID(req.body.postId);
+  if (!postId) {
+    res.status(400).send({
+      message: "Invalid Post ID",
+      code: "INVALID_POST_ID",
+    });
+    return;
+  }
 
   if (!checkPermission) {
     return res.status(403).send({

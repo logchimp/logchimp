@@ -11,14 +11,14 @@
 </template>
 
 <script setup lang="ts">
+import type { IBoardPrivate, IRoadmapPrivate } from "@logchimp/types";
 import ColorDot from "../ui/ColorDot/ColorDot.vue";
 
-defineProps({
-  board: {
-    type: Object,
-    default: () => {},
-  },
-});
+interface Props {
+  board: IBoardPrivate | IRoadmapPrivate;
+}
+
+defineProps<Props>();
 </script>
 
 <style lang='sass'>

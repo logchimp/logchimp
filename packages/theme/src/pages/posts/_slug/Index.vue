@@ -114,7 +114,6 @@ const post = reactive<IPost>({
     color: "",
     url: "",
     createdAt: new Date(),
-    post_count: "",
   },
   voters: {
     votesCount: 0,

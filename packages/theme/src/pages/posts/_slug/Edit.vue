@@ -14,7 +14,8 @@
 				@hide-error="hideTitleError"
 			/>
 			<l-textarea
-				v-model="post.contentMarkdown"
+        :model-value="post.contentMarkdown ?? undefined"
+        @update:model-value="(value) => post.contentMarkdown = value ?? null"
 				label="Description"
 				name="Post description"
 				placeholder="What would you use it for?"
@@ -49,6 +50,7 @@ export default {
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IDashboardPost } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
@@ -67,23 +69,40 @@ const { get: siteSettings } = useSettingStore()
 const { permissions, getUserId } = useUserStore()
 
 // posts
-const post = reactive({
-	postId: "",
-	title: "",
-	slug: "",
-	slugId: "",
-	contentMarkdown: "",
-	createdAt: "",
-	author: {
-		name: "",
-		username: "",
-		avatar: "",
-		userId: ""
-	},
-	voters: {
-		votesCount: 0,
-		viewerVote: false,
-	}
+const post = reactive<IDashboardPost>({
+  postId: "",
+  title: "",
+  slug: "",
+  slugId: "",
+  contentMarkdown: "",
+  // TODO: what should be the default/empty value
+  updatedAt: new Date(),
+  // TODO: what should be the default/empty value
+  createdAt: new Date(),
+  author: {
+    userId: "",
+    name: "",
+    username: "",
+    avatar: "",
+  },
+  board: {
+    boardId: "",
+    name: "",
+    url: "",
+    color: "",
+    createdAt: new Date(),
+  },
+  roadmap: {
+    id: "",
+    name: "",
+    url: "",
+    color: "",
+  },
+  voters: {
+    votes: [],
+    votesCount: 0,
+    viewerVote: undefined,
+  },
 });
 const postLoading = ref(false)
 const isPostExist = ref(true)
@@ -101,7 +120,6 @@ const updatePostPermissionDisabled = computed(() => {
 	return false;
 })
 
-// TODO: Add TS types
 function hideTitleError(event: FormFieldErrorType) {
 	postFieldError.show = event.show;
 	postFieldError.message = event.message;

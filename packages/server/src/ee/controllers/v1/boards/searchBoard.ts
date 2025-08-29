@@ -1,11 +1,21 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  ISearchBoardRequestParams,
+  ISearchBoardResponseBody,
+} from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function searchBoard(req: Request, res: Response) {
+type ResponseBody = ISearchBoardResponseBody | IApiErrorResponse;
+
+export async function searchBoard(
+  req: Request<ISearchBoardRequestParams>,
+  res: Response<ResponseBody>,
+) {
   const { name } = req.params;
   // @ts-ignore
   const permissions = req.user.permissions;
@@ -20,9 +30,20 @@ export async function searchBoard(req: Request, res: Response) {
 
   try {
     const boards = await database
-      .select("boardId", "name", "url", "color")
+      .select(
+        "boards.boardId",
+        "boards.name",
+        "boards.color",
+        "boards.url",
+        "boards.display",
+        "boards.view_voters",
+        "boards.createdAt",
+      )
+      .count("posts", { as: "post_count" })
+      .leftJoin("posts", "boards.boardId", "posts.boardId")
       .from("boards")
-      .where("name", "ILIKE", `${name}%`);
+      .where("name", "ILIKE", `${name}%`)
+      .groupBy("boards.boardId");
 
     res.status(200).send({
       boards,

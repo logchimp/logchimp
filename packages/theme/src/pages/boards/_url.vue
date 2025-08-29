@@ -53,6 +53,7 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
+import type {  IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { getBoardByUrl } from "../../ee/modules/boards";
@@ -71,10 +72,15 @@ import { useUserStore } from "../../store/user"
 
 const route = useRoute();
 const tab = ref("latest")
-const board = reactive({
+const board = reactive<IBoardPrivate>({
   boardId: "",
   name: "",
+  url: "",
+  color: "",
   display: false,
+  view_voters: false,
+  post_count: "",
+  createdAt: new Date(),
 });
 const loading = ref<boolean>(false)
 const isBoardExist = ref<boolean>(false)
@@ -94,7 +100,7 @@ const activeTab = computed(() => {
 
 function updateTab(tabValue: string) {
   tab.value = tabValue;
-};
+}
 
 async function getBoard() {
   loading.value = true;

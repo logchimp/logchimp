@@ -10,9 +10,9 @@ import database from "../../database";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
-import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
 type ResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
 
@@ -20,9 +20,9 @@ export async function postBySlug(
   req: Request<unknown, unknown, IGetPostBySlugRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  const userId = validUUID(req.body.userId);
   // @ts-expect-error
   const post = req.post;
+  const userId = validUUID(req.body?.userId);
 
   try {
     const author = await database

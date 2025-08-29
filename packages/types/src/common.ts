@@ -7,7 +7,7 @@ export interface IApiStatus {
 
 export interface ApiPaginationType {
   page: number;
-  limit?: number;
+  limit?: string;
   sort?: ApiSortType;
 }
 

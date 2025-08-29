@@ -136,7 +136,7 @@ const slugUrl = computed({
 	}
 })
 
-async function validateBoardUrl(event: unknown) {
+async function validateBoardUrl(event: KeyboardEvent) {
 	const keyCode = event.keyCode;
 
 	// only accept letters, numbers, & numpad numbers

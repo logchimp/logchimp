@@ -24,12 +24,12 @@ export type TGetSiteSettingsLabResponseBody = {
 };
 
 export interface IUpdateSiteSettingsRequestBody {
-  title?: string;
-  description?: string;
-  allowSignup?: boolean;
-  accentColor?: string;
-  googleAnalyticsId?: string;
-  developer_mode?: boolean;
+  title: string | null;
+  description: string | null;
+  allowSignup: boolean | null;
+  accentColor: string | null;
+  googleAnalyticsId: string | null;
+  developer_mode: boolean;
 }
 
 export type TUpdateSiteSettingsResponseBody = IGetSiteSettingsResponseBody;

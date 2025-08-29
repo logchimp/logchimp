@@ -1,3 +1,11 @@
+export type PermissionAction =
+  | "create"
+  | "read"
+  | "update"
+  | "destroy"
+  | "assign"
+  | "unassign";
+
 export type TPermission =
   | "post:read"
   | "post:create"
