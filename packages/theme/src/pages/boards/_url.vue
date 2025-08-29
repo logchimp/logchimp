@@ -100,7 +100,7 @@ const activeTab = computed(() => {
 
 function updateTab(tabValue: string) {
   tab.value = tabValue;
-};
+}
 
 async function getBoard() {
   loading.value = true;
