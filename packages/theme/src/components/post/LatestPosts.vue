@@ -7,7 +7,7 @@
       :show-board="false"
     />
 
-    <infinite-scroll @infinite="getMorePosts" :state="state" />
+    <infinite-scroll :on-infinite="getMorePosts" :state="state" />
   </div>
 </template>
 

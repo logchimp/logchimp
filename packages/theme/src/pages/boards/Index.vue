@@ -11,7 +11,7 @@
       />
     </div>
 
-    <infinite-scroll @infinite="getBoards" :state="state">
+    <infinite-scroll :on-infinite="getBoards" :state="state">
       <template #no-results>
         <p>There are no boards.</p>
       </template>

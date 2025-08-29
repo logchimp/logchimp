@@ -28,7 +28,7 @@
         <DashboardUsersTabularItem :user="user" :settings="settings" />
       </div>
 
-      <infinite-scroll @infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
+      <infinite-scroll :on-infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
     </Table>
   </div>
 </template>

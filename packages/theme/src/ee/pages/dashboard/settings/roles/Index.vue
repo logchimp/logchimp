@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <infinite-scroll @infinite="dashboardRoles.fetchRoles" :state="dashboardRoles.state" />
+        <infinite-scroll :on-infinite="dashboardRoles.fetchRoles" :state="dashboardRoles.state" />
       </div>
     </div>
   </div>

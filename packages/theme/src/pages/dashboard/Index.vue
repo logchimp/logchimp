@@ -24,7 +24,7 @@
           </div>
         </router-link>
 
-        <infinite-scroll @infinite="getRecentPosts" :state="postState" />
+        <infinite-scroll :on-infinite="getRecentPosts" :state="postState" />
       </Table>
     </div>
     <div class="dashboard-overview-boards">
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <infinite-scroll @infinite="getBoards" :state="boardState" />
+        <infinite-scroll on-infinite="getBoards" :state="boardState" />
       </Table>
     </div>
   </div>

@@ -45,7 +45,7 @@
 					</template>
         </draggable>
 
-        <infinite-scroll @infinite="getRoadmaps" :state="state" />
+        <infinite-scroll :on-infinite="getRoadmaps" :state="state" />
       </div>
     </div>
   </div>

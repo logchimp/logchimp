@@ -7,7 +7,7 @@
         :post="post"
       />
 
-      <infinite-scroll @infinite="getBoardPosts" :state="state" />
+      <infinite-scroll :on-infinite="getBoardPosts" :state="state" />
     </main>
     <aside class="flex-1 mb-6 lg:mb-0 grid grid-cols-1 gap-y-4">
       <site-setup-card v-if="showSiteSetupCard" />

@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <infinite-scroll @infinite="getBoards" :state="state" />
+      <infinite-scroll :on-infinite="getBoards" :state="state" />
 		</Table>
 	</div>
 </template>

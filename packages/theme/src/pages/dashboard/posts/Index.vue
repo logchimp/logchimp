@@ -15,7 +15,7 @@
       :dashboard="true"
     />
 
-    <infinite-scroll @infinite="getBoardPosts" :state="state" />
+    <infinite-scroll :on-infinite="getBoardPosts" :state="state" />
 	</div>
 </template>
 
