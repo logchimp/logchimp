@@ -78,11 +78,9 @@ describe("GET /boards/search/:name", () => {
     const { user: authUser } = await createUser();
 
     // assign "board:read" permission to user
-    await createRoleWithPermissions(
-      authUser.userId,
-      [{ type: "board", action: "read" }],
-      { roleId: undefined, roleName: "Board Reader" },
-    );
+    await createRoleWithPermissions(authUser.userId, ["board:read"], {
+      roleName: "Board Reader",
+    });
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
@@ -159,8 +157,10 @@ describe("DELETE /api/v1/boards", () => {
     // assign "board:destroy" permission to user
     await createRoleWithPermissions(
       authUser.userId,
-      [{ type: "board", action: "destroy" }],
-      { roleId: undefined, roleName: "Board destroyer" },
+      ["board:destroy", "board:create", "board:update"],
+      {
+        roleName: "Board destroyer",
+      },
     );
 
     const response = await supertest(app)
