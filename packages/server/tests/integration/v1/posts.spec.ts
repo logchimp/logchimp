@@ -279,9 +279,9 @@ describe("POST /api/v1/posts/slug", () => {
     });
 
     const post = generatePost({
-      user_id: authUser.userId,
-      board_id: board.boardId,
-      roadmap_id: roadmap.id,
+      userId: authUser.userId,
+      boardId: board.boardId,
+      roadmapId: roadmap.id,
     });
 
     await database.insert(post).into("posts");
