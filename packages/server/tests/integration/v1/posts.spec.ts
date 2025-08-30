@@ -258,7 +258,7 @@ describe("POST /api/v1/posts/slug", () => {
       .send(
         {
           slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
-          userId: ""
+          userId: "",
         }
       );
 
@@ -291,15 +291,17 @@ describe("POST /api/v1/posts/slug", () => {
       .send(
         {
           slug: post.slug,
-          userId: ""
+          userId: "",
         }
       );
 
+    const body = response.body.post;
+
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.post.slug).toEqual(post.slug);
-    expect(response.body.post.board.boardId).toEqual(board.boardId);
-    expect(response.body.post.roadmap.id).toEqual(roadmap.id);
-    expect(response.body.post.author.userId).toEqual(authUser.userId);
+    expect(body.slug).toEqual(post.slug);
+    expect(body.board.boardId).toEqual(board.boardId);
+    expect(body.roadmap.id).toEqual(roadmap.id);
+    expect(body.author.userId).toEqual(authUser.userId);
   });
 });
