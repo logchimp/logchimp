@@ -155,13 +155,9 @@ describe("DELETE /api/v1/boards", () => {
     const { user: authUser } = await createUser();
 
     // assign "board:destroy" permission to user
-    await createRoleWithPermissions(
-      authUser.userId,
-      ["board:destroy", "board:create", "board:update"],
-      {
-        roleName: "Board destroyer",
-      },
-    );
+    await createRoleWithPermissions(authUser.userId, ["board:destroy"], {
+      roleName: "Board destroyer",
+    });
 
     const response = await supertest(app)
       .delete(`/api/v1/boards/`)
