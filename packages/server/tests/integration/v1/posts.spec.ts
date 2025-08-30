@@ -1,13 +1,10 @@
 import { describe, it, expect, afterEach } from "vitest";
 import supertest from "supertest";
 import app from "../../../src/app";
-import database from "../../../src/database";
-import {
-  post as generatePost,
-  board as generateBoards,
-  roadmap as generateRoadmap
-} from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
+import { createBoard } from "../../utils/seed/board";
+import { createRoadmap } from "../../utils/seed/roadmap";
+import { createPost } from "../../utils/seed/post";
 import { cleanDb } from "../../utils/db";
 
 describe("POST Slug /api/v1/posts/slug", () => {
@@ -23,7 +20,7 @@ describe("POST Slug /api/v1/posts/slug", () => {
     .send(
       {
         slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
-        userId: "",
+        userId: ""
       }
     );
 
@@ -33,30 +30,26 @@ describe("POST Slug /api/v1/posts/slug", () => {
   });
 
   it('should get post with matching slug', async () => {
-    const board = generateBoards();
-    await database.insert(board).into("boards");
+    const board = await createBoard();
 
-    const roadmap = generateRoadmap();
-    await database.insert(roadmap).into("roadmaps");
+    const roadmap = await createRoadmap();
 
     const { user: authUser } = await createUser({
-      isVerified: true,
+      isVerified: true
     });
 
-    const post = generatePost({
-      userId: authUser.userId,
-      boardId: board.boardId,
-      roadmapId: roadmap.id,
-    });
-
-    await database.insert(post).into("posts");
+    const post = await createPost(
+      authUser.userId,
+      board.boardId,
+      roadmap.id
+    );
 
     const response = await supertest(app)
     .post("/api/v1/posts/slug")
     .send(
       {
         slug: post.slug,
-        userId: "",
+        userId: ""
       }
     );
 
