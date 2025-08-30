@@ -34,10 +34,10 @@ const user = () => {
 const roadmap = () => {
   const name = faker.commerce.productName();
   const url = name
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g, "-")
-  .substring(0, 50)
-  .replace(/^-+|-+$/g, "");
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .substring(0, 50)
+      .replace(/^-+|-+$/g, "");
 
   return {
     id: uuid(),
