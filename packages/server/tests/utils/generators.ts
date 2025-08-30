@@ -10,9 +10,9 @@ import {
 } from "../../src/helpers";
 
 interface PostGeneratorConfig {
-  user_id: string;
-  board_id: string;
-  roadmap_id: string;
+  userId: string;
+  boardId: string;
+  roadmapId: string;
 }
 
 const user = () => {
@@ -51,7 +51,7 @@ const roadmap = () => {
   };
 };
 
-const post = ({ user_id, board_id, roadmap_id }: PostGeneratorConfig) => {
+const post = ({ userId, boardId, roadmapId }: PostGeneratorConfig) => {
   const title = faker.commerce.productName();
 
   // generate slug unique indentification
@@ -64,11 +64,11 @@ const post = ({ user_id, board_id, roadmap_id }: PostGeneratorConfig) => {
     slug,
     slugId,
     contentMarkdown: faker.lorem.text(),
-    userId: user_id,
+    userId,
     createdAt: new Date().toJSON(),
     updatedAt: new Date().toJSON(),
-    boardId: board_id,
-    roadmap_id: roadmap_id,
+    boardId,
+    roadmap_id: roadmapId,
   };
 };
 

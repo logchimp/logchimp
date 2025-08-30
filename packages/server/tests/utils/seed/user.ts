@@ -6,13 +6,22 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
 
+interface CreateUserOptions {
+  name?: string;
+  email?: string;
+  password?: string;
+  isVerified?: boolean;
+  isOwner?: boolean;
+  isBlocked?: boolean;
+}
+
 /**
  * NOTE: this function by-passes 'allowSignup' settings
  * Should have `@everyone` role assigned.
  *
  * @param user
  */
-export async function createUser(user: any = {}) {
+export async function createUser(user?: CreateUserOptions) {
   const userId = uuid();
   const name = user?.name || faker.person.fullName();
   const email = (user?.email || faker.internet.email()).toLowerCase();
@@ -47,7 +56,7 @@ export async function createUser(user: any = {}) {
     {
       uuid: uuid(),
       userId,
-    }
+    },
   );
 
   const response = await supertest(app).post("/api/v1/auth/login").send({
