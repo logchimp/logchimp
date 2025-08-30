@@ -2,13 +2,18 @@ import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
 import generatePassword from "omgopass";
 import { nanoid } from "nanoid";
-
 import {
   generateHexColor,
   sanitiseUsername,
   sanitiseURL,
   toSlug,
 } from "../../src/helpers";
+
+interface PostGeneratorConfig {
+  userId: string;
+  boardId: string;
+  roadmapId: string;
+}
 
 const user = () => {
   return {
@@ -28,11 +33,16 @@ const user = () => {
 
 const roadmap = () => {
   const name = faker.commerce.productName();
+  const url = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .substring(0, 50)
+      .replace(/^-+|-+$/g, "");
 
   return {
     id: uuid(),
     name,
-    url: `${sanitiseURL(name)}-${nanoid(10)}`,
+    url,
     index: faker.number.int({ min: 1, max: 100000 }),
     color: generateHexColor(),
     display: faker.datatype.boolean(),
@@ -41,7 +51,7 @@ const roadmap = () => {
   };
 };
 
-const post = () => {
+const post = ({ userId, boardId, roadmapId }: PostGeneratorConfig) => {
   const title = faker.commerce.productName();
 
   // generate slug unique indentification
@@ -51,14 +61,14 @@ const post = () => {
   return {
     postId: uuid(),
     title,
-    slug: slug,
-    slugId: slugId,
-    contentMarkdown: faker.lorem.text,
-    userId: uuid(),
-    boardId: uuid(),
-    roadmap_id: uuid(),
+    slug,
+    slugId,
+    contentMarkdown: faker.lorem.text(),
+    userId,
     createdAt: new Date().toJSON(),
     updatedAt: new Date().toJSON(),
+    boardId,
+    roadmap_id: roadmapId,
   };
 };
 

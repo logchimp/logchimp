@@ -6,28 +6,41 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
 
+interface CreateUserOptions {
+  name?: string;
+  email?: string;
+  password?: string;
+  isVerified?: boolean;
+  isOwner?: boolean;
+  isBlocked?: boolean;
+}
+
 /**
  * NOTE: this function by-passes 'allowSignup' settings
  * Should have `@everyone` role assigned.
  *
  * @param user
  */
-export async function createUser(user = undefined) {
+export async function createUser(user?: CreateUserOptions) {
   const userId = uuid();
+  const name = user?.name || faker.person.fullName();
   const email = (user?.email || faker.internet.email()).toLowerCase();
   const username = email.split("@")[0];
   const password = user?.password || "password";
   const isVerified = user?.isVerified || false;
+  const isOwner = user?.isOwner || false;
   const isBlocked = user?.isBlocked || false;
 
   // manually seeding data due to 'allowSignup' possibly be disabled
   await database
     .insert({
       userId,
+      name,
       email,
       password: hashPassword(password),
       username,
       isVerified,
+      isOwner,
       isBlocked,
     })
     .into("users");
