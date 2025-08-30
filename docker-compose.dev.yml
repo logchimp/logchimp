@@ -36,16 +36,20 @@ services:
         DOCKER_BUILDKIT: 1
     volumes:
       - .:/app
+      - pnpm_store:/root/.local/share/pnpm
       - /app/node_modules
       - /app/packages/server/node_modules
       - /app/packages/types/node_modules
       - /app/packages/server/dist
       - /app/packages/types/dist
+      - lc_ts_types:/app/packages/types/dist
     depends_on:
+      - types-watcher
       - db
     networks:
       - dev-network
     environment:
+      PNPM_HOME: /root/.local/share/pnpm
       PORT: 8000
       # Database
       LOGCHIMP_DB_HOST: db
@@ -63,6 +67,33 @@ services:
     ports:
       - "8000:8000"
 
+  # Types package auto-rebuild service
+  types-watcher:
+    image: node:22-alpine
+    volumes:
+      - .:/app
+      - pnpm_store:/root/.local/share/pnpm
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/types/node_modules
+      - lc_ts_types:/app/packages/types/dist
+    working_dir: /app
+    command: sh ./packages/types/types-watcher.sh
+    environment:
+      NODE_ENV: development
+      PNPM_HOME: /root/.local/share/pnpm
+      npm_config_store: /root/.local/share/pnpm/store
+    networks:
+      - dev-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "test", "-f", "packages/types/dist/index.js" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    stop_signal: SIGTERM
+    stop_grace_period: 10s
+
   # theme:
   #   image: logchimp-theme:0.2.0
   #   environment:
@@ -77,3 +108,7 @@ networks:
 
 volumes:
   pg_data:
+  lc_ts_types:
+    name: "logchimp-dev-ts-types-compiled"
+  pnpm_store:
+    name: "logchimp-dev-pnpm-store"
