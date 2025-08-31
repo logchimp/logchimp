@@ -27,7 +27,7 @@ describe("GET /api/v1/roles", () => {
     const { user } = await createUser();
 
     await createRoleWithPermissions(user.userId, ["role:read"], {
-      roleName: "CreateRole",
+      roleName: "Spectator",
     });
 
     const response = await supertest(app)
