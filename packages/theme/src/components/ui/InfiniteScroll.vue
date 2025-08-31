@@ -1,6 +1,6 @@
 <template>
   <div data-test="infinite-scroll" :data-state="state">
-    <template v-if="loading">
+    <template v-if="state === 'LOADING'">
       <slot name="spinner">
         <div :class="$style['loader-container']">
           <loader />
@@ -13,7 +13,7 @@
     <template v-if="noResults">
       <slot name="no-results" />
     </template>
-    <template v-if="error">
+    <template v-if="state === 'ERROR'">
       <slot name="error">
         <client-error>
           Something went wrong!
@@ -48,7 +48,7 @@ interface Props {
    * @default LOADING
    */
   state?: InfiniteScrollStateType;
-  onInfinite: () => void;
+  onInfinite: () => Promise<void> | void;
   canLoadMore?: boolean;
 }
 
@@ -60,38 +60,31 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isFirstLoad = ref(true);
 
-const loading = computed<boolean>(() => props.state === "LOADING");
 const noMoreResults = computed<boolean>(
   () => props.state === "COMPLETED" && !isFirstLoad.value,
 );
 const noResults = computed<boolean>(
   () => props.state === "COMPLETED" && isFirstLoad.value,
 );
-const error = computed<boolean>(() => props.state === "ERROR");
 
 watch(
   () => props.state,
   (newValue) => {
-    if (newValue === "LOADED") {
+    if (newValue === "LOADED" || newValue === "COMPLETED") {
       isFirstLoad.value = false;
     }
   },
 );
 
 function executeInfiniteScroll() {
-  if (
-    typeof props.onInfinite === "function" &&
-    props.state !== "COMPLETED" &&
-    props.state !== "ERROR"
-  ) {
-    props.onInfinite();
-  }
+  if (props.state === "COMPLETED" || props.state === "ERROR") return;
+  props.onInfinite();
 }
 
 useInfiniteScroll(window, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
-  canLoadMore: () => !noMoreResults.value || !error.value,
+  canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
 });
 </script>
 
