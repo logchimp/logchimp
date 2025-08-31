@@ -1,4 +1,3 @@
-// middlewares/domainBlacklist.ts
 import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
@@ -38,22 +37,17 @@ export const parseBlacklistedDomains = (rawDomains: string) => {
 export class BlacklistManager {
   private cachedBlacklist: Set<string> | null = null;
 
-  constructor(
-    private rawDomains: string = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "",
-  ) {
-    this.cachedBlacklist = null;
-  }
-
   getBlacklistedDomains(): Set<string> {
     if (this.cachedBlacklist) {
       return this.cachedBlacklist;
     }
 
-    const parsed = parseBlacklistedDomains(this.rawDomains);
-    this.cachedBlacklist = parsed;
-    return parsed;
-  }
+    this.cachedBlacklist = parseBlacklistedDomains(
+      process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "",
+    );
 
+    return this.cachedBlacklist;
+  }
   reset(): void {
     this.cachedBlacklist = null;
   }
