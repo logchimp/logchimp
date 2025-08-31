@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
@@ -7,7 +7,6 @@ import { createUser } from "../../utils/seed/user";
 import { createBoard } from "../../utils/seed/board";
 import { createRoadmap } from "../../utils/seed/roadmap";
 import { createPost } from "../../utils/seed/post";
-import { cleanDb } from "../../utils/db";
 
 // Create new posts
 describe("POST /api/v1/posts", () => {
@@ -243,9 +242,6 @@ describe("POST /api/v1/posts", () => {
 });
 
 describe("POST /api/v1/posts/slug", () => {
-  afterEach(async () => {
-    await cleanDb();
-  });
 
   it('should throw error "POST_NOT_FOUND"', async () => {
     const response = await supertest(app)
@@ -253,9 +249,10 @@ describe("POST /api/v1/posts/slug", () => {
       .send(
         {
           slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
-          userId: ""
-        }
-      );
+          // only slug is required to get a post
+        userId: ""
+      }
+    );
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
@@ -282,9 +279,10 @@ describe("POST /api/v1/posts/slug", () => {
       .send(
         {
           slug: post.slug,
-          userId: ""
-        }
-      );
+          // only slug is required to get a post
+        userId: ""
+      }
+    );
 
     const body = response.body.post;
 
