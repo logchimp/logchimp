@@ -5,6 +5,7 @@ import {
   domainBlacklist,
   parseBlacklistedDomains,
   isValidDomain,
+  blacklistManager,
 } from "./../../src/middlewares/domainBlacklist";
 
 function createApp() {
@@ -24,6 +25,7 @@ describe("domainBlacklist", () => {
 
   beforeEach(() => {
     app = createApp();
+    blacklistManager.reset();
   });
 
   it("should block blacklisted domains", async () => {
