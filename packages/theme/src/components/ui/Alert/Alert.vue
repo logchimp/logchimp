@@ -11,9 +11,7 @@
   >
     <div :class="$style.header">
       <div :class="$style.icon">
-        <component :is="props.icon" v-if="props.icon" class="alert-icon"/>
-
-        <template v-else>
+        <slot name="icon">
         <success-icon
           v-if="type === 'success'"
           class="alert-icon alert-icon-success"
@@ -29,7 +27,8 @@
           class="alert-icon alert-icon-error"
           aria-hidden="true"
         />
-        </template>
+    
+        </slot>
       </div>
 
       <h6 :class="$style.title">
