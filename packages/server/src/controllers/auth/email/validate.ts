@@ -29,13 +29,6 @@ export async function validate(
   const { isVerified } = req.user;
   const { email } = req.ctx.token;
 
-  if (isDomainBlacklisted(email)) {
-    return res.status(403).send({
-      message: "Email domain is not allowed.",
-      code: "EMAIL_DOMAIN_BLACKLISTED",
-    });
-  }
-
   if (isVerified) {
     return res.status(409).send({
       message: error.api.emailVerify.emailAlreadyVerified,
