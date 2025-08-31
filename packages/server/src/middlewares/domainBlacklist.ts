@@ -53,6 +53,8 @@ export class BlacklistManager {
   }
 }
 
+export const blacklistManager = new BlacklistManager();
+
 export function domainBlacklist(
   req: Request,
   res: Response,
@@ -83,8 +85,6 @@ export function domainBlacklist(
       code: "INVALID_EMAIL_DOMAIN",
     });
   }
-
-  const blacklistManager = new BlacklistManager();
 
   if (blacklistManager.getBlacklistedDomains().has(domain)) {
     return res.status(403).send({
