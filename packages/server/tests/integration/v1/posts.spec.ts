@@ -248,8 +248,6 @@ describe("POST /api/v1/posts/slug", () => {
   });
 
   it('should throw error "POST_NOT_FOUND"', async () => {
-    await cleanDb();
-
     const response = await supertest(app)
       .post("/api/v1/posts/slug")
       .send(
