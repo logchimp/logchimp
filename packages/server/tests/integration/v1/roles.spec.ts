@@ -1,10 +1,9 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
-import { v4 as uuid } from "uuid";
-
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
@@ -27,40 +26,8 @@ describe("GET /api/v1/roles", () => {
 
     const { user } = await createUser();
 
-    const roleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: roleId,
-          name: "CreateRole",
-        })
-        .into("roles");
-
-      const readRolePerms = await trx
-        .select("id")
-        .from("permissions")
-        .where({
-          type: "role",
-          action: "read",
-        })
-        .first();
-
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: roleId,
-          permission_id: readRolePerms.id,
-        })
-        .into("permissions_roles");
-
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: roleId,
-          user_id: user.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(user.userId, ["role:read"], {
+      roleName: "Spectator",
     });
 
     const response = await supertest(app)
