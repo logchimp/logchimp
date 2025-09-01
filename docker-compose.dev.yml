@@ -42,7 +42,8 @@ services:
       - /app/packages/server/dist
       - /app/packages/types/dist
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - dev-network
     environment:
