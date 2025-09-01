@@ -1,24 +1,186 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
-import { faker } from "@faker-js/faker";
+import type { IBoardDetail } from "@logchimp/types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
-import { cleanDb } from "../../utils/db";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
-// Get all boards
 describe("GET /api/v1/boards", () => {
-  it("should get 0 boards", async () => {
-    await cleanDb();
+  beforeAll(async () => {
+    const requiredBoards = 15;
+    const existingBoardsCountResult = await database("boards")
+      .count({ count: "*" })
+      .first();
+    const existingBoardsCount = parseInt(
+      existingBoardsCountResult?.count?.toString() || "0",
+      10,
+    );
 
+    if (existingBoardsCount < requiredBoards) {
+      const boards: unknown[] = [];
+      const trx = await database.transaction();
+
+      for (let i = 0; i < requiredBoards; i++) {
+        const board = await generateBoards(
+          {
+            display: true,
+          },
+          true,
+        );
+        boards.push(board);
+      }
+
+      await database.batchInsert("boards", boards).transacting(trx);
+      await trx.commit();
+    }
+  });
+
+  it("should get an Array of boards", async () => {
     const response = await supertest(app).get("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.boards).toHaveLength(0);
+    expect(response.body.boards).toBeInstanceOf(Array);
+  });
+
+  it("should get filtered boards in default filter values", async () => {
+    const filterQuery = {
+      // default page num is 0
+      // page: 0,
+      // default and max limit is 10
+      // limit: 10,
+      // default 'ASC' order
+      // created: "ASC",
+    };
+
+    const response = await supertest(app)
+      .get("/api/v1/boards")
+      .query(filterQuery);
+
+    const responseBoards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(responseBoards).toHaveLength(10);
+
+    const boardCreationDates = responseBoards.map(
+      (board: IBoardDetail) => new Date(board.createdAt),
+    );
+
+    for (let i = 0; i < boardCreationDates.length - 1; i++) {
+      const curr = boardCreationDates[i].getTime();
+      const next = boardCreationDates[i + 1].getTime();
+      expect(curr).to.be.at.most(next);
+    }
+  });
+
+  it("should get filtered boards in 'DESC' order", async () => {
+    const response = await supertest(app).get("/api/v1/boards").query({
+      created: "DESC",
+    });
+
+    const responseBoards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(responseBoards).toHaveLength(10);
+
+    const boardCreationDates = responseBoards.map(
+      (board: IBoardDetail) => new Date(board.createdAt),
+    );
+
+    for (let i = 0; i < boardCreationDates.length - 1; i++) {
+      const curr = boardCreationDates[i].getTime();
+      const next = boardCreationDates[i + 1].getTime();
+      expect(curr).to.be.at.least(next);
+    }
+  });
+
+  it("should get 2 filtered boards in 'DESC' order", async () => {
+    const response = await supertest(app).get("/api/v1/boards").query({
+      limit: 2,
+      created: "DESC",
+    });
+
+    const responseBoards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(responseBoards).toHaveLength(2);
+
+    const boardCreationDates = responseBoards.map(
+      (board: IBoardDetail) => new Date(board.createdAt),
+    );
+
+    for (let i = 0; i < boardCreationDates.length - 1; i++) {
+      const curr = boardCreationDates[i].getTime();
+      const next = boardCreationDates[i + 1].getTime();
+      expect(curr).to.be.at.least(next);
+    }
+  });
+
+  it("should get 10 filtered boards in 'ACS' order", async () => {
+    const response = await supertest(app).get("/api/v1/boards").query({
+      limit: 15,
+      created: "ACS",
+    });
+
+    const responseBoards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(responseBoards).toHaveLength(10);
+
+    const boardCreationDates = responseBoards.map(
+      (board: IBoardDetail) => new Date(board.createdAt),
+    );
+
+    for (let i = 0; i < boardCreationDates.length - 1; i++) {
+      const curr = boardCreationDates[i].getTime();
+      const next = boardCreationDates[i + 1].getTime();
+      expect(curr).to.be.at.most(next);
+    }
+  });
+
+  it("should get 5 filtered boards, in page 3, 'DESC' order", async () => {
+    const response = await supertest(app).get("/api/v1/boards").query({
+      page: 2,
+      limit: 5,
+      created: "DESC",
+    });
+
+    const responseBoards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(responseBoards).toHaveLength(5);
+
+    const boardCreationDates = responseBoards.map(
+      (board: IBoardDetail) => new Date(board.createdAt),
+    );
+
+    for (let i = 0; i < boardCreationDates.length - 1; i++) {
+      const curr = boardCreationDates[i].getTime();
+      const next = boardCreationDates[i + 1].getTime();
+      expect(curr).to.be.at.least(next);
+    }
+  });
+
+  it("should get an empty boards Array", async () => {
+    const response = await supertest(app).get("/api/v1/boards").query({
+      page: 50,
+      limit: 10,
+      created: "DESC",
+    });
+
+    const responseBoards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(responseBoards).toHaveLength(0);
   });
 });
 
@@ -48,7 +210,6 @@ describe("GET /boards/:url", () => {
   });
 });
 
-// Search board by name
 describe("GET /boards/search/:name", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/boards/search/name");
