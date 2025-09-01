@@ -30,79 +30,7 @@
         :key="board.boardId"
         class="table-row"
       >
-        <div class="flex justify-center w-14">
-          <div
-            class="w-3 h-3 rounded-full"
-            :style="{
-              backgroundColor: `#${board.color}`
-            }"
-          />
-        </div>
-        <div class="table-data boards-table-name">
-          {{ board.name }}
-        </div>
-        <div class="table-data boards-table-posts">
-          {{ board.post_count }}
-        </div>
-        <div class="table-icon-group boards-table-icons">
-          <router-link
-            :to="`/boards/${board.url}`"
-            class="table-data table-data-icon boards-table-icon-link"
-          >
-            <link-icon />
-          </router-link>
-          <div class="table-data table-data-icon">
-            <eye-icon v-if="board.display" />
-            <eye-off-icon v-else />
-          </div>
-          <dropdown-wrapper>
-            <template #toggle>
-              <div
-                class="
-                  table-data table-data-icon
-                  boards-table-icon-settings
-                  dropdown-menu-icon
-                "
-              >
-                <more-icon />
-              </div>
-            </template>
-            <template #default="dropdown">
-              <dropdown v-if="dropdown.active" class="sw">
-                <dropdown-item
-                  @click="
-                    router.push(`/dashboard/boards/${board.url}/settings`)
-                  "
-                >
-                  <template #icon>
-                    <settings-icon />
-                  </template>
-                  Settings
-                </dropdown-item>
-                <dropdown-item
-                  v-if="settings.developer_mode"
-                  @click="useCopyText(board.boardId)"
-                >
-                  <template #icon>
-                    <copy-icon />
-                  </template>
-                  Copy ID
-                </dropdown-item>
-                <dropdown-spacer />
-                <dropdown-item
-                  :disabled="deleteBoardPermissionDisabled"
-                  class="color-danger"
-                  @click="deleteBoardHandler(board.boardId, index)"
-                >
-                  <template #icon>
-                    <delete-icon />
-                  </template>
-                  Delete
-                </dropdown-item>
-              </dropdown>
-            </template>
-          </dropdown-wrapper>
-        </div>
+        <DashboardBoardsTabularItem :board="board" :index="index" />
       </div>
 
       <infinite-scroll :on-infinite="getBoards" :state="state" />
@@ -111,30 +39,14 @@
 </template>
 
 <script setup lang="ts">
-// packages
 import { computed, ref } from "vue";
-import {
-  Link as LinkIcon,
-  Eye as EyeIcon,
-  EyeOff as EyeOffIcon,
-  MoreHorizontal as MoreIcon,
-  Clipboard as CopyIcon,
-  Trash2 as DeleteIcon,
-  Settings as SettingsIcon,
-} from "lucide-vue";
 import { useHead } from "@vueuse/head";
 import type { IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import { useSettingStore } from "../../../../store/settings";
 import { useUserStore } from "../../../../store/user";
-import {
-  getAllBoards,
-  createBoard,
-  deleteBoard,
-} from "../../../modules/boards";
-import { useCopyText } from "../../../../hooks";
+import { getAllBoards, createBoard } from "../../../modules/boards";
 
 // components
 import InfiniteScroll, {
@@ -142,15 +54,11 @@ import InfiniteScroll, {
 } from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import Table from "../../../../components/ui/Table.vue";
-import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../../../components/ui/dropdown/DropdownItem.vue";
-import DropdownSpacer from "../../../../components/ui/dropdown/DropdownSpacer.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import DashboardBoardsTabularItem from "../../../components/dashboard/boards/TabularItem.vue";
 
-const { settings } = useSettingStore();
 const { permissions } = useUserStore();
 
 const createBoardButtonLoading = ref(false);
@@ -160,11 +68,6 @@ const state = ref<InfiniteScrollStateType>();
 
 const createBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:create");
-  return !checkPermission;
-});
-
-const deleteBoardPermissionDisabled = computed(() => {
-  const checkPermission = permissions.includes("board:destroy");
   return !checkPermission;
 });
 
@@ -205,19 +108,6 @@ async function getBoards() {
   } catch (error) {
     console.error(error);
     state.value = "ERROR";
-  }
-}
-
-async function deleteBoardHandler(id: string, index: number) {
-  try {
-    const response = await deleteBoard(id);
-
-    if (response.status === 204) {
-      boards.value.splice(index, 1);
-      console.log(`[Dashboard] Delete board (${id})`);
-    }
-  } catch (error) {
-    console.error(error);
   }
 }
 
