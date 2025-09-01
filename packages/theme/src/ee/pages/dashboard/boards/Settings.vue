@@ -88,6 +88,7 @@ import {
   checkBoardName,
 } from "../../../modules/boards";
 import { useUserStore } from "../../../../store/user";
+import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -112,6 +113,7 @@ const urlAvailableError = ref(false);
 const saveButtonLoading = ref(false);
 
 const { permissions } = useUserStore();
+const dashboardBoards = useDashboardBoards();
 
 const createBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:update");
@@ -159,7 +161,7 @@ async function validateBoardUrl(event: KeyboardEvent) {
 async function update() {
   saveButtonLoading.value = true;
   try {
-    await updateBoard({
+    const response = await updateBoard({
       boardId: board.boardId,
       color: board.color,
       name: board.name,
@@ -168,6 +170,7 @@ async function update() {
       display: board.display,
     });
 
+    dashboardBoards.updateBoard(response.data.board);
     router.push("/dashboard/boards");
   } catch (error) {
     console.error(error);

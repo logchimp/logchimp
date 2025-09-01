@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { onMounted, inject, computed } from "vue";
 
-import { useDashboardRoles } from "../../../../../store/dashboard/roles";
+import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useDashboardUsers } from "../../../../../store/dashboard/users";
 import DropdownV2CheckboxItem from "../../../../../components/ui/DropdownV2/CheckboxItem.vue";
 import { userIdKey } from "./options";

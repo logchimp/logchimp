@@ -166,6 +166,7 @@ import type { IRole, PermissionAction, TPermission } from "@logchimp/types";
 import { router } from "../../../../../router";
 import { useUserStore } from "../../../../../store/user";
 import { getRole, updateRole } from "../../../../modules/roles";
+import { useDashboardRoles } from "../../../../store/dashboard/roles";
 
 // components
 import Button from "../../../../../components/ui/Button.vue";
@@ -178,6 +179,7 @@ import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbI
 import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.vue";
 
 const { permissions: userPermissions } = useUserStore();
+const dashboardRoles = useDashboardRoles();
 
 const title = ref("");
 const role = ref<IRole>({
@@ -264,6 +266,7 @@ async function updateRoleHandler() {
     });
 
     if (response.status === 200) {
+      dashboardRoles.updateRole(response.data.role);
       router.push("/dashboard/settings/roles");
     }
   } catch (err) {

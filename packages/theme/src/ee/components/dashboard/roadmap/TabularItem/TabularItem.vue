@@ -11,51 +11,52 @@
         <eye-icon v-if="roadmap.display" />
         <eye-off-icon v-else />
       </div>
-      <dropdown-wrapper>
-        <template #toggle>
-          <div
+
+      <DropdownV2>
+        <template #trigger>
+          <DropdownMenuTrigger
             class="table-data table-data-icon boards-table-icon-settings dropdown-menu-icon"
           >
-            <more-icon />
-          </div>
+            <more-icon aria-hidden="true" class="stroke-neutral-700 size-5" />
+            <span class="sr-only">More options</span>
+          </DropdownMenuTrigger>
         </template>
-        <template #default="dropdown">
-          <dropdown v-if="dropdown.active">
-            <dropdown-item
-              @click="
-								router.push(
-									`/dashboard/roadmaps/${roadmap.url}/settings`
-								)
-							"
-            >
-              <template #icon>
-                <settings-icon />
-              </template>
-              Settings
-            </dropdown-item>
-            <dropdown-item
-              v-if="settings.developer_mode"
-              @click="useCopyText(roadmap.id)"
-            >
-              <template #icon>
-                <copy-icon />
-              </template>
-              Copy ID
-            </dropdown-item>
-            <dropdown-spacer />
-            <dropdown-item
-              :disabled="deleteRoadmapPermissionDisabled"
-              class="color-danger"
-              @click="deleteRoadmapHandler(roadmap.id)"
-            >
-              <template #icon>
-                <delete-icon />
-              </template>
-              Delete
-            </dropdown-item>
-          </dropdown>
-        </template>
-      </dropdown-wrapper>
+
+        <DropdownV2Content
+          align="end"
+          side="bottom"
+          :loop="true"
+        >
+          <DropdownItem
+            @click="router.push(`/dashboard/roadmaps/${roadmap.url}/settings`)"
+          >
+            <template #icon>
+              <settings-icon aria-hidden="true" />
+            </template>
+            Settings
+          </DropdownItem>
+          <DropdownItem
+            v-if="settings.developer_mode"
+            @click="useCopyText(roadmap.id)"
+          >
+            <template #icon>
+              <copy-icon aria-hidden="true" />
+            </template>
+            Copy ID
+          </DropdownItem>
+          <DropdownSeparator />
+          <DropdownItem
+            :disabled="deleteRoadmapPermissionDisabled"
+            variant="danger"
+            @click="deleteRoadmapHandler(roadmap.id)"
+          >
+            <template #icon>
+              <delete-icon aria-hidden="true" />
+            </template>
+            Delete
+          </DropdownItem>
+        </DropdownV2Content>
+      </DropdownV2>
     </div>
   </div>
 </template>
@@ -72,21 +73,24 @@ import {
   Trash2 as DeleteIcon,
 } from "lucide-vue";
 import type { IRoadmapPrivate } from "@logchimp/types";
+import { DropdownMenuTrigger } from "reka-ui";
 
 import { router } from "../../../../../router";
 import { useCopyText } from "../../../../../hooks";
 import { useUserStore } from "../../../../../store/user";
 import { deleteRoadmap } from "../../../../modules/roadmaps";
 import { useSettingStore } from "../../../../../store/settings";
+import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 
 // components
-import Dropdown from "../../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownWrapper from "../../../../../components/ui/dropdown/DropdownWrapper.vue";
-import DropdownItem from "../../../../../components/ui/dropdown/DropdownItem.vue";
-import DropdownSpacer from "../../../../../components/ui/dropdown/DropdownSpacer.vue";
+import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
+import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
+import DropdownSeparator from "../../../../../components/ui/DropdownV2/DropdownSeparator.vue";
+import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 
 const { settings } = useSettingStore();
 const { permissions } = useUserStore();
+const dashboardRoadmaps = useDashboardRoadmaps();
 
 interface Props {
   roadmap: IRoadmapPrivate;
@@ -101,12 +105,10 @@ const deleteRoadmapPermissionDisabled = computed(() => {
 
 async function deleteRoadmapHandler(id: string) {
   try {
-    const response = await deleteRoadmap(id);
+    const response = await deleteRoadmap({ id });
 
     if (response.status === 204) {
-      // TODO: make it accessible, or update cache
-      // getRoadmaps();
-      console.log(`[Dashboard] Delete roadmap (${id})`);
+      dashboardRoadmaps.removeRoadmap(id);
     }
   } catch (error) {
     console.error(error);

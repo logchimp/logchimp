@@ -36,6 +36,8 @@ export interface ISearchRoadmapResponseBody {
   roadmaps: IRoadmapPrivate[];
 }
 
+export type TCreateRoadmapResponseBody = IGetRoadmapByUrlResponseBody;
+
 export interface IUpdateRoadmapRequestBody {
   name: string;
   url: string;
@@ -48,3 +50,18 @@ export type TUpdateRoadmapResponseBody = IGetRoadmapByUrlResponseBody;
 export interface IDeleteRoadmapRequestBody {
   id: string;
 }
+
+export type TDeleteRoadmapResponseBody = string;
+
+export interface ISortRoadmapRequestBody {
+  from: {
+    id: string;
+    index: number;
+  };
+  to: {
+    id: string;
+    index: number;
+  };
+}
+
+export type TSortRoadmapResponseBody = "OK";

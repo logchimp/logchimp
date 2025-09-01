@@ -41,14 +41,3 @@ export interface IApiErrorResponse {
 export interface IApiValidationErrorResponse {
   errors: IApiErrorResponse[];
 }
-
-export interface DraggableSortFromToType {
-  from: {
-    id: string;
-    index: string;
-  };
-  to: {
-    id: string;
-    index: string;
-  };
-}
