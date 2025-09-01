@@ -1,7 +1,7 @@
 <template>
   <!-- Show roadmaps grid only when we have roadmaps -->
   <div
-    v-if="roadmaps.length > 0"
+    v-if="roadmaps.length > 0" ref="roadmapElement"
     :class="[
       'overflow-x-auto h-[500px]',
       'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]'
@@ -13,41 +13,18 @@
       :roadmap="roadmap"
     />
   </div>
-
-  <!-- Show infinite scroll component with proper conditions -->
-  <infinite-scroll
-    :on-infinite="getRoadmaps"
-    :state="state"
-    :has-items="roadmaps.length > 0"
-  >
-    <template #no-results>
-      <!-- Only show "no roadmaps" when we truly have no data -->
-      <div v-if="roadmaps.length === 0 && state === 'COMPLETED'">
-        <p>There are no roadmaps.</p>
-      </div>
-    </template>
-
-    <!-- Optional: Add loading indicator -->
-    <template #loading>
-      <div v-if="state === 'LOADING'">
-        <p>Loading roadmaps...</p>
-      </div>
-    </template>
-  </infinite-scroll>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, useTemplateRef, onMounted } from "vue";
 import { useHead } from "@vueuse/head";
+import { useInfiniteScroll } from "@vueuse/core";
 
 // modules
 import { getAllRoadmaps } from "../modules/roadmaps";
 import { useSettingStore } from "../store/settings";
 
 // components
-import InfiniteScroll, {
-  type InfiniteScrollStateType,
-} from "../components/ui/InfiniteScroll.vue";
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
@@ -55,41 +32,42 @@ import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
+const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
 const roadmaps = ref<IRoadmap[]>([]);
-const currentCursor = ref<string | undefined>();
-const hasNextPage = ref<boolean>(false);
-const state = ref<InfiniteScrollStateType>();
+let roadmapList: IRoadmap[];
+const roadmapIndex = ref<number>(0);
 
 async function getRoadmaps() {
-  if (state.value === "COMPLETED") return;
-
-  state.value = "LOADING";
-
   try {
-    const response = await getAllRoadmaps({
-      after: currentCursor.value,
-    });
+    const response = await getAllRoadmaps();
 
     const paginatedData: IPaginatedRoadmapsResponse = response.data;
-    const newRoadmaps = paginatedData.results;
+    roadmapList = paginatedData.results;
 
-    if (newRoadmaps.length > 0) {
-      roadmaps.value.push(...newRoadmaps);
-
-      // Use backend-provided cursor
-      currentCursor.value = paginatedData.page_info.end_cursor || undefined;
-      hasNextPage.value = paginatedData.page_info.has_next_page;
-
-      state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
-    } else {
-      state.value = "COMPLETED";
-      hasNextPage.value = false;
+    if (roadmapList.length > 0) {
+      // Initializing the only 3 roadmaps
+      for (; roadmapIndex.value < 3; ) {
+        roadmaps.value.push(roadmapList[roadmapIndex.value++]);
+      }
     }
   } catch (err) {
     console.error("Error fetching roadmaps:", err);
-    state.value = "ERROR";
   }
 }
+
+useInfiniteScroll(
+  roadmapElement,
+  async () => {
+    roadmaps.value.push(roadmapList[roadmapIndex.value++]);
+  },
+  {
+    direction: "right",
+    canLoadMore: () => {
+      if (roadmapIndex.value > roadmapList.length) return false;
+      return true;
+    },
+  },
+);
 
 useHead({
   title: "Roadmaps",
@@ -99,6 +77,10 @@ useHead({
       content: () => `Roadmaps • ${siteSettings.title}`,
     },
   ],
+});
+
+onMounted(() => {
+  getRoadmaps();
 });
 
 defineOptions({
