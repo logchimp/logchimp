@@ -35,7 +35,7 @@
       <dropdown-item
         :disabled="deleteBoardPermissionDisabled"
         variant="danger"
-        @click="deleteBoardHandler(board.boardId, index)"
+        @click="deleteBoardHandler(board.boardId)"
       >
         <template #icon>
           <delete-icon aria-hidden="true" />
@@ -67,30 +67,29 @@ import DropdownV2 from "../../../../components/ui/DropdownV2/Dropdown.vue";
 import DropdownSeparator from "../../../../components/ui/DropdownV2/DropdownSeparator.vue";
 import DropdownV2Content from "../../../../components/ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../../../../components/ui/DropdownV2/DropdownItem.vue";
+import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 const { settings } = useSettingStore();
 const { permissions } = useUserStore();
+const dashboardBoards = useDashboardBoards();
 
 interface Props {
   board: IBoardPrivate;
-  index: number;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const deleteBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:destroy");
   return !checkPermission;
 });
 
-async function deleteBoardHandler(id: string, index: number) {
+async function deleteBoardHandler(id: string) {
   try {
     const response = await deleteBoard(id);
 
     if (response.status === 204) {
-      // TODO: fix it
-      props.boards.value.splice(index, 1);
-      console.log(`[Dashboard] Delete board (${id})`);
+      dashboardBoards.removeBoard(id);
     }
   } catch (error) {
     console.error(error);

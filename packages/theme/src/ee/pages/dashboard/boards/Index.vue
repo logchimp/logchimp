@@ -26,14 +26,14 @@
 			</template>
 
       <div
-        v-for="(board, index) in boards"
+        v-for="(board, index) in dashboardBoards.boards"
         :key="board.boardId"
         class="table-row"
       >
         <DashboardBoardsTabularItem :board="board" :index="index" />
       </div>
 
-      <infinite-scroll :on-infinite="getBoards" :state="state" />
+      <infinite-scroll :on-infinite="dashboardBoards.fetchBoards" :state="dashboardBoards.state" />
 		</Table>
 	</div>
 </template>
@@ -41,30 +41,26 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
-import { getAllBoards, createBoard } from "../../../modules/boards";
+import { createBoard } from "../../../modules/boards";
 
 // components
-import InfiniteScroll, {
-  type InfiniteScrollStateType,
-} from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import Table from "../../../../components/ui/Table.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardBoardsTabularItem from "../../../components/dashboard/boards/TabularItem.vue";
+import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 const { permissions } = useUserStore();
+const dashboardBoards = useDashboardBoards();
 
 const createBoardButtonLoading = ref(false);
-const boards = ref<IBoardPrivate[]>([]);
-const page = ref<number>(1);
-const state = ref<InfiniteScrollStateType>();
 
 const createBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:create");
@@ -77,8 +73,7 @@ async function createBoardHandler() {
   try {
     const response = await createBoard({});
 
-    console.log("response");
-    console.log(response.data);
+    dashboardBoards.appendBoard(response.data.board);
 
     const url = response.data.board.url;
     router.push(`/dashboard/boards/${url}/settings`);
@@ -86,28 +81,6 @@ async function createBoardHandler() {
     console.error(err);
   } finally {
     createBoardButtonLoading.value = false;
-  }
-}
-
-async function getBoards() {
-  state.value = "LOADING";
-
-  try {
-    const response = await getAllBoards({
-      page: page.value.toString(),
-      created: "DESC",
-    });
-
-    if (response.data.boards.length) {
-      boards.value.push(...response.data.boards);
-      page.value += 1;
-      state.value = "LOADED";
-    } else {
-      state.value = "COMPLETED";
-    }
-  } catch (error) {
-    console.error(error);
-    state.value = "ERROR";
   }
 }
 
