@@ -66,6 +66,7 @@ import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 import { createRoadmap, sortRoadmap } from "../../../modules/roadmaps";
+import type { VueDraggableEvent } from "../../../lib/vuedraggable/types";
 
 // components
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
@@ -82,11 +83,11 @@ const createRoadmapButtonLoading = ref(false);
 const sort = ref<ISortRoadmapRequestBody>({
   from: {
     id: "",
-    index: "",
+    index: 0,
   },
   to: {
     id: "",
-    index: "",
+    index: 0,
   },
 });
 const drag = ref(false);
@@ -112,20 +113,21 @@ async function createRoadmapHandler() {
   }
 }
 
-function moveItem(event: unknown) {
+function moveItem(
+  event: VueDraggableEvent<
+    ISortRoadmapRequestBody["from"],
+    ISortRoadmapRequestBody["to"]
+  >,
+) {
   // current
   sort.value.to = {
-    // @ts-ignore
     id: event.draggedContext.element.id,
-    // @ts-ignore
     index: event.draggedContext.futureIndex + 1,
   };
 
   // replaced with
   sort.value.from = {
-    // @ts-ignore
     id: event.relatedContext.element.id,
-    // @ts-ignore
     index: event.draggedContext.index + 1,
   };
 }
