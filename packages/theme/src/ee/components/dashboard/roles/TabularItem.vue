@@ -22,8 +22,7 @@
         :loop="true"
       >
         <DropdownItem
-          v-if="settings.developer_mode"
-          @click="router.push(`/dashboard/roadmaps/${role.id}/settings`)"
+          @click="router.push(`/dashboard/settings/roles/${role.id}/settings`)"
         >
           <template #icon>
             <settings-icon aria-hidden="true" />
