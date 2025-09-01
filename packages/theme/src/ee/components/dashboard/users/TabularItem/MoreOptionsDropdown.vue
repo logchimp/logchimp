@@ -8,7 +8,7 @@
           'dropdown-menu-icon',
         ]"
       >
-        <MoreHorizontalIcon aria-hidden="true" class="stroke-neutral-700 size-5"/>
+        <MoreHorizontalIcon aria-hidden="true" class="stroke-neutral-700 size-5" />
         <span class="sr-only">More options</span>
       </DropdownMenuTrigger>
     </template>

@@ -2,8 +2,8 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { IRole } from "@logchimp/types";
 
-import { Roles } from "../../ee/modules/roles";
-import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
+import { Roles } from "../../modules/roles";
+import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
 
 const roleServices = new Roles();
 
@@ -30,6 +30,24 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
     }
   }
 
+  function appendRole(role: IRole) {
+    roles.value.push(role);
+  }
+
+  function updateRole(role: IRole) {
+    const roleIdx = roles.value.findIndex((item) => item.id === role.id);
+    if (roleIdx === -1) return;
+
+    Object.assign(roles.value[roleIdx], role);
+  }
+
+  function removeRole(roleId: string) {
+    const roleIdx = roles.value.findIndex((item) => item.id === roleId);
+    if (roleIdx === -1) return;
+
+    roles.value.splice(roleIdx, 1);
+  }
+
   return {
     roles,
     state,
@@ -37,5 +55,8 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
     error,
 
     fetchRoles,
+    appendRole,
+    updateRole,
+    removeRole,
   };
 });

@@ -76,6 +76,7 @@ import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { getRoadmapByUrl } from "../../../../modules/roadmaps";
 import { updateRoadmap } from "../../../modules/roadmaps";
+import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -88,6 +89,7 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
 const { permissions } = useUserStore();
+const dashboardRoadmaps = useDashboardRoadmaps();
 
 const title = ref<string>("");
 const roadmap = reactive({
@@ -120,6 +122,7 @@ async function updateHandler() {
     });
 
     if (response.status === 200) {
+      dashboardRoadmaps.updateRoadmap(response.data.roadmap);
       router.push("/dashboard/roadmaps");
     }
   } catch (err) {

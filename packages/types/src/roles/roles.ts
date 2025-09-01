@@ -35,7 +35,5 @@ export interface IUpdateRoleResponseBody {
 }
 
 export interface ICreateRoleResponseBody {
-  role: {
-    id: string;
-  };
+  role: IRole;
 }
