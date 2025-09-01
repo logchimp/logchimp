@@ -28,7 +28,7 @@ const style = computed(() => {
 <style lang='sass'>
 .dropdown
 	background-color: var(--color-white)
-	position: absolute
+	position: relative
 	border: 1px solid var(--color-gray-90)
 	border-radius: var(--border-radius-default)
 	padding: 0.375rem 0
