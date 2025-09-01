@@ -58,7 +58,7 @@
 import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType } from "@logchimp/types";
+import type { ISortRoadmapRequestBody } from "@logchimp/types";
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
@@ -79,7 +79,7 @@ const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
 
 const createRoadmapButtonLoading = ref(false);
-const sort = ref<DraggableSortFromToType>({
+const sort = ref<ISortRoadmapRequestBody>({
   from: {
     id: "",
     index: "",

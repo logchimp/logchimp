@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
+import type {
+  IApiErrorResponse,
+  TCreateRoadmapResponseBody,
+  IRoadmapPrivate,
+} from "@logchimp/types";
 
 // database
 import database from "../../../../database";
@@ -10,7 +15,9 @@ import { generateHexColor } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function create(req: Request, res: Response) {
+type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
+
+export async function create(req: Request, res: Response<ResponseBody>) {
   // @ts-ignore
   const permissions = req.user.permissions;
 
@@ -35,7 +42,15 @@ export async function create(req: Request, res: Response) {
         index: roadmapIndex.max + 1,
       })
       .into("roadmaps")
-      .returning("*");
+      .returning<IRoadmapPrivate[]>([
+        "id",
+        "name",
+        "url",
+        "color",
+        "index",
+        "display",
+        "created_at",
+      ]);
 
     const roadmap = createRoadmap[0];
 

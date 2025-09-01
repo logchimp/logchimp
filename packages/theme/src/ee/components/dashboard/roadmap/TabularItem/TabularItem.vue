@@ -105,7 +105,7 @@ const deleteRoadmapPermissionDisabled = computed(() => {
 
 async function deleteRoadmapHandler(id: string) {
   try {
-    const response = await deleteRoadmap(id);
+    const response = await deleteRoadmap({ id });
 
     if (response.status === 204) {
       dashboardRoadmaps.removeRoadmap(id);
