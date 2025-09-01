@@ -116,8 +116,6 @@ describe("CREATE POST /api/v1/posts", () => {
         boardId: board.boardId,
       })
 
-    console.log(response.body)
-
     expect(response.status).toBe(201)
     expect(response.body.code).toBeUndefined()
   })
