@@ -82,10 +82,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  icon: {
-    type: Function,
-    default: null,
-  },
 });
 
 const hasDescription = computed(
