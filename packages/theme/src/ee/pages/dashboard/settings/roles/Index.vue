@@ -42,7 +42,7 @@ import { useHead } from "@vueuse/head";
 import { router } from "../../../../../router";
 import { useUserStore } from "../../../../../store/user";
 import { createRole } from "../../../../modules/roles";
-import { useDashboardRoles } from "../../../../../store/dashboard/roles.ts";
+import { useDashboardRoles } from "../../../../store/dashboard/roles";
 
 // components
 import InfiniteScroll from "../../../../../components/ui/InfiniteScroll.vue";
@@ -67,8 +67,9 @@ async function createRoleHandler() {
   try {
     const response = await createRole();
 
-    const roleId = response.data.role;
-    router.push(`/dashboard/settings/roles/${roleId.id}/settings`);
+    const role = response.data.role;
+    router.push(`/dashboard/settings/roles/${role.id}/settings`);
+    dashboardRoles.appendRole(role);
   } catch (error) {
     console.error(error);
   } finally {
