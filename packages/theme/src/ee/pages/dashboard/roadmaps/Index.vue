@@ -32,7 +32,7 @@
       </div>
       <div class="table-body">
         <draggable
-          :list="roadmaps"
+          :list="dashboardRoadmaps.roadmaps"
           group="roadmap"
           handle=".grip-handler"
 					item-key="roadmap"
@@ -45,7 +45,10 @@
 					</template>
         </draggable>
 
-        <infinite-scroll :on-infinite="getRoadmaps" :state="state" />
+        <infinite-scroll
+          :on-infinite="dashboardRoadmaps.fetchRoadmaps"
+          :state="dashboardRoadmaps.state"
+        />
       </div>
     </div>
   </div>
@@ -55,19 +58,17 @@
 import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
-import type { DraggableSortFromToType, IRoadmapPrivate } from "@logchimp/types";
+import type { DraggableSortFromToType } from "@logchimp/types";
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
-import { getAllRoadmaps } from "../../../../modules/roadmaps";
+import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 import { createRoadmap, sortRoadmap } from "../../../modules/roadmaps";
 
 // components
-import InfiniteScroll, {
-  type InfiniteScrollStateType,
-} from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
@@ -75,10 +76,7 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import DashboardRoadmapTabularItem from "../../../components/dashboard/roadmap/TabularItem/TabularItem.vue";
 
 const { permissions } = useUserStore();
-
-const roadmaps = ref<IRoadmapPrivate[]>([]);
-const currentCursor = ref<string | undefined>();
-const hasNextPage = ref<boolean>(false);
+const dashboardRoadmaps = useDashboardRoadmaps();
 
 const createRoadmapButtonLoading = ref(false);
 const sort = ref<DraggableSortFromToType>({
@@ -92,7 +90,6 @@ const sort = ref<DraggableSortFromToType>({
   },
 });
 const drag = ref(false);
-const state = ref<InfiniteScrollStateType>();
 
 const createRoadmapButtonDisabled = computed(() => {
   const checkPermission = permissions.includes("roadmap:create");
@@ -104,9 +101,10 @@ async function createRoadmapHandler() {
 
   try {
     const response = await createRoadmap();
+    const roadmap = response.data.roadmap;
 
-    const url = response.data.roadmap.url;
-    router.push(`/dashboard/roadmaps/${url}/settings`);
+    dashboardRoadmaps.appendRoadmap(roadmap);
+    router.push(`/dashboard/roadmaps/${roadmap.url}/settings`);
   } catch (err) {
     createRoadmapButtonLoading.value = false;
 
@@ -145,36 +143,6 @@ async function initialiseSort() {
     console.error(err);
   } finally {
     drag.value = false;
-  }
-}
-
-async function getRoadmaps() {
-  if (state.value === "COMPLETED") return;
-
-  state.value = "LOADING";
-
-  try {
-    const response = await getAllRoadmaps({
-      after: currentCursor.value,
-    });
-
-    const results = response.data.results;
-    const pageInfo = response.data.page_info;
-
-    if (results.length > 0) {
-      roadmaps.value.push(...results);
-
-      currentCursor.value = pageInfo.end_cursor || undefined;
-      hasNextPage.value = pageInfo.has_next_page;
-
-      state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
-    } else {
-      state.value = "COMPLETED";
-      hasNextPage.value = false;
-    }
-  } catch (err) {
-    console.error("Error fetching roadmaps:", err);
-    state.value = "ERROR";
   }
 }
 

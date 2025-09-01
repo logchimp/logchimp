@@ -80,6 +80,7 @@ import { useCopyText } from "../../../../../hooks";
 import { useUserStore } from "../../../../../store/user";
 import { deleteRoadmap } from "../../../../modules/roadmaps";
 import { useSettingStore } from "../../../../../store/settings";
+import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 
 // components
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
@@ -89,6 +90,7 @@ import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownC
 
 const { settings } = useSettingStore();
 const { permissions } = useUserStore();
+const dashboardRoadmaps = useDashboardRoadmaps();
 
 interface Props {
   roadmap: IRoadmapPrivate;
@@ -106,9 +108,7 @@ async function deleteRoadmapHandler(id: string) {
     const response = await deleteRoadmap(id);
 
     if (response.status === 204) {
-      // TODO: make it accessible, or update cache
-      // getRoadmaps();
-      console.log(`[Dashboard] Delete roadmap (${id})`);
+      dashboardRoadmaps.removeRoadmap(id);
     }
   } catch (error) {
     console.error(error);
