@@ -16,6 +16,10 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   const currentCursor = ref<string>();
 
   async function fetchRoadmaps() {
+    if (state.value === "LOADING" || state.value === "COMPLETED") {
+      return;
+    }
+
     state.value = "LOADING";
     isLoading.value = true;
     error.value = undefined;
@@ -70,6 +74,30 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     roadmaps.value.splice(roadmapIdx, 1);
   }
 
+  function sortRoadmap(fromIndex: number, toIndex: number) {
+    if (
+      fromIndex === toIndex ||
+      fromIndex < 0 ||
+      toIndex < 0 ||
+      fromIndex >= roadmaps.value.length ||
+      toIndex >= roadmaps.value.length
+    ) {
+      return;
+    }
+
+    const fromRoadmap = roadmaps.value[fromIndex];
+    const toRoadmap = roadmaps.value[toIndex];
+
+    updateRoadmap({
+      ...fromRoadmap,
+      index: toIndex,
+    });
+    updateRoadmap({
+      ...toRoadmap,
+      index: fromIndex,
+    });
+  }
+
   return {
     roadmaps,
     state,
@@ -78,5 +106,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     appendRoadmap,
     updateRoadmap,
     removeRoadmap,
+    sortRoadmap,
   };
 });

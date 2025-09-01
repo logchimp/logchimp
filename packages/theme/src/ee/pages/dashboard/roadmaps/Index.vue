@@ -138,8 +138,7 @@ async function initialiseSort() {
 
     if (response.status === 200) {
       drag.value = false;
-      // TODO: update cache
-      // await getRoadmaps();
+      dashboardRoadmaps.sortRoadmap(sort.value.from.index, sort.value.to.index);
     }
   } catch (err) {
     console.error(err);
