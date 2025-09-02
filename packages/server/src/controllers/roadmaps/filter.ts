@@ -5,14 +5,20 @@ import type {
   IPaginatedRoadmapsResponse,
   IRoadmapPrivate,
 } from "@logchimp/types";
+
+// database
 import database from "../../database";
-import logger from "../../utils/logger";
-import error from "../../errorResponse.json";
-import { getUserFromRequest } from "../../utils/getUserFromRequest";
+
+// middleware
 import {
   computePermissions,
   fetchUserWithRoles,
 } from "../../middlewares/authenticate";
+
+// utils
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
+import { getUserFromRequest } from "../../utils/getUserFromRequest";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
 import type {
   IAuthenticationMiddlewareUser,
