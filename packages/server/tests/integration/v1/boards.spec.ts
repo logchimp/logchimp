@@ -69,6 +69,9 @@ describe("GET /boards/search/:name", () => {
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
+    console.log("response:");
+    console.log(response.body);
+
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
@@ -84,6 +87,9 @@ describe("GET /boards/search/:name", () => {
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    console.log("response:");
+    console.log(response.body);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
@@ -107,6 +113,9 @@ describe("POST /api/v1/boards", () => {
     const response = await supertest(app)
       .post("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    console.log("response:");
+    console.log(response.body);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
