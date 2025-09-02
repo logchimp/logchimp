@@ -57,19 +57,21 @@ export class BlacklistManager {
   }
 }
 
-export const blacklistManager = new BlacklistManager(process.env.LOGCHIMP_BLACKLISTED_DOMAINS);
+export const blacklistManager = new BlacklistManager(
+  process.env.LOGCHIMP_BLACKLISTED_DOMAINS,
+);
 
 export function domainBlacklist(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { email } = req.body;
 
   if (!email || typeof email !== "string") {
     return res.status(400).json({
       message: error.api.authentication.invalidEmail,
-      code: "EMAIL_INVALID"
+      code: "EMAIL_INVALID",
     });
   }
 
@@ -77,7 +79,7 @@ export function domainBlacklist(
   if (parts.length !== 2) {
     return res.status(400).json({
       message: error.api.authentication.invalidEmailFormat,
-      code: "INVALID_EMAIL_FORMAT"
+      code: "INVALID_EMAIL_FORMAT",
     });
   }
 
@@ -86,14 +88,14 @@ export function domainBlacklist(
   if (!isValidDomain(domain)) {
     return res.status(400).json({
       message: error.api.authentication.invalidEmailDomain,
-      code: "INVALID_EMAIL_DOMAIN"
+      code: "INVALID_EMAIL_DOMAIN",
     });
   }
 
   if (blacklistManager.getBlacklistedDomains().has(domain)) {
     return res.status(403).send({
       message: error.api.authentication.emailDomainBlacklisted,
-      code: "EMAIL_DOMAIN_BLACKLISTED"
+      code: "EMAIL_DOMAIN_BLACKLISTED",
     });
   }
 
