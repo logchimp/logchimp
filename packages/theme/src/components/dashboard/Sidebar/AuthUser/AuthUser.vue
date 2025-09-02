@@ -5,7 +5,7 @@
 				:src="avatar"
 				:name="name || username"
 			/>
-			<div class="select-none grid grid-cols-1 gap-0.5">
+			<div class="select-none grid grid-cols-1 gap-0.5 text-left">
 				<p class="truncate font-semibold text-neutral-700 text-sm">
 					{{ name || username }}
 				</p>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Avatar } from "../ui/Avatar";
+import { Avatar } from "../../../ui/Avatar";
 
 interface Props {
   name: string | null;

@@ -85,45 +85,12 @@
     </ul>
 
     <div class="mt-auto relative">
-      <dropdown-wrapper>
-        <template #default="dropdown">
-          <dropdown v-if="dropdown.active" class="dashboard-sidebar-dropdown">
-            <dropdown-item @click="aboutLogChimp">
-              <template #icon>
-                <info-icon />
-              </template>
-              About LogChimp
-            </dropdown-item>
-            <dropdown-item @click="tweetLogChimp">
-              <template #icon>
-                <twitter-icon />
-              </template>
-              Tweet @LogChimp!
-            </dropdown-item>
-            <dropdown-spacer />
-            <dropdown-item @click="logout">
-              <template #icon>
-                <logout-icon />
-              </template>
-              Sign Out
-            </dropdown-item>
-          </dropdown>
-        </template>
-        <template #toggle>
-          <auth-user
-						:name="user.name"
-						:email="user.email"
-						:username="user.username"
-						:avatar="user.avatar"
-					/>
-        </template>
-      </dropdown-wrapper>
+      <dashboard-sidebar-auth-user-dropdown />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// packages
 import {
   LayoutDashboard as DashboardIcon,
   Columns as BoardIcon,
@@ -134,43 +101,17 @@ import {
   FlaskConical as LabIcon,
   ArrowUpRight as ArrowUpRightIcon,
   CreditCard as CreditCardIcon,
-  Info as InfoIcon,
-  Twitter as TwitterIcon,
-  LogOut as LogoutIcon,
 } from "lucide-vue";
 
-import { useSettingStore } from "../../../store/settings.ts";
-import { useUserStore } from "../../../store/user.ts";
+import { useSettingStore } from "../../../store/settings";
 
 // components
 import SiteBranding from "../../site/SiteBranding.vue";
-import AuthUser from "../AuthUser.vue";
-import DropdownWrapper from "../../ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../ui/dropdown/DropdownItem.vue";
-import DropdownSpacer from "../../ui/dropdown/DropdownSpacer.vue";
 import SidebarItem from "./SidebarItem.vue";
-
-// icons
 import RoadmapIcon from "../../icons/Roadmap.vue";
 import SidebarList from "./SidebarList.vue";
 import SidebarListHeading from "./SidebarListHeading.vue";
+import DashboardSidebarAuthUserDropdown from "./AuthUser/Dropdown.vue";
 
 const { get: siteSettings } = useSettingStore();
-const { user, logout } = useUserStore();
-
-function aboutLogChimp() {
-  window.open("https://logchimp.codecarrot.net/");
-}
-
-function tweetLogChimp() {
-  window.open(
-    "https://twitter.com/intent/tweet?text=%40LogChimp+Hi%21+Can+you+help+me+with+&related=LogChimp",
-  );
-}
 </script>
-
-<style lang='sass'>
-.dashboard-sidebar-dropdown
-	top: -9rem
-</style>

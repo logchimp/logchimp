@@ -26,6 +26,18 @@
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
+    <alert
+      v-if="permissions.role.assign"
+      title="Important"
+      description="The `role:assign` permission can cause critical security and access issues, if misused."
+      type="error"
+      class="mb-6"
+    >
+      <template #icon>
+        <ShieldAlert />
+      </template>
+    </alert>
+      
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -161,11 +173,13 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IRole, PermissionAction, TPermission } from "@logchimp/types";
+import { ShieldAlert } from "lucide-vue";
 
 // modules
 import { router } from "../../../../../router";
 import { useUserStore } from "../../../../../store/user";
 import { getRole, updateRole } from "../../../../modules/roles";
+import { useDashboardRoles } from "../../../../store/dashboard/roles";
 
 // components
 import Button from "../../../../../components/ui/Button.vue";
@@ -176,8 +190,10 @@ import Breadcrumbs from "../../../../../components/Breadcrumbs.vue";
 import BreadcrumbDivider from "../../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.vue";
+import Alert from "../../../../../components/ui/Alert/Alert.vue";
 
 const { permissions: userPermissions } = useUserStore();
+const dashboardRoles = useDashboardRoles();
 
 const title = ref("");
 const role = ref<IRole>({
@@ -264,6 +280,7 @@ async function updateRoleHandler() {
     });
 
     if (response.status === 200) {
+      dashboardRoles.updateRole(response.data.role);
       router.push("/dashboard/settings/roles");
     }
   } catch (err) {

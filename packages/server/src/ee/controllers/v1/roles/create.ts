@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import type {
+  IRole,
   IApiErrorResponse,
   ICreateRoleResponseBody,
 } from "@logchimp/types";
@@ -32,7 +33,7 @@ export async function create(req: Request, res: Response<ResponseBody>) {
         name: "new role",
       })
       .into("roles")
-      .returning("id");
+      .returning<IRole[]>("*");
 
     const role = createRole[0];
 

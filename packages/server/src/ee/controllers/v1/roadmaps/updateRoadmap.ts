@@ -2,6 +2,7 @@ import type { Response } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
+  IRoadmapPrivate,
   IUpdateRoadmapRequestBody,
   TUpdateRoadmapResponseBody,
 } from "@logchimp/types";
@@ -53,7 +54,7 @@ export async function updateRoadmap(
       .where({
         id,
       })
-      .returning([
+      .returning<IRoadmapPrivate[]>([
         "id",
         "name",
         "url",

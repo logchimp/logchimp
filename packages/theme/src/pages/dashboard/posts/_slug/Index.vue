@@ -295,7 +295,9 @@ async function suggestRoadmap(event: Event) {
 function selectBoard(index: number) {
   const item = boards.suggestions[index];
 
-  Object.assign(post.board, item);
+  Object.assign(post, {
+    board: item,
+  });
   boards.search = "";
   boards.suggestions = [];
 }

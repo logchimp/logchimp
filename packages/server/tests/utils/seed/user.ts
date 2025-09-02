@@ -1,33 +1,50 @@
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 import supertest from "supertest";
+import type { IAuthLoginResponseBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
 
+interface CreateUserArgs {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  isVerified: boolean;
+  isOwner: boolean;
+  isBlocked: boolean;
+}
+
 /**
  * NOTE: this function by-passes 'allowSignup' settings
  * Should have `@everyone` role assigned.
- *
- * @param user
+ * @param {object} [user=undefined]
+ * @returns {Promise<IAuthLoginResponseBody>}
  */
-export async function createUser(user = undefined) {
+export async function createUser(
+  user?: Partial<CreateUserArgs>,
+): Promise<IAuthLoginResponseBody> {
   const userId = uuid();
+  const name = user?.name;
   const email = (user?.email || faker.internet.email()).toLowerCase();
-  const username = email.split("@")[0];
+  const username = user?.username ? user.username : email.split("@")[0];
   const password = user?.password || "password";
   const isVerified = user?.isVerified || false;
+  const isOwner = user?.isOwner || false;
   const isBlocked = user?.isBlocked || false;
 
   // manually seeding data due to 'allowSignup' possibly be disabled
   await database
     .insert({
       userId,
+      name,
       email,
       password: hashPassword(password),
       username,
       isVerified,
+      isOwner,
       isBlocked,
     })
     .into("users");

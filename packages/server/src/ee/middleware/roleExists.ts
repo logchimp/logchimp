@@ -3,13 +3,14 @@ import database from "../../database";
 
 // utils
 import error from "../../errorResponse.json";
+import { validUUID } from "../../helpers";
 
 export async function roleExists(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  const id = req.body.id || req.params.id;
+  const id = validUUID(req.body.id || req.params.id);
 
   const role = await database
     .select()

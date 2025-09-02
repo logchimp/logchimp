@@ -1,12 +1,15 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import type {
-  DraggableSortFromToType,
+  IDeleteRoadmapRequestBody,
+  ISortRoadmapRequestBody,
   IUpdateRoadmapRequestBody,
+  TCreateRoadmapResponseBody,
+  TDeleteRoadmapResponseBody,
+  TSortRoadmapResponseBody,
+  TUpdateRoadmapResponseBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
-
-// store
 import { useUserStore } from "../../store/user";
 
 /**
@@ -14,7 +17,9 @@ import { useUserStore } from "../../store/user";
  *
  * @returns {object} response
  */
-export const createRoadmap = async () => {
+export const createRoadmap = async (): Promise<
+  AxiosResponse<TCreateRoadmapResponseBody>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -36,7 +41,9 @@ export const createRoadmap = async () => {
  * @param {boolean} roadmap.display display roadmap on the site
  * @returns {object} response
  */
-export const updateRoadmap = async (roadmap: IUpdateRoadmapRequestBody) => {
+export const updateRoadmap = async (
+  roadmap: IUpdateRoadmapRequestBody,
+): Promise<AxiosResponse<TUpdateRoadmapResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -54,7 +61,12 @@ export const updateRoadmap = async (roadmap: IUpdateRoadmapRequestBody) => {
 /**
  * Sort roadmap
  */
-export const sortRoadmap = async ({ from, to }: DraggableSortFromToType) => {
+export const sortRoadmap = async ({
+  from,
+  to,
+}: ISortRoadmapRequestBody): Promise<
+  AxiosResponse<TSortRoadmapResponseBody>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -77,7 +89,11 @@ export const sortRoadmap = async ({ from, to }: DraggableSortFromToType) => {
  *
  * @returns {object} response
  */
-export const deleteRoadmap = async (id: string) => {
+export const deleteRoadmap = async ({
+  id,
+}: IDeleteRoadmapRequestBody): Promise<
+  AxiosResponse<TDeleteRoadmapResponseBody>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({

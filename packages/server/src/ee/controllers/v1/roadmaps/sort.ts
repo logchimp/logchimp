@@ -1,11 +1,22 @@
 import type { Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  ISortRoadmapRequestBody,
+  TSortRoadmapResponseBody,
+} from "@logchimp/types";
+
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function sort(req: Request, res: Response) {
+type ResponseBody = TSortRoadmapResponseBody | IApiErrorResponse;
+
+export async function sort(
+  req: Request<unknown, unknown, ISortRoadmapRequestBody>,
+  res: Response<ResponseBody>,
+) {
   const { from, to } = req.body;
   // @ts-ignore
   const permissions = req.user.permissions;
