@@ -20,8 +20,8 @@ interface CreateUserArgs {
 /**
  * NOTE: this function by-passes 'allowSignup' settings
  * Should have `@everyone` role assigned.
- *
- * @param {object={}} user
+ * @param {object} [user=undefined]
+ * @returns {Promise<IAuthLoginResponseBody>}
  */
 export async function createUser(
   user?: Partial<CreateUserArgs>,
