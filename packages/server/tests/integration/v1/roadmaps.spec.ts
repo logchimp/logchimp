@@ -16,7 +16,8 @@ describe("GET /api/v1/roadmaps", () => {
     await cleanDb();
     await database.transaction(async (trx) => {
       for (let i = 0; i < 15; i++) {
-        await trx.insert(generateRoadmap()).into("roadmaps");
+        const r = await generateRoadmap();
+        await trx.insert(r).into("roadmaps");
       }
     });
   });
@@ -247,8 +248,6 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       },
       true,
     );
-
-    console.log("r2:", r2);
 
     const { user } = await createUser({
       isVerified: true,
