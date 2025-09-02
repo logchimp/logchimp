@@ -9,8 +9,12 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { getUserFromRequest } from "../../utils/getUserFromRequest";
-import { computePermissions } from "../../middlewares/authenticate";
+import {
+  computePermissions,
+  fetchUserWithRoles,
+} from "../../middlewares/authenticate";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
+import type { IAuthenticationMiddlewareUser } from "./../../types";
 
 const querySchema = z.object({
   first: z.coerce
@@ -29,24 +33,13 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
 
     const decoded = getUserFromRequest(req.headers.authorization);
 
-    //@ts-ignore
     const userId = decoded?.userId;
     let withPermissions = true;
 
     if (decoded) {
-      const user = await database
-        .select(
-          "u.userId",
-          "u.isOwner",
-          "u.isBlocked",
-          database.raw("ARRAY_AGG(r.id) AS roles"),
-        )
-        .from("users AS u")
-        .leftJoin("roles_users AS ru", "u.userId", "ru.user_id")
-        .leftJoin("roles AS r", "ru.role_id", "r.id")
-        .groupBy("u.userId")
-        .where("u.userId", userId)
-        .first();
+      const user = (await fetchUserWithRoles(
+        userId,
+      )) as IAuthenticationMiddlewareUser;
 
       const permissions = await computePermissions(user);
 
