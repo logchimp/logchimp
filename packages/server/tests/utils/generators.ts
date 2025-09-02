@@ -9,6 +9,7 @@ import {
   sanitiseURL,
   toSlug,
 } from "../../src/helpers";
+import database from "../../src/database";
 
 const user = () => {
   return {
@@ -26,20 +27,44 @@ const user = () => {
   };
 };
 
-const roadmap = () => {
-  const name = faker.commerce.productName();
+interface RoadmapArgs {
+  name: string;
+  url: string;
+  index: number;
+  color: string;
+  display: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
 
-  return {
-    id: uuid(),
+async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
+  const name = roadmap?.name || faker.commerce.productName();
+
+  const id = uuid();
+  const url = roadmap?.url || `${sanitiseURL(name)}-${nanoid(10)}`;
+  const index = faker.number.int({ min: 1, max: 100000 });
+  const color = generateHexColor();
+  const display = faker.datatype.boolean();
+  const created_at = new Date().toJSON();
+  const updated_at = new Date().toJSON();
+
+  const obj = {
+    id,
     name,
-    url: `${sanitiseURL(name)}-${nanoid(10)}`,
-    index: faker.number.int({ min: 1, max: 100000 }),
-    color: generateHexColor(),
-    display: faker.datatype.boolean(),
-    created_at: new Date().toJSON(),
-    updated_at: new Date().toJSON(),
+    url,
+    index,
+    color,
+    display,
+    created_at,
+    updated_at,
   };
-};
+
+  if (insertToDb) {
+    await database.insert(obj).into("roadmaps");
+  }
+
+  return obj;
+}
 
 const post = () => {
   const title = faker.commerce.productName();

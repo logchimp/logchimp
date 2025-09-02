@@ -7,6 +7,8 @@ import app from "../../../src/app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
 import database from "../../../src/database";
 import { cleanDb } from "../../utils/db";
+import { createUser } from "../../utils/seed/user";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Get all roadmaps
 describe("GET /api/v1/roadmaps", () => {
@@ -129,13 +131,24 @@ describe("GET /api/v1/roadmaps", () => {
 });
 
 // Get roadmaps by URL
-describe("GET /roadmaps/:url", () => {
-  it('should throw error "ROADMAP_NOT_FOUND"', async () => {
-    const res = await supertest(app).get("/api/v1/roadmaps/do_not_exists");
+describe("GET /api/v1/roadmaps/:url", () => {
+  [
+    "ROADMAP_NOT_FOUND",
+    "undefined",
+    "null",
+    null,
+    undefined,
+    "456575634",
+    // TODO: add this test case - not working for some reason
+    // "*&^(*&$%&*^&%&^%*",
+  ].map((name) =>
+    it(`should throw error "ROADMAP_NOT_FOUND" for '${name}'`, async () => {
+      const res = await supertest(app).get(`/api/v1/roadmaps/${name}`);
 
-    expect(res.status).toBe(404);
-    expect(res.body.code).toEqual("ROADMAP_NOT_FOUND");
-  });
+      expect(res.status).toBe(404);
+      expect(res.body.code).toEqual("ROADMAP_NOT_FOUND");
+    }),
+  );
 
   it("should get roadmap by url", async () => {
     const roadmapUrl = faker.commerce
@@ -144,9 +157,12 @@ describe("GET /roadmaps/:url", () => {
       .replace(/[^a-z0-9]+/g, "-")
       .substring(0, 50)
       .replace(/^-+|-+$/g, "");
-    const roadmap = generateRoadmap();
-    roadmap.url = roadmapUrl;
-    await database.insert(roadmap).into("roadmaps");
+    const roadmap = await generateRoadmap(
+      {
+        url: roadmapUrl,
+      },
+      true,
+    );
 
     const res = await supertest(app).get(`/api/v1/roadmaps/${roadmapUrl}`);
 
@@ -167,6 +183,108 @@ describe("GET /roadmaps/:url", () => {
   });
 });
 
+// Search roadmaps by name
+describe("GET /api/v1/roadmaps/search/:name", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const response = await supertest(app).get(
+      "/api/v1/roadmaps/search/completed",
+    );
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+  });
+
+  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+
+    const response = await supertest(app)
+      .get("/api/v1/roadmaps/search/completed")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+  });
+
+  it('should get 0 search results for "randooo" roadmaps', async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+      roleName: "Roadmap Reader",
+    });
+
+    const response = await supertest(app)
+      .get("/api/v1/roadmaps/search/randooo")
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    expect(response.body.roadmaps).toEqual([]);
+    expect(response.body.roadmaps.length).toEqual(0);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+  });
+
+  const roadmapName = faker.commerce
+    .productName()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .substring(0, 50)
+    .replace(/^-+|-+$/g, "");
+  it(`should show "${roadmapName}" roadmaps`, async () => {
+    const r1 = await generateRoadmap(
+      {
+        name: `${roadmapName}_first`,
+      },
+      true,
+    );
+    const r2 = await generateRoadmap(
+      {
+        name: `${roadmapName}_two`,
+      },
+      true,
+    );
+
+    console.log("r2:", r2);
+
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+      roleName: "Roadmap Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/roadmaps/search/${roadmapName}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    const roadmaps = response.body.roadmaps;
+    expect(response.body.roadmaps.length).toEqual(2);
+
+    // r1
+    expect(roadmaps[0].id).toEqual(r1.id);
+    expect(roadmaps[0].name).toEqual(r1.name);
+    expect(roadmaps[0].url).toEqual(r1.url);
+    expect(roadmaps[0].color).toEqual(r1.color);
+    expect(roadmaps[0].display).toEqual(r1.display);
+    expect(roadmaps[0].index).toEqual(r1.index);
+
+    // r2
+    expect(roadmaps[1].id).toEqual(r2.id);
+    expect(roadmaps[1].name).toEqual(r2.name);
+    expect(roadmaps[1].url).toEqual(r2.url);
+    expect(roadmaps[1].color).toEqual(r2.color);
+    expect(roadmaps[1].display).toEqual(r2.display);
+    expect(roadmaps[1].index).toEqual(r2.index);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+  });
+});
+
 // Create new roadmaps
 describe("POST /api/v1/roadmaps", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
@@ -174,5 +292,46 @@ describe("POST /api/v1/roadmaps", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.code).toEqual("INVALID_AUTH_HEADER");
+  });
+
+  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should create private roadmap with default values", async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:create"], {
+      roleName: "Roadmap Creator",
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+
+    const roadmap = response.body.roadmap;
+
+    expect(roadmap.name).toEqual("new roadmap");
+    expect(roadmap.url).toContain("new-roadmap-");
+    expect(roadmap.display).toBeFalsy();
+
+    expect(roadmap.id).toBeDefined();
+    expect(roadmap.color).toBeDefined();
+    expect(roadmap.index).toBeDefined();
+    expect(roadmap.created_at).toBeDefined();
   });
 });
