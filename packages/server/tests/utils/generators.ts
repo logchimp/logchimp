@@ -67,25 +67,40 @@ async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
   return obj;
 }
 
-const post = () => {
+interface PostArgs {
+  title?: string;
+  contentMarkdown?: string;
+  userId: string;
+  boardId?: string;
+  roadmapId?: string;
+}
+
+const post = async (post: PostArgs, insertToDb = false) => {
   const title = faker.commerce.productName();
+  const contentMarkdown = post?.contentMarkdown || faker.lorem.text();
 
   // generate slug unique identification
   const slugId = nanoid(20);
   const slug = `${toSlug(title)}-${slugId}`;
 
-  return {
+  const obj = {
     postId: uuid(),
     title,
     slug: slug,
     slugId: slugId,
-    contentMarkdown: faker.lorem.text,
-    userId: uuid(),
-    boardId: uuid(),
-    roadmap_id: uuid(),
+    contentMarkdown,
+    userId: post.userId,
+    boardId: post?.boardId,
+    roadmap_id: post?.roadmapId,
     createdAt: new Date().toJSON(),
     updatedAt: new Date().toJSON(),
   };
+
+  if (insertToDb) {
+    await database.insert(obj).into("posts");
+  }
+
+  return obj;
 };
 
 const board = () => {

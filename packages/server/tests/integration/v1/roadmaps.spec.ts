@@ -365,15 +365,25 @@ describe("PATCH /api/v1/roadmaps", () => {
     await createRoleWithPermissions(user.userId, ["roadmap:update"], {
       roleName: "Roadmap update",
     });
+    const r1 = await generateRoadmap({}, true);
 
     const response = await supertest(app)
       .patch("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${user.authToken}`);
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        id: r1.id,
+      });
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
 
-    expect(response.body.errors[0].code).toEqual("ROADMAP_URL_MISSING");
+    expect(response.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "ROADMAP_URL_MISSING",
+        }),
+      ]),
+    );
   });
 
   it("should update roadmap", async () => {

@@ -29,6 +29,12 @@ export async function add(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("vote:create");
+  if (!checkPermission) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
 
   const postId = validUUID(req.body.postId);
   if (!postId) {
@@ -39,19 +45,12 @@ export async function add(
     return;
   }
 
-  if (!checkPermission) {
-    return res.status(403).send({
-      message: error.api.roles.notEnoughPermission,
-      code: "NOT_ENOUGH_PERMISSION",
-    });
-  }
-
   try {
     const vote = await database
       .select()
       .from("votes")
       .where({
-        postId: postId || null,
+        postId,
         userId,
       })
       .first();
