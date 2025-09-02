@@ -335,3 +335,78 @@ describe("POST /api/v1/roadmaps", () => {
     expect(roadmap.created_at).toBeDefined();
   });
 });
+
+// Update roadmaps
+describe("PATCH /api/v1/roadmaps", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const res = await supertest(app).patch("/api/v1/roadmaps");
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toEqual("INVALID_AUTH_HEADER");
+  });
+
+  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+  });
+
+  it('should throw error "ROADMAP_URL_MISSING"', async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "Roadmap update",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+
+    expect(response.body.errors[0].code).toEqual("ROADMAP_URL_MISSING");
+  });
+
+  it("should update roadmap", async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "Roadmap update",
+    });
+
+    const r1 = await generateRoadmap({}, true);
+    const name = "Roadmap updated!";
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        id: r1.id,
+        name,
+        url: r1.url,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const roadmap = response.body.roadmap;
+    expect(roadmap.id).toEqual(r1.id);
+    expect(roadmap.name).toEqual(name);
+    expect(roadmap.url).toEqual(r1.url);
+    expect(roadmap.color).toEqual(r1.color);
+    expect(roadmap.display).toEqual(r1.display);
+    expect(roadmap.index).toEqual(r1.index);
+    expect(roadmap.created_at).toEqual(r1.created_at);
+  });
+});
