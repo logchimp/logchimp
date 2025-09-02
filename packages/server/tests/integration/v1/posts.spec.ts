@@ -4,10 +4,7 @@ import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 import app from "../../../src/app";
 import database from "../../../src/database";
-import {
-  post as generatePost,
-  board as generateBoards,
-} from "../../utils/generators";
+import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { cleanDb } from "../../utils/db";
 
@@ -103,7 +100,7 @@ describe("CREATE POST /api/v1/posts", () => {
           message: "Board ID missing",
           code: "BOARD_ID_MISSING",
         }),
-      ])
+      ]),
     );
   });
 
@@ -173,7 +170,7 @@ describe("CREATE POST /api/v1/posts", () => {
           message: "Post title missing",
           code: "POST_TITLE_MISSING",
         }),
-      ])
+      ]),
     );
   });
 
