@@ -9,7 +9,7 @@ import { createUser } from "../../utils/seed/user";
 import { cleanDb } from "../../utils/db";
 
 // Create new posts
-describe("CREATE POST /api/v1/posts", () => {
+describe("POST /api/v1/posts", () => {
   afterEach(async () => {
     await cleanDb();
   });
