@@ -1,10 +1,15 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vitest/config";
+import { defineProject } from "vitest/config";
+import dotenv from "dotenv";
 
-const baseConfig = defineConfig({
+dotenv.config({ path: "./.env" });
+
+const baseConfig = defineProject({
   test: {
-    globals: true,
     environment: "node",
+    env: {
+      ...process.env,
+    },
   },
 });
 
