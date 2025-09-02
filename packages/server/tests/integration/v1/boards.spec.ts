@@ -53,7 +53,7 @@ describe("GET /api/v1/boards", async () => {
     expect(response.body.boards).toBeInstanceOf(Array);
   });
 
-  it("should get filtered boards in defualt filter values", async () => {
+  it("should get filtered boards in default filter values", async () => {
     const filterQuery = {
       // default page num is 0
       // page: 0,
