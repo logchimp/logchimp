@@ -47,7 +47,7 @@ export async function createUser(user: any = {}) {
     {
       uuid: uuid(),
       userId,
-    }
+    },
   );
 
   const response = await supertest(app).post("/api/v1/auth/login").send({
