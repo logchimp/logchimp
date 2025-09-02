@@ -1,22 +1,19 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
-import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
+
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
 import { createBoard } from "../../utils/seed/board";
 import { createRoadmap } from "../../utils/seed/roadmap";
+import { roadmap as generateRoadmap } from "../../utils/generators";
 import { createPost } from "../../utils/seed/post";
-import { faker } from "@faker-js/faker";
 import database from "../../../src/database";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Create new posts
-describe(" POST /api/v1/posts", () => {afterEach(async () => {
-    await cleanDb();
-  });
+describe("POST /api/v1/posts", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
-    await cleanDb();
     const response = await supertest(app).post("/api/v1/posts");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -132,45 +129,32 @@ describe(" POST /api/v1/posts", () => {afterEach(async () => {
 
 describe("POST /api/v1/posts/slug", () => {
   it('should throw error "POST_NOT_FOUND"', async () => {
-    const response = await supertest(app)
-      .post("/api/v1/posts/slug")
-      .send(
-        {
-          slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
-          // only slug is required to get a post
-          userId: ""
-        }
-      );
+    const response = await supertest(app).post("/api/v1/posts/slug").send({
+      slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
+      // only slug is required to get a post
+      userId: "",
+    });
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toEqual("POST_NOT_FOUND");
   });
 
-  it('should get post with matching slug', async () => {
+  it("should get post with matching slug", async () => {
     const board = await createBoard();
-
     const roadmap = await createRoadmap();
 
     const { user: authUser } = await createUser({
-      isVerified: true
+      isVerified: true,
     });
 
-    const post = await createPost(
-      authUser.userId,
-      board.boardId,
-      roadmap.id
-    );
+    const post = await createPost(authUser.userId, board.boardId, roadmap.id);
 
-    const response = await supertest(app)
-      .post("/api/v1/posts/slug")
-      .send(
-        {
-          slug: post.slug,
-          // only slug is required to get a post
-          userId: ""
-        }
-      );
+    const response = await supertest(app).post("/api/v1/posts/slug").send({
+      slug: post.slug,
+      // only slug is required to get a post
+      userId: "",
+    });
 
     const body = response.body.post;
 
