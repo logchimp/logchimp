@@ -1,10 +1,10 @@
-import { afterAll, beforeAll } from 'vitest';
+import { afterAll, beforeAll } from "vitest";
 import database from "./src/database";
 
 export interface TableInserts {
   tableName: string;
   columnName: string;
-  uniqueValue: any;
+  uniqueValue: string | number | string;
 }
 
 declare global {
@@ -16,15 +16,13 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  console.log("totalTables: ", globalThis.tableInserts.length);
-
-    while (globalThis.tableInserts.length > 0) {
-      const inserts = globalThis.tableInserts.shift();
-      if (inserts) {
-        await database
+  while (globalThis.tableInserts.length > 0) {
+    const inserts = globalThis.tableInserts.shift();
+    if (inserts) {
+      await database
         .table(inserts.tableName)
         .where(inserts.columnName, inserts.uniqueValue)
         .del();
-      }
     }
+  }
 });
