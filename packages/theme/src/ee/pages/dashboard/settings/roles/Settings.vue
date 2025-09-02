@@ -29,7 +29,7 @@
     <alert
       v-if="permissions.role.assign"
       title="Important"
-      description="The `role:assign` permission can cause critical security and access issues if misused."
+      description="The `role:assign` permission can cause critical security and access issues, if misused."
       type="error"
       class="mb-6"
     >
