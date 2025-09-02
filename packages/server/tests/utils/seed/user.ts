@@ -1,6 +1,10 @@
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 import supertest from "supertest";
+import type {
+  IApiErrorResponse,
+  IAuthLoginResponseBody,
+} from "@logchimp/types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
@@ -24,7 +28,7 @@ interface CreateUserArgs {
  */
 export async function createUser(
   user?: Partial<CreateUserArgs>,
-): Promise<void> {
+): Promise<IAuthLoginResponseBody | IApiErrorResponse> {
   const userId = uuid();
   const name = user?.name;
   const email = (user?.email || faker.internet.email()).toLowerCase();
