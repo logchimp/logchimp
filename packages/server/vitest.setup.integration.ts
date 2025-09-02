@@ -16,12 +16,10 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  console.log("totalTables: ", globalThis.tableInserts.length);
-
-    while (globalThis.tableInserts.length > 0) {
-      const inserts = globalThis.tableInserts.shift();
-      if (inserts) {
-        await database
+  while (globalThis.tableInserts.length > 0) {
+    const inserts = globalThis.tableInserts.shift();
+    if (inserts) {
+      await database
         .table(inserts.tableName)
         .where(inserts.columnName, inserts.uniqueValue)
         .del();
