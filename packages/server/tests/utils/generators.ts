@@ -126,7 +126,7 @@ const board = async (board?: Partial<BoardArgs>, insertToDb = false) => {
   };
 
   if (insertToDb) {
-    await database.insert(board).into("boards");
+    await database.insert(obj).into("boards");
   }
 
   return obj;
