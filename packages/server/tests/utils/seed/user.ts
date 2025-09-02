@@ -6,17 +6,29 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
 
+interface CreateUserArgs {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  isVerified: boolean;
+  isOwner: boolean;
+  isBlocked: boolean;
+}
+
 /**
  * NOTE: this function by-passes 'allowSignup' settings
  * Should have `@everyone` role assigned.
  *
- * @param user
+ * @param {object={}} user
  */
-export async function createUser(user: any = {}) {
+export async function createUser(
+  user?: Partial<CreateUserArgs>,
+): Promise<void> {
   const userId = uuid();
-  const name = user?.name || faker.person.fullName();
+  const name = user?.name;
   const email = (user?.email || faker.internet.email()).toLowerCase();
-  const username = email.split("@")[0];
+  const username = user?.username ? user.username : email.split("@")[0];
   const password = user?.password || "password";
   const isVerified = user?.isVerified || false;
   const isOwner = user?.isOwner || false;
