@@ -111,7 +111,7 @@ interface BoardArgs {
   color: string;
 }
 
-const board = async (board: Partial<BoardArgs>, insertToDb = false) => {
+const board = async (board?: Partial<BoardArgs>, insertToDb = false) => {
   const name = board?.name || faker.commerce.productName();
 
   const obj = {

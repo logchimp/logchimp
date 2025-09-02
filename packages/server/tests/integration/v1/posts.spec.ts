@@ -96,27 +96,32 @@ describe("POST /api/v1/posts", () => {
     );
   });
 
-  it("should create a post", async () => {
+  it("should create a post with '@everyone' role", async () => {
     const board = await generateBoard({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-    await createRoleWithPermissions(authUser.userId, ["post:create"], {
-      roleName: "Post Creator",
-    });
 
+    const title = faker.food.dish();
+    const contentMarkdown = faker.food.description();
     const response = await supertest(app)
       .post(`/api/v1/posts/`)
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
-        title: faker.food.dish,
-        contentMarkdown: faker.food.description,
+        title,
+        contentMarkdown,
         userId: authUser.userId,
         boardId: board.boardId,
       });
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(201);
     expect(response.body.code).toBeUndefined();
+
+    const post = response.body.post;
+    expect(post.title).toEqual(title);
+    expect(post.contentMarkdown).toEqual(contentMarkdown);
+    expect(post.userId).toEqual(authUser.userId);
+    expect(post.boardId).toEqual(board.boardId);
   });
 });
 
