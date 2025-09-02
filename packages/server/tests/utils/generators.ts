@@ -41,7 +41,8 @@ async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
   const name = roadmap?.name || faker.commerce.productName();
 
   const id = uuid();
-  const url = roadmap?.url || `${sanitiseURL(name)}-${nanoid(10)}`;
+  const url =
+    roadmap?.url || `${sanitiseURL(name)}-${nanoid(10).toLowerCase()}`;
   const index = faker.number.int({ min: 1, max: 100000 });
   const color = generateHexColor();
   const display = faker.datatype.boolean();
@@ -69,7 +70,7 @@ async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
 const post = () => {
   const title = faker.commerce.productName();
 
-  // generate slug unique indentification
+  // generate slug unique identification
   const slugId = nanoid(20);
   const slug = `${toSlug(title)}-${slugId}`;
 

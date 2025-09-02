@@ -38,7 +38,7 @@ export async function create(req: Request, res: Response<ResponseBody>) {
       .insert({
         id: uuidv4(),
         name: "new roadmap",
-        url: `new-roadmap-${nanoid(10)}`,
+        url: `new-roadmap-${nanoid(10).toLowerCase()}`,
         color: generateHexColor(),
         index: roadmapIndex.max + 1,
       })
