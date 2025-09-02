@@ -291,7 +291,8 @@ jobs:
           pnpm knex --knexfile ./src/database/config.ts seed:run;
 
       - name: Testing
-        run: pnpm --filter @logchimp/api test:integration --retry 1
+        run: pnpm --filter @logchimp/api test:integration \
+          --sequence.concurrent false
 
       - name: Output logs
         if: always()
