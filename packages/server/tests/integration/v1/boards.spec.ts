@@ -274,46 +274,9 @@ describe("GET /boards/search/:name", () => {
     const { user: authUser } = await createUser();
 
     // assign "board:read" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "board:read",
-          description: "this role has 'board:read' permission",
-        })
-        .into("roles");
-
-      // find "board:read" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "board",
-          action: "read",
-        })
-        .first();
-
-      // assign 'board:read' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(authUser.userId, ["board:read"], {
+      roleName: "Board Reader",
     });
-
     const response = await supertest(app)
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
