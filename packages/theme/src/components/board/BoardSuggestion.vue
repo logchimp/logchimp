@@ -19,6 +19,7 @@ interface Props {
 }
 
 defineProps<Props>();
+defineEmits(["click"]);
 </script>
 
 <style lang='sass'>
