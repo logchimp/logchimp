@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   IGetRoleByIdRequestParams,
   IGetRoleByIdResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../../../database";
 
@@ -19,7 +20,7 @@ export async function getOne(
   const { id } = req.params;
 
   // @ts-expect-error
-  const permissions = req.user.permissions;
+  const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
     return res.status(403).send({

@@ -4,6 +4,7 @@ import type {
   IRole,
   IApiErrorResponse,
   ICreateRoleResponseBody,
+  TPermission,
 } from "@logchimp/types";
 
 // database
@@ -16,8 +17,8 @@ import error from "../../../../errorResponse.json";
 type ResponseBody = ICreateRoleResponseBody | IApiErrorResponse;
 
 export async function create(req: Request, res: Response<ResponseBody>) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("role:create");
   if (!checkPermission) {
     return res.status(403).send({

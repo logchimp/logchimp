@@ -5,6 +5,7 @@ import type {
   IApiErrorResponse,
   TCreateRoadmapResponseBody,
   IRoadmapPrivate,
+  TPermission,
 } from "@logchimp/types";
 
 // database
@@ -18,8 +19,8 @@ import error from "../../../../errorResponse.json";
 type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
 
 export async function create(req: Request, res: Response<ResponseBody>) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const checkPermission = permissions.includes("roadmap:create");
   if (!checkPermission) {

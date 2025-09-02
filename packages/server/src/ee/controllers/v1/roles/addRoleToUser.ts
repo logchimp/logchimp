@@ -9,13 +9,11 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
 export async function addRoleToUser(req: Request, res: Response) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
   const { role_id, user_id } = req.params;
 
-  const checkPermission = permissions.find(
-    (item: TPermission) => item === "role:assign",
-  );
+  const checkPermission = permissions.find((item) => item === "role:assign");
   if (!checkPermission) {
     return res.status(403).send({
       message: error.api.roles.notEnoughPermission,
