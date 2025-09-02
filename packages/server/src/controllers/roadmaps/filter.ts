@@ -14,7 +14,10 @@ import {
   fetchUserWithRoles,
 } from "../../middlewares/authenticate";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
-import type { IAuthenticationMiddlewareUser } from "./../../types";
+import type {
+  IAuthenticationMiddlewareUser,
+  IAuthenticationTokenPayload,
+} from "./../../types";
 
 const querySchema = z.object({
   first: z.coerce
@@ -110,7 +113,7 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
 function getRoadmapQuery(
   first: number,
   after?: string,
-  decoded?: any,
+  decoded?: IAuthenticationTokenPayload,
   withPermissions = true,
 ) {
   let query = database<IRoadmapPrivate>("roadmaps")
@@ -137,7 +140,7 @@ function getRoadmapQuery(
 
 async function getRoadmapMetadata(
   after?: string,
-  decoded?: any,
+  decoded?: IAuthenticationTokenPayload,
   withPermissions = true,
 ) {
   return database.transaction(async (trx) => {
