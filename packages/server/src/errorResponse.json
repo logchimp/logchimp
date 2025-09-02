@@ -31,7 +31,7 @@
       "invalidEmail": "Enter valid email",
       "invalidEmailFormat": "Invalid email format",
       "invalidEmailDomain": "Invalid email format",
-      "emailDomainBlacklisted": "Email domain is blacklisted",
+      "emailDomainBlacklisted": "Domain not allowed",
       "noPasswordProvided": "No password provided",
       "setupAlreadyCompleted": "Setup has already been completed.",
       "usernameExists": "Username already exists"
