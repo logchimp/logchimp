@@ -103,19 +103,33 @@ const post = async (post: PostArgs, insertToDb = false) => {
   return obj;
 };
 
-const board = () => {
-  const name = faker.commerce.productName();
+interface BoardArgs {
+  name: string;
+  url: string;
+  display: boolean;
+  view_voters: boolean;
+  color: string;
+}
 
-  return {
+const board = async (board: Partial<BoardArgs>, insertToDb = false) => {
+  const name = board?.name || faker.commerce.productName();
+
+  const obj = {
     boardId: uuid(),
     name,
-    url: `${sanitiseURL(name)}-${nanoid(10)}`,
-    color: generateHexColor(),
-    display: faker.datatype.boolean(),
-    view_voters: faker.datatype.boolean(),
+    url: board?.url || `${sanitiseURL(name)}-${nanoid(10)}`,
+    color: board?.color || generateHexColor(),
+    display: board?.display || faker.datatype.boolean(),
+    view_voters: board?.view_voters || faker.datatype.boolean(),
     createdAt: new Date().toJSON(),
     updatedAt: new Date().toJSON(),
   };
+
+  if (insertToDb) {
+    await database.insert(board).into("boards");
+  }
+
+  return obj;
 };
 
 export { user, roadmap, post, board };

@@ -4,11 +4,11 @@ import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
-import { createBoard } from "../../utils/seed/board";
-import { createRoadmap } from "../../utils/seed/roadmap";
-import { roadmap as generateRoadmap } from "../../utils/generators";
-import { createPost } from "../../utils/seed/post";
-import database from "../../../src/database";
+import {
+  board as generateBoard,
+  roadmap as generateRoadmap,
+  post as generatePost,
+} from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Create new posts
@@ -39,7 +39,6 @@ describe("POST /api/v1/posts", () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-
     await createRoleWithPermissions(authUser.userId, ["post:create"], {
       roleName: "Post Creator",
     });
@@ -66,12 +65,8 @@ describe("POST /api/v1/posts", () => {
   });
 
   it('should throw error "POST_TITLE_MISSING"', async () => {
-    const board = await createBoard();
-    await database.insert(board).into("boards");
-
-    const roadmap = generateRoadmap();
-    await database.insert(roadmap).into("roadmaps");
-
+    const board = await generateBoard({}, true);
+    await generateRoadmap({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -102,12 +97,10 @@ describe("POST /api/v1/posts", () => {
   });
 
   it("should create a post", async () => {
-    const board = await createBoard();
-
+    const board = await generateBoard({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-
     await createRoleWithPermissions(authUser.userId, ["post:create"], {
       roleName: "Post Creator",
     });
@@ -141,14 +134,19 @@ describe("POST /api/v1/posts/slug", () => {
   });
 
   it("should get post with matching slug", async () => {
-    const board = await createBoard();
-    const roadmap = await createRoadmap();
-
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-
-    const post = await createPost(authUser.userId, board.boardId, roadmap.id);
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
 
     const response = await supertest(app).post("/api/v1/posts/slug").send({
       slug: post.slug,
