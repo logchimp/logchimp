@@ -76,7 +76,7 @@ export function domainBlacklist(
   const parts = email.trim().split("@");
   if (parts.length !== 2) {
     return res.status(400).json({
-      message: error.api.authentication.invalidEmailDomain,
+      message: error.api.authentication.invalidEmailFormat,
       code: "INVALID_EMAIL_FORMAT"
     });
   }
