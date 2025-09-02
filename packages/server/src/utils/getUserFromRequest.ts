@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import logchimpConfig from "./logchimpConfig";
 import logger from "./logger";
+import type { IAuthenticationTokenPayload } from "./../types";
 const config = logchimpConfig();
 
 export function getUserFromRequest(authHeader?: string) {
@@ -11,7 +12,7 @@ export function getUserFromRequest(authHeader?: string) {
     const secretKey =
       process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
 
-    const decoded = jwt.verify(token, secretKey);
+    const decoded = jwt.verify(token, secretKey) as IAuthenticationTokenPayload;
 
     return decoded;
   } catch (err) {
