@@ -25,7 +25,7 @@ export async function createRoadmap() {
     color,
     display,
     created_at,
-    updated_at
+    updated_at,
   };
 
   await database.insert(roadmap).into("roadmaps");

@@ -23,7 +23,7 @@ export async function createBoard() {
     display,
     view_voters,
     createdAt,
-    updatedAt
+    updatedAt,
   };
 
   await database.insert(board).into("boards");

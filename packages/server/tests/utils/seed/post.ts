@@ -7,7 +7,7 @@ import { toSlug } from "../../../src/helpers";
 export async function createPost(
   userId: string,
   boardId: string,
-  roadmapId: string
+  roadmapId: string,
 ) {
   const title = faker.commerce.productName();
   // generate slug unique indentification
@@ -28,7 +28,7 @@ export async function createPost(
     createdAt,
     updatedAt,
     boardId,
-    roadmapId
+    roadmapId,
   };
 
   await database.insert(post).into("posts");

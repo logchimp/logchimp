@@ -7,13 +7,14 @@ import { createUser } from "../../utils/seed/user";
 import { createBoard } from "../../utils/seed/board";
 import { createRoadmap } from "../../utils/seed/roadmap";
 import { createPost } from "../../utils/seed/post";
+import { faker } from "@faker-js/faker";
+import database from "../../../src/database";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Create new posts
-describe("POST /api/v1/posts", () => {
-  afterEach(async () => {
+describe(" POST /api/v1/posts", () => {afterEach(async () => {
     await cleanDb();
   });
-
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     await cleanDb();
     const response = await supertest(app).post("/api/v1/posts");
@@ -42,45 +43,8 @@ describe("POST /api/v1/posts", () => {
       isVerified: true,
     });
 
-    // assign "post:create" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "post:create",
-          description: "this role has 'post:create' permission",
-        })
-        .into("roles");
-
-      // find "post:create" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "post",
-          action: "create",
-        })
-        .first();
-
-      // assign 'post:create' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
     });
 
     const response = await supertest(app)
@@ -105,7 +69,7 @@ describe("POST /api/v1/posts", () => {
   });
 
   it('should throw error "POST_TITLE_MISSING"', async () => {
-    const board = generateBoards();
+    const board = await createBoard();
     await database.insert(board).into("boards");
 
     const roadmap = generateRoadmap();
@@ -115,45 +79,8 @@ describe("POST /api/v1/posts", () => {
       isVerified: true,
     });
 
-    // assign "post:create" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "post:create",
-          description: "this role has 'post:create' permission",
-        })
-        .into("roles");
-
-      // find "post:create" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "post",
-          action: "create",
-        })
-        .first();
-
-      // assign 'post:create' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
     });
 
     const response = await supertest(app)
@@ -178,52 +105,14 @@ describe("POST /api/v1/posts", () => {
   });
 
   it("should create a post", async () => {
-    const board = generateBoards();
-    await database.insert(board).into("boards");
+    const board = await createBoard();
 
     const { user: authUser } = await createUser({
       isVerified: true,
     });
 
-    // assign "post:create" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "post:create",
-          description: "this role has 'post:create' permission",
-        })
-        .into("roles");
-
-      // find "post:create" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "post",
-          action: "create",
-        })
-        .first();
-
-      // assign 'post:create' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
     });
 
     const response = await supertest(app)
@@ -242,7 +131,6 @@ describe("POST /api/v1/posts", () => {
 });
 
 describe("POST /api/v1/posts/slug", () => {
-
   it('should throw error "POST_NOT_FOUND"', async () => {
     const response = await supertest(app)
       .post("/api/v1/posts/slug")
@@ -250,9 +138,9 @@ describe("POST /api/v1/posts/slug", () => {
         {
           slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
           // only slug is required to get a post
-        userId: ""
-      }
-    );
+          userId: ""
+        }
+      );
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
@@ -280,9 +168,9 @@ describe("POST /api/v1/posts/slug", () => {
         {
           slug: post.slug,
           // only slug is required to get a post
-        userId: ""
-      }
-    );
+          userId: ""
+        }
+      );
 
     const body = response.body.post;
 
