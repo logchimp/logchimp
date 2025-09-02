@@ -21,6 +21,25 @@ const extractTokenFromHeader = (header: string) => {
   }
 };
 
+export const fetchUserWithRoles = async (userId: string) => {
+  return database
+    .select(
+      "u.userId",
+      "u.isOwner",
+      "u.isBlocked",
+      "u.name",
+      "u.username",
+      "u.email",
+      database.raw("ARRAY_AGG(r.id) AS roles"),
+    )
+    .from("users AS u")
+    .leftJoin("roles_users AS ru", "u.userId", "ru.user_id")
+    .leftJoin("roles AS r", "ru.role_id", "r.id")
+    .groupBy("u.userId")
+    .where("u.userId", userId)
+    .first();
+};
+
 export const computePermissions = async (
   user: IAuthenticationMiddlewareUser,
 ): Promise<TPermission[]> => {
@@ -75,24 +94,9 @@ const authenticateWithToken = async (
   const userId = decoded.payload.userId;
 
   try {
-    const user = (await database
-      .select(
-        "u.userId",
-        "u.name",
-        "u.username",
-        "u.email",
-        "u.isOwner",
-        "u.isBlocked",
-        database.raw("ARRAY_AGG(r.id) AS roles"),
-      )
-      .from("users AS u")
-      .leftJoin("roles_users AS ru", "u.userId", "ru.user_id")
-      .leftJoin("roles AS r", "ru.role_id", "r.id")
-      .groupBy("u.userId")
-      .where({
-        userId,
-      })
-      .first()) as IAuthenticationMiddlewareUser;
+    const user = (await fetchUserWithRoles(
+      userId,
+    )) as IAuthenticationMiddlewareUser;
 
     if (!user) {
       return res.status(404).send({
