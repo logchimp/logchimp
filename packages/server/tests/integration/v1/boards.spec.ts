@@ -7,8 +7,8 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
-import { IBoard } from "@logchimp/types";
-import { TableInserts } from "../../../vitest.setup.integration";
+import type { IBoard } from "@logchimp/types";
+import type { TableInserts } from "../../../vitest.setup.integration";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 declare global {
@@ -17,33 +17,33 @@ declare global {
 
 // Get all boards by filter
 describe("GET /api/v1/boards", async () => {
-  beforeAll( async () => {
+  beforeAll(async () => {
     const response = await supertest(app).get("/api/v1/boards");
 
     const reponseBoards: IBoard[] = response.body.boards;
 
     if (reponseBoards.length < 11) {
-      const insertsToAdd: TableInserts[] = [];
-      await database.transaction(async (trx) => {
-        for (let i = 0; i < 15; i++) {
-          const board = generateBoards();
-          const boardName = faker.commerce.product().toLowerCase();
-          board.url = boardName + uuid();
-
-          await trx.insert(board).into("boards");
-
-          insertsToAdd.push({
-            tableName: "boards",
-            columnName: "boardId",
-            uniqueValue: board.boardId
-          });
-
-        }
+      const trx = await database.transaction({
+        isolationLevel: "read committed",
       });
-      globalThis.tableInserts.push(...insertsToAdd);
+
+      for (let i = 0; i < 15; i++) {
+        const board = generateBoards();
+        const boardName = faker.commerce.product().toLowerCase();
+        board.url = boardName + uuid();
+
+        await trx.insert(board).into("boards");
+
+        globalThis.tableInserts.push({
+          tableName: "boards",
+          columnName: "boardId",
+          uniqueValue: board.boardId,
+        });
+      }
+
+      trx.commit();
     }
   });
-
 
   it("should get an Array of boards", async () => {
     const response = await supertest(app).get("/api/v1/boards");
@@ -57,17 +57,15 @@ describe("GET /api/v1/boards", async () => {
     const filterQuery = {
       // default page num is 0
       // page: 0,
-
       // default and max limit is 10
       // limit: 10,
-
       // defualt 'ASC' order
       // created: "ASC",
     };
 
     const response = await supertest(app)
-    .get("/api/v1/boards")
-    .query(filterQuery);
+      .get("/api/v1/boards")
+      .query(filterQuery);
 
     const reponseBoards: IBoard[] = response.body.boards;
 
@@ -76,24 +74,24 @@ describe("GET /api/v1/boards", async () => {
     expect(reponseBoards).toHaveLength(10);
 
     const boardCreationDates = reponseBoards.map(
-      (board: IBoard) => new Date(board.createdAt)
+      (board: IBoard) => new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
       const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i+1].getTime();
+      const next = boardCreationDates[i + 1].getTime();
       expect(curr).to.be.at.most(next);
     }
   });
 
   it("should get filtered boards in 'DESC' order", async () => {
     const filterQuery = {
-      created: 'DESC',
+      created: "DESC",
     };
 
     const response = await supertest(app)
-    .get("/api/v1/boards")
-    .query(filterQuery);
+      .get("/api/v1/boards")
+      .query(filterQuery);
 
     const reponseBoards: IBoard[] = response.body.boards;
 
@@ -102,26 +100,25 @@ describe("GET /api/v1/boards", async () => {
     expect(reponseBoards).toHaveLength(10);
 
     const boardCreationDates = reponseBoards.map(
-      (board: IBoard) => new Date(board.createdAt)
+      (board: IBoard) => new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
       const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i+1].getTime();
+      const next = boardCreationDates[i + 1].getTime();
       expect(curr).to.be.at.least(next);
     }
   });
 
-
   it("should get 2 filtered boards in 'DESC' order", async () => {
     const filterQuery = {
       limit: 2,
-      created: 'DESC',
+      created: "DESC",
     };
 
     const response = await supertest(app)
-    .get("/api/v1/boards")
-    .query(filterQuery);
+      .get("/api/v1/boards")
+      .query(filterQuery);
 
     const reponseBoards: IBoard[] = response.body.boards;
 
@@ -130,12 +127,12 @@ describe("GET /api/v1/boards", async () => {
     expect(reponseBoards).toHaveLength(2);
 
     const boardCreationDates = reponseBoards.map(
-      (board: IBoard) => new Date(board.createdAt)
+      (board: IBoard) => new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
       const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i+1].getTime();
+      const next = boardCreationDates[i + 1].getTime();
       expect(curr).to.be.at.least(next);
     }
   });
@@ -143,12 +140,12 @@ describe("GET /api/v1/boards", async () => {
   it("should get 10 filtered boards in 'ACS' order", async () => {
     const filterQuery = {
       limit: 15,
-      created: 'ACS',
+      created: "ACS",
     };
 
     const response = await supertest(app)
-    .get("/api/v1/boards")
-    .query(filterQuery);
+      .get("/api/v1/boards")
+      .query(filterQuery);
 
     const reponseBoards: IBoard[] = response.body.boards;
 
@@ -157,12 +154,12 @@ describe("GET /api/v1/boards", async () => {
     expect(reponseBoards).toHaveLength(10);
 
     const boardCreationDates = reponseBoards.map(
-      (board: IBoard) => new Date(board.createdAt)
+      (board: IBoard) => new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
       const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i+1].getTime();
+      const next = boardCreationDates[i + 1].getTime();
       expect(curr).to.be.at.most(next);
     }
   });
@@ -171,12 +168,12 @@ describe("GET /api/v1/boards", async () => {
     const filterQuery = {
       page: 2,
       limit: 5,
-      created: 'DESC',
+      created: "DESC",
     };
 
     const response = await supertest(app)
-    .get("/api/v1/boards")
-    .query(filterQuery);
+      .get("/api/v1/boards")
+      .query(filterQuery);
 
     const reponseBoards: IBoard[] = response.body.boards;
 
@@ -185,12 +182,12 @@ describe("GET /api/v1/boards", async () => {
     expect(reponseBoards).toHaveLength(5);
 
     const boardCreationDates = reponseBoards.map(
-      (board: IBoard) => new Date(board.createdAt)
+      (board: IBoard) => new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
       const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i+1].getTime();
+      const next = boardCreationDates[i + 1].getTime();
       expect(curr).to.be.at.least(next);
     }
   });
@@ -199,12 +196,12 @@ describe("GET /api/v1/boards", async () => {
     const filterQuery = {
       page: 50,
       limit: 10,
-      created: 'DESC',
+      created: "DESC",
     };
 
     const response = await supertest(app)
-    .get("/api/v1/boards")
-    .query(filterQuery);
+      .get("/api/v1/boards")
+      .query(filterQuery);
 
     const reponseBoards: IBoard[] = response.body.boards;
 
@@ -212,7 +209,6 @@ describe("GET /api/v1/boards", async () => {
     expect(response.status).toBe(200);
     expect(reponseBoards).toHaveLength(0);
   });
-
 });
 
 // Get boards by URL
@@ -238,7 +234,7 @@ describe("GET /boards/:url", () => {
     globalThis.tableInserts.push({
       tableName: "boards",
       columnName: "boardId",
-      uniqueValue: board.boardId
+      uniqueValue: board.boardId,
     });
 
     const response = await supertest(app).get(`/api/v1/boards/${boardName}`);
@@ -376,7 +372,7 @@ describe("DELETE /api/v1/boards", () => {
     globalThis.tableInserts.push({
       tableName: "boards",
       columnName: "boardId",
-      uniqueValue: board.boardId
+      uniqueValue: board.boardId,
     });
 
     const { user: authUser } = await createUser();
@@ -400,7 +396,7 @@ describe("DELETE /api/v1/boards", () => {
     globalThis.tableInserts.push({
       tableName: "boards",
       columnName: "boardId",
-      uniqueValue: board.boardId
+      uniqueValue: board.boardId,
     });
 
     const { user: authUser } = await createUser();

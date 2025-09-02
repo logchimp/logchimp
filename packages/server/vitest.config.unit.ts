@@ -1,10 +1,11 @@
-import { defineConfig } from "vitest/config";
+import { defineProject } from "vitest/config";
 
 import baseConfig from "./vitest.config.base";
 
-export default defineConfig({
+export default defineProject({
   ...baseConfig,
   test: {
+    ...baseConfig.test,
     dir: "./tests/unit",
   },
 });
