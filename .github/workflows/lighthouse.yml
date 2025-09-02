@@ -13,9 +13,6 @@ jobs:
       - name: Checkout latest repo
         uses: actions/checkout@v4
 
-      - name: Create output dir
-        run: mkdir /tmp/artifacts
-
       - name: Setup node
         uses: actions/setup-node@v4
         with:
@@ -39,14 +36,12 @@ jobs:
         with:
           urls: "http://localhost:3000/"
           uploadArtifacts: true
-          temporaryPublicStorage: true
 
       - name: Format report
         id: format
         run: |
           manifest='${{ steps.lhci.outputs.manifest }}'
 
-          url=$(jq -r '.[0].url' <<< "$manifest")
           perf=$(jq -r '([.[0].summary.performance * 100 | floor] | .[0])' <<< "$manifest")
           acc=$(jq -r '([.[0].summary.accessibility * 100 | floor] | .[0])' <<< "$manifest")
           bp=$(jq -r '([.[0].summary["best-practices"] * 100 | floor] | .[0])' <<< "$manifest")
@@ -65,9 +60,10 @@ jobs:
               echo "🔴"
             fi
           }
+          run_url="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
           echo "COMMENT<<EOF" >> $GITHUB_ENV
-          echo "**Lighthouse report for** $url" >> $GITHUB_ENV
+          echo "**Lighthouse report**" >> $GITHUB_ENV
           echo "" >> $GITHUB_ENV
           echo "| Category       | Score | Status |" >> $GITHUB_ENV
           echo "|----------------|-------|--------|" >> $GITHUB_ENV
@@ -76,6 +72,8 @@ jobs:
           echo "| Best Practices | $bp   | $(badge $bp) |" >> $GITHUB_ENV
           echo "| SEO            | $seo  | $(badge $seo) |" >> $GITHUB_ENV
           echo "| PWA            | $pwa  | $(badge $pwa) |" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "[View workflow run]($run_url)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Lighthouse sticky comment
