@@ -12,7 +12,7 @@ export interface ApiPaginationType {
 }
 
 export interface CursorPaginationParams {
-  first?: number;
+  first?: string;
   after?: string;
 }
 
