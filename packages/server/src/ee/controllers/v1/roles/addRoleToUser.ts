@@ -1,6 +1,12 @@
 import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
-import type { IUserRole, TPermission } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  IAssignRoleToUserRequestParams,
+  IUserRole,
+  TAssignRoleToUserResponseBody,
+  TPermission,
+} from "@logchimp/types";
 
 import database from "../../../../database";
 
@@ -8,7 +14,12 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function addRoleToUser(req: Request, res: Response) {
+type ResponseBody = TAssignRoleToUserResponseBody | IApiErrorResponse;
+
+export async function addRoleToUser(
+  req: Request<IAssignRoleToUserRequestParams>,
+  res: Response<ResponseBody>,
+) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   const { role_id, user_id } = req.params;
