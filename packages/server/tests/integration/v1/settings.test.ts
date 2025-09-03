@@ -15,21 +15,21 @@ describe("GET /api/v1/settings/site", () => {
 
     const response = await supertest(app).get("/api/v1/settings/site");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
 
     const settings = response.body.settings;
-    expect(settings.title).toEqual("LogChimp");
-    expect(settings.description).toEqual(
+    expect(settings.title).toBe("LogChimp");
+    expect(settings.description).toBe(
       "Track user feedback to build better products",
     );
-    expect(settings.logo).toEqual(
+    expect(settings.logo).toBe(
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
     );
-    expect(settings.icon).toEqual(
+    expect(settings.icon).toBe(
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
     );
-    expect(settings.accentColor).toEqual("484d7c");
+    expect(settings.accentColor).toBe("484d7c");
     expect(settings.googleAnalyticsId).toBeNull();
     expect(settings.isPoweredBy).toBeTruthy();
     expect(settings.allowSignup).toBeTruthy();

@@ -10,7 +10,7 @@ describe("POST /api/v1/auth/email/validate", () => {
   it('should throw error "MISSING_TOKEN"', async () => {
     const response = await supertest(app).post("/api/v1/auth/email/validate");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
     expect(response.body.errors[0].code).toBe("MISSING_TOKEN");
   });
@@ -33,7 +33,7 @@ describe("POST /api/v1/auth/email/validate", () => {
         token,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("INVALID_TOKEN");
   });
@@ -63,7 +63,7 @@ describe("POST /api/v1/auth/email/validate", () => {
         token,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
     expect(response.body.verify.success).toBeTruthy();
 

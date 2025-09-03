@@ -28,7 +28,7 @@ describe("GET /api/v1/roadmaps", () => {
 
     const response = await supertest(app).get("/api/v1/roadmaps");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
     expect(response.body.results).toHaveLength(0);
     expect(response.body.roadmaps).toHaveLength(0);
@@ -99,11 +99,11 @@ describe("GET /api/v1/roadmaps", () => {
     const res = await supertest(app).get("/api/v1/roadmaps?after=");
 
     expect(res.status).toBe(400);
-    expect(res.body.code).toEqual("VALIDATION_ERROR");
-    expect(res.body.message).toEqual("Invalid query parameters");
+    expect(res.body.code).toBe("VALIDATION_ERROR");
+    expect(res.body.message).toBe("Invalid query parameters");
 
     // invalid ?=after query param
-    expect(res.body.errors[0].message).toEqual("Invalid UUID");
+    expect(res.body.errors[0].message).toBe("Invalid UUID");
   });
 
   it("returns correct info for last page", async () => {
@@ -148,7 +148,7 @@ describe("GET /api/v1/roadmaps/:url", () => {
       const res = await supertest(app).get(`/api/v1/roadmaps/${name}`);
 
       expect(res.status).toBe(404);
-      expect(res.body.code).toEqual("ROADMAP_NOT_FOUND");
+      expect(res.body.code).toBe("ROADMAP_NOT_FOUND");
     }),
   );
 
@@ -175,13 +175,13 @@ describe("GET /api/v1/roadmaps/:url", () => {
     expect(body.roadmap).not.toBeNull();
     expect(body.roadmap).not.toBeUndefined();
 
-    expect(body.roadmap.id).toEqual(roadmap.id);
-    expect(body.roadmap.name).toEqual(roadmap.name);
-    expect(body.roadmap.url).toEqual(roadmap.url);
-    expect(body.roadmap.index).toEqual(roadmap.index);
-    expect(body.roadmap.display).toEqual(roadmap.display);
-    expect(body.roadmap.color).toEqual(roadmap.color);
-    expect(body.roadmap.created_at).toEqual(roadmap.created_at);
+    expect(body.roadmap.id).toBe(roadmap.id);
+    expect(body.roadmap.name).toBe(roadmap.name);
+    expect(body.roadmap.url).toBe(roadmap.url);
+    expect(body.roadmap.index).toBe(roadmap.index);
+    expect(body.roadmap.display).toBe(roadmap.display);
+    expect(body.roadmap.color).toBe(roadmap.color);
+    expect(body.roadmap.created_at).toBe(roadmap.created_at);
   });
 });
 
@@ -192,9 +192,9 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       "/api/v1/roadmaps/search/completed",
     );
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
@@ -206,9 +206,9 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       .get("/api/v1/roadmaps/search/completed")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it('should get 0 search results for "randooo" roadmaps', async () => {
@@ -223,10 +223,10 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       .get("/api/v1/roadmaps/search/randooo")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.body.roadmaps).toEqual([]);
-    expect(response.body.roadmaps.length).toEqual(0);
+    expect(response.body.roadmaps).toStrictEqual([]);
+    expect(response.body.roadmaps).toHaveLength(0);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
   });
 
@@ -262,25 +262,25 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       .set("Authorization", `Bearer ${user.authToken}`);
 
     const roadmaps = response.body.roadmaps;
-    expect(response.body.roadmaps.length).toEqual(2);
+    expect(response.body.roadmaps).toHaveLength(2);
 
     // r1
-    expect(roadmaps[0].id).toEqual(r1.id);
-    expect(roadmaps[0].name).toEqual(r1.name);
-    expect(roadmaps[0].url).toEqual(r1.url);
-    expect(roadmaps[0].color).toEqual(r1.color);
-    expect(roadmaps[0].display).toEqual(r1.display);
-    expect(roadmaps[0].index).toEqual(r1.index);
+    expect(roadmaps[0].id).toBe(r1.id);
+    expect(roadmaps[0].name).toBe(r1.name);
+    expect(roadmaps[0].url).toBe(r1.url);
+    expect(roadmaps[0].color).toBe(r1.color);
+    expect(roadmaps[0].display).toBe(r1.display);
+    expect(roadmaps[0].index).toBe(r1.index);
 
     // r2
-    expect(roadmaps[1].id).toEqual(r2.id);
-    expect(roadmaps[1].name).toEqual(r2.name);
-    expect(roadmaps[1].url).toEqual(r2.url);
-    expect(roadmaps[1].color).toEqual(r2.color);
-    expect(roadmaps[1].display).toEqual(r2.display);
-    expect(roadmaps[1].index).toEqual(r2.index);
+    expect(roadmaps[1].id).toBe(r2.id);
+    expect(roadmaps[1].name).toBe(r2.name);
+    expect(roadmaps[1].url).toBe(r2.url);
+    expect(roadmaps[1].color).toBe(r2.color);
+    expect(roadmaps[1].display).toBe(r2.display);
+    expect(roadmaps[1].index).toBe(r2.index);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
   });
 });
@@ -291,7 +291,7 @@ describe("POST /api/v1/roadmaps", () => {
     const res = await supertest(app).post("/api/v1/roadmaps");
 
     expect(res.status).toBe(400);
-    expect(res.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
@@ -303,9 +303,9 @@ describe("POST /api/v1/roadmaps", () => {
       .post("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it("should create private roadmap with default values", async () => {
@@ -320,12 +320,12 @@ describe("POST /api/v1/roadmaps", () => {
       .post("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(201);
 
     const roadmap = response.body.roadmap;
 
-    expect(roadmap.name).toEqual("new roadmap");
+    expect(roadmap.name).toBe("new roadmap");
     expect(roadmap.url).toContain("new-roadmap-");
     expect(roadmap.display).toBeFalsy();
 
@@ -342,7 +342,7 @@ describe("PATCH /api/v1/roadmaps", () => {
     const res = await supertest(app).patch("/api/v1/roadmaps");
 
     expect(res.status).toBe(400);
-    expect(res.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
@@ -354,7 +354,7 @@ describe("PATCH /api/v1/roadmaps", () => {
       .patch("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
   });
@@ -375,7 +375,7 @@ describe("PATCH /api/v1/roadmaps", () => {
         id: r1.id,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
 
     expect(response.body.errors).toEqual(
@@ -407,17 +407,17 @@ describe("PATCH /api/v1/roadmaps", () => {
         url: r1.url,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
 
     const roadmap = response.body.roadmap;
-    expect(roadmap.id).toEqual(r1.id);
-    expect(roadmap.name).toEqual(name);
-    expect(roadmap.url).toEqual(r1.url);
-    expect(roadmap.color).toEqual(r1.color);
-    expect(roadmap.display).toEqual(r1.display);
-    expect(roadmap.index).toEqual(r1.index);
-    expect(roadmap.created_at).toEqual(r1.created_at);
+    expect(roadmap.id).toBe(r1.id);
+    expect(roadmap.name).toBe(name);
+    expect(roadmap.url).toBe(r1.url);
+    expect(roadmap.color).toBe(r1.color);
+    expect(roadmap.display).toBe(r1.display);
+    expect(roadmap.index).toBe(r1.index);
+    expect(roadmap.created_at).toBe(r1.created_at);
   });
 });
 
@@ -427,7 +427,7 @@ describe("DELETE /api/v1/roadmaps/", () => {
     const res = await supertest(app).delete("/api/v1/roadmaps");
 
     expect(res.status).toBe(400);
-    expect(res.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
@@ -439,9 +439,9 @@ describe("DELETE /api/v1/roadmaps/", () => {
       .delete("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it('should throw error "ROADMAP_NOT_FOUND"', async () => {
@@ -456,9 +456,9 @@ describe("DELETE /api/v1/roadmaps/", () => {
         id: uuid(),
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(404);
-    expect(response.body.code).toEqual("ROADMAP_NOT_FOUND");
+    expect(response.body.code).toBe("ROADMAP_NOT_FOUND");
   });
 
   it("should delete roadmap", async () => {

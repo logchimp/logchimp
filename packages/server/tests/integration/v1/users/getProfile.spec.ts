@@ -13,7 +13,7 @@ describe("GET /api/v1/users/profile", () => {
     const response = await supertest(app).get("/api/v1/users/profile");
 
     expect(response.statusCode).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it("should throw INVALID_AUTH_HEADER_FORMAT", async () => {
@@ -22,7 +22,7 @@ describe("GET /api/v1/users/profile", () => {
       .set("Authorization", "WrongFormatTokenHere");
 
     expect(response.statusCode).toBe(401);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER_FORMAT");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
   it("should throw INVALID_JWT", async () => {
@@ -31,7 +31,7 @@ describe("GET /api/v1/users/profile", () => {
       .set("Authorization", "Bearer InvalidJWTToken");
 
     expect(response.statusCode).toBe(401);
-    expect(response.body.code).toEqual("INVALID_JWT");
+    expect(response.body.code).toBe("INVALID_JWT");
   });
 
   it("should throw INVALID_TOKEN", async () => {
@@ -42,7 +42,7 @@ describe("GET /api/v1/users/profile", () => {
       .set("Authorization", `Bearer ${fakeToken}`);
 
     expect(response.statusCode).toBe(500);
-    expect(response.body.code).toEqual("SERVER_ERROR");
+    expect(response.body.code).toBe("SERVER_ERROR");
   });
 
   it("should throw INVALID_TOKEN", async () => {
@@ -57,7 +57,7 @@ describe("GET /api/v1/users/profile", () => {
       .set("Authorization", `Bearer ${fakeToken}`);
 
     expect(response.statusCode).toBe(404);
-    expect(response.body.code).toEqual("USER_NOT_FOUND");
+    expect(response.body.code).toBe("USER_NOT_FOUND");
   });
 
   it("should throw USER_BLOCK", async () => {

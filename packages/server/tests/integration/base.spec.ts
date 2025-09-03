@@ -5,23 +5,23 @@ import supertest from "supertest";
 it("GET /api", async () => {
   const response = await supertest(app).get("/api");
 
-  expect(response.headers["content-type"]).toContain("text/html");
-  expect(response.status).toEqual(200);
+  expect(response.headers["content-type"]).toBe("text/html");
+  expect(response.status).toBe(200);
   expect(response.text).toBe("👍");
 });
 
 // test("POST /api", async () => {
 // 	const response = await supertest(app).post("/api");
 
-// 	expect(response.headers["content-type"]).toContain("application/json");
-// 	expect(response.body.code).toEqual("ROUTE_NOT_FOUND");
+// 	expect(response.headers["content-type"]).toBe("application/json");
+// 	expect(response.body.code).toBe("ROUTE_NOT_FOUND");
 // });
 
 // describe("Server images", () => {
 //   test("should return 404 for readme.md file", async () => {
 //     const response = await supertest(app).get("/content/images/readme.md");
 //
-//     expect(response.status).toEqual(404);
+//     expect(response.status).toBe(404);
 //   });
 //
 //   test("should server 'png' image", async () => {
@@ -52,6 +52,6 @@ it("GET /api", async () => {
 //       "/content/images/random-avatar.png",
 //     );
 //
-//     expect(response.status).toEqual(200);
+//     expect(response.status).toBe(200);
 //   });
 // });

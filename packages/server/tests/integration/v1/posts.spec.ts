@@ -16,9 +16,9 @@ describe("POST /api/v1/posts", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/posts");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
@@ -30,9 +30,9 @@ describe("POST /api/v1/posts", () => {
       .post("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it('should throw error "BOARD_ID_MISSING"', async () => {
@@ -52,9 +52,9 @@ describe("POST /api/v1/posts", () => {
         userId: authUser.userId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
+    expect(response.body.errors).toBe(
       expect.arrayContaining([
         expect.objectContaining({
           message: "Board ID missing",
@@ -84,9 +84,9 @@ describe("POST /api/v1/posts", () => {
         boardId: board.boardId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
+    expect(response.body.errors).toBe(
       expect.arrayContaining([
         expect.objectContaining({
           message: "Post title missing",
@@ -118,10 +118,10 @@ describe("POST /api/v1/posts", () => {
     expect(response.body.code).toBeUndefined();
 
     const post = response.body.post;
-    expect(post.title).toEqual(title);
-    expect(post.contentMarkdown).toEqual(contentMarkdown);
-    expect(post.userId).toEqual(authUser.userId);
-    expect(post.boardId).toEqual(board.boardId);
+    expect(post.title).toBe(title);
+    expect(post.contentMarkdown).toBe(contentMarkdown);
+    expect(post.userId).toBe(authUser.userId);
+    expect(post.boardId).toBe(board.boardId);
   });
 });
 
@@ -133,9 +133,9 @@ describe("POST /api/v1/posts/slug", () => {
       userId: "",
     });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(404);
-    expect(response.body.code).toEqual("POST_NOT_FOUND");
+    expect(response.body.code).toBe("POST_NOT_FOUND");
   });
 
   it("should get post with matching slug", async () => {
@@ -161,11 +161,11 @@ describe("POST /api/v1/posts/slug", () => {
 
     const body = response.body.post;
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
-    expect(body.slug).toEqual(post.slug);
-    expect(body.board.boardId).toEqual(board.boardId);
-    expect(body.roadmap.id).toEqual(roadmap.id);
-    expect(body.author.userId).toEqual(authUser.userId);
+    expect(body.slug).toBe(post.slug);
+    expect(body.board.boardId).toBe(board.boardId);
+    expect(body.roadmap.id).toBe(roadmap.id);
+    expect(body.author.userId).toBe(authUser.userId);
   });
 });

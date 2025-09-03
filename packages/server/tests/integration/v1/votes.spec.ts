@@ -1,10 +1,14 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
+
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
 import { cleanDb } from "../../utils/db";
-import { post as generatePost, vote } from "../../utils/generators";
+import {
+  post as generatePost,
+  vote as assignVote,
+} from "../../utils/generators";
 
 // Add vote to post
 describe("POST /api/v1/votes", () => {
@@ -12,9 +16,9 @@ describe("POST /api/v1/votes", () => {
     await cleanDb();
     const response = await supertest(app).post("/api/v1/votes");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   // TODO: test the sceneries where a user does not have a 'vote:create' permission
@@ -30,9 +34,9 @@ describe("POST /api/v1/votes", () => {
         postId: uuid(),
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it('should throw error "INVALID_POST_ID"', async () => {
@@ -44,9 +48,9 @@ describe("POST /api/v1/votes", () => {
       .post(`/api/v1/votes`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_POST_ID");
+    expect(response.body.code).toBe("INVALID_POST_ID");
   });
 
   it('should throw error "VOTE_EXISTS"', async () => {
@@ -59,7 +63,7 @@ describe("POST /api/v1/votes", () => {
       },
       true,
     );
-    await vote(user.userId, p1.postId);
+    await assignVote(user.userId, p1.postId);
 
     const response = await supertest(app)
       .post(`/api/v1/votes`)
@@ -69,7 +73,7 @@ describe("POST /api/v1/votes", () => {
         userId: user.userId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(409);
     expect(response.body.code).toBe("VOTE_EXISTS");
   });
@@ -93,12 +97,12 @@ describe("POST /api/v1/votes", () => {
         userId: user.userId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(201);
 
-    expect(response.body.voters.votesCount).toEqual(1);
-    expect(response.body.voters.viewerVote.userId).toEqual(user.userId);
-    expect(response.body.voters.viewerVote.postId).toEqual(p1.postId);
+    expect(response.body.voters.votesCount).toBe(1);
+    expect(response.body.voters.viewerVote.userId).toBe(user.userId);
+    expect(response.body.voters.viewerVote.postId).toBe(p1.postId);
   });
 });
 
@@ -107,9 +111,9 @@ describe("DELETE /api/v1/votes", () => {
     await cleanDb();
     const response = await supertest(app).delete("/api/v1/votes");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   // TODO: test the sceneries where a user does not have a 'vote:destroy' permission
@@ -125,9 +129,9 @@ describe("DELETE /api/v1/votes", () => {
         postId: uuid(),
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it('should throw error "INVALID_POST_ID"', async () => {
@@ -139,9 +143,9 @@ describe("DELETE /api/v1/votes", () => {
       .delete("/api/v1/votes")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_POST_ID");
+    expect(response.body.code).toBe("INVALID_POST_ID");
   });
 
   it('should throw error "VOTE_NOT_FOUND"', async () => {
@@ -162,7 +166,7 @@ describe("DELETE /api/v1/votes", () => {
         postId: p1.postId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("VOTE_NOT_FOUND");
   });
@@ -177,7 +181,7 @@ describe("DELETE /api/v1/votes", () => {
       },
       true,
     );
-    await vote(user.userId, p1.postId);
+    await assignVote(user.userId, p1.postId);
 
     const response = await supertest(app)
       .delete("/api/v1/votes")
@@ -186,10 +190,10 @@ describe("DELETE /api/v1/votes", () => {
         postId: p1.postId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
 
-    expect(response.body.voters.votesCount).toEqual(0);
+    expect(response.body.voters.votesCount).toBe(0);
     expect(response.body.voters.votes).toHaveLength(0);
     expect(response.body.voters.viewerVote).toBeUndefined();
   });

@@ -13,7 +13,7 @@ describe("POST /api/v1/auth/login", () => {
   it('should throw error "EMAIL_INVALID"', async () => {
     const response = await supertest(app).post("/api/v1/auth/login");
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
@@ -23,7 +23,7 @@ describe("POST /api/v1/auth/login", () => {
       email: "user_not_found@example.com",
     });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
@@ -35,7 +35,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "",
     });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("PASSWORD_MISSING");
   });
@@ -47,7 +47,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "incorrect_password",
     });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("INCORRECT_PASSWORD");
   });
@@ -59,7 +59,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password",
     });
 
-    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["content-type"]).toBe("application/json");
     expect(response.status).toBe(200);
 
     const user = response.body.user;
@@ -69,12 +69,12 @@ describe("POST /api/v1/auth/login", () => {
     expect(typeof token).not.toBe("string");
     expect(typeof token).toBe("object");
     if (typeof token === "object") {
-      expect(token.email).toEqual(u.email);
-      expect(token.userId).toEqual(user.userId);
+      expect(token.email).toBe(u.email);
+      expect(token.userId).toBe(user.userId);
     }
 
-    expect(user.email).toEqual(u.email);
-    expect(user.username).toEqual(u.username);
+    expect(user.email).toBe(u.email);
+    expect(user.username).toBe(u.username);
     expect(user.avatar).toBeNull();
     expect(user.name).toBeNull();
     expect(user.password).toBeUndefined();
@@ -115,7 +115,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password",
     });
 
-    // expect(response.statusCode).toEqual(403);
-    expect(response.body.code).toEqual("USER_BLOCKED");
+    // expect(response.statusCode).toBe(403);
+    expect(response.body.code).toBe("USER_BLOCKED");
   });
 });
