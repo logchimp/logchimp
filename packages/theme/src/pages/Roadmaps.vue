@@ -1,10 +1,11 @@
 <template>
   <!-- Show roadmaps grid only when we have roadmaps -->
   <div
-    v-if="roadmaps.length > 0" ref="roadmapElement"
+    v-if="roadmaps.length > 0"
+    ref="roadmapElement"
     :class="[
       'overflow-x-auto h-[500px]',
-      'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]'
+      'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]',
     ]"
   >
     <roadmap-column
@@ -31,24 +32,27 @@ import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 const { get: siteSettings } = useSettingStore();
 
 // Cursor-based pagination state
+const pageSize = 4;
 const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
 const roadmaps = ref<IRoadmap[]>([]);
-let roadmapList: IRoadmap[];
-const roadmapIndex = ref<number>(0);
+const endCursor = ref<string | undefined>();
+const hasNextPage = ref<boolean>(false);
 
-async function getRoadmaps() {
+async function getRoadmaps(after: string | undefined) {
   try {
-    const response = await getAllRoadmaps();
+    const response = await getAllRoadmaps({
+      first: pageSize.toString(),
+      after: after == null ? undefined : after,
+    });
 
     const paginatedData: IPaginatedRoadmapsResponse = response.data;
-    roadmapList = paginatedData.results;
+    const roadmapList = paginatedData.results;
 
     if (roadmapList.length > 0) {
-      // Initializing the only 3 roadmaps
-      for (; roadmapIndex.value < 3; ) {
-        roadmaps.value.push(roadmapList[roadmapIndex.value++]);
-      }
+      roadmaps.value.push(...roadmapList);
     }
+    endCursor.value = paginatedData.page_info.end_cursor || undefined;
+    hasNextPage.value = paginatedData.page_info.has_next_page;
   } catch (err) {
     console.error("Error fetching roadmaps:", err);
   }
@@ -57,12 +61,12 @@ async function getRoadmaps() {
 useInfiniteScroll(
   roadmapElement,
   async () => {
-    roadmaps.value.push(roadmapList[roadmapIndex.value++]);
+    getRoadmaps(endCursor.value);
   },
   {
     direction: "right",
     canLoadMore: () => {
-      return roadmapIndex.value <= roadmapList.length;
+      return hasNextPage.value;
     },
   },
 );
@@ -78,7 +82,7 @@ useHead({
 });
 
 onMounted(() => {
-  getRoadmaps();
+  getRoadmaps(undefined);
 });
 
 defineOptions({
