@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
+import { v4 as uuid } from "uuid";
 import type { IGetRoadmapByUrlResponseBody } from "@logchimp/types";
 
 import app from "../../../src/app";
@@ -419,3 +420,65 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(roadmap.created_at).toEqual(r1.created_at);
   });
 });
+
+// Delete roadmaps
+describe("DELETE /api/v1/roadmaps/", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const res = await supertest(app).delete("/api/v1/roadmaps");
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toEqual("INVALID_AUTH_HEADER");
+  });
+
+  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+
+    const response = await supertest(app)
+      .delete("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+  });
+
+  it('should throw error "ROADMAP_NOT_FOUND"', async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+
+    const response = await supertest(app)
+      .delete("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        id: uuid(),
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toEqual("ROADMAP_NOT_FOUND");
+  });
+
+  it("should delete roadmap", async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:destroy"], {
+      roleName: "Roadmap delete",
+    });
+    const r1 = await generateRoadmap({}, true);
+
+    const response = await supertest(app)
+      .delete("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        id: r1.id,
+      });
+
+    expect(response.status).toBe(204);
+  });
+});
+
+// TODO: Sort roadmaps

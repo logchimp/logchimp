@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { v4 as uuid } from "uuid";
+import { v4 as uuidv4, v4 as uuid } from "uuid";
 import generatePassword from "omgopass";
 import { nanoid } from "nanoid";
 
@@ -132,4 +132,35 @@ const board = async (board?: Partial<BoardArgs>, insertToDb = false) => {
   return obj;
 };
 
-export { user, roadmap, post, board };
+interface RoleArgs {
+  name: string;
+  description: string;
+}
+
+async function role(role?: Partial<RoleArgs>) {
+  const name = role?.name || faker.commerce.productName();
+
+  const obj = {
+    id: uuid(),
+    name,
+    description: role?.description,
+    created_at: new Date().toJSON(),
+    updated_at: new Date().toJSON(),
+  };
+
+  await database.insert(obj).into("roles");
+
+  return obj;
+}
+
+async function vote(userId: string, postId: string) {
+  await database
+    .insert({
+      voteId: uuidv4(),
+      userId,
+      postId,
+    })
+    .into("votes");
+}
+
+export { user, roadmap, post, board, role, vote };

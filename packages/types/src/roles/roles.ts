@@ -26,7 +26,7 @@ export interface IUpdateRoleRequestBody {
   id: string;
   name: string;
   description: string | null;
-  permissions: TPermission[];
+  permissions?: TPermission[];
 }
 
 export interface IUpdateRoleResponseBody {

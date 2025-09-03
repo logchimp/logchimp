@@ -56,7 +56,7 @@ export async function update(
     const updateRole = updateRoles?.[0];
 
     // add new permissions to the role
-    role.permissions.forEach(async (perm) => {
+    for (const perm of (role?.permissions || []) as TPermission[]) {
       const type = perm.split(":")[0];
       const action = perm.split(":")[1];
 
@@ -71,7 +71,7 @@ export async function update(
           role_id: role.id,
         })
         .into("permissions_roles");
-    });
+    }
 
     const updatedPermissions = (await database
       .select(
