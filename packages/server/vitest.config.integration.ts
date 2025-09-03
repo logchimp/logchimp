@@ -1,4 +1,5 @@
 import { defineProject } from "vitest/config";
+import { defineProject } from "vitest/config";
 
 import baseConfig from "./vitest.config.base";
 
