@@ -19,6 +19,7 @@
 import { ref, useTemplateRef, onMounted } from "vue";
 import { useHead } from "@vueuse/head";
 import { useInfiniteScroll } from "@vueuse/core";
+import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 
 // modules
 import { getAllRoadmaps } from "../modules/roadmaps";
@@ -26,8 +27,6 @@ import { useSettingStore } from "../store/settings";
 
 // components
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
-
-import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 
 const { get: siteSettings } = useSettingStore();
 
@@ -63,8 +62,7 @@ useInfiniteScroll(
   {
     direction: "right",
     canLoadMore: () => {
-      if (roadmapIndex.value > roadmapList.length) return false;
-      return true;
+      return roadmapIndex.value <= roadmapList.length;
     },
   },
 );
