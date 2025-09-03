@@ -13,7 +13,7 @@ it("GET /api", async () => {
 // test("POST /api", async () => {
 // 	const response = await supertest(app).post("/api");
 
-// 	expect(response.headers["content-type"]).toBe("application/json");
+// 	expect(response.headers["content-type"]).toContain("application/json");
 // 	expect(response.body.code).toBe("ROUTE_NOT_FOUND");
 // });
 

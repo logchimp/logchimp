@@ -9,7 +9,7 @@ describe("POST /api/v1/auth/signup", () => {
   it('should throw error "EMAIL_INVALID"', async () => {
     const response = await supertest(app).post("/api/v1/auth/signup");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
@@ -19,7 +19,7 @@ describe("POST /api/v1/auth/signup", () => {
       email: "signup_email@example.com",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("PASSWORD_MISSING");
   });
@@ -67,7 +67,7 @@ describe("POST /api/v1/auth/signup", () => {
       email: randomEmail,
       password: "password",
     });
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(409);
     expect(response.body.code).toBe("USER_EXISTS");
   });

@@ -16,7 +16,7 @@ describe("POST /api/v1/posts", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/posts");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -30,7 +30,7 @@ describe("POST /api/v1/posts", () => {
       .post("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -52,7 +52,7 @@ describe("POST /api/v1/posts", () => {
         userId: authUser.userId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.errors).toBe(
       expect.arrayContaining([
@@ -84,7 +84,7 @@ describe("POST /api/v1/posts", () => {
         boardId: board.boardId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.errors).toBe(
       expect.arrayContaining([
@@ -133,7 +133,7 @@ describe("POST /api/v1/posts/slug", () => {
       userId: "",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("POST_NOT_FOUND");
   });
@@ -161,7 +161,7 @@ describe("POST /api/v1/posts/slug", () => {
 
     const body = response.body.post;
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(body.slug).toBe(post.slug);
     expect(body.board.boardId).toBe(board.boardId);

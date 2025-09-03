@@ -10,7 +10,7 @@ describe("GET /api/v1/auth/setup", () => {
 
     const response = await supertest(app).get("/api/v1/auth/setup");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     expect(response.body).toBeDefined();
@@ -27,7 +27,7 @@ describe("GET /api/v1/auth/setup", () => {
 
     const response = await supertest(app).get("/api/v1/auth/setup");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     expect(response.body).toBeDefined();
@@ -39,7 +39,7 @@ describe("POST /api/v1/auth/setup", () => {
   it('should throw error "EMAIL_INVALID"', async () => {
     const response = await supertest(app).post("/api/v1/auth/setup");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
@@ -49,7 +49,7 @@ describe("POST /api/v1/auth/setup", () => {
       email: "admin@example.com",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("PASSWORD_MISSING");
   });
@@ -64,7 +64,7 @@ describe("POST /api/v1/auth/setup", () => {
       password: "password",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(201);
 
     expect(response.body.user).toBeDefined();

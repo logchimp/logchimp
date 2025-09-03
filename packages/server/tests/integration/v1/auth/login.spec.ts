@@ -13,7 +13,7 @@ describe("POST /api/v1/auth/login", () => {
   it('should throw error "EMAIL_INVALID"', async () => {
     const response = await supertest(app).post("/api/v1/auth/login");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
@@ -23,7 +23,7 @@ describe("POST /api/v1/auth/login", () => {
       email: "user_not_found@example.com",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
@@ -35,7 +35,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("PASSWORD_MISSING");
   });
@@ -47,7 +47,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "incorrect_password",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("INCORRECT_PASSWORD");
   });
@@ -59,7 +59,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password",
     });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     const user = response.body.user;

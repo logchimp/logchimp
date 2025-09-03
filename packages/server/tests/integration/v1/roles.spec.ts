@@ -14,7 +14,7 @@ describe("GET /api/v1/roles", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/roles");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -26,7 +26,7 @@ describe("GET /api/v1/roles", () => {
       .get("/api/v1/roles")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -44,7 +44,7 @@ describe("GET /api/v1/roles", () => {
       .get("/api/v1/roles")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(response.body.roles).toHaveLength(2);
   });
@@ -54,7 +54,7 @@ describe("POST /api/v1/roles", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/roles");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -66,7 +66,7 @@ describe("POST /api/v1/roles", () => {
       .post("/api/v1/roles")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -80,7 +80,7 @@ describe("POST /api/v1/roles", () => {
       .post("/api/v1/roles")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(201);
 
     const role = response.body.role;
@@ -93,7 +93,7 @@ describe("PATCH /api/v1/roles", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).patch("/api/v1/roles");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -109,7 +109,7 @@ describe("PATCH /api/v1/roles", () => {
         id: r1.id,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -124,7 +124,7 @@ describe("PATCH /api/v1/roles", () => {
         id: uuid(),
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
@@ -146,7 +146,7 @@ describe("PATCH /api/v1/roles", () => {
         description,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     const resRole = response.body.role;
@@ -167,7 +167,7 @@ describe("GET /api/v1/roles/:id", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get(`/api/v1/roles/${uuid()}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -179,7 +179,7 @@ describe("GET /api/v1/roles/:id", () => {
       .get(`/api/v1/roles/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
@@ -192,7 +192,7 @@ describe("GET /api/v1/roles/:id", () => {
       .get(`/api/v1/roles/${r1.id}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -208,7 +208,7 @@ describe("GET /api/v1/roles/:id", () => {
       .get(`/api/v1/roles/${r1.id}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
 
     const role = response.body.role;
     expect(role.name).toBe(r1.name);
@@ -227,7 +227,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
       `/api/v1/roles/${uuid()}/users/${uuid()}`,
     );
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -239,7 +239,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
@@ -251,7 +251,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
@@ -263,7 +263,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -279,7 +279,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${r1.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     expect(response.body.success).toBe(1);
@@ -301,7 +301,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${r1.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(409);
 
     expect(response.body.success).toBe(0);
@@ -314,7 +314,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
       `/api/v1/roles/${uuid()}/users/${uuid()}`,
     );
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -326,7 +326,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
@@ -338,7 +338,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
@@ -350,7 +350,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
       .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });

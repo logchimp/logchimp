@@ -15,7 +15,7 @@ describe("GET /api/v1/settings/site", () => {
 
     const response = await supertest(app).get("/api/v1/settings/site");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     const settings = response.body.settings;

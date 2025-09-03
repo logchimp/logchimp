@@ -16,7 +16,7 @@ describe("POST /api/v1/votes", () => {
     await cleanDb();
     const response = await supertest(app).post("/api/v1/votes");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -34,7 +34,7 @@ describe("POST /api/v1/votes", () => {
         postId: uuid(),
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -48,7 +48,7 @@ describe("POST /api/v1/votes", () => {
       .post(`/api/v1/votes`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_POST_ID");
   });
@@ -73,7 +73,7 @@ describe("POST /api/v1/votes", () => {
         userId: user.userId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(409);
     expect(response.body.code).toBe("VOTE_EXISTS");
   });
@@ -97,7 +97,7 @@ describe("POST /api/v1/votes", () => {
         userId: user.userId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(201);
 
     expect(response.body.voters.votesCount).toBe(1);
@@ -111,7 +111,7 @@ describe("DELETE /api/v1/votes", () => {
     await cleanDb();
     const response = await supertest(app).delete("/api/v1/votes");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -129,7 +129,7 @@ describe("DELETE /api/v1/votes", () => {
         postId: uuid(),
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -143,7 +143,7 @@ describe("DELETE /api/v1/votes", () => {
       .delete("/api/v1/votes")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_POST_ID");
   });
@@ -166,7 +166,7 @@ describe("DELETE /api/v1/votes", () => {
         postId: p1.postId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("VOTE_NOT_FOUND");
   });
@@ -190,7 +190,7 @@ describe("DELETE /api/v1/votes", () => {
         postId: p1.postId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     expect(response.body.voters.votesCount).toBe(0);

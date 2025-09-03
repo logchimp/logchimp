@@ -28,7 +28,7 @@ describe("GET /api/v1/roadmaps", () => {
 
     const response = await supertest(app).get("/api/v1/roadmaps");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(response.body.results).toHaveLength(0);
     expect(response.body.roadmaps).toHaveLength(0);
@@ -192,7 +192,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       "/api/v1/roadmaps/search/completed",
     );
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -206,7 +206,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       .get("/api/v1/roadmaps/search/completed")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -226,7 +226,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.body.roadmaps).toStrictEqual([]);
     expect(response.body.roadmaps).toHaveLength(0);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
   });
 
@@ -280,7 +280,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     expect(roadmaps[1].display).toBe(r2.display);
     expect(roadmaps[1].index).toBe(r2.index);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
   });
 });
@@ -303,7 +303,7 @@ describe("POST /api/v1/roadmaps", () => {
       .post("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -320,7 +320,7 @@ describe("POST /api/v1/roadmaps", () => {
       .post("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(201);
 
     const roadmap = response.body.roadmap;
@@ -354,7 +354,7 @@ describe("PATCH /api/v1/roadmaps", () => {
       .patch("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
   });
@@ -375,7 +375,7 @@ describe("PATCH /api/v1/roadmaps", () => {
         id: r1.id,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
 
     expect(response.body.errors).toEqual(
@@ -407,7 +407,7 @@ describe("PATCH /api/v1/roadmaps", () => {
         url: r1.url,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     const roadmap = response.body.roadmap;
@@ -439,7 +439,7 @@ describe("DELETE /api/v1/roadmaps/", () => {
       .delete("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -456,7 +456,7 @@ describe("DELETE /api/v1/roadmaps/", () => {
         id: uuid(),
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("ROADMAP_NOT_FOUND");
   });

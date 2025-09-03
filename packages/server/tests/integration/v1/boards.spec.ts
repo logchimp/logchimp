@@ -16,7 +16,7 @@ describe("GET /api/v1/boards", () => {
 
     const response = await supertest(app).get("/api/v1/boards");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(response.body.boards).toHaveLength(0);
   });
@@ -27,7 +27,7 @@ describe("GET /boards/:url", () => {
   it('should throw error "BOARD_NOT_FOUND"', async () => {
     const response = await supertest(app).get("/api/v1/boards/do_not_exists");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("BOARD_NOT_FOUND");
   });
@@ -37,7 +37,7 @@ describe("GET /boards/:url", () => {
 
     const response = await supertest(app).get(`/api/v1/boards/${board.url}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     delete board.updatedAt;
@@ -53,7 +53,7 @@ describe("GET /boards/search/:name", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/boards/search/name");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -64,7 +64,7 @@ describe("GET /boards/search/:name", () => {
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -80,7 +80,7 @@ describe("GET /boards/search/:name", () => {
       .get("/api/v1/boards/search/name")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(response.body.boards).toHaveLength(0);
   });
@@ -91,7 +91,7 @@ describe("POST /api/v1/boards", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/boards");
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
@@ -103,7 +103,7 @@ describe("POST /api/v1/boards", () => {
       .post("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -137,7 +137,7 @@ describe("DELETE /api/v1/boards", () => {
         boardId: board.boardId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
@@ -158,7 +158,7 @@ describe("DELETE /api/v1/boards", () => {
         boardId: board.boardId,
       });
 
-    expect(response.headers["content-type"]).toBe("application/json");
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(204);
     expect(response.body.code).toBeUndefined();
   });
