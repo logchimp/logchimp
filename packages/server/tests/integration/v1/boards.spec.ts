@@ -9,11 +9,6 @@ import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import type { IBoard } from "@logchimp/types";
-import type { TableInserts } from "../../../vitest.setup.integration";
-
-declare global {
-  var tableInserts: TableInserts[];
-}
 
 // Get all boards by filter
 describe("GET /api/v1/boards", () => {
@@ -38,12 +33,6 @@ describe("GET /api/v1/boards", () => {
         board.display = true;
 
         boards.push(board);
-
-        globalThis.tableInserts.push({
-          tableName: "boards",
-          columnName: "boardId",
-          uniqueValue: board.boardId,
-        });
       }
 
       await database.batchInsert("boards", boards).transacting(trx);
@@ -235,12 +224,6 @@ describe("GET /boards/:url", () => {
     const { updatedAt, ...boardCheck } = board;
 
     await database.insert(board).into("boards");
-
-    globalThis.tableInserts.push({
-      tableName: "boards",
-      columnName: "boardId",
-      uniqueValue: board.boardId,
-    });
 
     const response = await supertest(app).get(`/api/v1/boards/${boardName}`);
 
