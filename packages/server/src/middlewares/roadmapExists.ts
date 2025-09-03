@@ -21,6 +21,14 @@ export async function roadmapExists(
   const id = validUUID(req.body.id);
   const url = req.params.url;
 
+  if (!id && !url) {
+    res.status(404).send({
+      message: error.api.roadmaps.roadmapNotFound,
+      code: "ROADMAP_ID_OR_URL_MISSING",
+    });
+    return;
+  }
+
   const roadmap = await database<IRoadmapPrivate>("roadmaps")
     .select("id", "name", "display", "url", "color", "created_at", "index")
     .where((builder) => {
