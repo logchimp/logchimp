@@ -1,5 +1,4 @@
 import { defineProject } from "vitest/config";
-import { defineProject } from "vitest/config";
 
 import baseConfig from "./vitest.config.base";
 
@@ -8,7 +7,6 @@ export default defineProject({
   test: {
     ...baseConfig.test,
     globals: true,
-    setupFiles: ["./vitest.setup.integration.ts"],
     dir: "./tests/integration",
   },
 });
