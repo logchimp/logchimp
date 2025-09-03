@@ -132,12 +132,12 @@
       </div>
     </template>
     <template #footer>
-      <button
+      <Button
+        type="outline"
         @click="closeDialog"
-        class="px-6 py-2 text-sm font-medium text-gray-700 bg-white/80 backdrop-blur-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm"
       >
         Close
-      </button>
+      </Button>
     </template>
   </UiDialog>
 </template>
@@ -148,6 +148,7 @@ import type { IUser, IUserInfo } from '@logchimp/types'
 import { Avatar } from '../../ui/Avatar'
 import { Users } from '../../../modules/users'
 import UiDialog from '../../ui/Dialog.vue'
+import Button from '../../ui/Button.vue'
 import {
   AlertTriangle as AlertTriangleIcon,
   Mail as MailIcon,
