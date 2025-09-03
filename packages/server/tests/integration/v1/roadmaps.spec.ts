@@ -197,7 +197,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+  it("should throw error not having 'roadmap:read' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -294,7 +294,7 @@ describe("POST /api/v1/roadmaps", () => {
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+  it("should throw error not having 'roadmap:create' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -345,7 +345,7 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+  it("should throw error not having 'roadmap:update' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -430,7 +430,7 @@ describe("DELETE /api/v1/roadmaps/", () => {
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+  it("should throw error not having 'roadmap:destroy' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });

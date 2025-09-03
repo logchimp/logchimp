@@ -21,7 +21,7 @@ describe("POST /api/v1/posts", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+  it("should throw error not having 'post:create' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -54,7 +54,7 @@ describe("POST /api/v1/posts", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.errors).toBe(
+    expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           message: "Board ID missing",

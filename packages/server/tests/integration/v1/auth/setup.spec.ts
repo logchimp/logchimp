@@ -44,7 +44,7 @@ describe("POST /api/v1/auth/setup", () => {
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
 
-  it('show throw error "PASSWORD_MISSING"', async () => {
+  it('should throw error "PASSWORD_MISSING"', async () => {
     const response = await supertest(app).post("/api/v1/auth/setup").send({
       email: "admin@example.com",
     });

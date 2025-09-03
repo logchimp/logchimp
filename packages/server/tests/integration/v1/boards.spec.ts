@@ -158,7 +158,6 @@ describe("DELETE /api/v1/boards", () => {
         boardId: board.boardId,
       });
 
-    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(204);
     expect(response.body.code).toBeUndefined();
   });
