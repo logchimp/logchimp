@@ -6,8 +6,18 @@ import app from "../../../src/app";
 import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
-import type { IBoard } from "@logchimp/types";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+
+interface BoardInsertRecord {
+  boardId: string;
+  name: string;
+  url: string;
+  color: string;
+  display: boolean;
+  view_voters: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 describe("GET /api/v1/boards", () => {
   beforeAll(async () => {
@@ -21,7 +31,7 @@ describe("GET /api/v1/boards", () => {
     );
 
     if (existingBoardsCount < requiredBoards) {
-      const boards: unknown[] = [];
+      const boards: BoardInsertRecord[] = [];
       const trx = await database.transaction();
 
       for (let i = 0; i < requiredBoards; i++) {
@@ -29,7 +39,7 @@ describe("GET /api/v1/boards", () => {
           {
             display: true,
           },
-          true,
+          false,
         );
         boards.push(board);
       }
@@ -196,14 +206,15 @@ describe("GET /boards/:url", () => {
   });
 
   it("should get board by url", async () => {
-    const board = await generateBoards({}, true);
+    const board: BoardInsertRecord = await generateBoards({}, true);
+    const { updatedAt, ...boardCheck } = board;
 
     const response = await supertest(app).get(`/api/v1/boards/${board.url}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(response.body.board).toStrictEqual({
-      ...board,
+      ...boardCheck,
       post_count: "0",
     });
   });
