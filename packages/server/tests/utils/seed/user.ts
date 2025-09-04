@@ -8,6 +8,7 @@ import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
 
 interface CreateUserArgs {
+  id: string;
   name: string;
   email: string;
   username: string;
@@ -26,7 +27,7 @@ interface CreateUserArgs {
 export async function createUser(
   user?: Partial<CreateUserArgs>,
 ): Promise<IAuthLoginResponseBody> {
-  const userId = uuid();
+  const userId = user?.id || uuid();
   const name = user?.name;
   const email = (user?.email || faker.internet.email()).toLowerCase();
   const username = user?.username ? user.username : email.split("@")[0];

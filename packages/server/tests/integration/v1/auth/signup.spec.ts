@@ -35,8 +35,8 @@ describe("POST /api/v1/auth/signup", () => {
 
     const user = response.body.user;
     expect(response.status).toBe(201);
-    expect(user.username).toEqual(username);
-    expect(user.email).toEqual(randomEmail.toLowerCase());
+    expect(user.username).toBe(username);
+    expect(user.email).toBe(randomEmail.toLowerCase());
   });
 
   it("should not create new user and throws 'USER EXISTS'", async () => {

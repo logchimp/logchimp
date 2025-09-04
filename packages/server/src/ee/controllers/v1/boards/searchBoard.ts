@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   ISearchBoardRequestParams,
   ISearchBoardResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../../../database";
 
@@ -17,8 +18,8 @@ export async function searchBoard(
   res: Response<ResponseBody>,
 ) {
   const { name } = req.params;
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const checkPermission = permissions.includes("board:read");
   if (!checkPermission) {
