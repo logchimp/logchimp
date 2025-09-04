@@ -5,7 +5,8 @@ import type {
   TPermission,
   TUpdateSiteSettingsResponseBody,
 } from "@logchimp/types";
-import { isURL } from "validator";
+import { JSDOM } from "jsdom";
+import createDOMPurify from "dompurify";
 import database from "../../database";
 
 // utils
@@ -40,17 +41,9 @@ export async function update(
     developer_mode,
   } = req.body;
 
-  let logo: string | undefined;
+  let logo: string;
   if (req.body?.logo) {
-    const _logo = req.body.logo.trim();
-    if (isURL(_logo)) {
-      logo = _logo;
-    } else {
-      return res.status(403).send({
-        message: "Invalid Logo URL",
-        code: "INVALID_LOGO_URL",
-      });
-    }
+    logo = sanitizeLogo(req.body?.logo);
   }
 
   try {
@@ -84,4 +77,25 @@ export async function update(
       code: "SERVER_ERROR",
     });
   }
+}
+
+function sanitizeLogo(value: string): string | null {
+  // Create a DOM window for DOMPurify to use
+  const window = new JSDOM("").window;
+  // @ts-expect-error
+  const DOMPurify = createDOMPurify(window as unknown);
+
+  const imgDiv = `<img src="${value}">`;
+
+  // Sanitize the HTML using DOMPurify
+  const sanitized = (
+    DOMPurify.sanitize(imgDiv, {
+      ALLOWED_TAGS: ["img"],
+      ALLOWED_ATTR: ["src"],
+      ALLOW_DATA_ATTR: false,
+    }) || ""
+  ).trim();
+
+  const url = sanitized.substring(10, sanitized.length - 2);
+  return url || null;
 }
