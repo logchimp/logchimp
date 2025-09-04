@@ -26,6 +26,7 @@ export type TGetSiteSettingsLabResponseBody = {
 export interface IUpdateSiteSettingsRequestBody {
   title: string | null;
   description: string | null;
+  logo: string | null;
   allowSignup: boolean | null;
   accentColor: string | null;
   googleAnalyticsId: string | null;

@@ -46,23 +46,28 @@
         </div>
 
         <div class="form-column">
-          <div class="dashboard-settings-logo">
-            <label class="input-field-label" for="logo">Logo</label>
-            <div class="dashboard-settings-logo-placeholder">
-              <img
-                v-if="logo"
-                :src="logo"
-                :alt="siteName.value || ''"
-                @click="selectFileHandler"
-              />
-            </div>
-            <input
-              ref="logoInputRef"
-              accept="image/jpg,image/jpeg,image/png,image/svg+xml"
-              type="file"
-              name="logo"
-              style="display: none"
-              @change="uploadFile"
+          <div class="grid gap-y-4">
+           <div>
+             <InputLabel html-for="logo_preview">Logo</InputLabel>
+             <div
+               :class="[
+                'size-16 border border-(--color-gray-90) bg-(--color-gray-97)',
+                'rounded-full select-none pointer-events-none overflow-hidden'
+              ]"
+             >
+               <img
+                 v-if="logo"
+                 :src="logo"
+                 :alt="siteName.value || ''"
+                 class="w-full h-full"
+               />
+             </div>
+           </div>
+            <l-text
+              :model-value="logo ?? undefined"
+              @update:model-value="(value) => logo = value ?? null"
+              label="Logo URL"
+              placeholder="https://avatar-url.png"
             />
           </div>
         </div>
@@ -112,11 +117,7 @@ import { useHead } from "@vueuse/head";
 // modules
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import {
-  getSettings,
-  updateSettings,
-  uploadSiteLogo,
-} from "../../../modules/site";
+import { getSettings, updateSettings } from "../../../modules/site";
 
 // components
 import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
@@ -128,6 +129,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
+import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
 const { update } = useSettingStore();
 const { permissions } = useUserStore();
@@ -148,7 +150,6 @@ const siteName = reactive<TextInputField>({
   },
 });
 const logo = ref<string | null>("");
-const logoInputRef = ref<HTMLInputElement | null>(null);
 const description = reactive<TextInputField>({
   value: "",
   error: {
@@ -195,29 +196,6 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
   googleAnalyticsId.error = event;
 }
 
-function selectFileHandler() {
-  if (!logoInputRef.value) return;
-  logoInputRef.value.click();
-}
-
-async function uploadFile(event: Event) {
-  const target = event.target as HTMLInputElement;
-  if (target.files && target.files.length === 0) return;
-  const file = (target.files || [])[0];
-
-  const formData = new FormData();
-  formData.append("logo", file);
-
-  try {
-    const response = await uploadSiteLogo(formData);
-
-    logo.value = response.data.settings.logo;
-    update(response.data.settings.logo);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function updateSettingsHandler() {
   if (!(siteName.value && accentColor.value)) {
     if (!siteName.value) {
@@ -237,6 +215,7 @@ async function updateSettingsHandler() {
     title: siteName.value,
     description: description.value,
     accentColor: accentColor.value,
+    logo: logo.value,
     googleAnalyticsId: googleAnalyticsId.value,
     allowSignup: allowSignup.value,
     developer_mode: developer_mode.value,
@@ -286,22 +265,3 @@ defineOptions({
   name: "DashboardSettings",
 });
 </script>
-
-<style lang='sass'>
-.dashboard-settings-logo
-  margin-bottom: 1rem
-  display: flex
-  flex-direction: column
-
-.dashboard-settings-logo-placeholder
-  width: 4rem
-  height: 4rem
-  background-color: var(--color-gray-97)
-  border: 1px solid var(--color-gray-90)
-  border-radius: 3rem
-  cursor: pointer
-  user-select: none
-
-  img
-    width: 100%
-</style>
