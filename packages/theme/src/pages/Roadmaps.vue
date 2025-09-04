@@ -31,8 +31,6 @@ import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 
 const { get: siteSettings } = useSettingStore();
 
-// Cursor-based pagination state
-const pageSize = 4;
 const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
 const roadmaps = ref<IRoadmap[]>([]);
 const endCursor = ref<string | undefined>();
@@ -41,7 +39,7 @@ const hasNextPage = ref<boolean>(false);
 async function getRoadmaps(after: string | undefined) {
   try {
     const response = await getAllRoadmaps({
-      first: pageSize.toString(),
+      first: "4",
       after: after == null ? undefined : after,
     });
 
