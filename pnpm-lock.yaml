@@ -44,9 +44,6 @@ importers:
       express:
         specifier: ^4.17.1
         version: 4.21.2
-      express-rate-limit:
-        specifier: ^6.3.0
-        version: 6.11.2(express@4.21.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.1
@@ -1777,12 +1774,6 @@ packages:
   expect-type@1.2.2:
     resolution: {integrity: sha512-JhFGDVJ7tmDJItKhYgJCGLOWjuK9vPxiXoUFLwLDc99NlmklilbiQJwoctZtt13+xMw91MCk/REan6MWHqDjyA==}
     engines: {node: '>=12.0.0'}
-
-  express-rate-limit@6.11.2:
-    resolution: {integrity: sha512-a7uwwfNTh1U60ssiIkuLFWHt4hAC5yxlLGU2VP0X4YNlyEDZAqF4tK3GD3NSitVBrCQmQ0++0uOyFOgC2y4DDw==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      express: ^4 || ^5
 
   express@4.21.2:
     resolution: {integrity: sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==}
@@ -5017,10 +5008,6 @@ snapshots:
   etag@1.8.1: {}
 
   expect-type@1.2.2: {}
-
-  express-rate-limit@6.11.2(express@4.21.2):
-    dependencies:
-      express: 4.21.2
 
   express@4.21.2:
     dependencies:
