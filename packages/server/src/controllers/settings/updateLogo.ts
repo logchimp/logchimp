@@ -7,7 +7,7 @@ import error from "../../errorResponse.json";
 
 export async function updateLogo(req: Request, res: Response) {
   const host = req.headers.host;
-  // @ts-ignore
+  // @ts-expect-error
   const imagePath = req.file.path.split("content/images")[1];
 
   const imageUrl = `//${host}/content/images${imagePath}`;
