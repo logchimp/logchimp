@@ -349,10 +349,13 @@ describe("PATCH /api/v1/roadmaps", () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
+    const r1 = await generateRoadmap({}, true);
 
     const response = await supertest(app)
       .patch("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`).send({
+        id: r1.id,
+      });
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
@@ -434,10 +437,13 @@ describe("DELETE /api/v1/roadmaps/", () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
+    const r1 = await generateRoadmap({}, true);
 
     const response = await supertest(app)
       .delete("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`).send({
+        id: r1.id,
+      });
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
