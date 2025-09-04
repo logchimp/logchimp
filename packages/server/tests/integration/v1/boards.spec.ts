@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
-import { faker } from "@faker-js/faker";
+import { faker, ur } from "@faker-js/faker";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
@@ -154,7 +154,7 @@ describe("POST /api/v1/boards", () => {
 
 describe("PATCH /api/v1/boards", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
-    const response = await supertest(app).post("/api/v1/boards");
+    const response = await supertest(app).patch("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
@@ -165,7 +165,7 @@ describe("PATCH /api/v1/boards", () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .patch("/api/v1/boards")
       .set("Authorization", `Beare${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -174,14 +174,21 @@ describe("PATCH /api/v1/boards", () => {
   });
 
   it("should throw error 'BOARD_NOT_FOUND'", async () => {
+    const board : BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
 
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .patch("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
-        boardId: "unknown"
+        boardId: board.boardId,
       });
+
+      console.log(`Response : ${JSON.stringify(response.body)}`)
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
@@ -193,7 +200,7 @@ describe("PATCH /api/v1/boards", () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .patch("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
@@ -216,7 +223,7 @@ describe("PATCH /api/v1/boards", () => {
     });
 
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .patch("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
@@ -248,7 +255,7 @@ describe("PATCH /api/v1/boards", () => {
     });
 
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .patch("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
@@ -260,11 +267,11 @@ describe("PATCH /api/v1/boards", () => {
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(200);
 
     const responseBoard = response.body.board;
     expect(responseBoard.boardId).toBe(board.boardId);
-    expect(responseBoard.url).toBe(newBoard.url);
+    expect(responseBoard.url).toBe(board.url);
     expect(responseBoard.name).toBe(newBoard.name);
     expect(responseBoard.color).toBe(newBoard.color);
     expect(responseBoard.view_voters).toBe(newBoard.view_voters);
