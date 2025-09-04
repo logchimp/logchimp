@@ -2,8 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 import type {
   IApiErrorResponse,
   IBoardDeleteRequestBody,
+  IBoardUpdateRequestBody,
   IGetBoardByUrlRequestParams,
-  TBoardUpdateResponseBody,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -12,7 +12,7 @@ import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
 
 type RequestParams = IGetBoardByUrlRequestParams;
-type RequestBody = TBoardUpdateResponseBody | IBoardDeleteRequestBody;
+type RequestBody = IBoardUpdateRequestBody | IBoardDeleteRequestBody;
 
 export async function boardExists(
   req: Request<RequestParams, unknown, RequestBody>,
