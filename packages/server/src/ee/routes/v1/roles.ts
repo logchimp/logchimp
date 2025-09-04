@@ -1,5 +1,9 @@
 import express from "express";
-import type { IGetRoleByIdRequestParams } from "@logchimp/types";
+import type {
+  IAssignRoleToUserRequestParams,
+  IGetRoleByIdRequestParams,
+  TUnassignRoleToUserRequestParams,
+} from "@logchimp/types";
 
 const router = express.Router();
 
@@ -26,8 +30,9 @@ router.patch("/roles", middleware.apiAuth, roleExists, roles.update);
 // BETA: Assign role to a user
 // todo: add userExists middleware
 // todo: add roleExists middleware
-router.put(
+router.put<IAssignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
+  // @ts-expect-error
   middleware.apiAuth,
   roles.addRoleToUser,
 );
@@ -35,8 +40,9 @@ router.put(
 // BETA: Unassign role from a user
 // todo: add userExists middleware
 // todo: add roleExists middleware
-router.delete(
+router.delete<TUnassignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
+  // @ts-expect-error
   middleware.apiAuth,
   roles.deleteRoleFromUser,
 );

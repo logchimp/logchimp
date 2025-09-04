@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   IDeleteRoadmapRequestBody,
   TDeleteRoadmapResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../../../database";
 
@@ -18,7 +19,7 @@ export async function deleteById(
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions;
+  const permissions = req.user.permissions as TPermission[];
 
   const id = validUUID(req.body.id);
 

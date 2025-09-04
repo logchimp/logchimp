@@ -18,10 +18,10 @@ export async function update(
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions;
+  const permissions = req.user.permissions as TPermission[];
 
   const checkPermission = permissions.find(
-    (item: TPermission) => item === "settings:update",
+    (item) => item === "settings:update",
   );
   if (!checkPermission) {
     return res.status(403).send({

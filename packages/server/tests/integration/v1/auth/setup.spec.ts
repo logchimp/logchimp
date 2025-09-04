@@ -44,7 +44,7 @@ describe("POST /api/v1/auth/setup", () => {
     expect(response.body.code).toBe("EMAIL_INVALID");
   });
 
-  it('show throw error "PASSWORD_MISSING"', async () => {
+  it('should throw error "PASSWORD_MISSING"', async () => {
     const response = await supertest(app).post("/api/v1/auth/setup").send({
       email: "admin@example.com",
     });
@@ -65,11 +65,11 @@ describe("POST /api/v1/auth/setup", () => {
     });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toEqual(201);
+    expect(response.status).toBe(201);
 
     expect(response.body.user).toBeDefined();
-    expect(response.body.user.name).toEqual("Admin");
-    expect(response.body.user.email).toEqual("admin@example.com");
+    expect(response.body.user.name).toBe("Admin");
+    expect(response.body.user.email).toBe("admin@example.com");
     expect(response.body.user.authToken).toBeDefined();
   });
 });

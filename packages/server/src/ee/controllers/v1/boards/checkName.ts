@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { TBoardCheckNameBody } from "@logchimp/types";
+import type { TBoardCheckNameBody, TPermission } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
@@ -10,8 +10,8 @@ export async function checkName(
   req: Request<unknown, unknown, TBoardCheckNameBody>,
   res: Response,
 ) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const name = req.body.name;
 

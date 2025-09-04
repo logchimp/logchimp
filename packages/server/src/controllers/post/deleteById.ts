@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IDeletePostByIdRequestBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -14,8 +15,8 @@ export async function deleteById(
   req: Request<unknown, unknown, IDeletePostByIdRequestBody>,
   res: Response<IApiErrorResponse>,
 ) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const id = validUUID(req.body.id);
 

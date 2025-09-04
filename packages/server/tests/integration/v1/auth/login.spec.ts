@@ -1,13 +1,10 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
-import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../../src/app";
 import { verifyToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
-import database from "../../../../src/database";
-import { hashPassword } from "../../../../src/utils/password";
 
 describe("POST /api/v1/auth/login", () => {
   it('should throw error "EMAIL_INVALID"', async () => {
@@ -69,53 +66,30 @@ describe("POST /api/v1/auth/login", () => {
     expect(typeof token).not.toBe("string");
     expect(typeof token).toBe("object");
     if (typeof token === "object") {
-      expect(token.email).toEqual(u.email);
-      expect(token.userId).toEqual(user.userId);
+      expect(token.email).toBe(u.email);
+      expect(token.userId).toBe(user.userId);
     }
 
-    expect(user.email).toEqual(u.email);
-    expect(user.username).toEqual(u.username);
+    expect(user.email).toBe(u.email);
+    expect(user.username).toBe(u.username);
     expect(user.avatar).toBeNull();
     expect(user.name).toBeNull();
     expect(user.password).toBeUndefined();
   });
 
   it('should throw error "USER_BLOCKED"', async () => {
-    const userId = uuid();
-    const email = faker.internet.email().toLowerCase();
-    const username = email.split("@")[0];
-
-    await database
-      .insert({
-        userId,
-        email,
-        password: hashPassword("password"),
-        username,
-        isVerified: false,
-        isBlocked: true,
-      })
-      .into("users");
-
-    // assign '@everyone' role to user
-    await database.raw(
-      `
-        INSERT INTO roles_users (id, role_id, user_id)
-        VALUES (:uuid, (SELECT id
-                        FROM roles
-                        WHERE name = '@everyone'), :userId)
-    `,
-      {
-        uuid: uuid(),
-        userId,
-      },
-    );
+    const email = faker.internet.email();
+    await createUser({
+      email,
+      isBlocked: true,
+    });
 
     const response = await supertest(app).post("/api/v1/auth/login").send({
       email,
       password: "password",
     });
 
-    // expect(response.statusCode).toEqual(403);
-    expect(response.body.code).toEqual("USER_BLOCKED");
+    expect(response.statusCode).toBe(403);
+    expect(response.body.code).toBe("USER_BLOCKED");
   });
 });
