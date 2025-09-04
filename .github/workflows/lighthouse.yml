@@ -3,12 +3,17 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
 permissions:
   pull-requests: write
 
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout latest repo
         uses: actions/checkout@v4
@@ -18,16 +23,27 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install wait on
-        run: npm install -g wait-on
+      - name: Install wait-on and pnpm
+        run: npm install -g wait-on pnpm serve
 
       - name: Setup env
-        run: cp ./docker/community/.env.example ./docker/community/.env
+        run: cp ./packages/server/.env.example ./packages/server/.env && cp ./packages/theme/.env.example ./packages/theme/.env
 
       - name: Run docker compose
-        run: docker compose -f ./docker/community/docker-compose.yml up -d --build
+        run: docker compose -f ./docker-compose.dev.yml up -d --build
 
-      - name: Wait for frontend
+      - run: curl http://0.0.0.0:8000/
+
+      # - name: Setting up frontend
+      #   run: cd ./packages/theme && pnpm i
+      #
+      # - name: Build and Run frontend
+      #   run: cd ./packages/theme && pnpm vite build && npx serve -s dist -l 3000 & echo $! > server.pid
+      #
+      # - name: Wait for frontend
+      #   run: npx wait-on http://localhost:3000
+
+      - name: Wait for backend
         run: npx wait-on http://localhost:3000
 
       - name: Lighthouse test
@@ -36,6 +52,7 @@ jobs:
         with:
           urls: "http://localhost:3000/"
           uploadArtifacts: true
+          temporaryPublicStorage: true
 
       - name: Format report
         id: format
@@ -82,4 +99,4 @@ jobs:
         with:
           header: lighthouse-report
           message: ${{ env.COMMENT }}
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
