@@ -18,11 +18,10 @@ interface BoardInsertRecord {
   view_voters: boolean;
   createdAt: string;
   updatedAt: string;
-};
+}
 // Get all boards
 describe("GET /api/v1/boards", () => {
   it("should get 0 boards", async () => {
-
     const response = await supertest(app).get("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -140,15 +139,13 @@ describe("POST /api/v1/boards", () => {
     const response = await supertest(app)
       .post(`/api/v1/boards/`)
       .set("Authorization", `Bearer ${authUser.authToken}`);
-      // .send({
-      //   boardId: board.boardId,
-      //   name: board.name,
-      //   url: board.url,
-      //   color: board.color,
-      //   display: board.display
-      // });
-
-
+    // .send({
+    //   boardId: board.boardId,
+    //   name: board.name,
+    //   url: board.url,
+    //   color: board.color,
+    //   display: board.display
+    // });
   });
 });
 
@@ -174,7 +171,7 @@ describe("PATCH /api/v1/boards", () => {
   });
 
   it("should throw error 'BOARD_NOT_FOUND'", async () => {
-    const board : BoardInsertRecord = await generateBoards({}, false);
+    const board: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
 
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
@@ -188,15 +185,13 @@ describe("PATCH /api/v1/boards", () => {
         boardId: board.boardId,
       });
 
-      console.log(`Response : ${JSON.stringify(response.body)}`)
-
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("BOARD_NOT_FOUND");
   });
 
   it("should throw error not having 'board:create' permission", async () => {
-    const board : BoardInsertRecord = await generateBoards({}, true);
+    const board: BoardInsertRecord = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -211,11 +206,9 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-
-
   it("should throw error 'BOARD_URL_MISSING'", async () => {
-    const board : BoardInsertRecord = await generateBoards({}, true);
-    const newBoard : BoardInsertRecord = await generateBoards({}, false);
+    const board: BoardInsertRecord = await generateBoards({}, true);
+    const newBoard: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
 
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
@@ -230,7 +223,7 @@ describe("PATCH /api/v1/boards", () => {
         name: newBoard.name,
         color: newBoard.color,
         view_voters: newBoard.view_voters,
-        display: newBoard.display
+        display: newBoard.display,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -246,8 +239,8 @@ describe("PATCH /api/v1/boards", () => {
   });
 
   it("should UPDATE board", async () => {
-    const board : BoardInsertRecord = await generateBoards({}, true);
-    const newBoard : BoardInsertRecord = await generateBoards({}, false);
+    const board: BoardInsertRecord = await generateBoards({}, true);
+    const newBoard: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
 
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
@@ -263,7 +256,7 @@ describe("PATCH /api/v1/boards", () => {
         name: newBoard.name,
         color: newBoard.color,
         view_voters: newBoard.view_voters,
-        display: newBoard.display
+        display: newBoard.display,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -271,14 +264,12 @@ describe("PATCH /api/v1/boards", () => {
 
     const responseBoard = response.body.board;
     expect(responseBoard.boardId).toBe(board.boardId);
-    expect(responseBoard.url).toBe(board.url);
+    expect(responseBoard.url).toBe(board.url.toLowerCase());
     expect(responseBoard.name).toBe(newBoard.name);
     expect(responseBoard.color).toBe(newBoard.color);
     expect(responseBoard.view_voters).toBe(newBoard.view_voters);
     expect(responseBoard.display).toBe(newBoard.display);
   });
-
-
 });
 
 // Delete boards by id
