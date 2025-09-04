@@ -64,57 +64,11 @@
       </h6>
       <div class="form-columns">
         <div class="form-column">
-          <dropdown-wrapper>
-            <template #toggle>
-              <l-text
-                v-model="boards.search"
-                label="Board"
-                placeholder="Search board"
-                @input="suggestBoard"
-              />
-            </template>
-
-            <template #default="dropdown">
-              <dropdown
-                v-if="dropdown.active && boards.suggestions.length"
-                :height="300"
-              >
-                <board-suggestion
-                  v-for="(item, index) in boards.suggestions"
-                  :key="item.boardId"
-                  :board="item"
-                  @click="selectBoard(index)"
-                />
-              </dropdown>
-            </template>
-          </dropdown-wrapper>
+          <BoardSearchSuggestions @select="selectBoard" />
         </div>
 
         <div class="form-column">
-          <dropdown-wrapper>
-            <template #toggle>
-              <l-text
-                v-model="roadmaps.search"
-                label="Roadmap"
-                placeholder="Search roadmap"
-                @input="suggestRoadmap"
-              />
-            </template>
-
-            <template #default="dropdown">
-              <dropdown
-                v-if="dropdown.active && roadmaps.suggestions.length"
-                :height="300"
-              >
-                <board-suggestion
-                  v-for="(item, index) in roadmaps.suggestions"
-                  :key="item.id"
-                  :board="item"
-                  @click="selectRoadmap(index)"
-                />
-              </dropdown>
-            </template>
-          </dropdown-wrapper>
+          <RoadmapSearchSuggestions @select="selectRoadmap" />
         </div>
       </div>
     </div>
@@ -132,11 +86,7 @@ import type {
 
 // modules
 import { router } from "../../../../router";
-
 import { getPostBySlug, updatePost } from "../../../../modules/posts";
-import { searchBoard } from "../../../../ee/modules/boards";
-import { searchRoadmap } from "../../../../modules/roadmaps";
-
 import { useUserStore } from "../../../../store/user";
 
 // components
@@ -144,13 +94,12 @@ import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import LTextarea from "../../../../components/ui/input/LTextarea.vue";
 import PostItem from "../../../../components/post/PostItem.vue";
-import Dropdown from "../../../../components/ui/dropdown/Dropdown.vue";
-import DropdownWrapper from "../../../../components/ui/dropdown/DropdownWrapper.vue";
-import BoardSuggestion from "../../../../components/board/BoardSuggestion.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
+import RoadmapSearchSuggestions from "../../../../ee/components/dashboard/roadmap/RoadmapSearchSuggestions.vue";
+import BoardSearchSuggestions from "../../../../ee/components/dashboard/boards/BoardSearchSuggestions.vue";
 
 const { permissions } = useUserStore();
 
@@ -195,20 +144,6 @@ const post = reactive<IDashboardPost>({
     votesCount: 0,
     viewerVote: undefined,
   },
-});
-const boards = reactive<{
-  search: string;
-  suggestions: IBoardPrivate[];
-}>({
-  search: "",
-  suggestions: [],
-});
-const roadmaps = reactive<{
-  search: string;
-  suggestions: IRoadmapPrivate[];
-}>({
-  search: "",
-  suggestions: [],
 });
 
 const updatePostPermissionDisabled = computed(() => {
@@ -258,58 +193,16 @@ async function postBySlug() {
   }
 }
 
-async function suggestBoard(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const name = target.value;
-  if (!name) {
-    boards.search = "";
-    boards.suggestions = [];
-    return;
-  }
-
-  try {
-    const response = await searchBoard(name);
-    boards.suggestions = response.data.boards;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function suggestRoadmap(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const name = target.value;
-  if (!name) {
-    roadmaps.search = "";
-    roadmaps.suggestions = [];
-    return;
-  }
-
-  try {
-    const response = await searchRoadmap(name);
-    roadmaps.suggestions = response.data.roadmaps;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-function selectBoard(index: number) {
-  const item = boards.suggestions[index];
-
+function selectBoard(board: IBoardPrivate) {
   Object.assign(post, {
-    board: item,
+    board,
   });
-  boards.search = "";
-  boards.suggestions = [];
 }
 
-function selectRoadmap(index: number) {
-  const item = roadmaps.suggestions[index];
-
+function selectRoadmap(roadmap: IRoadmapPrivate) {
   Object.assign(post, {
-    roadmap: item,
+    roadmap,
   });
-  roadmaps.search = "";
-  roadmaps.suggestions = [];
 }
 
 onMounted(() => postBySlug());
