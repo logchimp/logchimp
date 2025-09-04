@@ -70,7 +70,6 @@ describe("POST /api/v1/posts", () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-
     await createRoleWithPermissions(authUser.userId, ["post:create"], {
       roleName: "Post Creator",
     });
@@ -86,7 +85,7 @@ describe("POST /api/v1/posts", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.errors).toBe(
+    expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           message: "Post title missing",
