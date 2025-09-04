@@ -353,7 +353,8 @@ describe("PATCH /api/v1/roadmaps", () => {
 
     const response = await supertest(app)
       .patch("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`).send({
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
         id: r1.id,
       });
 
@@ -441,7 +442,8 @@ describe("DELETE /api/v1/roadmaps/", () => {
 
     const response = await supertest(app)
       .delete("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`).send({
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
         id: r1.id,
       });
 
