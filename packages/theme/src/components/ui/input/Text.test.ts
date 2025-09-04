@@ -42,7 +42,7 @@ describe("text input", () => {
     it("Has 'disabled' attribute in input", () => {
       expect(
         wrapper.find("[data-test=input-field]").attributes("disabled"),
-      ).toEqual("");
+      ).toBe("");
     });
   });
 

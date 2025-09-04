@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IUpdatePostRequestBody,
+  TPermission,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
 import database from "../../database";
@@ -17,13 +18,13 @@ export async function updatePost(
   req: Request<unknown, unknown, IUpdatePostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   const userId = req.user.userId;
-  // @ts-ignore
-  const permissions = req.user.permissions;
-  // @ts-ignore
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
+  // @ts-expect-error
   const authorId = req.post.userId;
-  // @ts-ignore
+  // @ts-expect-error
   const slugId = req.post.slugId;
 
   const id = validUUID(req.body.id);

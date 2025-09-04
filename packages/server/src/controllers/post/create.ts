@@ -6,6 +6,7 @@ import type {
   IApiValidationErrorResponse,
   ICreatePostRequestBody,
   ICreatePostResponseBody,
+  TPermission,
 } from "@logchimp/types";
 
 import database from "../../database";
@@ -25,10 +26,10 @@ export async function create(
   req: Request<unknown, unknown, ICreatePostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   const userId = req.user.userId;
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const title = req.body.title;
   const contentMarkdown = req.body.contentMarkdown;

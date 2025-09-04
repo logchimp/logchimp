@@ -29,18 +29,13 @@ describe("GET /boards/:url", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
-    expect(response.body.code).toEqual("BOARD_NOT_FOUND");
+    expect(response.body.code).toBe("BOARD_NOT_FOUND");
   });
 
   it("should get board by url", async () => {
-    // generate & add board
-    const board = generateBoards();
-    const boardName = faker.commerce.product().toLowerCase();
-    board.url = boardName;
+    const board = await generateBoards({}, true);
 
-    await database.insert(board).into("boards");
-
-    const response = await supertest(app).get(`/api/v1/boards/${boardName}`);
+    const response = await supertest(app).get(`/api/v1/boards/${board.url}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
@@ -60,7 +55,7 @@ describe("GET /boards/search/:name", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it("should throw error not having 'board:read' permission", async () => {
@@ -71,7 +66,7 @@ describe("GET /boards/search/:name", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it("should return 0 boards", async () => {
@@ -98,7 +93,7 @@ describe("POST /api/v1/boards", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
   it("should throw error not having 'board:create' permission", async () => {
@@ -110,7 +105,7 @@ describe("POST /api/v1/boards", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   // it("should create a board", async () => {
@@ -132,9 +127,7 @@ describe("POST /api/v1/boards", () => {
 // Delete boards by id
 describe("DELETE /api/v1/boards", () => {
   it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
-    const board = generateBoards();
-
-    await database.insert(board).into("boards");
+    const board = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -144,14 +137,13 @@ describe("DELETE /api/v1/boards", () => {
         boardId: board.boardId,
       });
 
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it("should delete the board", async () => {
-    const board = generateBoards();
-
-    await database.insert(board).into("boards");
+    const board = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
     // assign "board:destroy" permission to user

@@ -4,6 +4,7 @@ import type {
   IApiValidationErrorResponse,
   IBoardUpdateRequestBody,
   TBoardUpdateResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../../../database";
 
@@ -20,9 +21,9 @@ export async function updateBoard(
   req: Request<unknown, unknown, IBoardUpdateRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
-  // @ts-ignore
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
+  // @ts-expect-error
   const boardId = req.board.boardId;
 
   const { name, url, color, view_voters, display } = req.body;

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { validate as validateUUID } from "uuid";
-import type { IBoardDeleteRequestBody } from "@logchimp/types";
+import type { IBoardDeleteRequestBody, TPermission } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
@@ -11,8 +11,8 @@ export async function deleteById(
   req: Request<unknown, unknown, IBoardDeleteRequestBody>,
   res: Response,
 ) {
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const boardId = req.body.boardId;
   if (!validateUUID(boardId)) {

@@ -4,6 +4,7 @@ import type {
   IApiValidationErrorResponse,
   IRoadmapPrivate,
   IUpdateRoadmapRequestBody,
+  TPermission,
   TUpdateRoadmapResponseBody,
 } from "@logchimp/types";
 import type { ExpressRequestContext } from "../../../../express";
@@ -22,8 +23,18 @@ export async function updateRoadmap(
   req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  const id = req.ctx.roadmap.id;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
+  const checkPermission = permissions.includes("roadmap:update");
+  if (!checkPermission) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
+
+  const id = req.ctx.roadmap.id;
   const { name, url, color, display } = req.body;
 
   if (!url) {

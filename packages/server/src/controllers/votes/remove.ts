@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IRemoveVoteRequestBody,
+  TPermission,
   TRemoveVoteResponseBody,
 } from "@logchimp/types";
 import database from "../../database";
@@ -20,11 +21,17 @@ export async function remove(
   req: Request<unknown, unknown, IRemoveVoteRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   const userId = req.user.userId;
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("vote:destroy");
+  if (!checkPermission) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
 
   const postId = validUUID(req.body.postId);
   if (!postId) {
@@ -33,13 +40,6 @@ export async function remove(
       code: "INVALID_POST_ID",
     });
     return;
-  }
-
-  if (!checkPermission) {
-    return res.status(403).send({
-      message: error.api.roles.notEnoughPermission,
-      code: "NOT_ENOUGH_PERMISSION",
-    });
   }
 
   try {

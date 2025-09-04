@@ -4,6 +4,7 @@ import type {
   IRoadmapPrivate,
   ISearchRoadmapRequestParam,
   ISearchRoadmapResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -18,8 +19,8 @@ export async function searchRoadmap(
   res: Response<ResponseBody>,
 ) {
   const { name } = req.params;
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
 
   const checkPermission = permissions.includes("roadmap:read");
   if (!checkPermission) {

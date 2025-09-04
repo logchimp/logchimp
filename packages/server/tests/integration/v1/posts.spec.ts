@@ -1,29 +1,27 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import supertest from "supertest";
-import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
+
 import app from "../../../src/app";
-import database from "../../../src/database";
-import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
-import { cleanDb } from "../../utils/db";
+import {
+  board as generateBoard,
+  roadmap as generateRoadmap,
+  post as generatePost,
+} from "../../utils/generators";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Create new posts
 describe("POST /api/v1/posts", () => {
-  afterEach(async () => {
-    await cleanDb();
-  });
-
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
-    await cleanDb();
     const response = await supertest(app).post("/api/v1/posts");
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.code).toEqual("INVALID_AUTH_HEADER");
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it('should throw error "NOT_ENOUGH_PERMISSION"', async () => {
+  it("should throw error not having 'post:create' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -34,53 +32,15 @@ describe("POST /api/v1/posts", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
   it('should throw error "BOARD_ID_MISSING"', async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-
-    // assign "post:create" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "post:create",
-          description: "this role has 'post:create' permission",
-        })
-        .into("roles");
-
-      // find "post:create" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "post",
-          action: "create",
-        })
-        .first();
-
-      // assign 'post:create' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
     });
 
     const response = await supertest(app)
@@ -105,52 +65,13 @@ describe("POST /api/v1/posts", () => {
   });
 
   it('should throw error "POST_TITLE_MISSING"', async () => {
-    const board = generateBoards();
-    await database.insert(board).into("boards");
-
+    const board = await generateBoard({}, true);
+    await generateRoadmap({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
-
-    // assign "post:create" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "post:create",
-          description: "this role has 'post:create' permission",
-        })
-        .into("roles");
-
-      // find "post:create" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "post",
-          action: "create",
-        })
-        .first();
-
-      // assign 'post:create' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
     });
 
     const response = await supertest(app)
@@ -174,66 +95,76 @@ describe("POST /api/v1/posts", () => {
     );
   });
 
-  it("should create a post", async () => {
-    const board = generateBoards();
-    await database.insert(board).into("boards");
-
+  it("should create a post with '@everyone' role", async () => {
+    const board = await generateBoard({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
 
-    // assign "post:create" permission to user
-    const newRoleId = uuid();
-
-    await database.transaction(async (trx) => {
-      await trx
-        .insert({
-          id: newRoleId,
-          name: "post:create",
-          description: "this role has 'post:create' permission",
-        })
-        .into("roles");
-
-      // find "post:create" permission
-      const findPermission = await trx
-        .select()
-        .from("permissions")
-        .where({
-          type: "post",
-          action: "create",
-        })
-        .first();
-
-      // assign 'post:create' permission to newly created role
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          permission_id: findPermission.id,
-        })
-        .into("permissions_roles");
-
-      // assign the role to newly created user
-      await trx
-        .insert({
-          id: uuid(),
-          role_id: newRoleId,
-          user_id: authUser.userId,
-        })
-        .into("roles_users");
-    });
-
+    const title = faker.food.dish();
+    const contentMarkdown = faker.food.description();
     const response = await supertest(app)
       .post(`/api/v1/posts/`)
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
-        title: faker.food.dish,
-        contentMarkdown: faker.food.description,
+        title,
+        contentMarkdown,
         userId: authUser.userId,
         boardId: board.boardId,
       });
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(201);
     expect(response.body.code).toBeUndefined();
+
+    const post = response.body.post;
+    expect(post.title).toBe(title);
+    expect(post.contentMarkdown).toBe(contentMarkdown);
+    expect(post.userId).toBe(authUser.userId);
+    expect(post.boardId).toBe(board.boardId);
+  });
+});
+
+describe("POST /api/v1/posts/slug", () => {
+  it('should throw error "POST_NOT_FOUND"', async () => {
+    const response = await supertest(app).post("/api/v1/posts/slug").send({
+      slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
+      // only slug is required to get a post
+      userId: "",
+    });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("POST_NOT_FOUND");
+  });
+
+  it("should get post with matching slug", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const response = await supertest(app).post("/api/v1/posts/slug").send({
+      slug: post.slug,
+      // only slug is required to get a post
+      userId: "",
+    });
+
+    const body = response.body.post;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(body.slug).toBe(post.slug);
+    expect(body.board.boardId).toBe(board.boardId);
+    expect(body.roadmap.id).toBe(roadmap.id);
+    expect(body.author.userId).toBe(authUser.userId);
   });
 });

@@ -4,6 +4,7 @@ import type {
   IAddVoteRequestBody,
   IAddVoteResponseBody,
   IApiErrorResponse,
+  TPermission,
 } from "@logchimp/types";
 
 // database
@@ -23,11 +24,17 @@ export async function add(
   req: Request<unknown, unknown, IAddVoteRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-ignore
+  // @ts-expect-error
   const userId = req.user.userId;
-  // @ts-ignore
-  const permissions = req.user.permissions;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("vote:create");
+  if (!checkPermission) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
 
   const postId = validUUID(req.body.postId);
   if (!postId) {
@@ -38,19 +45,12 @@ export async function add(
     return;
   }
 
-  if (!checkPermission) {
-    return res.status(403).send({
-      message: error.api.roles.notEnoughPermission,
-      code: "NOT_ENOUGH_PERMISSION",
-    });
-  }
-
   try {
     const vote = await database
       .select()
       .from("votes")
       .where({
-        postId: postId || null,
+        postId,
         userId,
       })
       .first();

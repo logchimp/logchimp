@@ -5,6 +5,7 @@ import type {
   IApiErrorResponse,
   TBoardCreateRequestBody,
   TBoardCreateResponseBody,
+  TPermission,
 } from "@logchimp/types";
 
 // database
@@ -22,7 +23,7 @@ export async function create(
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions;
+  const permissions = req.user.permissions as TPermission[];
   const name = req.body.name || "new board";
   const display = req.body.display;
 
