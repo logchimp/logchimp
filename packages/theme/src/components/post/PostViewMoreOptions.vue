@@ -36,5 +36,5 @@ interface Props {
   post: IPost;
 }
 
-defineProps<Props>()
+defineProps<Props>();
 </script>
