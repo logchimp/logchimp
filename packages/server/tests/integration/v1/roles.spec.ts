@@ -161,7 +161,7 @@ describe("PATCH /api/v1/roles", () => {
 });
 
 // TODO: implement this API first
-describe("DELETE /api/v1/roles", () => {});
+// describe("DELETE /api/v1/roles", () => {});
 
 describe("GET /api/v1/roles/:id", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
