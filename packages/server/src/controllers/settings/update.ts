@@ -5,6 +5,7 @@ import type {
   TPermission,
   TUpdateSiteSettingsResponseBody,
 } from "@logchimp/types";
+import { isURL } from "validator";
 import database from "../../database";
 
 // utils
@@ -34,11 +35,23 @@ export async function update(
     title,
     description,
     allowSignup,
-    logo,
     accentColor,
     googleAnalyticsId,
     developer_mode,
   } = req.body;
+
+  let logo: string | undefined;
+  if (req.body?.logo) {
+    const _logo = req.body.logo.trim();
+    if (isURL(_logo)) {
+      logo = _logo;
+    } else {
+      return res.status(403).send({
+        message: "Invalid Logo URL",
+        code: "INVALID_LOGO_URL",
+      });
+    }
+  }
 
   try {
     const updateSettings = await database
