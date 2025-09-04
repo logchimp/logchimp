@@ -34,6 +34,7 @@ export async function update(
     title,
     description,
     allowSignup,
+    logo,
     accentColor,
     googleAnalyticsId,
     developer_mode,
@@ -44,6 +45,8 @@ export async function update(
       .update({
         title,
         description,
+        logo,
+        icon: logo,
         allowSignup,
         accentColor,
         googleAnalyticsId,
