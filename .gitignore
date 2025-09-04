@@ -5,10 +5,6 @@ dist
 logchimp.config.json
 
 # content
-content/images/*.png
-content/images/*.jpg
-content/images/*.jpeg
-content/images/*.svg
 content/logs/*.log
 
 # Theme
