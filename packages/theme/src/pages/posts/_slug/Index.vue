@@ -14,39 +14,25 @@
 					<h1 class="font-medium text-4xl mb-2.5">
 						{{ post.title }}
 					</h1>
-					<div class="flex items-center gap-x-4 mb-6">
-						<div class="flex items-center gap-x-2">
-							<avatar
-								:src="post.author.avatar || undefined"
-								:name="postAuthorName"
-							/>
-							{{ postAuthorName }}
-						</div>
-						<div class="bg-neutral-300 h-4 w-px" aria-hidden="true"/>
-						<time
-							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
-							class="text-sm text-neutral-700"
-						>
-							{{ dayjs(post.createdAt).fromNow() }}
-						</time>
-						<dropdown-wrapper v-if="postAuthor" class="ml-auto">
-							<template #toggle>
-								<div class="dropdown-menu-icon">
-									<more-icon />
-								</div>
-							</template>
-							<template #default="dropdown">
-								<dropdown v-if="dropdown.active" class="right-0">
-									<dropdown-item @click="editPost">
-										<template #icon>
-											<edit-icon />
-										</template>
-										Edit
+					<div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-x-4">
+              <div class="flex items-center gap-x-2">
+                <avatar
+                  :src="post.author.avatar || undefined"
+                  :name="postAuthorName"
+                />
+                {{ postAuthorName }}
+              </div>
+              <div class="bg-neutral-300 h-4 w-px" aria-hidden="true"/>
+              <time
+                :title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
+                class="text-sm text-neutral-700"
+              >
+                {{ dayjs(post.createdAt).fromNow() }}
+              </time>
+            </div>
 
-									</dropdown-item>
-								</dropdown>
-							</template>
-						</dropdown-wrapper>
+						<PostViewMoreOptions v-if="postAuthor" :post="post" class="ml-auto" />
 					</div>
 				</div>
 			</div>
@@ -69,7 +55,6 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
 import type { IPost, IPostVote } from "@logchimp/types";
 
 // modules
@@ -81,11 +66,9 @@ import { getPostBySlug } from "../../../modules/posts";
 // components
 import Loader from "../../../components/ui/Loader.vue";
 import Vote from "../../../components/vote/Vote.vue";
-import DropdownWrapper from "../../../components/ui/dropdown/DropdownWrapper.vue";
-import Dropdown from "../../../components/ui/dropdown/Dropdown.vue";
-import DropdownItem from "../../../components/ui/dropdown/DropdownItem.vue";
 import { Avatar } from "../../../components/ui/Avatar";
 import PostActivityList from "../../../ee/components/posts/PostActivityList.vue";
+import PostViewMoreOptions from "../../../components/post/PostViewMoreOptions.vue";
 
 const { permissions, getUserId } = useUserStore();
 const { get: siteSettings } = useSettingStore();
@@ -171,10 +154,6 @@ async function postBySlug() {
 function updateVoters(voters: IPostVote) {
   post.voters.votesCount = voters.votesCount;
   post.voters.viewerVote = voters.viewerVote;
-}
-
-function editPost() {
-  router.push(`/posts/${post.slug}/edit`);
 }
 
 onMounted(() => postBySlug());
