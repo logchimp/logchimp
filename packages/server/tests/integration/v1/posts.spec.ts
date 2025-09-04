@@ -11,6 +11,7 @@ import {
   post as generatePost,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import database from "../../../src/database";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
@@ -703,5 +704,129 @@ describe("POST /api/v1/posts/slug", () => {
     expect(body.board.boardId).toBe(board.boardId);
     expect(body.roadmap.id).toBe(roadmap.id);
     expect(body.author.userId).toBe(authUser.userId);
+  });
+});
+
+describe("POST /api/v1/posts/:post_id/comments", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const response = await supertest(app).post(`/api/v1/posts/${post.postId}/comments`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/${post.postId}/comments`)
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  it("should throw error 'LABS_DISABLED'", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    await database
+      .update({
+        labs: `{"comments": false}`,
+      })
+      .from("settings");
+
+
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/${post.postId}/comments`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        is_internal: Math.random() >= 0.5,
+        body: "et blanditiis pariatur sit eveniet aliquid consequuntur sit tenetur alias",
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("LABS_DISABLED");
+  });
+
+  it("should create a Comment", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    await database
+      .update({
+        labs: `{"comments": true}`,
+      })
+      .from("settings");
+
+    const commentRequest = {
+      is_internal: Math.random() >= 0.5,
+      body: "et blanditiis pariatur sit eveniet aliquid consequuntur sit tenetur alias",
+    };
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/${post.postId}/comments`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send(commentRequest);
+
+    const responseBody = response.body.comment;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    expect(responseBody.author.userId).toBe(authUser.userId);
+    expect(responseBody.comment.body).toBe(commentRequest.body);
+    expect(responseBody.comment.is_internal).toBe(commentRequest.is_internal);
   });
 });
