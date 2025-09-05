@@ -18,7 +18,7 @@
     "biome:format": "biome format --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.2",
+    "@biomejs/biome": "2.2.3",
     "lefthook": "^1.12.2",
     "nodemon": "3.1.10"
   },
