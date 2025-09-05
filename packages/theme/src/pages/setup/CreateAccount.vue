@@ -174,6 +174,11 @@ async function createAccount() {
     }
 
     console.error(error);
+
+    if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+      email.error.show = true;
+      email.error.message = "Email domain blacklisted";
+    }
   } finally {
     buttonLoading.value = false;
   }

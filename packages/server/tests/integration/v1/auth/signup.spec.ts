@@ -6,6 +6,19 @@ import app from "../../../../src/app";
 import database from "../../../../src/database";
 
 describe("POST /api/v1/auth/signup", () => {
+  it("should throw EMAIL_DOMAIN_BLACKLISTED", async () => {
+    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
+      "example.com, test.com, spam.com, badsite.org";
+    const response = await supertest(app).post("/api/v1/auth/signup").send({
+      email: "test@test.com",
+      password: "password",
+    });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("EMAIL_DOMAIN_BLACKLISTED");
+  });
+
   it('should throw error "EMAIL_INVALID"', async () => {
     const response = await supertest(app).post("/api/v1/auth/signup");
 
