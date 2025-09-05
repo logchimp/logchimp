@@ -30,20 +30,9 @@ jobs:
         run: cp ./packages/server/.env.example ./packages/server/.env && cp ./packages/theme/.env.example ./packages/theme/.env
 
       - name: Run docker compose
-        run: docker compose -f ./docker-compose.dev.yml up -d --build
+        run: docker compose -f ./docker-compose.ci.yml up -d --build
 
-      - run: curl http://0.0.0.0:8000/
-
-      # - name: Setting up frontend
-      #   run: cd ./packages/theme && pnpm i
-      #
-      # - name: Build and Run frontend
-      #   run: cd ./packages/theme && pnpm vite build && npx serve -s dist -l 3000 & echo $! > server.pid
-      #
-      # - name: Wait for frontend
-      #   run: npx wait-on http://localhost:3000
-
-      - name: Wait for backend
+      - name: Wait for frontend
         run: npx wait-on http://localhost:3000
 
       - name: Lighthouse test
@@ -52,7 +41,6 @@ jobs:
         with:
           urls: "http://localhost:3000/"
           uploadArtifacts: true
-          temporaryPublicStorage: true
 
       - name: Format report
         id: format
