@@ -4,3 +4,4 @@ export { getOne } from "./getOne";
 export { update } from "./update";
 export { addRoleToUser } from "./addRoleToUser";
 export { deleteRoleFromUser } from "./deleteRoleFromUser";
+export { DeleteRole } from "./DeleteRole";
