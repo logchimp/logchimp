@@ -1,7 +1,7 @@
 <template>
   <card>
     <template #title>
-			Setup your LogChimp site
+			CURRENTPR Setup your LogChimp site
     </template>
     <template #label>
 			Complete your LogChimp site setup to access dashboard.
