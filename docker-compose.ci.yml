@@ -1,0 +1,86 @@
+name: "LogChimp-CI"
+
+services:
+  db:
+    image: postgres:17.6
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: lc
+      POSTGRES_PASSWORD: password
+    networks:
+      - ci-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - ci-network
+
+  server:
+    build:
+      dockerfile: ./docker/ci/server.Dockerfile
+      context: .
+      args:
+        DOCKER_BUILDKIT: 1
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # server
+      HOST: localhost
+      PORT: 8000
+      # Database
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: db
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: lc
+      LOGCHIMP_DB_PASSWORD: password
+      # Mail
+      LOGCHIMP_MAIL_HOST: mail
+      LOGCHIMP_MAIL_PORT: 1025
+    env_file:
+      - ./packages/server/.env
+    ports:
+      - "8000:8000"
+    networks:
+      - ci-network
+    healthcheck:
+      test: [ "CMD", "npx wait-on http://$${HOST}:$${PORT}" ]
+      interval: 2s
+      timeout: 2s
+      retries: 2
+
+  client:
+    build:
+      dockerfile: ./docker/ci/client.Dockerfile
+      context: .
+      args:
+        DOCKER_BUILDKIT: 1
+    environment:
+      # client
+      HOST: localhost
+      PORT: 3000
+    env_file:
+      - ./packages/theme/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - ci-network
+    healthcheck:
+      test: [ "CMD", "npx wait-on http://$${HOST}:$${PORT}" ]
+      interval: 2s
+      timeout: 2s
+      retries: 2
+
+networks:
+  ci-network:
+    driver: bridge
