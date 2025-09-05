@@ -83,20 +83,24 @@ watch(
   },
 );
 
-watchDebounced(search, async (searchTerm: string) => {
-  if (!searchTerm.trim()) {
-    resetSuggestions();
-    return;
-  }
+watchDebounced(
+  search,
+  async (searchTerm: string) => {
+    if (!searchTerm.trim()) {
+      resetSuggestions();
+      return;
+    }
 
-  try {
-    const response = await searchRoadmapApi(searchTerm);
-    suggestions.value = response.data.roadmaps;
-  } catch (err) {
-    console.error(err);
-    resetSuggestions()
-  }
-}, { debounce: 600 })
+    try {
+      const response = await searchRoadmapApi(searchTerm);
+      suggestions.value = response.data.roadmaps;
+    } catch (err) {
+      console.error(err);
+      resetSuggestions();
+    }
+  },
+  { debounce: 600 },
+);
 
 function selectHandler(e: IRoadmapPrivate) {
   searchRoadmap.select(e);

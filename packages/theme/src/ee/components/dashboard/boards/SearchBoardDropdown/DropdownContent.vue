@@ -83,20 +83,24 @@ watch(
   },
 );
 
-watchDebounced(search, async (searchTerm: string) => {
-  if (!searchTerm.trim()) {
-    resetSuggestions();
-    return;
-  }
+watchDebounced(
+  search,
+  async (searchTerm: string) => {
+    if (!searchTerm.trim()) {
+      resetSuggestions();
+      return;
+    }
 
-  try {
-    const response = await searchBoardApi(searchTerm);
-    suggestions.value = response.data.boards;
-  } catch (err) {
-    console.error(err);
-    resetSuggestions()
-  }
-}, { debounce: 600 })
+    try {
+      const response = await searchBoardApi(searchTerm);
+      suggestions.value = response.data.boards;
+    } catch (err) {
+      console.error(err);
+      resetSuggestions();
+    }
+  },
+  { debounce: 600 },
+);
 
 function selectHandler(e: IBoardPrivate) {
   searchBoard.select(e);

@@ -1,4 +1,4 @@
-import { ref } from "vue"
+import { ref } from "vue";
 import type { IBoardPrivate } from "@logchimp/types";
 
 const currentBoard = ref<IBoardPrivate>();
@@ -17,5 +17,5 @@ export function useBoardSearch() {
 
     select,
     clear,
-  }
+  };
 }

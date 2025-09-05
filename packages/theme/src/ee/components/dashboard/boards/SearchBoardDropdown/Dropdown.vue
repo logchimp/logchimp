@@ -79,7 +79,7 @@ watch(board, (value?: IBoardPrivate) => {
 
 onMounted(() => {
   clearBoardSearch();
-})
+});
 
 defineOptions({
   name: "SearchBoardDropdown",

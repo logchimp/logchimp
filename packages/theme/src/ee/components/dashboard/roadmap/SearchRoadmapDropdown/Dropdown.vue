@@ -79,7 +79,7 @@ watch(roadmap, (value?: IRoadmapPrivate) => {
 
 onMounted(() => {
   clearRoadmapSearch();
-})
+});
 
 defineOptions({
   name: "SearchRoadmapDropdown",
