@@ -43,13 +43,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { DropdownMenuTrigger } from "reka-ui";
 import { ChevronDown } from "lucide-vue";
+import type { IRoadmapPrivate } from "@logchimp/types";
+
+import { useSearchRoadmap } from "./search";
 
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
 import SearchRoadmapDropdownContent from "./DropdownContent.vue";
-import { useSearchRoadmap } from "./search";
 import ColorDot from "../../../../../components/ui/ColorDot/ColorDot.vue";
 
 const isOpen = ref<boolean>(false);
@@ -58,7 +60,7 @@ const { roadmap } = useSearchRoadmap();
 interface Props {
   disabled?: boolean;
 }
-
+const emit = defineEmits<(e: "selected", value: IRoadmapPrivate) => void>();
 withDefaults(defineProps<Props>(), {
   disabled: false,
 });
@@ -66,6 +68,13 @@ withDefaults(defineProps<Props>(), {
 function onToggle(e: boolean) {
   isOpen.value = e;
 }
+
+watch(roadmap, (value?: IRoadmapPrivate) => {
+  if (!value) return;
+
+  isOpen.value = false;
+  emit("selected", value);
+});
 
 defineOptions({
   name: "SearchRoadmapDropdown",

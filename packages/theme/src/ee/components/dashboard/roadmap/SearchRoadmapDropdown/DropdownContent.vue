@@ -23,7 +23,10 @@
     </div>
 
     <div class="p-1 w-full">
-      <div v-if="!search && suggestions.length === 0" class="text-center text-sm text-neutral-500 py-3.5">
+      <div
+        v-if="!search && suggestions.length === 0"
+        class="text-center text-sm text-neutral-500 py-3.5"
+      >
         No matches
       </div>
 
@@ -75,7 +78,7 @@ watch(
       });
     } else {
       search.value = "";
-      suggestions.value = [];
+      resetSuggestions();
     }
   },
 );

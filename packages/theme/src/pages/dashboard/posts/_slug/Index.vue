@@ -68,7 +68,7 @@
         </div>
 
         <div class="form-column">
-          <Dropdown @select="selectRoadmap" />
+          <SearchRoadmapDropdown @selected="selectRoadmap" />
         </div>
       </div>
     </div>
@@ -98,7 +98,7 @@ import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
-import Dropdown from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/Dropdown.vue";
+import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/Dropdown.vue";
 import BoardSearchSuggestions from "../../../../ee/components/dashboard/boards/BoardSearchSuggestions.vue";
 
 const { permissions } = useUserStore();
