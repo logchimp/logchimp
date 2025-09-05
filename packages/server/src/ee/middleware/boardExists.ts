@@ -21,7 +21,15 @@ export async function boardExists(
 ) {
   const url = req.params.url;
 
-  const boardId = "boardId" in req.body ? validUUID(req.body?.boardId) : null;
+  const boardId = validUUID(req.body.boardId);
+
+  if (!boardId && !url) {
+    res.status(404).send({
+      message: error.api.boards.boardNotFound,
+      code: "BOARD_ID_OR_URL_MISSING",
+    });
+    return;
+  }
 
   const board = await database
     .select("boardId")
