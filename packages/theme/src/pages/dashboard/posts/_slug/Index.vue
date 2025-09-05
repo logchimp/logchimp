@@ -64,7 +64,7 @@
       </h6>
       <div class="form-columns">
         <div class="form-column">
-          <BoardSearchSuggestions @select="selectBoard" />
+          <SearchBoardDropdown @selected="selectBoard" />
         </div>
 
         <div class="form-column">
@@ -99,7 +99,7 @@ import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbD
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/Dropdown.vue";
-import BoardSearchSuggestions from "../../../../ee/components/dashboard/boards/BoardSearchSuggestions.vue";
+import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
 
 const { permissions } = useUserStore();
 
