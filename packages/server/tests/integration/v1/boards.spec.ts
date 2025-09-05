@@ -4,7 +4,10 @@ import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
-import { board as generateBoards } from "../../utils/generators";
+import {
+  BoardInsertRecord,
+  board as generateBoards,
+} from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { cleanDb } from "../../utils/db";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
@@ -40,7 +43,6 @@ describe("GET /boards/:url", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
-    delete board.updatedAt;
     expect(response.body.board).toStrictEqual({
       ...board,
       post_count: "0",
@@ -96,6 +98,18 @@ describe("POST /api/v1/boards", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+    const { user: authUser } = await createUser();
+
+    const response = await supertest(app)
+      .post("/api/v1/boards")
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
   it("should throw error not having 'board:create' permission", async () => {
     const { user: authUser } = await createUser();
 
@@ -108,20 +122,50 @@ describe("POST /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  // it("should create a board", async () => {
-  //   // seed users with "board:create permission"
-  //   const createUser = await database
-  //     .insert([
-  //       {
-  //         userId: uuid(),
-  //         email: "create-board@example.com",
-  //         password: hashPassword("strongPassword"),
-  //         username: "create-board",
-  //       },
-  //     ])
-  //     .into("users")
-  //     .returning(["userId"]);
-  // });
+  it("should create a board", async () => {
+    const board: BoardInsertRecord = await generateBoards({}, false);
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(authUser.userId, ["board:create"], {
+      roleName: "Board Creator",
+    });
+
+    const response = await supertest(app)
+      .post(`/api/v1/boards/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        name: board.name,
+        display: board.display,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    const boardResponse = response.body.board;
+    expect(boardResponse.name).toBe(board.name);
+    expect(boardResponse.display).toBe(board.display);
+  });
+
+  it("should create a board without a name", async () => {
+    const { user: authUser } = await createUser();
+    const display = Math.random() >= 0.5;
+
+    await createRoleWithPermissions(authUser.userId, ["board:create"], {
+      roleName: "Board Creator",
+    });
+
+    const response = await supertest(app)
+      .post(`/api/v1/boards/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        display,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    const boardResponse = response.body.board;
+    expect(boardResponse.name).toBe("new board");
+    expect(boardResponse.display).toBe(display);
+  });
 });
 
 // Delete boards by id
