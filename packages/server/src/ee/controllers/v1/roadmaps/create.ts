@@ -6,6 +6,7 @@ import type {
   TCreateRoadmapResponseBody,
   IRoadmapPrivate,
   TPermission,
+  ICreateRoadmapRequestBody,
 } from "@logchimp/types";
 
 // database
@@ -18,7 +19,10 @@ import error from "../../../../errorResponse.json";
 
 type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
 
-export async function create(req: Request, res: Response<ResponseBody>) {
+export async function create(
+  req: Request<unknown, unknown, ICreateRoadmapRequestBody>,
+  res: Response<ResponseBody>,
+) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
@@ -30,6 +34,12 @@ export async function create(req: Request, res: Response<ResponseBody>) {
     });
   }
 
+  let name: string | undefined;
+  if (req.body?.name) {
+    // TODO: length check
+    name = req.body.name.trim();
+  }
+
   try {
     // get maximum index value of roadmap
     const roadmapIndex = await database.max("index").from("roadmaps").first();
@@ -37,7 +47,7 @@ export async function create(req: Request, res: Response<ResponseBody>) {
     const createRoadmap = await database
       .insert({
         id: uuidv4(),
-        name: "new roadmap",
+        name: name || "new roadmap",
         url: `new-roadmap-${nanoid(10).toLowerCase()}`,
         color: generateHexColor(),
         index: roadmapIndex.max + 1,
