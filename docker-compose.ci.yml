@@ -27,7 +27,7 @@ services:
 
   server:
     build:
-      dockerfile: ./docker/ci/server.Dockerfile
+      dockerfile: ./packages/server/Dockerfile
       context: .
       args:
         DOCKER_BUILDKIT: 1
@@ -53,15 +53,10 @@ services:
       - "8000:8000"
     networks:
       - ci-network
-    healthcheck:
-      test: [ "CMD", "npx wait-on http://$${HOST}:$${PORT}" ]
-      interval: 2s
-      timeout: 2s
-      retries: 2
 
   client:
     build:
-      dockerfile: ./docker/ci/client.Dockerfile
+      dockerfile: ./packages/theme/Dockerfile
       context: .
       args:
         DOCKER_BUILDKIT: 1
@@ -75,11 +70,6 @@ services:
       - "3000:3000"
     networks:
       - ci-network
-    healthcheck:
-      test: [ "CMD", "npx wait-on http://$${HOST}:$${PORT}" ]
-      interval: 2s
-      timeout: 2s
-      retries: 2
 
 networks:
   ci-network:
