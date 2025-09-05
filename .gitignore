@@ -34,3 +34,6 @@ coverage
 
 # theme
 packages/theme/.out
+
+# Editor Settings
+.vscode/
