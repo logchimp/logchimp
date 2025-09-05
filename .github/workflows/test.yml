@@ -209,7 +209,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [api-unit]
     env:
-      NODE_ENV: "testing"
+      NODE_ENV: "ci"
       LOGCHIMP_DB_DATABASE: db
       LOGCHIMP_DB_HOST: "localhost"
       LOGCHIMP_DB_USER: user
