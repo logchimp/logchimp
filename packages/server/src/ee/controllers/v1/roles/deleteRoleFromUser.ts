@@ -14,31 +14,27 @@ export async function deleteRoleFromUser(
   req: Request<TUnassignRoleToUserRequestParams>,
   res: Response<IApiErrorResponse>,
 ) {
-  // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
-  const { role_id, user_id } = req.params;
-
-  const checkPermission = permissions.find((item) => item === "role:unassign");
-  if (!checkPermission) {
-    return res.status(403).send({
-      message: error.api.roles.notEnoughPermission,
-      code: "NOT_ENOUGH_PERMISSION",
-    });
-  }
-
   try {
-    await database.delete().from("roles_users").where({
-      role_id,
-      user_id,
-    });
+    // @ts-expect-error: user object injected by auth middleware
+    const permissions = req.user.permissions as TPermission[];
+    const { role_id, user_id } = req.params;
 
-    res.sendStatus(204);
+    if (!permissions.includes("role:unassign")) {
+      return res.status(403).send({
+        message: error.api.roles.notEnoughPermission,
+        code: "NOT_ENOUGH_PERMISSION",
+      });
+    }
+
+    await database("roles_users")
+      .where({ role_id, user_id })
+      .delete();
+
+    return res.sendStatus(204);
   } catch (err) {
-    logger.error({
-      message: err,
-    });
+    logger.error({ message: err });
 
-    res.status(500).send({
+    return res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
     });
