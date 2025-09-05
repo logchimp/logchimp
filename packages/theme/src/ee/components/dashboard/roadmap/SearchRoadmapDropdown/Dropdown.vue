@@ -49,14 +49,14 @@ import { DropdownMenuTrigger } from "reka-ui";
 import { ChevronDown } from "lucide-vue";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
-import { useSearchRoadmap } from "./search";
+import { useRoadmapSearch } from "./search";
 
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
 import SearchRoadmapDropdownContent from "./DropdownContent.vue";
 import ColorDot from "../../../../../components/ui/ColorDot/ColorDot.vue";
 
 const isOpen = ref<boolean>(false);
-const { roadmap, clear: clearRoadmapSearch } = useSearchRoadmap();
+const { roadmap, clear: clearRoadmapSearch } = useRoadmapSearch();
 
 interface Props {
   disabled?: boolean;

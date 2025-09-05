@@ -3,7 +3,7 @@ import type { IRoadmapPrivate } from "@logchimp/types";
 
 const currentRoadmap = ref<IRoadmapPrivate>();
 
-export function useSearchRoadmap() {
+export function useRoadmapSearch() {
   function select(_roadmap: IRoadmapPrivate) {
     currentRoadmap.value = _roadmap;
   }

@@ -53,7 +53,7 @@ import { watchDebounced } from "@vueuse/core";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { searchRoadmap as searchRoadmapApi } from "../../../../../modules/roadmaps";
-import { useSearchRoadmap } from "./search";
+import { useRoadmapSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
 import CreateRoadmapItem from "./CreateRoadmapItem.vue";
@@ -67,7 +67,7 @@ interface Props {
   isOpen: boolean;
 }
 const props = defineProps<Props>();
-const searchRoadmap = useSearchRoadmap();
+const searchRoadmap = useRoadmapSearch();
 
 watch(
   () => props.isOpen,
