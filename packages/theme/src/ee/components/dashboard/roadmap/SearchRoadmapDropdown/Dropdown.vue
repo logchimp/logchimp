@@ -42,8 +42,9 @@
     </DropdownV2>
   </div>
 </template>
+
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { DropdownMenuTrigger } from "reka-ui";
 import { ChevronDown } from "lucide-vue";
 import type { IRoadmapPrivate } from "@logchimp/types";
@@ -55,7 +56,7 @@ import SearchRoadmapDropdownContent from "./DropdownContent.vue";
 import ColorDot from "../../../../../components/ui/ColorDot/ColorDot.vue";
 
 const isOpen = ref<boolean>(false);
-const { roadmap } = useSearchRoadmap();
+const { roadmap, clear: clearRoadmapSearch } = useSearchRoadmap();
 
 interface Props {
   disabled?: boolean;
@@ -75,6 +76,10 @@ watch(roadmap, (value?: IRoadmapPrivate) => {
   isOpen.value = false;
   emit("selected", value);
 });
+
+onMounted(() => {
+  clearRoadmapSearch();
+})
 
 defineOptions({
   name: "SearchRoadmapDropdown",
