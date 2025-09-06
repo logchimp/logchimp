@@ -1,5 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
+  ICreateRoadmapRequestBody,
   IDeleteRoadmapRequestBody,
   ISortRoadmapRequestBody,
   IUpdateRoadmapRequestBody,
@@ -14,17 +15,21 @@ import { useUserStore } from "../../store/user";
 
 /**
  * Create new roadmap
- *
- * @returns {object} response
+ * @param {object} roadmap
+ * @param {string} [roadmap.name=] roadmap name
+ * @returns {Promise<AxiosResponse<TCreateRoadmapResponseBody>>} response
  */
-export const createRoadmap = async (): Promise<
-  AxiosResponse<TCreateRoadmapResponseBody>
-> => {
+export const createRoadmap = async (
+  roadmap?: ICreateRoadmapRequestBody,
+): Promise<AxiosResponse<TCreateRoadmapResponseBody>> => {
   const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/roadmaps`,
+    data: {
+      name: roadmap?.name,
+    },
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

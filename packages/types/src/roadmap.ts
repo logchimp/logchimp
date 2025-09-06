@@ -36,6 +36,10 @@ export interface ISearchRoadmapResponseBody {
   roadmaps: IRoadmapPrivate[];
 }
 
+export interface ICreateRoadmapRequestBody {
+  name?: string;
+}
+
 export type TCreateRoadmapResponseBody = IGetRoadmapByUrlResponseBody;
 
 export interface IUpdateRoadmapRequestBody {
