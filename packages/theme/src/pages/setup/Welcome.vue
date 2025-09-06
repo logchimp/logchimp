@@ -1,14 +1,13 @@
 <template>
 	<div class="onboarding onboarding-content">
 		<div class="onboarding-header">
-			<h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
+			<h2 class="onboarding-heading">{{t("setupWelcome.heading")}} <span>LogChimp</span>!</h2>
 			<p class="onboarding-label">
-				Let’s setup your LogChimp site to track user feedback for building
-				better products.
+				{{t("setupWelcome.label")}}
 			</p>
 		</div>
 		<Button type="primary" class="welcome-button" href="/setup/create-account">
-			Create an account
+			{{t("setupWelcome.cta")}}
 		</Button>
 		<img
 			class="welcome-image"
@@ -20,6 +19,7 @@
 
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 import { useSettingStore } from "../../store/settings";
 
@@ -27,6 +27,7 @@ import { useSettingStore } from "../../store/settings";
 import Button from "../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore();
+const { t } = useI18n();
 
 useHead({
   title: "Welcome • Onboarding",
