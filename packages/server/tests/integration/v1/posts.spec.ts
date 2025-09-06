@@ -24,7 +24,11 @@ describe("POST /api/v1/posts/get", () => {
     const createdSlugs: string[] = [];
     for (let i = 0; i < 12; i++) {
       const p = await generatePost(
-        { userId: authUser.userId, boardId: board.boardId, roadmapId: roadmap.id },
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
         true,
       );
       createdSlugs.push(p.slug);
@@ -36,7 +40,9 @@ describe("POST /api/v1/posts/get", () => {
     expect(resDefault.status).toBe(200);
 
     // Default page should be 1 => should return the newest posts first (DESC is default)
-    const slugsDefault: string[] = resDefault.body.posts.map((p: IPost) => p.slug);
+    const slugsDefault: string[] = resDefault.body.posts.map(
+      (p: IPost) => p.slug,
+    );
     expect(Array.isArray(resDefault.body.posts)).toBe(true);
     expect(resDefault.body.posts.length).toBeGreaterThan(0);
 
@@ -226,7 +232,9 @@ describe("POST /api/v1/posts/get", () => {
     // Ensure no overlap between pages when there are at least 3 posts
     const slugs0 = new Set(page0.body.posts.map((p: IPost) => p.slug));
     const slugs1 = new Set(page1.body.posts.map((p: IPost) => p.slug));
-    const intersection = [...Array.from(slugs0)].filter((key) => slugs1.has(key));
+    const intersection = [...Array.from(slugs0)].filter((key) =>
+      slugs1.has(key),
+    );
     expect(intersection.length).toBe(0);
 
     // Ensure union contains created slugs
