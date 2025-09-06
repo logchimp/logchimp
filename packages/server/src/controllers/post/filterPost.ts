@@ -66,7 +66,7 @@ export async function filterPost(
     `,
       {
         limit,
-        offset: limit * page,
+        offset: limit * (page - 1),
         roadmapId,
       },
     );
