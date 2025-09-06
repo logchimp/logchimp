@@ -25,11 +25,16 @@ jobs:
       - name: Install wait-on and pnpm
         run: npm install -g wait-on pnpm serve
 
-      - name: Setup env
-        run: cp ./packages/server/.env.example ./packages/server/.env && cp ./packages/theme/.env.example ./packages/theme/.env
-
       - name: Run docker compose
         run: docker compose -f ./docker-compose.ci.yml up -d --build
+        env:
+          # Server
+          LOGCHIMP_WEB_URL: "http://localhost:3000"
+          LOGCHIMP_SECRET_KEY: "secret-key-1234"
+          LOGCHIMP_MACHINE_SIGNATURE: xxx-xxx-xxx-xxx-xxx
+
+          # Theme
+          LOGCHIMP_API_URL: "http://localhost:8000"
 
       - name: Wait for frontend
         run: npx wait-on http://localhost:3000
