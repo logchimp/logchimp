@@ -1,6 +1,6 @@
 name: Lighthouse test
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
   push:
     tags:
@@ -8,14 +8,18 @@ on:
 
 permissions:
   pull-requests: write
+  contents: read
 
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout latest repo
+      - name: Checkout PR head
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup node
         uses: actions/setup-node@v4
@@ -81,7 +85,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Lighthouse sticky comment
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: lighthouse-report
