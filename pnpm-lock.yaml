@@ -88,7 +88,7 @@ importers:
         version: 3.17.0
       zod:
         specifier: ^4.0.14
-        version: 4.0.17
+        version: 4.1.5
     devDependencies:
       '@faker-js/faker':
         specifier: ^9.9.0
@@ -3275,8 +3275,8 @@ packages:
   zhead@2.2.4:
     resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
 
-  zod@4.0.17:
-    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
+  zod@4.1.5:
+    resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
 
 snapshots:
 
@@ -6588,4 +6588,4 @@ snapshots:
 
   zhead@2.2.4: {}
 
-  zod@4.0.17: {}
+  zod@4.1.5: {}
