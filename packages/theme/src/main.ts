@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, watchEffect } from "vue";
 import { createHead } from "@vueuse/head";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
@@ -16,15 +16,22 @@ import hi from "./locales/hi.json";
 const app = createApp(App);
 const store = createPinia();
 const head = createHead();
+
+const savedLocale = localStorage.getItem("locale") || "en";
+
 const i18n = createI18n({
   legacy: false,
-  locale: "en",
+  locale: savedLocale,
   fallbackLocale: "en",
   messages: {
     en,
     fr,
     hi,
   },
+});
+
+watchEffect(() => {
+  localStorage.setItem("locale", i18n.global.locale.value);
 });
 
 app.use(router);
