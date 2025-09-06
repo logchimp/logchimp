@@ -1,5 +1,6 @@
 import type { Response, NextFunction } from "express";
 import type {
+  IApiErrorResponse,
   IGetRoadmapByUrlRequestParam,
   IRoadmapPrivate,
 } from "@logchimp/types";
@@ -10,12 +11,13 @@ import database from "../database";
 // utils
 import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
+import logger from "../utils/logger";
 
 type RequestParams = IGetRoadmapByUrlRequestParam;
 
 export async function roadmapExists(
   req: ExpressRequestContext<RequestParams>,
-  res: Response,
+  res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
   const id = validUUID(req.body.id);
@@ -29,25 +31,36 @@ export async function roadmapExists(
     return;
   }
 
-  const roadmap = await database<IRoadmapPrivate>("roadmaps")
-    .select("id", "name", "display", "url", "color", "created_at", "index")
-    .where((builder) => {
-      if (id) builder.where("id", id);
-      if (url) builder.orWhere("url", url);
-    })
-    .first();
+  try {
+    const roadmap = await database<IRoadmapPrivate>("roadmaps")
+      .select("id", "name", "display", "url", "color", "created_at", "index")
+      .where((builder) => {
+        if (id) builder.where("id", id);
+        if (url) builder.orWhere("url", url);
+      })
+      .first();
 
-  if (!roadmap) {
-    res.status(404).send({
-      message: error.api.roadmaps.roadmapNotFound,
-      code: "ROADMAP_NOT_FOUND",
+    if (!roadmap) {
+      res.status(404).send({
+        message: error.api.roadmaps.roadmapNotFound,
+        code: "ROADMAP_NOT_FOUND",
+      });
+      return;
+    }
+
+    if (!req.ctx) {
+      req.ctx = {};
+    }
+    req.ctx.roadmap = roadmap;
+    next();
+  } catch (err) {
+    logger.error({
+      message: err,
     });
-    return;
-  }
 
-  if (!req.ctx) {
-    req.ctx = {};
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
   }
-  req.ctx.roadmap = roadmap;
-  next();
 }
