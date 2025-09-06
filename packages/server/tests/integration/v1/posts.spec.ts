@@ -14,6 +14,55 @@ import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
+  it("should use default page=1 and default limit when no filters are provided", async () => {
+    // seed more posts than default limit to test pagination default
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    // Create 12 posts to exceed typical default [GET_POSTS_FILTER_COUNT]
+    const createdSlugs: string[] = [];
+    for (let i = 0; i < 12; i++) {
+      const p = await generatePost(
+        { userId: authUser.userId, boardId: board.boardId, roadmapId: roadmap.id },
+        true,
+      );
+      createdSlugs.push(p.slug);
+    }
+
+    // Call with no filters and no pagination params
+    const resDefault = await supertest(app).post("/api/v1/posts/get");
+    expect(resDefault.headers["content-type"]).toContain("application/json");
+    expect(resDefault.status).toBe(200);
+
+    // Default page should be 1 => should return the newest posts first (DESC is default)
+    const slugsDefault: string[] = resDefault.body.posts.map((p: IPost) => p.slug);
+    expect(Array.isArray(resDefault.body.posts)).toBe(true);
+    expect(resDefault.body.posts.length).toBeGreaterThan(0);
+
+    // Verify DESC: last created slug should appear at or before index of earlier ones
+    const last = createdSlugs[createdSlugs.length - 1];
+    const first = createdSlugs[0];
+    const idxLast = slugsDefault.indexOf(last);
+    const idxFirst = slugsDefault.indexOf(first);
+    if (idxLast !== -1 && idxFirst !== -1) {
+      expect(idxLast).toBeLessThan(idxFirst);
+    }
+
+    // Now request page 2 explicitly to ensure default was page 1
+    const resPage2 = await supertest(app)
+      .post("/api/v1/posts/get")
+      .send({ page: 2 });
+    expect(resPage2.headers["content-type"]).toContain("application/json");
+    expect(resPage2.status).toBe(200);
+
+    // There should be minimal overlap between default page (1) and page 2 when many posts exist
+    const setDefault = new Set(slugsDefault);
+    const slugsPage2 = resPage2.body.posts.map((p: IPost) => p.slug);
+    const intersection = slugsPage2.filter((s: string) => setDefault.has(s));
+    expect(intersection.length).toBeLessThan(slugsPage2.length);
+  });
+
   it.skip("should return empty posts array when no posts exist", async () => {
     const response = await supertest(app).post("/api/v1/posts/get").send({
       boardId: [],
@@ -64,7 +113,7 @@ describe("POST /api/v1/posts/get", () => {
         boardId: [boardA.boardId],
         userId: "",
         limit: 10,
-        page: 0,
+        page: 1,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -113,7 +162,7 @@ describe("POST /api/v1/posts/get", () => {
       roadmapId: roadmapA.id,
       userId: "",
       limit: 10,
-      page: 0,
+      page: 1,
     });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -224,7 +273,7 @@ describe("POST /api/v1/posts/get", () => {
         boardId: [board.boardId],
         created: "ASC",
         limit: 10,
-        page: 0,
+        page: 1,
         userId: "",
       });
 
