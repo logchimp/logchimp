@@ -1,0 +1,62 @@
+name: Playwright Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    paths:
+      - ".github/workflows/playwright.yml"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+env:
+  node-version: 22
+  pnpm-version: 10
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      WEB_URL: "http://localhost:3000"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
+      with:
+        node_version: ${{ env.node-version }}
+        pnpm_version: ${{ env.pnpm-version }}
+
+    - name: Run docker compose
+      run: docker compose -f ./docker-compose.ci.yml up -d --build
+      env:
+        # Server
+        LOGCHIMP_WEB_URL: ${{ env.WEB_URL }}
+        LOGCHIMP_SECRET_KEY: "secret-key-1234"
+        LOGCHIMP_MACHINE_SIGNATURE: xxx-xxx-xxx-xxx-xxx
+
+        # Theme
+        LOGCHIMP_API_URL: "http://localhost:8000"
+
+    - name: Wait for frontend
+      run: npx wait-on http://localhost:3000
+
+    - name: Install Playwright Browsers
+      run: pnpm --filter @logchimp/e2e exec playwright install --with-deps
+
+    - name: Run Playwright tests
+      run: pnpm --filter @logchimp/e2e exec playwright test
+      env:
+        BASE_URL: ${{ env.WEB_URL }}
+        CI_BRANCH_NAME: ${{ github.ref_name }}
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
