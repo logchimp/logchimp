@@ -45,7 +45,7 @@ export async function get(
       .groupBy("boards.boardId")
       .orderBy("boards.createdAt", created)
       .limit(limit)
-      .offset(limit * page);
+      .offset(limit * (page - 1));
 
     res.status(200).send({ boards });
   } catch (err) {

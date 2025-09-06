@@ -16,7 +16,7 @@ export async function getUsers(
       .select("userId", "name", "email", "username", "avatar", "isVerified")
       .from("users")
       .limit(limit)
-      .offset(limit * page)
+      .offset(limit * (page - 1))
       .orderBy([
         {
           column: "createdAt",

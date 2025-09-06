@@ -27,12 +27,12 @@ export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  const boardId = validUUIDs(req.body.boardId);
+  const boardId = validUUIDs(req.body.boardId || []);
   const roadmapId = validUUID(req.body.roadmapId);
   /**
    * top, latest, oldest, trending
    */
-  const created = req.body.created;
+  const created = req.body.created || "DESC";
   const limit = parseAndValidateLimit(req.body?.limit, GET_POSTS_FILTER_COUNT);
   const page = parseAndValidatePage(req.body?.page);
 
@@ -66,7 +66,7 @@ export async function filterPost(
     `,
       {
         limit,
-        offset: limit * page,
+        offset: limit * (page - 1),
         roadmapId,
       },
     );
