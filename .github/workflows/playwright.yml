@@ -20,6 +20,8 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      WEB_URL: "http://localhost:3000"
 
     steps:
     - uses: actions/checkout@v4
@@ -33,7 +35,7 @@ jobs:
       run: docker compose -f ./docker-compose.ci.yml up -d --build
       env:
         # Server
-        LOGCHIMP_WEB_URL: "http://localhost:3000"
+        LOGCHIMP_WEB_URL: ${{ env.WEB_URL }}
         LOGCHIMP_SECRET_KEY: "secret-key-1234"
         LOGCHIMP_MACHINE_SIGNATURE: xxx-xxx-xxx-xxx-xxx
 
@@ -48,6 +50,9 @@ jobs:
 
     - name: Run Playwright tests
       run: pnpm --filter @logchimp/e2e exec playwright test
+      env:
+        BASE_URL: ${{ env.WEB_URL }}
+        CI_BRANCH_NAME: ${{ github.ref_name }}
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
