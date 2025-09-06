@@ -84,6 +84,27 @@ describe("GET /boards/search/:name", () => {
     expect(response.status).toBe(200);
     expect(response.body.boards).toHaveLength(0);
   });
+
+  it("should return matching board", async () => {
+    const board = await generateBoards({}, true);
+    const { user: authUser } = await createUser();
+
+    // assign "board:read" permission to user
+    await createRoleWithPermissions(authUser.userId, ["board:read"], {
+      roleName: "Board Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/boards/search/${board.name}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    const responseBoards = response.body.boards;
+    expect(responseBoards).toHaveLength(1);
+    expect(responseBoards[0].name).toBe(board.name);
+    expect(responseBoards[0].boardId).toBe(board.boardId);
+  });
 });
 
 // Create new boards
