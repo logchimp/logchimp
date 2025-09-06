@@ -40,32 +40,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: ${{ env.pnpm-version }}
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
+          node_version: ${{ matrix.node }}
+          pnpm_version: ${{ env.pnpm-version }}
 
       - name: Testing
         run: pnpm --filter @logchimp/theme test:unit
@@ -83,32 +61,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 10
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
+          node_version: ${{ matrix.node }}
+          pnpm_version: ${{ env.pnpm-version }}
 
       - name: Compile LogChimp Types package
         run: pnpm --filter="@logchimp/types" build;
@@ -128,32 +84,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 10
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
+          node_version: ${{ matrix.node }}
+          pnpm_version: ${{ env.pnpm-version }}
 
       - name: logchimp/type typecheck
         run: pnpm --filter @logchimp/types exec pnpm tsc
@@ -174,32 +108,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 10
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
+          node_version: ${{ matrix.node }}
+          pnpm_version: ${{ env.pnpm-version }}
 
       - name: Testing
         run: pnpm --filter @logchimp/api test:unit
@@ -250,32 +162,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 10
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - name: Cache .pnpm-store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.os }}-OS-node-v${{ matrix.node }}-pnpm-v${{ env.pnpm-version }}-
-
-      - name: Install packages
-        run: pnpm install --frozen-lockfile
+          node_version: ${{ matrix.node }}
+          pnpm_version: ${{ env.pnpm-version }}
 
       - name: Compile LogChimp Types package
         run: pnpm --filter="@logchimp/types" build;
