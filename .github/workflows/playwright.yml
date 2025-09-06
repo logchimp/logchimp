@@ -44,10 +44,10 @@ jobs:
       run: npx wait-on http://localhost:3000
 
     - name: Install Playwright Browsers
-      run: pnpm exec playwright install --with-deps
+      run: pnpm --filter @logchimp/e2e playwright install --with-deps
 
     - name: Run Playwright tests
-      run: pnpm exec playwright test
+      run: pnpm --filter @logchimp/e2e playwright test
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}

@@ -1,13 +1,7 @@
 {
-  "name": "e2e",
+  "name": "@logchimp/e2e",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.3.1"
