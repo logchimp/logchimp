@@ -1,0 +1,89 @@
+name: Lighthouse test
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest repo
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install wait-on and pnpm
+        run: npm install -g wait-on pnpm serve
+
+      - name: Setup env
+        run: cp ./packages/server/.env.example ./packages/server/.env && cp ./packages/theme/.env.example ./packages/theme/.env
+
+      - name: Run docker compose
+        run: docker compose -f ./docker-compose.ci.yml up -d --build
+
+      - name: Wait for frontend
+        run: npx wait-on http://localhost:3000
+
+      - name: Lighthouse test
+        uses: treosh/lighthouse-ci-action@v12
+        id: lhci
+        with:
+          urls: "http://localhost:3000/"
+          uploadArtifacts: true
+
+      - name: Format report
+        id: format
+        run: |
+          manifest='${{ steps.lhci.outputs.manifest }}'
+
+          perf=$(jq -r '([.[0].summary.performance * 100 | floor] | .[0])' <<< "$manifest")
+          acc=$(jq -r '([.[0].summary.accessibility * 100 | floor] | .[0])' <<< "$manifest")
+          bp=$(jq -r '([.[0].summary["best-practices"] * 100 | floor] | .[0])' <<< "$manifest")
+          seo=$(jq -r '([.[0].summary.seo * 100 | floor] | .[0])' <<< "$manifest")
+          pwa=$(jq -r '([.[0].summary.pwa * 100 | floor] | .[0])' <<< "$manifest" 2>/dev/null || echo "N/A")
+
+          badge() {
+            local score=$1
+            if [ "$score" = "N/A" ]; then
+              echo "⚪"
+            elif [ "$score" -ge 90 ]; then
+              echo "🟢"
+            elif [ "$score" -ge 50 ]; then
+              echo "🟡"
+            else
+              echo "🔴"
+            fi
+          }
+          run_url="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          echo "COMMENT<<EOF" >> $GITHUB_ENV
+          echo "**Lighthouse report**" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "| Category       | Score | Status |" >> $GITHUB_ENV
+          echo "|----------------|-------|--------|" >> $GITHUB_ENV
+          echo "| Performance    | $perf | $(badge $perf) |" >> $GITHUB_ENV
+          echo "| Accessibility  | $acc  | $(badge $acc) |" >> $GITHUB_ENV
+          echo "| Best Practices | $bp   | $(badge $bp) |" >> $GITHUB_ENV
+          echo "| SEO            | $seo  | $(badge $seo) |" >> $GITHUB_ENV
+          echo "| PWA            | $pwa  | $(badge $pwa) |" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "[View workflow run]($run_url)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Lighthouse sticky comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: lighthouse-report
+          message: ${{ env.COMMENT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
