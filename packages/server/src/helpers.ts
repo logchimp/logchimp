@@ -86,7 +86,7 @@ const sanitiseName = (value) => {
  * @param {string} value url
  * @returns {string} Return sanitised url
  */
-const sanitiseURL = (value) => {
+const sanitiseURL = (value: string): string => {
   if (value == null || !_.isString(value)) {
     return "";
   }
@@ -132,8 +132,10 @@ const isDevTestEnv =
   process.env.NODE_ENV === "testing" ||
   process.env.NODE_ENV === "ci";
 
-function parseAndValidatePage(value: string) {
-  return value ? Math.max(+value - 1, 0) : 0;
+function parseAndValidatePage(value?: string) {
+  const n = value ? +value : NaN;
+  // Default to page 1; coerce invalid/NaN/<=0 to 1
+  return !Number.isNaN(n) && n > 0 ? Math.floor(n) : 1;
 }
 
 function parseAndValidateLimit(value: string, max: number): number {
