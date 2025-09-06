@@ -32,9 +32,14 @@ export const getAllRoadmaps = async (
     searchParams.toString() ? `?${searchParams.toString()}` : ""
   }`;
 
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 

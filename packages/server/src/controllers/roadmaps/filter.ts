@@ -5,10 +5,25 @@ import type {
   IPaginatedRoadmapsResponse,
   IRoadmapPrivate,
 } from "@logchimp/types";
+
+// database
 import database from "../../database";
+
+// middleware
+import {
+  computePermissions,
+  fetchUserWithRoles,
+} from "../../middlewares/authenticate";
+
+// utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { getUserFromRequest } from "../../utils/getUserFromRequest";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
+import type {
+  IAuthenticationMiddlewareUser,
+  IAuthenticationTokenPayload,
+} from "./../../types";
 
 const querySchema = z.object({
   first: z.coerce
@@ -25,7 +40,26 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
   try {
     const { first, after } = querySchema.parse(req.query);
 
-    const data = await getRoadmapQuery(first, after);
+    const decoded = getUserFromRequest(req.headers.authorization);
+
+    const userId = decoded?.userId;
+    let withPermissions = true;
+
+    if (decoded) {
+      const user = (await fetchUserWithRoles(
+        userId,
+      )) as IAuthenticationMiddlewareUser;
+
+      const permissions = await computePermissions(user);
+
+      if (!permissions.includes("roadmap:read")) {
+        withPermissions = false;
+      }
+    } else {
+      withPermissions = false;
+    }
+
+    const data = await getRoadmapQuery(first, after, decoded, withPermissions);
     const dataLength = data.length;
 
     const startCursor = data.length > 0 ? String(data[0].id) : null;
@@ -36,7 +70,11 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
     let currentPage = 1;
     let hasNextPage = false;
 
-    const metadataResults = await getRoadmapMetadata(after);
+    const metadataResults = await getRoadmapMetadata(
+      after,
+      decoded,
+      withPermissions,
+    );
     if (metadataResults) {
       totalCount = metadataResults.totalCount;
       totalPages = Math.ceil(metadataResults.totalCount / first);
@@ -78,7 +116,12 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
   }
 }
 
-function getRoadmapQuery(first: number, after?: string) {
+function getRoadmapQuery(
+  first: number,
+  after?: string,
+  decoded?: IAuthenticationTokenPayload,
+  withPermissions = true,
+) {
   let query = database<IRoadmapPrivate>("roadmaps")
     .select("id", "name", "url", "color", "display", "index", "created_at")
     .orderBy("index", "asc")
@@ -94,16 +137,34 @@ function getRoadmapQuery(first: number, after?: string) {
       .offset(1);
   }
 
+  if (!decoded || !withPermissions) {
+    query = query.where({ display: true });
+  }
+
   return query;
 }
 
-async function getRoadmapMetadata(after?: string) {
+async function getRoadmapMetadata(
+  after?: string,
+  decoded?: IAuthenticationTokenPayload,
+  withPermissions = true,
+) {
   return database.transaction(async (trx) => {
     // Total count
-    const totalCountResult = await trx("roadmaps").count("* as count");
+    let totalCountQuery = trx("roadmaps");
+
+    if (!decoded || !withPermissions) {
+      totalCountQuery = totalCountQuery.where({ display: true });
+    }
+
+    const totalCountResult = await totalCountQuery.count("* as count");
 
     // Has next page
-    let hasNextPageSubquery = database("roadmaps").as("next");
+    let hasNextPageSubquery = trx("roadmaps");
+    if (!decoded || !withPermissions) {
+      hasNextPageSubquery = hasNextPageSubquery.where({ display: true });
+    }
+
     if (after) {
       hasNextPageSubquery = hasNextPageSubquery
         .where(
