@@ -323,7 +323,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+      .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -335,7 +335,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+      .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
