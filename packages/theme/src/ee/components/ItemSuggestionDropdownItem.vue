@@ -1,0 +1,41 @@
+<template>
+  <DropdownMenuItem
+    :class="[
+      'flex items-center gap-x-6 px-4 py-1 rounded-md',
+      'cursor-pointer outline-none',
+      'bg-white hover:bg-neutral-300/50 data-[highlighted]:bg-neutral-300/50',
+    ]"
+    @click="$emit('select', suggestion)"
+  >
+    <color-dot :color="suggestion.color" />
+    <div>
+      <div data-test="board-suggestion-name" class="text-md font-semibold">
+        {{ suggestion.name }}
+      </div>
+      <p data-test="board-suggestion-url" class="text-xs text-neutral-500">{{ suggestion.url }}</p>
+    </div>
+  </DropdownMenuItem>
+</template>
+
+<script lang="ts">
+interface SuggestionItem {
+  id?: string;
+  name: string;
+  url: string;
+  color: string;
+}
+</script>
+
+<script setup lang="ts" generic="T extends SuggestionItem">
+import { DropdownMenuItem } from "reka-ui";
+
+import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
+
+interface Props {
+  suggestion: T;
+}
+
+defineProps<Props>();
+
+defineEmits<(e: "select", value: T) => void>();
+</script>
