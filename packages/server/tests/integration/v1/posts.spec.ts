@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
+import type { IPost } from "@logchimp/types";
 
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
@@ -10,6 +11,236 @@ import {
   post as generatePost,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+
+// Get posts with filters
+describe("POST /api/v1/posts/get", () => {
+  it.skip("should return empty posts array when no posts exist", async () => {
+    const response = await supertest(app).post("/api/v1/posts/get").send({
+      boardId: [],
+      userId: "",
+    });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    expect(Array.isArray(response.body.posts)).toBe(true);
+    expect(response.body.posts).toHaveLength(0);
+  });
+
+  it("should filter posts by boardId list", async () => {
+    const boardA = await generateBoard({}, true);
+    const boardB = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser();
+
+    const post1 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: boardA.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+    const postA2 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: boardA.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+    await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: boardB.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const response = await supertest(app)
+      .post("/api/v1/posts/get")
+      .send({
+        boardId: [boardA.boardId],
+        userId: "",
+        limit: 10,
+        page: 0,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const posts = response.body.posts;
+    expect(Array.isArray(posts)).toBe(true);
+    expect(posts.length).toBeGreaterThanOrEqual(2);
+
+    // All returned posts should belong to boardA
+    posts.forEach((p: IPost) => {
+      expect(p.board.boardId).toBe(boardA.boardId);
+      expect(p.board).toBeDefined();
+      expect(p.roadmap).toBeDefined();
+      expect(Array.isArray(p.voters.votes)).toBe(true);
+    });
+
+    const slugs = posts.map((p: IPost) => p.slug);
+    expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
+  });
+
+  it("should filter posts by roadmapId", async () => {
+    const board = await generateBoard({}, true);
+    const roadmapA = await generateRoadmap({}, true);
+    const roadmapB = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    const postR1 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmapA.id,
+      },
+      true,
+    );
+    await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmapB.id,
+      },
+      true,
+    );
+
+    const response = await supertest(app).post("/api/v1/posts/get").send({
+      roadmapId: roadmapA.id,
+      userId: "",
+      limit: 10,
+      page: 0,
+    });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const posts = response.body.posts;
+    expect(posts.length).toBeGreaterThanOrEqual(1);
+    posts.forEach((p: IPost) => {
+      expect(p.roadmap.id).toBe(roadmapA.id);
+    });
+    expect(posts.map((p: IPost) => p.slug)).toEqual(
+      expect.arrayContaining([postR1.slug]),
+    );
+  });
+
+  it("should paginate results with limit and page", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    // Create 3 posts
+    const post1 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+    const post2 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+    const post3 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const page0 = await supertest(app)
+      .post("/api/v1/posts/get")
+      .send({ boardId: [board.boardId], limit: 2, page: 1, userId: "" });
+    const page1 = await supertest(app)
+      .post("/api/v1/posts/get")
+      .send({ boardId: [board.boardId], limit: 2, page: 2, userId: "" });
+
+    expect(page0.status).toBe(200);
+    expect(page1.status).toBe(200);
+    expect(page0.headers["content-type"]).toContain("application/json");
+    expect(page1.headers["content-type"]).toContain("application/json");
+    expect(page0.body.posts.length).toBeLessThanOrEqual(2);
+    expect(page1.body.posts.length).toBeLessThanOrEqual(2);
+
+    // Ensure no overlap between pages when there are at least 3 posts
+    const slugs0 = new Set(page0.body.posts.map((p: IPost) => p.slug));
+    const slugs1 = new Set(page1.body.posts.map((p: IPost) => p.slug));
+    const intersection = [...Array.from(slugs0)].filter((key) => slugs1.has(key));
+    expect(intersection.length).toBe(0);
+
+    // Ensure union contains created slugs
+    const union = new Set([...Array.from(slugs0), ...Array.from(slugs1)]);
+    const createdSlugs = [post1.slug, post2.slug, post3.slug];
+    const foundCount = createdSlugs.filter((s) => union.has(s)).length;
+    expect(foundCount).toBeGreaterThanOrEqual(3);
+  });
+
+  it("should order posts in ASC order when specified", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    // Create posts sequentially so createdAt increases
+    const post1 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+    const post2 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+    const post3 = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const asc = await supertest(app)
+      .post("/api/v1/posts/get")
+      .send({
+        boardId: [board.boardId],
+        created: "ASC",
+        limit: 10,
+        page: 0,
+        userId: "",
+      });
+
+    expect(asc.headers["content-type"]).toContain("application/json");
+    expect(asc.status).toBe(200);
+
+    const ascSlugs = asc.body.posts.map((p: IPost) => p.slug);
+    // In ASC, the earliest created should appear before later ones
+    const idxA = ascSlugs.indexOf(post1.slug);
+    const idxB = ascSlugs.indexOf(post2.slug);
+    const idxC = ascSlugs.indexOf(post3.slug);
+
+    expect(idxA).toBeLessThan(idxB);
+    expect(idxB).toBeLessThan(idxC);
+  });
+});
 
 // Create new posts
 describe("POST /api/v1/posts", () => {
@@ -124,6 +355,7 @@ describe("POST /api/v1/posts", () => {
   });
 });
 
+// Get post by slug
 describe("POST /api/v1/posts/slug", () => {
   it('should throw error "POST_NOT_FOUND"', async () => {
     const response = await supertest(app).post("/api/v1/posts/slug").send({
