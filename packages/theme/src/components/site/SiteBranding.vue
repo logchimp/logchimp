@@ -14,6 +14,7 @@
 				'text-neutral-800': textColor === 'black',
 				'text-white': textColor === 'white'
 			}"
+      data-testid="site-name"
 		>
 			{{ title }}
 		</p>
