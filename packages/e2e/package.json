@@ -2,7 +2,7 @@
   "name": "@logchimp/e2e",
   "version": "1.0.0",
   "scripts": {
-    "playwright:ui": "playwright test --ui"
+    "playwright:ui": "BASE_URL=\"http://localhost:3000\" playwright test --ui"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
