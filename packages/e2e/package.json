@@ -1,9 +1,12 @@
 {
   "name": "@logchimp/e2e",
   "version": "1.0.0",
-  "scripts": {},
+  "scripts": {
+    "playwright:ui": "playwright test --ui"
+  },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@types/node": "^24.3.1"
+    "@types/node": "^24.3.1",
+    "dotenv": "^16.6.1"
   }
 }
