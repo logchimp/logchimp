@@ -1,0 +1,30 @@
+{
+  "navbar": {
+    "home": "Accueil",
+    "roadmaps": "Feuilles de route",
+    "boards": "Tableaux"
+  },
+  "header": {
+    "login": "Se connecter",
+    "createAccount": "Créer un compte"
+  },
+  "powerBy": {
+    "poweredByLogchimp": "Propulsé par LogChimp"
+  },
+  "topPublicBoards": {
+    "title": "Tableaux",
+    "viewAll": "Voir tous les tableaux",
+    "none": "Aucun tableau disponible"
+  },
+  "setupCard": {
+    "title": "Configurez votre site LogChimp",
+    "label": "Complétez la configuration de votre site LogChimp pour accéder au tableau de bord.",
+    "cta": "Créer un compte propriétaire"
+  },
+  "setupWelcome": {
+    "heading": "Bienvenue sur",
+    "label": "Configurons votre site LogChimp pour suivre les commentaires des utilisateurs afin de créer de meilleurs produits.",
+    "cta": "Créer un compte propriétaire"
+  },
+  "setupCreateAccount": {}
+}
