@@ -15,10 +15,9 @@ import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
   it("should use default page=1 and default limit when no filters are provided", async () => {
-    // seed more posts than default limit to test pagination default
+    const { user: authUser } = await createUser({ isVerified: true });
     const board = await generateBoard({}, true);
     const roadmap = await generateRoadmap({}, true);
-    const { user: authUser } = await createUser({ isVerified: true });
 
     // Create 12 posts to exceed typical default [GET_POSTS_FILTER_COUNT]
     const createdSlugs: string[] = [];
