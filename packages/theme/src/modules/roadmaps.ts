@@ -3,7 +3,7 @@ import type {
   IGetRoadmapByUrlResponseBody,
   IPaginatedRoadmapsResponse,
   ISearchRoadmapResponseBody,
-  TGetRoadmapsParams,
+  IGetRoadmapsParams,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
@@ -12,15 +12,15 @@ import { useUserStore } from "../store/user";
 /**
  * Get all roadmaps with cursor-based pagination
  *
- * @param {TGetRoadmapsParams} params - Pagination parameters
+ * @param {IGetRoadmapsParams} params - Pagination parameters
  * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
  */
 export const getAllRoadmaps = async (
-  params: TGetRoadmapsParams = {},
+  params: IGetRoadmapsParams = {},
 ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
-  if (params.first) {
+  if (params.first !== undefined) {
     searchParams.append("first", params.first.toString());
   }
 
@@ -32,9 +32,14 @@ export const getAllRoadmaps = async (
     searchParams.toString() ? `?${searchParams.toString()}` : ""
   }`;
 
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 

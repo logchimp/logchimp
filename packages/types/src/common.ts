@@ -11,8 +11,10 @@ export interface ApiPaginationType {
   sort?: ApiSortType;
 }
 
+export type FilterVisibility = "public" | "private";
+
 export interface CursorPaginationParams {
-  first?: string;
+  first?: number;
   after?: string;
 }
 
