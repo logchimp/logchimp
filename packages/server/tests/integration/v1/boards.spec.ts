@@ -1,13 +1,11 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
-import { faker, ur } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
-import database from "../../../src/database";
 import { board as generateBoards } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import { url } from "zod";
 
 interface BoardInsertRecord {
   boardId: string;
@@ -128,10 +126,7 @@ describe("POST /api/v1/boards", () => {
   });
 
   it("should create a board", async () => {
-    // seed users with "board:create permission"
-    // const board : BoardInsertRecord = generateBoards({}, false);
     const { user: authUser } = await createUser();
-
     await createRoleWithPermissions(authUser.userId, ["board:create"], {
       roleName: "Board Creator",
     });
@@ -171,7 +166,6 @@ describe("PATCH /api/v1/boards", () => {
   });
 
   it("should throw error 'BOARD_NOT_FOUND'", async () => {
-    const board: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
 
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
@@ -182,7 +176,7 @@ describe("PATCH /api/v1/boards", () => {
       .patch("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
-        boardId: board.boardId,
+        boardId: faker.string.uuid(),
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -190,7 +184,7 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("BOARD_NOT_FOUND");
   });
 
-  it("should throw error not having 'board:create' permission", async () => {
+  it("should throw error not having 'board:update' permission", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
@@ -252,7 +246,7 @@ describe("PATCH /api/v1/boards", () => {
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
-        url: board.url,
+        url: newBoard.url,
         name: newBoard.name,
         color: newBoard.color,
         view_voters: newBoard.view_voters,
@@ -264,7 +258,7 @@ describe("PATCH /api/v1/boards", () => {
 
     const responseBoard = response.body.board;
     expect(responseBoard.boardId).toBe(board.boardId);
-    expect(responseBoard.url).toBe(board.url.toLowerCase());
+    expect(responseBoard.url).toBe(newBoard.url.toLowerCase());
     expect(responseBoard.name).toBe(newBoard.name);
     expect(responseBoard.color).toBe(newBoard.color);
     expect(responseBoard.view_voters).toBe(newBoard.view_voters);
