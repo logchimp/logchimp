@@ -48,5 +48,16 @@
     "errors": {
       "required": "Required"
     }
+  },
+  "setupCreateBoard": {
+    "heading": "Create a new board",
+    "label": "A board is a place where people can post and vote on ideas for a specific topic.",
+    "card": {
+      "label": "Name",
+      "placeholder": "Name of the board"
+    },
+    "create": "Create",
+    "skipText": "You can {skip} and create one later.",
+    "skipWord": "skip"
   }
 }
