@@ -57,11 +57,14 @@ describe("POST /api/v1/votes", () => {
 
     const response = await supertest(app)
       .post(`/api/v1/votes`)
-      .set("Authorization", `Bearer ${user.authToken}`);
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .set({
+        postId: uuid(),
+      });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("INVALID_POST_ID");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("POST_NOT_FOUND");
   });
 
   it('should throw error "VOTE_EXISTS"', async () => {
@@ -163,11 +166,14 @@ describe("DELETE /api/v1/votes", () => {
 
     const response = await supertest(app)
       .delete("/api/v1/votes")
-      .set("Authorization", `Bearer ${user.authToken}`);
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .set({
+        postId: uuid(),
+      });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("INVALID_POST_ID");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("POST_NOT_FOUND");
   });
 
   it('should throw error "VOTE_NOT_FOUND"', async () => {
