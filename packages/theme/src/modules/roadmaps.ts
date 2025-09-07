@@ -20,7 +20,7 @@ export const getAllRoadmaps = async (
 ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
-  if (params.first !== undefined) {
+  if (params.first) {
     searchParams.append("first", params.first.toString());
   }
 

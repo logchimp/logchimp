@@ -14,7 +14,7 @@ export interface ApiPaginationType {
 export type FilterVisibility = "public" | "private";
 
 export interface CursorPaginationParams {
-  first?: number;
+  first?: string;
   after?: string;
 }
 
