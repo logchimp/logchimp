@@ -11,21 +11,21 @@ const router = express.Router();
 import * as roles from "../../controllers/v1/roles";
 
 // middleware
-import * as middleware from "../../../middlewares";
+import { authRequired } from "../../../middlewares/auth";
 import { roleExists } from "../../middleware/roleExists";
 
-router.get("/roles", middleware.apiAuth, roles.get);
+router.get("/roles", authRequired, roles.get);
 router.get<IGetRoleByIdRequestParams>(
   "/roles/:id",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   roleExists,
   roles.getOne,
 );
 
-router.post("/roles", middleware.apiAuth, roles.create);
+router.post("/roles", authRequired, roles.create);
 
-router.patch("/roles", middleware.apiAuth, roleExists, roles.update);
+router.patch("/roles", authRequired, roleExists, roles.update);
 
 // BETA: Assign role to a user
 // todo: add userExists middleware
@@ -33,7 +33,7 @@ router.patch("/roles", middleware.apiAuth, roleExists, roles.update);
 router.put<IAssignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   roles.addRoleToUser,
 );
 
@@ -43,7 +43,7 @@ router.put<IAssignRoleToUserRequestParams>(
 router.delete<TUnassignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   roles.deleteRoleFromUser,
 );
 

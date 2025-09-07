@@ -11,7 +11,7 @@ const router = express.Router();
 import * as boards from "../../controllers/v1/boards";
 
 // middleware
-import * as middleware from "../../../middlewares";
+import { authRequired } from "../../../middlewares/auth";
 import { boardExists } from "../../middleware/boardExists";
 
 router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
@@ -30,14 +30,14 @@ router.get<IGetBoardByUrlRequestParams>(
 router.get<ISearchBoardRequestParams>(
   "/boards/search/:name",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   boards.searchBoard,
 );
 
-router.post("/boards/check-name", middleware.apiAuth, boards.checkName);
-router.post("/boards", middleware.apiAuth, boards.create);
-router.patch("/boards", middleware.apiAuth, boardExists, boards.updateBoard);
+router.post("/boards/check-name", authRequired, boards.checkName);
+router.post("/boards", authRequired, boards.create);
+router.patch("/boards", authRequired, boardExists, boards.updateBoard);
 
-router.delete("/boards", middleware.apiAuth, boardExists, boards.deleteById);
+router.delete("/boards", authRequired, boardExists, boards.deleteById);
 
 export default router;
