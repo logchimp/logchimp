@@ -17,13 +17,16 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
+import { parseAndValidateLimit } from "../../helpers";
 
 const FilterVisibilitySchema = z.enum(["public", "private"]);
 const querySchema = z.object({
   first: z.coerce
     .string()
     .min(1)
-    .transform((value) => Number.parseInt(value, 10))
+    .transform((value) =>
+      parseAndValidateLimit(value, GET_ROADMAPS_FILTER_COUNT),
+    )
     .pipe(
       z
         .number()
@@ -37,17 +40,39 @@ const querySchema = z.object({
 
 type ResponseBody = IPaginatedRoadmapsResponse | IApiErrorResponse;
 
+interface GetRoadmapQueryOptions {
+  first: number;
+  after?: string;
+  visibility: FilterVisibility[];
+}
+
+interface GetRoadmapMetadataOptions {
+  after?: string;
+  visibility: FilterVisibility[];
+}
+
 export async function filter(
   req: Request<IGetRoadmapsParams>,
   res: Response<ResponseBody>,
 ) {
-  const { first, after, visibility } = querySchema.parse(req.query);
+  const {
+    first,
+    after,
+    visibility: _visibility,
+  } = querySchema.parse(req.query);
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = (req?.user?.permissions || []) as TPermission[];
   const hasPermission = permissions.includes("roadmap:read");
 
+  // Sanitize visibility filter based on permission
+  const visibility = sanitizeVisibility(_visibility, hasPermission);
+
   try {
-    const data = await getRoadmapQuery({ first, after, visibility });
+    const data = await getRoadmapQuery({
+      first,
+      after,
+      visibility,
+    });
     const dataLength = data.length;
 
     const startCursor = data.length > 0 ? String(data[0].id) : null;
@@ -58,7 +83,10 @@ export async function filter(
     let currentPage = 1;
     let hasNextPage = false;
 
-    const metadataResults = await getRoadmapMetadata({ after, visibility });
+    const metadataResults = await getRoadmapMetadata({
+      after,
+      visibility,
+    });
     if (metadataResults) {
       totalCount = metadataResults.totalCount;
       totalPages = Math.ceil(metadataResults.totalCount / first);
@@ -100,12 +128,6 @@ export async function filter(
   }
 }
 
-interface GetRoadmapQueryOptions {
-  first: number;
-  after?: string;
-  visibility: FilterVisibility[];
-}
-
 function getRoadmapQuery({ first, after, visibility }: GetRoadmapQueryOptions) {
   let query = database<IRoadmapPrivate>("roadmaps")
     .select("id", "name", "url", "color", "display", "index", "created_at")
@@ -127,11 +149,6 @@ function getRoadmapQuery({ first, after, visibility }: GetRoadmapQueryOptions) {
   return query;
 }
 
-interface GetRoadmapMetadataOptions {
-  after?: string;
-  visibility: FilterVisibility[];
-}
-
 async function getRoadmapMetadata({
   after,
   visibility,
@@ -139,15 +156,14 @@ async function getRoadmapMetadata({
   return database.transaction(async (trx) => {
     // Total count
     let totalCountQuery = trx("roadmaps");
-    totalCountQuery = applyVisibilityFilter<typeof totalCountQuery>(
-      totalCountQuery,
-      visibility,
-    );
-    const totalCountResult = await totalCountQuery.count("* as count");
+    totalCountQuery = applyVisibilityFilter(totalCountQuery, visibility);
+    const totalCountResult = await totalCountQuery
+      .count<{ count: string | number }[]>("* as count")
+      .first();
 
     // Has next page
     let hasNextPageSubquery = trx("roadmaps");
-    hasNextPageSubquery = applyVisibilityFilter<typeof hasNextPageSubquery>(
+    hasNextPageSubquery = applyVisibilityFilter(
       hasNextPageSubquery,
       visibility,
     );
@@ -162,13 +178,14 @@ async function getRoadmapMetadata({
         .offset(1);
     }
     const hasNextPageResult = await trx
-      .count<{ count: string }[]>({ count: "*" })
-      .from(hasNextPageSubquery);
+      .count<{ count: string | number }[]>({ count: "*" })
+      .from(hasNextPageSubquery)
+      .first();
 
-    const totalCount = Number.parseInt(String(totalCountResult[0].count), 10);
+    const totalCount = Number.parseInt(String(totalCountResult.count), 10);
 
     const remainingResultsCount = Number.parseInt(
-      String(hasNextPageResult[0].count),
+      String(hasNextPageResult.count),
       10,
     );
 
@@ -209,4 +226,12 @@ function applyVisibilityFilter<T>(
     // @ts-expect-error
     return query.where({ display: null });
   }
+}
+
+function sanitizeVisibility(
+  visibility: FilterVisibility[],
+  hasPermission: boolean,
+): FilterVisibility[] {
+  if (hasPermission) return visibility;
+  return ["public"];
 }
