@@ -8,15 +8,9 @@
           text-color="white"
         />
 
-        <select
-            v-model="$i18n.locale"
-            class="ml-4 px-2 py-1 rounded bg-white text-black text-sm"
-          >
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="hi">हिन्दी</option>
-          </select>
-
+       
+       <div class="flex items-center gap-5">
+        <LanguageDropdown/>
         <nav>
           <HeaderAuthDropdown
             v-if="userStore.user.userId"
@@ -35,6 +29,7 @@
           </div>
           
         </nav>
+        </div>
       </div>
 
       <navbar class="mt-2" />
@@ -52,6 +47,7 @@ import Navbar from "./Navbar.vue";
 import SiteBranding from "./site/SiteBranding.vue";
 import Button from "./ui/Button.vue";
 import HeaderAuthDropdown from "./HeaderAuthDropdown.vue";
+import LanguageDropdown from "./ui/LanguageDropdown.vue";
 
 const settingsStore = useSettingStore();
 const userStore = useUserStore();
