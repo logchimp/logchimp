@@ -18,7 +18,7 @@ export interface IRoadmapPrivate extends IRoadmap {
 }
 
 export interface IGetRoadmapsParams extends CursorPaginationParams {
-  visibility: FilterVisibility[];
+  visibility?: FilterVisibility[];
 }
 
 export interface IPaginatedRoadmapsResponse
