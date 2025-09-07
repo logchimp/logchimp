@@ -60,7 +60,7 @@
     "skipText": "You can {skip} and create one later.",
     "skipWord": "skip"
   },
-  "dashbaord": {
+  "dashboard": {
     "tableHeading1": "Posts",
     "postsTableTitle": "Title",
     "postsTableVotes": "Votes",
