@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
 import {
-  BoardInsertRecord,
+  type BoardInsertRecord,
   board as generateBoards,
 } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
@@ -18,7 +18,7 @@ describe("GET /api/v1/boards", () => {
     const existingBoardsCountResult = await database("boards")
       .count({ count: "*" })
       .first();
-    const existingBoardsCount = parseInt(
+    const existingBoardsCount = Number.parseInt(
       existingBoardsCountResult?.count?.toString() || "0",
       10,
     );
