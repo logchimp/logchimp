@@ -25,5 +25,47 @@
     "heading": "आपका स्वागत है",
     "label": "आइए बेहतर उत्पाद बनाने के लिए उपयोगकर्ता प्रतिक्रिया को ट्रैक करने के लिए अपनी LogChimp साइट सेटअप करें।",
     "cta": "ओनर खाता बनाएँ"
+  },
+  "setupCreateAccount": {
+    "heading": "खाता बनाएं",
+    "siteTitle": {
+      "label": "साइट शीर्षक",
+      "placeholder": "मेरी शानदार साइट"
+    },
+    "fullName": {
+      "label": "पूरा नाम",
+      "placeholder": "माइक एम. स्मिथ"
+    },
+    "email": {
+      "label": "ईमेल पता",
+      "placeholder": "उदा. email@example.com"
+    },
+    "password": {
+      "label": "पासवर्ड",
+      "placeholder": "कम से कम 10 अक्षर"
+    },
+    "cta": "खाता बनाएं",
+    "errors": {
+      "required": "आवश्यक"
+    }
+  },
+  "setupCreateBoard": {
+    "heading": "नया बोर्ड बनाएं",
+    "label": "बोर्ड एक ऐसी जगह है जहाँ लोग किसी विशेष विषय के लिए आइडियाज़ पोस्ट और वोट कर सकते हैं।",
+    "card": {
+      "label": "नाम",
+      "placeholder": "बोर्ड का नाम"
+    },
+    "create": "बनाएं",
+    "skipText": "आप {skip} कर सकते हैं और बाद में एक बना सकते हैं।",
+    "skipWord": "छोड़ें"
+  },
+  "dashboard": {
+    "tableHeading1": "पोस्ट्स",
+    "postsTableTitle": "शीर्षक",
+    "postsTableVotes": "वोट्स",
+    "tableHeading2": "बोर्ड्स",
+    "baordsTableName": "नाम",
+    "boardsTablePosts": "पोस्ट्स"
   }
 }
