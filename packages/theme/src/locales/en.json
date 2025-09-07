@@ -59,5 +59,13 @@
     "create": "Create",
     "skipText": "You can {skip} and create one later.",
     "skipWord": "skip"
+  },
+  "dashbaord": {
+    "tableHeading1": "Posts",
+    "postsTableTitle": "Title",
+    "postsTableVotes": "Votes",
+    "tableHeading2": "Boards",
+    "baordsTableName": "Name",
+    "boardsTablePosts": "Posts"
   }
 }
