@@ -1,31 +1,53 @@
 import { z } from "zod";
 import type { Request, Response } from "express";
+import type { Knex } from "knex";
 import type {
   IApiErrorResponse,
   IPaginatedRoadmapsResponse,
   IRoadmapPrivate,
+  IGetRoadmapsParams,
+  TPermission,
+  FilterVisibility,
 } from "@logchimp/types";
+
+// database
 import database from "../../database";
+
+// utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
 
+const FilterVisibilitySchema = z.enum(["public", "private"]);
 const querySchema = z.object({
   first: z.coerce
-    .number()
+    .string()
     .min(1)
-    .max(GET_ROADMAPS_FILTER_COUNT)
-    .default(GET_ROADMAPS_FILTER_COUNT),
+    .transform((value) => Number.parseInt(value, 10))
+    .pipe(
+      z
+        .number()
+        .int()
+        .max(GET_ROADMAPS_FILTER_COUNT)
+        .default(GET_ROADMAPS_FILTER_COUNT),
+    ),
   after: z.string().uuid().optional(),
+  visibility: z.array(FilterVisibilitySchema).default(["public"]),
 });
 
 type ResponseBody = IPaginatedRoadmapsResponse | IApiErrorResponse;
 
-export async function filter(req: Request, res: Response<ResponseBody>) {
-  try {
-    const { first, after } = querySchema.parse(req.query);
+export async function filter(
+  req: Request<IGetRoadmapsParams>,
+  res: Response<ResponseBody>,
+) {
+  const { first, after, visibility } = querySchema.parse(req.query);
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
+  const hasPermission = permissions.includes("roadmap:read");
 
-    const data = await getRoadmapQuery(first, after);
+  try {
+    const data = await getRoadmapQuery({ first, after, visibility });
     const dataLength = data.length;
 
     const startCursor = data.length > 0 ? String(data[0].id) : null;
@@ -36,7 +58,7 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
     let currentPage = 1;
     let hasNextPage = false;
 
-    const metadataResults = await getRoadmapMetadata(after);
+    const metadataResults = await getRoadmapMetadata({ after, visibility });
     if (metadataResults) {
       totalCount = metadataResults.totalCount;
       totalPages = Math.ceil(metadataResults.totalCount / first);
@@ -78,7 +100,13 @@ export async function filter(req: Request, res: Response<ResponseBody>) {
   }
 }
 
-function getRoadmapQuery(first: number, after?: string) {
+interface GetRoadmapQueryOptions {
+  first: number;
+  after?: string;
+  visibility: FilterVisibility[];
+}
+
+function getRoadmapQuery({ first, after, visibility }: GetRoadmapQueryOptions) {
   let query = database<IRoadmapPrivate>("roadmaps")
     .select("id", "name", "url", "color", "display", "index", "created_at")
     .orderBy("index", "asc")
@@ -94,16 +122,36 @@ function getRoadmapQuery(first: number, after?: string) {
       .offset(1);
   }
 
+  query = applyVisibilityFilter(query, visibility);
+
   return query;
 }
 
-async function getRoadmapMetadata(after?: string) {
+interface GetRoadmapMetadataOptions {
+  after?: string;
+  visibility: FilterVisibility[];
+}
+
+async function getRoadmapMetadata({
+  after,
+  visibility,
+}: GetRoadmapMetadataOptions) {
   return database.transaction(async (trx) => {
     // Total count
-    const totalCountResult = await trx("roadmaps").count("* as count");
+    let totalCountQuery = trx("roadmaps");
+    totalCountQuery = applyVisibilityFilter<typeof totalCountQuery>(
+      totalCountQuery,
+      visibility,
+    );
+    const totalCountResult = await totalCountQuery.count("* as count");
 
     // Has next page
-    let hasNextPageSubquery = database("roadmaps").as("next");
+    let hasNextPageSubquery = trx("roadmaps");
+    hasNextPageSubquery = applyVisibilityFilter<typeof hasNextPageSubquery>(
+      hasNextPageSubquery,
+      visibility,
+    );
+
     if (after) {
       hasNextPageSubquery = hasNextPageSubquery
         .where(
@@ -129,4 +177,36 @@ async function getRoadmapMetadata(after?: string) {
       remainingResultsCount,
     };
   });
+}
+
+function applyVisibilityFilter<T>(
+  query: Knex.QueryBuilder<T>,
+  visibility: FilterVisibility[],
+): Knex.QueryBuilder<T> {
+  if (!visibility || visibility.length === 0) {
+    // Default: show only public roadmaps
+    // @ts-expect-error
+    return query.where({ display: true });
+  }
+
+  const hasPublic = visibility.includes("public");
+  const hasPrivate = visibility.includes("private");
+
+  // query remains unchanged
+  if (hasPublic && hasPrivate) {
+    return query;
+  } else if (hasPublic) {
+    // Show only public
+    // @ts-expect-error
+    return query.where({ display: true });
+  } else if (hasPrivate) {
+    // Show only private
+    // @ts-expect-error
+    return query.where({ display: false });
+  }
+  // If neither public nor private is specified (edge case), show nothing
+  else {
+    // @ts-expect-error
+    return query.where({ display: null });
+  }
 }
