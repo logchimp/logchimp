@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import error from "../errorResponse.json";
+import error from "../../errorResponse.json";
 
 const authorize = (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
