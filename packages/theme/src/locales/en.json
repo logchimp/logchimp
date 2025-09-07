@@ -27,6 +27,26 @@
     "cta": "Create owner account"
   },
   "setupCreateAccount": {
-    "heading": "Create an account"
+    "heading": "Create an account",
+    "siteTitle": {
+      "label": "Site Title",
+      "placeholder": "My awesome site"
+    },
+    "fullName": {
+      "label": "Full Name",
+      "placeholder": "Mike M. Smith"
+    },
+    "email": {
+      "label": "Email address",
+      "placeholder": "Eg. email@example.com"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "At least 10 character"
+    },
+    "cta": "Create account",
+    "errors": {
+      "required": "Required"
+    }
   }
 }
