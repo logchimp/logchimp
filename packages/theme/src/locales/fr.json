@@ -26,5 +26,46 @@
     "label": "Configurons votre site LogChimp pour suivre les commentaires des utilisateurs afin de créer de meilleurs produits.",
     "cta": "Créer un compte propriétaire"
   },
-  "setupCreateAccount": {}
+  "setupCreateAccount": {
+    "heading": "Créer un compte",
+    "siteTitle": {
+      "label": "Titre du site",
+      "placeholder": "Mon site génial"
+    },
+    "fullName": {
+      "label": "Nom complet",
+      "placeholder": "Mike M. Smith"
+    },
+    "email": {
+      "label": "Adresse e-mail",
+      "placeholder": "Ex. email@example.com"
+    },
+    "password": {
+      "label": "Mot de passe",
+      "placeholder": "Au moins 10 caractères"
+    },
+    "cta": "Créer un compte",
+    "errors": {
+      "required": "Requis"
+    }
+  },
+  "setupCreateBoard": {
+    "heading": "Créer un nouveau tableau",
+    "label": "Un tableau est un espace où les utilisateurs peuvent poster et voter pour des idées sur un sujet spécifique.",
+    "card": {
+      "label": "Nom",
+      "placeholder": "Nom du tableau"
+    },
+    "create": "Créer",
+    "skipText": "Vous pouvez {skip} et en créer un plus tard.",
+    "skipWord": "ignorer"
+  },
+  "dashboard": {
+    "tableHeading1": "Publications",
+    "postsTableTitle": "Titre",
+    "postsTableVotes": "Votes",
+    "tableHeading2": "Tableaux",
+    "baordsTableName": "Nom",
+    "boardsTablePosts": "Publications"
+  }
 }
