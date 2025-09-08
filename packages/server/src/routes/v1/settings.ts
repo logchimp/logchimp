@@ -25,17 +25,17 @@ const upload = multer({
 import * as settings from "../../controllers/settings";
 
 // middleware
-import * as middlewares from "../../middlewares";
+import { authRequired } from "../../middlewares/auth";
 
 router.get("/settings/site", settings.siteSettings);
-router.patch("/settings/site", middlewares.apiAuth, settings.update);
+router.patch("/settings/site", authRequired, settings.update);
 router.post(
   "/settings/update-logo",
-  middlewares.apiAuth,
+  authRequired,
   upload.single("logo", 1),
   settings.updateLogo,
 );
 router.get("/settings/labs", settings.getLabs);
-router.patch("/settings/labs", middlewares.apiAuth, settings.updateLabs);
+router.patch("/settings/labs", authRequired, settings.updateLabs);
 
 export default router;

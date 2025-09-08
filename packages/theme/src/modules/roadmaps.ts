@@ -3,7 +3,7 @@ import type {
   IGetRoadmapByUrlResponseBody,
   IPaginatedRoadmapsResponse,
   ISearchRoadmapResponseBody,
-  TGetRoadmapsParams,
+  IGetRoadmapsParams,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
@@ -12,29 +12,33 @@ import { useUserStore } from "../store/user";
 /**
  * Get all roadmaps with cursor-based pagination
  *
- * @param {TGetRoadmapsParams} params - Pagination parameters
+ * @param {IGetRoadmapsParams} params - Pagination parameters
  * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
  */
 export const getAllRoadmaps = async (
-  params: TGetRoadmapsParams = {},
+  params: IGetRoadmapsParams = {},
 ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
-  if (params.first) {
-    searchParams.append("first", params.first.toString());
-  }
-
-  if (params.after) {
-    searchParams.append("after", params.after);
+  for (const paramsKey in params) {
+    const value = params[paramsKey as keyof IGetRoadmapsParams];
+    if (value) {
+      searchParams.append(paramsKey, value.toString());
+    }
   }
 
   const url = `${VITE_API_URL}/api/v1/roadmaps${
     searchParams.toString() ? `?${searchParams.toString()}` : ""
   }`;
 
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 

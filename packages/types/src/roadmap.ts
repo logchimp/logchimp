@@ -1,4 +1,8 @@
-import type { CursorPaginationParams, CursorPaginatedResponse } from "./common";
+import type {
+  CursorPaginationParams,
+  CursorPaginatedResponse,
+  FilterVisibility,
+} from "./common";
 
 export interface IRoadmap {
   id: string;
@@ -13,7 +17,9 @@ export interface IRoadmapPrivate extends IRoadmap {
   created_at: Date;
 }
 
-export type TGetRoadmapsParams = CursorPaginationParams;
+export interface IGetRoadmapsParams extends CursorPaginationParams {
+  visibility?: FilterVisibility[];
+}
 
 export interface IPaginatedRoadmapsResponse
   extends CursorPaginatedResponse<IRoadmapPrivate> {

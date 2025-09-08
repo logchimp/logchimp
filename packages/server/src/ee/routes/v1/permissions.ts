@@ -6,14 +6,14 @@ const router = express.Router();
 // import users from "../../../controllers/users";
 
 // middleware
-// import * as middleware from "../../../middlewares";
+// import { authRequired } from "../../../middlewares/auth";
 
 // TODO: create permission for user:read, user:update, user:create, user:delete
-// router.get("/users/get", middleware.apiAuth, users.accessDashboard);
-// router.get("/users/:user_id/get", middleware.apiAuth, users.getUserInfo);
+// router.get("/users/get", authRequired, users.accessDashboard);
+// router.get("/users/:user_id/get", authRequired, users.getUserInfo);
 // router.patch(
 // 	"/users/:user_id/update",
-// 	middleware.apiAuth,
+// 	authRequired,
 // 	users.updateUserInfo
 // );
 

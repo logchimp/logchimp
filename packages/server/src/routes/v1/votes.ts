@@ -6,9 +6,9 @@ const router = express.Router();
 import * as votes from "../../controllers/votes";
 
 // middleware
-import * as middleware from "../../middlewares";
+import { authRequired } from "../../middlewares/auth";
 
-router.post("/votes", middleware.apiAuth, votes.add);
-router.delete("/votes", middleware.apiAuth, votes.remove);
+router.post("/votes", authRequired, votes.add);
+router.delete("/votes", authRequired, votes.remove);
 
 export default router;

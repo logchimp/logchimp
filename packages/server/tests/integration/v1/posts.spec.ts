@@ -42,7 +42,7 @@ describe("POST /api/v1/posts/get", () => {
     const slugsDefault: string[] = resDefault.body.posts.map(
       (p: IPost) => p.slug,
     );
-    expect(Array.isArray(resDefault.body.posts)).toBe(true);
+    expect(Array.isArray(resDefault.body.posts)).toBeTruthy();
     expect(resDefault.body.posts.length).toBeGreaterThan(0);
 
     // Verify DESC: last created slug should appear at or before index of earlier ones
@@ -77,7 +77,7 @@ describe("POST /api/v1/posts/get", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
-    expect(Array.isArray(response.body.posts)).toBe(true);
+    expect(Array.isArray(response.body.posts)).toBeTruthy();
     expect(response.body.posts).toHaveLength(0);
   });
 
@@ -125,7 +125,7 @@ describe("POST /api/v1/posts/get", () => {
     expect(response.status).toBe(200);
 
     const posts = response.body.posts;
-    expect(Array.isArray(posts)).toBe(true);
+    expect(Array.isArray(posts)).toBeTruthy();
     expect(posts.length).toBeGreaterThanOrEqual(2);
 
     // All returned posts should belong to boardA
@@ -133,7 +133,7 @@ describe("POST /api/v1/posts/get", () => {
       expect(p.board.boardId).toBe(boardA.boardId);
       expect(p.board).toBeDefined();
       expect(p.roadmap).toBeDefined();
-      expect(Array.isArray(p.voters.votes)).toBe(true);
+      expect(Array.isArray(p.voters.votes)).toBeTruthy();
     });
 
     const slugs = posts.map((p: IPost) => p.slug);

@@ -6,24 +6,14 @@ const router = express.Router();
 import * as roadmaps from "../../controllers/v1/roadmaps";
 
 // middleware
-import * as middleware from "../../../middlewares";
+import { authRequired } from "../../../middlewares/auth";
 import { roadmapExists } from "../../../middlewares/roadmapExists";
 
-router.post("/roadmaps", middleware.apiAuth, roadmaps.create);
+router.post("/roadmaps", authRequired, roadmaps.create);
 
-router.patch(
-  "/roadmaps",
-  middleware.apiAuth,
-  roadmapExists,
-  roadmaps.updateRoadmap,
-);
-router.patch("/roadmaps/sort", middleware.apiAuth, roadmaps.sort);
+router.patch("/roadmaps", authRequired, roadmapExists, roadmaps.updateRoadmap);
+router.patch("/roadmaps/sort", authRequired, roadmaps.sort);
 
-router.delete(
-  "/roadmaps",
-  middleware.apiAuth,
-  roadmapExists,
-  roadmaps.deleteById,
-);
+router.delete("/roadmaps", authRequired, roadmapExists, roadmaps.deleteById);
 
 export default router;
