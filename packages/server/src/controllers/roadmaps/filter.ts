@@ -26,7 +26,6 @@ const FilterVisibilitySchema = z.enum<FilterVisibility[]>([
 const querySchema = z.object({
   first: z.coerce
     .string()
-    .min(1)
     .transform((value) =>
       parseAndValidateLimit(value, GET_ROADMAPS_FILTER_COUNT),
     )
@@ -34,6 +33,7 @@ const querySchema = z.object({
       z
         .number()
         .int()
+        .min(1)
         .max(GET_ROADMAPS_FILTER_COUNT)
         .default(GET_ROADMAPS_FILTER_COUNT),
     ),
@@ -62,11 +62,16 @@ export async function filter(
   req: Request<IGetRoadmapsParams>,
   res: Response<ResponseBody>,
 ) {
-  const {
-    first,
-    after,
-    visibility: _visibility,
-  } = querySchema.parse(req.query);
+  const query = querySchema.safeParse(req.query);
+  if (!query.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid query parameters",
+      errors: query.error.issues,
+    });
+  }
+  const { first, after, visibility: _visibility } = query.data;
+
   // @ts-expect-error
   const permissions = (req?.user?.permissions || []) as TPermission[];
   const hasPermission = permissions.includes("roadmap:read");
@@ -119,15 +124,8 @@ export async function filter(
       total_count: totalCount,
     });
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      return res.status(400).json({
-        code: "VALIDATION_ERROR",
-        message: "Invalid query parameters",
-        errors: err.issues,
-      });
-    }
-
     logger.error({ message: err });
+
     res.status(500).json({
       message: error.general.serverError,
       code: "SERVER_ERROR",
