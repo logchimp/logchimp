@@ -122,7 +122,7 @@ export interface BoardInsertRecord {
   updatedAt: string;
 }
 
-const board = async (board?: Partial<BoardArgs>, insertToDb = false) => {
+const board = async (board?: Partial<BoardArgs>, insertToDb = false): Promise<BoardInsertRecord> => {
   const name = board?.name || faker.commerce.productName();
 
   const obj: BoardInsertRecord = {
