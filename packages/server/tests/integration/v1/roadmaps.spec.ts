@@ -304,6 +304,9 @@ describe("GET /api/v1/roadmaps/:url", () => {
     "null",
     null,
     undefined,
+    "roadmap name with spaces",
+    "roadmap+with+plus",
+    "roadmap#with#hash",
     "456575634",
     // TODO: add this test case - not working for some reason
     // "*&^(*&$%&*^&%&^%*",
@@ -377,24 +380,38 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should get 0 search results for "randooo" roadmaps', async () => {
-    const { user } = await createUser({
-      isVerified: true,
-    });
-    await createRoleWithPermissions(user.userId, ["roadmap:read"], {
-      roleName: "Roadmap Reader",
-    });
+  [
+    "ROADMAP_NOT_FOUND",
+    "undefined",
+    "null",
+    null,
+    undefined,
+    "roadmap name with spaces",
+    "roadmap+with+plus",
+    "roadmap#with#hash",
+    "456575634",
+    // TODO: add this test case - not working for some reason
+    // "*&^(*&$%&*^&%&^%*",
+  ].map((name) =>
+    it(`should get 0 search results for "${name}" roadmaps`, async () => {
+      const { user } = await createUser({
+        isVerified: true,
+      });
+      await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+        roleName: "Roadmap Reader",
+      });
 
-    const response = await supertest(app)
-      .get("/api/v1/roadmaps/search/randooo")
-      .set("Authorization", `Bearer ${user.authToken}`);
+      const response = await supertest(app)
+        .get(`/api/v1/roadmaps/search/${name}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.body.roadmaps).toStrictEqual([]);
-    expect(response.body.roadmaps).toHaveLength(0);
+      expect(response.body.roadmaps).toStrictEqual([]);
+      expect(response.body.roadmaps).toHaveLength(0);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+    }),
+  );
 
   const roadmapName = faker.commerce
     .productName()
@@ -428,7 +445,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
       .set("Authorization", `Bearer ${user.authToken}`);
 
     const roadmaps = response.body.roadmaps;
-    expect(response.body.roadmaps).toHaveLength(2);
+    expect(roadmaps).toHaveLength(2);
 
     // r1
     expect(roadmaps[0].id).toBe(r1.id);
