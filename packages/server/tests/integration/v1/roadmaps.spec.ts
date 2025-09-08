@@ -308,8 +308,6 @@ describe("GET /api/v1/roadmaps/:url", () => {
     "roadmap+with+plus",
     "roadmap#with#hash",
     "456575634",
-    // TODO: add this test case - not working for some reason
-    // "*&^(*&$%&*^&%&^%*",
   ].map((name) =>
     it(`should throw error "ROADMAP_NOT_FOUND" for '${name}'`, async () => {
       const res = await supertest(app).get(`/api/v1/roadmaps/${name}`);
@@ -317,6 +315,26 @@ describe("GET /api/v1/roadmaps/:url", () => {
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(404);
       expect(res.body.code).toBe("ROADMAP_NOT_FOUND");
+    }),
+  );
+
+  ["*&^(*&$%&*^&%&^%*"].map((name) =>
+    it(`should get 0 search results for "${name}" roadmaps`, async () => {
+      const { user } = await createUser({
+        isVerified: true,
+      });
+      await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+        roleName: "Roadmap Reader",
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/roadmaps/search/${name}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("DECODE_URI_ERROR");
     }),
   );
 
@@ -380,19 +398,29 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  [
-    "ROADMAP_NOT_FOUND",
-    "undefined",
-    "null",
-    null,
-    undefined,
-    "roadmap name with spaces",
-    "roadmap+with+plus",
-    "roadmap#with#hash",
-    "456575634",
-    // TODO: add this test case - not working for some reason
-    // "*&^(*&$%&*^&%&^%*",
-  ].map((name) =>
+  ["ROADMAP_NOT_FOUND", "undefined", "null", null, undefined, "456575634"].map(
+    (name) =>
+      it(`should get 0 search results for "${name}" roadmaps`, async () => {
+        const { user } = await createUser({
+          isVerified: true,
+        });
+        await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+          roleName: "Roadmap Reader",
+        });
+
+        const response = await supertest(app)
+          .get(`/api/v1/roadmaps/search/${name}`)
+          .set("Authorization", `Bearer ${user.authToken}`);
+
+        expect(response.body.roadmaps).toStrictEqual([]);
+        expect(response.body.roadmaps).toHaveLength(0);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+      }),
+  );
+
+  ["*&^(*&$%&*^&%&^%*"].map((name) =>
     it(`should get 0 search results for "${name}" roadmaps`, async () => {
       const { user } = await createUser({
         isVerified: true,
@@ -405,11 +433,9 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
         .get(`/api/v1/roadmaps/search/${name}`)
         .set("Authorization", `Bearer ${user.authToken}`);
 
-      expect(response.body.roadmaps).toStrictEqual([]);
-      expect(response.body.roadmaps).toHaveLength(0);
-
       expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("DECODE_URI_ERROR");
     }),
   );
 
