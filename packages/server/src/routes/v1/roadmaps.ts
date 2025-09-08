@@ -7,12 +7,7 @@ import * as roadmaps from "../../controllers/roadmaps";
 import { authOptional, authRequired } from "../../middlewares/auth";
 import { roadmapExists } from "../../middlewares/roadmapExists";
 
-router.get(
-  "/roadmaps",
-  authOptional,
-  // @ts-expect-error
-  roadmaps.filter,
-);
+router.get("/roadmaps", authOptional, roadmaps.filter);
 
 router.get("/roadmaps/:url", roadmapExists, roadmaps.roadmapByUrl);
 router.get<ISearchRoadmapRequestParam>(
