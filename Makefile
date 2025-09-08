@@ -12,6 +12,6 @@ server-integration-test:
     LOGCHIMP_DB_PORT=5432 \
     LOGCHIMP_DB_USER=lc \
     LOGCHIMP_DB_PASSWORD=password \
-    $$pnpm_cmd vitest \
+    $$pnpm_cmd vitest run \
 		--config ./vitest.config.integration.ts \
 		./tests/integration/base.spec.js
