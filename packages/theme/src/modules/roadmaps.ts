@@ -20,12 +20,11 @@ export const getAllRoadmaps = async (
 ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
-  if (params.first) {
-    searchParams.append("first", params.first.toString());
-  }
-
-  if (params.after) {
-    searchParams.append("after", params.after);
+  for (const paramsKey in params) {
+    const value = params[paramsKey as keyof IGetRoadmapsParams];
+    if (value) {
+      searchParams.append(paramsKey, value.toString());
+    }
   }
 
   const url = `${VITE_API_URL}/api/v1/roadmaps${
