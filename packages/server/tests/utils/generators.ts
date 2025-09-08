@@ -111,10 +111,24 @@ interface BoardArgs {
   color: string;
 }
 
-const board = async (board?: Partial<BoardArgs>, insertToDb = false) => {
+export interface BoardInsertRecord {
+  boardId: string;
+  name: string;
+  url: string;
+  color: string;
+  display: boolean;
+  view_voters: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const board = async (
+  board?: Partial<BoardArgs>,
+  insertToDb = false,
+): Promise<BoardInsertRecord> => {
   const name = board?.name || faker.commerce.productName();
 
-  const obj = {
+  const obj: BoardInsertRecord = {
     boardId: uuid(),
     name,
     url: board?.url || `${sanitiseURL(name)}-${nanoid(10)}`,
