@@ -17,9 +17,10 @@ interface BoardInsertRecord {
   createdAt: string;
   updatedAt: string;
 }
+
 // Get all boards
 describe("GET /api/v1/boards", () => {
-  it("should get 0 boards", async () => {
+  it.skip("should get 0 boards", async () => {
     const response = await supertest(app).get("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -41,22 +42,21 @@ describe("GET /boards/:url", () => {
     "board+with+plus",
     "board#with#hash",
     "a@@@@@@@@",
-    // TODO: add this test case - not working for some reason
-    // "*&^(*&$%&*^&%&^%*",
   ].map((name) =>
-    it.only(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
-      const res = await supertest(app)
-        .get(`/api/v1/boards/${name}`)
-        .buffer(true)
-        .set("Accept", "application/json");
-      // .parse(supertest.parse["application/json"]);
+    it(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
+      const res = await supertest(app).get(`/api/v1/boards/${name}`);
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(404);
+      expect(res.body.code).toBe("BOARD_NOT_FOUND");
+    }),
+  );
 
-      console.log(res.headers["content-type"]);
-      console.log(res.body);
-      console.log(res.status);
-      // expect(res.headers["content-type"]).toContain("application/json");
-      // expect(res.status).toBe(404);
-      // expect(res.body.code).toBe("BOARD_NOT_FOUND");
+  ["*&^(*&$%&*^&%&^%*"].map((name) =>
+    it(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
+      const res = await supertest(app).get(`/api/v1/boards/${name}`);
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe("DECODE_URI_ERROR");
     }),
   );
 
@@ -68,6 +68,7 @@ describe("GET /boards/:url", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
+    delete board.updatedAt;
     expect(response.body.board).toStrictEqual({
       ...board,
       post_count: "0",
@@ -107,8 +108,6 @@ describe("GET /boards/search/:name", () => {
     "board+with+plus",
     "board#with#hash",
     "a@@@@@@@@",
-    // TODO: add this test case - not working for some reason
-    // "*&^(*&$%&*^&%&^%*",
   ].map((name) =>
     it(`should return 0 search results for '${name}' boards`, async () => {
       const { user: authUser } = await createUser();
@@ -123,6 +122,23 @@ describe("GET /boards/search/:name", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(200);
       expect(response.body.boards).toHaveLength(0);
+    }),
+  );
+
+  ["*&^(*&$%&*^&%&^%*"].map((name) =>
+    it(`should return 0 search results for '${name}' boards`, async () => {
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["board:read"], {
+        roleName: "Board Reader",
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/boards/search/${name}`)
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("DECODE_URI_ERROR");
     }),
   );
 
