@@ -27,8 +27,9 @@ export async function authOptional(
   let decoded: IAuthenticationTokenPayload;
   try {
     decoded = verifyJwtAuthToken(token, config.server.secretKey);
-  } catch (err) {
-    logger.error(err);
+  } catch (_err) {
+    // ignore error from JWT auth token verification
+    // and move to next middlware
   }
   if (!decoded && !decoded?.userId) {
     return next();
