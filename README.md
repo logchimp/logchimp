@@ -76,7 +76,12 @@ community with these helpful resources.
 We welcome contributions! To ensure your work doesn't conflict with ongoing work, please:
 
 1. Read our [contributing guide](CONTRIBUTING.md)
-2. **Discuss your ideas with us in public channels (GitHub/Discord) BEFORE starting development** (No private DMs)
+2. Discuss your ideas with us in public channels (GitHub/Discord) BEFORE starting development(No private DMs)
 3. Get approval from a core team member
 
 This helps us align efforts and prevents duplicated or conflicting work.
+
+## Quick Tip for New Contributors:  
+
+1.Before starting, join the Discord server and introduce yourself!  
+2.This helps you get guidance and avoid duplicate work.
