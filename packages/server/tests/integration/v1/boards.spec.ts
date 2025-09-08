@@ -4,6 +4,7 @@ import type { IBoardDetail } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
+import database from "../../../src/database";
 import {
   type BoardInsertRecord,
   board as generateBoards,
@@ -227,6 +228,7 @@ describe("GET /boards/:url", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
+
     expect(response.body.board).toStrictEqual({
       ...boardCheck,
       post_count: "0",
@@ -387,21 +389,48 @@ describe("POST /api/v1/boards", () => {
   });
 
   it("should create a board", async () => {
+    const board: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
+
     await createRoleWithPermissions(authUser.userId, ["board:create"], {
       roleName: "Board Creator",
     });
 
     const response = await supertest(app)
       .post(`/api/v1/boards/`)
-      .set("Authorization", `Bearer ${authUser.authToken}`);
-    // .send({
-    //   boardId: board.boardId,
-    //   name: board.name,
-    //   url: board.url,
-    //   color: board.color,
-    //   display: board.display
-    // });
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        name: board.name,
+        display: board.display,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    const boardResponse = response.body.board;
+    expect(boardResponse.name).toBe(board.name);
+    expect(boardResponse.display).toBe(board.display);
+  });
+
+  it("should create a board without a name", async () => {
+    const { user: authUser } = await createUser();
+    const display = Math.random() >= 0.5;
+
+    await createRoleWithPermissions(authUser.userId, ["board:create"], {
+      roleName: "Board Creator",
+    });
+
+    const response = await supertest(app)
+      .post(`/api/v1/boards/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        display,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    const boardResponse = response.body.board;
+    expect(boardResponse.name).toBe("new board");
+    expect(boardResponse.display).toBe(display);
   });
 });
 
