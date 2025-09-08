@@ -173,6 +173,11 @@ async function createAccount() {
       serverError.value = true;
     }
 
+    if (error.response.data.code === "EMAIL_INVALID") {
+      email.error.message = "Invalid email";
+      email.error.show = true;
+    }
+
     console.error(error);
   } finally {
     buttonLoading.value = false;
