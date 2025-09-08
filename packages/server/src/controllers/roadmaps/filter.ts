@@ -19,7 +19,10 @@ import error from "../../errorResponse.json";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
 import { parseAndValidateLimit } from "../../helpers";
 
-const FilterVisibilitySchema = z.enum(["public", "private"]);
+const FilterVisibilitySchema = z.enum<FilterVisibility[]>([
+  "public",
+  "private",
+]);
 const querySchema = z.object({
   first: z.coerce
     .string()
@@ -35,7 +38,11 @@ const querySchema = z.object({
         .default(GET_ROADMAPS_FILTER_COUNT),
     ),
   after: z.string().uuid().optional(),
-  visibility: z.array(FilterVisibilitySchema).default(["public"]),
+  visibility: z
+    .string()
+    .optional()
+    .transform((value) => (value ? value.split(",") : []))
+    .pipe(z.array(FilterVisibilitySchema)),
 });
 
 type ResponseBody = IPaginatedRoadmapsResponse | IApiErrorResponse;
@@ -162,21 +169,21 @@ async function getRoadmapMetadata({
       .first();
 
     // Has next page
-    let hasNextPageSubquery = trx("roadmaps");
-    hasNextPageSubquery = applyVisibilityFilter(
-      hasNextPageSubquery,
-      visibility,
-    );
-
+    let hasNextPageSubquery = trx("roadmaps").as("next");
     if (after) {
       hasNextPageSubquery = hasNextPageSubquery
         .where(
           "index",
           ">=",
-          database("roadmaps").select("index").where("id", "=", after),
+          trx("roadmaps").select("index").where("id", "=", after),
         )
         .offset(1);
     }
+    hasNextPageSubquery = applyVisibilityFilter(
+      hasNextPageSubquery,
+      visibility,
+    );
+
     const hasNextPageResult = await trx
       .count<{ count: string | number }[]>({ count: "*" })
       .from(hasNextPageSubquery)
