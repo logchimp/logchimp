@@ -76,6 +76,7 @@ export const getSettings = async (): Promise<
  * @param {object} site update site setting data
  * @param {string} site.title site title
  * @param {string} site.description site description
+ * @param {string} site.logo site logo URL
  * @param {string} site.accentColor site accent color
  * @param {string} site.googleAnalyticsId site google analytics ID
  * @param {boolean} site.allowSignup allow user creating account
