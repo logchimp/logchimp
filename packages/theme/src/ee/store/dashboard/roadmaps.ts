@@ -27,6 +27,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     try {
       const response = await getAllRoadmaps({
         after: currentCursor.value,
+        visibility: ["public", "private"],
       });
 
       const results = response.data.results;

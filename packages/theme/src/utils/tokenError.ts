@@ -15,7 +15,7 @@ const tokenError = (error: any) => {
   }
 
   // invalid token or invalid JWT
-  if (["INVALID_TOKEN", "INVALID_JWT"].includes(error.response.data.code)) {
+  if (error.response.data.code === "INVALID_TOKEN") {
     router.push("/login");
   }
 

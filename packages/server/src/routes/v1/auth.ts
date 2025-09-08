@@ -9,7 +9,7 @@ import * as auth from "../../controllers/auth";
 import { userExists } from "../../middlewares/userExists";
 import { mailConfigExists } from "../../middlewares/mailConfigExists";
 import { validateEmailToken } from "../../middlewares/validateEmailToken";
-import * as middleware from "../../middlewares";
+import { authRequired } from "../../middlewares/auth";
 
 router.post("/auth/signup", mailConfigExists, auth.signup);
 router.post("/auth/login", userExists, auth.login);
@@ -21,7 +21,7 @@ router.get("/auth/setup", auth.isSiteSetup);
 router.post(
   "/auth/email/verify",
   mailConfigExists,
-  middleware.apiAuth,
+  authRequired,
   userExists,
   auth.email.verify,
 );

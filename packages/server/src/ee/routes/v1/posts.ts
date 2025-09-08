@@ -13,7 +13,7 @@ const router = express.Router();
 import * as post from "../../../ee/controllers/v1/posts";
 
 // middleware
-import * as middleware from "../../../middlewares";
+import { authRequired } from "../../../middlewares/auth";
 
 // post activity
 router.get<
@@ -27,19 +27,19 @@ router.get<
 router.post<TCreatePostCommentRequestParam>(
   "/posts/:post_id/comments",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   post.comments.create,
 );
 router.put<IUpdatePostCommentRequestParam>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   post.comments.update,
 );
 router.delete<TDeletePostCommentRequestParam>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
-  middleware.apiAuth,
+  authRequired,
   post.comments.destroy,
 );
 

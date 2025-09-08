@@ -41,6 +41,7 @@ async function getRoadmaps(after: string | undefined) {
     const response = await getAllRoadmaps({
       first: "4",
       after: after == null ? undefined : after,
+      visibility: ["public"],
     });
 
     const paginatedData: IPaginatedRoadmapsResponse = response.data;

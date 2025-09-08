@@ -26,14 +26,14 @@ describe("GET /api/v1/users/profile", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw INVALID_JWT", async () => {
+  it("should throw INVALID_TOKEN", async () => {
     const response = await supertest(app)
       .get("/api/v1/users/profile")
       .set("Authorization", "Bearer InvalidJWTToken");
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.statusCode).toBe(401);
-    expect(response.body.code).toBe("INVALID_JWT");
+    expect(response.body.code).toBe("INVALID_TOKEN");
   });
 
   it("should throw 'SERVER_ERROR' for passing empty JWT token", async () => {
@@ -134,7 +134,7 @@ describe("PATCH /api/v1/users/profile", () => {
       expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
     });
 
-    it("should throw INVALID_JWT", async () => {
+    it("should throw INVALID_TOKEN", async () => {
       const response = await supertest(app)
         .patch("/api/v1/users/profile")
         .set("Authorization", "Bearer invalid.jwt.token")
@@ -142,7 +142,7 @@ describe("PATCH /api/v1/users/profile", () => {
 
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(401);
-      expect(response.body.code).toBe("INVALID_JWT");
+      expect(response.body.code).toBe("INVALID_TOKEN");
     });
 
     it("should throw 'USER_NOT_FOUND' error with fake user ID", async () => {

@@ -6,13 +6,13 @@ const router = express.Router();
 import * as users from "../../controllers/users";
 
 // middleware
-import * as middleware from "../../middlewares";
+import { authRequired } from "../../middlewares/auth";
 
 router.get("/users", users.filter);
-router.get("/users/profile", middleware.apiAuth, users.getProfile);
-router.patch("/users/profile", middleware.apiAuth, users.updateProfile);
+router.get("/users/profile", authRequired, users.getProfile);
+router.patch("/users/profile", authRequired, users.updateProfile);
 
-router.get("/users/permissions", middleware.apiAuth, users.getUserPermissions);
-router.get("/users/dashboard", middleware.apiAuth, users.accessDashboard);
+router.get("/users/permissions", authRequired, users.getUserPermissions);
+router.get("/users/dashboard", authRequired, users.accessDashboard);
 
 export default router;
