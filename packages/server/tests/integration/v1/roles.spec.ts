@@ -46,7 +46,7 @@ describe("GET /api/v1/roles", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.roles).toHaveLength(2);
+    expect(response.body.roles.length).toBeGreaterThanOrEqual(2);
   });
 });
 

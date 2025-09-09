@@ -6,6 +6,7 @@ import type {
   TUpdateSiteSettingsResponseBody,
 } from "@logchimp/types";
 import { JSDOM } from "jsdom";
+import { isURL, isHexColor } from "validator";
 import createDOMPurify from "dompurify";
 import database from "../../database";
 
@@ -32,18 +33,55 @@ export async function update(
     });
   }
 
-  const {
-    title,
-    description,
-    allowSignup,
-    accentColor,
-    googleAnalyticsId,
-    developer_mode,
-  } = req.body;
+  const { title, description, allowSignup, googleAnalyticsId, developer_mode } =
+    req.body;
 
-  let logo: string;
-  if (req.body?.logo) {
-    logo = sanitizeLogo(req.body?.logo);
+  let logo: string | null | undefined;
+  if ("logo" in req.body) {
+    const _logo = req.body.logo;
+
+    if (_logo === null || _logo === "") {
+      logo = null;
+    } else {
+      const _sanitized = (sanitizeUrl(req.body?.logo.trim()) || "").trim();
+
+      if (!isURL(_sanitized)) {
+        res.status(400).send({
+          message: "Invalid Logo URL",
+          code: "INVALID_LOGO_URL",
+        });
+        return;
+      }
+
+      if (_sanitized.length > 255) {
+        res.status(400).send({
+          message: "Logo URL is too long",
+          code: "LOGO_URL_TOO_LONG",
+        });
+        return;
+      }
+
+      logo = _sanitized;
+    }
+  }
+
+  let accentColor: string | null | undefined;
+  if ("accentColor" in req.body) {
+    const _accentColor = req.body.accentColor;
+
+    if (_accentColor === null || _accentColor === "") {
+      accentColor = null;
+    } else {
+      if (!isHexColor(_accentColor)) {
+        res.status(400).send({
+          message: "Invalid accent color",
+          code: "INVALID_ACCENT_COLOR",
+        });
+        return;
+      }
+
+      accentColor = _accentColor;
+    }
   }
 
   try {
@@ -79,7 +117,7 @@ export async function update(
   }
 }
 
-function sanitizeLogo(value: string): string | null {
+function sanitizeUrl(value: string): string | null {
   // Create a DOM window for DOMPurify to use
   const window = new JSDOM("").window;
   // @ts-expect-error
