@@ -8,6 +8,7 @@ import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import type { TPermission } from "@logchimp/types";
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
@@ -218,7 +219,39 @@ describe("GET /api/v1/roles/:id", () => {
     expect(response.body.role.permissions).toStrictEqual([]);
   });
 
-  // TODO: add test case get role by ID with permissions
+  it("should get role by ID with permissions", async () => {
+    const { user } = await createUser();
+    const permissions: TPermission[] = [
+      "post:read",
+      "post:create",
+      "post:update",
+      "post:destroy",
+      "board:read",
+      "board:create",
+      "board:update",
+      "board:destroy",
+      "board:assign",
+      "board:unassign",
+      "vote:create",
+      "vote:destroy",
+      "vote:assign",
+      "vote:unassign",
+      "role:read",
+    ];
+    const roleName = "Custom role";
+    const roleId = await createRoleWithPermissions(user.userId, permissions, {
+      roleName,
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/roles/${roleId}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.body.role.id).toEqual(roleId);
+    expect(response.body.role.name).toEqual(roleName);
+    expect(response.body.role.permissions).toEqual(permissions);
+  });
 });
 
 describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
