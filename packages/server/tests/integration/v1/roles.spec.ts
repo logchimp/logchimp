@@ -8,7 +8,7 @@ import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import { TPermission } from "@logchimp/types";
+import type { TPermission } from "@logchimp/types";
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
