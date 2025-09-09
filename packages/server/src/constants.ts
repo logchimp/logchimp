@@ -1,3 +1,6 @@
+// 8 digits
+export const OFFSET_PAGINATION_UPPER_LIMIT = 99999999;
+
 export const GET_USERS_FILTER_COUNT = 10;
 export const GET_POSTS_FILTER_COUNT = 10;
 export const GET_BOARDS_FILTER_COUNT = 10;

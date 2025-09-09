@@ -7,8 +7,9 @@ import {
   generateHexColor,
   sanitiseName,
   sanitiseUsername,
-  sanitiseURL,
   validUUIDs,
+  parseAndValidatePage,
+  parseAndValidateLimit,
 } from "../../src/helpers";
 
 describe("validate email", () => {
@@ -284,5 +285,71 @@ describe("sanitise name", () => {
 
     expect(res).toBe("");
     expect(typeof res).toBe("string");
+  });
+});
+
+describe("parse and validate page", () => {
+  it("defaults to 1 when value is undefined", () => {
+    expect(parseAndValidatePage()).toBe(1);
+  });
+
+  it("defaults to 1 when value is empty string", () => {
+    expect(parseAndValidatePage("")).toBe(1);
+  });
+
+  it("defaults to 1 when value is non-numeric", () => {
+    expect(parseAndValidatePage("abc")).toBe(1);
+  });
+
+  it("defaults to 1 when value is 0", () => {
+    expect(parseAndValidatePage("0")).toBe(1);
+  });
+
+  it("defaults to 1 when value is negative", () => {
+    expect(parseAndValidatePage("-5")).toBe(1);
+  });
+
+  it("returns the integer when value is a valid positive integer", () => {
+    expect(parseAndValidatePage("5")).toBe(5);
+  });
+
+  it("floors a float value", () => {
+    expect(parseAndValidatePage("3.7")).toBe(3);
+  });
+
+  it("caps the value at PAGE_UPPER_LIMIT (99999999)", () => {
+    expect(parseAndValidatePage("100000000000")).toBe(99999999);
+  });
+});
+
+describe("parseAndValidateLimit", () => {
+  const max = 50;
+
+  it("returns max when value is empty string", () => {
+    expect(parseAndValidateLimit("", max)).toBe(max);
+  });
+
+  it("returns max when value is non-numeric", () => {
+    expect(parseAndValidateLimit("abc", max)).toBe(max);
+  });
+
+  it("returns value when less than max", () => {
+    expect(parseAndValidateLimit("10", max)).toBe(10);
+  });
+
+  it("caps the value at max when greater than max", () => {
+    expect(parseAndValidateLimit("100", max)).toBe(max);
+  });
+
+  it("returns 0 when value is negative", () => {
+    expect(parseAndValidateLimit("-5", max)).toBe(0);
+  });
+
+  it("allows 0 as a valid value", () => {
+    expect(parseAndValidateLimit("0", max)).toBe(0);
+  });
+
+  it("accepts float values directly", () => {
+    expect(parseAndValidateLimit("7.5", max)).toBe(7.5);
   });
 });
