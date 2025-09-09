@@ -1,24 +1,32 @@
 # Contributing to LogChimp
 
-Thank you for showing an interest in contributing to LogChimp! All kinds on contributions are valuable to us. In this guide, we will cover how you can quickly onboard and make your first contribution.
+Thanks for your interest in contributing to LogChimp! Every contribution matters, whether it's fixing bugs, improving the UI, updating documentation, or suggesting new features. This guide will help you get started and make your first contribution quickly.
 
-## Directory structure
+## Project Overview
 
-The repository is a monorepo, with backend APIs and frontend in a single repository.
+LogChimp is a monorepo, which means the backend and frontend are in the same repository:
 
 ```
 packages
- ├── server
- ├── theme
- └── types
+├── server    # Backend APIs
+├── theme     # Frontend application
+└── types     # Shared TypeScript types
 ```
 
-Please make sure you've enough hardware resources (Memory, CPU, Disk Space) to run the application on your machine or use cloud environments like GitHub Spaces
+Ensure your machine has enough resources, like CPU, RAM, and disk space, to run the project locally. If not, you can use cloud environments such as GitHub Codespaces.
 
-1. [Docker](#1-docker)
-2. [GitHub CodeSpaces](#2-github-codespaces)
+## Prerequisites
 
-## 1. Docker
+Before you begin, make sure you have these installed:
+
+* Node.js v18+
+* pnpm (package manager) - npm install -g pnpm
+* Docker Desktop (for local development)
+* VSCode (optional, but recommended)
+
+## Development Setup
+
+### 1. Docker Setup (Local Development)
 
 #### Setup the project
 
@@ -29,7 +37,7 @@ git clone git@github.com:logchimp/logchimp.git <folder-name>
 cd <folder-name>
 ```
 
-2. Prep the `.env` files
+2. Prepare the `.env` files
 
 Run this command from the root directory.
 
@@ -38,37 +46,35 @@ cp ./packages/server/.env.example ./packages/server/.env; \
   cp ./packages/theme/.env.example ./packages/theme/.env
 ```
 
-3. Build the LogChimp Types package
-
-_We're still trying to figure out how to automate this step._
-
-```shell
-pnpm --filter="@logchimp/types" build
-```
-
-4. Start the Docker containers
-
-Run this command from the root directory.
+3. Run this command from the root directory:
 
 ```shell
 docker compose -f ./docker-compose.dev.yml up -d
 ```
 
-5. Start the LogChimp theme
+4. Start the LogChimp theme:
 
-If opening inside VSCode, open the command (`Ctrl` / `Command` + `Shift` + `P`), type `Tasks: Run Task` and hit enter, you will find the task in the list `LogChimp Theme Dev` and hit enter.
+If you are using VSCode, press `Ctrl` / `Command` + `Shift` + `P`, type `Tasks: Run Task`, and press enter. You will see `LogChimp Theme Dev` in the list. Select it and press enter.
 
-Or, you can run it manually 
+Alternatively, you can run it manually:
 
 ```shell
 cd ./packages/theme
 pnpm dev
 ```
 
-## 2. GitHub CodeSpaces
+### 2. GitHub Codespaces
 
-There are no prerequisites for software or hardware requirements except for the Web Browser.
+You only need a web browser.
 
-Once you run the CodeSpaces and the whole setup is complete.
+Once the Codespace setup is complete:
 
-If opening inside VSCode, open the command (`Ctrl` / `Command` + `Shift` + `P`), type `Tasks: Run Task` and hit enter, you will find the task in the list `LogChimp Theme Dev` and hit enter.
+If you are using VSCode, press `Ctrl` / `Command` + `Shift` + `P`, type `Tasks: Run Task`, and press enter. You will see `LogChimp Theme Dev` in the list. Select it and press enter.
+
+## Next Steps
+
+After the project is running, you can start exploring:
+
+- Frontend: `packages/theme`
+- Backend: `packages/server`
+- Shared types: `packages/types`
