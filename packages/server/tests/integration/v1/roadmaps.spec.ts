@@ -319,7 +319,7 @@ describe("GET /api/v1/roadmaps/:url", () => {
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
-    it(`should get 0 search results for "${name}" roadmaps`, async () => {
+    it(`should throw error "DECODE_URI_ERROR" for '${name}' roadmap`, async () => {
       const { user } = await createUser({
         isVerified: true,
       });

@@ -308,6 +308,18 @@ describe("POST /api/v1/posts", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    const res = await supertest(app)
+      .post("/api/v1/posts")
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(401);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
   it("should throw error not having 'post:create' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
@@ -408,6 +420,243 @@ describe("POST /api/v1/posts", () => {
     expect(post.contentMarkdown).toBe(contentMarkdown);
     expect(post.userId).toBe(authUser.userId);
     expect(post.boardId).toBe(board.boardId);
+  });
+});
+
+describe("PATCH /api/v1/posts", () => {
+  it('should throw error "INVALID_AUTH_HEADER" when auth is missing', async () => {
+    const res = await supertest(app).patch("/api/v1/posts");
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+    const { user } = await createUser({ isVerified: true });
+
+    const res = await supertest(app)
+      .patch("/api/v1/posts")
+      .set("Authorization", `Beare${user.authToken}`);
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(401);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  it('should throw error "NOT_ENOUGH_PERMISSION" when not author and without permission', async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: author } = await createUser({ isVerified: true });
+    const { user: stranger } = await createUser({ isVerified: true });
+
+    const post = await generatePost(
+      {
+        userId: author.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const res = await supertest(app)
+      .patch("/api/v1/posts")
+      .set("Authorization", `Bearer ${stranger.authToken}`)
+      .send({
+        id: post.postId,
+        title: "Unauthorized update attempt",
+      });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should allow the author to update their own post without explicit permission", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: author } = await createUser({ isVerified: true });
+
+    const post = await generatePost(
+      {
+        userId: author.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const newTitle = `${post.title} Updated!`; // include punctuation to test slug cleaning
+    const newMarkdown = "Updated content";
+
+    const res = await supertest(app)
+      .patch("/api/v1/posts")
+      .set("Authorization", `Bearer ${author.authToken}`)
+      .send({
+        id: post.postId,
+        title: newTitle,
+        contentMarkdown: newMarkdown,
+      });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+    const updated = res.body.post as IPost;
+    expect(updated.title).toBe(newTitle);
+    expect(updated.contentMarkdown).toBe(newMarkdown);
+
+    // slug should be regenerated: alphanumeric/space only, lowercased, spaces to dashes, with original slugId suffix
+    // Extract slugId from old slug (suffix after last dash segment that is not part of words is included in original slug)
+    const oldSlug = post.slug;
+    const slugSuffix = oldSlug.split("-").slice(-1)[0];
+    expect(updated.slug.endsWith(`-${slugSuffix}`)).toBe(true);
+  });
+
+  it("should allow a user with 'post:update' permission to update someone else's post", async () => {
+    const board = await generateBoard({}, true);
+    const roadmapA = await generateRoadmap({}, true);
+    const roadmapB = await generateRoadmap({}, true);
+    const { user: author } = await createUser({ isVerified: true });
+    const { user: moderator } = await createUser({ isVerified: true });
+
+    await createRoleWithPermissions(moderator.userId, ["post:update"], {
+      roleName: "Moderator",
+    });
+
+    const post = await generatePost(
+      {
+        userId: author.userId,
+        boardId: board.boardId,
+        roadmapId: roadmapA.id,
+      },
+      true,
+    );
+
+    const newTitle = `Moderator changed ${faker.word.words(2)}`;
+
+    const res = await supertest(app)
+      .patch("/api/v1/posts")
+      .set("Authorization", `Bearer ${moderator.authToken}`)
+      .send({
+        id: post.postId,
+        title: newTitle,
+        roadmapId: roadmapB.id,
+      });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+    const updated = res.body.post as IPost;
+
+    expect(updated.title).toBe(newTitle);
+    // roadmap may appear as relation or field; ensure either roadmaps relation id or field reflects change
+    if ((updated as any).roadmap?.id) {
+      expect((updated as any).roadmap.id).toBe(roadmapB.id);
+    } else if ((updated as any).roadmapId) {
+      expect((updated as any).roadmapId).toBe(roadmapB.id);
+    }
+
+    // ensure slug suffix is consistent with original
+    const oldSlug = post.slug;
+    const slugSuffix = oldSlug.split("-").slice(-1)[0];
+    expect(updated.slug.endsWith(`-${slugSuffix}`)).toBe(true);
+  });
+});
+
+describe("DELETE /api/v1/posts", () => {
+  it('should throw error "INVALID_AUTH_HEADER" when auth is missing', async () => {
+    const res = await supertest(app).delete("/api/v1/posts");
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    const res = await supertest(app)
+      .delete("/api/v1/posts")
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(401);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  it("should return 404 'POST_NOT_FOUND' for a non-existent post id", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+    // Grant permission so we get to postExists and its 404, not blocked by controller's 403
+    await createRoleWithPermissions(authUser.userId, ["post:destroy"], {
+      roleName: "Post Destroyer",
+    });
+
+    const res = await supertest(app)
+      .delete("/api/v1/posts")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({ id: faker.string.uuid() });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(404);
+    expect(res.body.code).toBe("POST_NOT_FOUND");
+  });
+
+  it("should throw error 'NOT_ENOUGH_PERMISSION' when user lacks 'post:destroy' permission (even if author)", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: author } = await createUser({ isVerified: true });
+
+    const post = await generatePost(
+      {
+        userId: author.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const res = await supertest(app)
+      .delete("/api/v1/posts")
+      .set("Authorization", `Bearer ${author.authToken}`)
+      .send({ id: post.postId });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should delete the post when user has 'post:destroy' permission and make it unretrievable by slug", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: moderator } = await createUser({ isVerified: true });
+
+    await createRoleWithPermissions(moderator.userId, ["post:destroy"], {
+      roleName: "Moderator",
+    });
+
+    const post = await generatePost(
+      {
+        userId: moderator.userId, // author can be moderator or anyone; permission is what matters
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const del = await supertest(app)
+      .delete("/api/v1/posts")
+      .set("Authorization", `Bearer ${moderator.authToken}`)
+      .send({ id: post.postId });
+
+    expect(del.status).toBe(204);
+    expect(del.body.code).toBeUndefined();
+
+    // Verify it's gone by slug lookup
+    const fetchAfter = await supertest(app).post("/api/v1/posts/slug").send({
+      slug: post.slug,
+      userId: "",
+    });
+
+    expect(fetchAfter.headers["content-type"]).toContain("application/json");
+    expect(fetchAfter.status).toBe(404);
+    expect(fetchAfter.body.code).toBe("POST_NOT_FOUND");
   });
 });
 
