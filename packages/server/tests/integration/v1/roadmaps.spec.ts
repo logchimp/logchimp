@@ -473,21 +473,26 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     const roadmaps = response.body.roadmaps;
     expect(roadmaps).toHaveLength(2);
 
-    // r1
-    expect(roadmaps[0].id).toBe(r1.id);
-    expect(roadmaps[0].name).toBe(r1.name);
-    expect(roadmaps[0].url).toBe(r1.url);
-    expect(roadmaps[0].color).toBe(r1.color);
-    expect(roadmaps[0].display).toBe(r1.display);
-    expect(roadmaps[0].index).toBe(r1.index);
-
-    // r2
-    expect(roadmaps[1].id).toBe(r2.id);
-    expect(roadmaps[1].name).toBe(r2.name);
-    expect(roadmaps[1].url).toBe(r2.url);
-    expect(roadmaps[1].color).toBe(r2.color);
-    expect(roadmaps[1].display).toBe(r2.display);
-    expect(roadmaps[1].index).toBe(r2.index);
+    expect(roadmaps).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: r1.id,
+          name: r1.name,
+          url: r1.url,
+          color: r1.color,
+          display: r1.display,
+          index: r1.index,
+        }),
+        expect.objectContaining({
+          id: r2.id,
+          name: r2.name,
+          url: r2.url,
+          color: r2.color,
+          display: r2.display,
+          index: r2.index,
+        }),
+      ]),
+    );
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);

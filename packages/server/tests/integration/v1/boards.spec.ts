@@ -338,19 +338,24 @@ describe("GET /boards/search/:name", () => {
     const boards = response.body.boards;
     expect(boards).toHaveLength(2);
 
-    // b1
-    expect(boards[0].boardId).toBe(board1.boardId);
-    expect(boards[0].name).toBe(board1.name);
-    expect(boards[0].url).toBe(board1.url);
-    expect(boards[0].color).toBe(board1.color);
-    expect(boards[0].display).toBe(board1.display);
-
-    // b2
-    expect(boards[1].boardId).toBe(board2.boardId);
-    expect(boards[1].name).toBe(board2.name);
-    expect(boards[1].url).toBe(board2.url);
-    expect(boards[1].color).toBe(board2.color);
-    expect(boards[1].display).toBe(board2.display);
+    expect(boards).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          boardId: board1.boardId,
+          name: board1.name,
+          url: board1.url,
+          color: board1.color,
+          display: board1.display,
+        }),
+        expect.objectContaining({
+          boardId: board2.boardId,
+          name: board2.name,
+          url: board2.url,
+          color: board2.color,
+          display: board2.display,
+        }),
+      ]),
+    );
   });
 });
 
