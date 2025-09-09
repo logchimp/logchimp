@@ -309,7 +309,7 @@ describe("GET /boards/search/:name", () => {
     .replace(/[^a-z0-9]+/g, "-")
     .substring(0, 50)
     .replace(/^-+|-+$/g, "");
-  it("should show 2 matching boards", async () => {
+  it(`should show 2 "${boardName}" matching boards`, async () => {
     const board1 = await generateBoards(
       {
         name: `${boardName}_one`,

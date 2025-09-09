@@ -445,7 +445,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
     .replace(/[^a-z0-9]+/g, "-")
     .substring(0, 50)
     .replace(/^-+|-+$/g, "");
-  it(`should show "${roadmapName}" roadmaps`, async () => {
+  it(`should show 2 "${roadmapName}" matching roadmaps`, async () => {
     const r1 = await generateRoadmap(
       {
         name: `${roadmapName}_first`,
