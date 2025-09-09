@@ -3,12 +3,14 @@ import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 
 import app from "../../../src/app";
+import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import {
   post as generatePost,
   vote as assignVote,
 } from "../../utils/generators";
 import { detachPermissionsFromRole } from "../../utils/detachPermissionFromRole";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Add vote to post
 describe("POST /api/v1/votes", () => {
@@ -25,9 +27,28 @@ describe("POST /api/v1/votes", () => {
       isVerified: true,
     });
 
-    const rollback = await detachPermissionsFromRole(["vote:create"], {
-      roleName: "@everyone",
+    // const rollback = await detachPermissionsFromRole(["vote:create"], {
+    //   roleName: "@everyone",
+    // });
+
+    // set "role:unassign" permission to user
+    await createRoleWithPermissions(user.userId, ["role:unassign"], {
+      roleName: "Role destroyer",
     });
+
+    // get roleId for "@everyone" role
+    const { id: roleId } = await database
+      .select("id")
+      .from("roles")
+      .where({
+        name: "@everyone",
+      })
+      .first();
+
+    // remove @everyone role from user
+    await supertest(app)
+      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
 
     const post = await generatePost(
       {
@@ -43,7 +64,7 @@ describe("POST /api/v1/votes", () => {
         postId: post.postId,
       });
 
-    await rollback();
+    // await rollback();
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
@@ -134,9 +155,30 @@ describe("DELETE /api/v1/votes", () => {
       isVerified: true,
     });
 
-    const rollback = await detachPermissionsFromRole(["vote:destroy"], {
-      roleName: "@everyone",
+    // const rollback = await detachPermissionsFromRole(["vote:destroy"], {
+    //   roleName: "@everyone",
+    // });
+
+    // set "role:unassign" permission to user
+    await createRoleWithPermissions(user.userId, ["role:unassign"], {
+      roleName: "Role destroyer",
     });
+
+    // get roleId for @everyone
+    const { id: roleId } = await database
+      .select("id")
+      .from("roles")
+      .where({
+        name: "@everyone",
+      })
+      .first();
+
+    // remove @everyone role from user
+    const res = await supertest(app)
+      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    console.log(res.body);
 
     const post = await generatePost(
       {
@@ -152,7 +194,7 @@ describe("DELETE /api/v1/votes", () => {
         postId: post.postId,
       });
 
-    await rollback();
+    // await rollback();
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
