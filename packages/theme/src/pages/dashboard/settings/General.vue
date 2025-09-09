@@ -24,7 +24,7 @@
             :model-value="siteName.value ?? undefined"
             @update:model-value="(value) => siteName.value = value ?? null"
             label="Site name"
-            placeholder="Enter board name"
+            placeholder="Enter site name"
             :error="siteName.error"
             @hide-error="hideSiteNameError"
           />
