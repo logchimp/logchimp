@@ -317,8 +317,8 @@ describe("parse and validate page", () => {
     expect(parseAndValidatePage("3.7")).toBe(3);
   });
 
-  it("caps the value at PAGE_UPPER_LIMIT (999999)", () => {
-    expect(parseAndValidatePage("1000000")).toBe(999999);
+  it("caps the value at PAGE_UPPER_LIMIT (99999999)", () => {
+    expect(parseAndValidatePage("100000000000")).toBe(99999999);
   });
 });
 
