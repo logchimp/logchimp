@@ -2,11 +2,17 @@ import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import jwt from "jsonwebtoken";
+import { v4 as uuid } from "uuid";
+import jwt from "jsonwebtoken";
 
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
 import database from "../../../../src/database";
 import { createUser } from "../../../utils/seed/user";
+
+describe("POST /api/v1/auth/password/reset", () => {
+import { createToken } from "../../../../src/services/token.service";
+import database from "../../../../src/database";
 
 describe("POST /api/v1/auth/password/reset", () => {
   it('should throw error "EMAIL_INVALID" when invalid email is sent', async () => {
