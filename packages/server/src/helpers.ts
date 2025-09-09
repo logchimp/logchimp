@@ -134,6 +134,7 @@ const isDevTestEnv =
   process.env.NODE_ENV === "ci";
 
 function parseAndValidatePage(value?: string) {
+  if (!value) return 1;
   const n = value ? +value : NaN;
   // Default to page 1; coerce invalid/NaN/<=0 to 1
   return Math.min(
