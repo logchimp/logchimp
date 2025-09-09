@@ -9,7 +9,6 @@ import {
   post as generatePost,
   vote as assignVote,
 } from "../../utils/generators";
-import { detachPermissionsFromRole } from "../../utils/detachPermissionFromRole";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Add vote to post
@@ -26,10 +25,6 @@ describe("POST /api/v1/votes", () => {
     const { user } = await createUser({
       isVerified: true,
     });
-
-    // const rollback = await detachPermissionsFromRole(["vote:create"], {
-    //   roleName: "@everyone",
-    // });
 
     // set "role:unassign" permission to user
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
@@ -63,8 +58,6 @@ describe("POST /api/v1/votes", () => {
       .send({
         postId: post.postId,
       });
-
-    // await rollback();
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
@@ -155,10 +148,6 @@ describe("DELETE /api/v1/votes", () => {
       isVerified: true,
     });
 
-    // const rollback = await detachPermissionsFromRole(["vote:destroy"], {
-    //   roleName: "@everyone",
-    // });
-
     // set "role:unassign" permission to user
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
       roleName: "Role destroyer",
@@ -174,11 +163,9 @@ describe("DELETE /api/v1/votes", () => {
       .first();
 
     // remove @everyone role from user
-    const res = await supertest(app)
+    await supertest(app)
       .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
-
-    console.log(res.body);
 
     const post = await generatePost(
       {
@@ -193,8 +180,6 @@ describe("DELETE /api/v1/votes", () => {
       .send({
         postId: post.postId,
       });
-
-    // await rollback();
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
