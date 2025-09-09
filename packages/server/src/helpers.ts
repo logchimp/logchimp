@@ -2,6 +2,7 @@ import _ from "lodash";
 import { validate as validateUUID } from "uuid";
 import fs from "fs";
 import { isEmail } from "validator";
+import { OFFSET_PAGINATION_UPPER_LIMIT } from "./constants";
 
 /**
  * Check value is valid email
@@ -134,11 +135,10 @@ const isDevTestEnv =
 
 function parseAndValidatePage(value?: string) {
   const n = value ? +value : NaN;
-  const PAGE_UPPER_LIMIT = 999999;
   // Default to page 1; coerce invalid/NaN/<=0 to 1
   return Math.min(
     !Number.isNaN(n) && n > 0 ? Math.floor(n) : 1,
-    PAGE_UPPER_LIMIT,
+    OFFSET_PAGINATION_UPPER_LIMIT,
   );
 }
 
