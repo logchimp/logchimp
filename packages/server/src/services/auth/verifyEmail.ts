@@ -59,6 +59,7 @@ export async function verifyEmail(
 
     return userEmailVerificationToken[0];
   } catch (err) {
-    logger.error(err.message);
+    logger.error("failed to send email verification", err.message);
+    throw new Error("Verification email not sent.");
   }
 }
