@@ -212,7 +212,7 @@ describe("GET /boards/:url", () => {
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
-    it(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
+    it(`should throw error "DECODE_URI_ERROR" for '${name}' board`, async () => {
       const res = await supertest(app).get(`/api/v1/boards/${name}`);
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(400);
