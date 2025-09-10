@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
-import { v4 as uuid } from "uuid";
 import jwt from "jsonwebtoken";
 
 import app from "../../../../src/app";
@@ -56,10 +55,10 @@ describe("POST /api/v1/auth/password/validateToken", () => {
   it("should throw error INVALID_TOKEN", async () => {
     // generate token
     const tokenPayload = {
-      userId: "601db0cd-ba5b-480d-a62b-06c8dcb72267",
-      email: "mittalyashu77@gmail.com",
-      type: "emailVerification",
-    };
+    userId: faker.string.uuid(),
+    email: faker.internet.email().toLowerCase(),
+    type: "resetPassword",
+  };
 
     const token = createToken(tokenPayload, {
       expiresIn: "2h",
@@ -112,11 +111,11 @@ describe("POST /api/v1/password/set", () => {
   });
 
   it("should throw error INVALID_TOKEN", async () => {
-    // generate token
+  
     const tokenPayload = {
-      userId: "601db0cd-ba5b-480d-a62b-06c8dcb72267",
-      email: "mittalyashu77@gmail.com",
-      type: "emailVerification",
+     userId: faker.string.uuid(),
+     email: faker.internet.email().toLowerCase(),
+     type: "resetPassword", 
     };
 
     const token = createToken(tokenPayload, {
