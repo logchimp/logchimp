@@ -5,13 +5,13 @@ import type { IPost } from "@logchimp/types";
 
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
+import { updateSettings } from "../../utils/seed/settings";
 import {
   board as generateBoard,
   roadmap as generateRoadmap,
   post as generatePost,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import database from "../../../src/database";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
@@ -723,7 +723,9 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
       true,
     );
 
-    const response = await supertest(app).post(`/api/v1/posts/${post.postId}/comments`);
+    const response = await supertest(app).post(
+      `/api/v1/posts/${post.postId}/comments`,
+    );
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
@@ -754,7 +756,9 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw error 'LABS_DISABLED'", async () => {
+  it("should throw error 'NOT_ENOUGH_PERMISSION' when user lacks 'comment:create' permission", async () => {});
+
+  it("should throw error 'LABS_DISABLED' on comments feature disabled", async () => {
     const board = await generateBoard({}, true);
     const roadmap = await generateRoadmap({}, true);
     const { user: authUser } = await createUser({
@@ -769,13 +773,12 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
       true,
     );
 
-    await database
-      .update({
-        labs: `{"comments": false}`,
-      })
-      .from("settings");
-
-
+    await updateSettings(
+      {
+        labs: { comments: false },
+      },
+      true,
+    );
 
     const response = await supertest(app)
       .post(`/api/v1/posts/${post.postId}/comments`)
@@ -805,11 +808,12 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
       true,
     );
 
-    await database
-      .update({
-        labs: `{"comments": true}`,
-      })
-      .from("settings");
+    await updateSettings(
+      {
+        labs: { comments: true },
+      },
+      true,
+    );
 
     const commentRequest = {
       is_internal: Math.random() >= 0.5,
