@@ -95,3 +95,102 @@ describe("POST /api/v1/auth/password/validateToken", () => {
     expect(response.body.reset.valid).toBe(true);
   });
 });
+
+describe("POST /api/v1/password/set", () => {
+  it("should throw error MISSING_TOKEN if token is missing", async () => {
+    const response = await supertest(app).post(
+      "/api/v1/auth/password/validateToken",
+    );
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].code).toBe("MISSING_TOKEN");
+  });
+
+  it("should throw error INVALID_TOKEN", async () => {
+    // generate token
+    const tokenPayload = {
+      userId: "601db0cd-ba5b-480d-a62b-06c8dcb72267",
+      email: "mittalyashu77@gmail.com",
+      type: "emailVerification",
+    };
+
+    const token = createToken(tokenPayload, {
+      expiresIn: "2h",
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/validateToken")
+      .send({
+        token,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("INVALID_TOKEN");
+  });
+
+  it("should return 400 when password is missing", async () => {
+    const secretKey = process.env.LOGCHIMP_SECRET_KEY || "secret";
+    const tokenPayload = {
+      userId: "601db0cd-as5b-480d-a62b-06c8dcb72267",
+      email: "test12@example.com",
+      type: "resetPassword",
+      createdAt: new Date().toISOString(),
+    };
+    const token = createToken(tokenPayload, { expiresIn: "2h" });
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/set")
+      .send({ token });
+
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("PASSWORD_MISSING");
+  });
+
+  it("should return 200 and update password when valid token + password provided", async () => {
+    const userId = uuid();
+    const email = "valid-user@example.com";
+    const secretKey = process.env.LOGCHIMP_SECRET_KEY || "secret";
+
+    // Insert user
+    await database("users").insert({
+      userId,
+      username: "test-user",
+      email,
+      name: "Test User",
+      password: "old-password",
+      createdAt: new Date(),
+    });
+
+    // Create token
+    const token = jwt.sign(
+      { email, type: "resetPassword", userId },
+      secretKey,
+      {
+        expiresIn: "15m",
+      },
+    );
+
+    await database("resetPassword").insert({
+      email,
+      token,
+      createdAt: new Date(),
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/set")
+      .send({ token, password: "newPassword123" });
+
+    expect(response.status).toBe(200);
+    expect(response.body.reset.success).toBe(true);
+
+    // Verify password changed
+    const user = await database("users").where({ email }).first();
+    expect(user.password).not.toBe("old-password");
+
+    // Verify resetPassword cleared
+    const resetEntry = await database("resetPassword").where({ email }).first();
+    expect(resetEntry).toBeUndefined();
+  });
+});
