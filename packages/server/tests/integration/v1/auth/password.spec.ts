@@ -33,7 +33,7 @@ describe("POST /api/v1/auth/password/reset", () => {
   });
 
   it("should send password reset mail and return token (200)", async () => {
-    const {user} = await createUser();
+    const { user } = await createUser();
 
     const response = await supertest(app)
       .post("/api/v1/auth/password/reset")
@@ -79,7 +79,7 @@ describe("POST /api/v1/auth/password/validateToken", () => {
   });
 
   it("should return 200 and reset.valid = true for a valid token", async () => {
-    const {user} = await createUser();
+    const { user } = await createUser();
 
     const secretKey = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
     const payload = { email: user.email, type: "resetPassword" };
@@ -137,7 +137,7 @@ describe("POST /api/v1/password/set", () => {
   });
 
   it("should successfully reset password and return 200", async () => {
-    const {user} = await createUser();
+    const { user } = await createUser();
 
     const secret = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
     const token = jwt.sign(
