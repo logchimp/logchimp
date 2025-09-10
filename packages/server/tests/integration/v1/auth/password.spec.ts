@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
+import { v4 as uuid } from "uuid";
 
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
+import database from "../../../../src/database";
 
 describe("POST /api/v1/auth/password/reset", () => {
   it('should throw error "EMAIL_INVALID" when invalid email is sent', async () => {
@@ -24,6 +26,26 @@ describe("POST /api/v1/auth/password/reset", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("USER_NOT_FOUND");
+  });
+
+  it("should send password reset mail and return token (200)", async () => {
+    const user = {
+      userId: uuid(),
+      username: "reset-user1234",
+      email: "resetuser12345@example.com",
+      name: "Reset Test_1",
+      password: "hashed-password",
+      createdAt: new Date(),
+    };
+
+    await database("users").insert(user);
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/reset")
+      .send({ email: user.email });
+
+    expect(response.status).toBe(200);
+    expect(response.headers["content-type"]).toContain("application/json");
   });
 });
 
