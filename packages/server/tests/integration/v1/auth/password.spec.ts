@@ -132,4 +132,41 @@ describe("POST /api/v1/password/set", () => {
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("INVALID_TOKEN");
   });
+
+  it("should successfully reset password and return 200", async () => {
+    const [user] = await database("users")
+      .insert({
+        userId: uuid(),
+        email: "set_success@example.com",
+        username: "set_success",
+        password: "old_password_hash",
+      })
+      .returning("*");
+
+    const secret = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
+    const token = jwt.sign(
+      { email: user.email, type: "resetPassword" },
+      secret,
+      { expiresIn: "15m" },
+    );
+
+    await database("resetPassword").insert({
+      email: user.email,
+      token,
+      createdAt: new Date(),
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/set")
+      .send({
+        token,
+        password: "newStrongPassword123",
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.body).toEqual({
+      reset: { success: true },
+    });
+  });
 });
