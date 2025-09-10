@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
 import database from "../../../../src/database";
+import { createUser } from "../../../utils/seed/user";
 
 describe("POST /api/v1/auth/password/reset", () => {
   it('should throw error "EMAIL_INVALID" when invalid email is sent', async () => {
@@ -30,16 +31,7 @@ describe("POST /api/v1/auth/password/reset", () => {
   });
 
   it("should send password reset mail and return token (200)", async () => {
-    const user = {
-      userId: uuid(),
-      username: "reset-user1234",
-      email: "resetuser12345@example.com",
-      name: "Reset Test_1",
-      password: "hashed-password",
-      createdAt: new Date(),
-    };
-
-    await database("users").insert(user);
+    const {user} = await createUser();
 
     const response = await supertest(app)
       .post("/api/v1/auth/password/reset")
@@ -85,15 +77,7 @@ describe("POST /api/v1/auth/password/validateToken", () => {
   });
 
   it("should return 200 and reset.valid = true for a valid token", async () => {
-    const user = {
-      userId: uuid(),
-      username: "valid-user-200",
-      email: "valid-user-200@example.com",
-      name: "Test User",
-      password: "hashed-password",
-      createdAt: new Date(),
-    };
-    await database("users").insert(user);
+    const {user} = await createUser();
 
     const secretKey = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
     const payload = { email: user.email, type: "resetPassword" };
@@ -151,14 +135,7 @@ describe("POST /api/v1/password/set", () => {
   });
 
   it("should successfully reset password and return 200", async () => {
-    const [user] = await database("users")
-      .insert({
-        userId: uuid(),
-        email: "set_success@example.com",
-        username: "set_success",
-        password: "old_password_hash",
-      })
-      .returning("*");
+    const {user} = await createUser();
 
     const secret = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
     const token = jwt.sign(
