@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
+import jwt from "jsonwebtoken";
 
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
@@ -81,6 +82,37 @@ describe("POST /api/v1/auth/password/validateToken", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("INVALID_TOKEN");
+  });
+
+  it("should return 200 and reset.valid = true for a valid token", async () => {
+    const user = {
+      userId: uuid(),
+      username: "valid-user-200",
+      email: "valid-user-200@example.com",
+      name: "Test User",
+      password: "hashed-password",
+      createdAt: new Date(),
+    };
+    await database("users").insert(user);
+
+    const secretKey = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
+    const payload = { email: user.email, type: "resetPassword" };
+    const token = jwt.sign(payload, secretKey, { expiresIn: "15m" });
+
+    await database("resetPassword").insert({
+      email: user.email,
+      token,
+      createdAt: new Date(),
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/validateToken")
+      .send({ token });
+
+    expect(response.status).toBe(200);
+    expect(response.body.reset.valid).toBe(true);
+    expect(response.body.reset.email).toBe(user.email);
+    expect(response.body.reset.token).toBe(token);
   });
 });
 
