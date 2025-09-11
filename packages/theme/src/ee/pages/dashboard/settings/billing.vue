@@ -13,6 +13,13 @@
         title="We are working on defining its pricing model at the moment."
         type="warning"
       >
+        <template #icon>
+          <PhCrownSimple
+            :size="24"
+            weight="fill"
+            class="fill-(--color-yellow-800)"
+          />
+        </template>
         <template #description>
           <p>
             Please keep in mind that a few <strong>free</strong> plan features will be converted to paid plans.
@@ -35,6 +42,7 @@
 
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
+import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // components
 import { Alert } from "../../../../components/ui/Alert";

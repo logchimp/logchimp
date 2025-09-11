@@ -13,6 +13,11 @@
       @click="createBoardHandler"
     >
       Create board
+      <PhCrownSimple
+        :size="20"
+        weight="regular"
+        class="fill-white"
+      />
     </Button>
   </DashboardPageHeader>
 
@@ -41,6 +46,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
 import { router } from "../../../../router";
