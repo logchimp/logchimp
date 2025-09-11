@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@logchimp/types": "workspace:*",
+    "@phosphor-icons/vue": "^2.2.1",
     "@tailwindcss/vite": "^4.1.11",
     "@vueuse/components": "10.11.1",
     "@vueuse/core": "10.11.1",

@@ -14,10 +14,12 @@
       :loading="createRoadmapButtonLoading"
       @click="createRoadmapHandler"
     >
-      <!-- <div>-->
-      <!--   <PhCrownSimple :size="32" color="#d8f218" weight="fill" />-->
-      <!-- </div>-->
       Create roadmap
+      <PhCrownSimple
+        :size="20"
+        weight="regular"
+        class="fill-white"
+      />
     </Button>
   </DashboardPageHeader>
 
@@ -59,7 +61,7 @@ import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
 import type { ISortRoadmapRequestBody } from "@logchimp/types";
-// import { PhCrownSimple } from "@phosphor-icons/vue";
+import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
 import { router } from "../../../../router";
