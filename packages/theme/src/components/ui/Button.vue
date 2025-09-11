@@ -1,23 +1,50 @@
 <template>
 	<component
-		:is="href ? 'a' : 'button'"
-		class="button"
-		:class="{
-			[`button-${type}`]: !!type,
-			'button-loading': loading,
-			'button-primary-disabled': disabled,
-			'button-outline': outline,
-			[$style['button-size-small']]: size === 'small',
-			[$style['button-size-medium']]: size === 'medium',
-      'w-full': fullWidth,
-		}"
-		:href="href"
+		:is="href ? 'a' : as"
+		:class="[
+      'group flex items-center justify-center gap-2 relative leading-5',
+      'overflow-hidden select-none rounded-(--border-radius-default)',
+      'text-md font-medium',
+      // TODO: improve a11y styles
+      'outline-none',
+      // primary
+      type === 'primary' && [
+        'bg-(--color-brand-color) text-white',
+      ],
+      {
+        [`button-${type}`]: !!type,
+        'border border-white/50 hover:border-white': outline,
+        'w-full': fullWidth,
+        // size
+        'px-3 py-1.5 h-8': size === 'small',
+        'px-5 py-2.5 h-[2.625rem]': size === 'medium',
+        'cursor-pointer': !loading && !disabled,
+        // loading
+        'opacity-70': loading,
+        // disabled
+        'opacity-70 cursor-not-allowed': disabled,
+      }
+		]"
+		:href="href ? href : undefined"
 		@click="click"
+    :disabled="(as === 'button' && disabled) ? 'true' : undefined"
+    :aria-disabled="disabled ? 'true' : undefined"
+    :aria-busy="loading ? true : undefined"
 	>
-		<slot />
-		<div v-if="loading" class="button-loader">
-			<loader-icon />
+		<div
+      v-if="loading"
+      aria-hidden="true"
+    >
+      <loader-icon
+        :class="[
+          'spinner',
+          type === 'primary' && 'stroke-white'
+        ]"
+      />
 		</div>
+		<span>
+      <slot />
+    </span>
 	</component>
 </template>
 
@@ -26,6 +53,10 @@ import LoaderIcon from "../icons/Loader.vue";
 
 type ButtonSize = "small" | "medium";
 const props = defineProps({
+  as: {
+    default: "button",
+    validator: (value: "a" | "button") => ["a", "button"].includes(value),
+  },
   href: {
     type: String,
     default: null,
@@ -65,97 +96,3 @@ function click() {
   emit("click");
 }
 </script>
-
-<style lang='sass'>
-.button
-	// normalise button
-	border: none
-	padding: 0
-	font-family: inherit
-	font-size: inherit
-	position: relative
-	border-radius: var(--border-radius-default)
-	font-weight: 500
-	display: flex
-	justify-content: center
-	cursor: pointer
-	user-select: none
-	line-height: 20px
-
-.button-loader
-	border-radius: var(--border-radius-default)
-	display: flex
-	justify-content: center
-	align-items: center
-	width: 100%
-	height: 100%
-	position: absolute
-	top: 0
-	bottom: 0
-	left: 0
-	right: 0
-	cursor: default
-
-	svg
-		width: 1.5rem
-		height: 1.5rem
-		animation-name: spinner
-		animation-duration: 1.1s
-		animation-direction: normal
-		animation-timing-function: linear
-		animation-iteration-count: infinite
-
-.button-loading
-	opacity: 0.8
-	cursor: wait
-
-@keyframes spinner
-	0%
-		transform: rotate(0deg)
-
-	100%
-		transform: rotate(360deg)
-
-.button-primary
-	background-color: var(--color-brand-color)
-	color: var(--color-white)
-
-	.button-loader
-		background-color: var(--color-brand-color)
-
-		svg
-			stroke: var(--color-white)
-
-.button-outline
-	border: 1px solid var(--color-white-light)
-
-	&:hover
-		border-color: var(--color-white)
-
-.button-background
-	color: var(--color-brand-color)
-
-	.button-loader
-		background-color: var(--color-gray-97)
-
-		svg
-			stroke: var(--color-gray-90)
-
-	&:hover
-		background-color: var(--color-gray-97)
-
-.button-primary-disabled
-	opacity: 0.7
-	cursor: not-allowed
-</style>
-
-<style lang='sass' module>
-// size
-.button-size-small
-	padding: 0.375rem 0.75rem
-	height: 2rem
-
-.button-size-medium
-	padding: 0.625rem 1.25rem
-	height: 2.625rem
-</style>
