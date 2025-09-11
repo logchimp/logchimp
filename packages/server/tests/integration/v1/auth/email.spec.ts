@@ -1,10 +1,12 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
+import { v4 as uuid } from "uuid";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import type {
   IPasswordResetJwtPayload,
   IVerifyEmailJwtPayload,
 } from "@logchimp/types";
+import { faker } from "@faker-js/faker";
 
 import app from "../../../../src/app";
 import database from "../../../../src/database";
@@ -92,8 +94,8 @@ describe("POST /api/v1/auth/email/validate", () => {
   it('should throw error "INVALID_TOKEN"', async () => {
     // generate token
     const tokenPayload = {
-      userId: "601db0cd-ba5b-480d-a62b-06c8dcb72267",
-      email: "mittalyashu77@gmail.com",
+      userId: uuid(),
+      email: faker.internet.email(),
       type: "emailVerification",
     };
 
