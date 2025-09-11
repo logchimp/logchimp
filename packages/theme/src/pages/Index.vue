@@ -7,7 +7,7 @@
         :post="post"
       />
 
-      <infinite-scroll :on-infinite="getBoardPosts" :state="state" />
+      <infinite-scroll :on-infinite="loadMorePosts" :state="state" />
     </main>
     <aside class="flex-1 mb-6 lg:mb-0 grid grid-cols-1 gap-y-4">
       <site-setup-card v-if="showSiteSetupCard" />
@@ -54,7 +54,7 @@ async function isSetup() {
   }
 }
 
-async function getBoardPosts() {
+async function loadMorePosts() {
   state.value = "LOADING";
 
   try {
