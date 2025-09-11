@@ -1,5 +1,6 @@
 <template>
-  <div v-if="!loading">
+  <loader-container v-if="loading" />
+  <template v-else>
     <div v-if="isBoardExist">
       <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
         <main class="grow-[2] shrink basis-0">
@@ -35,10 +36,7 @@
     <p v-else>
       There is no such board.
     </p>
-  </div>
-  <div v-else class="loader-container">
-    <loader />
-  </div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -53,7 +51,7 @@ import type { IBoardPrivate } from "@logchimp/types";
 import { getBoardByUrl } from "../../ee/modules/boards";
 
 // components
-import Loader from "../../components/ui/Loader.vue";
+import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 import Tab from "../../components/ui/tab/Tab.vue";
 import TabItem from "../../components/ui/tab/TabItem.vue";
 import LatestPosts from "../../components/post/LatestPosts.vue";

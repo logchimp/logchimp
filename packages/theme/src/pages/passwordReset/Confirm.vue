@@ -50,9 +50,7 @@
       <div>Invalid or expired password reset link.</div>
     </div>
     <div v-if="validToken.loading" class="card">
-      <div class="loader-container">
-        <loader />
-      </div>
+      <loader-container />
     </div>
   </auth-form>
 </template>
@@ -71,7 +69,7 @@ import { useSettingStore } from "../../store/settings";
 // component
 import AuthForm from "../../layout/AuthForm.vue";
 import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
-import Loader from "../../components/ui/Loader.vue";
+import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 import SiteBranding from "../../components/site/SiteBranding.vue";

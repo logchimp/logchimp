@@ -34,9 +34,7 @@
         :activity="item"
       />
     </div>
-    <div v-else class="loader-container">
-      <loader />
-    </div>
+    <loader-container v-else />
   </div>
 </template>
 
@@ -48,7 +46,7 @@ import { addComment, postActivity } from "../../modules/posts";
 import { useSettingStore } from "../../../store/settings";
 
 // components
-import Loader from "../../../components/ui/Loader.vue";
+import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
 import AddComment from "../activity/AddComment.vue";
 import ActivityItem from "../activity/ActivityItem.vue";
 

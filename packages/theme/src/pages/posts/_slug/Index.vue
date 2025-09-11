@@ -1,5 +1,6 @@
 <template>
-	<div v-if="!postLoading">
+  <loader-container v-if="postLoading" />
+	<template v-else>
 		<div v-if="isPostExist" class="flex-2">
 			<div class="flex items-start">
 				<div>
@@ -44,10 +45,7 @@
 		<p v-else>
 			There is no such post.
 		</p>
-	</div>
-	<div v-else class="loader-container">
-		<loader />
-	</div>
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +62,7 @@ import { useUserStore } from "../../../store/user";
 import { getPostBySlug } from "../../../modules/posts";
 
 // components
-import Loader from "../../../components/ui/Loader.vue";
+import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
 import Vote from "../../../components/vote/Vote.vue";
 import { Avatar } from "../../../components/ui/Avatar";
 import PostActivityList from "../../../ee/components/posts/PostActivityList.vue";
