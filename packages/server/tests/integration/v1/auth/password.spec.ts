@@ -154,6 +154,7 @@ describe("POST /api/v1/password/set", () => {
       .post("/api/v1/auth/password/set")
       .send({
         token,
+        password: "",
       });
 
     expect(response.status).toBe(400);
