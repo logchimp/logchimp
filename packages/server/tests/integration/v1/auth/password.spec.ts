@@ -57,10 +57,10 @@ describe("POST /api/v1/auth/password/validateToken", () => {
   it("should throw error INVALID_TOKEN", async () => {
     // generate token
     const tokenPayload = {
-    userId: faker.string.uuid(),
-    email: faker.internet.email().toLowerCase(),
-    type: "resetPassword",
-  };
+      userId: faker.string.uuid(),
+      email: faker.internet.email().toLowerCase(),
+      type: "resetPassword",
+    };
 
     const token = createToken(tokenPayload, {
       expiresIn: "2h",
@@ -113,11 +113,10 @@ describe("POST /api/v1/password/set", () => {
   });
 
   it("should throw error INVALID_TOKEN", async () => {
-  
     const tokenPayload = {
-     userId: faker.string.uuid(),
-     email: faker.internet.email().toLowerCase(),
-     type: "resetPassword", 
+      userId: faker.string.uuid(),
+      email: faker.internet.email().toLowerCase(),
+      type: "resetPassword",
     };
 
     const token = createToken(tokenPayload, {
