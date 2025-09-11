@@ -17,7 +17,6 @@
   --color-gray-95: #f2f2f2;
   --color-gray-97: #f7f7f7;
 
-  --color-color-success: #64b285;
   --color-color-danger-light: #f8d9d8;
   --color-color-danger: #de544e;
 
@@ -53,7 +52,7 @@
   }
 
   svg {
-    fill: none;
+    /*fill: none;*/
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;

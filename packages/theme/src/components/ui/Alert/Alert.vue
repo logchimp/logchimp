@@ -6,37 +6,49 @@
     :class="{
       [$style.alert]: true,
       [$style.toast]: isToast,
-      [$style[type]]: type,
+      'p-4 rounded-(--border-radius-default)': true,
+      'bg-green-300/30': type === 'success',
+      'bg-(--color-yellow-50)': type === 'warning',
+      'bg-(--color-red-50)': type === 'error',
     }"
   >
-    <div :class="$style.header">
-      <div :class="$style.icon">
+    <div class="grid gap-x-3 items-center grid-cols-[1.5rem_1fr]">
+      <div
+        :class="[
+          $style.icon,
+          'flex size-6 [&>svg]:size-6',
+          type === 'success' && '[&>svg]:stroke-emerald-600',
+          type === 'warning' && '[&>svg]:stroke-(--color-yellow-400)',
+          type === 'error' && '[&>svg]:stroke-(--color-red-800)'
+        ]"
+      >
         <slot name="icon">
-          <success-icon
-            v-if="type === 'success'"
-            class="alert-icon alert-icon-success"
-            aria-hidden="true"
-          />
-          <warning-icon
-            v-if="type === 'warning'"
-            class="alert-icon alert-icon-warning"
-            aria-hidden="true"
-          />
-          <error-icon
-            v-if="type === 'error'"
-            class="alert-icon alert-icon-error"
-            aria-hidden="true"
-          />
+          <success-icon v-if="type === 'success'" aria-hidden="true" />
+          <warning-icon  v-if="type === 'warning'" aria-hidden="true" />
+          <error-icon v-if="type === 'error'" aria-hidden="true" />
         </slot>
       </div>
 
-      <h6 :class="$style.title">
+      <div
+        :class="[
+          'font-medium',
+          type === 'warning' && 'text-(--color-yellow-800)',
+          type === 'error' && 'text-(--color-red-800)',
+        ]"
+      >
         {{ title }}
-      </h6>
+      </div>
     </div>
 
     <div v-if="hasFooter" :class="$style.footer">
-      <div :class="$style.description" v-if="hasDescription">
+      <div
+        :class="[
+          'mt-2 ml-9 text-sm',
+          type === 'warning' && 'text-(--color-yellow-700)',
+          type === 'error' && 'text-(--color-red-700)',
+        ]"
+        v-if="hasDescription"
+      >
         <template v-if="$slots.description">
           <slot name="description" />
         </template>
@@ -45,7 +57,7 @@
         </template>
       </div>
 
-      <div :class="$style.cta" v-if="$slots.cta">
+      <div class="mt-4" v-if="$slots.cta">
         <slot name="cta" />
       </div>
     </div>
@@ -95,77 +107,6 @@ onMounted(() => {
 </script>
 
 <style lang='scss' module>
-.alert {
-  padding: 1rem;
-  border-radius: var(--border-radius-default);
-
-  .header {
-    display: grid;
-    grid-template-columns: 1.5rem 1fr;
-    grid-gap: 0.75rem;
-    align-items: center;
-  }
-
-  .icon {
-    display: flex;
-
-    svg {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
-  }
-
-  .title {
-    font-weight: 500;
-    margin-bottom: 0;
-  }
-
-  .footer {
-    margin-top: 0.5rem;
-    margin-left: calc(1.5rem + 0.75rem);
-  }
-
-  .cta {
-    margin-top: 1rem;
-  }
-}
-
-.alert.success {
-	background-color: var(--color-color-success);
-}
-
-.alert.warning {
-  background-color: var(--color-yellow-50);
-
-  .icon svg {
-    stroke: var(--color-yellow-400);
-  }
-
-  .title {
-    color: var(--color-yellow-800);
-  }
-
-  .description {
-    color: var(--color-yellow-700);
-  }
-}
-
-.alert.error {
-  background-color: var(--color-red-50);
-
-  .icon svg {
-    stroke: var(--color-red-400);
-  }
-
-  .title {
-    color: var(--color-red-800);
-  }
-
-  .description {
-    color: var(--color-red-700);
-  }
-}
-
 .alert.toast {
   box-shadow: 2px 4px 20px 2px rgba(0, 0, 0, 0.12);
   animation-name: alertfade;
