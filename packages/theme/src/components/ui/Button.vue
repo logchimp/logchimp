@@ -42,9 +42,7 @@
         ]"
       />
 		</div>
-		<span>
-      <slot />
-    </span>
+    <slot />
 	</component>
 </template>
 
