@@ -3,6 +3,7 @@ import type {
   IDeletePostByIdRequestBody,
   IGetPostBySlugRequestBody,
   IUpdatePostRequestBody,
+  IGetPostActivityRequestParam,
 } from "@logchimp/types";
 import database from "../database";
 
@@ -16,12 +17,14 @@ type RequestBody =
   | IDeletePostByIdRequestBody;
 
 export async function postExists(
-  req: Request<RequestBody>,
+  req: Request<IGetPostActivityRequestParam, unknown, RequestBody>,
   res: Response,
   next: NextFunction,
 ) {
-  const id = validUUID(req.body.id || req.body.postId);
-  const slug = req.body.slug;
+  // @ts-expect-error
+  const id = validUUID(req.body.id || req.body.postId || req.params.post_id);
+  // @ts-expect-error
+  const slug = req.uuidbody.slug;
 
   const post = await database
     .select()
