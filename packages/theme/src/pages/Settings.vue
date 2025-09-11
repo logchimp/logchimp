@@ -3,7 +3,8 @@
     <h4 class="form-header">
       Account settings
     </h4>
-    <div v-if="!loading">
+    <loader-container v-if="loading" />
+    <div v-else>
       <server-error v-if="serverError" @close="serverError = false" />
 
       <!-- Account verification alert -->
@@ -49,9 +50,6 @@
         </Button>
       </div>
     </div>
-    <div v-else class="loader-container">
-      <loader />
-    </div>
   </div>
 </template>
 
@@ -68,11 +66,11 @@ import { useUserStore } from "../store/user";
 import tokenError from "../utils/tokenError";
 
 // components
-import Loader from "../components/ui/Loader.vue";
+import LoaderContainer from "../components/ui/LoaderContainer.vue";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
-import { type FormFieldErrorType } from "../components/ui/input/formBaseProps";
+import type { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import AccountVerificationAlert from "../components/account/VerificationAlert.vue";
 
 const { get: siteSettings } = useSettingStore();

@@ -2,9 +2,7 @@
   <div data-test="infinite-scroll" :data-state="state">
     <template v-if="state === 'LOADING'">
       <slot name="spinner">
-        <div :class="$style['loader-container']">
-          <loader />
-        </div>
+        <loader-container />
       </slot>
     </template>
     <template v-if="noMoreResults">
@@ -29,7 +27,7 @@ import { useInfiniteScroll } from "@vueuse/core";
 
 // components
 import ClientError from "./ClientError.vue";
-import Loader from "./Loader.vue";
+import LoaderContainer from "./LoaderContainer.vue";
 
 export type InfiniteScrollStateType =
   | "LOADING"
@@ -87,12 +85,3 @@ useInfiniteScroll(window, executeInfiniteScroll, {
   canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
 });
 </script>
-
-<style module>
-.loader-container {
-	display: flex;
-	justify-content: center;
-	margin-bottom: 1rem;
-	width: 100%;
-}
-</style>

@@ -1,7 +1,8 @@
 <template>
-  <div v-if="isPostExist">
-    <h4 class="post-edit-heading">Edit post</h4>
-		<div v-if="!postLoading">
+  <template v-if="isPostExist">
+    <h1 class="text-2xl font-medium mb-8">Edit post</h1>
+    <loader-container v-if="postLoading" />
+		<div v-else>
 			<l-text
 				v-model="post.title"
 				label="Title"
@@ -21,7 +22,7 @@
 				placeholder="What would you use it for?"
 				:disabled="updatePostPermissionDisabled"
 			/>
-			<div style="display: flex; justify-content: flex-start">
+			<div class="flex justify-start">
 				<Button
 					type="primary"
 					:loading="postSubmitting"
@@ -32,10 +33,7 @@
 				</Button>
 			</div>
 		</div>
-		<div v-else class="loader-container">
-      <loader />
-    </div>
-  </div>
+  </template>
   <p v-else>
     There is no such post.
   </p>
@@ -54,7 +52,7 @@ import { getPostBySlug, updatePost } from "../../../modules/posts";
 
 // components
 import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
-import Loader from "../../../components/ui/Loader.vue";
+import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
 import LText from "../../../components/ui/input/LText.vue";
 import LTextarea from "../../../components/ui/input/LTextarea.vue";
 import Button from "../../../components/ui/Button.vue";
@@ -186,8 +184,3 @@ defineOptions({
   name: "PostEdit",
 });
 </script>
-
-<style lang='sass'>
-.post-edit-heading
-  margin-bottom: 2rem
-</style>

@@ -29,11 +29,7 @@
     </div>
 
     <!-- Loading -->
-    <div v-if="loading" class="email-verification">
-      <div class="loader-container">
-        <loader />
-      </div>
-    </div>
+    <loader-container v-if="loading" class="mt-16" />
   </auth-form>
 </template>
 
@@ -50,7 +46,7 @@ import { verifyUserEmail } from "../modules/auth";
 
 // components
 import AuthForm from "../layout/AuthForm.vue";
-import Loader from "../components/ui/Loader.vue";
+import LoaderContainer from "../components/ui/LoaderContainer.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";
 
 const { get: siteSettings } = useSettingStore();
@@ -101,22 +97,3 @@ defineOptions({
   name: "EmailVerification",
 });
 </script>
-
-<style lang='sass'>
-.email-verification
-	margin-top: 4rem
-	display: flex
-	flex-direction: column
-	justify-content: center
-	align-items: center
-
-.email-verification > .auth-form
-	display: flex
-	flex-direction: column
-	align-items: center
-
-	svg
-		margin-bottom: 1rem
-		width: 3rem
-		height: 3rem
-</style>
