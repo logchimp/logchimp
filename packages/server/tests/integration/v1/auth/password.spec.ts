@@ -159,7 +159,7 @@ describe("POST /api/v1/password/set", () => {
 
     expect(response.status).toBe(400);
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.body.code).toBe("PASSWORD_MISSING");
+    expect(response.body.errors[0].code).toBe("PASSWORD_MISSING");
   });
 
   it("should successfully reset password and return 200", async () => {
