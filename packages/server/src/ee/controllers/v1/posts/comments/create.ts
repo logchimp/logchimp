@@ -14,6 +14,7 @@ import database from "../../../../../database";
 // utils
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
+import { validUUID } from "../../../../../helpers";
 
 type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
 
@@ -28,7 +29,9 @@ export async function create(
   // @ts-expect-error
   const userId = req.user.userId;
   const { post_id } = req.params;
-  const { parent_id, is_internal, body } = req.body;
+  let parent_id = validUUID(req.body.parent_id);
+  const is_internal = req.body.is_internal;
+  const body = req.body.body;
 
   // check auth user has required permission to set comment as internal
   // check the auth user has permission to comment
@@ -46,9 +49,28 @@ export async function create(
       return;
     }
 
+    if (!body) {
+      return res.status(400).send({
+        message: error.api.comments.bodyMissing,
+        code: "COMMENT_BODY_MISSING",
+      });
+    }
+
     const results = await database.transaction(async (trx) => {
       // postActivityId will be shared b/w "posts_comments" and "posts_activity" table
       const postActivityId = uuid();
+
+      // checking if the parent comment exists
+      const parent_comment = await trx
+        .from("posts_comments")
+        .where({
+          id: parent_id || null,
+        })
+        .first();
+
+      if (!parent_comment) {
+        parent_id = null;
+      }
 
       const comments = await trx("posts_comments").insert(
         {
