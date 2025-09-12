@@ -17,6 +17,7 @@
   <div class="table-data users-table-votes">
     {{ user.votes }}
   </div>
+  
   <MoreOptionsDropdown
     v-if="settings.developer_mode"
   />

@@ -1,7 +1,7 @@
 // packages
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
-
+import TestDialog from "../src/test/DialogOutputTest.vue"
 import { useUserStore } from "./store/user";
 import { isSiteSetup } from "./modules/site";
 import { checkUserDashboardAccess } from "./modules/users";
@@ -231,6 +231,11 @@ const routes = [
     path: "/(.*)",
     name: "Page not found",
     component: () => () => import("./pages/pageNotFound.vue"),
+  },
+    {
+    path: "/test",
+    name: "TestDialog",
+    component: TestDialog,
   },
 ];
 
