@@ -14,7 +14,7 @@ export async function destroy(
   req: Request<TDeletePostCommentRequestParam>,
   res: Response<IApiErrorResponse>,
 ) {
-  const { comment_id } = req.params;
+  const { comment_id, post_id } = req.params;
 
   try {
     const labSettings = (await database
@@ -30,9 +30,13 @@ export async function destroy(
       return;
     }
 
+    await database.delete().from("posts_activity").where({
+      post_id: post_id,
+      posts_comments_id: comment_id,
+    });
     await database.delete().from("posts_comments").where({ id: comment_id });
 
-    res.status(204);
+    res.sendStatus(204);
   } catch (err) {
     logger.log({
       level: "error",
