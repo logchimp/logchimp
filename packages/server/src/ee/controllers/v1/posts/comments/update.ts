@@ -23,7 +23,8 @@ export async function update(
   res: Response<ResponseBody>,
 ) {
   const { comment_id } = req.params;
-  const { body, is_internal, is_spam } = req.body;
+  const { is_internal, is_spam } = req.body;
+  const body = req.body.body;
 
   try {
     const labSettings = (await database
@@ -39,13 +40,19 @@ export async function update(
       return;
     }
 
+    if (!body) {
+      return res.status(400).send({
+        message: error.api.comments.bodyMissing,
+        code: "COMMENT_BODY_MISSING",
+      });
+    }
+
     const comment = await database
       .update({
         body,
         is_internal,
         is_edited: true,
         is_spam,
-        created_at: new Date().toJSON(),
         updated_at: new Date().toJSON(),
       })
       .from("posts_comments")
