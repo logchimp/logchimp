@@ -38,10 +38,11 @@ export async function postExists(
     .first();
 
   if (!post) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.posts.postNotFound,
       code: "POST_NOT_FOUND",
     });
+    return
   }
 
   // @ts-expect-error

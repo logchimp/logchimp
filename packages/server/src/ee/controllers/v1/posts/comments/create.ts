@@ -50,10 +50,11 @@ export async function create(
     }
 
     if (!body) {
-      return res.status(400).send({
+      res.status(400).send({
         message: error.api.comments.bodyMissing,
         code: "COMMENT_BODY_MISSING",
       });
+      return
     }
 
     const results = await database.transaction(async (trx) => {
