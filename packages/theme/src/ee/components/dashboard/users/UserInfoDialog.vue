@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import Dialog from "../../../../components/ui/Dialog.vue"
+import type { IUser } from "@logchimp/types"
 
-const isOpen = ref(false)
-
-const staticUser = {
-  name: "John Doe",
-  username: "@johndoe",
-  email: "john@example.com",
-  roles: ["Admin", "Editor"],
-  posts: 12,
-  votes: 34,
-  isVerified: true,
+interface Props {
+  user: IUser
 }
+
+const props = defineProps<Props>()
+const isOpen = ref(false)
 </script>
 
 <template>
@@ -30,13 +26,13 @@ const staticUser = {
     <template #description>Details about the user</template>
 
     <div class="space-y-3">
-      <p><strong>Name:</strong> {{ staticUser.name }}</p>
-      <p><strong>Username:</strong> {{ staticUser.username }}</p>
-      <p><strong>Email:</strong> {{ staticUser.email }}</p>
-      <p><strong>Roles:</strong> {{ staticUser.roles.join(", ") }}</p>
-      <p><strong>Posts:</strong> {{ staticUser.posts }}</p>
-      <p><strong>Votes:</strong> {{ staticUser.votes }}</p>
-      <p><strong>Verified:</strong> {{ staticUser.isVerified ? "Yes" : "No" }}</p>
+      <p><strong>Name:</strong> {{ props.user.name || props.user.username }}</p>
+      <p><strong>Username:</strong> {{ props.user.username }}</p>
+      <p><strong>Email:</strong> {{ props.user.email }}</p>
+      <p><strong>Roles:</strong> {{ props.user.roles.map(r => r.name).join(", ") }}</p>
+      <p><strong>Posts:</strong> {{ props.user.posts }}</p>
+      <p><strong>Votes:</strong> {{ props.user.votes }}</p>
+      <p><strong>Verified:</strong> {{ props.user.isVerified ? "Yes" : "No" }}</p>
     </div>
   </Dialog>
 </template>

@@ -25,7 +25,9 @@
         :key="user.userId"
         class="table-row group"
       >
+      
         <DashboardUsersTabularItem :user="user" :settings="settings" />
+       
       </div>
 
       <infinite-scroll :on-infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
@@ -47,7 +49,7 @@ import Breadcrumbs from "../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardUsersTabularItem from "../../ee/components/dashboard/users/TabularItem/TabularItem.vue";
-
+import UserInfoDialog from "../../ee/components/dashboard/users/UserInfoDialog.vue";
 const { settings } = useSettingStore();
 const dashboardUsers = useDashboardUsers();
 

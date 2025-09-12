@@ -6,6 +6,9 @@
     <h6 class="users-table-user-name">
       {{ user.name || user.username }}
     </h6>
+     <div class="p-6">
+    <UserInfoDialog :user="user" />
+  </div>
   </div>
   <div class="table-header-item users-table-user flex items-center gap-x-1.5">
     <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
@@ -32,7 +35,7 @@ import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
 import { userIdKey } from "./options";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
-
+import UserInfoDialog from "../../../../../ee/components/dashboard/users/UserInfoDialog.vue";
 interface Props {
   user: IUser;
   settings: ISiteSettings;
