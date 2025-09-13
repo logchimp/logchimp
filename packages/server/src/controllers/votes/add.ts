@@ -37,13 +37,6 @@ export async function add(
   }
 
   const postId = validUUID(req.body.postId);
-  if (!postId) {
-    res.status(400).send({
-      message: "Invalid Post ID",
-      code: "INVALID_POST_ID",
-    });
-    return;
-  }
 
   try {
     const vote = await database
