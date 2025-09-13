@@ -47,6 +47,25 @@ export async function update(
       });
     }
 
+    // @ts-expect-error
+    const userId = req.user.userId;
+
+    const isAuthor = await database
+      .from("posts_activity")
+      .where({
+        type: "comment",
+        posts_comments_id: comment_id,
+        author_id: userId,
+      })
+      .first();
+
+    if (!isAuthor) {
+      return res.status(403).send({
+        message: error.api.comments.notAnAuthor,
+        code: "UNAUTHORIZED_NOT_AUTHOR",
+      });
+    }
+
     const comment = await database
       .update({
         body,

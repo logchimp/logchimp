@@ -30,6 +30,25 @@ export async function destroy(
       return;
     }
 
+    // @ts-expect-error
+    const userId = req.user.userId;
+
+    const isAuthor = await database
+      .from("posts_activity")
+      .where({
+        type: "comment",
+        posts_comments_id: comment_id,
+        author_id: userId,
+      })
+      .first();
+
+    if (!isAuthor) {
+      return res.status(403).send({
+        message: error.api.comments.notAnAuthor,
+        code: "UNAUTHORIZED_NOT_AUTHOR",
+      });
+    }
+
     await database.delete().from("posts_activity").where({
       post_id: post_id,
       posts_comments_id: comment_id,
