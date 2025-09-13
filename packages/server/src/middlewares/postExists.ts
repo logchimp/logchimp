@@ -20,7 +20,7 @@ export async function postExists(
   res: Response,
   next: NextFunction,
 ) {
-  const id = validUUID(req.body.id);
+  const id = validUUID(req.body.id || req.body.postId);
   const slug = req.body.slug;
 
   const post = await database

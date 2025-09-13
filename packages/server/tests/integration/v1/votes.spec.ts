@@ -3,17 +3,17 @@ import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 
 import app from "../../../src/app";
+import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
-import { cleanDb } from "../../utils/db";
 import {
   post as generatePost,
   vote as assignVote,
 } from "../../utils/generators";
+import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 
 // Add vote to post
 describe("POST /api/v1/votes", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
-    await cleanDb();
     const response = await supertest(app).post("/api/v1/votes");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -21,17 +21,42 @@ describe("POST /api/v1/votes", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  // TODO: test the sceneries where a user does not have a 'vote:create' permission
-  it.skip("should throw error \"NOT_ENOUGH_PERMISSION\" for user without 'vote:create' permission", async () => {
-    const { user: authUser } = await createUser({
+  it('should throw error "NOT_ENOUGH_PERMISSION" for user without "vote:create" permission', async () => {
+    const { user } = await createUser({
       isVerified: true,
     });
 
+    // set "role:unassign" permission to user
+    await createRoleWithPermissions(user.userId, ["role:unassign"], {
+      roleName: "Role destroyer",
+    });
+
+    // get roleId for "@everyone" role
+    const { id: roleId } = await database
+      .select("id")
+      .from("roles")
+      .where({
+        name: "@everyone",
+      })
+      .first();
+
+    // remove @everyone role from user
+    await supertest(app)
+      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    const post = await generatePost(
+      {
+        userId: user.userId,
+      },
+      true,
+    );
+
     const response = await supertest(app)
       .post("/api/v1/votes")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .set("Authorization", `Bearer ${user.authToken}`)
       .send({
-        postId: uuid(),
+        postId: post.postId,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -39,19 +64,24 @@ describe("POST /api/v1/votes", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should throw error "INVALID_POST_ID"', async () => {
-    const { user } = await createUser({
-      isVerified: true,
-    });
+  [uuid(), undefined, null].map((value) =>
+    it(`should throw error "INVALID_POST_ID" for "${value}" value`, async () => {
+      const { user } = await createUser({
+        isVerified: true,
+      });
 
-    const response = await supertest(app)
-      .post(`/api/v1/votes`)
-      .set("Authorization", `Bearer ${user.authToken}`);
+      const response = await supertest(app)
+        .post(`/api/v1/votes`)
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send({
+          postId: value,
+        });
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("INVALID_POST_ID");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe("POST_NOT_FOUND");
+    }),
+  );
 
   it('should throw error "VOTE_EXISTS"', async () => {
     const { user } = await createUser({
@@ -108,7 +138,6 @@ describe("POST /api/v1/votes", () => {
 
 describe("DELETE /api/v1/votes", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
-    await cleanDb();
     const response = await supertest(app).delete("/api/v1/votes");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -116,17 +145,42 @@ describe("DELETE /api/v1/votes", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  // TODO: test the sceneries where a user does not have a 'vote:destroy' permission
-  it.skip("should throw error \"NOT_ENOUGH_PERMISSION\" for user without 'vote:destroy' permission", async () => {
-    const { user: authUser } = await createUser({
+  it('should throw error "NOT_ENOUGH_PERMISSION" for user without "vote:destroy" permission', async () => {
+    const { user } = await createUser({
       isVerified: true,
     });
 
+    // set "role:unassign" permission to user
+    await createRoleWithPermissions(user.userId, ["role:unassign"], {
+      roleName: "Role destroyer",
+    });
+
+    // get roleId for @everyone
+    const { id: roleId } = await database
+      .select("id")
+      .from("roles")
+      .where({
+        name: "@everyone",
+      })
+      .first();
+
+    // remove @everyone role from user
+    await supertest(app)
+      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    const post = await generatePost(
+      {
+        userId: user.userId,
+      },
+      true,
+    );
+
     const response = await supertest(app)
       .delete("/api/v1/votes")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .set("Authorization", `Bearer ${user.authToken}`)
       .send({
-        postId: uuid(),
+        postId: post.postId,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -134,19 +188,24 @@ describe("DELETE /api/v1/votes", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should throw error "INVALID_POST_ID"', async () => {
-    const { user } = await createUser({
-      isVerified: true,
-    });
+  [uuid(), undefined, null].map((value) =>
+    it(`should throw error "INVALID_POST_ID" for "${value}" value`, async () => {
+      const { user } = await createUser({
+        isVerified: true,
+      });
 
-    const response = await supertest(app)
-      .delete("/api/v1/votes")
-      .set("Authorization", `Bearer ${user.authToken}`);
+      const response = await supertest(app)
+        .delete("/api/v1/votes")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send({
+          postId: value,
+        });
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("INVALID_POST_ID");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe("POST_NOT_FOUND");
+    }),
+  );
 
   it('should throw error "VOTE_NOT_FOUND"', async () => {
     const { user } = await createUser({
