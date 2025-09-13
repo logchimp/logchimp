@@ -773,12 +773,9 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
       true,
     );
 
-    await updateSettings(
-      {
-        labs: { comments: false },
-      },
-      true,
-    );
+    await updateSettings({
+      labs: { comments: false },
+    });
 
     const response = await supertest(app)
       .post(`/api/v1/posts/${post.postId}/comments`)
@@ -808,12 +805,9 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
       true,
     );
 
-    await updateSettings(
-      {
-        labs: { comments: true },
-      },
-      true,
-    );
+    await updateSettings({
+      labs: { comments: true },
+    });
 
     const commentRequest = {
       is_internal: Math.random() >= 0.5,
