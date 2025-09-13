@@ -197,7 +197,7 @@ describe("DELETE /api/v1/votes", () => {
       const response = await supertest(app)
         .delete("/api/v1/votes")
         .set("Authorization", `Bearer ${user.authToken}`)
-        .sent({
+        .send({
           postId: value,
         });
 
