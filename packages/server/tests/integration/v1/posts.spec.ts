@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
+import { v4 as uuid } from "uuid";
 import type { IPost } from "@logchimp/types";
 
 import app from "../../../src/app";
@@ -582,22 +583,24 @@ describe("DELETE /api/v1/posts", () => {
     expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should return 404 'POST_NOT_FOUND' for a non-existent post id", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
-    // Grant permission so we get to postExists and its 404, not blocked by controller's 403
-    await createRoleWithPermissions(authUser.userId, ["post:destroy"], {
-      roleName: "Post Destroyer",
-    });
+  [uuid(), undefined, null].map((value) =>
+    it(`should return 404 'POST_NOT_FOUND' for "${value}" value`, async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+      // Grant permission so we get to postExists and its 404, not blocked by controller's 403
+      await createRoleWithPermissions(authUser.userId, ["post:destroy"], {
+        roleName: "Post Destroyer",
+      });
 
-    const res = await supertest(app)
-      .delete("/api/v1/posts")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({ id: faker.string.uuid() });
+      const res = await supertest(app)
+        .delete("/api/v1/posts")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({ id: value });
 
-    expect(res.headers["content-type"]).toContain("application/json");
-    expect(res.status).toBe(404);
-    expect(res.body.code).toBe("POST_NOT_FOUND");
-  });
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(404);
+      expect(res.body.code).toBe("POST_NOT_FOUND");
+    }),
+  );
 
   it("should throw error 'NOT_ENOUGH_PERMISSION' when user lacks 'post:destroy' permission (even if author)", async () => {
     const board = await generateBoard({}, true);
@@ -663,17 +666,19 @@ describe("DELETE /api/v1/posts", () => {
 
 // Get post by slug
 describe("POST /api/v1/posts/slug", () => {
-  it('should throw error "POST_NOT_FOUND"', async () => {
-    const response = await supertest(app).post("/api/v1/posts/slug").send({
-      slug: "dolores-ipsa-mKTAvagnq3xaZYaag2pU",
-      // only slug is required to get a post
-      userId: "",
-    });
+  ["dolores-ipsa-mKTAvagnq3xaZYaag2pU", uuid(), undefined, null].map((value) =>
+    it(`should throw error "POST_NOT_FOUND" for "${value}" value`, async () => {
+      const response = await supertest(app).post("/api/v1/posts/slug").send({
+        slug: value,
+        // only slug is required to get a post
+        userId: "",
+      });
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(404);
-    expect(response.body.code).toBe("POST_NOT_FOUND");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(404);
+      expect(response.body.code).toBe("POST_NOT_FOUND");
+    }),
+  );
 
   it("should get post with matching slug", async () => {
     const board = await generateBoard({}, true);
