@@ -199,8 +199,8 @@ importers:
         specifier: 3.5.21
         version: 3.5.21(typescript@5.9.2)
       vue-gtag:
-        specifier: 3.5.2
-        version: 3.5.2(vue-router@4.5.1(vue@3.5.21(typescript@5.9.2)))(vue@3.5.21(typescript@5.9.2))
+        specifier: 3.6.1
+        version: 3.6.1(vue-router@4.5.1(vue@3.5.21(typescript@5.9.2)))(vue@3.5.21(typescript@5.9.2))
       vue-infinite-loading:
         specifier: github:nvitius/vue-infinite-loading#next
         version: https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d(vue@3.5.21(typescript@5.9.2))
@@ -3138,8 +3138,8 @@ packages:
       '@vue/composition-api':
         optional: true
 
-  vue-gtag@3.5.2:
-    resolution: {integrity: sha512-efTY4yrkNraFSu6CZqhFZLX5LggqCr44d6kcPnPPtzYhvu5ywrTFUnuvM2Vm238QC+YT43HkVEXV/L1OYnHvNg==}
+  vue-gtag@3.6.1:
+    resolution: {integrity: sha512-gsEt3vconVtZlYJTel9B/qVjdmW87XMl2KDrz0ds1sGSHjzqZ1c6KXl4M/Qjiem57FixQR8RDTDDX7MTKa3rFw==}
     peerDependencies:
       vue: ^3.5.13
       vue-router: ^4.5.0
@@ -6398,7 +6398,7 @@ snapshots:
     dependencies:
       vue: 3.5.21(typescript@5.9.2)
 
-  vue-gtag@3.5.2(vue-router@4.5.1(vue@3.5.21(typescript@5.9.2)))(vue@3.5.21(typescript@5.9.2)):
+  vue-gtag@3.6.1(vue-router@4.5.1(vue@3.5.21(typescript@5.9.2)))(vue@3.5.21(typescript@5.9.2)):
     dependencies:
       vue: 3.5.21(typescript@5.9.2)
     optionalDependencies:
