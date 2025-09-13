@@ -25,11 +25,10 @@
         :key="user.userId"
         class="table-row group"
       >
-      
         <DashboardUsersTabularItem :user="user" :settings="settings" />
-       
+        <Useusers :user="user" @open="setUser(user)" />
       </div>
-
+      
       <infinite-scroll :on-infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
     </Table>
   </div>
@@ -41,7 +40,8 @@ import { useHead } from "@vueuse/head";
 // modules
 import { useSettingStore } from "../../store/settings";
 import { useDashboardUsers } from "../../store/dashboard/users";
-
+import { useUser } from "../../composables/UseUser";
+const { selectedUser, setUser } = useUser();
 // components
 import InfiniteScroll from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
@@ -49,7 +49,6 @@ import Breadcrumbs from "../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardUsersTabularItem from "../../ee/components/dashboard/users/TabularItem/TabularItem.vue";
-import UserInfoDialog from "../../ee/components/dashboard/users/UserInfoDialog.vue";
 const { settings } = useSettingStore();
 const dashboardUsers = useDashboardUsers();
 

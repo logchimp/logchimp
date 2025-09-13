@@ -6,9 +6,6 @@
     <h6 class="users-table-user-name">
       {{ user.name || user.username }}
     </h6>
-     <div class="p-6">
-    <UserInfoDialog :user="user" />
-  </div>
   </div>
   <div class="table-header-item users-table-user flex items-center gap-x-1.5">
     <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
@@ -20,10 +17,12 @@
   <div class="table-data users-table-votes">
     {{ user.votes }}
   </div>
-  
-  <MoreOptionsDropdown
-    v-if="settings.developer_mode"
-  />
+  <div class="p-6">
+      <UserInfoDialog :user="user" />
+  </div> 
+
+  <!-- <MoreOptionsDropdown /> -->
+  <MoreOptionsDropdown v-if="settings.developer_mode" />
 </template>
 
 <script setup lang="ts">
