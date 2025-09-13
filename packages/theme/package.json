@@ -35,7 +35,7 @@
     "@vitejs/plugin-vue": "6.0.1",
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "^0.7.0",
-    "jsdom": "^20.0.1",
+    "jsdom": "^26.0.0",
     "sass": "1.69.5",
     "typescript": "5.9.2",
     "vite": "6.3.6",
