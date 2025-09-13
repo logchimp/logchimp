@@ -9,7 +9,7 @@
 
       <infinite-scroll :on-infinite="loadMorePosts" :state="state" />
     </main>
-    <aside class="flex-1 mb-6 lg:mb-0 grid grid-cols-1 gap-y-4">
+    <aside class="flex-1 h-full mb-6 lg:mb-0 grid grid-cols-1 gap-y-4 lg:sticky lg:top-20">
       <site-setup-card v-if="showSiteSetupCard" />
       <login-card v-if="!userStore.getUserId && !showSiteSetupCard" />
       <top-public-boards-list />
