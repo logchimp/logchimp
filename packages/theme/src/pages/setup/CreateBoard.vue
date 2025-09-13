@@ -2,20 +2,19 @@
   <auth-form>
     <div class="onboarding-header">
       <h2 class="onboarding-heading">
-        Create a new board
+        {{t("setupCreateBoard.heading")}}
       </h2>
       <p class="onboarding-label">
-        A board is a place where people can post and vote on ideas for a
-        specific topic.
+       {{t("setupCreateBoard.label")}}
       </p>
     </div>
     <div class="card">
       <l-text
         v-model="boardName.value"
-        label="Name"
+        :label="t('setupCreateBoard.card.label')"
         type="text"
         name="Name"
-        placeholder="Name of the board"
+        :placeholder="t('setupCreateBoard.card.placeholder')"
         :error="boardName.error"
         @keyup-enter="create"
         @hide-error="hideBoardNameError"
@@ -27,13 +26,17 @@
           type="primary"
           @click="create"
         >
-          Create
+         {{t("setupCreateBoard.create")}}
         </Button>
       </div>
     </div>
 
     <div class="auth-form-other">
-      You can <router-link to="/dashboard">skip</router-link> and create one later.
+      <i18n-t keypath="setupCreateAccount.skipText">
+      <router-link to="/dashboard" place="skip">
+         {{ t("setupCreateAccount.skipWord") }}
+      </router-link>
+    </i18n-t>
     </div>
   </auth-form>
 </template>
@@ -41,6 +44,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../router";
@@ -70,6 +74,8 @@ const createBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:create");
   return !checkPermission;
 });
+
+const { t } = useI18n();
 
 function hideBoardNameError(event: FormFieldErrorType) {
   boardName.error = event;

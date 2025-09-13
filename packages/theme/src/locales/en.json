@@ -1,0 +1,71 @@
+{
+  "navbar": {
+    "home": "Home",
+    "roadmaps": "Roadmaps",
+    "boards": "Boards"
+  },
+  "header": {
+    "login": "Login",
+    "createAccount": "Create an account"
+  },
+  "powerBy": {
+    "poweredByLogchimp": "Powered by LogChimp"
+  },
+  "topPublicBoards": {
+    "title": "Boards",
+    "viewAll": "View all boards",
+    "none": "No boards available"
+  },
+  "setupCard": {
+    "title": "Setup your LogChimp site",
+    "label": "Complete your LogChimp site setup to access dashboard.",
+    "cta": "Create owner account"
+  },
+  "setupWelcome": {
+    "heading": "Welcome to",
+    "label": "Let’s setup your LogChimp site to track user feedback for building better products.",
+    "cta": "Create owner account"
+  },
+  "setupCreateAccount": {
+    "heading": "Create an account",
+    "siteTitle": {
+      "label": "Site Title",
+      "placeholder": "My awesome site"
+    },
+    "fullName": {
+      "label": "Full Name",
+      "placeholder": "Mike M. Smith"
+    },
+    "email": {
+      "label": "Email address",
+      "placeholder": "Eg. email@example.com"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "At least 10 character"
+    },
+    "cta": "Create account",
+    "errors": {
+      "required": "Required"
+    }
+  },
+  "setupCreateBoard": {
+    "heading": "Create a new board",
+    "label": "A board is a place where people can post and vote on ideas for a specific topic.",
+    "card": {
+      "label": "Name",
+      "placeholder": "Name of the board"
+    },
+    "create": "Create",
+    "skipText": "You can {skip} and create one later.",
+    "skipWord": "skip"
+  },
+  "dashboard": {
+    "tableHeading1": "Posts",
+    "postsTableTitle": "Title",
+    "postsTableVotes": "Votes",
+    "tableHeading2": "Boards",
+    "baordsTableName": "Name",
+    "boardsTablePosts": "Posts"
+  }
+}

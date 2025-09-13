@@ -5,7 +5,7 @@
 				<home-icon aria-hidden="true" />
 			</div>
 			<div class="navbar-item-content">
-				Home
+				{{ t("navbar.home") }}
 			</div>
 		</router-link>
 		<router-link to="/roadmaps" class="navbar-item">
@@ -13,7 +13,7 @@
 				<roadmap-icon />
 			</div>
 			<div class="navbar-item-content">
-				Roadmaps
+			{{ t("navbar.roadmaps") }}
 			</div>
 		</router-link>
 		<router-link to="/boards" class="navbar-item">
@@ -21,13 +21,17 @@
 				<board-icon aria-hidden="true" />
 			</div>
 			<div class="navbar-item-content">
-				Boards
+			{{ t("navbar.boards") }}
+
 			</div>
 		</router-link>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 // packages
 import { Home as HomeIcon, Columns as BoardIcon } from "lucide-vue";
 

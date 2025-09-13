@@ -9,7 +9,7 @@
         'px-2 py-0.5'
         ]"
       >
-        Powered by LogChimp
+        {{t("powerBy.poweredByLogchimp")}}
       </a>
     </div>
   </div>
@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import { useSettingStore } from "../store/settings";
 
@@ -25,4 +26,6 @@ const route = useRoute();
 const { get: siteSettings } = useSettingStore();
 
 const source = computed(() => route.name?.toString());
+
+const { t } = useI18n();
 </script>

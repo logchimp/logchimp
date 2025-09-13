@@ -3,11 +3,11 @@
 
   <div class="flex items-start px-3 lg:px-6 py-6">
     <div class="dashboard-overview-posts">
-      <div class="table-heading">Posts</div>
+      <div class="table-heading">{{t("dashboard.tableHeading1")}}</div>
       <Table>
         <template #header>
-          <div class="table-header-item posts-table-title">title</div>
-          <div class="table-header-item posts-table-votes">votes</div>
+          <div class="table-header-item posts-table-title">{{t("dashboard.postsTableTitle")}}</div>
+          <div class="table-header-item posts-table-votes">{{t("dashboard.postsTableVotes")}}</div>
         </template>
 
         <router-link
@@ -28,12 +28,12 @@
       </Table>
     </div>
     <div class="dashboard-overview-boards">
-      <div class="table-heading">Boards</div>
+      <div class="table-heading">{{t("dashboard.tableHeading2")}}</div>
       <Table>
         <template #header>
           <div class="table-header-item boards-table-color" />
-          <div class="table-header-item boards-table-name">name</div>
-          <div class="table-header-item boards-table-posts">posts</div>
+          <div class="table-header-item boards-table-name">{{t("dashboard.baordsTableName")}}</div>
+          <div class="table-header-item boards-table-posts">{{t("dashboard.boardsTablePosts")}}</div>
         </template>
 
         <div
@@ -62,7 +62,7 @@
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IBoardPrivate, IPost } from "@logchimp/types";
-
+import { useI18n } from "vue-i18n";
 // modules
 import { getPosts } from "../../modules/posts";
 import { getAllBoards } from "../../ee/modules/boards";
@@ -79,6 +79,7 @@ const posts = ref<IPost[]>([]);
 const postState = ref<InfiniteScrollStateType>();
 const boards = ref<IBoardPrivate[]>([]);
 const boardState = ref<InfiniteScrollStateType>();
+const { t } = useI18n();
 
 async function getRecentPosts() {
   postState.value = "LOADING";
