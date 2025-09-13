@@ -15,7 +15,7 @@ import {
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../../helpers";
-import { GET_COMMENTS_FILER_COUNT } from "../../../../../constants";
+import { GET_COMMENTS_FILTER_COUNT } from "../../../../../constants";
 
 type ResponseBody = IGetPostActivityResponseBody | IApiErrorResponse;
 
@@ -31,7 +31,7 @@ export async function get(
   const { post_id } = req.params;
   const limit = parseAndValidateLimit(
     req.query.limit,
-    GET_COMMENTS_FILER_COUNT,
+    GET_COMMENTS_FILTER_COUNT,
   );
   const page = parseAndValidatePage(req.query.page);
 
