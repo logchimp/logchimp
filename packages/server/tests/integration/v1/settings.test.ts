@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker";
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import { updateSettings } from "../../utils/seed/settings";
 
 describe("GET /api/v1/settings/site", () => {
   it("should get all settings", async () => {
@@ -27,23 +28,16 @@ describe("GET /api/v1/settings/site", () => {
     const updateLabs = {
       comments: faker.datatype.boolean(),
     };
-
-    await supertest(app)
-      .patch("/api/v1/settings/site")
-      .set("Authorization", `Bearer ${user.authToken}`)
-      .send({
-        title,
-        description,
-        logo,
-        accentColor: color,
-        allowSignup: true,
-        isPoweredBy: true,
-        developer_mode: false,
-      });
-    await supertest(app)
-      .patch("/api/v1/settings/labs")
-      .set("Authorization", `Bearer ${user.authToken}`)
-      .send(updateLabs);
+    await updateSettings({
+      title,
+      description,
+      logo,
+      accentColor: color,
+      allowSignup: true,
+      isPoweredBy: true,
+      developer_mode: false,
+      labs: updateLabs,
+    });
     // end - update site data
 
     const response = await supertest(app).get("/api/v1/settings/site");
