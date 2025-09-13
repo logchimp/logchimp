@@ -14,7 +14,7 @@ export interface IGetAllRoles {
 }
 
 export interface IGetRoleByIdRequestParams {
-  id: string;
+  role_id: string;
 }
 
 export interface IGetRoleByIdResponseBody {

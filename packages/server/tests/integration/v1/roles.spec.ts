@@ -101,13 +101,13 @@ describe("PATCH /api/v1/roles", () => {
 
   it("should not have permission 'role:update'", async () => {
     const { user } = await createUser();
-    const r1 = await generateRole();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
       .patch("/api/v1/roles")
       .set("Authorization", `Bearer ${user.authToken}`)
       .send({
-        id: r1.id,
+        id: generatedRole.id,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -210,10 +210,10 @@ describe("GET /api/v1/roles/:id", () => {
 
   it("should not have permission 'role:read'", async () => {
     const { user } = await createUser();
-    const r1 = await generateRole();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
-      .get(`/api/v1/roles/${r1.id}`)
+      .get(`/api/v1/roles/${generatedRole.id}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -226,16 +226,16 @@ describe("GET /api/v1/roles/:id", () => {
     await createRoleWithPermissions(user.userId, ["role:read"], {
       roleName: "Role reader",
     });
-    const r1 = await generateRole();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
-      .get(`/api/v1/roles/${r1.id}`)
+      .get(`/api/v1/roles/${generatedRole.id}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
 
     const role = response.body.role;
-    expect(role.name).toBe(r1.name);
+    expect(role.name).toBe(generatedRole.name);
     expect(role.description).toBeNull();
 
     expect(response.body.role.permissions).toHaveLength(0);
@@ -300,7 +300,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it.skip('should throw error "ROLE_NOT_FOUND"', async () => {
+  it('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -312,11 +312,13 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
-  it.skip('should throw error "USER_NOT_FOUND"', async () => {
+  it('should throw error "USER_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
+    const generatedRole = await generateRole();
+
     const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -337,9 +339,10 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
 
   it("should not have 'role:assign' permission", async () => {
     const { user } = await createUser();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -352,18 +355,18 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     await createRoleWithPermissions(user.userId, ["role:assign"], {
       roleName: "Role assigner",
     });
-    const r1 = await generateRole();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
-      .put(`/api/v1/roles/${r1.id}/users/${user.userId}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
 
     expect(response.body.success).toBe(1);
-    expect(response.body.id).toBe(r1.id);
-    expect(response.body.name).toBe(r1.name);
+    expect(response.body.id).toBe(generatedRole.id);
+    expect(response.body.name).toBe(generatedRole.name);
   });
 
   it("should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user", async () => {
@@ -371,13 +374,13 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     await createRoleWithPermissions(user.userId, ["role:assign"], {
       roleName: "Role assigner",
     });
-    const r1 = await generateRole();
+    const generatedRole = await generateRole();
 
     await supertest(app)
-      .put(`/api/v1/roles/${r1.id}/users/${user.userId}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
     const response = await supertest(app)
-      .put(`/api/v1/roles/${r1.id}/users/${user.userId}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -410,7 +413,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it.skip('should throw error "ROLE_NOT_FOUND"', async () => {
+  it('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -422,11 +425,12 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
-  it.skip('should throw error "USER_NOT_FOUND"', async () => {
+  it('should throw error "USER_NOT_FOUND"', async () => {
     const { user } = await createUser();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
-      .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+      .delete(`/api/v1/roles/${generatedRole.id}/users/${uuid()}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -447,9 +451,10 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
 
   it("should not have 'role:unassign' permission", async () => {
     const { user } = await createUser();
+    const generatedRole = await generateRole();
 
     const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -462,14 +467,14 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
       roleName: "Role assigner",
     });
-    const r1 = await generateRole();
+    const generatedRole = await generateRole();
 
     await supertest(app)
-      .put(`/api/v1/roles/${r1.id}/users/${user.userId}`)
+      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     const response = await supertest(app)
-      .delete(`/api/v1/roles/${r1.id}/users/${user.userId}`)
+      .delete(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
       .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.status).toBe(204);

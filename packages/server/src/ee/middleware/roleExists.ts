@@ -10,7 +10,7 @@ export async function roleExists(
   res: Response,
   next: NextFunction,
 ) {
-  const id = validUUID(req.body.id || req.params.id);
+  const id = validUUID(req.body.id || req.params.role_id);
 
   const role = await database
     .select()
