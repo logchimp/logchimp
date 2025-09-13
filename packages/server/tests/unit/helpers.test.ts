@@ -349,7 +349,7 @@ describe("parseAndValidateLimit", () => {
     expect(parseAndValidateLimit("0", max)).toBe(0);
   });
 
-  it("accepts float values directly", () => {
-    expect(parseAndValidateLimit("7.5", max)).toBe(7.5);
+  it("floors a float value", () => {
+    expect(parseAndValidateLimit("7.5", max)).toBe(7);
   });
 });
