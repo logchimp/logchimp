@@ -146,7 +146,9 @@ function parseAndValidatePage(value?: string) {
 function parseAndValidateLimit(value: string, max: number): number {
   const parsedLimit = value ? +value : NaN;
   return Math.max(
-    value && !Number.isNaN(parsedLimit) ? Math.min(parsedLimit, max) : max,
+    value && !Number.isNaN(parsedLimit)
+      ? Math.min(Math.floor(parsedLimit), max)
+      : max,
     0,
   );
 }
