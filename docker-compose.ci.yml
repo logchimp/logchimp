@@ -1,6 +1,13 @@
 name: "LogChimp-CI"
 
 services:
+  cache:
+    image: valkey/valkey:8
+    ports:
+      - "6379:6379"
+    networks:
+      - ci-network
+
   db:
     image: postgres:17.6
     ports:
