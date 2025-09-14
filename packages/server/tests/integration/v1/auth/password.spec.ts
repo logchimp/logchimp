@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
-import jwt from "jsonwebtoken";
 
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
@@ -78,9 +77,10 @@ describe("POST /api/v1/auth/password/validateToken", () => {
   it("should return 200 and reset.valid = true for a valid token", async () => {
     const { user } = await createUser();
 
-    const secretKey = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
-    const payload = { email: user.email, type: "resetPassword" };
-    const token = jwt.sign(payload, secretKey, { expiresIn: "15m" });
+    const tokenPayload = { email: user.email, type: "resetPassword" };
+    const token = createToken(tokenPayload, {
+      expiresIn: "2h",
+    });
 
     await database("resetPassword").insert({
       email: user.email,
@@ -135,12 +135,10 @@ describe("POST /api/v1/password/set", () => {
   it("should throw 'PASSWORD_MISSING'", async () => {
     const { user } = await createUser();
 
-    const secret = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
-    const token = jwt.sign(
-      { email: user.email, type: "resetPassword" },
-      secret,
-      { expiresIn: "15m" },
-    );
+    const tokenPayload = { email: user.email, type: "resetPassword" };
+    const token = createToken(tokenPayload, {
+      expiresIn: "2h",
+    });
 
     await database("resetPassword").insert({
       email: user.email,
@@ -163,12 +161,10 @@ describe("POST /api/v1/password/set", () => {
   it("should successfully reset password and return 200", async () => {
     const { user } = await createUser();
 
-    const secret = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
-    const token = jwt.sign(
-      { email: user.email, type: "resetPassword" },
-      secret,
-      { expiresIn: "15m" },
-    );
+    const tokenPayload = { email: user.email, type: "resetPassword" };
+    const token = createToken(tokenPayload, {
+      expiresIn: "2h",
+    });
 
     await database("resetPassword").insert({
       email: user.email,
