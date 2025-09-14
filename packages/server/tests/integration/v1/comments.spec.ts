@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   board as generateBoard,
   post as generatePost,
+  comment as generateComment,
 } from "../../utils/generators";
 
 beforeAll(async () => {
@@ -161,37 +162,33 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
     );
 
     // create parent comment
-    const commentBody1 = faker.lorem.sentence();
-    const res1 = await supertest(app)
-      .post(`/api/v1/posts/${post.postId}/comments`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        body: commentBody1,
-      });
-    const { comment: comment1 } = res1.body.comment;
+    const { comment: parentComment } = await generateComment(
+      authUser.userId,
+      post.postId,
+    );
 
     // create child comment
-    const commentBody2 = faker.lorem.sentence();
-    const res2 = await supertest(app)
+    const commentBody = faker.lorem.sentence();
+    const res = await supertest(app)
       .post(`/api/v1/posts/${post.postId}/comments`)
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
-        parent_id: comment1.id,
-        body: commentBody2,
+        parent_id: parentComment.id,
+        body: commentBody,
       });
 
-    expect(res2.headers["content-type"]).toContain("application/json");
-    expect(res2.status).toBe(201);
-    const { author, comment: comment2 } = res2.body.comment;
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(201);
+    const { author, comment: childComment } = res.body.comment;
 
     // check author details
     expect(author.userId).toBe(authUser.userId);
     expect(author.username).toBe(authUser.username);
 
     // check comment details
-    expect(comment2.isEdited).toBeFalsy();
-    expect(comment2.body).toBe(commentBody2);
-    expect(comment2.parent_id).toBe(comment1.id);
+    expect(childComment.isEdited).toBeFalsy();
+    expect(childComment.body).toBe(commentBody);
+    expect(childComment.parent_id).toBe(parentComment.id);
   });
 });
 
@@ -260,24 +257,15 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
       },
       true,
     );
-    const commentBody = faker.lorem.sentence();
+    const { comment } = await generateComment(authUser.userId, post.postId);
 
-    const res1 = await supertest(app)
-      .post(`/api/v1/posts/${post.postId}/comments`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        body: commentBody,
-      });
-
-    const { comment } = res1.body.comment;
-
-    const res2 = await supertest(app)
+    const res = await supertest(app)
       .put(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(res2.headers["content-type"]).toContain("application/json");
-    expect(res2.status).toBe(400);
-    expect(res2.body.code).toBe("COMMENT_BODY_MISSING");
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe("COMMENT_BODY_MISSING");
   });
 
   it("should throw 'UNAUTHORIZED_NOT_AUTHOR'", async () => {
@@ -290,31 +278,22 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
       },
       true,
     );
-    const commentBody = faker.lorem.sentence();
+    const { comment } = await generateComment(authUser.userId, post.postId);
 
-    const res1 = await supertest(app)
-      .post(`/api/v1/posts/${post.postId}/comments`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        body: commentBody,
-      });
-
-    const { comment } = res1.body.comment;
-
-    const updatedCommentBody = faker.lorem.sentence();
+    const newCommentBody = faker.lorem.sentence();
 
     const { user: anotherAuthUser } = await createUser();
 
-    const res2 = await supertest(app)
+    const res = await supertest(app)
       .put(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
       .set("Authorization", `Bearer ${anotherAuthUser.authToken}`)
       .send({
-        body: updatedCommentBody,
+        body: newCommentBody,
       });
 
-    expect(res2.headers["content-type"]).toContain("application/json");
-    expect(res2.status).toBe(403);
-    expect(res2.body.code).toBe("UNAUTHORIZED_NOT_AUTHOR");
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("UNAUTHORIZED_NOT_AUTHOR");
   });
 
   it("should update a comment", async () => {
@@ -327,33 +306,24 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
       },
       true,
     );
-    const commentBody = faker.lorem.sentence();
+    const { comment } = await generateComment(authUser.userId, post.postId);
 
-    const res1 = await supertest(app)
-      .post(`/api/v1/posts/${post.postId}/comments`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        body: commentBody,
-      });
+    const newCommentBody = faker.lorem.sentence();
 
-    const { comment } = res1.body.comment;
-
-    const updatedCommentBody = faker.lorem.sentence();
-
-    const res2 = await supertest(app)
+    const res = await supertest(app)
       .put(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
-        body: updatedCommentBody,
+        body: newCommentBody,
       });
 
-    const { comment: updatedComment } = res2.body;
+    const { comment: updatedComment } = res.body;
 
-    expect(res2.headers["content-type"]).toContain("application/json");
-    expect(res2.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
     expect(updatedComment.is_edited).toBeTruthy();
     expect(updatedComment.created_at).not.toBe(updatedComment.edited_at);
-    expect(updatedComment.body).toBe(updatedCommentBody);
+    expect(updatedComment.body).toBe(newCommentBody);
   });
 });
 
@@ -422,26 +392,17 @@ describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
       },
       true,
     );
-    const commentBody = faker.lorem.sentence();
-
-    const res1 = await supertest(app)
-      .post(`/api/v1/posts/${post.postId}/comments`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        body: commentBody,
-      });
-
-    const { comment } = res1.body.comment;
+    const { comment } = await generateComment(authUser.userId, post.postId);
 
     const { user: anotherAuthUser } = await createUser();
 
-    const res2 = await supertest(app)
+    const res = await supertest(app)
       .delete(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
       .set("Authorization", `Bearer ${anotherAuthUser.authToken}`);
 
-    expect(res2.headers["content-type"]).toContain("application/json");
-    expect(res2.status).toBe(403);
-    expect(res2.body.code).toBe("UNAUTHORIZED_NOT_AUTHOR");
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("UNAUTHORIZED_NOT_AUTHOR");
   });
 
   it("should delete a comment", async () => {
@@ -454,22 +415,13 @@ describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
       },
       true,
     );
-    const commentBody = faker.lorem.sentence();
+    const { comment } = await generateComment(authUser.userId, post.postId);
 
-    const res1 = await supertest(app)
-      .post(`/api/v1/posts/${post.postId}/comments`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        body: commentBody,
-      });
-
-    const { comment } = res1.body.comment;
-
-    const res2 = await supertest(app)
+    const res = await supertest(app)
       .delete(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(res2.status).toBe(204);
+    expect(res.status).toBe(204);
   });
 });
 
@@ -496,12 +448,7 @@ describe("GET /api/v1/posts/:post_id/activity", () => {
     );
 
     for (let i = 0; i < 5; i++) {
-      await supertest(app)
-        .post(`/api/v1/posts/${post.postId}/comments`)
-        .set("Authorization", `Bearer ${authUser.authToken}`)
-        .send({
-          body: faker.lorem.sentence(),
-        });
+      await generateComment(authUser.userId, post.postId);
     }
 
     const res = await supertest(app).get(
@@ -527,12 +474,7 @@ describe("GET /api/v1/posts/:post_id/activity", () => {
     );
 
     for (let i = 0; i < 5; i++) {
-      await supertest(app)
-        .post(`/api/v1/posts/${post.postId}/comments`)
-        .set("Authorization", `Bearer ${authUser.authToken}`)
-        .send({
-          body: faker.lorem.sentence(),
-        });
+      await generateComment(authUser.userId, post.postId);
     }
 
     const res = await supertest(app)
