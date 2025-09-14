@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, reactive } from "vue";
 import type {
   IBoardPrivate,
   IDashboardPost,
@@ -101,12 +101,16 @@ import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/S
 import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
 
 const { permissions } = useUserStore();
-const saveBtnLoading = ref(false);
 
 interface Props {
   post: IDashboardPost;
 }
 const props = defineProps<Props>();
+
+const saveBtnLoading = ref(false);
+const post = reactive<IDashboardPost>({
+  ...props.post,
+});
 
 const updatePostPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("post:update");
@@ -118,13 +122,13 @@ async function updatePostHandler() {
 
   try {
     const response = await updatePost({
-      id: props.post.postId,
-      title: props.post.title,
-      contentMarkdown: props.post.contentMarkdown,
-      slugId: props.post.slugId,
-      userId: props.post.author.userId,
-      boardId: props.post.board ? props.post.board.boardId : undefined,
-      roadmapId: props.post.roadmap ? props.post.roadmap.id : undefined,
+      id: post.postId,
+      title: post.title,
+      contentMarkdown: post.contentMarkdown,
+      slugId: post.slugId,
+      userId: post.author.userId,
+      boardId: post.board ? post.board.boardId : undefined,
+      roadmapId: post.roadmap ? post.roadmap.id : undefined,
     });
 
     if (response.status === 200) {
@@ -138,13 +142,13 @@ async function updatePostHandler() {
 }
 
 function selectBoard(board: IBoardPrivate) {
-  Object.assign(props.post, {
+  Object.assign(post, {
     board,
   });
 }
 
 function selectRoadmap(roadmap: IRoadmapPrivate) {
-  Object.assign(props.post, {
+  Object.assign(post, {
     roadmap,
   });
 }
