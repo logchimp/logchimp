@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div
+    :class="[
+      'flex-1',
+      {
+        'flex items-center': loading || errorCode
+      }
+    ]"
+  >
     <LoaderContainer v-if="loading" />
     <DashboardPostEditor
       v-else-if="post.postId && !errorCode"

@@ -3,7 +3,7 @@
     <Sidebar />
 
     <main class="md:py-2 md:pr-2 lg:h-auto md:h-auto h-screen">
-      <div class="h-full bg-white md:rounded-xl">
+      <div class="h-full bg-white md:rounded-xl flex flex-col">
         <router-view />
 
         <div class="mt-8 mb-4 px-3 lg:px-6">
