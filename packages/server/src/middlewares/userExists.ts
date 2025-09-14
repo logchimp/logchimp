@@ -37,7 +37,7 @@ export async function userExists(
       return res.status(400).send({
         message: error.api.user.invalidUserId,
         code: "INVALID_USER_ID",
-      })
+      });
     }
   }
 

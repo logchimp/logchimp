@@ -16,7 +16,7 @@ export async function roleExists(
     return res.status(400).send({
       message: error.api.roles.invalidRoleId,
       code: "INVALID_ROLE_ID",
-    })
+    });
   }
 
   const role = await database
