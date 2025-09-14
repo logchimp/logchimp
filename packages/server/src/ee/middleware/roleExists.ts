@@ -12,6 +12,13 @@ export async function roleExists(
 ) {
   const id = validUUID(req.body.id || req.params.role_id);
 
+  if (!id) {
+    return res.status(400).send({
+      message: error.api.roles.invalidRoleId,
+      code: "INVALID_ROLE_ID",
+    })
+  }
+
   const role = await database
     .select()
     .from("roles")

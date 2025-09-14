@@ -25,6 +25,7 @@
       "setupAlreadyCompleted": "Setup has already been completed."
     },
     "roles": {
+      "invalidRoleId": "Invalid role ID",
       "roleNotFound": "Role not found",
       "notEnoughPermission": "You do not have permission to perform this action."
     },
