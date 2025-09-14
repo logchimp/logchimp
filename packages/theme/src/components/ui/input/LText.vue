@@ -9,7 +9,7 @@
     </p>
     <input
       :type="type"
-      data-test="input-field"
+      data-testid="input-field"
       class="input-field input-text"
       :class="{
         'input-field-disabled': disabled,

@@ -1,5 +1,5 @@
 <template>
-	<router-link :to="link" class="flex items-center gap-x-2.5 select-none">
+	<router-link data-testid="site-branding" :to="link" class="flex items-center gap-x-2.5 select-none">
 		<div v-if="logo" class="size-7 bg-neutral-100 rounded-full overflow-hidden">
 			<img
         class="size-7 rounded-full"

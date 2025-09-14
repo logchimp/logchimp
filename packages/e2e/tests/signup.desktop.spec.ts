@@ -1,15 +1,14 @@
 import { expect } from "@playwright/test";
 import { test } from "../fixtures/pageTest";
 
-test.describe("Homepage", (): void => {
+test.describe("Signup", (): void => {
+  test.beforeEach(async ({ page }) => {
+    page.goto("/join");
+  });
+
   test.describe("Header", (): void => {
     test("should display LogChimp branding", async ({ page }) => {
-      const header = page.getByTestId("header");
-
-      expect(header).toBeDefined();
-      await expect(header).toHaveCSS("background-color", "rgb(72, 77, 124)");
-
-      const siteBranding = header.getByTestId("site-branding");
+      const siteBranding = page.getByTestId("site-branding");
       expect(siteBranding).toBeDefined();
       await expect(siteBranding).toHaveAttribute("href", "/");
 
@@ -26,6 +25,15 @@ test.describe("Homepage", (): void => {
       const siteName = siteBranding.getByTestId("site-name");
       expect(siteName).toBeDefined();
       await expect(siteName).toHaveText("LogChimp");
+    });
+  });
+
+  test.describe("Footer", (): void => {
+    test("should have link to login page", async ({ page }) => {
+      const signUpLink = page.getByRole("link", { name: "Log in" });
+
+      expect(signUpLink).toBeDefined();
+      await expect(signUpLink).toHaveAttribute("href", "/login");
     });
   });
 });

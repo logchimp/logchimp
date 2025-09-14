@@ -6,7 +6,8 @@
         Welcome back!
       </h3>
     </div>
-    <div class="card">
+
+    <form class="card">
       <l-text
         v-model="email"
         label="Email Address"
@@ -36,10 +37,11 @@
           Login
         </Button>
       </div>
-    </div>
-    <div class="auth-form-other">
+    </form>
+
+    <footer class="auth-form-other">
       <router-link to="/password-reset">
-        Forget password?
+        Forgot password?
       </router-link>
       <div v-if="siteSettings.allowSignup">
        • Don't have an account yet?
@@ -47,7 +49,7 @@
           Sign up
         </router-link>
       </div>
-    </div>
+    </footer>
   </auth-form>
 </template>
 

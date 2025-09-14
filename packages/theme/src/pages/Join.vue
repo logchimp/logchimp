@@ -39,12 +39,13 @@
         </Button>
       </div>
     </div>
-    <div class="auth-form-other">
+
+    <footer class="auth-form-other">
       Already have an account?
       <router-link to="/login">
         Log in
       </router-link>
-    </div>
+    </footer>
   </auth-form>
 </template>
 
