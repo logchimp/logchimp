@@ -143,6 +143,13 @@ function parseAndValidatePage(value?: string) {
   );
 }
 
+/**
+ * Parses a string to a positive integer, clamped to the maximum limit.
+ * Returns max for invalid/empty values or numbers ≤ 0.
+ * @param {string} value
+ * @param {number} max
+ * @returns {number}
+ */
 function parseAndValidateLimit(value: string, max: number): number {
   if (!value) return max;
   const _value = +value;
