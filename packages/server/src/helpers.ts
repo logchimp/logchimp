@@ -146,7 +146,7 @@ function parseAndValidatePage(value?: string) {
 function parseAndValidateLimit(value: string, max: number): number {
   if (!value) return max;
   const _value = +value;
-  return _value > 0 ? Math.min(Math.floor(_value) | 0, max) : max;
+  return _value > 0 ? Math.min(Math.floor(_value), max) : max;
 }
 
 export {

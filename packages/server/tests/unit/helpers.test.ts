@@ -341,15 +341,19 @@ describe("parseAndValidateLimit", () => {
     expect(parseAndValidateLimit("100", max)).toBe(max);
   });
 
-  it("returns 0 when value is negative", () => {
-    expect(parseAndValidateLimit("-5", max)).toBe(0);
+  it("returns max when value is negative", () => {
+    expect(parseAndValidateLimit("-5", max)).toBe(50);
   });
 
-  it("allows 0 as a valid value", () => {
-    expect(parseAndValidateLimit("0", max)).toBe(0);
+  it("return max when value is set to 0", () => {
+    expect(parseAndValidateLimit("0", max)).toBe(50);
   });
 
   it("floors a float value", () => {
     expect(parseAndValidateLimit("7.5", max)).toBe(7);
   });
+
+  it('caps to value at max for value "abc"', () => {
+    expect(parseAndValidateLimit("abc", max)).toBe(max)
+  })
 });
