@@ -4,6 +4,8 @@ import type {
   IGetPostBySlugRequestBody,
   IUpdatePostRequestBody,
   IGetPostActivityRequestParam,
+  IRemoveVoteRequestBody,
+  IAddVoteRequestBody,
 } from "@logchimp/types";
 import database from "../database";
 
@@ -14,7 +16,9 @@ import error from "../errorResponse.json";
 type RequestBody =
   | IGetPostBySlugRequestBody
   | IUpdatePostRequestBody
-  | IDeletePostByIdRequestBody;
+  | IDeletePostByIdRequestBody
+  | IAddVoteRequestBody
+  | IRemoveVoteRequestBody;
 
 export async function postExists(
   req: Request<IGetPostActivityRequestParam, unknown, RequestBody>,
@@ -24,7 +28,7 @@ export async function postExists(
   // @ts-expect-error
   const id = validUUID(req.body.id || req.body.postId || req.params.post_id);
   // @ts-expect-error
-  const slug = req.uuidbody.slug;
+  const slug = req.body.slug;
 
   const post = await database
     .select()
