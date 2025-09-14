@@ -15,7 +15,7 @@ import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions
 // Get all boards
 describe("GET /api/v1/boards", () => {
   beforeAll(async () => {
-    const requiredBoards = 15;
+    const requiredBoards = 20;
     const existingBoardsCountResult = await database("boards")
       .count({ count: "*" })
       .first();
