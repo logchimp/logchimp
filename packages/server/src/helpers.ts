@@ -133,6 +133,12 @@ const isDevTestEnv =
   process.env.NODE_ENV === "testing" ||
   process.env.NODE_ENV === "ci";
 
+/**
+ * Parses and validates the value, returning a positive integer
+ * Default to 1, if the value is missing, invalid, or out of range.
+ * @param {string} [value] - The page value to be parsed and validated, optional.
+ * @return {number} The validated page number, defaulted to 1 if invalid or out of range.
+ */
 function parseAndValidatePage(value?: string) {
   if (!value) return 1;
   const n = value ? +value : NaN;
