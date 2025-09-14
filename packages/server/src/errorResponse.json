@@ -29,6 +29,7 @@
       "notEnoughPermission": "You do not have permission to perform this action."
     },
     "user": {
+      "invalidUserId": "Invalid user ID",
       "userNotFound": "User not found"
     },
     "emailVerify": {

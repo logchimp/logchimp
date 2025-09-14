@@ -32,6 +32,13 @@ export async function userExists(
     // setting email to null so that it doesn't coincide with user_id based API calls
     email = null;
     id = validUUID(id);
+
+    if (!id) {
+      return res.status(400).send({
+        message: error.api.user.invalidUserId,
+        code: "INVALID_USER_ID",
+      })
+    }
   }
 
   try {
