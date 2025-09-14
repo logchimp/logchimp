@@ -28,9 +28,6 @@ router.post("/roles", authRequired, roles.create);
 
 router.patch("/roles", authRequired, roleExists, roles.update);
 
-// BETA: Assign role to a user
-// todo: add userExists middleware
-// todo: add roleExists middleware
 router.put<IAssignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
   // @ts-expect-error
@@ -40,9 +37,6 @@ router.put<IAssignRoleToUserRequestParams>(
   roles.addRoleToUser,
 );
 
-// BETA: Unassign role from a user
-// todo: add userExists middleware
-// todo: add roleExists middleware
 router.delete<TUnassignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
   // @ts-expect-error
