@@ -2,6 +2,7 @@ import type { IBoard } from "@logchimp/types";
 
 import database from "../../database";
 import * as cache from "../../cache";
+import { DAY } from "../../cache/time";
 
 // utils
 import logger from "../../utils/logger";
@@ -34,7 +35,12 @@ export async function getBoardById(boardId: string): Promise<IBoard | null> {
 
   if (boardFromDb) {
     try {
-      await cache.valkey.set(cacheKey, JSON.stringify(boardFromDb));
+      await cache.valkey.set(
+        cacheKey,
+        JSON.stringify(boardFromDb),
+        "EX",
+        DAY * 7,
+      );
     } catch (err) {
       logger.log({
         level: "error",
