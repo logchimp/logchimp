@@ -17,7 +17,7 @@ export async function getOne(
   req: Request<IGetRoleByIdRequestParams>,
   res: Response<ResponseBody>,
 ) {
-  const { id } = req.params;
+  const id = req.params.role_id;
 
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
