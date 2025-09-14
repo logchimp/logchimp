@@ -143,12 +143,18 @@ function parseAndValidatePage(value?: string) {
   );
 }
 
+/**
+ * Parses a string to a positive integer, clamped to the maximum limit.
+ * Returns max for invalid/empty values or numbers ≤ 0.
+ * @param {string} value
+ * @param {number} max
+ * @returns {number}
+ */
 function parseAndValidateLimit(value: string, max: number): number {
-  const parsedLimit = value ? +value : NaN;
-  return Math.max(
-    value && !Number.isNaN(parsedLimit) ? Math.min(parsedLimit, max) : max,
-    0,
-  );
+  if (!value) return max;
+  const _value = +value;
+  if (_value === 0) return 0;
+  return _value > 0 ? Math.min(Math.floor(_value), max) : max;
 }
 
 export {
