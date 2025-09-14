@@ -3,7 +3,7 @@ import type { IApiErrorResponse } from "@logchimp/types";
 import database from "../database";
 
 // utils
-import { validEmail } from "../helpers";
+import { validEmail, validUUID } from "../helpers";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
@@ -12,17 +12,33 @@ export async function userExists(
   res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
-  const email = (
+  let email = (
     (req.body ? req.body.email : "") ||
     // @ts-expect-error
     (req.user ? req.user.email : "")
   ).toLowerCase();
 
-  if (!validEmail(email)) {
-    return res.status(400).send({
-      message: error.api.authentication.invalidEmail,
-      code: "EMAIL_INVALID",
-    });
+  // As of now it only handles if the user_id is a param
+  let id = req.params.user_id;
+
+  if (!id) {
+    if (!validEmail(email)) {
+      return res.status(400).send({
+        message: error.api.authentication.invalidEmail,
+        code: "EMAIL_INVALID",
+      });
+    }
+  } else {
+    // setting email to null so that it doesn't coincide with user_id based API calls
+    email = null;
+    id = validUUID(id);
+
+    if (!id) {
+      return res.status(400).send({
+        message: error.api.user.invalidUserId,
+        code: "INVALID_USER_ID",
+      });
+    }
   }
 
   try {
@@ -30,7 +46,10 @@ export async function userExists(
       .select()
       .from("users")
       .where({
-        email,
+        email: email || null,
+      })
+      .orWhere({
+        userId: id || null,
       })
       .first();
 
@@ -41,8 +60,11 @@ export async function userExists(
       });
     }
 
-    // @ts-expect-error
-    req.user = user;
+    // fill req.user only for email based API calls
+    if (email) {
+      // @ts-expect-error
+      req.user = user;
+    }
     next();
   } catch (err) {
     logger.error({
