@@ -42,7 +42,7 @@ describe("POST /api/v1/auth/password/reset", () => {
 });
 
 describe("POST /api/v1/auth/password/validateToken", () => {
-  it("should throw error MISSING_TOKEN if token is missing", async () => {
+  it("should throw error 'MISSING_TOKEN' if token is missing", async () => {
     const response = await supertest(app).post(
       "/api/v1/auth/password/validateToken",
     );
@@ -52,7 +52,7 @@ describe("POST /api/v1/auth/password/validateToken", () => {
     expect(response.body.errors[0].code).toBe("MISSING_TOKEN");
   });
 
-  it("should throw error INVALID_TOKEN", async () => {
+  it("should throw error 'INVALID_TOKEN'", async () => {
     // generate token
     const tokenPayload = {
       userId: faker.string.uuid(),
@@ -100,7 +100,7 @@ describe("POST /api/v1/auth/password/validateToken", () => {
 });
 
 describe("POST /api/v1/password/set", () => {
-  it("should throw error MISSING_TOKEN if token is missing", async () => {
+  it("should throw error 'MISSING_TOKEN' if token is missing", async () => {
     const response = await supertest(app).post(
       "/api/v1/auth/password/validateToken",
     );
@@ -110,7 +110,7 @@ describe("POST /api/v1/password/set", () => {
     expect(response.body.errors[0].code).toBe("MISSING_TOKEN");
   });
 
-  it("should throw error INVALID_TOKEN", async () => {
+  it("should throw error 'INVALID_TOKEN'", async () => {
     const tokenPayload = {
       userId: faker.string.uuid(),
       email: faker.internet.email().toLowerCase(),
@@ -132,7 +132,7 @@ describe("POST /api/v1/password/set", () => {
     expect(response.body.code).toBe("INVALID_TOKEN");
   });
 
-  it("should throw PASSWORD_MISSING", async () => {
+  it("should throw 'PASSWORD_MISSING'", async () => {
     const { user } = await createUser();
 
     const secret = process.env.LOGCHIMP_SECRET_KEY || "test_secret";
