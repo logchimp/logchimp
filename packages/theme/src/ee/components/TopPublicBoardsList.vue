@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="mb-2 text-sm font-medium text-neutral-700/70">Boards</p>
+    <p class="mb-2 text-sm font-medium text-neutral-700/70">  {{ t("topPublicBoards.title") }}</p>
 
     <div class="grid grid-cols-1 gap-y-1">
       <a
@@ -8,10 +8,10 @@
         href="/boards"
         class="flex items-center gap-x-3 px-4 py-1.5 hover:bg-neutral-200 rounded-md font-medium text-neutral-700"
       >
-        View all boards
+       {{ t("topPublicBoards.viewAll") }}
       </a>
       <p v-else class="text-sm text-neutral-700">
-        No boards available
+        {{ $t("topPublicBoards.none") }}
       </p>
 
       <a
@@ -35,12 +35,13 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import type { IBoardDetail } from "@logchimp/types";
 import { getPublicBoards } from "../modules/boards";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 
 const boards = ref<IBoardDetail[]>([]);
-
+const { t } = useI18n();
 onMounted(async () => {
   const response = await getPublicBoards({
     page: "1",

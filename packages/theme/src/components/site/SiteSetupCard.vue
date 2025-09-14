@@ -1,15 +1,15 @@
 <template>
   <card>
     <template #title>
-			Setup your LogChimp site
+		 {{ t("setupCard.title") }}
     </template>
     <template #label>
-			Complete your LogChimp site setup to access dashboard.
+		    {{ t("setupCard.label") }} 
     </template>
 
     <div :class="$style.cta">
       <Button type="primary" href="/setup/welcome">
-        Create owner account
+        {{ t("setupCard.cta") }}
       </Button>
     </div>
 
@@ -23,9 +23,12 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 // components
 import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
+
+const { t } = useI18n();
 </script>
 
 <style module>

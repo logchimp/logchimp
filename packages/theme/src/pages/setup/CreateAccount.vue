@@ -2,54 +2,54 @@
   <auth-layout>
     <div class="onboarding-header">
       <h2 class="onboarding-heading">
-        Create an account
+        {{ t("setupCreateAccount.heading") }}
       </h2>
     </div>
     <server-error v-if="serverError" @close="serverError = false" />
     <card>
       <l-text
         v-model="siteTitle.value"
-        label="Site title"
+        :label="t('setupCreateAccount.siteTitle.label')"
         type="text"
         name="Site title"
-        placeholder="My awesome site"
+        :placeholder="t('setupCreateAccount.siteTitle.placeholder')"
         :error="siteTitle.error"
         @keyup-enter="createAccount"
         @hide-error="hideSiteTitleError"
       />
       <l-text
         v-model="fullName.value"
-        label="Full name"
+        :label="t('setupCreateAccount.fullName.label')"
         type="text"
         name="Full name"
-        placeholder="Mike M. Smit"
+        :placeholder="t('setupCreateAccount.fullName.placeholder')"
         :error="fullName.error"
         @keyup-enter="createAccount"
         @hide-error="hideFullNameError"
       />
       <l-text
         v-model="email.value"
-        label="Email address"
+        :label="t('setupCreateAccount.email.label')"
         type="text"
         name="Email address"
-        placeholder="Eg. email@example.com"
+        :placeholder="t('setupCreateAccount.email.placeholder')"
         :error="email.error"
         @keyup-enter="createAccount"
         @hide-error="hideEmailError"
       />
       <l-text
         v-model="password.value"
-        label="Password"
+        :label="t('setupCreateAccount.password.label')"
         type="password"
         name="Password"
-        placeholder="At least 10 character"
+        :placeholder="t('setupCreateAccount.password.placeholder')"
         :error="password.error"
         @keyup-enter="createAccount"
         @hide-error="hidePasswordError"
       />
       <div style="display: flex; justify-content: center">
         <Button :loading="buttonLoading" type="primary" @click="createAccount">
-          Create account
+           {{ t("setupCreateAccount.cta") }}
         </Button>
       </div>
     </card>
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../router";
@@ -81,6 +82,7 @@ import Button from "../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { login, setPermissions } = useUserStore();
+const { t } = useI18n();
 
 const siteTitle = reactive({
   value: "",
@@ -133,7 +135,7 @@ async function createAccount() {
   if (!(siteTitle.value && fullName.value && email.value && password.value)) {
     if (!siteTitle.value) {
       siteTitle.error.show = true;
-      siteTitle.error.message = "Required";
+      siteTitle.error.message = t("setupCreateAccount.errors.required");
     }
 
     if (!fullName.value) {
