@@ -64,6 +64,8 @@ services:
       LOGCHIMP_DB_PORT: 5432
       LOGCHIMP_DB_USER: lc
       LOGCHIMP_DB_PASSWORD: password
+      # Cache
+      LOGCHIMP_VALKEY_URL: cache:6379
       # Mail
       LOGCHIMP_MAIL_HOST: mail
       LOGCHIMP_MAIL_PORT: 1025
