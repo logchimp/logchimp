@@ -1,23 +1,28 @@
 import type { IBoard } from "@logchimp/types";
+
 import database from "../../database";
+import * as cache from "../../cache";
 
 // utils
 import logger from "../../utils/logger";
 
 export async function getBoardById(boardId: string): Promise<IBoard | null> {
+  const cacheKey = `board:${boardId}`;
+  if (cache.isActive) {
+    const cachedBoard = await cache.valkey.get(cacheKey);
+    if (cachedBoard) {
+      return JSON.parse(cachedBoard) satisfies IBoard;
+    }
+  }
+
+  let boardFromDb: IBoard;
   try {
-    const board = await database("boards")
+    boardFromDb = await database<IBoard>("boards")
       .select("boardId", "name", "url", "color", "createdAt")
       .where({
         boardId,
       })
       .first();
-
-    if (board) {
-      return board;
-    }
-
-    return null;
   } catch (err) {
     logger.log({
       level: "error",
@@ -26,4 +31,19 @@ export async function getBoardById(boardId: string): Promise<IBoard | null> {
 
     return null;
   }
+
+  if (boardFromDb) {
+    try {
+      await cache.valkey.set(cacheKey, JSON.stringify(boardFromDb));
+    } catch (err) {
+      logger.log({
+        level: "error",
+        message: err,
+      });
+    }
+
+    return boardFromDb;
+  }
+
+  return null;
 }
