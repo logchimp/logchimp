@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { v4 as uuidv4, v4 as uuid } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import {
   generateHexColor,
@@ -175,11 +175,46 @@ async function role(role?: Partial<RoleArgs>) {
 async function vote(userId: string, postId: string) {
   await database
     .insert({
-      voteId: uuidv4(),
+      voteId: uuid(),
       userId,
       postId,
     })
     .into("votes");
 }
 
-export { user, roadmap, post, board, role, vote };
+async function comment(
+  userId: string,
+  postId: string,
+  parentId: string | null = null,
+  is_internal: boolean = false,
+) {
+  const postActivityId = uuid();
+
+  const comment = {
+    id: uuid(),
+    parent_id: parentId,
+    body: faker.lorem.sentence(),
+    activity_id: postActivityId,
+    is_internal,
+    created_at: new Date().toJSON(),
+    updated_at: new Date().toJSON(),
+  };
+
+  const activity = {
+    id: postActivityId,
+    type: "comment",
+    posts_comments_id: comment.id,
+    post_id: postId,
+    author_id: userId,
+    created_at: new Date().toJSON(),
+  };
+  await database.transaction(async (trx) => {
+    await trx("posts_comments").insert(comment);
+    await trx("posts_activity").insert(activity);
+  });
+  return {
+    comment,
+    activity,
+  };
+}
+export { user, roadmap, post, board, role, vote, comment };
