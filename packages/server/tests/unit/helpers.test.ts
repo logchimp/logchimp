@@ -346,7 +346,7 @@ describe("parseAndValidateLimit", () => {
   });
 
   it("return max when value is set to 0", () => {
-    expect(parseAndValidateLimit("0", max)).toBe(50);
+    expect(parseAndValidateLimit("0", max)).toBe(0);
   });
 
   it("floors a float value", () => {
