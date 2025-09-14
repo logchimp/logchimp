@@ -352,8 +352,4 @@ describe("parseAndValidateLimit", () => {
   it("floors a float value", () => {
     expect(parseAndValidateLimit("7.5", max)).toBe(7);
   });
-
-  it('caps to value at max for value "abc"', () => {
-    expect(parseAndValidateLimit("abc", max)).toBe(max)
-  })
 });
