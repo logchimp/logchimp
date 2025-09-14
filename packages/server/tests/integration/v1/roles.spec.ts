@@ -9,6 +9,10 @@ import { createUser } from "../../utils/seed/user";
 import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import type { TPermission } from "@logchimp/types";
+import { toSlug } from "../../../src/helpers";
+
+const roleIdSlug = toSlug(faker.commerce.productName());
+const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
@@ -300,6 +304,33 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
+  [
+    undefined,
+    null,
+    57241,
+    roleIdSlug,
+
+    // VBScript and Other Protocols
+    `vbscript:msgbox("XSS")`,
+    `livescript:alert('XSS')`,
+    `mocha:alert('XSS')`,
+    `charset:alert('XSS')`,
+
+    "%20", // Just whitespace
+  ].map((value) =>
+    it(`should throw error "INVALID_ROLE_ID" for role_id value "${value}"`, async () => {
+      const { user } = await createUser();
+
+      const response = await supertest(app)
+        .put(`/api/v1/roles/${value}/users/${uuid()}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("INVALID_ROLE_ID");
+    }),
+  );
+
   it('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
@@ -312,9 +343,36 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
+  [
+    undefined,
+    null,
+    57241,
+    userIdSlug,
+
+    // VBScript and Other Protocols
+    `vbscript:msgbox("XSS")`,
+    `livescript:alert('XSS')`,
+    `mocha:alert('XSS')`,
+    `charset:alert('XSS')`,
+
+    "%20", // Just whitespace
+  ].map((value) =>
+    it(`should throw error "INVALID_USER_ID" for user_id value "${value}"`, async () => {
+      const { user } = await createUser();
+      const generatedRole = await generateRole();
+
+      const response = await supertest(app)
+        .put(`/api/v1/roles/${generatedRole.id}/users/${value}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("INVALID_USER_ID");
+    }),
+  );
+
   it('should throw error "USER_NOT_FOUND"', async () => {
     const { user } = await createUser();
-
     const generatedRole = await generateRole();
 
     const response = await supertest(app)
@@ -332,7 +390,6 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     );
 
     expect(response.headers["content-type"]).toContain("application/json");
-
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("DECODE_URI_ERROR");
   });
@@ -413,6 +470,33 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
+  [
+    undefined,
+    null,
+    57241,
+    roleIdSlug,
+
+    // VBScript and Other Protocols
+    `vbscript:msgbox("XSS")`,
+    `livescript:alert('XSS')`,
+    `mocha:alert('XSS')`,
+    `charset:alert('XSS')`,
+
+    "%20", // Just whitespace
+  ].map((value) =>
+    it(`should throw error "INVALID_ROLE_ID" for role_id value "${value}"`, async () => {
+      const { user } = await createUser();
+
+      const response = await supertest(app)
+        .delete(`/api/v1/roles/${value}/users/${uuid()}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("INVALID_ROLE_ID");
+    }),
+  );
+
   it('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
@@ -424,6 +508,34 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
+
+  [
+    undefined,
+    null,
+    57241,
+    userIdSlug,
+
+    // VBScript and Other Protocols
+    `vbscript:msgbox("XSS")`,
+    `livescript:alert('XSS')`,
+    `mocha:alert('XSS')`,
+    `charset:alert('XSS')`,
+
+    "%20", // Just whitespace
+  ].map((value) =>
+    it(`should throw error "INVALID_USER_ID" for user_id value "${value}"`, async () => {
+      const { user } = await createUser();
+      const generatedRole = await generateRole();
+
+      const response = await supertest(app)
+        .delete(`/api/v1/roles/${generatedRole.id}/users/${value}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("INVALID_USER_ID");
+    }),
+  );
 
   it('should throw error "USER_NOT_FOUND"', async () => {
     const { user } = await createUser();
