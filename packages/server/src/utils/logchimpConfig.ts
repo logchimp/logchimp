@@ -39,6 +39,9 @@ function config() {
   const databaseName = process.env.LOGCHIMP_DB_DATABASE;
   const databaseSsl = process.env.LOGCHIMP_DB_SSL;
 
+  // Cache
+  const cacheUrl = process.env.LOGCHIMP_VALKEY_URL;
+
   // Mail
   const mailService = process.env.LOGCHIMP_MAIL_SERVICE; // deprecated
   const mailHost = process.env.LOGCHIMP_MAIL_HOST;
@@ -82,6 +85,9 @@ function config() {
       name: databaseName,
       port: databasePort,
       ssl: databaseSsl === "true",
+    },
+    cache: {
+      url: cacheUrl,
     },
     mail: {
       service: mailService,
