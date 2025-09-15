@@ -24,15 +24,49 @@ const isOpen = ref(false)
   <Dialog v-model:open="isOpen">
     <template #title>User Information</template>
     <template #description>Details about the user</template>
-
-    <div class="space-y-3">
-      <p><strong>Name:</strong> {{ props.user.name || props.user.username }}</p>
-      <p><strong>Username:</strong> {{ props.user.username }}</p>
-      <p><strong>Email:</strong> {{ props.user.email }}</p>
-      <p><strong>Roles:</strong> {{ props.user.roles.map(r => r.name).join(", ") }}</p>
-      <p><strong>Posts:</strong> {{ props.user.posts }}</p>
-      <p><strong>Votes:</strong> {{ props.user.votes }}</p>
-      <p><strong>Verified:</strong> {{ props.user.isVerified ? "Yes" : "No" }}</p>
+<div class="space-y-4">
+  <dl class="divide-y divide-gray-200">
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Name</dt>
+      <dd class="col-span-2 text-gray-900">{{ props.user.name || props.user.username }}</dd>
     </div>
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Username</dt>
+      <dd class="col-span-2 text-gray-900">{{ props.user.username }}</dd>
+    </div>
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Email</dt>
+      <dd class="col-span-2 text-gray-900">{{ props.user.email }}</dd>
+    </div>
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Roles</dt>
+      <dd class="col-span-2 text-gray-900">{{ props.user.roles.map(r => r.name).join(", ") }}</dd>
+    </div>
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Posts</dt>
+      <dd class="col-span-2 text-gray-900">{{ props.user.posts }}</dd>
+    </div>
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Votes</dt>
+      <dd class="col-span-2 text-gray-900">{{ props.user.votes }}</dd>
+    </div>
+    <div class="py-2 grid grid-cols-3 gap-4">
+      <dt class="font-medium text-gray-700">Verified</dt>
+      <dd class="col-span-2">
+        <span
+          :class="props.user.isVerified ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'"
+        >
+          {{ props.user.isVerified ? "Yes" : "No" }}
+        </span>
+      </dd>
+    </div>
+  </dl>
+</div>
+  <button
+    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm"
+    @click="isOpen = false"
+  >
+    Close
+  </button>
   </Dialog>
 </template>
