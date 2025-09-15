@@ -11,9 +11,9 @@
   </dropdown-item>
     <dropdown-item>
 
-  <div class="p-6" >
+  <!-- <div class="p-6" >
     <UserInfoDialog :user="user" />
-  </div>
+  </div> -->
   </dropdown-item>
 </template>
 
@@ -24,6 +24,6 @@ import { CopyIcon } from "lucide-vue";
 import { useCopyText } from "../../../../../hooks";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
 import { userIdKey } from "./options";
-import UserInfoDialog from "../../../../../ee/components/dashboard/users/UserInfoDialog.vue";
+// import UserInfoDialog from "../../../../../ee/components/dashboard/users/UserInfoDialog.vue";
 const userId = inject(userIdKey);
 </script>

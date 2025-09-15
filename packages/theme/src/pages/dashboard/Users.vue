@@ -26,7 +26,6 @@
         class="table-row group"
       >
         <DashboardUsersTabularItem :user="user" :settings="settings" />
-        <Useusers :user="user" @open="setUser(user)" />
       </div>
       
       <infinite-scroll :on-infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
@@ -40,8 +39,6 @@ import { useHead } from "@vueuse/head";
 // modules
 import { useSettingStore } from "../../store/settings";
 import { useDashboardUsers } from "../../store/dashboard/users";
-import { useUser } from "../../composables/UseUser";
-const { selectedUser, setUser } = useUser();
 // components
 import InfiniteScroll from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table.vue";
