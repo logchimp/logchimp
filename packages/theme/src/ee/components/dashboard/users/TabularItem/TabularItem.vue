@@ -17,6 +17,9 @@
   <div class="table-data users-table-votes">
     {{ user.votes }}
   </div>
+    <div class="p-6">
+      <UserInfoDialog :user="user" />
+  </div> 
   <MoreOptionsDropdown
     v-if="settings.developer_mode"
   />
@@ -31,6 +34,7 @@ import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
 import { userIdKey } from "./options";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
+import UserInfoDialog from "../../../../../ee/components/dashboard/users/TabularItem/UserInfoDialog.vue";
 
 interface Props {
   user: IUser;
