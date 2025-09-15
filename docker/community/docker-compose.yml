@@ -1,6 +1,16 @@
 name: "LogChimp"
 
 services:
+  cache:
+    image: valkey/valkey:8
+    ports:
+      - "6379:6379"
+    command: [ "valkey-server", "--save", "60", "1", "--loglevel", "warning", "--dir", "/data" ]
+    volumes:
+      - valkey-data:/data
+    networks:
+      - logchimp
+
   db:
     image: postgres:12
     restart: unless-stopped
@@ -42,6 +52,9 @@ services:
       LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
       LOGCHIMP_DB_SSL: ${LOGCHIMP_DB_SSL:-false}
 
+      # Cache
+      LOGCHIMP_VALKEY_URL: cache:6379
+
       # Mail
       LOGCHIMP_MAIL_HOST: ${LOGCHIMP_MAIL_HOST}
       LOGCHIMP_MAIL_USER: ${LOGCHIMP_MAIL_USER}
@@ -72,4 +85,5 @@ networks:
     driver: bridge
 
 volumes:
+  valkey-data:
   postgres:

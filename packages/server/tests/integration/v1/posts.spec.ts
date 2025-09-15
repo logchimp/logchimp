@@ -2,9 +2,10 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
-import type { IPost } from "@logchimp/types";
+import type { IBoard, IPost } from "@logchimp/types";
 
 import app from "../../../src/app";
+import * as cache from "../../../src/cache";
 import { createUser } from "../../utils/seed/user";
 import { updateSettings } from "../../utils/seed/settings";
 import {
@@ -140,6 +141,19 @@ describe("POST /api/v1/posts/get", () => {
 
     const slugs = posts.map((p: IPost) => p.slug);
     expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
+
+    // should cache the boardA by ID
+    const boardACacheStr = await cache.valkey.get(
+      `board:public:${boardA.boardId}`,
+    );
+    const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
+    expect(boardA).toMatchObject(boardACache);
+
+    // should not have boardB cached
+    const boardBCache = await cache.valkey.get(
+      `board:public:${boardB.boardId}`,
+    );
+    expect(boardBCache).toBeNull();
   });
 
   it("should filter posts by roadmapId", async () => {
@@ -243,6 +257,13 @@ describe("POST /api/v1/posts/get", () => {
     const createdSlugs = [post1.slug, post2.slug, post3.slug];
     const foundCount = createdSlugs.filter((s) => union.has(s)).length;
     expect(foundCount).toBeGreaterThanOrEqual(3);
+
+    // should cache the boardA by ID
+    const boardCacheStr = await cache.valkey.get(
+      `board:public:${board.boardId}`,
+    );
+    const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+    expect(board).toMatchObject(boardCache);
   });
 
   it("should order posts in ASC order when specified", async () => {
@@ -297,6 +318,13 @@ describe("POST /api/v1/posts/get", () => {
 
     expect(idxA).toBeLessThan(idxB);
     expect(idxB).toBeLessThan(idxC);
+
+    // should cache the boardA by ID
+    const boardCacheStr = await cache.valkey.get(
+      `board:public:${board.boardId}`,
+    );
+    const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+    expect(board).toMatchObject(boardCache);
   });
 });
 
