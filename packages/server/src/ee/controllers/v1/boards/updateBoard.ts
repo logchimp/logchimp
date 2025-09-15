@@ -6,7 +6,9 @@ import type {
   TBoardUpdateResponseBody,
   TPermission,
 } from "@logchimp/types";
+
 import database from "../../../../database";
+import { invalidateBoardCache } from "../../../services/boards/invalidateCache";
 
 // utils
 import logger from "../../../../utils/logger";
@@ -68,6 +70,8 @@ export async function updateBoard(
       .returning("*");
 
     const board = boards[0];
+
+    await invalidateBoardCache(boardId);
 
     res.status(200).send({ board });
   } catch (err) {

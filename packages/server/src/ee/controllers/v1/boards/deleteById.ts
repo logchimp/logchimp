@@ -3,6 +3,7 @@ import { validate as validateUUID } from "uuid";
 import type { IBoardDeleteRequestBody, TPermission } from "@logchimp/types";
 import database from "../../../../database";
 import * as cache from "../../../../cache";
+import { invalidateBoardCache } from "../../../services/boards/invalidateCache";
 
 // utils
 import logger from "../../../../utils/logger";
@@ -49,13 +50,7 @@ export async function deleteById(
 
   if (boardDeleted) {
     if (cache.isActive) {
-      try {
-        await cache.valkey.del(`board:${boardId}`);
-      } catch (err) {
-        logger.error({
-          message: err,
-        });
-      }
+      await invalidateBoardCache(boardId);
     }
 
     res.sendStatus(204);

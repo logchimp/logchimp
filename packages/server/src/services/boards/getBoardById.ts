@@ -8,7 +8,7 @@ import { DAY } from "../../cache/time";
 import logger from "../../utils/logger";
 
 export async function getBoardById(boardId: string): Promise<IBoard | null> {
-  const cacheKey = `board:${boardId}`;
+  const cacheKey = `board:public:${boardId}`;
   if (cache.isActive) {
     const cachedBoard = await cache.valkey.get(cacheKey);
     if (cachedBoard) {
