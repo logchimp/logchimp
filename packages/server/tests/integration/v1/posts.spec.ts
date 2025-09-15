@@ -143,12 +143,16 @@ describe("POST /api/v1/posts/get", () => {
     expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
 
     // should cache the boardA by ID
-    const boardACacheStr = await cache.valkey.get(`board:${boardA.boardId}`);
+    const boardACacheStr = await cache.valkey.get(
+      `board:public:${boardA.boardId}`,
+    );
     const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
     expect(boardA).toMatchObject(boardACache);
 
     // should not have boardB cached
-    const boardBCache = await cache.valkey.get(`board:${boardB.boardId}`);
+    const boardBCache = await cache.valkey.get(
+      `board:public:${boardB.boardId}`,
+    );
     expect(boardBCache).toBeNull();
   });
 
@@ -255,7 +259,9 @@ describe("POST /api/v1/posts/get", () => {
     expect(foundCount).toBeGreaterThanOrEqual(3);
 
     // should cache the boardA by ID
-    const boardCacheStr = await cache.valkey.get(`board:${board.boardId}`);
+    const boardCacheStr = await cache.valkey.get(
+      `board:public:${board.boardId}`,
+    );
     const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
     expect(board).toMatchObject(boardCache);
   });
@@ -314,7 +320,9 @@ describe("POST /api/v1/posts/get", () => {
     expect(idxB).toBeLessThan(idxC);
 
     // should cache the boardA by ID
-    const boardCacheStr = await cache.valkey.get(`board:${board.boardId}`);
+    const boardCacheStr = await cache.valkey.get(
+      `board:public:${board.boardId}`,
+    );
     const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
     expect(board).toMatchObject(boardCache);
   });
