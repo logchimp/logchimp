@@ -1,5 +1,5 @@
 <template>
-	<div class="auth-form">
+	<div class="max-w-sm px-4 mt-8 mx-auto">
 		<slot />
 	</div>
 </template>
@@ -11,13 +11,6 @@ defineOptions({
 </script>
 
 <style lang='sass'>
-.auth-form
-	width: 24rem
-	padding: 0 1rem
-	margin-top: 2rem
-	margin-left: auto
-	margin-right: auto
-
 .auth-form-header
 	margin-bottom: 2rem
 	display: flex

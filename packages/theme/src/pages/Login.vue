@@ -6,7 +6,8 @@
         Welcome back!
       </h3>
     </div>
-    <div class="card">
+
+    <form class="card" data-testid="login-form" @submit.prevent="login">
       <l-text
         v-model="email"
         label="Email Address"
@@ -27,7 +28,8 @@
         @keyup-enter="login"
         @hide-error="hidePasswordError"
       />
-      <div style="display: flex; justify-content: center">
+
+      <div class="flex justify-center">
         <Button
           type="primary"
           :loading="buttonLoading"
@@ -36,10 +38,11 @@
           Login
         </Button>
       </div>
-    </div>
-    <div class="auth-form-other">
+    </form>
+
+    <footer class="auth-form-other">
       <router-link to="/password-reset">
-        Forget password?
+        Forgot password?
       </router-link>
       <div v-if="siteSettings.allowSignup">
        • Don't have an account yet?
@@ -47,7 +50,7 @@
           Sign up
         </router-link>
       </div>
-    </div>
+    </footer>
   </auth-form>
 </template>
 
