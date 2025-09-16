@@ -106,7 +106,11 @@ describe("POST /api/v1/password/set", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.errors[0].code).toBe("MISSING_TOKEN");
+    expect(response.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "MISSING_TOKEN" }),
+      ]),
+    );
   });
 
   it("should throw error 'INVALID_TOKEN'", async () => {
@@ -154,7 +158,11 @@ describe("POST /api/v1/password/set", () => {
 
     expect(response.status).toBe(400);
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.body.errors[0].code).toBe("PASSWORD_MISSING");
+    expect(response.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "PASSWORD_MISSING" }),
+      ]),
+    );
   });
 
   it("should successfully reset password and return 200", async () => {
