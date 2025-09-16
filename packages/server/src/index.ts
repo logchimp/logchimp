@@ -2,6 +2,7 @@ const startTime = Date.now();
 
 import database from "./database";
 import app from "./app";
+import { closeConnection as shutdown } from "./shutdown";
 
 // utils
 import logger from "./utils/logger";
@@ -39,9 +40,22 @@ const config = logchimpConfig();
 const port = process.env.PORT || config.server.port || 3000;
 const host = config.server.host || "0.0.0.0";
 
-app.listen(port, host, async () => {
+const server = app.listen(port, host, async () => {
   logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
   logger.info(`Listening on port: ${port}`);
   logger.info("Ctrl+C to shut down");
   logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
+});
+
+process.on("SIGTERM", () => shutdown(server, "SIGTERM"));
+process.on("SIGINT", () => shutdown(server, "SIGINT"));
+
+process.on("uncaughtException", (error) => {
+  logger.error({ code: "UNCAUGHT_EXCEPTION", message: error });
+  void shutdown(server, "UNCAUGHT_EXCEPTION", error);
+});
+
+process.on("unhandledRejection", (reason: unknown) => {
+  logger.error({ code: "UNHANDLED_REJECTION", message: reason as any });
+  void shutdown(server, "UNHANDLED_REJECTION", reason);
 });
