@@ -47,9 +47,9 @@ export interface IGetPostBySlugResponseBody {
 }
 
 export interface ICreatePostRequestBody {
-  title: string;
-  contentMarkdown: string | null;
-  boardId: string;
+  title?: string;
+  contentMarkdown?: string | null;
+  boardId?: string;
   roadmapId?: string;
 }
 
