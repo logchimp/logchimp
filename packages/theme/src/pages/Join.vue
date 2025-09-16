@@ -9,7 +9,7 @@
 
     <server-error v-if="serverError" @close="serverError = false" />
 
-    <form class="card" data-testid="signup-form">
+    <form class="card" data-testid="signup-form" @submit.prevent="join">
       <l-text
         v-model="email"
         label="Email Address"

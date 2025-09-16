@@ -7,7 +7,7 @@
       </h3>
     </div>
 
-    <form class="card" data-testid="login-form">
+    <form class="card" data-testid="login-form" @submit.prevent="login">
       <l-text
         v-model="email"
         label="Email Address"

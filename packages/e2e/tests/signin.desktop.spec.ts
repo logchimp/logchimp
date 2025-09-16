@@ -97,5 +97,9 @@ test.describe("Signin", (): void => {
       const submitButton = form.getByRole("button", { name: "Login" });
       await submitButton.click();
     });
+
+    test.skip("should display 'User not found' error", () => {});
+    test.skip("should display 'Incorrect password' error", () => {});
+    test.skip("should login to user account using valid credentials", () => {});
   });
 });
