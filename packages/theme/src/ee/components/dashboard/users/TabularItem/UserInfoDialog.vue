@@ -1,23 +1,29 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import Dialog from "../../../../../components/ui/Dialog.vue"
+
+import {
+  Eye as EyeIcon, CircleUserRound as AccountInfoIcon,
+  Activity as ActivityIcon, Users as UsersIcon
+} from "lucide-vue"
 import type { IUser } from "@logchimp/types"
+
+import Dialog from "../../../../../components/ui/Dialog.vue"
+import Button from "../../../../../components/ui/Button.vue" // Adjust the path as necessary to point to
 
 interface Props {
   user: IUser
 }
-import { Eye, CircleUserRound , Activity, Users  } from "lucide-vue"
 
 const props = defineProps<Props>()
 const isOpen = ref(false)
 </script>
 
 <template>
-  <button
-    class="ml-auto rounded-full p-1.5 hover:bg-gray-100 text-gray-600 hover:text-black transition"
-    @click="isOpen = true"
-  >
-    <Eye size ="18"/>
+  <button class="ml-auto rounded-full p-1.5 hover:bg-gray-100 text-gray-600 hover:text-black transition"
+    @click="isOpen = true">
+    <EyeIcon aria-hidden="true" class="w-4 h-4" />
+
+    <span class="sr-only">View details</span>
   </button>
 
   <Dialog v-model:open="isOpen" class="max-w-2xl w-full">
@@ -26,29 +32,33 @@ const isOpen = ref(false)
     <div class="space-y-4">
       <div class="flex items-center justify-between p-2 border border-gray-200 rounded-md">
         <div class="flex items-center space-x-3">
-          <img
-            v-if="props.user.avatar"
-            :src="props.user.avatar"
-            alt="Avatar"
-            class="w-10 h-10 rounded-full "
-          />
+          <div>
+            <img v-if="props.user.avatar" :src="props.user.avatar" alt="Avatar"
+              class="w-10 h-10 rounded-full object-cover" />
+            <div v-else class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"
+              aria-hidden="true">
+              <span class="text-sm font-medium">U</span>
+            </div>
+          </div>
           <div>
             <h2 class="text-base font-semibold text-gray-900">{{ props.user.name }}</h2>
             <p class="text-xs text-gray-600">@{{ props.user.username }}</p>
             <p class="text-xs text-gray-500">{{ props.user.email }}</p>
           </div>
         </div>
-        <span
+        <!-- <span
           class="px-2 py-0.5 text-[11px] font-medium rounded-full bg-purple-100 text-purple-700"
         >
           {{ props.user.isOwner ? "Owner" : "Member" }}
-        </span>
+        </span> -->
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="p-3 border border-gray-200 rounded-md bg-white shadow-sm">
           <h3 class="text-xs font-medium text-gray-700 mb-2 flex items-center space-x-1">
-            <span><CircleUserRound size ="16"/></span><span>Account Information</span>
+            <span>
+              <AccountInfoIcon aria-hidden="true" class="w-4 h-4" />
+            </span><span>Account Information</span>
           </h3>
           <dl class="space-y-1 text-xs">
             <div>
@@ -60,7 +70,7 @@ const isOpen = ref(false)
             <div>
               <dt class="font-medium text-gray-500">Joined</dt>
               <dd class="mt-0.5 text-gray-800">
-                {{ props.user.createdAt}}
+                {{ props.user.createdAt }}
               </dd>
             </div>
           </dl>
@@ -68,7 +78,9 @@ const isOpen = ref(false)
 
         <div class="p-3 border border-gray-200 rounded-md bg-white shadow-sm">
           <h3 class="text-xs font-medium text-gray-700 mb-2 flex items-center space-x-1">
-            <span><Activity size ="16"/></span><span>Activity Stats</span>
+            <span>
+              <ActivityIcon aria-hidden="true" class="w-4 h-4" />
+            </span><span>Activity Stats</span>
           </h3>
           <ul class="space-y-1 text-xs">
             <li class="flex justify-between p-1.5 rounded bg-blue-50">
@@ -85,28 +97,25 @@ const isOpen = ref(false)
 
       <div class="p-3 border border-gray-200 rounded-md bg-white shadow-sm">
         <h3 class="text-xs font-medium text-gray-700 mb-2 flex items-center space-x-1">
-          <span><Users size ="16"/></span><span>User Roles</span>
+          <span>
+            <UsersIcon aria-hidden="true" class="w-4 h-4" />
+          </span><span>User Roles</span>
         </h3>
         <div class="flex flex-wrap gap-1.5">
-          <span
-            v-for="role in props.user.roles"
-            :key="role.id"
-            class="px-2 py-0.5 text-[11px] rounded bg-blue-100 text-blue-700 font-medium"
-          >
+          <span v-for="role in props.user.roles" :key="role.id"
+            class="px-2 py-0.5 text-[11px] rounded bg-blue-100 text-blue-700 font-medium">
             {{ role.name }}
           </span>
         </div>
       </div>
 
-    
+
     </div>
     <template #footer>
-      <button
-        class="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded text-xs"
-        @click="isOpen = false"
-      >
+      <Button type="primary" @click="isOpen = false">
         Close
-      </button>
+      </Button>
+
     </template>
   </Dialog>
 </template>
