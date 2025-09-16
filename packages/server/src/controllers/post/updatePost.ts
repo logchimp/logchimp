@@ -30,8 +30,8 @@ export async function updatePost(
   const id = validUUID(req.body.id);
   const title = req.body.title;
   const contentMarkdown = req.body.contentMarkdown;
-  const boardId = validUUID(req.body.boardId) || undefined;
-  const roadmapId = validUUID(req.body.roadmapId) || undefined;
+  const boardId = validUUID(req.body.boardId) || null;
+  const roadmapId = validUUID(req.body.roadmapId) || null;
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
