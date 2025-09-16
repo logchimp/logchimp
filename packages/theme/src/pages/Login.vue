@@ -7,7 +7,7 @@
       </h3>
     </div>
 
-    <form class="card">
+    <form class="card" data-testid="login-form">
       <l-text
         v-model="email"
         label="Email Address"
@@ -28,7 +28,8 @@
         @keyup-enter="login"
         @hide-error="hidePasswordError"
       />
-      <div style="display: flex; justify-content: center">
+
+      <div class="flex justify-center">
         <Button
           type="primary"
           :loading="buttonLoading"

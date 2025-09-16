@@ -3,7 +3,7 @@ import { test } from "../fixtures/pageTest";
 
 test.describe("Signup", (): void => {
   test.beforeEach(async ({ page }) => {
-    page.goto("/join");
+    await page.goto("/join");
   });
 
   test.describe("Header", (): void => {
@@ -26,6 +26,8 @@ test.describe("Signup", (): void => {
       expect(siteName).toBeDefined();
       await expect(siteName).toHaveText("LogChimp");
     });
+
+    test.skip("should display heading 'Create your account!'", async () => {});
   });
 
   test.describe("Footer", (): void => {
@@ -34,6 +36,54 @@ test.describe("Signup", (): void => {
 
       expect(signUpLink).toBeDefined();
       await expect(signUpLink).toHaveAttribute("href", "/login");
+    });
+  });
+
+  test.describe("Form", (): void => {
+    test("should render sign-up form", async ({ page }) => {
+      const form = page.getByTestId("signup-form");
+      await expect(form).toBeVisible();
+
+      const emailInput = await form.getByLabel("Email Address");
+      await expect(emailInput).toBeVisible();
+      await expect(emailInput).toHaveAttribute("type", "email");
+      await expect(emailInput).toHaveAttribute("placeholder", "Email address");
+
+      const passwordInput = form.getByLabel("password");
+      await expect(passwordInput).toBeVisible();
+      await expect(passwordInput).toHaveAttribute("type", "password");
+      await expect(passwordInput).toHaveAttribute("placeholder", "Password");
+
+      const submitButton = form.getByRole("button", { name: "Create Account" });
+      await expect(submitButton).toBeVisible();
+      // await expect(submitButton).toHaveAttribute("type", "submit");
+      // await expect(submitButton).toHaveAttribute("disabled");
+    });
+
+    test.skip("should display 'Required' error message on empty fields", async ({
+      page,
+    }) => {
+      const form = page.getByTestId("signup-form");
+      const submitButton = form.getByRole("button", { name: "Login" });
+      await submitButton.click();
+
+      const emailInput = form.getByLabel("Email Address");
+      const passwordInput = form.getByLabel("password");
+    });
+
+    test.skip("should display error message when email is invalid", async ({
+      page,
+    }) => {
+      const form = page.getByTestId("signup-form");
+
+      const emailInput = form.getByLabel("Email Address");
+      await emailInput.fill("invalid-email");
+
+      const passwordInput = form.getByLabel("password");
+      await passwordInput.fill("p");
+
+      const submitButton = form.getByRole("button", { name: "Login" });
+      await submitButton.click();
     });
   });
 });
