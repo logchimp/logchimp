@@ -183,11 +183,13 @@ describe("POST /api/v1/password/set", () => {
       createdAt: new Date(),
     });
 
+    const newPassword = "newStrongPassword123";
+
     const response = await supertest(app)
       .post("/api/v1/auth/password/set")
       .send({
         token,
-        password: "newStrongPassword123",
+        password: newPassword,
       });
 
     expect(response.status).toBe(200);
@@ -195,5 +197,13 @@ describe("POST /api/v1/password/set", () => {
     expect(response.body).toEqual({
       reset: { success: true },
     });
+
+    const loginResponse = await supertest(app).post("/api/v1/auth/login").send({
+      email: user.email,
+      password: newPassword,
+    });
+
+    expect(loginResponse.status).toBe(200);
+    expect(loginResponse.headers["content-type"]).toContain("application/json");
   });
 });
