@@ -117,6 +117,6 @@ useHead({
 });
 
 defineOptions({
-  name: "ForgetPassword",
+  name: "ForgotPassword",
 });
 </script>

@@ -9,7 +9,7 @@
     </p>
     <input
       :type="type"
-      data-test="input-field"
+      data-testid="input-field"
       class="input-field input-text"
       :class="{
         'input-field-disabled': disabled,
@@ -28,7 +28,7 @@
     </p>
     <p
       v-if="error.show"
-      data-test="input-error-message"
+      data-testid="input-error-message"
       class="input-error-message"
     >
       {{ error.message }}

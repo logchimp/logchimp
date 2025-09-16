@@ -35,13 +35,15 @@ describe("text input", () => {
 
     it("Has 'input-field-disabled' class", () => {
       expect(
-        wrapper.find("[data-test=input-field]").classes("input-field-disabled"),
+        wrapper
+          .find("[data-testid=input-field]")
+          .classes("input-field-disabled"),
       ).toBe(true);
     });
 
     it("Has 'disabled' attribute in input", () => {
       expect(
-        wrapper.find("[data-test=input-field]").attributes("disabled"),
+        wrapper.find("[data-testid=input-field]").attributes("disabled"),
       ).toBe("");
     });
   });
@@ -57,12 +59,12 @@ describe("text input", () => {
 
     it("Red color border on input", () => {
       expect(
-        wrapper.find("[data-test=input-field]").classes("input-error"),
+        wrapper.find("[data-testid=input-field]").classes("input-error"),
       ).toBe(true);
     });
 
     it("Show empty error message", () => {
-      expect(wrapper.find("[data-test=input-error-message]").exists()).toBe(
+      expect(wrapper.find("[data-testid=input-error-message]").exists()).toBe(
         true,
       );
     });
@@ -75,7 +77,7 @@ describe("text input", () => {
         },
       });
 
-      expect(wrapper.find("[data-test=input-error-message]").text()).toBe(
+      expect(wrapper.find("[data-testid=input-error-message]").text()).toBe(
         "Some error message",
       );
     });

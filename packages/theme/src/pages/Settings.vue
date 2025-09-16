@@ -13,48 +13,54 @@
         class="mb-8"
       />
 
-      <l-text
-        v-model="name.value"
-        label="Name"
-        type="text"
-        name="Name"
-        placeholder="Full name"
-        class="user-settings-name-item"
-        @keyup-enter="updateSettings"
-        @hide-error="hideNameError"
-        :error="name.error"
-      />
-      <l-text
-        v-model="user.username"
-        label="Username"
-        type="text"
-        name="Username"
-        placeholder="Username"
-        :disabled="true"
-      />
-      <l-text
-        v-model="user.email"
-        label="Email Address"
-        type="text"
-        name="Email Address"
-        placeholder="Email address"
-        :disabled="true"
-      />
-      <div class="flex items-start">
-        <Button
-          type="primary"
-          :loading="updateUserButtonLoading"
-          @click="updateSettings"
-        >
-          Update
-        </Button>
-      </div>
+      <form
+        @submit.prevent="updateSettings"
+        data-testid="settings-form"
+        class="space-y-4"
+      >
+        <l-text
+          v-model="name.value"
+          label="Name"
+          type="text"
+          name="Name"
+          placeholder="Full name"
+          class="user-settings-name-item"
+          @keyup-enter="updateSettings"
+          @hide-error="hideNameError"
+          :error="name.error"
+        />
+        <l-text
+          v-model="user.username"
+          label="Username"
+          type="text"
+          name="Username"
+          placeholder="Username"
+          :disabled="true"
+        />
+        <l-text
+          v-model="user.email"
+          label="Email Address"
+          type="text"
+          name="Email Address"
+          placeholder="Email address"
+          :disabled="true"
+        />
+
+        <div>
+          <Button
+            type="primary"
+            :loading="updateUserButtonLoading"
+            @click="updateSettings"
+          >
+            Update
+          </Button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// packages
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 
@@ -161,6 +167,6 @@ useHead({
 });
 
 defineOptions({
-  name: "UserSettings",
+  name: "UserAccountSettings",
 });
 </script>

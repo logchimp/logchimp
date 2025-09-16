@@ -6,8 +6,10 @@
         Create your account
       </h3>
     </div>
+
     <server-error v-if="serverError" @close="serverError = false" />
-    <div class="card">
+
+    <form class="card" data-testid="signup-form" @submit.prevent="join">
       <l-text
         v-model="email"
         label="Email Address"
@@ -28,23 +30,25 @@
         @keyup-enter="join"
         @hide-error="hidePasswordError"
       />
-      <div style="display: flex; justify-content: center">
+
+      <div class="flex justify-center">
         <Button
           type="primary"
           :loading="buttonLoading"
           :disabled="!siteSettings.allowSignup"
           @click="join"
         >
-          Create account
+          Create Account
         </Button>
       </div>
-    </div>
-    <div class="auth-form-other">
+    </form>
+
+    <footer class="auth-form-other">
       Already have an account?
       <router-link to="/login">
         Log in
       </router-link>
-    </div>
+    </footer>
   </auth-form>
 </template>
 
