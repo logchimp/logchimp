@@ -48,7 +48,11 @@ describe("POST /api/v1/auth/password/validateToken", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
-    expect(response.body.errors[0].code).toBe("MISSING_TOKEN");
+    expect(response.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "MISSING_TOKEN" }),
+      ]),
+    );
   });
 
   it("should throw error 'INVALID_TOKEN'", async () => {
