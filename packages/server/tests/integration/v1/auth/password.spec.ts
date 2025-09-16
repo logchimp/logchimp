@@ -4,8 +4,8 @@ import { faker } from "@faker-js/faker";
 
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
-import database from "../../../../src/database";
 import { createUser } from "../../../utils/seed/user";
+import { resetPassword } from "../../../utils/resetPassword";
 
 describe("POST /api/v1/auth/password/reset", () => {
   it('should throw error "EMAIL_INVALID" when invalid email is sent', async () => {
@@ -79,18 +79,7 @@ describe("POST /api/v1/auth/password/validateToken", () => {
   });
 
   it("should return 200 and reset.valid = true for a valid token", async () => {
-    const { user } = await createUser();
-
-    const tokenPayload = { email: user.email, type: "resetPassword" };
-    const token = createToken(tokenPayload, {
-      expiresIn: "2h",
-    });
-
-    await database("resetPassword").insert({
-      email: user.email,
-      token,
-      createdAt: new Date(),
-    });
+    const { user, token } = await resetPassword();
 
     const response = await supertest(app)
       .post("/api/v1/auth/password/validateToken")
@@ -140,18 +129,7 @@ describe("POST /api/v1/password/set", () => {
   });
 
   it("should throw 'PASSWORD_MISSING'", async () => {
-    const { user } = await createUser();
-
-    const tokenPayload = { email: user.email, type: "resetPassword" };
-    const token = createToken(tokenPayload, {
-      expiresIn: "2h",
-    });
-
-    await database("resetPassword").insert({
-      email: user.email,
-      token,
-      createdAt: new Date(),
-    });
+    const { token } = await resetPassword();
 
     const response = await supertest(app)
       .post("/api/v1/auth/password/set")
@@ -170,18 +148,7 @@ describe("POST /api/v1/password/set", () => {
   });
 
   it("should successfully reset password and return 200", async () => {
-    const { user } = await createUser();
-
-    const tokenPayload = { email: user.email, type: "resetPassword" };
-    const token = createToken(tokenPayload, {
-      expiresIn: "2h",
-    });
-
-    await database("resetPassword").insert({
-      email: user.email,
-      token,
-      createdAt: new Date(),
-    });
+    const { user, token } = await resetPassword();
 
     const newPassword = "newStrongPassword123";
 
