@@ -786,7 +786,7 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw error 'NOT_ENOUGH_PERMISSION' when user lacks 'comment:create' permission", async () => { });
+  it("should throw error 'NOT_ENOUGH_PERMISSION' when user lacks 'comment:create' permission", async () => {});
 
   it("should throw error 'LABS_DISABLED' on comments feature disabled", async () => {
     const board = await generateBoard({}, true);
