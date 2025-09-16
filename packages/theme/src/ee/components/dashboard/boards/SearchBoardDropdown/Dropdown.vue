@@ -20,7 +20,7 @@
                 <div class="text-md font-semibold line-clamp-1">
                   {{board.name}}
                 </div>
-                <p class="text-xs text-neutral-500 line-clamp-1 leading-3">
+                <p class="text-xs text-neutral-500 line-clamp-1 leading-3 pb-0.5">
                   {{board.url}}
                 </p>
               </div>
