@@ -50,7 +50,8 @@
             <div>
               <dt class="font-medium text-gray-500">Joined</dt>
               <dd class="mt-0.5 text-gray-800">
-                {{ props.user.createdAt }}
+                <!-- {{ props.user.createdAt }} -->
+                  Created At
               </dd>
             </div>
           </dl>
