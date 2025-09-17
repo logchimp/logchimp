@@ -1,30 +1,7 @@
-<script setup lang="ts">
-import { ref } from "vue";
-
-import {
-  Eye as EyeIcon,
-  CircleUserRound as AccountInfoIcon,
-  Activity as ActivityIcon,
-  Users as UsersIcon,
-} from "lucide-vue";
-import type { IUser } from "@logchimp/types";
-
-import Dialog from "../../../../../components/ui/Dialog.vue";
-import Button from "../../../../../components/ui/Button.vue"; // Adjust the path as necessary to point to
-
-interface Props {
-  user: IUser;
-}
-
-const props = defineProps<Props>();
-const isOpen = ref(false);
-</script>
-
 <template>
   <button class="ml-auto rounded-full p-1.5 hover:bg-gray-100 text-gray-600 hover:text-black transition"
     @click="isOpen = true">
     <EyeIcon aria-hidden="true" class="w-4 h-4" />
-
     <span class="sr-only">View details</span>
   </button>
 
@@ -32,6 +9,7 @@ const isOpen = ref(false);
     <template #title>User Details</template>
 
     <div class="space-y-4">
+
       <div class="flex items-center justify-between p-2 border border-gray-200 rounded-md">
         <div class="flex items-center space-x-3">
           <div>
@@ -110,14 +88,32 @@ const isOpen = ref(false);
           </span>
         </div>
       </div>
-
-
     </div>
+
     <template #footer>
       <Button type="primary" @click="isOpen = false">
         Close
       </Button>
-
     </template>
   </Dialog>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import {
+  Eye as EyeIcon,
+  CircleUserRound as AccountInfoIcon,
+  Activity as ActivityIcon,
+  Users as UsersIcon,
+} from "lucide-vue";
+import type { IUser } from "@logchimp/types";
+
+import Dialog from "../../../../../components/ui/Dialog.vue";
+import Button from "../../../../../components/ui/Button.vue";
+interface Props {
+  user: IUser;
+}
+
+const props = defineProps<Props>();
+const isOpen = ref(false);
+</script>
