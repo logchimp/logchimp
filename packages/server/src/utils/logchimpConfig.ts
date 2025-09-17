@@ -3,6 +3,8 @@ import fs from "fs";
 import fsExtra from "fs-extra";
 import logger from "./logger";
 
+const DEFAULT_SERVER_PORT = 8000;
+
 interface Config {
   secretKey: string | undefined;
   machineSignature: string | undefined;
@@ -10,7 +12,7 @@ interface Config {
 
   // Server
   serverHost: string | undefined;
-  serverPort: string | undefined;
+  serverPort: number | undefined;
   webUrl: string | undefined;
 
   // Database
@@ -94,6 +96,8 @@ class ConfigManager {
       );
     }
 
+    const serverPort = config.server?.port;
+
     return {
       secretKey: config.server?.secretKey,
       machineSignature: config.server?.machineSignature,
@@ -103,7 +107,9 @@ class ConfigManager {
 
       // Server
       serverHost: config.server?.host,
-      serverPort: config.server?.port,
+      serverPort: serverPort
+        ? Number.parseInt(`${config.server?.port}`, 10)
+        : DEFAULT_SERVER_PORT,
       webUrl: config.server?.webUrl,
 
       // Database
@@ -138,6 +144,8 @@ class ConfigManager {
       );
     }
 
+    const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
+
     return {
       secretKey: process.env.LOGCHIMP_SECRET_KEY,
       machineSignature: process.env.LOGCHIMP_MACHINE_SIGNATURE,
@@ -145,7 +153,9 @@ class ConfigManager {
 
       // Server
       serverHost: process.env.LOGCHIMP_SERVER_HOST,
-      serverPort: process.env.LOGCHIMP_SERVER_PORT,
+      serverPort: serverPort
+        ? Number.parseInt(`${serverPort}`, 10)
+        : DEFAULT_SERVER_PORT,
       webUrl: process.env.LOGCHIMP_WEB_URL,
 
       // Database
