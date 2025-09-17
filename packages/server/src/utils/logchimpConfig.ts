@@ -63,10 +63,14 @@ class ConfigManager {
     const config = this.mergeConfigs(fileConfig, envConfig);
 
     if (!config.webUrl?.trim()) {
-      logger.info(
+      logger.warn(
         "'LOGCHIMP_WEB_URL' variable is missing, some functionality of the LogChimp may not work as intended.",
       );
     }
+
+    logger.warning(
+      "LogChimp mail configuration default port '465' will be removed in next major release. It means you've to explicitly provide the SMTP mail port.",
+    );
 
     return config;
   }
