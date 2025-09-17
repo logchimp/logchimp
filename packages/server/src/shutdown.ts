@@ -1,3 +1,4 @@
+const startTime = Date.now();
 import type { Server } from "node:http";
 
 import database from "./database";
@@ -12,6 +13,8 @@ export async function closeConnection(
   signal: string,
   err?: unknown,
 ) {
+  logger.info(`Starting shutdown process for signal: ${signal}`);
+
   try {
     if (err) {
       logger.error({
@@ -24,11 +27,44 @@ export async function closeConnection(
     }
 
     // Stop accepting new connections
-    await new Promise<void>((resolve) => {
-      // If server isn't listening yet, resolve immediately
-      if (!server || !("close" in server)) return resolve();
-      server.close(() => resolve());
+    logger.info("Stopping server from accepting new connections...");
+    await new Promise<void>((resolve, reject) => {
+      if (!server || !server.listening) {
+        logger.info("Server not listening, skipping close");
+        return resolve();
+      }
+
+      const timeout = setTimeout(() => {
+        reject(new Error("Server close timeout"));
+      }, 5000);
+
+      server.close((closeErr) => {
+        clearTimeout(timeout);
+        if (closeErr) {
+          logger.error("Error closing server:", closeErr);
+          reject(closeErr);
+        } else {
+          logger.info("Server stopped accepting new connections");
+          resolve();
+        }
+      });
     });
+
+    logger.info("Closing active connections...");
+
+    // Get all active connections and close them
+    if (server && "getConnections" in server) {
+      await new Promise<void>((resolve) => {
+        server.getConnections((err, count) => {
+          if (err) {
+            logger.error("Error getting connection count:", err);
+          } else {
+            logger.info(`Active connections: ${count}`);
+          }
+          resolve();
+        });
+      });
+    }
 
     // Close connections in parallel for faster shutdown
     const shutdownPromises = [];
@@ -65,7 +101,16 @@ export async function closeConnection(
     }
 
     // Wait for all connections to close with a reasonable timeout
-    await Promise.allSettled(shutdownPromises);
+    const results = await Promise.allSettled(shutdownPromises);
+
+    // Log results
+    results.forEach((result, index) => {
+      if (result.status === "rejected") {
+        logger.error(`Shutdown promise ${index} failed:`, result.reason);
+      }
+    });
+
+    logger.info("All shutdown operations completed");
   } catch (e) {
     logger.error({
       code: "SHUTDOWN_ERROR",
@@ -74,21 +119,30 @@ export async function closeConnection(
     });
   } finally {
     const exitCode = err ? 1 : 0;
+    const totalTime = (Date.now() - startTime) / 1000;
 
-    // Add a small delay to ensure logs are flushed
-    setTimeout(() => {
-      logger.info("Graceful shutdown completed");
-      process.exit(exitCode);
-    }, 100);
+    logger.info(`Shutdown process completed in ${totalTime}s`);
+
+    // Force flush logs and exit
+    if (logger.end && typeof logger.end === "function") {
+      logger.end(() => {
+        process.exit(exitCode);
+      });
+    } else {
+      // Add a small delay to ensure logs are flushed
+      setTimeout(() => {
+        logger.info("Graceful shutdown completed, exiting...");
+        process.exit(exitCode);
+      }, 500);
+    }
 
     // Fallback force exit if something hangs
     const timeout = setTimeout(() => {
-      logger.error({
-        code: "FORCE_EXIT",
-        message: `Exiting forcefully after ${GRACE_PERIOD_MS}ms`,
-      });
+      console.error(`Force exiting after ${GRACE_PERIOD_MS}ms timeout`);
       process.exit(exitCode);
     }, GRACE_PERIOD_MS);
-    timeout.unref?.();
+
+    // Don't keep the process alive just for this timeout
+    timeout.unref();
   }
 }

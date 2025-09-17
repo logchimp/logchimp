@@ -47,8 +47,16 @@ const server = app.listen(port, host, async () => {
   logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
 });
 
-process.on("SIGTERM", () => shutdown(server, "SIGTERM"));
-process.on("SIGINT", () => shutdown(server, "SIGINT"));
+// Signal handlers
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received");
+  void shutdown(server, "SIGTERM");
+});
+
+process.on("SIGINT", () => {
+  logger.info("SIGINT received");
+  void shutdown(server, "SIGINT");
+});
 
 process.on("uncaughtException", (error) => {
   logger.error({ code: "UNCAUGHT_EXCEPTION", message: error });
@@ -56,6 +64,6 @@ process.on("uncaughtException", (error) => {
 });
 
 process.on("unhandledRejection", (reason: unknown) => {
-  logger.error({ code: "UNHANDLED_REJECTION", message: reason as any });
+  logger.error({ code: "UNHANDLED_REJECTION", message: reason as unknown });
   void shutdown(server, "UNHANDLED_REJECTION", reason);
 });
