@@ -68,7 +68,7 @@ class ConfigManager {
       );
     }
 
-    logger.warning(
+    logger.warn(
       "LogChimp mail configuration default port '465' will be removed in next major release. It means you've to explicitly provide the SMTP mail port.",
     );
 
