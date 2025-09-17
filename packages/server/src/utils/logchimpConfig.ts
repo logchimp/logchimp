@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import fsExtra from "fs-extra";
+import logger from "./logger";
 
 function config() {
   // read logchimp.config.json from file-system
@@ -16,7 +17,7 @@ function config() {
     );
 
     if (config.mail.service) {
-      console.log(
+      logger.info(
         "'mail.service' key is deprecated and will be removed in next major release in `logchimp.config.json`.",
       );
     }
@@ -50,19 +51,19 @@ function config() {
   const mailPort = process.env.LOGCHIMP_MAIL_PORT;
 
   if (process.env?.LOGCHIMP_MAIL_SERVICE) {
-    console.log(
+    logger.info(
       "'LOGCHIMP_MAIL_SERVICE' variable is deprecated and will be removed in next major release.",
     );
   }
 
   if (process.env?.LOGCHIMP_THEME_STANDALONE) {
-    console.log(
+    logger.info(
       "'LOGCHIMP_THEME_STANDALONE' variable is deprecated and will be removed in next major release.",
     );
   }
 
   if (!webUrl?.trim()) {
-    console.log(
+    logger.info(
       "'LOGCHIMP_WEB_URL' variable is missing, some functionality of the LogChimp may not work as intended.",
     );
   }
