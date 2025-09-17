@@ -1,29 +1,49 @@
 <template>
   <Table class="users-table">
     <template #header>
-      <div class="table-header-item users-table-user">name</div>
-      <div class="table-header-item users-table-user">roles</div>
-      <div class="table-header-item users-table-posts">posts</div>
-      <div class="table-header-item users-table-votes">votes</div>
-      <div
-        v-if="settings.developer_mode"
-        class="table-header-item users-table-votes"
-      />
+      <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+        <th
+          v-for="header in headerGroup.headers"
+          :key="header.id"
+          class="table-header-item"
+          :style="{
+            width: `${header.column.getSize()}px`,
+            flexGrow: header.id === 'name' ? 1 : 0,
+          }"
+        >
+          <FlexRender
+            v-if="header.column.columnDef.header"
+            :render="header.column.columnDef.header"
+            :props="header.getContext()"
+          />
+        </th>
+      </tr>
     </template>
 
-    <div
-      v-for="user in dashboardUsers.users"
-      :key="user.userId"
+    <tr
+      v-for="row in table.getCoreRowModel().rows"
+      :key="row.id"
       class="table-row group"
     >
-      <DashboardUsersTabularItem :user="user" :settings="settings" />
-    </div>
+      <DashboardUsersTabularItem
+        :row="row"
+        :user="row.original" :settings="settings"
+      />
+    </tr>
 
     <infinite-scroll :on-infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
   </Table>
 </template>
 
 <script setup lang="ts">
+import {
+  FlexRender,
+  getCoreRowModel,
+  useVueTable,
+  createColumnHelper,
+} from "@tanstack/vue-table";
+import type { IUser } from "@logchimp/types";
+
 import DashboardUsersTabularItem from "./TabularItem/TabularItem.vue";
 import Table from "../../../../components/ui/Table.vue";
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
@@ -32,6 +52,54 @@ import { useDashboardUsers } from "../../../../store/dashboard/users";
 
 const { settings } = useSettingStore();
 const dashboardUsers = useDashboardUsers();
+
+const columnHelper = createColumnHelper<IUser>();
+
+const columns = [
+  columnHelper.display({
+    id: "avatar",
+    enableHiding: true,
+    size: 64,
+    header: () => null,
+    enableResizing: false,
+  }),
+  columnHelper.accessor("name", {
+    header: "name",
+    enableSorting: true,
+  }),
+  columnHelper.display({
+    id: "roles",
+    header: "roles",
+  }),
+  columnHelper.display({
+    id: "post_count",
+    size: 30,
+    header: () => "Posts",
+  }),
+  columnHelper.display({
+    id: "votes_count",
+    size: 30,
+    header: () => "Votes",
+  }),
+  columnHelper.display({
+    id: "more",
+    enableHiding: !settings.developer_mode,
+    header: () => null,
+    size: 64,
+    enableResizing: false,
+  }),
+];
+
+const table = useVueTable({
+  get data() {
+    return dashboardUsers.users;
+  },
+  getRowId: (originalRow) => originalRow.userId,
+  columns,
+  getCoreRowModel: getCoreRowModel(),
+});
+
+console.log(table.getCoreRowModel().rows[0]);
 
 defineOptions({
   name: "DashboardUsersTabularView",
