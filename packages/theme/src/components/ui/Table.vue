@@ -1,19 +1,15 @@
 <template>
-  <div class="table-container">
-    <div class="table-header">
+  <table class="border border-(--color-gray-90) rounded-lg w-full">
+    <thead class="table-header">
       <slot name="header" />
-    </div>
-    <div class="table-body">
+    </thead>
+    <tbody class="table-body">
       <slot />
-    </div>
-  </div>
+    </tbody>
+  </table>
 </template>
 
 <style lang='sass'>
-.table-container
-	border: 1px solid var(--color-gray-90)
-	border-radius: var(--border-radius-default)
-
 .table-heading
 	color: var(--color-gray-40)
 	font-size: 0.875rem
