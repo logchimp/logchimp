@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogOverlay,
-  DialogPortal,
-  DialogRoot,
-  DialogTitle,
-} from "reka-ui";
-import { X as CloseIcon } from "lucide-vue";
-
-const model = defineModel<boolean>("open", { default: false });
-</script>
-
 <template>
   <DialogRoot v-model:open="model">
     <DialogPortal>
@@ -42,3 +27,18 @@ const model = defineModel<boolean>("open", { default: false });
     </DialogPortal>
   </DialogRoot>
 </template>
+<script setup lang="ts">
+import {
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogOverlay,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+} from "reka-ui";
+
+import { X as CloseIcon } from "lucide-vue";
+
+const model = defineModel<boolean>("open", { default: false });
+</script>
