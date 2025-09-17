@@ -21,7 +21,7 @@ interface Config {
   databasePort: string | undefined;
   databasePassword: string | undefined;
   databaseName: string | undefined;
-  databaseSsl: boolean | undefined;
+  databaseSsl: boolean;
 
   // Cache
   cacheUrl: string | undefined;
@@ -30,7 +30,7 @@ interface Config {
   mailHost: string | undefined;
   mailUser: string | undefined;
   mailPassword: string | undefined;
-  mailPort: string | undefined;
+  mailPort: number;
 }
 
 class ConfigManager {
@@ -97,6 +97,7 @@ class ConfigManager {
     }
 
     const serverPort = config.server?.port;
+    const mailPort = config.mail?.port;
 
     return {
       secretKey: config.server?.secretKey,
@@ -118,7 +119,10 @@ class ConfigManager {
       databasePassword: config.database?.password,
       databasePort: config.database?.port,
       databaseName: config.database?.name,
-      databaseSsl: config.database?.ssl,
+      databaseSsl:
+        config.database?.ssl === "true" ||
+        config.database?.ssl === true ||
+        false,
 
       // Cache
       cacheUrl: config.cache?.url,
@@ -127,7 +131,7 @@ class ConfigManager {
       mailHost: config.mail?.host,
       mailUser: config.mail?.user,
       mailPassword: config.mail?.password,
-      mailPort: config.mail?.port,
+      mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
     };
   }
 
@@ -145,6 +149,7 @@ class ConfigManager {
     }
 
     const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
+    const mailPort = process.env.LOGCHIMP_MAIL_PORT;
 
     return {
       secretKey: process.env.LOGCHIMP_SECRET_KEY,
@@ -173,7 +178,7 @@ class ConfigManager {
       mailHost: process.env.LOGCHIMP_MAIL_HOST,
       mailUser: process.env.LOGCHIMP_MAIL_USER,
       mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
-      mailPort: process.env.LOGCHIMP_MAIL_PORT,
+      mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
     };
   }
 
