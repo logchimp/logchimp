@@ -1,33 +1,92 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
+import { v4 as uuidv4 } from "uuid";
 
 import app from "../../../src/app";
-import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
-import { v4 as uuidv4 } from "uuid";
+import { updateSettings } from "../../utils/seed/settings";
 import {
   board as generateBoard,
   post as generatePost,
   comment as generateComment,
 } from "../../utils/generators";
 
-beforeAll(async () => {
-  // Enable commenting from labs
-  await database
-    .update({
-      labs: database.raw(`labs::jsonb || '{"comments": true}'`),
-    })
-    .from("settings");
-});
+//  LABS_DISABLED based test
+describe("LABS_DISABLED", () => {
+  beforeAll(async () => {
+    // Disable commenting from labs
+    await updateSettings({
+      labs: { comments: false },
+    });
+  });
 
-afterAll(async () => {
-  // Disable commenting from labs
-  await database
-    .update({
-      labs: database.raw(`labs::jsonb || '{"comments": false}'`),
-    })
-    .from("settings");
+  afterAll(async () => {
+    // Enable commenting from labs
+    await updateSettings({
+      labs: { comments: true },
+    });
+  });
+
+  it("should throw error 'LABS_DISABLED' on create comment", async () => {
+    const { user: authUser } = await createUser();
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+      },
+      true,
+    );
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/${post.postId}/comments`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("LABS_DISABLED");
+  });
+
+  it("should throw error 'LABS_DISABLED' on update comment", async () => {
+    const { user: authUser } = await createUser();
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+      },
+      true,
+    );
+
+    const { comment } = await generateComment(authUser.userId, post.postId);
+
+    const response = await supertest(app)
+      .put(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("LABS_DISABLED");
+  });
+
+  it("should throw error 'LABS_DISABLED' on delete comment", async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+      },
+      true,
+    );
+
+    const { comment } = await generateComment(authUser.userId, post.postId);
+
+    const response = await supertest(app)
+      .delete(`/api/v1/posts/${post.postId}/comments/${comment.id}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("LABS_DISABLED");
+  });
 });
 
 describe("POST /api/v1/posts/:post_id/comments", () => {
