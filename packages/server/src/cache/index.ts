@@ -3,7 +3,7 @@ import logchimpConfig from "../utils/logchimpConfig";
 const config = logchimpConfig();
 
 let valkey: Valkey | null = null;
-const isActive = !!(config.cache.url || "").trim();
+const isActive = !!(config?.cache?.url || "").trim();
 
 if (isActive) {
   valkey = new Valkey(config.cache.url);

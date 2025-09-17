@@ -14,6 +14,7 @@ import {
   post as generatePost,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import { isActive } from "../../../src/cache";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
@@ -142,18 +143,20 @@ describe("POST /api/v1/posts/get", () => {
     const slugs = posts.map((p: IPost) => p.slug);
     expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
 
-    // should cache the boardA by ID
-    const boardACacheStr = await cache.valkey.get(
-      `board:public:${boardA.boardId}`,
-    );
-    const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
-    expect(boardA).toMatchObject(boardACache);
+    if (cache.isActive) {
+      // should cache the boardA by ID
+      const boardACacheStr = await cache.valkey.get(
+        `board:public:${boardA.boardId}`,
+      );
+      const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
+      expect(boardA).toMatchObject(boardACache);
 
-    // should not have boardB cached
-    const boardBCache = await cache.valkey.get(
-      `board:public:${boardB.boardId}`,
-    );
-    expect(boardBCache).toBeNull();
+      // should not have boardB cached
+      const boardBCache = await cache.valkey.get(
+        `board:public:${boardB.boardId}`,
+      );
+      expect(boardBCache).toBeNull();
+    }
   });
 
   it("should filter posts by roadmapId", async () => {
@@ -258,12 +261,14 @@ describe("POST /api/v1/posts/get", () => {
     const foundCount = createdSlugs.filter((s) => union.has(s)).length;
     expect(foundCount).toBeGreaterThanOrEqual(3);
 
-    // should cache the boardA by ID
-    const boardCacheStr = await cache.valkey.get(
-      `board:public:${board.boardId}`,
-    );
-    const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
-    expect(board).toMatchObject(boardCache);
+    if (cache.isActive) {
+      // should cache the boardA by ID
+      const boardCacheStr = await cache.valkey.get(
+        `board:public:${board.boardId}`,
+      );
+      const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+      expect(board).toMatchObject(boardCache);
+    }
   });
 
   it("should order posts in ASC order when specified", async () => {
@@ -319,12 +324,14 @@ describe("POST /api/v1/posts/get", () => {
     expect(idxA).toBeLessThan(idxB);
     expect(idxB).toBeLessThan(idxC);
 
-    // should cache the boardA by ID
-    const boardCacheStr = await cache.valkey.get(
-      `board:public:${board.boardId}`,
-    );
-    const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
-    expect(board).toMatchObject(boardCache);
+    if (cache.isActive) {
+      // should cache the boardA by ID
+      const boardCacheStr = await cache.valkey.get(
+        `board:public:${board.boardId}`,
+      );
+      const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+      expect(board).toMatchObject(boardCache);
+    }
   });
 });
 
