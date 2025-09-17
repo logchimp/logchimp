@@ -13,7 +13,7 @@ import database from "../database";
 
 // utils
 import logger from "../utils/logger";
-import logchimpConfig from "../utils/logchimpConfig";
+import { configManager } from "../utils/logchimpConfig";
 import type { ExpressRequestContext } from "../express";
 import error from "../errorResponse.json";
 import type {
@@ -21,7 +21,7 @@ import type {
   IVerifyEmailJwtPayload,
 } from "../types";
 
-const config = logchimpConfig();
+const config = configManager.getConfig();
 
 type RequestBody =
   | IValidateEmailVerificationTokenRequestBody
@@ -50,9 +50,7 @@ export async function validateEmailToken(
 
   try {
     // validate JWT token
-    const secretKey =
-      process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
-    const decoded = jwt.verify(token, secretKey) as JwtPayload &
+    const decoded = jwt.verify(token, config.secretKey) as JwtPayload &
       (IVerifyEmailJwtPayload | IPasswordResetJwtPayload);
 
     const tokenType = decoded.type;

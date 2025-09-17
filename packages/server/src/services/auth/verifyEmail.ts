@@ -6,11 +6,11 @@ import { mail, generateContent } from "../mail";
 import { createToken } from "../token.service";
 
 // utils
-import logchimpConfig from "../../utils/logchimpConfig";
+import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IVerifyEmailJwtPayload } from "../../types";
 
-const config = logchimpConfig();
+const config = configManager.getConfig();
 
 export async function verifyEmail(
   tokenPayload: IVerifyEmailJwtPayload,
@@ -39,7 +39,7 @@ export async function verifyEmail(
     const siteInfo = await database.select("title").from("settings");
     const siteTitle = siteInfo[0].title;
 
-    const urlObject = new URL(config.server.webUrl);
+    const urlObject = new URL(config.webUrl);
     const onboardingMailContent = await generateContent("verify", {
       url: urlObject.origin,
       domain: urlObject.hostname,
