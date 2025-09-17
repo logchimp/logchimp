@@ -18,7 +18,7 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dompurify": "^3.2.6",
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.0.0",
     "express": "^4.17.1",
     "fs-extra": "^11.0.0",
     "html-to-text": "^8.1.0",
