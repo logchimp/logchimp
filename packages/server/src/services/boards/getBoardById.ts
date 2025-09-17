@@ -34,18 +34,20 @@ export async function getBoardById(boardId: string): Promise<IBoard | null> {
   }
 
   if (boardFromDb) {
-    try {
-      await cache.valkey.set(
-        cacheKey,
-        JSON.stringify(boardFromDb),
-        "EX",
-        DAY * 7,
-      );
-    } catch (err) {
-      logger.log({
-        level: "error",
-        message: err,
-      });
+    if (cache.isActive) {
+      try {
+        await cache.valkey.set(
+          cacheKey,
+          JSON.stringify(boardFromDb),
+          "EX",
+          DAY * 7,
+        );
+      } catch (err) {
+        logger.log({
+          level: "error",
+          message: err,
+        });
+      }
     }
 
     return boardFromDb;
