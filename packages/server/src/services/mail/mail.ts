@@ -2,21 +2,18 @@ import nodemailer from "nodemailer";
 import("dotenv");
 
 // utils
-import logchimpConfig from "../../utils/logchimpConfig";
-const config = logchimpConfig();
+import { configManager } from "../../utils/logchimpConfig";
+const config = configManager.getConfig();
 import logger from "../../utils/logger";
 
 function getMailConfig() {
   const mailConfig = {
-    host: process.env.LOGCHIMP_MAIL_HOST || config.mail?.host,
-    port: Number.parseInt(
-      process.env.LOGCHIMP_MAIL_PORT || config.mail?.port || "465",
-      10,
-    ),
-    secure: process.env.SMTP_PORT === "465",
+    host: config.mailHost,
+    port: config.mailPort,
+    secure: config.mailPort === 465,
     auth: {
-      user: process.env.LOGCHIMP_MAIL_USER || config.mail?.user,
-      pass: process.env.LOGCHIMP_MAIL_PASSWORD || config.mail?.password,
+      user: config.mailUser,
+      pass: config.mailPassword,
     },
   };
 

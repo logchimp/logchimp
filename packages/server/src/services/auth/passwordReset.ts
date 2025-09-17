@@ -7,11 +7,11 @@ import { mail, generateContent } from "../mail";
 import { createToken } from "../token.service";
 
 // utils
-import logchimpConfig from "../../utils/logchimpConfig";
+import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IPasswordResetJwtPayload } from "../../types";
 
-const config = logchimpConfig();
+const config = configManager.getConfig();
 
 export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
   const token = createToken(tokenPayload, {
@@ -39,7 +39,7 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
     const siteInfo = await database.select("title").from("settings");
     const siteTitle = siteInfo[0].title;
 
-    const urlObject = new URL(config.server.webUrl);
+    const urlObject = new URL(config.webUrl);
     const passwordResetMailContent = await generateContent("reset", {
       url: urlObject.origin,
       domain: urlObject.host,
