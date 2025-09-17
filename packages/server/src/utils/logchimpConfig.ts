@@ -3,18 +3,84 @@ import fs from "fs";
 import fsExtra from "fs-extra";
 import logger from "./logger";
 
-function config() {
-  // read logchimp.config.json from file-system
-  const configPath = path.resolve(
-    __dirname,
-    "../../../../logchimp.config.json",
-  );
-  const isConfigExists = fs.existsSync(configPath);
+interface Config {
+  secretKey: string | undefined;
+  machineSignature: string | undefined;
+  isSelfHosted: boolean | undefined;
 
-  if (isConfigExists) {
-    const config = fsExtra.readJsonSync(
-      path.resolve(__dirname, "../../../../logchimp.config.json"),
-    );
+  // Server
+  serverHost: string | undefined;
+  serverPort: string | undefined;
+  webUrl: string | undefined;
+
+  // Database
+  databaseHost: string | undefined;
+  databaseUser: string | undefined;
+  databasePort: string | undefined;
+  databasePassword: string | undefined;
+  databaseName: string | undefined;
+  databaseSsl: boolean | undefined;
+
+  // Cache
+  cacheUrl: string | undefined;
+
+  // Mail
+  mailHost: string | undefined;
+  mailUser: string | undefined;
+  mailPassword: string | undefined;
+  mailPort: string | undefined;
+}
+
+class ConfigManager {
+  private readonly configPath: string;
+  private cachedConfig: Config;
+
+  constructor(configPath?: string) {
+    this.configPath =
+      configPath || path.resolve(__dirname, "../../../../logchimp.config.json");
+  }
+
+  /**
+   * Get the complete configuration, with caching
+   */
+  public getConfig(): Config {
+    if (!this.cachedConfig) {
+      this.cachedConfig = this.loadAndMergeConfig();
+    }
+    return this.cachedConfig;
+  }
+
+  public reload() {
+    this.cachedConfig = this.loadAndMergeConfig();
+    return this.cachedConfig;
+  }
+
+  private loadAndMergeConfig(): Config {
+    const fileConfig = this.getConfigFile();
+    const envConfig = this.getEnvConfig();
+    const config = this.mergeConfigs(fileConfig, envConfig);
+
+    if (!config.webUrl?.trim()) {
+      logger.info(
+        "'LOGCHIMP_WEB_URL' variable is missing, some functionality of the LogChimp may not work as intended.",
+      );
+    }
+
+    return config;
+  }
+
+  /**
+   * Check if config file exists
+   */
+  public hasConfigFile(): boolean {
+    return fs.existsSync(this.configPath);
+  }
+
+  // Read config from `logchimp.config.json` file
+  private getConfigFile(): Config | null {
+    if (!this.hasConfigFile()) return null;
+
+    const config = fsExtra.readJsonSync(this.configPath);
 
     if (config.mail.service) {
       logger.info(
@@ -22,82 +88,91 @@ function config() {
       );
     }
 
-    return config;
+    if (config?.theme?.standalone) {
+      logger.info(
+        "'theme.standalone' key is deprecated and will be removed in next major release in `logchimp.config.json`.",
+      );
+    }
+
+    return {
+      secretKey: config.server?.secretKey,
+      machineSignature: config.server?.machineSignature,
+      isSelfHosted:
+        config.server?.selfHosted === true ||
+        config.server?.selfHosted === "true",
+
+      // Server
+      serverHost: config.server?.host,
+      serverPort: config.server?.port,
+      webUrl: config.server?.webUrl,
+
+      // Database
+      databaseHost: config.database?.host,
+      databaseUser: config.database?.user,
+      databasePassword: config.database?.password,
+      databasePort: config.database?.port,
+      databaseName: config.database?.name,
+      databaseSsl: config.database?.ssl,
+
+      // Cache
+      cacheUrl: config.cache?.url,
+
+      // Mail
+      mailHost: config.mail?.host,
+      mailUser: config.mail?.user,
+      mailPassword: config.mail?.password,
+      mailPort: config.mail?.port,
+    };
   }
 
-  const themeStandalone = process.env.LOGCHIMP_THEME_STANDALONE; // deprecated
-  const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
-  const serverSecretKey = process.env.LOGCHIMP_SECRET_KEY;
-  const machineSignature = process.env.LOGCHIMP_MACHINE_SIGNATURE;
-  const isSelfHosted = process.env.LOGCHIMP_IS_SELF_HOSTED === "true";
-  const webUrl = process.env.LOGCHIMP_WEB_URL;
+  private getEnvConfig(): Config {
+    if (process.env?.LOGCHIMP_MAIL_SERVICE) {
+      logger.info(
+        "'LOGCHIMP_MAIL_SERVICE' variable is deprecated and will be removed in next major release.",
+      );
+    }
 
-  // Database
-  const databaseHost = process.env.LOGCHIMP_DB_HOST;
-  const databaseUser = process.env.LOGCHIMP_DB_USER;
-  const databasePassword = process.env.LOGCHIMP_DB_PASSWORD;
-  const databasePort = process.env.LOGCHIMP_DB_PORT;
-  const databaseName = process.env.LOGCHIMP_DB_DATABASE;
-  const databaseSsl = process.env.LOGCHIMP_DB_SSL;
+    if (process.env?.LOGCHIMP_THEME_STANDALONE) {
+      logger.info(
+        "'LOGCHIMP_THEME_STANDALONE' variable is deprecated and will be removed in next major release.",
+      );
+    }
 
-  // Cache
-  const cacheUrl = process.env.LOGCHIMP_VALKEY_URL;
+    return {
+      secretKey: process.env.LOGCHIMP_SECRET_KEY,
+      machineSignature: process.env.LOGCHIMP_MACHINE_SIGNATURE,
+      isSelfHosted: process.env.LOGCHIMP_IS_SELF_HOSTED === "true",
 
-  // Mail
-  const mailService = process.env.LOGCHIMP_MAIL_SERVICE; // deprecated
-  const mailHost = process.env.LOGCHIMP_MAIL_HOST;
-  const mailUser = process.env.LOGCHIMP_MAIL_USER;
-  const mailPassword = process.env.LOGCHIMP_MAIL_PASSWORD;
-  const mailPort = process.env.LOGCHIMP_MAIL_PORT;
+      // Server
+      serverHost: process.env.LOGCHIMP_SERVER_HOST,
+      serverPort: process.env.LOGCHIMP_SERVER_PORT,
+      webUrl: process.env.LOGCHIMP_WEB_URL,
 
-  if (process.env?.LOGCHIMP_MAIL_SERVICE) {
-    logger.info(
-      "'LOGCHIMP_MAIL_SERVICE' variable is deprecated and will be removed in next major release.",
-    );
+      // Database
+      databaseHost: process.env.LOGCHIMP_DB_HOST,
+      databaseUser: process.env.LOGCHIMP_DB_USER,
+      databasePassword: process.env.LOGCHIMP_DB_PASSWORD,
+      databasePort: process.env.LOGCHIMP_DB_PORT,
+      databaseName: process.env.LOGCHIMP_DB_DATABASE,
+      databaseSsl: process.env.LOGCHIMP_DB_SSL === "true",
+
+      // Cache
+      cacheUrl: process.env.LOGCHIMP_VALKEY_URL,
+
+      // Mail
+      mailHost: process.env.LOGCHIMP_MAIL_HOST,
+      mailUser: process.env.LOGCHIMP_MAIL_USER,
+      mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
+      mailPort: process.env.LOGCHIMP_MAIL_PORT,
+    };
   }
 
-  if (process.env?.LOGCHIMP_THEME_STANDALONE) {
-    logger.info(
-      "'LOGCHIMP_THEME_STANDALONE' variable is deprecated and will be removed in next major release.",
-    );
+  private mergeConfigs(fileConfig: Config | null, envConfig: Config) {
+    return {
+      ...envConfig,
+      ...(fileConfig || {}),
+    };
   }
-
-  if (!webUrl?.trim()) {
-    logger.info(
-      "'LOGCHIMP_WEB_URL' variable is missing, some functionality of the LogChimp may not work as intended.",
-    );
-  }
-
-  return {
-    theme: {
-      standalone: themeStandalone === "true",
-    },
-    server: {
-      machineSignature,
-      isSelfHosted,
-      port: serverPort,
-      secretKey: serverSecretKey,
-      webUrl,
-    },
-    database: {
-      host: databaseHost,
-      user: databaseUser,
-      password: databasePassword,
-      name: databaseName,
-      port: databasePort,
-      ssl: databaseSsl === "true",
-    },
-    cache: {
-      url: cacheUrl,
-    },
-    mail: {
-      service: mailService,
-      host: mailHost,
-      user: mailUser,
-      password: mailPassword,
-      port: mailPort,
-    },
-  };
 }
 
-export default config;
+export const configManager = new ConfigManager();
