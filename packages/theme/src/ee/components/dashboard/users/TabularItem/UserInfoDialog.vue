@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref } from "vue";
 
 import {
-  Eye as EyeIcon, CircleUserRound as AccountInfoIcon,
-  Activity as ActivityIcon, Users as UsersIcon
-} from "lucide-vue"
-import type { IUser } from "@logchimp/types"
+  Eye as EyeIcon,
+  CircleUserRound as AccountInfoIcon,
+  Activity as ActivityIcon,
+  Users as UsersIcon,
+} from "lucide-vue";
+import type { IUser } from "@logchimp/types";
 
-import Dialog from "../../../../../components/ui/Dialog.vue"
-import Button from "../../../../../components/ui/Button.vue" // Adjust the path as necessary to point to
+import Dialog from "../../../../../components/ui/Dialog.vue";
+import Button from "../../../../../components/ui/Button.vue"; // Adjust the path as necessary to point to
 
 interface Props {
-  user: IUser
+  user: IUser;
 }
 
-const props = defineProps<Props>()
-const isOpen = ref(false)
+const props = defineProps<Props>();
+const isOpen = ref(false);
 </script>
 
 <template>

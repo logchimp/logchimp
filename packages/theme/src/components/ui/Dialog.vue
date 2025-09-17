@@ -7,10 +7,10 @@ import {
   DialogPortal,
   DialogRoot,
   DialogTitle,
-} from "reka-ui"
-import {X as CloseIcon} from "lucide-vue"
+} from "reka-ui";
+import { X as CloseIcon } from "lucide-vue";
 
-const model = defineModel<boolean>("open", { default: false })
+const model = defineModel<boolean>("open", { default: false });
 </script>
 
 <template>
