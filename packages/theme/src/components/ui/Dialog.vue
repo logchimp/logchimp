@@ -1,35 +1,48 @@
 <template>
   <DialogRoot v-model:open="model">
     <DialogPortal>
-      <DialogOverlay class="bg-black/20 backdrop-blur-sm data-[state=open]:animate-overlayShow fixed inset-0 z-30" />
-      <DialogContent class="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px]
-               translate-x-[-50%] translate-y-[-50%] rounded-lg bg-white p-6 shadow-lg focus:outline-none z-[100]">
-        <div class="flex items-center justify-between mb-2">
-          <DialogTitle class="text-lg font-semibold mb-2">
+      <DialogOverlay
+        class="bg-black/20 backdrop-blur-sm fixed inset-0 z-30"
+      />
+      <DialogContent
+        :class="[
+          'fixed top-1/2 left-1/2 rounded-lg bg-white p-6 shadow-lg',
+          'w-full max-h-[calc(100vh-10%)] overflow-y-auto',
+          '-translate-x-1/2 -translate-y-1/2',
+          'focus:outline-none z-100',
+          {
+            'max-w-sm': size === 'sm',
+            'max-w-lg': size === 'md',
+            'max-w-2xl': size === 'lg',
+          }
+        ]"
+      >
+        <header class="flex items-center justify-between mb-2">
+          <DialogTitle class="text-lg font-semibold" as="div">
             <slot name="title" />
           </DialogTitle>
-          <DialogClose class=" text-gray-500 hover:text-black " aria-label="Close">
-            <CloseIcon aria-hidden="true" />
-          </DialogClose>
-        </div>
-        <DialogDescription class="text-sm text-gray-500 mb-4">
+
+          <DialogCloseIconButton />
+        </header>
+
+        <DialogDescription class="text-sm text-neutral-500 mb-4">
           <slot name="description" />
         </DialogDescription>
 
-        <div class="mb-4">
+        <div>
           <slot />
         </div>
-        <footer class="flex justify-end">
+
+        <footer v-if="$slots.footer" class="flex justify-end mt-4">
           <slot name="footer" />
         </footer>
-
       </DialogContent>
     </DialogPortal>
   </DialogRoot>
 </template>
+
 <script setup lang="ts">
 import {
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogOverlay,
@@ -37,8 +50,15 @@ import {
   DialogRoot,
   DialogTitle,
 } from "reka-ui";
-
-import { X as CloseIcon } from "lucide-vue";
+import DialogCloseIconButton from "./Dialog/DialogCloseIconButton.vue";
 
 const model = defineModel<boolean>("open", { default: false });
+
+interface Props {
+  size?: "sm" | "md" | "lg";
+}
+
+withDefaults(defineProps<Props>(), {
+  size: "md",
+});
 </script>
