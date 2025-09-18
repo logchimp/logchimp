@@ -23,9 +23,8 @@
           'p-3 border border-(--border-color-default) rounded-lg'
         ]"
       >
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center gap-x-3">
           <Avatar
-            v-if="user.avatar"
             :src="user.avatar"
             :name="user.username || user.name || ''"
           />
