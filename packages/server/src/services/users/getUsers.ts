@@ -10,13 +10,19 @@ interface GetUserQueryOptions {
   first: number;
   after?: string;
   created: ApiSortType;
+  page?: number;
 }
 
 interface GetUserMetadataOptions {
   after?: string;
 }
 
-export async function getUsers({ first, after, created }: GetUserQueryOptions) {
+export async function getUsers({
+  first,
+  after,
+  page,
+  created,
+}: GetUserQueryOptions): Promise<IUserInfo[]> {
   try {
     let users = database<IUserInfo>("users")
       .select(
@@ -31,7 +37,9 @@ export async function getUsers({ first, after, created }: GetUserQueryOptions) {
       .orderBy("createdAt", created)
       .limit(first);
 
-    if (after) {
+    if (page) {
+      users = users.offset(first * (page - 1));
+    } else if (after) {
       users = users
         .where(
           "createdAt",
@@ -47,6 +55,8 @@ export async function getUsers({ first, after, created }: GetUserQueryOptions) {
       level: "error",
       message: err,
     });
+
+    return [];
   }
 }
 

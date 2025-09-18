@@ -14,12 +14,20 @@ import { getUsers, getUserMetadata } from "../../services/users/getUsers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_USERS_FILTER_COUNT } from "../../constants";
-import { parseAndValidateLimit } from "../../helpers";
+import { parseAndValidateLimit, parseAndValidatePage } from "../../helpers";
 
 const querySchema = z.object({
   first: z.coerce
     .string()
     .transform((value) => parseAndValidateLimit(value, GET_USERS_FILTER_COUNT)),
+  /**
+   * For backward compatibility to support offset pagination,
+   * will be removed in the next major release.
+   */
+  page: z.coerce
+    .string()
+    .optional()
+    .transform((value) => parseAndValidatePage(value)),
   after: z.uuid().optional(),
   created: z.enum(["ASC", "DESC"]).default("ASC"),
 });
@@ -31,31 +39,45 @@ export async function filter(
   res: Response<ResponseBody>,
 ) {
   const query = querySchema.safeParse(req.query);
+  if (!query.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid query parameters",
+      errors: query.error.issues,
+    });
+  }
+  const { first, page, after, created } = query.data;
 
   try {
-    const { first, after, created } = query.data;
-    const userData = await getUsers({ first, after, created });
+    const userData = await getUsers({ first, page, after, created });
     const userDataLength = userData.length;
 
-    const startCursor = userDataLength > 0 ? String(userData[0].userId) : null;
-    const endCursor =
-      userDataLength > 0 ? String(userData[userDataLength - 1].userId) : null;
+    let startCursor: string | null = null;
+    let endCursor: string | null = null;
+    if (!page) {
+      startCursor = userDataLength > 0 ? String(userData[0].userId) : null;
+      endCursor =
+        userDataLength > 0 ? String(userData[userDataLength - 1].userId) : null;
+    }
 
     let totalCount: number | null = null;
     let totalPages: number | null = null;
     let currentPage = 1;
     let hasNextPage = false;
-    const metadataResults = await getUserMetadata({
-      after,
-    });
-    if (metadataResults) {
-      totalCount = metadataResults.totalCount;
-      totalPages = Math.ceil(metadataResults.totalCount / first);
-      hasNextPage = metadataResults.remainingResultsCount - first > 0;
+    if (!page) {
+      const metadataResults = await getUserMetadata({
+        after,
+      });
+      if (metadataResults) {
+        totalCount = metadataResults.totalCount;
+        totalPages = Math.ceil(metadataResults.totalCount / first);
+        hasNextPage = metadataResults.remainingResultsCount - first > 0;
 
-      if (after) {
-        const seenResults = totalCount - metadataResults.remainingResultsCount;
-        currentPage = Math.floor(seenResults / first) + 1;
+        if (after) {
+          const seenResults =
+            totalCount - metadataResults.remainingResultsCount;
+          currentPage = Math.floor(seenResults / first) + 1;
+        }
       }
     }
 
@@ -107,15 +129,19 @@ export async function filter(
       },
       users,
       results: users,
-      page_info: {
-        count: userDataLength,
-        current_page: currentPage,
-        has_next_page: hasNextPage,
-        end_cursor: endCursor,
-        start_cursor: startCursor,
-      },
-      total_pages: totalPages,
-      total_count: totalCount,
+      ...(page
+        ? {}
+        : {
+            page_info: {
+              count: userDataLength,
+              current_page: currentPage,
+              has_next_page: hasNextPage,
+              end_cursor: endCursor,
+              start_cursor: startCursor,
+            },
+            total_pages: totalPages,
+            total_count: totalCount,
+          }),
     });
   } catch (err) {
     logger.log({
