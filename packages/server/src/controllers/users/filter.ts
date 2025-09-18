@@ -106,7 +106,7 @@ export async function filter(
         type: "success",
       },
       users,
-      // @ts-expect-error
+      results: users,
       page_info: {
         count: userDataLength,
         current_page: currentPage,

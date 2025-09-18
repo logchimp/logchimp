@@ -1,4 +1,8 @@
-import type { ApiSortType, IApiStatus } from "./common";
+import type {
+  ApiSortType,
+  CursorPaginatedResponse,
+  IApiStatus,
+} from "./common";
 
 export interface IPublicUserInfo {
   userId: string;
@@ -50,7 +54,7 @@ export interface IGetUsersRequestQuery {
   created: ApiSortType;
 }
 
-export interface IGetUsersResponseBody {
+export interface IGetUsersResponseBody extends CursorPaginatedResponse<IUser> {
   status: IApiStatus;
   users: IUser[];
 }
