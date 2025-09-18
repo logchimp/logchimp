@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { z } from "zod";
 import type {
   IApiErrorResponse,
   IGetUsersRequestQuery,
@@ -7,13 +8,21 @@ import type {
 import database from "../../database";
 
 // services
-import { getUsers } from "../../services/users/getUsers";
+import { getUsers, getUserMetadata } from "../../services/users/getUsers";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_USERS_FILTER_COUNT } from "../../constants";
-import { parseAndValidateLimit, parseAndValidatePage } from "../../helpers";
+import { parseAndValidateLimit } from "../../helpers";
+
+const querySchema = z.object({
+  first: z.coerce
+    .string()
+    .transform((value) => parseAndValidateLimit(value, GET_USERS_FILTER_COUNT)),
+  after: z.uuid().optional(),
+  created: z.enum(["ASC", "DESC"]).default("ASC"),
+});
 
 type ResponseBody = IGetUsersResponseBody | IApiErrorResponse;
 
@@ -21,16 +30,38 @@ export async function filter(
   req: Request<unknown, unknown, unknown, IGetUsersRequestQuery>,
   res: Response<ResponseBody>,
 ) {
-  const created = req.query.created;
-  const limit = parseAndValidateLimit(req.query?.limit, GET_USERS_FILTER_COUNT);
-  const page = parseAndValidatePage(req.query?.page);
+  const query = querySchema.safeParse(req.query);
 
   try {
-    const userData = await getUsers(created, limit, page);
+    const { first, after, created } = query.data;
+    const userData = await getUsers({ first, after, created });
+    const userDataLength = userData.length;
+
+    const startCursor = userDataLength > 0 ? String(userData[0].userId) : null;
+    const endCursor =
+      userDataLength > 0 ? String(userData[userDataLength - 1].userId) : null;
+
+    let totalCount: number | null = null;
+    let totalPages: number | null = null;
+    let currentPage = 1;
+    let hasNextPage = false;
+    const metadataResults = await getUserMetadata({
+      after,
+    });
+    if (metadataResults) {
+      totalCount = metadataResults.totalCount;
+      totalPages = Math.ceil(metadataResults.totalCount / first);
+      hasNextPage = metadataResults.remainingResultsCount - first > 0;
+
+      if (after) {
+        const seenResults = totalCount - metadataResults.remainingResultsCount;
+        currentPage = Math.floor(seenResults / first) + 1;
+      }
+    }
 
     const users = [];
 
-    for (let i = 0; i < userData.length; i++) {
+    for (let i = 0; i < userDataLength; i++) {
       const userId = userData[i].userId;
 
       try {
@@ -75,6 +106,16 @@ export async function filter(
         type: "success",
       },
       users,
+      // @ts-expect-error
+      page_info: {
+        count: userDataLength,
+        current_page: currentPage,
+        has_next_page: hasNextPage,
+        end_cursor: endCursor,
+        start_cursor: startCursor,
+      },
+      total_pages: totalPages,
+      total_count: totalCount,
     });
   } catch (err) {
     logger.log({
