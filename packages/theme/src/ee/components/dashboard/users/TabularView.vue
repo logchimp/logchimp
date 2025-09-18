@@ -1,14 +1,16 @@
 <template>
-  <Table class="users-table">
+  <Table>
     <template #header>
-      <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+      <tr
+        v-for="headerGroup in table.getHeaderGroups()"
+        :key="headerGroup.id"
+      >
         <th
           v-for="header in headerGroup.headers"
           :key="header.id"
           class="table-header-item"
           :style="{
             width: `${header.column.getSize()}px`,
-            flexGrow: header.id === 'name' ? 1 : 0,
           }"
         >
           <FlexRender
@@ -20,18 +22,21 @@
       </tr>
     </template>
 
-    <tr
+    <Tr
       v-for="row in table.getCoreRowModel().rows"
       :key="row.id"
-      class="table-row group"
+      class="group"
     >
       <DashboardUsersTabularItem
         :row="row"
         :user="row.original" :settings="settings"
       />
-    </tr>
+    </Tr>
 
-    <infinite-scroll :on-infinite="dashboardUsers.fetchUsers" :state="dashboardUsers.state" />
+    <infinite-scroll
+      :on-infinite="dashboardUsers.fetchUsers"
+      :state="dashboardUsers.state"
+    />
   </Table>
 </template>
 
@@ -46,6 +51,7 @@ import type { IUser } from "@logchimp/types";
 
 import DashboardUsersTabularItem from "./TabularItem/TabularItem.vue";
 import Table from "../../../../components/ui/Table/Table.vue";
+import Tr from "../../../../components/ui/Table/Tr.vue";
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import { useSettingStore } from "../../../../store/settings";
 import { useDashboardUsers } from "../../../../store/dashboard/users";
@@ -69,6 +75,7 @@ const columns = [
   }),
   columnHelper.display({
     id: "roles",
+    size: 350,
     header: "roles",
   }),
   columnHelper.display({
@@ -105,23 +112,3 @@ defineOptions({
   name: "DashboardUsersTabularView",
 });
 </script>
-
-<style lang='sass'>
-.users-table
-  .users-table-user
-    display: flex
-    align-items: center
-    flex: 6
-
-    .users-table-user-avatar
-      margin-right: 0.5rem
-
-    .users-table-user-name
-      margin-bottom: 0
-
-  .users-table-posts
-    flex: 1
-
-  .users-table-votes
-    flex: 1
-</style>
