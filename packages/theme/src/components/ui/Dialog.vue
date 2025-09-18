@@ -1,15 +1,13 @@
 <template>
   <DialogRoot v-model:open="model">
     <DialogPortal>
-      <DialogOverlay
-        class="bg-black/20 backdrop-blur-sm fixed inset-0 z-30"
-      />
+      <DialogBackdrop :as="DialogOverlay" :is-visible="true" />
       <DialogContent
         :class="[
           'fixed top-1/2 left-1/2 rounded-lg bg-white p-6 shadow-lg',
           'w-full max-h-[calc(100vh-10%)] overflow-y-auto',
           '-translate-x-1/2 -translate-y-1/2',
-          'focus:outline-none z-100',
+          'focus:outline-none z-60',
           {
             'max-w-sm': size === 'sm',
             'max-w-lg': size === 'md',
@@ -50,6 +48,8 @@ import {
   DialogRoot,
   DialogTitle,
 } from "reka-ui";
+
+import DialogBackdrop from "./DialogBackdrop.vue";
 import DialogCloseIconButton from "./Dialog/DialogCloseIconButton.vue";
 
 const model = defineModel<boolean>("open", { default: false });
