@@ -1,54 +1,66 @@
 <template>
   <template v-for="cell in row.getVisibleCells()" :key="cell.id">
-    <td
+    <Td
       v-if="cell.column.id === 'avatar'"
-      class="users-table-user-avatar"
       :style="{
         width: `${cell.column.getSize()}px`,
       }"
     >
       <avatar :src="user.avatar" :name="user.name || user.username" />
-    </td>
+    </Td>
 
-    <td v-else-if="cell.column.id === 'name'" class="table-data users-table-user font-medium"
-        :style="{
+    <Td
+      v-else-if="cell.column.id === 'name'"
+      class="font-medium"
+      :style="{
         width: `${cell.column.getSize()}px`,
       }"
     >
       {{ user.name || user.username }}
-    </td>
+    </Td>
 
-    <td v-else-if="cell.column.id === 'roles'" class="table-header-item users-table-user flex items-center gap-x-1.5"
-        :style="{
+    <Td
+      v-else-if="cell.column.id === 'roles'"
+      :style="{
         width: `${cell.column.getSize()}px`,
       }"
     >
-      <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
-      <AssignRoleUserDropdown />
-    </td>
+      <div class="flex items-center gap-x-1.5">
+        <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
+        <AssignRoleUserDropdown />
+      </div>
+    </Td>
 
-    <td v-else-if="cell.column.id === 'post_count'" class="table-data users-table-posts"
-        :style="{
+    <Td
+      v-else-if="cell.column.id === 'post_count'"
+      :style="{
         width: `${cell.column.getSize()}px`,
       }"
     >
       {{ user.posts }}
-    </td>
+    </Td>
 
-    <td v-else-if="cell.column.id === 'votes_count'" class="table-data users-table-votes"
-        :style="{
+    <Td
+      v-else-if="cell.column.id === 'votes_count'"
+      :style="{
         width: `${cell.column.getSize()}px`,
       }"
     >
       {{ user.votes }}
-    </td>
+    </Td>
 
-    <td v-else-if="cell.column.id === 'more' && settings.developer_mode"
-        :style="{
+    <Td
+      v-else-if="cell.column.id === 'more' && settings.developer_mode"
+      :style="{
         width: `${cell.column.getSize()}px`,
-      }">
-      <MoreOptionsDropdown />
-    </td>
+      }"
+      :ignore-px="true"
+      :ignore-py="true"
+    >
+      <div class="flex items-center justify-center">
+        <MoreOptionsDropdown />
+      </div>
+    </Td>
   </template>
 </template>
 
@@ -57,11 +69,13 @@ import { provide } from "vue";
 import type { Row } from "@tanstack/vue-table";
 import type { IUser, ISiteSettings } from "@logchimp/types";
 
+import { userIdKey } from "./options";
+
 import { Avatar } from "../../../../../components/ui/Avatar";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
-import { userIdKey } from "./options";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
+import Td from "../../../../../components/ui/Table/Td.vue";
 
 interface Props {
   row: Row<IUser>;
