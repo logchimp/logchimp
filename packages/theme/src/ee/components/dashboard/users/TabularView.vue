@@ -45,7 +45,7 @@ import {
 import type { IUser } from "@logchimp/types";
 
 import DashboardUsersTabularItem from "./TabularItem/TabularItem.vue";
-import Table from "../../../../components/ui/Table.vue";
+import Table from "../../../../components/ui/Table/Table.vue";
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import { useSettingStore } from "../../../../store/settings";
 import { useDashboardUsers } from "../../../../store/dashboard/users";

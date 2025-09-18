@@ -71,7 +71,7 @@ import { getAllBoards } from "../../ee/modules/boards";
 import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../components/ui/InfiniteScroll.vue";
-import Table from "../../components/ui/Table.vue";
+import Table from "../../components/ui/Table/Table.vue";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 
