@@ -12,7 +12,7 @@
 					/>
 				</div>
 				<div class="w-full">
-					<h1 class="font-medium text-4xl mb-2.5">
+					<h1 class="font-medium text-4xl mb-2.5 break-all">
 						{{ post.title }}
 					</h1>
 					<div class="flex items-center justify-between mb-6">
