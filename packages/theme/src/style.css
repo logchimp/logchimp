@@ -34,7 +34,7 @@
   /* radius */
   --border-radius-default: 0.375rem;
 
-  --border-color-default: theme('colors.neutral.300');
+  --border-color-default: theme("colors.neutral.300");
 }
 
 @layer base {
