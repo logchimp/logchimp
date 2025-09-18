@@ -137,6 +137,7 @@ defineOptions({
 .posts-table-title
   flex: 6
   font-weight: 500
+  word-break: break-word
 
 .posts-table-votes
   flex: 1
