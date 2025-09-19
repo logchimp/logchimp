@@ -1,7 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import type {
   IApiErrorResponse,
-  IGetCommentRequestParam,
+  IUpdatePostCommentRequestParam,
+  TDeletePostCommentRequestParam,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -9,8 +10,12 @@ import database from "../../database";
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
 
+type RequestParam =
+  | IUpdatePostCommentRequestParam
+  | TDeletePostCommentRequestParam;
+
 export async function commentExists(
-  req: Request<IGetCommentRequestParam>,
+  req: Request<RequestParam>,
   res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
