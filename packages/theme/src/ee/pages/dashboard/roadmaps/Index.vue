@@ -3,7 +3,7 @@
     <template v-slot:left>
       <Breadcrumbs>
         <BreadcrumbItem>
-          Roadmaps
+          {{t("dashboard.roadmaps.title")}}
         </BreadcrumbItem>
       </Breadcrumbs>
     </template>
@@ -17,7 +17,7 @@
       <!-- <div>-->
       <!--   <PhCrownSimple :size="32" color="#d8f218" weight="fill" />-->
       <!-- </div>-->
-      Create roadmap
+      {{t("dashboard.roadmaps.createRoadmap")}}
     </Button>
   </DashboardPageHeader>
 
@@ -26,7 +26,7 @@
       <div class="table-header">
         <div class="w-14" />
         <div class="table-header-item flex-1">
-          name
+            {{t("dashboard.roadmaps.roadmapsTableName")}}
         </div>
         <div class="table-header-item" />
       </div>
@@ -59,6 +59,7 @@ import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 import { useHead } from "@vueuse/head";
 import type { ISortRoadmapRequestBody } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 // import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
@@ -96,6 +97,8 @@ const createRoadmapButtonDisabled = computed(() => {
   const checkPermission = permissions.includes("roadmap:create");
   return !checkPermission;
 });
+
+const { t } = useI18n();
 
 async function createRoadmapHandler() {
   createRoadmapButtonLoading.value = true;
