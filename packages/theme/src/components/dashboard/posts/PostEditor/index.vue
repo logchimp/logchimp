@@ -87,6 +87,7 @@ import type {
 import { router } from "../../../../router";
 import { updatePost } from "../../../../modules/posts";
 import { useUserStore } from "../../../../store/user";
+import { useDashboardPosts } from "../../../../store/dashboard/posts";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -101,6 +102,7 @@ import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/S
 import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
 
 const { permissions } = useUserStore();
+const dashboardPosts = useDashboardPosts();
 
 interface Props {
   post: IDashboardPost;
@@ -131,9 +133,9 @@ async function updatePostHandler() {
       roadmapId: post.roadmap ? post.roadmap.id : undefined,
     });
 
-    if (response.status === 200) {
-      router.push("/dashboard/posts");
-    }
+    Object.assign(post, response.data.post);
+    dashboardPosts.updatePost(post);
+    router.push("/dashboard/posts");
   } catch (err) {
     console.error(err);
   } finally {

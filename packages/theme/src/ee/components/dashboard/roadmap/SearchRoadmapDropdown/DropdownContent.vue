@@ -22,12 +22,17 @@
       />
     </div>
 
-    <div class="p-1 w-full">
+    <div class="w-full">
       <div
-        v-if="!search && suggestions.length === 0"
-        class="text-center text-sm text-neutral-500 py-3.5"
+        v-if="!(searchRoadmap.roadmap.value?.url === 'uncategorized-roadmap') && !search"
+        :class="[
+          'gap-x-6 px-4 py-2.5 rounded-md text-center text-md font-semibold',
+          'cursor-pointer outline-none',
+          'bg-white hover:bg-neutral-300/50 data-[highlighted]:bg-neutral-300/50',
+        ]"
+        @click="selectHandler(noRoadmapTemplate)"
       >
-        No matches
+        No Roadmap
       </div>
 
       <ItemSuggestionDropdownItem
@@ -57,6 +62,17 @@ import { useRoadmapSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
 import CreateRoadmapItem from "./CreateRoadmapItem.vue";
+
+const noRoadmapTemplate = {
+  id: "",
+  name: "No Roadmap",
+  url: "uncategorized-roadmap",
+  index: -1,
+  color: "000000",
+  display: true,
+  created_at: new Date(),
+  updated_at: new Date(),
+};
 
 const search = ref("");
 const suggestions = ref<IRoadmapPrivate[]>([]);

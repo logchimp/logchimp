@@ -22,12 +22,17 @@
       />
     </div>
 
-    <div class="p-1 w-full">
+    <div class="w-full">
       <div
-        v-if="!search && suggestions.length === 0"
-        class="text-center text-sm text-neutral-500 py-3.5"
+        v-if="!(searchBoard.board.value?.url === 'uncategorized-board') && !search"
+        :class="[
+          'gap-x-6 px-4 py-2.5 rounded-md text-center text-md font-semibold',
+          'cursor-pointer outline-none',
+          'bg-white hover:bg-neutral-300/50 data-[highlighted]:bg-neutral-300/50',
+        ]"
+        @click="selectHandler(noBoardTemplate)"
       >
-        No matches
+        No Board
       </div>
 
       <ItemSuggestionDropdownItem
@@ -57,6 +62,17 @@ import { useBoardSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
 import CreateBoardItem from "./CreateBoardItem.vue";
+
+const noBoardTemplate: IBoardPrivate = {
+  boardId: "",
+  name: "No Board",
+  color: "000000",
+  url: "uncategorized-board",
+  createdAt: new Date(),
+  post_count: "",
+  display: true,
+  view_voters: true,
+};
 
 const search = ref("");
 const suggestions = ref<IBoardPrivate[]>([]);
