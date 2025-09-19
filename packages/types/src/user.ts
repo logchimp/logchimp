@@ -1,6 +1,7 @@
-import type {
+import {
   ApiSortType,
   CursorPaginatedResponse,
+  CursorPaginationParams,
   IApiStatus,
 } from "./common";
 
@@ -48,9 +49,7 @@ export type TGetUserInfoResponseBody = {
   user: IUserInfo;
 };
 
-export interface IGetUsersRequestQuery {
-  page: string;
-  limit?: string;
+export interface IGetUsersRequestQuery extends CursorPaginationParams {
   created: ApiSortType;
 }
 

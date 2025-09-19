@@ -6,6 +6,7 @@ import type {
   IUpdateUserSettingsArgs,
   IGetPermissionResponse,
   IGetUsersResponseBody,
+  IGetUsersRequestQuery,
 } from "@logchimp/types";
 
 // store
@@ -97,10 +98,12 @@ export class Users extends APIService {
   }
 
   /**
-   * @param {object} [params={}] - URL parameters
+   * @param {Partial<IGetUsersRequestQuery>} [params={}] - URL parameters
    * @returns {Promise<AxiosResponse<IGetUsersResponseBody>>}
    */
-  async getAll(params = {}): Promise<IGetUsersResponseBody> {
+  async getAll(
+    params: Partial<IGetUsersRequestQuery> = {},
+  ): Promise<IGetUsersResponseBody> {
     const { authToken } = useUserStore();
     const config: AxiosRequestConfig = {
       headers: {
