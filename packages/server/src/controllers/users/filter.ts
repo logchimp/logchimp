@@ -29,6 +29,10 @@ const querySchema = z.object({
     .string()
     .optional()
     .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
+  limit: z.coerce
+    .string()
+    .optional()
+    .transform((value) => parseAndValidateLimit(value, GET_USERS_FILTER_COUNT)),
   after: z.uuid().optional(),
   created: z.enum(["ASC", "DESC"]).default("ASC"),
 });
@@ -47,7 +51,8 @@ export async function filter(
       errors: query.error.issues,
     });
   }
-  const { first, page, after, created } = query.data;
+  const { first: _first, page, after, created, limit } = query.data;
+  const first = req.query?.limit ? limit : _first;
 
   // @ts-expect-error
   const { isOwner } = req.user as IAuthenticationMiddlewareUser;
