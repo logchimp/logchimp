@@ -34,10 +34,6 @@ export interface IGetPostActivityResponseBody {
   activity: IPostActivity[];
 }
 
-export interface IGetCommentRequestParam {
-  comment_id: string;
-}
-
 export type TCreatePostCommentRequestParam = IGetPostActivityRequestParam;
 
 export interface ICreatePostCommentRequestBody {
