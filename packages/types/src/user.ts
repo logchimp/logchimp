@@ -51,6 +51,12 @@ export type TGetUserInfoResponseBody = {
 
 export interface IGetUsersRequestQuery extends CursorPaginationParams {
   created: ApiSortType;
+  /**
+   * For backward compatibility to support offset pagination,
+   * will be removed in the next major release.
+   */
+  page?: string;
+  limit?: string;
 }
 
 export interface IGetUsersResponseBody
