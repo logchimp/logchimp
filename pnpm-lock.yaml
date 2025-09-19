@@ -194,7 +194,7 @@ importers:
         version: 3.5.2(vue-router@4.5.1(vue@3.5.21(typescript@5.9.2)))(vue@3.5.21(typescript@5.9.2))
       vue-i18n:
         specifier: ^11.1.11
-        version: 11.1.11(vue@3.5.20(typescript@5.9.2))
+        version: 11.1.11(vue@3.5.21(typescript@5.9.2))
       vue-infinite-loading:
         specifier: github:nvitius/vue-infinite-loading#next
         version: https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d(vue@3.5.21(typescript@5.9.2))
@@ -6508,12 +6508,12 @@ snapshots:
     optionalDependencies:
       vue-router: 4.5.1(vue@3.5.21(typescript@5.9.2))
 
-  vue-i18n@11.1.11(vue@3.5.20(typescript@5.9.2)):
+  vue-i18n@11.1.11(vue@3.5.21(typescript@5.9.2)):
     dependencies:
       '@intlify/core-base': 11.1.11
       '@intlify/shared': 11.1.11
       '@vue/devtools-api': 6.6.4
-      vue: 3.5.20(typescript@5.9.2)
+      vue: 3.5.21(typescript@5.9.2)
 
   vue-infinite-loading@https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d(vue@3.5.21(typescript@5.9.2)):
     dependencies:
