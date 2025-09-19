@@ -61,11 +61,31 @@
     "skipWord": "छोड़ें"
   },
   "dashboard": {
-    "tableHeading1": "पोस्ट्स",
-    "postsTableTitle": "शीर्षक",
-    "postsTableVotes": "वोट्स",
-    "tableHeading2": "बोर्ड्स",
-    "baordsTableName": "नाम",
-    "boardsTablePosts": "पोस्ट्स"
+    "dashboardContent": {
+      "tableHeading1": "पोस्ट",
+      "postsTableTitle": "शीर्षक",
+      "postsTableVotes": "वोट",
+      "tableHeading2": "बोर्ड",
+      "baordsTableName": "नाम",
+      "boardsTablePosts": "पोस्ट"
+    },
+    "sidebar": {
+      "manage": {
+        "manage": "प्रबंधन",
+        "dashboard": "डैशबोर्ड",
+        "boards": "बोर्ड",
+        "roadmaps": "रोडमैप",
+        "posts": "पोस्ट",
+        "users": "उपयोगकर्ता"
+      },
+      "settings": {
+        "settings": "सेटिंग्स",
+        "general": "सामान्य",
+        "billing": "बिलिंग",
+        "roles": "भूमिकाएँ",
+        "labs": "लैब्स"
+      },
+      "publicView": "सार्वजनिक दृश्य"
+    }
   }
 }
