@@ -28,7 +28,7 @@ const querySchema = z.object({
   page: z.coerce
     .string()
     .optional()
-    .transform((value) => parseAndValidatePage(value)),
+    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
   after: z.uuid().optional(),
   created: z.enum(["ASC", "DESC"]).default("ASC"),
 });
