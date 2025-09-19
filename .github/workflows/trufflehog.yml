@@ -32,6 +32,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Create results directory
+        run: mkdir -p results
+
       - name: Run TruffleHog
         id: trufflehog
         uses: trufflesecurity/trufflehog@v3.90.8
