@@ -3,11 +3,11 @@
 
   <div class="flex items-start px-3 lg:px-6 py-6">
     <div class="dashboard-overview-posts">
-      <div class="table-heading">{{t("dashboard.tableHeading1")}}</div>
+      <div class="table-heading">{{t("dashboard.dashboardContent.tableHeading1")}}</div>
       <Table>
         <template #header>
-          <div class="table-header-item posts-table-title">{{t("dashboard.postsTableTitle")}}</div>
-          <div class="table-header-item posts-table-votes">{{t("dashboard.postsTableVotes")}}</div>
+          <div class="table-header-item posts-table-title">{{t("dashboard.dashboardContent.postsTableTitle")}}</div>
+          <div class="table-header-item posts-table-votes">{{t("dashboard.dashboardContent.postsTableVotes")}}</div>
         </template>
 
         <router-link
@@ -28,12 +28,12 @@
       </Table>
     </div>
     <div class="dashboard-overview-boards">
-      <div class="table-heading">{{t("dashboard.tableHeading2")}}</div>
+      <div class="table-heading">{{t("dashboard.dashboardContent.tableHeading2")}}</div>
       <Table>
         <template #header>
           <div class="table-header-item boards-table-color" />
-          <div class="table-header-item boards-table-name">{{t("dashboard.baordsTableName")}}</div>
-          <div class="table-header-item boards-table-posts">{{t("dashboard.boardsTablePosts")}}</div>
+          <div class="table-header-item boards-table-name">{{t("dashboard.dashboardContent.baordsTableName")}}</div>
+          <div class="table-header-item boards-table-posts">{{t("dashboard.dashboardContent.boardsTablePosts")}}</div>
         </template>
 
         <div
