@@ -128,7 +128,7 @@ describe("POST /api/v1/password/set", () => {
     expect(response.body.code).toBe("INVALID_TOKEN");
   });
 
-  it("should throw 'PASSWORD_MISSING'", async () => {
+  it("should throw 'PASSWORD_MISSING' on empty password", async () => {
     const { token } = await resetPassword();
 
     const response = await supertest(app)
