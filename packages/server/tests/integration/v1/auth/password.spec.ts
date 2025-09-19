@@ -86,6 +86,7 @@ describe("POST /api/v1/auth/password/validateToken", () => {
       .send({ token });
 
     expect(response.status).toBe(200);
+    expect(response.headers["content-type"]).toContain("application/json");
     expect(response.body.reset.valid).toBe(true);
     expect(response.body.reset.email).toBe(user.email);
   });
