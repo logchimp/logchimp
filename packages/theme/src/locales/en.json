@@ -71,7 +71,7 @@
     },
     "sidebar": {
       "manage": {
-        "manage": "manage",
+        "manage": "Manage",
         "dashboard": "Dashboard",
         "boards": "Boards",
         "roadmaps": "Roadmaps",
@@ -86,6 +86,27 @@
         "labs": "Labs"
       },
       "publicView": "Public View"
+    },
+    "boards": {
+      "title": "Boards",
+      "createBoard": "Create Board",
+      "boardsTableName": "name",
+      "boardsTablePosts": "posts"
+    },
+    "roadmaps": {
+      "title": "Boards",
+      "createRoadmap": "Create roadmap",
+      "roadmapsTableName": "name"
+    },
+    "posts": {
+      "posts": "Posts"
+    },
+    "users": {
+      "title": "Users",
+      "columnName": "name",
+      "columnRoles": "roles",
+      "columnPosts": "posts",
+      "columnVotes": "votes"
     }
   }
 }
