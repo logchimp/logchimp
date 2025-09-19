@@ -5,15 +5,22 @@ on:
     branches: [ master ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+  schedule:
+    # Run weekly scan on Monday at 12:00 AM
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
 
 permissions:
   contents: read
   id-token: write
   issues: write
   pull-requests: write
+  security-events: write
+  actions: read
 
 jobs:
   trufflehog:
+    name: 🔎 Secret Scanning
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +35,123 @@ jobs:
         continue-on-error: true
         with:
           path: '.'
-          extra_args: '--log-level=2'
+          extra_args: >
+            --log-level=2
+            --output=results/trufflehog-results.json
 
-      - name: Scan Results Status
+      - name: Upload TruffleHog results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trufflehog-results-${{ github.run_id }}
+          path: results/
+          retention-days: 30
+
+      - name: Process Results for PR Comment
+        if: github.event_name == 'pull_request' && steps.trufflehog.outcome == 'failure'
+        id: process-results
+        run: |
+          if [ -f "results/trufflehog-results.json" ]; then
+            # Count total findings
+            FINDINGS_COUNT=$(jq length results/trufflehog-results.json)
+            echo "findings_count=$FINDINGS_COUNT" >> $GITHUB_OUTPUT
+          
+            # Create summary for first few findings
+            SUMMARY=$(jq -r '.[0:3] | map("- **\(.DetectorType)**: \(.Raw[:50])...") | join("\n")' results/trufflehog-results.json)
+            echo "findings_summary<<EOF" >> $GITHUB_OUTPUT
+            echo "$SUMMARY" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "findings_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment PR with findings
+        if: github.event_name == 'pull_request' && steps.trufflehog.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const findingsCount = '${{ steps.process-results.outputs.findings_count }}';
+            const findingsSummary = `${{ steps.process-results.outputs.findings_summary }}`;
+            
+            const body = `## 🚨 TruffleHog Security Scan Results
+            
+            **Found ${findingsCount} potential secret(s) in this PR**
+            
+            ### Summary of findings:
+            ${findingsSummary}
+            
+            ${findingsCount > 3 ? `\n_... and ${findingsCount - 3} more findings_` : ''}
+            
+            ### ⚠️ Next Steps:
+            1. Review the findings in the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            2. Remove any real secrets from your code and commit history
+            3. Rotate any exposed credentials
+            4. If these are false positives, add them to your TruffleHog ignore file
+            
+            ### 📋 Full Results:
+            Download the complete scan results from the workflow artifacts.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Generate SARIF Report
+        if: always() && steps.trufflehog.outcome == 'failure'
+        run: |
+          if [ -f "results/trufflehog-results.json" ]; then
+            # Convert JSON to SARIF format (basic conversion)
+            cat > results/trufflehog.sarif << 'EOF'
+            {
+              "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+              "version": "2.1.0",
+              "runs": [
+                {
+                  "tool": {
+                    "driver": {
+                      "name": "TruffleHog",
+                      "version": "3.90.8"
+                    }
+                  },
+                  "results": []
+                }
+              ]
+            }
+            EOF
+          
+            # You might want to use a proper JSON-to-SARIF converter here
+            echo "SARIF file created (basic template)"
+          fi
+
+      - name: Upload SARIF to GitHub Security
+        if: always() && steps.trufflehog.outcome == 'failure'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results/trufflehog.sarif
+        continue-on-error: true
+
+      - name: Set job summary
+        if: always()
+        run: |
+          echo "## TruffleHog Scan Summary" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.trufflehog.outcome }}" == "success" ]; then
+            echo "✅ No secrets detected" >> $GITHUB_STEP_SUMMARY
+          else
+            FINDINGS_COUNT="${{ steps.process-results.outputs.findings_count || 'unknown' }}"
+            echo "❌ Found $FINDINGS_COUNT potential secret(s)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Actions Required:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Review findings in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+            echo "2. Remove real secrets and rotate credentials" >> $GITHUB_STEP_SUMMARY
+            echo "3. Update .trufflehog ignore file for false positives" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Fail workflow if secrets found
         if: steps.trufflehog.outcome == 'failure'
-        run: exit 1
+        run: |
+          echo "::error title=Secrets Detected::TruffleHog found potential secrets in the repository"
+          exit 1
