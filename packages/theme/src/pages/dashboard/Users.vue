@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template v-slot:left>
       <Breadcrumbs>
-        <BreadcrumbItem>Users</BreadcrumbItem>
+        <BreadcrumbItem>{{t("dashboard.users.title")}}</BreadcrumbItem>
       </Breadcrumbs>
     </template>
   </DashboardPageHeader>
@@ -10,10 +10,10 @@
   <div class="px-3 lg:px-6">
     <Table class="users-table">
       <template #header>
-        <div class="table-header-item users-table-user">name</div>
-        <div class="table-header-item users-table-user">roles</div>
-        <div class="table-header-item users-table-posts">posts</div>
-        <div class="table-header-item users-table-votes">votes</div>
+        <div class="table-header-item users-table-user">{{t("dashboard.users.columnName")}}</div>
+        <div class="table-header-item users-table-user">{{t("dashboard.users.columnRoles")}}</div>
+        <div class="table-header-item users-table-posts">{{t("dashboard.users.columnPosts")}}</div>
+        <div class="table-header-item users-table-votes">{{t("dashboard.users.columnVotes ")}}</div>
         <div
           v-if="settings.developer_mode"
           class="table-header-item users-table-votes"
@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { useSettingStore } from "../../store/settings";
@@ -50,6 +51,7 @@ import DashboardUsersTabularItem from "../../ee/components/dashboard/users/Tabul
 
 const { settings } = useSettingStore();
 const dashboardUsers = useDashboardUsers();
+const { t } = useI18n();
 
 useHead({
   title: "Users • Dashboard",
