@@ -37,8 +37,8 @@ describe("POST /api/v1/auth/password/reset", () => {
 
     expect(response.status).toBe(200);
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.body).toHaveProperty("reset.token");
-    expect(typeof response.body.reset.token).toBe("string");
+    expect(response.body).toHaveProperty("reset.__token.token");
+    expect(typeof response.body.reset.__token.token).toBe("string");
   });
 });
 
