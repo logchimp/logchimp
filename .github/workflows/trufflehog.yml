@@ -1,0 +1,45 @@
+name: TruffleHog
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+  schedule:
+    # Run weekly scan on Monday at 12:00 AM
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+  pull-requests: write
+  security-events: write
+  actions: read
+
+jobs:
+  trufflehog:
+    name: 🔎 Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog
+        id: trufflehog
+        uses: trufflesecurity/trufflehog@v3.90.8
+        continue-on-error: true
+        with:
+          path: '.'
+          extra_args: >
+            --log-level=2
+
+      - name: Fail workflow if secrets found
+        if: steps.trufflehog.outcome == 'failure'
+        run: |
+          echo "::error title=Secrets Detected::TruffleHog found potential secrets in the repository"
+          exit 1
