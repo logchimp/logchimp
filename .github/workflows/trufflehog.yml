@@ -18,6 +18,9 @@ permissions:
   security-events: write
   actions: read
 
+env:
+  TRUFFLEHOG_REPORT_FILE_PATH: results/trufflehog-results.json
+
 jobs:
   trufflehog:
     name: 🔎 Secret Scanning
@@ -37,7 +40,7 @@ jobs:
           path: '.'
           extra_args: >
             --log-level=2
-            --output=results/trufflehog-results.json
+            --output=${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}
 
       - name: Upload TruffleHog results
         if: always()
@@ -51,13 +54,13 @@ jobs:
         if: github.event_name == 'pull_request' && steps.trufflehog.outcome == 'failure'
         id: process-results
         run: |
-          if [ -f "results/trufflehog-results.json" ]; then
+          if [ -f "${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}" ]; then
             # Count total findings
-            FINDINGS_COUNT=$(jq length results/trufflehog-results.json)
+            FINDINGS_COUNT=$(jq length ${{ env.TRUFFLEHOG_REPORT_FILE_PATH }})
             echo "findings_count=$FINDINGS_COUNT" >> $GITHUB_OUTPUT
           
             # Create summary for first few findings
-            SUMMARY=$(jq -r '.[0:3] | map("- **\(.DetectorType)**: \(.Raw[:50])...") | join("\n")' results/trufflehog-results.json)
+            SUMMARY=$(jq -r '.[0:3] | map("- **\(.DetectorType)**: \(.Raw[:50])...") | join("\n")' ${{ env.TRUFFLEHOG_REPORT_FILE_PATH }})
             echo "findings_summary<<EOF" >> $GITHUB_OUTPUT
             echo "$SUMMARY" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
@@ -102,7 +105,7 @@ jobs:
       - name: Generate SARIF Report
         if: always() && steps.trufflehog.outcome == 'failure'
         run: |
-          if [ -f "results/trufflehog-results.json" ]; then
+          if [ -f "${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}" ]; then
             # Convert JSON to SARIF format (basic conversion)
             cat > results/trufflehog.sarif << 'EOF'
             {
