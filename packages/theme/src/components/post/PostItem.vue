@@ -87,7 +87,7 @@ function updateVoters(voters: IPostVote) {
 .post-content-title
 	color: var(--color-text-black)
 	margin-bottom: 0
-  word-break: break-all
+	word-break: break-all
 
 .post-roadmap
 	text-transform: uppercase
