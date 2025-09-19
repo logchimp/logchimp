@@ -61,11 +61,31 @@
     "skipWord": "ignorer"
   },
   "dashboard": {
-    "tableHeading1": "Publications",
-    "postsTableTitle": "Titre",
-    "postsTableVotes": "Votes",
-    "tableHeading2": "Tableaux",
-    "baordsTableName": "Nom",
-    "boardsTablePosts": "Publications"
+    "dashboardContent": {
+      "tableHeading1": "Publications",
+      "postsTableTitle": "Titre",
+      "postsTableVotes": "Votes",
+      "tableHeading2": "Tableaux",
+      "baordsTableName": "Nom",
+      "boardsTablePosts": "Publications"
+    },
+    "sidebar": {
+      "manage": {
+        "manage": "gérer",
+        "dashboard": "Tableau de bord",
+        "boards": "Tableaux",
+        "roadmaps": "Feuilles de route",
+        "posts": "Publications",
+        "users": "Utilisateurs"
+      },
+      "settings": {
+        "settings": "Paramètres",
+        "general": "Général",
+        "billing": "Facturation",
+        "roles": "Rôles",
+        "labs": "Labs"
+      },
+      "publicView": "Vue publique"
+    }
   }
 }
