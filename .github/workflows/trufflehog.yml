@@ -20,6 +20,7 @@ permissions:
 
 env:
   TRUFFLEHOG_VERSION: 3.90.8
+  TRUFFLEHOG_REPORT_FILE_PATH: results/trufflehog-results.json
 
 jobs:
   trufflehog-cli:
@@ -32,6 +33,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Create results directory
+        run: mkdir -p results
+
       - name: Install TruffleHog CLI
         run: |
           curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin v${{ env.TRUFFLEHOG_VERSION }}
@@ -41,7 +45,156 @@ jobs:
         id: trufflehog
         run: |
           trufflehog filesystem . \
-            --results=unverified,verified \
-            --github-actions \
-            --exclude-paths .config/.trufflehogignore \
-            --fail
+          --results=unverified,verified \
+          --github-actions \
+          --exclude-paths .config/.trufflehogignore \
+          --fail \
+          --output=${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}
+
+      - name: Upload TruffleHog results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trufflehog-results-${{ github.run_id }}
+          path: results/
+          retention-days: 30
+
+      - name: Process Results for PR Comment
+        if: github.event_name == 'pull_request' && (steps.trufflehog.outcome == 'failure' || steps.trufflehog.outcome == 'success')
+        id: process-results
+        run: |
+          if [ -f "${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}" ]; then
+            # Count total findings
+            FINDINGS_COUNT=$(jq length ${{ env.TRUFFLEHOG_REPORT_FILE_PATH }} 2>/dev/null || echo "0")
+            echo "findings_count=$FINDINGS_COUNT" >> $GITHUB_OUTPUT
+          
+            if [ "$FINDINGS_COUNT" -gt 0 ]; then
+              # Create summary for first few findings
+              SUMMARY=$(jq -r '.[0:3] | map("- **\(.DetectorType // "Unknown")**: \(.Raw[:50] // "No raw data")...") | join("\n")' ${{ env.TRUFFLEHOG_REPORT_FILE_PATH }} 2>/dev/null || echo "- Unable to parse findings")
+              echo "findings_summary<<EOF" >> $GITHUB_OUTPUT
+              echo "$SUMMARY" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "findings_count=0" >> $GITHUB_OUTPUT
+            echo "No results file found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Comment PR with findings
+        if: github.event_name == 'pull_request' && steps.process-results.outputs.findings_count != '0'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const findingsCount = '${{ steps.process-results.outputs.findings_count }}';
+            const findingsSummary = `${{ steps.process-results.outputs.findings_summary }}`;
+            
+            // Check if we already commented on this PR
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existingComment = comments.data.find(comment => 
+              comment.body.includes('🚨 TruffleHog Security Scan Results')
+            );
+            
+            const body = `## 🚨 TruffleHog Security Scan Results
+            
+            **Found ${findingsCount} potential secret(s) in this PR**
+            
+            ### Summary of findings:
+            ${findingsSummary}
+            
+            ${findingsCount > 3 ? `\n_... and ${findingsCount - 3} more findings_` : ''}
+            
+            ### ⚠️ Next Steps:
+            1. Review the findings in the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            2. Remove any real secrets from your code and commit history
+            3. Rotate any exposed credentials
+            4. If these are false positives, add them to your TruffleHog ignore file
+            
+            ### 📋 Full Results:
+            Download the complete scan results from the workflow artifacts.
+            
+            ---
+            *Last updated: ${new Date().toISOString()}*
+            `;
+            
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: body
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+
+      - name: Comment PR with success
+        if: github.event_name == 'pull_request' && steps.process-results.outputs.findings_count == '0' && steps.trufflehog.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check for existing TruffleHog comments and update/delete them
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existingComment = comments.data.find(comment => 
+              comment.body.includes('🚨 TruffleHog Security Scan Results')
+            );
+            
+            if (existingComment) {
+              // Update to show success
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: `## ✅ TruffleHog Security Scan Results
+            
+                **No secrets detected in this PR** 🎉
+            
+                ---
+                *Last updated: ${new Date().toISOString()}*`
+              });
+            }
+
+      - name: Generate SARIF Report
+        if: always() && steps.trufflehog.outcome == 'failure' && hashFiles('results/trufflehog-results.json') != ''
+        run: |
+          python3 .github/scripts/convert_to_sarif.py results/trufflehog-results.json results/trufflehog.sarif
+
+      - name: Upload SARIF to GitHub Security
+        if: always() && steps.trufflehog.outcome == 'failure' && hashFiles('results/trufflehog.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results/trufflehog.sarif
+        continue-on-error: true
+
+      - name: Set job summary
+        if: always()
+        run: |
+          echo "## TruffleHog Scan Summary" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.trufflehog.outcome }}" == "success" ]; then
+            echo "✅ No secrets detected" >> $GITHUB_STEP_SUMMARY
+          else
+            FINDINGS_COUNT="${{ steps.process-results.outputs.findings_count || 'unknown' }}"
+            echo "❌ Found $FINDINGS_COUNT potential secret(s)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Actions Required:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Review findings in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+            echo "2. Remove real secrets and rotate credentials" >> $GITHUB_STEP_SUMMARY
+            echo "3. Update .trufflehog ignore file for false positives" >> $GITHUB_STEP_SUMMARY
+          fi
