@@ -15,6 +15,7 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_USERS_FILTER_COUNT } from "../../constants";
 import { parseAndValidateLimit, parseAndValidatePage } from "../../helpers";
+import type { IAuthenticationMiddlewareUser } from "../../types";
 
 const querySchema = z.object({
   first: z.coerce
@@ -47,6 +48,15 @@ export async function filter(
     });
   }
   const { first, page, after, created } = query.data;
+
+  // @ts-expect-error
+  const { isOwner } = req.user as IAuthenticationMiddlewareUser;
+  if (!isOwner) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
 
   try {
     const userData = await getUsers({ first, page, after, created });

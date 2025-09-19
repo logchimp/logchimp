@@ -1,5 +1,5 @@
 // packages
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type {
   IAuthUserProfile,
   IAuthUserProfileResponse,
@@ -101,7 +101,14 @@ export class Users extends APIService {
    * @returns {Promise<AxiosResponse<IGetUsersResponseBody>>}
    */
   async getAll(params = {}): Promise<IGetUsersResponseBody> {
-    return this.get("/v1/users", params)
+    const { authToken } = useUserStore();
+    const config: AxiosRequestConfig = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    return this.get("/v1/users", params, config)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
