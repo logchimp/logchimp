@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template v-slot:left>
       <Breadcrumbs>
-        <BreadcrumbItem>Boards</BreadcrumbItem>
+        <BreadcrumbItem>{{t("dashboard.boards.title")}}</BreadcrumbItem>
       </Breadcrumbs>
     </template>
 
@@ -12,7 +12,7 @@
       :loading="createBoardButtonLoading"
       @click="createBoardHandler"
     >
-      Create board
+      {{t("dashboard.boards.createBoard")}}
     </Button>
   </DashboardPageHeader>
 
@@ -20,8 +20,8 @@
 		<Table class="boards-table">
 			<template #header>
 				<div class="w-14" />
-				<div class="table-header-item boards-table-name">name</div>
-				<div class="table-header-item boards-table-posts">posts</div>
+				<div class="table-header-item boards-table-name">{{t("dashboard.boards.boardsTableName")}}</div>
+				<div class="table-header-item boards-table-posts">{{t("dashboard.boards.boardsTablePosts")}}</div>
 				<div class="table-header-item boards-table-icons" />
 			</template>
 
@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../../router";
@@ -59,6 +60,7 @@ import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
+const { t } = useI18n();
 
 const createBoardButtonLoading = ref(false);
 
