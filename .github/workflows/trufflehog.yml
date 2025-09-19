@@ -1,22 +1,27 @@
 name: TruffleHog
+
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
+
 permissions:
   contents: read
   id-token: write
   issues: write
   pull-requests: write
+
 jobs:
   trufflehog:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Run TruffleHog
         id: trufflehog
         uses: trufflesecurity/trufflehog@v3.90.8
@@ -24,6 +29,7 @@ jobs:
         with:
           path: '.'
           extra_args: '--log-level=2'
+
       - name: Scan Results Status
         if: steps.trufflehog.outcome == 'failure'
         run: exit 1
