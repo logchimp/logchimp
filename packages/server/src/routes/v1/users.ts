@@ -8,7 +8,7 @@ import * as users from "../../controllers/users";
 // middleware
 import { authRequired } from "../../middlewares/auth";
 
-router.get("/users", users.filter);
+router.get("/users", authRequired, users.filter);
 router.get("/users/profile", authRequired, users.getProfile);
 router.patch("/users/profile", authRequired, users.updateProfile);
 
