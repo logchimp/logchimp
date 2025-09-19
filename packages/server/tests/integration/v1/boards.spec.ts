@@ -82,74 +82,6 @@ describe("GET /api/v1/boards", () => {
     }
   });
 
-  it("should get filtered boards in 'DESC' order", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      created: "DESC",
-    });
-
-    const responseBoards: IBoardDetail[] = response.body.boards;
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(10);
-
-    const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
-    );
-
-    for (let i = 0; i < boardCreationDates.length - 1; i++) {
-      const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i + 1].getTime();
-      expect(curr).to.be.at.least(next);
-    }
-  });
-
-  it("should get 2 filtered boards in 'DESC' order", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      limit: 2,
-      created: "DESC",
-    });
-
-    const responseBoards: IBoardDetail[] = response.body.boards;
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(2);
-
-    const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
-    );
-
-    for (let i = 0; i < boardCreationDates.length - 1; i++) {
-      const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i + 1].getTime();
-      expect(curr).to.be.at.least(next);
-    }
-  });
-
-  it("should get 10 filtered boards in 'ACS' order", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      limit: 15,
-      created: "ACS",
-    });
-
-    const responseBoards: IBoardDetail[] = response.body.boards;
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(10);
-
-    const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
-    );
-
-    for (let i = 0; i < boardCreationDates.length - 1; i++) {
-      const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i + 1].getTime();
-      expect(curr).to.be.at.most(next);
-    }
-  });
-
   it("should get 5 filtered boards, in page 3, 'DESC' order", async () => {
     const response = await supertest(app).get("/api/v1/boards").query({
       page: 2,
@@ -174,18 +106,116 @@ describe("GET /api/v1/boards", () => {
     }
   });
 
-  it("should get an empty boards Array", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      page: 50,
-      limit: 10,
-      created: "DESC",
+  describe("Offset pagination", () => {
+    describe("'?page=' param", () => {
+      it("should coerce page=0 and page=-1 to page=1 in offset mode", async () => {
+        const page0 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5, page: 0, created: "ASC" });
+
+        const pageNeg1 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5, page: -1, created: "ASC" });
+
+        const page1 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5, page: 1, created: "ASC" });
+
+        const ids0 = page0.body.boards.map((b: IBoardDetail) => b.boardId);
+        const idsNeg1 = pageNeg1.body.boards.map(
+          (b: IBoardDetail) => b.boardId,
+        );
+        const ids1 = page1.body.boards.map((b: IBoardDetail) => b.boardId);
+
+        expect(ids0).toEqual(ids1);
+        expect(idsNeg1).toEqual(ids1);
+      });
+
+      it("should get an empty boards Array for large '?page=1000'", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          page: 1000,
+          created: "DESC",
+        });
+
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(0);
+      });
     });
 
-    const responseBoards: IBoardDetail[] = response.body.boards;
+    describe("'?created=' param", () => {
+      it("should get filtered boards in 'DESC' order", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          created: "DESC",
+        });
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(0);
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(10);
+
+        const boardCreationDates = responseBoards.map(
+          (board: IBoardDetail) => new Date(board.createdAt),
+        );
+
+        for (let i = 0; i < boardCreationDates.length - 1; i++) {
+          const curr = boardCreationDates[i].getTime();
+          const next = boardCreationDates[i + 1].getTime();
+          expect(curr).to.be.at.least(next);
+        }
+      });
+    });
+
+    describe("'?limit=' param", () => {
+      it("should get 2 filtered boards in 'DESC' order", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          limit: 2,
+          created: "DESC",
+        });
+
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(2);
+
+        const boardCreationDates = responseBoards.map(
+          (board: IBoardDetail) => new Date(board.createdAt),
+        );
+
+        for (let i = 0; i < boardCreationDates.length - 1; i++) {
+          const curr = boardCreationDates[i].getTime();
+          const next = boardCreationDates[i + 1].getTime();
+          expect(curr).to.be.at.least(next);
+        }
+      });
+
+      it("should get 15 boards, fallback to cap value of 10 boards in 'ACS' order", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          limit: 15,
+          created: "ACS",
+        });
+
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(10);
+
+        const boardCreationDates = responseBoards.map(
+          (board: IBoardDetail) => new Date(board.createdAt),
+        );
+
+        for (let i = 0; i < boardCreationDates.length - 1; i++) {
+          const curr = boardCreationDates[i].getTime();
+          const next = boardCreationDates[i + 1].getTime();
+          expect(curr).to.be.at.most(next);
+        }
+      });
+    });
   });
 });
 
