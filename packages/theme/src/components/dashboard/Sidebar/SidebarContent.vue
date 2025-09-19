@@ -10,66 +10,66 @@
     </div>
 
     <SidebarList>
-      <SidebarListHeading>Manage</SidebarListHeading>
+      <SidebarListHeading>{{t("dashboard.sidebar.manage.manage")}}</SidebarListHeading>
       <ul>
         <li>
           <SidebarItem to="/dashboard">
             <dashboard-icon />
-            <p>Dashboard</p>
+            <p>{{t("dashboard.sidebar.manage.dashboard")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/boards">
             <board-icon />
-            <p>Boards</p>
+            <p>{{t("dashboard.sidebar.manage.boards")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/roadmaps">
             <roadmap-icon />
-            <p>Roadmaps</p>
+            <p>{{t("dashboard.sidebar.manage.roadmaps")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/posts">
             <post-icon />
-            <p>Posts</p>
+            <p>{{t("dashboard.sidebar.manage.posts")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/users">
             <users-icon />
-            <p>Users</p>
+            <p>{{t("dashboard.sidebar.manage.users")}}</p>
           </SidebarItem>
         </li>
       </ul>
     </SidebarList>
 
     <SidebarList>
-      <SidebarListHeading>Settings</SidebarListHeading>
+      <SidebarListHeading>{{t("dashboard.sidebar.settings.settings")}}</SidebarListHeading>
       <ul>
         <li>
           <SidebarItem to="/dashboard/settings/general">
             <settings-icon />
-            <p>General</p>
+            <p>{{t("dashboard.sidebar.settings.general")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/settings/billing">
             <credit-card-icon />
-            <p>Billing</p>
+            <p>{{t("dashboard.sidebar.settings.billing")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/settings/roles">
             <shield-icon />
-            <p>Roles</p>
+            <p>{{t("dashboard.sidebar.settings.roles")}}</p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/settings/labs">
             <lab-icon />
-            <p>Labs</p>
+            <p>{{t("dashboard.sidebar.settings.labs")}}</p>
           </SidebarItem>
         </li>
       </ul>
@@ -79,7 +79,7 @@
       <li>
         <SidebarItem to="/">
           <arrow-up-right-icon />
-          <p>Public view</p>
+          <p>{{t("dashboard.sidebar.publicView")}}</p>
         </SidebarItem>
       </li>
     </ul>
@@ -104,6 +104,7 @@ import {
   ArrowUpRight as ArrowUpRightIcon,
   CreditCard as CreditCardIcon,
 } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 import { useSettingStore } from "../../../store/settings";
 
@@ -117,4 +118,5 @@ import DashboardSidebarAuthUserDropdown from "./AuthUser/Dropdown.vue";
 import LanguageDropdown from "../../ui/LanguageDropdown.vue";
 
 const { get: siteSettings } = useSettingStore();
+const { t } = useI18n();
 </script>
