@@ -1,11 +1,12 @@
 // packages
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type {
   IAuthUserProfile,
   IAuthUserProfileResponse,
   IUpdateUserSettingsArgs,
   IGetPermissionResponse,
   IGetUsersResponseBody,
+  IGetUsersRequestQuery,
 } from "@logchimp/types";
 
 // store
@@ -97,11 +98,20 @@ export class Users extends APIService {
   }
 
   /**
-   * @param {object} [params={}] - URL parameters
+   * @param {Partial<IGetUsersRequestQuery>} [params={}] - URL parameters
    * @returns {Promise<AxiosResponse<IGetUsersResponseBody>>}
    */
-  async getAll(params = {}): Promise<IGetUsersResponseBody> {
-    return this.get("/v1/users", params)
+  async getAll(
+    params: Partial<IGetUsersRequestQuery> = {},
+  ): Promise<IGetUsersResponseBody> {
+    const { authToken } = useUserStore();
+    const config: AxiosRequestConfig = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    return this.get("/v1/users", params, config)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
