@@ -73,7 +73,7 @@ jobs:
 
       - name: Comment PR with findings
         if: github.event_name == 'pull_request' && steps.trufflehog.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const findingsCount = '${{ steps.process-results.outputs.findings_count }}';
@@ -106,34 +106,12 @@ jobs:
             });
 
       - name: Generate SARIF Report
-        if: always() && steps.trufflehog.outcome == 'failure'
+        if: always() && steps.trufflehog.outcome == 'failure' && hashFiles('results/trufflehog-results.json') != ''
         run: |
-          if [ -f "${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}" ]; then
-            # Convert JSON to SARIF format (basic conversion)
-            cat > results/trufflehog.sarif << 'EOF'
-            {
-              "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
-              "version": "2.1.0",
-              "runs": [
-                {
-                  "tool": {
-                    "driver": {
-                      "name": "TruffleHog",
-                      "version": "3.90.8"
-                    }
-                  },
-                  "results": []
-                }
-              ]
-            }
-            EOF
-          
-            # You might want to use a proper JSON-to-SARIF converter here
-            echo "SARIF file created (basic template)"
-          fi
+          python3 .github/scripts/convert_to_sarif.py results/trufflehog-results.json results/trufflehog.sarif
 
       - name: Upload SARIF to GitHub Security
-        if: always() && steps.trufflehog.outcome == 'failure'
+        if: always() && steps.trufflehog.outcome == 'failure' && hashFiles('results/trufflehog.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results/trufflehog.sarif
