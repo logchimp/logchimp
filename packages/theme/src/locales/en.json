@@ -61,11 +61,31 @@
     "skipWord": "skip"
   },
   "dashboard": {
-    "tableHeading1": "Posts",
-    "postsTableTitle": "Title",
-    "postsTableVotes": "Votes",
-    "tableHeading2": "Boards",
-    "baordsTableName": "Name",
-    "boardsTablePosts": "Posts"
+    "dashboardContent": {
+      "tableHeading1": "Posts",
+      "postsTableTitle": "Title",
+      "postsTableVotes": "Votes",
+      "tableHeading2": "Boards",
+      "baordsTableName": "Name",
+      "boardsTablePosts": "Posts"
+    },
+    "sidebar": {
+      "manage": {
+        "manage": "manage",
+        "dashboard": "Dashboard",
+        "boards": "Boards",
+        "roadmaps": "Roadmaps",
+        "posts": "Posts",
+        "users": "Users"
+      },
+      "settings": {
+        "settings": "Settings",
+        "general": "General",
+        "billing": "Billing",
+        "roles": "Roles",
+        "labs": "Labs"
+      },
+      "publicView": "Public View"
+    }
   }
 }
