@@ -54,7 +54,8 @@ export interface IGetUsersRequestQuery {
   created: ApiSortType;
 }
 
-export interface IGetUsersResponseBody extends Partial<CursorPaginatedResponse<IUser>> {
+export interface IGetUsersResponseBody
+  extends Partial<CursorPaginatedResponse<IUser>> {
   status: IApiStatus;
   users: IUser[];
 }

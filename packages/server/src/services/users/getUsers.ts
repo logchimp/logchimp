@@ -33,8 +33,8 @@ export async function getUsers({
         "avatar",
         "isVerified",
         "isBlocked",
-        'isOwner',
-        'notes',
+        "isOwner",
+        "notes",
         "createdAt",
       )
       .orderBy("createdAt", created)
