@@ -123,7 +123,6 @@ import type { IUser } from "@logchimp/types";
 
 import Dialog from "../../../../../components/ui/Dialog.vue";
 import Avatar from "../../../../../components/ui/Avatar/Avatar.vue";
-import Button from "../../../../../components/ui/Button.vue";
 import RoleBadge from "../../../RoleBadge.vue";
 
 interface Props {
