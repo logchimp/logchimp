@@ -82,11 +82,11 @@
 
           <ul class="grid gap-y-1 text-xs text-neutral-700">
             <li class="flex justify-between px-2 py-1.5 rounded-md bg-neutral-100">
-              <div class="font-medium">Posts Created</div>
+              <div class="font-medium">Posts</div>
               <span class="font-semibold">{{ user.posts }}</span>
             </li>
             <li class="flex justify-between px-2 py-1.5 rounded-md bg-neutral-100">
-              <div class="font-medium">Votes Cast</div>
+              <div class="font-medium">Votes</div>
               <span class="font-semibold">{{ user.votes }}</span>
             </li>
           </ul>
