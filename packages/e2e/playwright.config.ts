@@ -1,10 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from 'dotenv';
+import path from 'path';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-require("dotenv").config();
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+const authFile = path.join(__dirname, '.auth/user.json')
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -35,48 +39,84 @@ export default defineConfig({
     process.env.CI_BRANCH_NAME === "master"
       ? // CI
         [
+          // Setup project
+          { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
           {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
+            use: { ...devices["Desktop Chrome"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
           // Test against branded browsers
           {
             name: "Microsoft Edge",
-            use: { ...devices["Desktop Edge"], channel: "msedge" },
+            use: {
+              ...devices["Desktop Edge"],
+              channel: "msedge",
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
           {
             name: "firefox",
-            use: { ...devices["Desktop Firefox"] },
+            use: { ...devices["Desktop Firefox"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
           {
             name: "webkit",
-            use: { ...devices["Desktop Safari"] },
+            use: { ...devices["Desktop Safari"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
           // Mobile
           {
             name: "Mobile Chrome",
-            use: { ...devices["Pixel 5"] },
+            use: { ...devices["Pixel 5"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
           {
             name: "Mobile Safari",
-            use: { ...devices["iPhone 13 Pro"] },
+            use: {
+              ...devices["iPhone 13 Pro"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
         ]
       : // Dev
         [
+          // Setup project
+          { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
           {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
+            use: { ...devices["Desktop Chrome"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
 
           {
             name: "firefox",
-            use: { ...devices["Desktop Firefox"] },
+            use: { ...devices["Desktop Firefox"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
 
           {
             name: "webkit",
-            use: { ...devices["Desktop Safari"] },
+            use: { ...devices["Desktop Safari"],
+              storageState: authFile,
+            },
+            dependencies: [ "setup" ],
           },
 
           /* Test against mobile viewports. */
