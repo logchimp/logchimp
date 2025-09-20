@@ -3,3 +3,4 @@
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/.auth/
