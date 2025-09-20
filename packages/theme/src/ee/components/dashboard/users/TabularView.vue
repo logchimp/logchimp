@@ -25,7 +25,7 @@
     <Tr
       v-for="row in table.getCoreRowModel().rows"
       :key="row.id"
-      class="group"
+      class="relative group"
     >
       <DashboardUsersTabularItem
         :row="row"

@@ -17,6 +17,7 @@
       }"
     >
       {{ user.name || user.username }}
+      <UserInfoDialog :user="user" />
     </Td>
 
     <Td
@@ -27,7 +28,9 @@
     >
       <div class="flex items-center gap-x-1.5">
         <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
-        <AssignRoleUserDropdown />
+        <div class="relative z-[2]">
+          <AssignRoleUserDropdown />
+        </div>
       </div>
     </Td>
 
@@ -57,7 +60,7 @@
       :ignore-px="true"
       :ignore-py="true"
     >
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center relative z-[1]">
         <MoreOptionsDropdown />
       </div>
     </Td>
@@ -65,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide } from "vue";
+import { provide, defineAsyncComponent } from "vue";
 import type { Row } from "@tanstack/vue-table";
 import type { IUser, ISiteSettings } from "@logchimp/types";
 
@@ -76,6 +79,10 @@ import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
 import Td from "../../../../../components/ui/Table/Td.vue";
+
+const UserInfoDialog = defineAsyncComponent(
+  () => import("../UserInfo/UserInfoDialog.vue"),
+);
 
 interface Props {
   row: Row<IUser>;

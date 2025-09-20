@@ -1,17 +1,5 @@
 <template>
-  <button
-    :class="[
-      'ml-auto rounded-full p-1.5 text-neutral-600',
-      'hover:bg-gray-100 hover:text-black'
-    ]"
-    @click="isOpen = true"
-    type="button"
-  >
-    <EyeIcon aria-hidden="true" class="size-4" />
-    <span class="sr-only">View details</span>
-  </button>
-
-  <Dialog v-model:open="isOpen">
+  <DialogContent>
     <template #title>
       User Details
     </template>
@@ -108,27 +96,20 @@
         </div>
       </div>
     </div>
-  </Dialog>
+  </DialogContent>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import {
-  Eye as EyeIcon,
   CircleUserRound as AccountInfoIcon,
   Activity as ActivityIcon,
   Users as UsersIcon,
 } from "lucide-vue";
-import type { IUser } from "@logchimp/types";
 
-import Dialog from "../../../../../components/ui/Dialog.vue";
+import DialogContent from "../../../../../components/ui/Dialog/DialogContent.vue";
 import Avatar from "../../../../../components/ui/Avatar/Avatar.vue";
 import RoleBadge from "../../../RoleBadge.vue";
+import type { UserInfoDialogProps } from "./types";
 
-interface Props {
-  user: IUser;
-}
-
-defineProps<Props>();
-const isOpen = ref(false);
+defineProps<UserInfoDialogProps>();
 </script>
