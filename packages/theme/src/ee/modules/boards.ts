@@ -179,14 +179,14 @@ export const deleteBoard = async (
 /**
  * Check board name
  */
-export const checkBoardName = async (
+export const checkBoardSlug = async (
   name: string,
 ): Promise<AxiosResponse<TBoardCheckNameResponse>> => {
   const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
-    url: `${VITE_API_URL}/api/v1/boards/check-name`,
+    url: `${VITE_API_URL}/api/v1/boards/check-slug`,
     data: {
       name,
     },

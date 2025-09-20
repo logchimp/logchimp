@@ -6,7 +6,7 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function checkName(
+export async function checkSlug(
   req: Request<unknown, unknown, TBoardCheckNameBody>,
   res: Response,
 ) {

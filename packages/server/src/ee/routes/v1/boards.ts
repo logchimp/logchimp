@@ -34,7 +34,7 @@ router.get<ISearchBoardRequestParams>(
   boards.searchBoard,
 );
 
-router.post("/boards/check-name", authRequired, boards.checkName);
+router.post("/boards/check-slug", authRequired, boards.checkSlug);
 router.post("/boards", authRequired, boards.create);
 router.patch("/boards", authRequired, boardExists, boards.updateBoard);
 

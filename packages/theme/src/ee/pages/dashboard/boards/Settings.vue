@@ -85,7 +85,7 @@ import { router } from "../../../../router";
 import {
   getBoardByUrl,
   updateBoard,
-  checkBoardName,
+  checkBoardSlug,
 } from "../../../modules/boards";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
@@ -149,7 +149,7 @@ async function validateBoardUrl(event: KeyboardEvent) {
   urlAvailableError.value = false;
 
   try {
-    const response = await checkBoardName(board.url);
+    const response = await checkBoardSlug(board.url);
     if (!response.data.available) {
       urlAvailableError.value = true;
     }
