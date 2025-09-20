@@ -18,28 +18,30 @@ permissions:
   security-events: write
   actions: read
 
+env:
+  TRUFFLEHOG_VERSION: 3.90.8
+
 jobs:
-  trufflehog:
+  trufflehog-cli:
     name: 🔎 Secret Scanning
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Run TruffleHog
-        id: trufflehog
-        uses: trufflesecurity/trufflehog@v3.90.8
-        continue-on-error: true
-        with:
-          path: '.'
-          extra_args: >
-            --log-level=2
-
-      - name: Fail workflow if secrets found
-        if: steps.trufflehog.outcome == 'failure'
+      - name: Install TruffleHog CLI
         run: |
-          echo "::error title=Secrets Detected::TruffleHog found potential secrets in the repository"
-          exit 1
+          curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin v${{ env.TRUFFLEHOG_VERSION }}
+          trufflehog --version
+
+      - name: Scan current commit
+        id: trufflehog
+        run: |
+          trufflehog filesystem . \
+            --results=unverified,verified \
+            --github-actions \
+            --exclude-paths .config/.trufflehogignore \
+            --fail
