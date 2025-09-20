@@ -91,7 +91,18 @@
       "title": "Boards",
       "createBoard": "Create Board",
       "boardsTableName": "name",
-      "boardsTablePosts": "posts"
+      "boardsTablePosts": "posts",
+      "settings": {
+        "save": "Save",
+        "name": "Name",
+        "slug": "Slug",
+        "color": "Color",
+        "privacy": "Privacy",
+        "displayLable": "Display on site",
+        "displayNote": "Show this board on the site",
+        "votersLabel": "View voters",
+        "votersNote": "Show people who vote the post"
+      }
     },
     "roadmaps": {
       "title": "Boards",
