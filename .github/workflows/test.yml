@@ -138,7 +138,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12.18
+        image: postgres:17.6
         env:
           POSTGRES_DB: db
           POSTGRES_USER: user
