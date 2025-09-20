@@ -33,5 +33,5 @@ jobs:
           trufflehog filesystem . \
             --results=unverified,verified \
             --github-actions \
-            --exclude-paths .trufflehogignore \
+            --exclude-paths .config/.trufflehogignore \
             --fail
