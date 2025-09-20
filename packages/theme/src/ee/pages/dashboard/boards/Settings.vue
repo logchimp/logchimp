@@ -3,7 +3,7 @@
     <template v-slot:left>
       <Breadcrumbs>
         <BreadcrumbItem to="/dashboard/boards">
-          Boards
+          {{t("dashboard.boards.title")}}
         </BreadcrumbItem>
 
         <template v-if="title">
@@ -21,7 +21,7 @@
       :disabled="createBoardPermissionDisabled"
       @click="update"
     >
-      Save
+      {{t("dashboard.boards.settings.save")}}
     </Button>
   </DashboardPageHeader>
 
@@ -31,7 +31,7 @@
         <div class="form-column">
           <l-text
             v-model="board.name"
-            label="Name"
+            :label="t('dashboard.boards.settings.name')"
             placeholder="Enter board name"
           />
 
@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../../router";
@@ -119,6 +120,8 @@ const createBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:update");
   return !checkPermission;
 });
+
+const { t } = useI18n();
 
 const slugUrl = computed({
   get() {
