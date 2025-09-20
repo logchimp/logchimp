@@ -108,16 +108,6 @@
         </div>
       </div>
     </div>
-
-    <template #footer>
-      <Button
-        type="primary"
-        :outline="true"
-        @click="isOpen = false"
-      >
-        Close
-      </Button>
-    </template>
   </Dialog>
 </template>
 
