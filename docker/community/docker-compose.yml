@@ -12,7 +12,7 @@ services:
       - logchimp
 
   db:
-    image: postgres:12
+    image: postgres:17
     restart: unless-stopped
     ports:
       - "5432:5432"
