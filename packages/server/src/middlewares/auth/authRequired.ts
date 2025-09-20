@@ -10,8 +10,8 @@ import {
   verifyJwtAuthToken,
 } from "./helpers";
 import logger from "../../utils/logger";
-import logchimpConfig from "../../utils/logchimpConfig";
-const config = logchimpConfig();
+import { configManager } from "../../utils/logchimpConfig";
+const config = configManager.getConfig();
 
 const authenticateWithToken = async (
   req: Request,
@@ -22,7 +22,7 @@ const authenticateWithToken = async (
   let jwtTokenPayload: IAuthenticationTokenPayload;
 
   try {
-    const secretKey = config.server.secretKey;
+    const secretKey = config.secretKey;
     jwtTokenPayload = verifyJwtAuthToken(token, secretKey);
   } catch (err) {
     if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
