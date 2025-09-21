@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
@@ -36,6 +36,7 @@ export async function create(
   }
 
   try {
+    const nanoid = customAlphabet("_0123456789abcdefghijklmnopqrstuvwxyz");
     const createBoard = await database
       .insert({
         boardId: uuidv4(),

@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
@@ -43,12 +43,13 @@ export async function create(
   try {
     // get maximum index value of roadmap
     const roadmapIndex = await database.max("index").from("roadmaps").first();
+    const nanoid = customAlphabet("_0123456789abcdefghijklmnopqrstuvwxyz");
 
     const createRoadmap = await database
       .insert({
         id: uuidv4(),
         name: name || "new roadmap",
-        url: `new-roadmap-${nanoid(10).toLowerCase()}`,
+        url: `new-roadmap-${nanoid(10)}`,
         color: generateHexColor(),
         index: roadmapIndex.max + 1,
       })
