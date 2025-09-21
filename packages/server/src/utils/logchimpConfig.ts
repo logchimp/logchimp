@@ -4,6 +4,7 @@ import fsExtra from "fs-extra";
 import logger from "./logger";
 
 const DEFAULT_SERVER_PORT = 8000;
+const DEFAULT_DATABASE_PORT = 5432;
 
 interface Config {
   secretKey: string | undefined;
@@ -18,7 +19,7 @@ interface Config {
   // Database
   databaseHost: string | undefined;
   databaseUser: string | undefined;
-  databasePort: string | undefined;
+  databasePort: number;
   databasePassword: string | undefined;
   databaseName: string | undefined;
   databaseSsl: boolean;
@@ -153,6 +154,7 @@ class ConfigManager {
     }
 
     const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
+    const databasePort = process.env.LOGCHIMP_DB_PORT;
     const mailPort = process.env.LOGCHIMP_MAIL_PORT;
 
     return {
@@ -171,7 +173,9 @@ class ConfigManager {
       databaseHost: process.env.LOGCHIMP_DB_HOST,
       databaseUser: process.env.LOGCHIMP_DB_USER,
       databasePassword: process.env.LOGCHIMP_DB_PASSWORD,
-      databasePort: process.env.LOGCHIMP_DB_PORT,
+      databasePort: databasePort
+        ? Number.parseInt(databasePort, 10)
+        : DEFAULT_DATABASE_PORT,
       databaseName: process.env.LOGCHIMP_DB_DATABASE,
       databaseSsl: process.env.LOGCHIMP_DB_SSL === "true",
 
