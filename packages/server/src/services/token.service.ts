@@ -1,8 +1,7 @@
 import jwt, { type JwtPayload, type SignOptions } from "jsonwebtoken";
 
-import logchimpConfig from "../utils/logchimpConfig";
-
-const config = logchimpConfig();
+import { configManager } from "../utils/logchimpConfig";
+const config = configManager.getConfig();
 
 /**
  * Generate JWT token
@@ -15,8 +14,7 @@ const createToken = (
   data: string | Buffer | object,
   payload: SignOptions,
 ): string => {
-  const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
-  return jwt.sign(data, secretKey, payload);
+  return jwt.sign(data, config.secretKey, payload);
 };
 
 /**
@@ -26,8 +24,7 @@ const createToken = (
  * @returns
  */
 const verifyToken = (token: string): JwtPayload | string => {
-  const secretKey = process.env.LOGCHIMP_SECRET_KEY || config.server.secretKey;
-  return jwt.verify(token, secretKey);
+  return jwt.verify(token, config.secretKey);
 };
 
 export { createToken, verifyToken };

@@ -5,7 +5,7 @@ import app from "./app";
 
 // utils
 import logger from "./utils/logger";
-import logchimpConfig from "./utils/logchimpConfig";
+import { configManager } from "./utils/logchimpConfig";
 
 // run database migrations
 database.migrate
@@ -33,11 +33,11 @@ database.migrate
     }
   });
 
-const config = logchimpConfig();
+const config = configManager.getConfig();
 
 // start express server at SERVER_PORT
-const port = process.env.PORT || config.server.port || 3000;
-const host = config.server.host || "0.0.0.0";
+const port = config.serverPort || 8000;
+const host = config.serverHost || "0.0.0.0";
 
 app.listen(port, host, async () => {
   logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
