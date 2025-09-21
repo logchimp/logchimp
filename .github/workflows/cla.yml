@@ -2,9 +2,17 @@ name: "CLA Assistant"
 
 on:
   issue_comment:
-    types: [created]
+    types: [ created ]
   pull_request_target:
-    types: [opened, closed, synchronize]
+    types: [ opened, closed, synchronize ]
+
+# explicitly configure permissions, in case your GITHUB_TOKEN workflow permissions are set to read-only in repository settings
+permissions:
+  actions: write
+  # this can be 'read' if the signatures are in remote repository
+  contents: write
+  pull-requests: write
+  statuses: write
 
 jobs:
   CLAssistant:
@@ -24,6 +32,5 @@ jobs:
           remote-organization-name: "logchimp"
           remote-repository-name: "cla-signatures"
           custom-notsigned-prcomment: |
-            Thank you for your interest in contributing to open source software projects (“Projects”) made available by CodeCarrot.
-
+            Thank you for your interest in contributing to open source software projects (“Projects”) made available by Shinkly Private Limited (SPL).
             If you have any questions respecting this Agreement, please contact [opensource@codecarrot.net](mailto:opensource@codecarrot.net).
