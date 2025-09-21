@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { v4 as uuidv4, v4 as uuid } from "uuid";
 import generatePassword from "omgopass";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 
 import {
   generateHexColor,
@@ -10,6 +10,9 @@ import {
   toSlug,
 } from "../../src/helpers";
 import database from "../../src/database";
+
+// Create nanoid with only [_0-9a-z]
+const nanoid = customAlphabet("_0123456789abcdefghijklmnopqrstuvwxyz");
 
 const user = () => {
   return {
@@ -41,8 +44,7 @@ async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
   const name = roadmap?.name || faker.commerce.productName();
 
   const id = uuid();
-  const url =
-    roadmap?.url || `${sanitiseURL(name)}-${nanoid(10).toLowerCase()}`;
+  const url = roadmap?.url || `${sanitiseURL(name)}-${nanoid(10)}`;
   const index = faker.number.int({ min: 1, max: 100000 });
   const color = generateHexColor();
   const display = faker.datatype.boolean();
