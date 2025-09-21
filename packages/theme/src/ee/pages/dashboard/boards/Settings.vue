@@ -38,7 +38,7 @@
           <color-input v-model="board.color" />
         </div>
 
-        <div class="form-column">
+        <div class="form-column flex">
           <l-text
             v-model="slugUrl"
             label="Slug"
@@ -47,7 +47,7 @@
               show: urlAvailableError,
               message: 'Not available'
             }"
-            @keyup="validateBoardUrl"
+            @keydown="validateBoardUrl"
           />
         </div>
       </div>
@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { watchDebounced } from "@vueuse/core";
 
 // modules
 import { router } from "../../../../router";
@@ -101,6 +102,8 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
 const title = ref("");
+const boardSlugUrl = ref("");
+
 const board = reactive({
   boardId: "",
   name: "",
@@ -132,29 +135,36 @@ const slugUrl = computed({
   },
 });
 
+watchDebounced(
+  slugUrl,
+  async () => {
+    if (boardSlugUrl.value === slugUrl.value) return;
+
+    urlAvailableError.value = false;
+
+    try {
+      const response = await checkBoardSlug(board.url);
+      if (!response.data.available) {
+        urlAvailableError.value = true;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  { debounce: 600 },
+);
+
 async function validateBoardUrl(event: KeyboardEvent) {
-  const keyCode = event.keyCode;
+  const key = event.key;
 
   // only accept letters, numbers, & numpad numbers
   if (
-    !(
-      (keyCode > 65 && keyCode < 90) ||
-      (keyCode > 45 && keyCode < 57) ||
-      (keyCode > 96 && keyCode < 105) ||
-      keyCode === 8
-    )
-  )
-    return false;
-
-  urlAvailableError.value = false;
-
-  try {
-    const response = await checkBoardSlug(board.url);
-    if (!response.data.available) {
-      urlAvailableError.value = true;
-    }
-  } catch (err) {
-    console.error(err);
+    !/^[a-zA-Z0-9_]$/.test(key) &&
+    key !== "Backspace" &&
+    key !== "ArrowLeft" &&
+    key !== "ArrowRight"
+  ) {
+    event.preventDefault();
   }
 }
 
@@ -187,6 +197,7 @@ async function getBoard() {
     const response = await getBoardByUrl(url);
 
     Object.assign(board, response.data.board);
+    boardSlugUrl.value = board.url;
     title.value = response.data.board.name;
   } catch (error) {
     console.error(error);
