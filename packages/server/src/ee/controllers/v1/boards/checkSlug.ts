@@ -15,7 +15,9 @@ export async function checkSlug(
 
   const slugUrl = req.body.url;
 
-  const checkPermission = permissions.includes("board:create");
+  const checkPermission =
+    permissions.includes("board:create") ||
+    permissions.includes("board:update");
   if (!checkPermission) {
     res.status(403).send({
       message: error.api.roles.notEnoughPermission,
