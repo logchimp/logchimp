@@ -10,8 +10,11 @@ import { faker } from "@faker-js/faker";
 
 import app from "../../../../src/app";
 import database from "../../../../src/database";
+import { configManager } from "../../../../src/utils/logchimpConfig";
 import { createToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
+
+const config = configManager.getConfig();
 
 describe("POST /api/v1/auth/email/verify", () => {
   it("should throw error 'INVALID_AUTH_HEADER'", async () => {
@@ -71,10 +74,8 @@ describe("POST /api/v1/auth/email/verify", () => {
     expect(typeof verify.__token.token).toBe("string");
 
     const token = verify.__token.token;
-    const decoded = jwt.verify(
-      token,
-      process.env.LOGCHIMP_SECRET_KEY,
-    ) as JwtPayload & (IVerifyEmailJwtPayload | IPasswordResetJwtPayload);
+    const decoded = jwt.verify(token, config.secretKey) as JwtPayload &
+      (IVerifyEmailJwtPayload | IPasswordResetJwtPayload);
 
     expect(decoded.userId).toBe(user.userId);
     expect(decoded.email).toBe(user.email);

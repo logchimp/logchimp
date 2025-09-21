@@ -12,8 +12,8 @@ import type {
   IAuthenticationTokenPayload,
 } from "../../types";
 import logger from "../../utils/logger";
-import logchimpConfig from "../../utils/logchimpConfig";
-const config = logchimpConfig();
+import { configManager } from "../../utils/logchimpConfig";
+const config = configManager.getConfig();
 
 // Allow the user to proceed with optional authentication
 export async function authOptional(
@@ -26,7 +26,7 @@ export async function authOptional(
 
   let decoded: IAuthenticationTokenPayload;
   try {
-    decoded = verifyJwtAuthToken(token, config.server.secretKey);
+    decoded = verifyJwtAuthToken(token, config.secretKey);
   } catch (_err) {
     // ignore error from JWT auth token verification
     // and move to next middlware
