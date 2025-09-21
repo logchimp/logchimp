@@ -557,6 +557,29 @@ describe("PATCH /api/v1/boards", () => {
     );
   });
 
+  it("should throw error 'BOARD_URL_EXISTS'", async () => {
+    const { user: authUser } = await createUser();
+
+    const preExistingBoard = await generateBoards({}, true);
+    const board = await generateBoards({}, true);
+
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+        url: preExistingBoard.url,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(409);
+    expect(response.body.code).toBe("BOARD_URL_EXISTS");
+  });
+
   it("should UPDATE board", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const newBoard: BoardInsertRecord = await generateBoards({}, false);
