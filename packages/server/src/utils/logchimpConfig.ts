@@ -164,7 +164,7 @@ class ConfigManager {
       isSelfHosted: process.env.LOGCHIMP_IS_SELF_HOSTED === "true",
 
       // Server
-      serverHost: process.env.LOGCHIMP_SERVER_HOST,
+      serverHost: process.env.LOGCHIMP_API_HOST,
       serverPort: serverPort
         ? Number.parseInt(`${serverPort}`, 10)
         : DEFAULT_SERVER_PORT,
