@@ -33,6 +33,9 @@ test.describe("Settings", (): void => {
       await expect(siteNameInput).toContainClass("input-error");
       // Bug [https://github.com/logchimp/logchimp/issues/1312]
       // await expect(newSiteName).toHaveText(oldSiteName);
+
+      await siteNameInput.fill("LogChimp");
+      await page.getByRole("button", { name: "Save" }).click();
     });
 
     test("should update 'Description'", async ({ page }) => {
@@ -49,25 +52,25 @@ test.describe("Settings", (): void => {
       await expect(input).toHaveValue(new_desc);
     });
 
-    test.skip("should toggle 'Allow signups'", async ({ page }) => {
+    test("should toggle 'Allow signups'", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
       await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
 
       const toggleSelector = "button[aria-label='Allow signups']";
       const toggleButton = page.locator(toggleSelector);
-      const initial_toggle_value = await toggleButton.getAttribute('aria-checked');
 
 
-      await toggleButton.click();
+      await toggleButton.setChecked(false);
       await page.getByRole('button', { name: 'Save' }).click();
 
       await page.reload();
+      expect(toggleButton).toBeChecked({ checked: false });
 
-      const newToggleButton = page.locator("button[aria-label='Allow signups']");
-      const new_toggle_value = await newToggleButton.getAttribute('aria-checked');
-      expect(Boolean(initial_toggle_value)).toBe(
-        new_toggle_value
-      );
+      await toggleButton.setChecked(true);
+      await page.getByRole('button', { name: 'Save' }).click();
+
+      await page.reload();
+      expect(toggleButton).toBeChecked();
     });
 
     test("should update 'Google Analytics'", async ({ page }) => {
@@ -84,25 +87,25 @@ test.describe("Settings", (): void => {
       await expect(input).toHaveValue(new_analytics);
     });
 
-    test.skip("should toggle 'Developer mode'", async ({ page }) => {
+    test("should toggle 'Developer mode'", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
       await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
 
       const toggleSelector = "button[aria-label='Developer Mode']";
       const toggleButton = page.locator(toggleSelector);
-      const initial_toggle_value = await toggleButton.getAttribute('aria-checked');
+
+      await toggleButton.setChecked(true);
+      await page.getByRole('button', { name: 'Save' }).click();
 
 
-      await toggleButton.click();
+      await page.reload();
+      expect(toggleButton).toBeChecked();
+
+      await toggleButton.setChecked(false);
       await page.getByRole('button', { name: 'Save' }).click();
 
       await page.reload();
-
-      const newToggleButton = page.locator("button[aria-label='Developer Mode']");
-      const new_toggle_value = await newToggleButton.getAttribute('aria-checked');
-      expect(initial_toggle_value).toBe(
-        new_toggle_value
-      );
+      expect(toggleButton).toBeChecked({ checked: false });
     });
 
     test("should display 'Powered by LogChimp' badge", async ({ page }) => {

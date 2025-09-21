@@ -11,7 +11,7 @@ test('authenticate', async ({ page }) => {
 
   if ( page.url() === "http://localhost:3000/setup/create-account") {
     const siteTitle = page.locator("input[placeholder='My awesome site']");
-    await siteTitle.fill("LogChimp e2e");
+    await siteTitle.fill("LogChimp");
 
     const fullName = page.locator("input[placeholder='Mike M. Smit']");
     await fullName.fill("e2e Admin");
@@ -23,6 +23,8 @@ test('authenticate', async ({ page }) => {
     await password.fill("password");
 
     await page.locator('text= Create account ').click();
+    await page.waitForLoadState('networkidle');
+
     await page.locator('a[href="/dashboard"]:has-text("skip")').click();
     await expect(page).toHaveURL("http://localhost:3000/dashboard");
   }
