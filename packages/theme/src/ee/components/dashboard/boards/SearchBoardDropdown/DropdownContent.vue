@@ -23,17 +23,10 @@
     </div>
 
     <div class="w-full">
-      <div
-        v-if="!(searchBoard.board.value?.url === 'uncategorized-board') && !search"
-        :class="[
-          'gap-x-6 px-4 py-2.5 rounded-md text-center text-md font-semibold',
-          'cursor-pointer outline-none',
-          'bg-white hover:bg-neutral-300/50 data-[highlighted]:bg-neutral-300/50',
-        ]"
-        @click="selectHandler(noBoardTemplate)"
-      >
-        No Board
-      </div>
+      <NoBoard
+        v-if="searchBoard.board"
+        @select="selectHandler"
+      />
 
       <ItemSuggestionDropdownItem
         v-for="item in suggestions"
@@ -58,21 +51,11 @@ import { watchDebounced } from "@vueuse/core";
 import type { IBoardPrivate } from "@logchimp/types";
 
 import { searchBoard as searchBoardApi } from "../../../../modules/boards";
-import { useBoardSearch } from "./search";
+import { type TCurrentBoard, useBoardSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
+import NoBoard from "./NoBoard.vue";
 import CreateBoardItem from "./CreateBoardItem.vue";
-
-const noBoardTemplate: IBoardPrivate = {
-  boardId: "",
-  name: "No Board",
-  color: "000000",
-  url: "uncategorized-board",
-  createdAt: new Date(),
-  post_count: "",
-  display: true,
-  view_voters: true,
-};
 
 const search = ref("");
 const suggestions = ref<IBoardPrivate[]>([]);
@@ -118,7 +101,7 @@ watchDebounced(
   { debounce: 600 },
 );
 
-function selectHandler(e: IBoardPrivate) {
+function selectHandler(e: TCurrentBoard) {
   searchBoard.select(e);
 }
 

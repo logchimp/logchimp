@@ -78,9 +78,7 @@
 <script setup lang="ts">
 import { computed, ref, reactive } from "vue";
 import type {
-  IBoardPrivate,
-  IDashboardPost,
-  IRoadmapPrivate,
+  IDashboardPost
 } from "@logchimp/types";
 
 // modules
@@ -100,6 +98,8 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/Dropdown.vue";
 import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
+import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
+import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
@@ -107,11 +107,12 @@ const dashboardPosts = useDashboardPosts();
 interface Props {
   post: IDashboardPost;
 }
+
 const props = defineProps<Props>();
 
 const saveBtnLoading = ref(false);
 const post = reactive<IDashboardPost>({
-  ...props.post,
+  ...props.post
 });
 
 const updatePostPermissionDisabled = computed(() => {
@@ -130,7 +131,7 @@ async function updatePostHandler() {
       slugId: post.slugId,
       userId: post.author.userId,
       boardId: post.board ? post.board.boardId : undefined,
-      roadmapId: post.roadmap ? post.roadmap.id : undefined,
+      roadmapId: post.roadmap ? post.roadmap.id : undefined
     });
 
     Object.assign(post, response.data.post);
@@ -143,19 +144,19 @@ async function updatePostHandler() {
   }
 }
 
-function selectBoard(board: IBoardPrivate) {
+function selectBoard(board: TCurrentBoard) {
   Object.assign(post, {
-    board,
+    board
   });
 }
 
-function selectRoadmap(roadmap: IRoadmapPrivate) {
+function selectRoadmap(roadmap: TCurrentRoadmap) {
   Object.assign(post, {
-    roadmap,
+    roadmap
   });
 }
 
 defineOptions({
-  name: "DashboardPostEditor",
+  name: "DashboardPostEditor"
 });
 </script>

@@ -4,18 +4,20 @@
       <template #trigger>
         <DropdownMenuTrigger
           :class="[
-            'group w-full px-3 outline-none select-none rounded-md',
+            'group w-full px-4 outline-none select-none rounded-md',
             'border border-neutral-300 bg-white hover:bg-neutral-50 data-[state=open]:bg-neutral-50',
             'data-[state=open]:ring-4 data-[state=open]:ring-neutral-200/70',
             'text-left text-sm font-medium',
-            'flex items-center justify-between gap-x-2',
+            'flex items-center justify-between gap-x-4',
             board ? 'py-1.5' : 'py-2.5'
           ]"
           :disabled="disabled"
         >
           <template v-if="board">
             <div class="flex items-center gap-x-4">
-              <color-dot :color="board.color" />
+              <div class="size-4 flex items-center justify-center">
+                <color-dot :color="board.color" class="size-3" />
+              </div>
               <div>
                 <div class="text-md font-semibold line-clamp-1">
                   {{board.name}}
@@ -61,7 +63,7 @@ const { board, clear: clearBoardSearch } = useBoardSearch();
 interface Props {
   disabled?: boolean;
 }
-const emit = defineEmits<(e: "selected", value: IBoardPrivate) => void>();
+const emit = defineEmits<(e: "selected", value: IBoardPrivate | null) => void>();
 withDefaults(defineProps<Props>(), {
   disabled: false,
 });
@@ -70,9 +72,7 @@ function onToggle(e: boolean) {
   isOpen.value = e;
 }
 
-watch(board, (value?: IBoardPrivate) => {
-  if (!value) return;
-
+watch(board, (value: IBoardPrivate | null) => {
   isOpen.value = false;
   emit("selected", value);
 });

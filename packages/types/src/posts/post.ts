@@ -5,9 +5,9 @@ import type { IBoard } from "../board";
 import type { ApiSortType } from "../common";
 
 export interface IPost extends IPostInfo {
-  board: IBoard;
+  board: IBoard | null;
   author: IPublicUserInfo;
-  roadmap?: IRoadmap;
+  roadmap: IRoadmap | null;
   voters: IPostVote;
 }
 
