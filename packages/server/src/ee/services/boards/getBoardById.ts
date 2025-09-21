@@ -1,11 +1,11 @@
 import type { IBoard } from "@logchimp/types";
 
-import database from "../../database";
-import * as cache from "../../cache";
-import { DAY } from "../../cache/time";
+import database from "../../../database";
+import * as cache from "../../../cache";
+import { DAY } from "../../../cache/time";
 
 // utils
-import logger from "../../utils/logger";
+import logger from "../../../utils/logger";
 
 export async function getBoardById(boardId: string): Promise<IBoard | null> {
   const cacheKey = `board:public:${boardId}`;
