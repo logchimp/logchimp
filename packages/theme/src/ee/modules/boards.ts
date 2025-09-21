@@ -4,7 +4,7 @@ import type {
   IFilterBoardResponseBody,
   IGetBoardsRequestQuery,
   IGetBoardsResponseBody,
-  TBoardCheckNameResponse,
+  TBoardCheckSlugResponse,
   TBoardCreateRequestBody,
   TBoardCreateResponseBody,
   IBoardUpdateRequestBody,
@@ -177,18 +177,18 @@ export const deleteBoard = async (
 };
 
 /**
- * Check board name
+ * Check if board slug exists
  */
 export const checkBoardSlug = async (
-  name: string,
-): Promise<AxiosResponse<TBoardCheckNameResponse>> => {
+  url: string,
+): Promise<AxiosResponse<TBoardCheckSlugResponse>> => {
   const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/boards/check-slug`,
     data: {
-      name,
+      url,
     },
     headers: {
       Authorization: `Bearer ${authToken}`,

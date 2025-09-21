@@ -41,11 +41,11 @@ export interface IGetBoardsByUrlResponseBody {
   board: IBoardPrivate;
 }
 
-export type TBoardCheckNameBody = {
-  name: string;
+export type TBoardCheckSlugBody = {
+  url: string;
 };
 
-export type TBoardCheckNameResponse = {
+export type TBoardCheckSlugResponse = {
   readonly available: boolean;
 };
 

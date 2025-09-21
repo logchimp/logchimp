@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { TBoardCheckNameBody, TPermission } from "@logchimp/types";
+import type { TBoardCheckSlugBody, TPermission } from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
@@ -7,13 +7,13 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
 export async function checkSlug(
-  req: Request<unknown, unknown, TBoardCheckNameBody>,
+  req: Request<unknown, unknown, TBoardCheckSlugBody>,
   res: Response,
 ) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const name = req.body.name;
+  const slugUrl = req.body.url;
 
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
@@ -24,15 +24,15 @@ export async function checkSlug(
     return;
   }
 
-  if (!name) {
+  if (!slugUrl) {
     res.status(400).send({
-      message: error.api.boards.nameMissing,
-      code: "BOARD_NAME_MISSING",
+      message: error.api.boards.urlMissing,
+      code: "BOARD_URL_MISSING",
     });
     return;
   }
 
-  const slimUrl = name
+  const slimUrl = slugUrl
     .replace(/[^\w]+/gi, "-")
     .trim()
     .toLowerCase();
