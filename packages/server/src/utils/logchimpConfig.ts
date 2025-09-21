@@ -90,7 +90,7 @@ class ConfigManager {
 
     const config = fsExtra.readJsonSync(this.configPath);
 
-    if (config.mail.service) {
+    if (config?.mail?.service) {
       logger.info(
         "'mail.service' key is deprecated and will be removed in next major release in `logchimp.config.json`.",
       );
