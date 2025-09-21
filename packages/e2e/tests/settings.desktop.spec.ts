@@ -6,9 +6,13 @@ test.describe("Settings", (): void => {
   test.describe("General", (): void => {
     test("should change Site Name", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
-      const siteNameInput = page.locator("input[placeholder='Enter site name']");
+      const siteNameInput = page.locator(
+        "input[placeholder='Enter site name']",
+      );
       const newSiteName = faker.company.name();
 
       await siteNameInput.fill(newSiteName);
@@ -18,11 +22,15 @@ test.describe("Settings", (): void => {
       await expect(siteNameInput).toHaveValue(newSiteName);
     });
 
-    test('should display error for empty site name', async ({ page }) => {
+    test("should display error for empty site name", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
-      const siteNameInput = page.locator("input[placeholder='Enter site name']");
+      const siteNameInput = page.locator(
+        "input[placeholder='Enter site name']",
+      );
       // const oldSiteName = await siteNameInput.inputValue();
 
       await siteNameInput.clear();
@@ -40,7 +48,9 @@ test.describe("Settings", (): void => {
 
     test("should update 'Description'", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
       const input = page.locator("input[placeholder='Site description']");
       const new_desc = faker.company.buzzPhrase();
@@ -54,20 +64,21 @@ test.describe("Settings", (): void => {
 
     test("should toggle 'Allow signups'", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
       const toggleSelector = "button[aria-label='Allow signups']";
       const toggleButton = page.locator(toggleSelector);
 
-
       await toggleButton.setChecked(false);
-      await page.getByRole('button', { name: 'Save' }).click();
+      await page.getByRole("button", { name: "Save" }).click();
 
       await page.reload();
       expect(toggleButton).toBeChecked({ checked: false });
 
       await toggleButton.setChecked(true);
-      await page.getByRole('button', { name: 'Save' }).click();
+      await page.getByRole("button", { name: "Save" }).click();
 
       await page.reload();
       expect(toggleButton).toBeChecked();
@@ -75,7 +86,9 @@ test.describe("Settings", (): void => {
 
     test("should update 'Google Analytics'", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
       const input = page.locator("input[placeholder='UA-12345678-0']");
       const new_analytics = faker.string.nanoid();
@@ -89,20 +102,21 @@ test.describe("Settings", (): void => {
 
     test("should toggle 'Developer mode'", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
       const toggleSelector = "button[aria-label='Developer Mode']";
       const toggleButton = page.locator(toggleSelector);
 
       await toggleButton.setChecked(true);
-      await page.getByRole('button', { name: 'Save' }).click();
-
+      await page.getByRole("button", { name: "Save" }).click();
 
       await page.reload();
       expect(toggleButton).toBeChecked();
 
       await toggleButton.setChecked(false);
-      await page.getByRole('button', { name: 'Save' }).click();
+      await page.getByRole("button", { name: "Save" }).click();
 
       await page.reload();
       expect(toggleButton).toBeChecked({ checked: false });
@@ -110,14 +124,16 @@ test.describe("Settings", (): void => {
 
     test("should display 'Powered by LogChimp' badge", async ({ page }) => {
       await page.goto("http://localhost:3000/dashboard/settings/general");
-      await expect(page).toHaveURL("http://localhost:3000/dashboard/settings/general");
+      await expect(page).toHaveURL(
+        "http://localhost:3000/dashboard/settings/general",
+      );
 
-      const poweredByLink = page.getByRole('link', { name: 'Powered by LogChimp' });
+      const poweredByLink = page.getByRole("link", {
+        name: "Powered by LogChimp",
+      });
 
       expect(poweredByLink).toBeDefined();
     });
-
-
   });
 
   test.describe("Email verification", (): void => {
