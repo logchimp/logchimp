@@ -1,18 +1,15 @@
 import { faker } from "@faker-js/faker";
 import { v4 as uuidv4, v4 as uuid } from "uuid";
 import generatePassword from "omgopass";
-import { customAlphabet } from "nanoid";
 
 import {
   generateHexColor,
   sanitiseUsername,
   sanitiseURL,
   toSlug,
+  generateNanoID as nanoid,
 } from "../../src/helpers";
 import database from "../../src/database";
-
-// Create nanoid with only [_0-9a-z]
-const nanoid = customAlphabet("_0123456789abcdefghijklmnopqrstuvwxyz");
 
 const user = () => {
   return {
