@@ -3,13 +3,20 @@
     :class="[
       'flex items-center relative',
       'w-full overflow-hidden',
-      'bg-neutral-200 rounded-md pr-1.5'
+      {
+        'bg-neutral-200 rounded-md': !minimal,
+        'pr-1.5': !minimal,
+        'gap-x-px': minimal,
+      }
     ]"
   >
     <div
       :class="[
-        'text-sm font-mono pl-3 pr-8 py-2.5 flex-1',
-        'w-0 overflow-x-auto whitespace-nowrap'
+        'text-sm',
+        !minimal && [
+          'font-mono pl-3 pr-8 py-2 flex-1',
+          'w-0 overflow-x-auto whitespace-nowrap'
+        ]
       ]"
     >
       <span class="inline-block">
@@ -23,19 +30,28 @@
       @click="copy(value)"
       :class="[
         'flex items-center justify-center shrink-0',
-        'absolute right-1 top-1/2 -translate-y-1/2',
-        'cursor-pointer',
-        'bg-neutral-300 rounded-sm p-1'
+        'cursor-pointer rounded-sm p-1',
+        minimal ? 'hover:bg-neutral-300' : 'bg-neutral-300',
+        {
+          'absolute right-1 top-1/2 -translate-y-1/2': !minimal,
+        }
       ]"
       :aria-label="isCopied ? 'Copied' : 'Copy'"
     >
-      <CheckIcon v-if="isCopied" class="size-4 stroke-emerald-700" />
-      <CopyIcon v-else class="size-4" />
+      <CheckIcon
+        v-if="isCopied"
+        :class="['stroke-emerald-700',iconSizeClass]"
+      />
+      <CopyIcon
+        v-else
+        :class="['stroke-neutral-700', iconSizeClass]"
+      />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { Copy as CopyIcon, Check as CheckIcon } from "lucide-vue";
 
@@ -43,6 +59,11 @@ const { copy, copied: isCopied, isSupported } = useClipboard();
 
 interface Props {
   value: string;
+  minimal?: boolean;
 }
-defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  minimal: false,
+});
+
+const iconSizeClass = computed(() => (props.minimal ? "size-4" : "size-5"));
 </script>

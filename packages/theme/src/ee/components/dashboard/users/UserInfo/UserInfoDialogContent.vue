@@ -17,13 +17,13 @@
             :name="user.username || user.name || ''"
           />
           <div>
-            <div class="mb-2">
+            <div class="mb-px">
               <div v-if="user.name" class="text-sm font-medium text-neutral-900">
                 {{ user.name }}
               </div>
               <p class="text-xs text-neutral-600">@{{ user.username }}</p>
             </div>
-            <p class="text-sm text-neutral-700">{{ user.email }}</p>
+            <CopyableTextField :value="user.email" :minimal="true" />
           </div>
         </div>
 
@@ -47,9 +47,7 @@
             <!-- User ID -->
             <div>
               <div class="text-xs text-neutral-500 mb-1">User ID</div>
-              <div class="text-sm font-mono bg-neutral-100 px-3 py-2 rounded-md text-neutral-800">
-                {{ user.userId }}
-              </div>
+              <CopyableTextField :value="user.userId" />
             </div>
 
             <!-- Joined -->
@@ -110,6 +108,7 @@ import DialogContent from "../../../../../components/ui/Dialog/DialogContent.vue
 import Avatar from "../../../../../components/ui/Avatar/Avatar.vue";
 import RoleBadge from "../../../RoleBadge.vue";
 import type { UserInfoDialogProps } from "./types";
+import CopyableTextField from "../../../../../components/ui/Clipboard/CopyableTextField.vue";
 
 defineProps<UserInfoDialogProps>();
 </script>
