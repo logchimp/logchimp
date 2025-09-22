@@ -5,11 +5,14 @@
     </div>
     <h6 class="users-table-user-name">
       {{ user.name || user.username }}
+      <UserInfoDialog :user="user" />
     </h6>
   </div>
   <div class="table-header-item users-table-user flex items-center gap-x-1.5">
     <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
-    <AssignRoleUserDropdown />
+    <div class="relative z-[2]">
+      <AssignRoleUserDropdown />
+    </div>
   </div>
   <div class="table-data users-table-posts">
     {{ user.posts }}
@@ -17,13 +20,13 @@
   <div class="table-data users-table-votes">
     {{ user.votes }}
   </div>
-  <MoreOptionsDropdown
-    v-if="settings.developer_mode"
-  />
+  <div class="flex items-center justify-center relative z-[1]">
+    <MoreOptionsDropdown />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { provide } from "vue";
+import { provide, defineAsyncComponent } from "vue";
 import type { IUser, ISiteSettings } from "@logchimp/types";
 
 import { Avatar } from "../../../../../components/ui/Avatar";
@@ -31,6 +34,10 @@ import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 import AssignRoleUserDropdown from "./AssignRoleUserDropdown.vue";
 import { userIdKey } from "./options";
 import DashboardUsersTabularItemRolePreviewer from "./RolePreviewer.vue";
+
+const UserInfoDialog = defineAsyncComponent(
+  () => import("../UserInfo/UserInfoDialog.vue"),
+);
 
 interface Props {
   user: IUser;

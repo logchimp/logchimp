@@ -17,6 +17,7 @@
       align="end"
       side="bottom"
       :loop="true"
+      class="relative z-[2]"
     >
       <MoreOptionsDropdownContent />
     </DropdownV2Content>
