@@ -6,6 +6,7 @@ import logger from "./logger";
 const DEFAULT_SERVER_PORT = 8000;
 const DEFAULT_DATABASE_PORT = 5432;
 const DEFAULT_MAIL_PORT = 465;
+const DEFAULT_LOGCHIMP_PILOT_URL = "https://pilot.logchimp.codecarrot.net";
 
 interface Config {
   secretKey: string | undefined;
@@ -16,6 +17,11 @@ interface Config {
   serverHost: string | undefined;
   serverPort: number | undefined;
   webUrl: string | undefined;
+
+  // License
+  licenseKey: string | undefined;
+  licenseSignature: string | undefined;
+  licensePilotUrl: string | undefined;
 
   // Database
   databaseUrl: string | undefined;
@@ -120,6 +126,11 @@ class ConfigManager {
         : DEFAULT_SERVER_PORT,
       webUrl: config.server?.webUrl,
 
+      // License
+      licenseKey: config?.license?.key,
+      licenseSignature: config?.license?.signature,
+      licensePilotUrl: config?.license?.pilotUrl || DEFAULT_LOGCHIMP_PILOT_URL,
+
       // Database
       databaseUrl: config.database?.url,
       databaseHost: config.database?.host,
@@ -172,6 +183,12 @@ class ConfigManager {
         : DEFAULT_SERVER_PORT,
       webUrl: process.env.LOGCHIMP_WEB_URL,
 
+      // License
+      licenseKey: process.env.LOGCHIMP_LICENSE_KEY,
+      licenseSignature: process.env.LOGCHIMP_SIGNATURE_TOKEN,
+      licensePilotUrl:
+        process.env.LOGCHIMP_PILOT_URL || DEFAULT_LOGCHIMP_PILOT_URL,
+
       // Database
       databaseUrl: process.env.LOGCHIMP_DB_URL,
       databaseHost: process.env.LOGCHIMP_DB_HOST,
@@ -200,6 +217,23 @@ class ConfigManager {
       ...(fileConfig || {}),
     };
   }
+
+  // private getEnv = <K extends keyof NodeJS.ProcessEnv>(key: K, fallback?: NodeJS.ProcessEnv[K]): NodeJS.ProcessEnv[K] => {
+  //   const value = process.env[key] as NodeJS.ProcessEnv[K] | undefined;
+  //
+  //   if (value === undefined) {
+  //     // handle fallback falsy cases that should still be used as value
+  //     if (fallback === false || fallback === "" || fallback === 0) {
+  //       return fallback;
+  //     }
+  //     if (fallback) {
+  //       return fallback;
+  //     }
+  //     throw new Error(`Missing environment variable: ${key}.`);
+  //   }
+  //
+  //   return value;
+  // };
 }
 
 export const configManager = new ConfigManager();
