@@ -25,10 +25,13 @@ export async function postExists(
   res: Response,
   next: NextFunction,
 ) {
-  // @ts-expect-error
-  const id = validUUID(req.body.id || req.body.postId || req.params.post_id);
-  // @ts-expect-error
-  const slug = req.body.slug;
+  const { id, slug } = getPostIdentifier(req);
+  if (!id && !slug) {
+    return res.status(404).send({
+      message: error.api.posts.postNotFound,
+      code: "POST_NOT_FOUND",
+    });
+  }
 
   const post = await database
     .select()
@@ -52,4 +55,32 @@ export async function postExists(
   // @ts-expect-error
   req.post = post;
   next();
+}
+
+function getPostIdentifier(
+  req: Request<IGetPostActivityRequestParam, unknown, RequestBody>,
+): { id: string | null; slug: string | null } {
+  let id: string | null = null;
+  let slug: string | null = null;
+  if ("id" in req.body) {
+    id = (req.body.id || "").trim();
+  }
+  if ("postId" in req.body) {
+    id = (req.body.postId || "").trim();
+  }
+  if ("post_id" in req.params) {
+    id = (req.params.post_id || "").trim();
+  }
+  if (id) {
+    id = validUUID(id);
+  }
+
+  if ("slug" in req.body) {
+    slug = (req.body.slug || "").trim();
+  }
+
+  return {
+    id,
+    slug,
+  };
 }
