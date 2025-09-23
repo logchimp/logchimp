@@ -1,5 +1,4 @@
 const startTime = Date.now();
-
 import database from "./database";
 import app from "./app";
 

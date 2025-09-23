@@ -113,9 +113,10 @@ jobs:
         run: pnpm --filter @logchimp/api test:unit
 
   api-integration:
-    name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }} - Postgres v${{ matrix.postgres }}
     runs-on: ${{ matrix.os }}
     needs: [api-unit]
+
     env:
       NODE_ENV: "ci"
       LOGCHIMP_DB_DATABASE: db
@@ -132,13 +133,15 @@ jobs:
       LOGCHIMP_MAIL_PORT: 1025
 
     strategy:
+      fail-fast: false
       matrix:
-        node: [22]
+        node: [18, 20, 22]
+        postgres: [12.18, 14, 16, 17]
         os: [ubuntu-24.04]
 
     services:
       postgres:
-        image: postgres:12.18
+        image: postgres:${{ matrix.postgres }}
         env:
           POSTGRES_DB: db
           POSTGRES_USER: user
@@ -173,13 +176,13 @@ jobs:
 
       - name: Database setup
         run: |
-          cd ./packages/server;
+          cd ./packages/server
 
           # Run database migrations
-          pnpm knex --knexfile ./src/database/config.ts migrate:latest;
+          pnpm knex --knexfile ./src/database/config.ts migrate:latest
 
           # Seeding database
-          pnpm knex --knexfile ./src/database/config.ts seed:run;
+          pnpm knex --knexfile ./src/database/config.ts seed:run
 
       - name: Testing
         run: pnpm --filter @logchimp/api test:integration --retry 1
@@ -195,9 +198,5 @@ jobs:
       - name: Store Code Coverage
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.runs-on }}
+          name: coverage-${{ matrix.os }}-node${{ matrix.node }}-pg${{ matrix.postgres }}
           path: ./coverage
-
-  biome-tools:
-    name: "Biome CLI"
-    uses: ./.github/workflows/biome-tools.yml
