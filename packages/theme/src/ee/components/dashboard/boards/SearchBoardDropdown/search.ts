@@ -1,7 +1,7 @@
 import { ref } from "vue";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { IBoard, IBoardPrivate } from "@logchimp/types";
 
-export type TCurrentBoard = IBoardPrivate | null;
+export type TCurrentBoard = IBoard | IBoardPrivate | null;
 const currentBoard = ref<TCurrentBoard>(null);
 
 export function useBoardSearch() {

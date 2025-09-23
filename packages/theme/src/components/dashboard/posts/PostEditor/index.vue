@@ -64,11 +64,16 @@
       </h6>
       <div class="form-columns">
         <div class="form-column">
-          <SearchBoardDropdown @selected="selectBoard" />
+          <SearchBoardDropdown
+            :board="post.board"
+            @selected="selectBoard"
+          />
         </div>
 
         <div class="form-column">
-          <SearchRoadmapDropdown @selected="selectRoadmap" />
+          <SearchRoadmapDropdown
+            :roadmap="post.roadmap"
+            @selected="selectRoadmap" />
         </div>
       </div>
     </div>
