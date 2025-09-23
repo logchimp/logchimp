@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
-import type { IBoard, IPost } from "@logchimp/types";
+import type { IBoard, IPost, ICreatePostResponseBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
@@ -14,7 +14,6 @@ import {
   post as generatePost,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import { isActive } from "../../../src/cache";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
@@ -450,6 +449,7 @@ describe("POST /api/v1/posts", () => {
   });
 });
 
+// Update a post
 describe("PATCH /api/v1/posts", () => {
   it('should throw error "INVALID_AUTH_HEADER" when auth is missing', async () => {
     const res = await supertest(app).patch("/api/v1/posts");
@@ -584,6 +584,79 @@ describe("PATCH /api/v1/posts", () => {
     const oldSlug = post.slug;
     const slugSuffix = oldSlug.split("-").slice(-1)[0];
     expect(updated.slug.endsWith(`-${slugSuffix}`)).toBe(true);
+  });
+
+  it("should not allow a normal user without 'post:update' to change board or roadmap", async () => {
+    const boardA = await generateBoard({}, true);
+    const boardB = await generateBoard({}, true);
+    const roadmapA = await generateRoadmap({}, true);
+    const roadmapB = await generateRoadmap({}, true);
+    const { user: author } = await createUser({ isVerified: true });
+
+    const post = await generatePost(
+      {
+        userId: author.userId,
+        boardId: boardA.boardId,
+        roadmapId: roadmapA.id,
+      },
+      true,
+    );
+
+    const res = await supertest(app)
+      .patch("/api/v1/posts")
+      .set("Authorization", `Bearer ${author.authToken}`)
+      .send({
+        id: post.postId,
+        title: `${post.title} tweak`,
+        boardId: boardB.boardId,
+        roadmapId: roadmapB.id,
+      });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should allow a user with 'post:update' permission to change board", async () => {
+    const boardA = await generateBoard({}, true);
+    const boardB = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: author } = await createUser({ isVerified: true });
+    const { user: moderator } = await createUser({ isVerified: true });
+
+    await createRoleWithPermissions(moderator.userId, ["post:update"], {
+      roleName: "Moderator",
+    });
+
+    const post = await generatePost(
+      {
+        userId: author.userId,
+        boardId: boardA.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const res = await supertest(app)
+      .patch("/api/v1/posts")
+      .set("Authorization", `Bearer ${moderator.authToken}`)
+      .send({
+        id: post.postId,
+        title: `${post.title} mod change`,
+        boardId: boardB.boardId,
+      });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+    const updated = res.body.post;
+
+    if ((updated as IPost).board?.boardId) {
+      expect((updated as IPost).board.boardId).toBe(boardB.boardId);
+    } else if ((updated as ICreatePostResponseBody["post"]).boardId) {
+      expect((updated as ICreatePostResponseBody["post"]).boardId).toBe(
+        boardB.boardId,
+      );
+    }
   });
 });
 
