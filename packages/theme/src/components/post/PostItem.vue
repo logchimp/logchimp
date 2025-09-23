@@ -17,7 +17,7 @@
         </h5>
       </router-link>
       <p
-        v-if="postData.roadmap"
+        v-if="postData.roadmap?.id"
         class="post-roadmap"
         :style="{
           color: `#${postData.roadmap.color}`
@@ -29,7 +29,7 @@
         {{ useTrim(postData.contentMarkdown, 120) }}
       </p>
       <board-badge
-        v-if="postData.board"
+        v-if="postData.board?.boardId"
         :show-board="showBoard"
         :name="postData.board.name"
         :color="postData.board.color"

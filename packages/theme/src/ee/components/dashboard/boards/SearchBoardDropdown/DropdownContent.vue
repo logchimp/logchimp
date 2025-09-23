@@ -22,13 +22,11 @@
       />
     </div>
 
-    <div class="p-1 w-full">
-      <div
-        v-if="!search && suggestions.length === 0"
-        class="text-center text-sm text-neutral-500 py-3.5"
-      >
-        No matches
-      </div>
+    <div class="w-full">
+      <NoBoard
+        v-if="searchBoard.board"
+        @select="selectHandler"
+      />
 
       <ItemSuggestionDropdownItem
         v-for="item in suggestions"
@@ -53,9 +51,10 @@ import { watchDebounced } from "@vueuse/core";
 import type { IBoardPrivate } from "@logchimp/types";
 
 import { searchBoard as searchBoardApi } from "../../../../modules/boards";
-import { useBoardSearch } from "./search";
+import { type TCurrentBoard, useBoardSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
+import NoBoard from "./NoBoard.vue";
 import CreateBoardItem from "./CreateBoardItem.vue";
 
 const search = ref("");
@@ -102,7 +101,7 @@ watchDebounced(
   { debounce: 600 },
 );
 
-function selectHandler(e: IBoardPrivate) {
+function selectHandler(e: TCurrentBoard) {
   searchBoard.select(e);
 }
 

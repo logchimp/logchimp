@@ -1,13 +1,15 @@
 <template>
   <DropdownMenuItem
     :class="[
-      'flex items-center gap-x-6 px-4 py-1 rounded-md',
+      'flex items-center gap-x-4 px-4 py-1',
       'cursor-pointer outline-none',
       'bg-white hover:bg-neutral-300/50 data-[highlighted]:bg-neutral-300/50',
     ]"
     @click="$emit('select', suggestion)"
   >
-    <color-dot :color="suggestion.color" />
+    <div class="size-4 flex items-center justify-center">
+      <color-dot :color="suggestion.color" class="size-3" />
+    </div>
     <div>
       <div data-test="board-suggestion-name" class="text-md font-semibold">
         {{ suggestion.name }}

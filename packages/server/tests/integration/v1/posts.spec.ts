@@ -371,38 +371,8 @@ describe("POST /api/v1/posts", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should throw error "BOARD_ID_MISSING"', async () => {
-    const { user: authUser } = await createUser({
-      isVerified: true,
-    });
-    await createRoleWithPermissions(authUser.userId, ["post:create"], {
-      roleName: "Post Creator",
-    });
-
-    const response = await supertest(app)
-      .post(`/api/v1/posts/`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        title: faker.food.dish,
-        contentMarkdown: faker.food.description,
-        userId: authUser.userId,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          message: "Board ID missing",
-          code: "BOARD_ID_MISSING",
-        }),
-      ]),
-    );
-  });
-
-  it('should throw error "POST_TITLE_MISSING"', async () => {
+  it("should create a post without title", async () => {
     const board = await generateBoard({}, true);
-    await generateRoadmap({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -420,15 +390,35 @@ describe("POST /api/v1/posts", () => {
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          message: "Post title missing",
-          code: "POST_TITLE_MISSING",
-        }),
-      ]),
-    );
+    expect(response.status).toBe(201);
+    const postResponse = response.body.post;
+    expect(postResponse.title).toBe("new post");
+    expect(postResponse.boardId).toBe(board.boardId);
+  });
+
+  it("should create a post without a board", async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const title = faker.food.dish();
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
+    });
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        title,
+        contentMarkdown: faker.food.description,
+        userId: authUser.userId,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    const postResponse = response.body.post;
+    expect(postResponse.title).toBe(title);
+    expect(postResponse.boardId).toBeNull();
   });
 
   it("should create a post with '@everyone' role", async () => {

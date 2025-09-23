@@ -10,7 +10,7 @@ defineProps({
 <template>
   <div
     data-test="color-dot"
-    class="min-w-2.5 min-h-2.5 max-w-2.5 max-h-2.5 rounded-full"
+    class="size-2.5 rounded-full"
     :style="{
       backgroundColor: `#${color}`
     }"

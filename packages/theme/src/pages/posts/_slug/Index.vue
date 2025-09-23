@@ -89,13 +89,8 @@ const post = reactive<IPost>({
     avatar: null,
     userId: "",
   },
-  board: {
-    boardId: "",
-    name: "",
-    color: "",
-    url: "",
-    createdAt: new Date(),
-  },
+  board: null,
+  roadmap: null,
   voters: {
     votesCount: 0,
     viewerVote: undefined,

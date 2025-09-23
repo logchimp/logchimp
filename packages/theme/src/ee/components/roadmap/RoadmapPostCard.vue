@@ -14,7 +14,7 @@
               <h5>{{ post.title }}</h5>
             </router-link>
             <span
-              v-if="!isExpanded"
+              v-if="!isExpanded && post.board"
               data-test="post-board-name"
               class="post-card-board"
             >
@@ -59,6 +59,7 @@
         :total-count="post.voters.votesCount"
       />
       <board-badge
+        v-if="post.board"
         :show-board="true"
         :name="post.board.name"
         :color="post.board.color"
