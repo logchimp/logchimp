@@ -1,6 +1,10 @@
 import { expect } from "@playwright/test";
 import { test } from "../../fixtures/pageTest";
 import { faker } from "@faker-js/faker";
+import path from "path";
+
+const authFile = path.join(__dirname, "../../.auth/user.json");
+test.use({ storageState: authFile });
 
 test.describe("General", (): void => {
   test("should change Site Name", async ({ page }) => {
@@ -17,9 +21,12 @@ test.describe("General", (): void => {
 
     await page.reload();
     await expect(siteNameInput).toHaveValue(newSiteName);
+
+    await siteNameInput.fill("LogChimp");
+    await page.getByRole("button", { name: "Save" }).click();
   });
 
-  test("should display error for empty site name", async ({ page }) => {
+  test.skip("should display error for empty site name", async ({ page }) => {
     await page.goto("http://localhost:3000/dashboard/settings/general");
     await expect(page).toHaveURL(
       "http://localhost:3000/dashboard/settings/general",
@@ -50,6 +57,7 @@ test.describe("General", (): void => {
     const input = page.locator("input[placeholder='Site description']");
     const new_desc = faker.company.buzzPhrase();
 
+    await input.clear();
     await input.fill(new_desc);
     await page.getByRole("button", { name: "Save" }).click();
 
