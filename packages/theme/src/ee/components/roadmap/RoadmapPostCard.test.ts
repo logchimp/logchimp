@@ -55,6 +55,7 @@ describe("post card", () => {
           url: "feature-requests",
           createdAt: new Date(),
         },
+        roadmap: null,
       },
     },
     stubs: {

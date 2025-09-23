@@ -31,6 +31,7 @@ describe("post", () => {
           url: "feature-requests",
           createdAt: new Date(),
         },
+        roadmap: null,
       },
       showBoard: true,
     },
