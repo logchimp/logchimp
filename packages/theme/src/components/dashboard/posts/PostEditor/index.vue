@@ -128,8 +128,8 @@ async function updatePostHandler() {
       contentMarkdown: post.contentMarkdown,
       slugId: post.slugId,
       userId: post.author.userId,
-      boardId: post.board ? post.board.boardId : undefined,
-      roadmapId: post.roadmap ? post.roadmap.id : undefined,
+      boardId: post.board ? post.board.boardId : null,
+      roadmapId: post.roadmap ? post.roadmap.id : null,
     });
 
     Object.assign(post, response.data.post);

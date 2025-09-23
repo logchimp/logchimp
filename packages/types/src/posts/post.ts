@@ -74,8 +74,8 @@ export interface IUpdatePostRequestBody {
   contentMarkdown: string | null;
   slugId: string;
   userId: string;
-  boardId?: string;
-  roadmapId?: string;
+  boardId: string | null;
+  roadmapId: string | null;
 }
 
 export type TUpdatePostResponseBody = ICreatePostResponseBody;
