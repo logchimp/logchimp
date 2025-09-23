@@ -1,9 +1,6 @@
 import { expect } from "@playwright/test";
 import { test } from "../fixtures/pageTest";
 
-// Reset storage state for this file to avoid being authenticated
-test.use({ storageState: { cookies: [], origins: [] } });
-
 test.describe("Signin", (): void => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/login");

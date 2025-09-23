@@ -116,13 +116,13 @@ test.describe("General", (): void => {
     await page.getByRole("button", { name: "Save" }).click();
 
     await page.reload();
-    expect(toggleButton).toBeChecked();
+    await expect(toggleButton).toBeChecked();
 
     await toggleButton.setChecked(false);
     await page.getByRole("button", { name: "Save" }).click();
 
     await page.reload();
-    expect(toggleButton).toBeChecked({ checked: false });
+    await expect(toggleButton).toBeChecked({ checked: false });
   });
 
   test("should display 'Powered by LogChimp' badge", async ({ page }) => {
