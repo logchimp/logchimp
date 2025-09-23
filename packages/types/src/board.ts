@@ -49,6 +49,16 @@ export type TBoardCheckSlugResponse = {
   readonly available: boolean;
 };
 
+export type TBoardCheckNameBody = {
+  // DEPRECATED, will be removed
+  name: string;
+};
+
+export type TBoardCheckNameResponse = {
+  // DEPRECATED, will be removed
+  readonly available: boolean;
+};
+
 export type TBoardCreateRequestBody = {
   name?: string;
   display?: boolean;

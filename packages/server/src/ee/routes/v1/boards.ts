@@ -40,4 +40,8 @@ router.patch("/boards", authRequired, boardExists, boards.updateBoard);
 
 router.delete("/boards", authRequired, boardExists, boards.deleteById);
 
+// DEPRECATED, will be removed
+
+router.post("/boards/check-name", authRequired, boards.checkName);
+
 export default router;

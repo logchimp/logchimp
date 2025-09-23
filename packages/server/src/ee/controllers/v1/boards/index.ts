@@ -6,3 +6,6 @@ export { checkSlug } from "./checkSlug";
 export { boardByUrl } from "./boardByUrl";
 export { updateBoard } from "./updateBoard";
 export { deleteById } from "./deleteById";
+
+// DEPRECATED, will be removed
+export { checkName } from "./checkName";
