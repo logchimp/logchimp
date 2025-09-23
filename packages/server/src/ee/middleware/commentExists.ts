@@ -21,6 +21,13 @@ export async function commentExists(
 ) {
   const id = validUUID(req.params.comment_id);
 
+  if (!id) {
+    return res.status(404).send({
+      message: error.api.comments.commentNotFound,
+      code: "COMMENT_NOT_FOUND",
+    });
+  }
+
   const comment = await database
     .select()
     .from("posts_comments")
