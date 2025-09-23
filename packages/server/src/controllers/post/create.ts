@@ -31,7 +31,7 @@ export async function create(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const title = req.body.title;
+  const title = req.body.title || "new post";
   const contentMarkdown = req.body.contentMarkdown;
   const boardId = validUUID(req.body.boardId);
 
@@ -40,25 +40,6 @@ export async function create(
     return res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
-    });
-  }
-
-  if (!(title && boardId)) {
-    return res.status(400).send({
-      errors: [
-        title
-          ? undefined
-          : {
-              message: error.api.posts.titleMissing,
-              code: "POST_TITLE_MISSING",
-            },
-        boardId
-          ? undefined
-          : {
-              message: error.api.boards.boardIdMissing,
-              code: "BOARD_ID_MISSING",
-            },
-      ],
     });
   }
 

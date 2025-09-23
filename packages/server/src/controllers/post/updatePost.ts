@@ -27,11 +27,10 @@ export async function updatePost(
   // @ts-expect-error
   const slugId = req.post.slugId;
 
-  const id = validUUID(req.body.id);
-  const title = req.body.title;
-  const contentMarkdown = req.body.contentMarkdown;
-  const boardId = validUUID(req.body.boardId) || undefined;
-  const roadmapId = validUUID(req.body.roadmapId) || undefined;
+  const { id: _id, title, contentMarkdown } = req.body;
+  const id = validUUID(_id);
+  const boardId = validUUID(req.body.boardId);
+  const roadmapId = validUUID(req.body.roadmapId);
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
