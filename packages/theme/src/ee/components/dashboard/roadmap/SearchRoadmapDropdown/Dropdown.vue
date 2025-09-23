@@ -63,7 +63,8 @@ const { roadmap, clear: clearRoadmapSearch } = useRoadmapSearch();
 interface Props {
   disabled?: boolean;
 }
-const emit = defineEmits<(e: "selected", value: IRoadmapPrivate | null) => void>();
+const emit =
+  defineEmits<(e: "selected", value: IRoadmapPrivate | null) => void>();
 withDefaults(defineProps<Props>(), {
   disabled: false,
 });

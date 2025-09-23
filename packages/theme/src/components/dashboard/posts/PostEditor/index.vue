@@ -77,9 +77,7 @@
 
 <script setup lang="ts">
 import { computed, ref, reactive } from "vue";
-import type {
-  IDashboardPost
-} from "@logchimp/types";
+import type { IDashboardPost } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
@@ -112,7 +110,7 @@ const props = defineProps<Props>();
 
 const saveBtnLoading = ref(false);
 const post = reactive<IDashboardPost>({
-  ...props.post
+  ...props.post,
 });
 
 const updatePostPermissionDisabled = computed(() => {
@@ -131,7 +129,7 @@ async function updatePostHandler() {
       slugId: post.slugId,
       userId: post.author.userId,
       boardId: post.board ? post.board.boardId : undefined,
-      roadmapId: post.roadmap ? post.roadmap.id : undefined
+      roadmapId: post.roadmap ? post.roadmap.id : undefined,
     });
 
     Object.assign(post, response.data.post);
@@ -146,17 +144,17 @@ async function updatePostHandler() {
 
 function selectBoard(board: TCurrentBoard) {
   Object.assign(post, {
-    board
+    board,
   });
 }
 
 function selectRoadmap(roadmap: TCurrentRoadmap) {
   Object.assign(post, {
-    roadmap
+    roadmap,
   });
 }
 
 defineOptions({
-  name: "DashboardPostEditor"
+  name: "DashboardPostEditor",
 });
 </script>

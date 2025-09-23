@@ -63,7 +63,8 @@ const { board, clear: clearBoardSearch } = useBoardSearch();
 interface Props {
   disabled?: boolean;
 }
-const emit = defineEmits<(e: "selected", value: IBoardPrivate | null) => void>();
+const emit =
+  defineEmits<(e: "selected", value: IBoardPrivate | null) => void>();
 withDefaults(defineProps<Props>(), {
   disabled: false,
 });

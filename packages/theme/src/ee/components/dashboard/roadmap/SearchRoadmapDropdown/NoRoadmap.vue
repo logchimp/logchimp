@@ -24,5 +24,5 @@ import { DropdownMenuItem } from "reka-ui";
 
 defineOptions({
   name: "SearchBoardDropdownNoRoadmap",
-})
+});
 </script>
