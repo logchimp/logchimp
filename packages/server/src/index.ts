@@ -1,4 +1,5 @@
 const startTime = Date.now();
+import 'dotenv/config';
 import database from "./database";
 import app from "./app";
 

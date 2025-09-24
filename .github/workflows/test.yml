@@ -2,7 +2,7 @@ name: Test
 
 on:
   push:
-    branches: [main,master]
+    branches: [main, master]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -135,7 +135,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [18, 20, 22]
+        node: [22]
         postgres: [12.18, 14, 16, 17]
         os: [ubuntu-24.04]
 
@@ -176,13 +176,13 @@ jobs:
 
       - name: Database setup
         run: |
-          cd ./packages/server
+          cd ./packages/server;
 
           # Run database migrations
-          pnpm knex --knexfile ./src/database/config.ts migrate:latest
+          pnpm knex --knexfile ./src/database/config.ts migrate:latest;
 
           # Seeding database
-          pnpm knex --knexfile ./src/database/config.ts seed:run
+          pnpm knex --knexfile ./src/database/config.ts seed:run;
 
       - name: Testing
         run: pnpm --filter @logchimp/api test:integration --retry 1
@@ -200,3 +200,7 @@ jobs:
         with:
           name: coverage-node@22-pg@${{ matrix.postgres }}
           path: ./coverage
+
+  biome-tools:
+    name: "Biome CLI"
+    uses: ./.github/workflows/biome-tools.yml
