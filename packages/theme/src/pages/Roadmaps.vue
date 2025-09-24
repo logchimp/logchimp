@@ -1,4 +1,7 @@
 <template>
+   <!-- Show skeleton while loading -->
+  <roadmap-skeleton v-if="loading && roadmaps.length === 0" />
+
   <!-- Show roadmaps grid only when we have roadmaps -->
   <div
     v-if="roadmaps.length > 0"
@@ -28,6 +31,7 @@ import { useSettingStore } from "../store/settings";
 
 // components
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
+import RoadmapSkeleton from "../ee/components/roadmap/RoadmapSkeleton.vue";
 
 const { get: siteSettings } = useSettingStore();
 
@@ -35,9 +39,11 @@ const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
 const roadmaps = ref<IRoadmap[]>([]);
 const endCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
+const loading = ref(true);
 
 async function getRoadmaps(after: string | undefined) {
   try {
+    loading.value = true;
     const response = await getAllRoadmaps({
       first: "4",
       after: after == null ? undefined : after,
@@ -54,6 +60,8 @@ async function getRoadmaps(after: string | undefined) {
     hasNextPage.value = paginatedData.page_info.has_next_page;
   } catch (err) {
     console.error("Error fetching roadmaps:", err);
+  } finally {
+    loading.value = false;
   }
 }
 
