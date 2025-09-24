@@ -200,7 +200,3 @@ jobs:
         with:
           name: coverage-node@22-pg@${{ matrix.postgres }}
           path: ./coverage
-
-  biome-tools:
-    name: "Biome CLI"
-    uses: ./.github/workflows/biome-tools.yml
