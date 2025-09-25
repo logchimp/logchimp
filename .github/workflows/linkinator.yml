@@ -3,9 +3,9 @@ name: Link Check
 on:
   pull_request:
     paths:
-      - '**/*.md'
+      - "**/*"
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   link-check:
@@ -23,4 +23,4 @@ jobs:
         run: npm install -g linkinator
 
       - name: Run Linkinator
-        run: linkinator '**/*.md'
+        run: linkinator '**/*'
