@@ -1,7 +1,21 @@
 name: "Biome tools"
 
 on:
-  workflow_call:
+  push:
+    branches: [main,master]
+    paths:
+      - ".github/workflows/test.yml"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - ".github/workflows/test.yml"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
 
 jobs:
   formatter:
