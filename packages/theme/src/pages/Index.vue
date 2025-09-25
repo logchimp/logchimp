@@ -77,7 +77,10 @@ async function loadMorePosts() {
   }
 }
 
-onMounted(() => isSetup(), autoLoadPosts());
+onMounted(async () => {
+  await isSetup();
+  await loadMorePosts();
+});
 
 useHead({
   title: "Home",
@@ -88,12 +91,6 @@ useHead({
     },
   ],
 });
-// working for smaller screens also.
-async function autoLoadPosts() {
-  while (document.documentElement.scrollHeight <= window.innerHeight && state.value !== "COMPLETED") {
-    await loadMorePosts();
-  }
-}
 
 defineOptions({
   name: "Homepage",
