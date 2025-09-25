@@ -63,7 +63,6 @@ async function loadMorePosts() {
       created: "DESC",
       boardId: [],
     });
-
     if (response.data.posts.length) {
       posts.value.push(...response.data.posts);
       page.value += 1;
