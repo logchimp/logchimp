@@ -16,9 +16,8 @@
     </aside>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, ref } from "vue";
+<script setup lang="ts">s
+import { onMounted, ref, nextTick } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPost } from "@logchimp/types";
 
@@ -75,8 +74,6 @@ async function loadMorePosts() {
     state.value = "ERROR";
   }
 }
-import { nextTick } from "vue";
-
 onMounted(() => {
   isSetup();
   nextTick(() => {
