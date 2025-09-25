@@ -16,7 +16,7 @@
     </aside>
   </div>
 </template>
-<script setup lang="ts">s
+<script setup lang="ts">
 import { onMounted, ref, nextTick } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPost } from "@logchimp/types";
