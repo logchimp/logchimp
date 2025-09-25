@@ -76,11 +76,20 @@ async function loadMorePosts() {
     state.value = "ERROR";
   }
 }
+import { nextTick } from "vue";
 
-onMounted(async () => {
-  await isSetup();
-  await loadMorePosts();
+onMounted(() => {
+  isSetup();
+  nextTick(() => {
+    // if smallscreen, loadmoreposts
+    if (window.innerHeight < 524) {
+      loadMorePosts();
+    }
+  });
 });
+
+
+
 
 useHead({
   title: "Home",
