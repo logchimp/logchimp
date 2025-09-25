@@ -12,7 +12,7 @@ services:
       - dev-network
 
   db:
-    image: postgres:12
+    image: postgres:17
     ports:
       - "5432:5432"
     environment:
