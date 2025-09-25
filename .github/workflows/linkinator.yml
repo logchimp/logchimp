@@ -1,0 +1,26 @@
+name: Link Check
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+  push:
+    branches: [ master ]
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Linkinator
+        run: npm install -g linkinator
+
+      - name: Run Linkinator
+        run: linkinator '**/*.md'
