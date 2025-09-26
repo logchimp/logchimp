@@ -1,33 +1,22 @@
 <template>
-  <div class="table-container">
-    <div class="table-header">
+  <table class="border border-(--color-gray-90) rounded-lg w-full">
+    <thead class="text-(--color-gray-70) text-left uppercase text-xs font-semibold">
       <slot name="header" />
-    </div>
-    <div class="table-body">
+    </thead>
+
+    <tbody>
       <slot />
-    </div>
-  </div>
+    </tbody>
+  </table>
 </template>
 
 <style lang='sass'>
-.table-container
-	border: 1px solid var(--color-gray-90)
-	border-radius: var(--border-radius-default)
-
 .table-heading
 	color: var(--color-gray-40)
 	font-size: 0.875rem
 	font-weight: 500
 	margin-left: 0.375rem
 	margin-bottom: 0.5rem
-
-.table-header
-	color: var(--color-gray-70)
-	text-transform: uppercase
-	font-size: 0.75rem
-	font-weight: 600
-	display: flex
-	align-items: center
 
 .table-header-item
 	padding: 1.125rem 1.5rem 0.75rem
