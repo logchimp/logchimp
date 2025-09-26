@@ -191,7 +191,7 @@ importers:
         version: 2.3.1(typescript@5.9.2)(vue@3.5.21(typescript@5.9.2))
       reka-ui:
         specifier: ^2.4.1
-        version: 2.5.0(typescript@5.9.2)(vue@3.5.21(typescript@5.9.2))
+        version: 2.5.1(typescript@5.9.2)(vue@3.5.21(typescript@5.9.2))
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.13
@@ -2674,8 +2674,8 @@ packages:
     resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
     engines: {node: '>=4'}
 
-  reka-ui@2.5.0:
-    resolution: {integrity: sha512-81aMAmJeVCy2k0E6x7n1kypDY6aM1ldLis5+zcdV1/JtoAlSDck5OBsyLRJU9CfgbrQp1ImnRnBSmC4fZ2fkZQ==}
+  reka-ui@2.5.1:
+    resolution: {integrity: sha512-QJGB3q21wQ1Kw28HhhNDpjfFe8qpePX1gK4FTBRd68XTh9aEnhR5bTJnlV0jxi8FBPh0xivZBeNFUc3jiGx7mQ==}
     peerDependencies:
       vue: '>= 3.2.0'
 
@@ -5956,7 +5956,7 @@ snapshots:
     dependencies:
       redis-errors: 1.2.0
 
-  reka-ui@2.5.0(typescript@5.9.2)(vue@3.5.21(typescript@5.9.2)):
+  reka-ui@2.5.1(typescript@5.9.2)(vue@3.5.21(typescript@5.9.2)):
     dependencies:
       '@floating-ui/dom': 1.7.4
       '@floating-ui/vue': 1.1.9(vue@3.5.21(typescript@5.9.2))
