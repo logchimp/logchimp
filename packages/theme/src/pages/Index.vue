@@ -84,9 +84,6 @@ onMounted(() => {
   });
 });
 
-
-
-
 useHead({
   title: "Home",
   meta: [
