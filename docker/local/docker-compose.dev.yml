@@ -1,0 +1,93 @@
+name: "LogChimp-Dev"
+
+services:
+  cache:
+    image: valkey/valkey:8
+    ports:
+      - "6379:6379"
+    command: [ "valkey-server", "--save", "60", "1", "--loglevel", "warning", "--dir", "/data" ]
+    volumes:
+      - valkey-data:/data
+    networks:
+      - dev-network
+
+  db:
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: lc
+      POSTGRES_PASSWORD: password
+    networks:
+      - dev-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  # Local SMTP mailbox
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - dev-network
+
+  logchimp:
+    build:
+      dockerfile: docker/local/server.Dockerfile
+      context: .
+      args:
+        DOCKER_BUILDKIT: 1
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/types/node_modules
+      - /app/packages/server/dist
+      - /app/packages/types/dist
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dev-network
+    environment:
+      PORT: 8000
+      # Database
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: db
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: lc
+      LOGCHIMP_DB_PASSWORD: password
+      # Cache
+      LOGCHIMP_VALKEY_URL: cache:6379
+      # Mail
+      LOGCHIMP_MAIL_HOST: mail
+      LOGCHIMP_MAIL_PORT: 1025
+      LOGCHIMP_MAIL_USER: test
+      LOGCHIMP_MAIL_PASSWORD: test
+    env_file:
+      - packages/server/.env
+    ports:
+      - "8000:8000"
+
+  # theme:
+  #   image: logchimp-theme:0.2.0
+  #   environment:
+  #     API_HOST: logchimp
+  #     command: /logchimp/scripts/run_nginx.sh
+  #   depends_on:
+  #     - logchimp
+
+networks:
+  dev-network:
+    driver: bridge
+
+volumes:
+  valkey-data:
+  pg_data:
