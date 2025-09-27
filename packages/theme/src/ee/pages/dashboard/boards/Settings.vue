@@ -38,17 +38,23 @@
           <color-input v-model="board.color" />
         </div>
 
-        <div class="form-column flex">
-          <l-text
-            v-model="slugUrl"
-            label="Slug"
-            placeholder="Board slug url"
-            :error="{
-              show: urlAvailableError,
-              message: 'Not available'
-            }"
-            @keydown="validateBoardUrl"
-          />
+        <div class="form-column">
+          <div class="grid gap-y-1.5">
+            <l-text
+              v-model="slugUrl"
+              label="Slug"
+              placeholder="Board slug url"
+              :error="{
+                show: urlAvailableError,
+                message: 'Not available'
+              }"
+              class="!mb-0"
+              @keydown="validateBoardUrl"
+            />
+            <HelperText>
+              Alphabets, numbers or underscore are allowed.
+            </HelperText>
+          </div>
         </div>
       </div>
     </div>
@@ -94,6 +100,7 @@ import { useDashboardBoards } from "../../../store/dashboard/boards";
 // components
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
+import HelperText from "../../../../components/ui/HelperText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
 import ColorInput from "../../../../components/ui/ColorInput.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
