@@ -557,7 +557,7 @@ describe("PATCH /api/v1/boards", () => {
     );
   });
 
-  it("should throw error 'BOARD_URL_EXISTS'", async () => {
+  it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {
     const { user: authUser } = await createUser();
 
     const preExistingBoard = await generateBoards({}, true);
