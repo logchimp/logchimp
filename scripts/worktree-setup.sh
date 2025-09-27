@@ -81,7 +81,7 @@ setup_worktree() {
     export COMPOSE_BAKE=true
 
     # Spin up dev environment
-    docker compose -f docker-compose.dev.yml up -d
+    docker compose -f docker/local/docker-compose.dev.yml up -d
 }
 
 copy_to_relative_directory() {
