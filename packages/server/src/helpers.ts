@@ -3,6 +3,7 @@ import { validate as validateUUID } from "uuid";
 import fs from "fs";
 import { isEmail } from "validator";
 import { OFFSET_PAGINATION_UPPER_LIMIT } from "./constants";
+import { customAlphabet } from "nanoid";
 
 /**
  * Check value is valid email
@@ -163,6 +164,22 @@ function parseAndValidateLimit(value: string, max: number): number {
   return _value > 0 ? Math.min(Math.floor(_value), max) : max;
 }
 
+/**
+ * Random ID generator using nanoid.
+ * Returns random ID based on param length.
+ * @param {number} length
+ * @returns {string}
+ */
+function generateNanoID(length: number): string {
+  // Generate nanoid only with [_0-9a-z]
+  const allowedChars = "_0123456789abcdefghijklmnopqrstuvwxyz";
+  const nanoid = customAlphabet(
+    allowedChars,
+    Math.min(Math.max(length, 2), allowedChars.length),
+  );
+  return nanoid();
+}
+
 export {
   validEmail,
   validUUID,
@@ -176,4 +193,5 @@ export {
   isDevTestEnv,
   parseAndValidatePage,
   parseAndValidateLimit,
+  generateNanoID,
 };

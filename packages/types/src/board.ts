@@ -41,10 +41,26 @@ export interface IGetBoardsByUrlResponseBody {
   board: IBoardPrivate;
 }
 
+export type TBoardCheckSlugBody = {
+  url: string;
+};
+
+export type TBoardCheckSlugResponse = {
+  readonly available: boolean;
+};
+
+/**
+ * @deprecated will be removed in next major release.
+ * Use `/api/v1/boards/check-slug` API endpoint.
+ */
 export type TBoardCheckNameBody = {
   name: string;
 };
 
+/**
+ * @deprecated will be removed in next major release.
+ * Use `/api/v1/boards/check-slug` API endpoint.
+ */
 export type TBoardCheckNameResponse = {
   readonly available: boolean;
 };

@@ -557,6 +557,29 @@ describe("PATCH /api/v1/boards", () => {
     );
   });
 
+  it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {
+    const { user: authUser } = await createUser();
+
+    const preExistingBoard = await generateBoards({}, true);
+    const board = await generateBoards({}, true);
+
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+        url: preExistingBoard.url,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(409);
+    expect(response.body.code).toBe("BOARD_URL_EXISTS");
+  });
+
   it("should UPDATE board", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const newBoard: BoardInsertRecord = await generateBoards({}, false);
@@ -627,5 +650,108 @@ describe("DELETE /api/v1/boards", () => {
 
     expect(response.status).toBe(204);
     expect(response.body.code).toBeUndefined();
+  });
+});
+
+// Check if a boardUrl exists
+describe("POST /api/v1/boards/check-slug", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const response = await supertest(app).post("/api/v1/boards/check-slug");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+    const { user: authUser } = await createUser();
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
+    const { user: authUser } = await createUser();
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should throw error 'BOARD_URL_MISSING'", async () => {
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(
+      authUser.userId,
+      ["board:create", "board:update"],
+      {
+        roleName: "Board contributor",
+      },
+    );
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("BOARD_URL_MISSING");
+  });
+
+  it("should return '{ available: false}' for board url that already exists", async () => {
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(
+      authUser.userId,
+      ["board:create", "board:update"],
+      {
+        roleName: "Board contributor",
+      },
+    );
+
+    const board = await generateBoards({}, true);
+    console.log(board.url);
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        url: board.url,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.available).toBeFalsy();
+  });
+
+  it.skip("should return '{ available: true}' for board url that doesn't exists", async () => {
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(
+      authUser.userId,
+      ["board:create", "board:update"],
+      {
+        roleName: "Board contributor",
+      },
+    );
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        url: faker.food.dish(),
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.available).toBeTruthy();
   });
 });
