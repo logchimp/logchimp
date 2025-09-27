@@ -4,7 +4,7 @@
     v-if="roadmaps.length > 0"
     ref="roadmapElement"
     :class="[
-      'overflow-x-auto h-[500px]',
+      'overflow-x-auto h-[500px] overflow-y-hidden',
       'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]',
     ]"
   >
@@ -12,6 +12,7 @@
       v-for="roadmap in roadmaps"
       :key="roadmap.id"
       :roadmap="roadmap"
+       class="h-[500px] overflow-y-auto"
     />
   </div>
 </template>
