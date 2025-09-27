@@ -43,7 +43,7 @@ export async function checkName(
 
   try {
     const board = await database
-      .select()
+      .select<{ boardId: string }>("boardId")
       .from("boards")
       .where({
         url: slimUrl || null,
