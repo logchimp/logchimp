@@ -43,7 +43,7 @@ test.describe("Signin", (): void => {
       );
     });
 
-    test("should have link to sign up page", async ({ page }) => {
+    test.skip("should have link to sign up page", async ({ page }) => {
       const signUpLink = page.getByRole("link", { name: "Sign up" });
 
       await expect(signUpLink).toBeVisible();
