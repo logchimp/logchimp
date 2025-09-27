@@ -34,8 +34,8 @@ services:
 
   server:
     build:
-      dockerfile: ../../packages/server/Dockerfile
-      context: ../..
+      dockerfile: ./../packages/server/Dockerfile
+      context: ./..
       args:
         DOCKER_BUILDKIT: 1
     depends_on:
@@ -66,8 +66,8 @@ services:
 
   client:
     build:
-      dockerfile: ../../packages/theme/Dockerfile
-      context: ../..
+      dockerfile: ./../packages/theme/Dockerfile
+      context: ./..
       args:
         DOCKER_BUILDKIT: 1
     environment:
