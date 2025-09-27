@@ -9,7 +9,7 @@ services:
       - ci-network
 
   db:
-    image: postgres:17.6
+    image: postgres:18.0
     ports:
       - "5432:5432"
     environment:
