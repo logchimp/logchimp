@@ -18,6 +18,7 @@
         </client-error>
       </slot>
     </template>
+     <div ref="infiniteTrigger" />
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import { useInfiniteScroll } from "@vueuse/core";
 import ClientError from "./ClientError.vue";
 import LoaderContainer from "./LoaderContainer.vue";
 
+const infiniteTrigger = ref<HTMLElement | null>(null);
 export type InfiniteScrollStateType =
   | "LOADING"
   | "LOADED"
@@ -79,7 +81,7 @@ function executeInfiniteScroll() {
   props.onInfinite();
 }
 
-useInfiniteScroll(window, executeInfiniteScroll, {
+useInfiniteScroll(infiniteTrigger, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
   canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",

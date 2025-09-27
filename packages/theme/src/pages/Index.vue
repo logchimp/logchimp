@@ -17,7 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from "vue";
+import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPost } from "@logchimp/types";
 
@@ -76,12 +76,12 @@ async function loadMorePosts() {
 }
 onMounted(() => {
   isSetup();
-  nextTick(() => {
-    // if smallscreen, loadmoreposts
-    if (window.innerHeight < 524) {
-      loadMorePosts();
-    }
-  });
+  // nextTick(() => {
+  //   // if smallscreen, loadmoreposts
+  //   if (window.innerHeight < 524) {
+  //     loadMorePosts();
+  //   }
+  // });
 });
 
 useHead({
