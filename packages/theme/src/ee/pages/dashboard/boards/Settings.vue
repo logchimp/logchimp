@@ -6,10 +6,10 @@
           Boards
         </BreadcrumbItem>
 
-        <template v-if="title">
+        <template v-if="board?.name">
           <BreadcrumbDivider />
           <BreadcrumbItem>
-            {{ title }}
+            {{ board.name }}
           </BreadcrumbItem>
         </template>
       </Breadcrumbs>
@@ -18,7 +18,7 @@
     <Button
       type="primary"
       :loading="saveButtonLoading"
-      :disabled="createBoardPermissionDisabled"
+      :disabled="updateBoardPermissionDisabled"
       @click="update"
     >
       Save
@@ -41,18 +41,30 @@
         <div class="form-column">
           <div class="grid gap-y-1.5">
             <l-text
-              v-model="slugUrl"
+              v-model="boardSlug.value"
               label="Slug"
               placeholder="Board slug url"
-              :error="{
-                show: urlAvailableError,
-                message: 'Not available'
-              }"
               class="!mb-0"
               @keydown="validateBoardUrl"
             />
             <HelperText>
               Alphabets, numbers or underscore are allowed.
+            </HelperText>
+            <HelperText
+              :class="[
+                'flex items-center gap-x-1 font-medium transition-opacity',
+                boardSlug.value !== board.url ? 'opacity-100' : 'opacity-0'
+              ]"
+              aria-hidden="true"
+            >
+              <template v-if="boardSlug.available">
+                <CheckCircle aria-hidden="true" class="size-4 stroke-green-600" />
+                Available
+              </template>
+              <template v-else-if="boardSlug.available === false">
+                <CheckCircle aria-hidden="true" class="size-4 stroke-red-500" />
+                Not available
+              </template>
             </HelperText>
           </div>
         </div>
@@ -86,6 +98,7 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { watchDebounced } from "@vueuse/core";
+import { CheckCircle2 as CheckCircle } from "lucide-vue";
 
 // modules
 import { router } from "../../../../router";
@@ -100,16 +113,13 @@ import { useDashboardBoards } from "../../../store/dashboard/boards";
 // components
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
-import HelperText from "../../../../components/ui/HelperText.vue";
+import HelperText from "../../../../components/ui/input/HelperText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
 import ColorInput from "../../../../components/ui/ColorInput.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
-
-const title = ref("");
-const boardSlugUrl = ref("");
 
 const board = reactive({
   boardId: "",
@@ -119,41 +129,38 @@ const board = reactive({
   view_voters: false,
   display: false,
 });
-const urlAvailableError = ref(false);
+const boardSlug = reactive<{
+  value: string;
+  available: boolean | undefined;
+}>({
+  value: "",
+  available: undefined,
+});
 const saveButtonLoading = ref(false);
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 
-const createBoardPermissionDisabled = computed(() => {
-  const checkPermission = permissions.includes("board:update");
-  return !checkPermission;
-});
-
-const slugUrl = computed({
-  get() {
-    return board.url;
-  },
-  set(value) {
-    board.url = value
-      .trim()
-      .replace(/[^\w]+/gi, "-")
-      .toLowerCase();
-  },
+const updateBoardPermissionDisabled = computed(() => {
+  return !permissions.includes("board:update");
 });
 
 watchDebounced(
-  slugUrl,
-  async () => {
-    if (boardSlugUrl.value === slugUrl.value) return;
+  () => boardSlug.value,
+  async (newValue) => {
+    const current = board.url;
+    if (!current) {
+      boardSlug.value = "";
+      boardSlug.available = undefined;
+      return;
+    }
 
-    urlAvailableError.value = false;
+    if (newValue === current) return;
+    boardSlug.available = undefined;
 
     try {
-      const response = await checkBoardSlug(board.url);
-      if (!response.data.available) {
-        urlAvailableError.value = true;
-      }
+      const response = await checkBoardSlug(newValue);
+      boardSlug.available = response.data.available;
     } catch (err) {
       console.error(err);
     }
@@ -164,13 +171,23 @@ watchDebounced(
 async function validateBoardUrl(event: KeyboardEvent) {
   const key = event.key;
 
-  // only accept letters, numbers, & numpad numbers
-  if (
-    !/^[a-zA-Z0-9_]$/.test(key) &&
-    key !== "Backspace" &&
-    key !== "ArrowLeft" &&
-    key !== "ArrowRight"
-  ) {
+  // allow common shortcuts (copy/paste/select all, etc.)
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+  // allow letters, numbers, underscore, and hyphen; plus navigation/edit keys
+  const allowed =
+    /^[a-zA-Z0-9_-]$/.test(key) ||
+    [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "Tab",
+      "Home",
+      "End",
+    ].includes(key);
+
+  if (!allowed) {
     event.preventDefault();
   }
 }
@@ -204,8 +221,7 @@ async function getBoard() {
     const response = await getBoardByUrl(url);
 
     Object.assign(board, response.data.board);
-    boardSlugUrl.value = board.url;
-    title.value = response.data.board.name;
+    boardSlug.value = board.url;
   } catch (error) {
     console.error(error);
   }
@@ -214,7 +230,7 @@ async function getBoard() {
 onMounted(() => getBoard());
 
 useHead({
-  title: () => `${title.value ? `${title.value} • ` : ""}Board • Dashboard`,
+  title: () => `${board.name ? `${board.name} • ` : ""}Board • Dashboard`,
 });
 
 defineOptions({
