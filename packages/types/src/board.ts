@@ -49,13 +49,19 @@ export type TBoardCheckSlugResponse = {
   readonly available: boolean;
 };
 
+/**
+ * @deprecated will be removed in next major release.
+ * Use `/api/v1/boards/check-slug` API endpoint.
+ */
 export type TBoardCheckNameBody = {
-  // DEPRECATED, will be removed
   name: string;
 };
 
+/**
+ * @deprecated will be removed in next major release.
+ * Use `/api/v1/boards/check-slug` API endpoint.
+ */
 export type TBoardCheckNameResponse = {
-  // DEPRECATED, will be removed
   readonly available: boolean;
 };
 
