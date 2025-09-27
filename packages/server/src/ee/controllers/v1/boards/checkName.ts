@@ -10,9 +10,10 @@ export async function checkName(
   req: Request<unknown, unknown, TBoardCheckNameBody>,
   res: Response,
 ) {
-  logger.warning(
-    "This API will be deprecated in the upcoming major release. Use `check-slug` instead",
+  logger.warn(
+    "`/api/v1/boards/check-name` API endpoint is deprecated and will be removed in next major release. Use `/api/v1/boards/check-slug` API endpoint.",
   );
+
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 

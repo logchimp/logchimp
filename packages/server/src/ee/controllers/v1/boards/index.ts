@@ -7,5 +7,6 @@ export { boardByUrl } from "./boardByUrl";
 export { updateBoard } from "./updateBoard";
 export { deleteById } from "./deleteById";
 
-// DEPRECATED, will be removed
+// --- Start: Deprecated, will be removed in next major release ---
 export { checkName } from "./checkName";
+// -- End: Deprecated ---
