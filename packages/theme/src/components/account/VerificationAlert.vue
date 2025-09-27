@@ -47,7 +47,7 @@ import Button from "../ui/Button.vue";
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
 
-const { getUser } = useUserStore();
+const { authToken } = useUserStore();
 const loading = ref<boolean>(false);
 
 interface IRequestStatus {
@@ -92,8 +92,8 @@ async function sendEmailVerification(): Promise<
   return axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/email/verify`,
-    data: {
-      email: getUser.email,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 }
