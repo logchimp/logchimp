@@ -16,7 +16,6 @@
     </aside>
   </div>
 </template>
-
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
@@ -63,7 +62,6 @@ async function loadMorePosts() {
       created: "DESC",
       boardId: [],
     });
-
     if (response.data.posts.length) {
       posts.value.push(...response.data.posts);
       page.value += 1;
@@ -76,8 +74,15 @@ async function loadMorePosts() {
     state.value = "ERROR";
   }
 }
-
-onMounted(() => isSetup());
+onMounted(() => {
+  isSetup();
+  // nextTick(() => {
+  //   // if smallscreen, loadmoreposts
+  //   if (window.innerHeight < 524) {
+  //     loadMorePosts();
+  //   }
+  // });
+});
 
 useHead({
   title: "Home",
