@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { CheckCircle2 as CheckCircle } from "lucide-vue";
 import { watchDebounced } from "@vueuse/core";
 
@@ -29,18 +29,9 @@ const state = reactive(DEFAULT_STATE);
 watchDebounced(
   () => value.value,
   async (newValue: string) => {
-    console.log("debounce ->");
-    console.log("new Value: ", newValue);
     const current = props.currentValue;
-    console.log("current: ", current);
 
-    if (!current) {
-      value.value = "";
-      state.available = undefined;
-      return;
-    }
-
-    console.log("");
+    emit("update", newValue);
 
     if (newValue === current) return;
     state.available = undefined;
@@ -80,19 +71,16 @@ async function validateBoardUrl(event: KeyboardEvent) {
   if (!allowed) {
     event.preventDefault();
   }
-}
 
-watch(
-  () => value.value,
-  (newValue: string) => {
-    emit("update", newValue);
-  },
-);
+  const target = event.target as HTMLInputElement;
+  value.value = target.value.toLowerCase();
+}
 
 // Fail-safe in case `value` ref is not able to access `props.currentValue` directly
 watch(
   () => props.currentValue,
   (newValue: string) => {
+    if (value.value) return;
     value.value = newValue;
   },
 );

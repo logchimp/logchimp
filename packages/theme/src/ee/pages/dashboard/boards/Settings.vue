@@ -41,7 +41,7 @@
         <div class="form-column">
           <SlugInputField
             :current-value="board.url"
-            @update="(value) => board.url = value"
+            @update="(value) => (boardSlug = value)"
           />
         </div>
       </div>
@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, defineAsyncComponent } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IBoardUpdateRequestBody } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
@@ -96,7 +97,7 @@ const SlugInputField = defineAsyncComponent(
     ),
 );
 
-const board = reactive({
+const board = reactive<IBoardUpdateRequestBody>({
   boardId: "",
   name: "",
   url: "",
@@ -104,6 +105,7 @@ const board = reactive({
   view_voters: false,
   display: false,
 });
+const boardSlug = ref("");
 const saveButtonLoading = ref(false);
 
 const { permissions } = useUserStore();
@@ -116,14 +118,18 @@ const updateBoardPermissionDisabled = computed(() => {
 async function update() {
   saveButtonLoading.value = true;
   try {
-    const response = await updateBoard({
+    const body = {
       boardId: board.boardId,
       color: board.color,
       name: board.name,
       url: board.url,
       view_voters: board.view_voters,
       display: board.display,
-    });
+    };
+    if (boardSlug.value) {
+      body.url = boardSlug.value;
+    }
+    const response = await updateBoard(body);
 
     dashboardBoards.updateBoard(response.data.board);
     router.push("/dashboard/boards");
