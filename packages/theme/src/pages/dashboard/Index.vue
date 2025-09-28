@@ -44,7 +44,7 @@
           <div class="table-data boards-table-color">
             <color-dot :color="board.color" />
           </div>
-          <div class="table-data boards-table-name">
+          <div class="table-data boards-table-name truncate">
             {{ board.name }}
           </div>
           <div class="table-data boards-table-posts">

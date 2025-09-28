@@ -20,10 +20,10 @@
         class="hover:bg-neutral-200 rounded-md"
         :href="`/boards/${board.url}`"
       >
-        <div class="flex items-center justify-between px-4 py-1.5">
+        <div class="flex items-center justify-between gap-x-4 px-4 py-1.5">
           <div class="flex items-center gap-x-3">
             <ColorDot :color="board.color" />
-            <span class="font-medium text-neutral-700">{{board.name}}</span>
+            <span class="font-medium text-neutral-700 break-all">{{board.name}}</span>
           </div>
 
           <p v-if="board.post_count" class="font-semibold text-xs">{{board.post_count}}</p>

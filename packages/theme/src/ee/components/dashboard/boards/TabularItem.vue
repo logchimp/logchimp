@@ -7,7 +7,7 @@
       }"
     />
   </div>
-  <div class="table-data boards-table-name">
+  <div class="table-data boards-table-name break-all">
     {{ board.name }}
   </div>
   <div class="table-data boards-table-posts">
