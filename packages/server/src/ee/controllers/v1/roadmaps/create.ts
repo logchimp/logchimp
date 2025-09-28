@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
@@ -13,7 +12,10 @@ import type {
 import database from "../../../../database";
 
 // utils
-import { generateHexColor } from "../../../../helpers";
+import {
+  generateHexColor,
+  generateNanoID as nanoid,
+} from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
@@ -48,7 +50,7 @@ export async function create(
       .insert({
         id: uuidv4(),
         name: name || "new roadmap",
-        url: `new-roadmap-${nanoid(10).toLowerCase()}`,
+        url: `new-roadmap-${nanoid(10)}`,
         color: generateHexColor(),
         index: roadmapIndex.max + 1,
       })

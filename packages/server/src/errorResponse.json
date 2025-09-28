@@ -54,6 +54,7 @@
       "urlMissing": "Board url cannot be empty",
       "boardIdMissing": "Board ID missing",
       "exists": "Board already exists",
+      "urlExists": "Board url already exists",
       "boardNotFound": "Board not found"
     },
     "roadmaps": {

@@ -27,6 +27,8 @@ export async function updateBoard(
   const permissions = req.user.permissions as TPermission[];
   // @ts-expect-error
   const boardId = req.board.boardId;
+  // @ts-expect-error
+  const boardUrl = req.board.url;
 
   const { name, url, color, view_voters, display } = req.body;
 
@@ -52,6 +54,22 @@ export async function updateBoard(
   }
 
   const slimUrl = url.replace(/\W+/gi, "-").trim().toLowerCase();
+
+  if (boardUrl !== slimUrl) {
+    const urlExists = await database
+      .select()
+      .from("boards")
+      .where({
+        url: slimUrl || null,
+      })
+      .first();
+    if (urlExists) {
+      return res.status(409).send({
+        message: error.api.boards.urlExists,
+        code: "BOARD_URL_EXISTS",
+      });
+    }
+  }
 
   try {
     const boards = await database
