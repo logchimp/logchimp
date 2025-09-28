@@ -8,7 +8,12 @@
     @click="$emit('select', suggestion)"
   >
     <div class="size-4 flex items-center justify-center">
-      <color-dot :color="suggestion.color" class="size-3" />
+      <color-dot
+        :color="suggestion.color"
+        :style="{
+          '--size': '12px',
+        }"
+      />
     </div>
     <div>
       <div data-test="board-suggestion-name" class="text-md font-semibold">
