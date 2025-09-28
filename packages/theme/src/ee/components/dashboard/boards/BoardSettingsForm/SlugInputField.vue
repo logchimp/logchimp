@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, watch, computed } from "vue";
+import { ref, reactive, watch } from "vue";
 import { CheckCircle2 as CheckCircle } from "lucide-vue";
 import { watchDebounced } from "@vueuse/core";
 
