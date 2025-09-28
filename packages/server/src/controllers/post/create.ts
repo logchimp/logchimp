@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
@@ -12,7 +11,7 @@ import type {
 import database from "../../database";
 
 // utils
-import { validUUID } from "../../helpers";
+import { validUUID, generateNanoID as nanoid } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";

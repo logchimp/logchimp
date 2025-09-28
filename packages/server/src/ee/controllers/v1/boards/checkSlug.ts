@@ -1,25 +1,30 @@
 import type { Request, Response } from "express";
-import type { TBoardCheckNameBody, TPermission } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  TBoardCheckSlugBody,
+  TBoardCheckSlugResponse,
+  TPermission,
+} from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-export async function checkName(
-  req: Request<unknown, unknown, TBoardCheckNameBody>,
-  res: Response,
-) {
-  logger.warn(
-    "`/api/v1/boards/check-name` API endpoint is deprecated and will be removed in next major release. Use `/api/v1/boards/check-slug` API endpoint.",
-  );
+type ResponseBody = TBoardCheckSlugResponse | IApiErrorResponse;
 
+export async function checkSlug(
+  req: Request<unknown, unknown, TBoardCheckSlugBody>,
+  res: Response<ResponseBody>,
+) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const name = req.body.name;
+  const slugUrl = req.body.url;
 
-  const checkPermission = permissions.includes("board:create");
+  const checkPermission =
+    permissions.includes("board:create") ||
+    permissions.includes("board:update");
   if (!checkPermission) {
     res.status(403).send({
       message: error.api.roles.notEnoughPermission,
@@ -28,15 +33,15 @@ export async function checkName(
     return;
   }
 
-  if (!name) {
+  if (!slugUrl) {
     res.status(400).send({
-      message: error.api.boards.nameMissing,
-      code: "BOARD_NAME_MISSING",
+      message: error.api.boards.urlMissing,
+      code: "BOARD_URL_MISSING",
     });
     return;
   }
 
-  const slimUrl = name
+  const slimUrl = slugUrl
     .replace(/[^\w]+/gi, "-")
     .trim()
     .toLowerCase();
