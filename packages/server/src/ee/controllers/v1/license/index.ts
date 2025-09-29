@@ -1,0 +1,1 @@
+export { checkLicense } from "./checkLicense";
