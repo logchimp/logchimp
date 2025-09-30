@@ -1,0 +1,22 @@
+name: Display Branch Stack
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  git-town:
+    name: Display the branch stack
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: git-town/action@v1
+        with:
+          location: 'comment'
+          skip-single-stacks: true
