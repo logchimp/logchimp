@@ -79,6 +79,7 @@ test.describe("General", (): void => {
 
     await page.reload();
     await expect(toggleButton).toBeChecked({ checked: false });
+    await expect(toggleButton).toBeChecked({ checked: false });
 
     await toggleButton.setChecked(true);
     await page.getByRole("button", { name: "Save" }).click();
