@@ -33,6 +33,7 @@ interface Config {
   databaseSsl: boolean;
 
   // Cache
+  cachePrefix: string | undefined;
   cacheUrl: string | undefined;
 
   // Mail
@@ -144,6 +145,7 @@ class ConfigManager {
         false,
 
       // Cache
+      cachePrefix: config?.cache?.prefix,
       cacheUrl: config.cache?.url,
 
       // Mail
@@ -201,6 +203,7 @@ class ConfigManager {
       databaseSsl: process.env.LOGCHIMP_DB_SSL === "true",
 
       // Cache
+      cachePrefix: process.env.LOGCHIMP_CACHE_PREFIX || "logchimp:",
       cacheUrl: process.env.LOGCHIMP_VALKEY_URL,
 
       // Mail
