@@ -1,3 +1,5 @@
+import type { TPermission } from "@logchimp/types";
+
 export interface IAuthenticationTokenPayload {
   userId: string;
   email: string;
@@ -11,6 +13,10 @@ export interface IGetUserInfoWithRoles {
   isOwner: boolean;
   isBlocked: boolean;
   roles: string[];
+}
+
+export interface IAuthenticationMiddlewareUser extends IGetUserInfoWithRoles {
+  permissions: TPermission[];
 }
 
 export interface IPasswordResetJwtPayload {

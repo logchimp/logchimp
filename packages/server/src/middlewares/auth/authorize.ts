@@ -1,9 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
+
 import error from "../../errorResponse.json";
+import type { IAuthenticationMiddlewareUser } from "../../types";
 
 const authorize = (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
-  const user = req.user;
+  const user = req.user as IAuthenticationMiddlewareUser;
+
   if (!user || !user.userId) {
     return res.status(401).send({
       message: error.middleware.auth.authorizationFailed,
@@ -21,7 +24,7 @@ const authorize = (req: Request, res: Response, next: NextFunction) => {
 
   const hasPermissions =
     Array.isArray(user.permissions) && user.permissions.length > 0;
-  if (!hasPermissions) {
+  if (!user.isOwner && !hasPermissions) {
     return res.status(403).send({
       message: error.middleware.auth.accessDenied,
       code: "ACCESS_DENIED",
