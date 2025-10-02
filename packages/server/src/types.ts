@@ -3,7 +3,7 @@ export interface IAuthenticationTokenPayload {
   email: string;
 }
 
-export interface IAuthenticationMiddlewareUser {
+export interface IGetUserInfoWithRoles {
   userId: string;
   name: string | null;
   username: string;
