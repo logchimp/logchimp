@@ -1,4 +1,7 @@
-import type { ICheckLicenseResponseBody } from "@logchimp/types";
+import type {
+  ICheckLicenseRequestBody,
+  ICheckLicenseResponseBody,
+} from "@logchimp/types";
 
 import { configManager } from "../../../utils/logchimpConfig";
 import * as cache from "../../../cache";
@@ -31,7 +34,7 @@ export async function checkLicense(): Promise<boolean> {
       license_key: licenseKey,
       machine_signature: config.machineSignature,
       timestamp: new Date().toISOString(),
-    }),
+    } as ICheckLicenseRequestBody),
   });
   const data = (await response.json()) as ICheckLicenseResponseBody;
   if (cache.isActive) {
