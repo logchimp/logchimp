@@ -5,6 +5,7 @@ import type {
   IFilterBoardResponseBody,
   IGetBoardQueryOptions,
 } from "@logchimp/types";
+
 import database from "../../../../database";
 
 // utils
@@ -115,7 +116,7 @@ export async function getBoards({
       .from("boards")
       .leftJoin("posts", "boards.boardId", "posts.boardId")
       .where({
-        display: true,
+        "boards.display": true,
       })
       .groupBy("boards.boardId")
       .orderBy("boards.createdAt", created)

@@ -1,4 +1,4 @@
-import type { ApiSortType } from "./common";
+import type { ApiSortType, IApiStatus, PageInfo } from "./common";
 
 export interface IBoard {
   boardId: string;
@@ -21,6 +21,7 @@ export interface IGetBoardsRequestQuery {
   page: string;
   limit?: string;
   created: ApiSortType;
+  after?: string;
 }
 
 export interface IGetBoardsResponseBody {
@@ -30,7 +31,9 @@ export interface IGetBoardsResponseBody {
 export type TFilterBoardRequestQuery = IGetBoardsRequestQuery;
 
 export interface IFilterBoardResponseBody {
+  status: IApiStatus;
   boards: IBoardDetail[];
+  page_info?: PageInfo;
 }
 
 export interface IGetBoardByUrlRequestParams {
