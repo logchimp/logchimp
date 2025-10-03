@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { z } from "zod";
 import type {
   IApiErrorResponse,
   IFilterPostRequestBody,
@@ -21,12 +22,44 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_POSTS_FILTER_COUNT } from "../../constants";
 
+const querySchema = z.object({
+  first: z.coerce
+    .string()
+    .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
+  page: z.coerce
+    .string()
+    .optional()
+    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
+  limit: z.coerce
+    .string()
+    .optional()
+    .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
+  after: z.uuid().optional(),
+  created: z.enum(["ASC", "DESC"]).default("DESC"),
+});
+
 type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
 
 export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
+  if (req.query?.page || req.query?.limit) {
+    logger.warn(
+      "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
+    );
+  }
+
+  const query = querySchema.safeParse(req.query);
+
+  if (!query.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid query parameters",
+      errors: query.error.issues,
+    });
+  }
+
   const boardId = validUUIDs(req.body.boardId || []);
   const roadmapId = validUUID(req.body.roadmapId);
   /**
