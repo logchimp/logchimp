@@ -2,7 +2,7 @@ import type { TPermission } from "@logchimp/types";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
 import type {
-  IAuthenticationMiddlewareUser,
+  IGetUserInfoWithRoles,
   IAuthenticationTokenPayload,
 } from "../../types";
 import database from "../../database";
@@ -34,7 +34,7 @@ export function verifyJwtAuthToken(
 
 export const getUserInfoWithRoles = async (
   userId: string,
-): Promise<IAuthenticationMiddlewareUser> =>
+): Promise<IGetUserInfoWithRoles> =>
   database
     .select(
       "u.userId",
@@ -43,17 +43,23 @@ export const getUserInfoWithRoles = async (
       "u.name",
       "u.username",
       "u.email",
-      database.raw("ARRAY_AGG(r.id) AS roles"),
+      database.raw(`
+        COALESCE(
+          (SELECT ARRAY_AGG(r.id)
+           FROM roles_users ru
+           JOIN roles r ON r.id = ru.role_id
+           WHERE ru.user_id = u."userId"
+          ), 
+          '{}'
+        ) as roles
+      `),
     )
     .from("users AS u")
-    .leftJoin("roles_users AS ru", "u.userId", "ru.user_id")
-    .leftJoin("roles AS r", "ru.role_id", "r.id")
-    .groupBy("u.userId")
     .where("u.userId", userId)
     .first();
 
 export const computePermissions = async (
-  user: IAuthenticationMiddlewareUser,
+  user: IGetUserInfoWithRoles,
 ): Promise<TPermission[]> => {
   // return all permission for owner
   if (user.isOwner) {

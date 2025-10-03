@@ -1,9 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
+
 import error from "../../errorResponse.json";
+import type { IAuthenticationMiddlewareUser } from "../../types";
 
 const authorize = (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
-  const user = req.user;
+  const user = req.user as IAuthenticationMiddlewareUser;
   if (!user || !user.userId) {
     return res.status(401).send({
       message: error.middleware.auth.authorizationFailed,

@@ -8,7 +8,7 @@ import {
   getUserInfoWithRoles,
 } from "./helpers";
 import type {
-  IAuthenticationMiddlewareUser,
+  IGetUserInfoWithRoles,
   IAuthenticationTokenPayload,
 } from "../../types";
 import logger from "../../utils/logger";
@@ -35,7 +35,7 @@ export async function authOptional(
     return next();
   }
 
-  let user: IAuthenticationMiddlewareUser;
+  let user: IGetUserInfoWithRoles;
   try {
     user = await getUserInfoWithRoles(decoded.userId);
   } catch (err) {

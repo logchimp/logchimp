@@ -1,5 +1,6 @@
 <template>
   <RoleBadge
+    v-if="roles[0]"
     :role="roles[0]"
   />
   <div
