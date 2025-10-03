@@ -12,7 +12,7 @@
       v-for="roadmap in roadmaps"
       :key="roadmap.id"
       :roadmap="roadmap"
-       class="h-[500px] overflow-y-auto"
+       
     />
   </div>
 </template>
