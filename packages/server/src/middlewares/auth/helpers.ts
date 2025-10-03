@@ -43,12 +43,18 @@ export const getUserInfoWithRoles = async (
       "u.name",
       "u.username",
       "u.email",
-      database.raw("ARRAY_AGG(r.id) AS roles"),
+      database.raw(`
+        COALESCE(
+          (SELECT ARRAY_AGG(r.id)
+           FROM roles_users ru
+           JOIN roles r ON r.id = ru.role_id
+           WHERE ru.user_id = u."userId"
+          ), 
+          '{}'
+        ) as roles
+      `),
     )
     .from("users AS u")
-    .leftJoin("roles_users AS ru", "u.userId", "ru.user_id")
-    .leftJoin("roles AS r", "ru.role_id", "r.id")
-    .groupBy("u.userId")
     .where("u.userId", userId)
     .first();
 
