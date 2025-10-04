@@ -44,7 +44,7 @@
           <div class="table-data boards-table-color">
             <color-dot :color="board.color" />
           </div>
-          <div class="table-data boards-table-name">
+          <div class="table-data boards-table-name truncate">
             {{ board.name }}
           </div>
           <div class="table-data boards-table-posts">
@@ -137,6 +137,7 @@ defineOptions({
 .posts-table-title
   flex: 6
   font-weight: 500
+  word-break: break-word
 
 .posts-table-votes
   flex: 1

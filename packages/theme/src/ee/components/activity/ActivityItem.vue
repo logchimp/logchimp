@@ -2,9 +2,9 @@
 	<div class="flex items-start">
 		<avatar :src="activity.author.avatar" :name="activity.author.name" />
 
-		<div class="ml-4">
+		<div class="ml-4 flex-1">
 			<div class="font-medium mb-1">{{ activity.author.name }}</div>
-			<p class="mb-1 text-sm">{{ activity.comment.body }}</p>
+			<p class="mb-1 text-sm break-all">{{ activity.comment.body }}</p>
 
 			<time
 				:datetime="activity.created_at"

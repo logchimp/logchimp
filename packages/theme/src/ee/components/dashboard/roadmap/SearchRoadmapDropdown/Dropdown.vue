@@ -16,7 +16,12 @@
           <template v-if="roadmap?.id">
             <div class="flex items-center gap-x-4">
               <div class="size-4 flex items-center justify-center">
-                <color-dot :color="roadmap.color" class="size-3" />
+                <color-dot
+                  :color="roadmap.color"
+                  :style="{
+                    '--size': '12px',
+                  }"
+                />
               </div>
               <div>
                 <div class="text-md font-semibold line-clamp-1">
