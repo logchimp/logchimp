@@ -11,7 +11,8 @@
         'text-(--color-gray-70) text-left uppercase text-xs font-semibold',
         'flex items-center',
         'border-b-2 border-b-(--border-color-default)',
-        'select-none pointer-events-none'
+        'select-none pointer-events-none',
+        'px-2'
       ]"
     >
       <slot name="header" />
@@ -44,18 +45,6 @@
 	justify-content: center
 	padding: 1rem 1.5rem
 
-.table-row
-	color: var(--color-text-black)
-	display: flex
-	align-items: center
-
-	&:hover
-		background-color: var(--color-gray-97)
-
-		&:last-child
-			border-bottom-left-radius: var(--border-radius-default)
-			border-bottom-right-radius: var(--border-radius-default)
-
 .table-data
 	padding: 1rem 1.5rem
 
@@ -75,5 +64,3 @@
 		height: 1.125rem
 		stroke: var(--color-gray-80)
 </style>
-<script setup lang="ts">
-</script>
