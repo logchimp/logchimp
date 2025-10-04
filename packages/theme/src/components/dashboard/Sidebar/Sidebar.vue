@@ -17,7 +17,10 @@ function away() {
 </script>
 
 <template>
-  <DialogBackdrop :is-visible="dashboard.isSidebarOpen" />
+  <DialogBackdrop
+    :is-visible="dashboard.isSidebarOpen"
+    class="md:hidden"
+  />
   <div
     :class="[
       'z-50 md:z-auto w-[220px] h-dvh overflow-hidden overflow-y-auto bg-neutral-200',
