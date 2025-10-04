@@ -2,20 +2,27 @@
   <Table>
     <template #header>
       <Td
-        class="table-header-item"
+        :head="true"
+      />
+      <Td
+        :head="true"
         :style="{
           minWidth: '150px',
         }"
-      />
+      >
+        Name
+      </Td>
        <Td
+         :head="true"
          :style="{
-          width: '350px',
+          minWidth: '350px',
         }"
-        class="flex"
+        class="flex-1"
        >
          Roles
       </Td>
       <Td
+        :head="true"
         :style="{
           width: '100px',
         }"
@@ -23,12 +30,19 @@
         Posts
       </Td>
       <Td
+        :head="true"
         :style="{
           width: '100px',
         }"
       >
         Votes
       </Td>
+      <Td
+        :head="true"
+        :style="{
+          width: '100px',
+        }"
+      />
     </template>
 
     <Tr
@@ -41,10 +55,12 @@
       />
     </Tr>
 
-    <infinite-scroll
-      :on-infinite="dashboardUsers.fetchUsers"
-      :state="dashboardUsers.state"
-    />
+    <template #infinite-loader>
+      <infinite-scroll
+        :on-infinite="dashboardUsers.fetchUsers"
+        :state="dashboardUsers.state"
+      />
+    </template>
   </Table>
 </template>
 

@@ -1,20 +1,22 @@
 <template>
   <div class="relative group flex items-center">
+    <Td />
     <Td
-      class="font-medium flex items-center gap-x-3"
+      :class="['font-medium flex items-center gap-x-3']"
       :style="{
         minWidth: '150px',
       }"
     >
       <avatar :src="user.avatar" :name="user.name || user.username" />
-      {{ user.name || user.username }}
+      <span class="text-black">{{ user.name || user.username }}</span>
       <UserInfoDialog :user="user" />
     </Td>
 
     <Td
       :style="{
-        width: '350px',
+        minWidth: '350px',
       }"
+      class="flex-1"
     >
       <div class="flex items-center gap-x-1.5">
         <DashboardUsersTabularItemRolePreviewer :roles="user.roles" />
@@ -28,6 +30,7 @@
       :style="{
         width: '100px',
       }"
+      class="font-medium text-md"
     >
       {{ user.posts }}
     </Td>
@@ -36,6 +39,7 @@
       :style="{
         width: '100px',
       }"
+      class="font-medium text-md"
     >
       {{ user.votes }}
     </Td>
