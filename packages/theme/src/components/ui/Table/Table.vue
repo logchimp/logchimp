@@ -1,13 +1,17 @@
 <template>
-  <table class="border border-(--color-gray-90) rounded-lg w-full">
-    <thead class="text-(--color-gray-70) text-left uppercase text-xs font-semibold">
+  <div
+    class="border border-(--color-gray-90) rounded-lg w-full"
+  >
+    <div
+      :class="['text-(--color-gray-70) text-left uppercase text-xs font-semibold', 'flex items-center']"
+    >
       <slot name="header" />
-    </thead>
+    </div>
 
-    <tbody>
+    <div role="tbody">
       <slot />
-    </tbody>
-  </table>
+    </div>
+  </div>
 </template>
 
 <style lang='sass'>

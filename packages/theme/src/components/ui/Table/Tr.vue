@@ -1,5 +1,5 @@
 <template>
-  <tr class="hover:bg-neutral-100">
+  <div class="hover:bg-neutral-100">
     <slot />
-  </tr>
+  </div>
 </template>

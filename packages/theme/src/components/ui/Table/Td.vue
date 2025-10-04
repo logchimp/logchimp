@@ -1,12 +1,14 @@
 <template>
-  <td :class="[
-    {
-      'px-6': !ignorePx,
-      'py-3': !ignorePy,
-    }
-  ]">
+  <div
+    :class="[
+      {
+        'px-6': !ignorePx,
+        'py-3': !ignorePy,
+      }
+    ]"
+  >
     <slot />
-  </td>
+  </div>
 </template>
 
 <script lang="ts" setup>
