@@ -16,7 +16,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@vueuse/components": "10.11.1",
     "@vueuse/core": "10.11.1",
-    "@vueuse/head": "1.3.1",
+    "@vueuse/head": "2.0.0",
     "axios": "1.12.2",
     "dayjs": "1.11.18",
     "lucide-vue": "npm:lucide-vue-next@0.544.0",
