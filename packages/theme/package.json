@@ -28,7 +28,7 @@
     "vue-gtag": "3.5.2",
     "vue-infinite-loading": "github:nvitius/vue-infinite-loading#next",
     "vue-router": "4.5.1",
-    "vuedraggable": "4.1.0"
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@types/uuid": "10.0.0",
