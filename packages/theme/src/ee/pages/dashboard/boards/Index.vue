@@ -56,7 +56,7 @@ import { createBoard } from "../../../modules/boards";
 // components
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
-import Table from "../../../../components/ui/Table.vue";
+import Table from "../../../../components/ui/Table/Table.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";

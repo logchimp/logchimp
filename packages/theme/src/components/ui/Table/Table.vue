@@ -1,33 +1,40 @@
 <template>
-  <div class="table-container">
-    <div class="table-header">
+  <div
+    :class="[
+      'border border-(--border-color-default)',
+      'rounded-lg w-full overflow-hidden',
+      'bg-white drop-shadow-xs'
+    ]"
+  >
+    <div
+      :class="[
+        'text-(--color-gray-70) text-left uppercase text-xs font-semibold',
+        'flex items-center',
+        'border-b-2 border-b-(--border-color-default)',
+        'select-none pointer-events-none'
+      ]"
+    >
       <slot name="header" />
     </div>
-    <div class="table-body">
+
+    <div class="divide-y-1 divide-neutral-200">
       <slot />
     </div>
+
+    <slot
+      v-if="$slots['infinite-loader']"
+      name="infinite-loader"
+    />
   </div>
 </template>
 
 <style lang='sass'>
-.table-container
-	border: 1px solid var(--color-gray-90)
-	border-radius: var(--border-radius-default)
-
 .table-heading
 	color: var(--color-gray-40)
 	font-size: 0.875rem
 	font-weight: 500
 	margin-left: 0.375rem
 	margin-bottom: 0.5rem
-
-.table-header
-	color: var(--color-gray-70)
-	text-transform: uppercase
-	font-size: 0.75rem
-	font-weight: 600
-	display: flex
-	align-items: center
 
 .table-header-item
 	padding: 1.125rem 1.5rem 0.75rem
@@ -68,3 +75,5 @@
 		height: 1.125rem
 		stroke: var(--color-gray-80)
 </style>
+<script setup lang="ts">
+</script>
