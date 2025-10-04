@@ -1,29 +1,19 @@
 <template>
-  <template v-for="cell in row.getVisibleCells()" :key="cell.id">
+  <div class="relative group flex items-center">
     <Td
-      v-if="cell.column.id === 'avatar'"
+      class="font-medium flex items-center gap-x-3"
       :style="{
-        width: `${cell.column.getSize()}px`,
+        minWidth: '150px',
       }"
     >
       <avatar :src="user.avatar" :name="user.name || user.username" />
-    </Td>
-
-    <Td
-      v-else-if="cell.column.id === 'name'"
-      class="font-medium"
-      :style="{
-        width: `${cell.column.getSize()}px`,
-      }"
-    >
       {{ user.name || user.username }}
       <UserInfoDialog :user="user" />
     </Td>
 
     <Td
-      v-else-if="cell.column.id === 'roles'"
       :style="{
-        width: `${cell.column.getSize()}px`,
+        width: '350px',
       }"
     >
       <div class="flex items-center gap-x-1.5">
@@ -35,27 +25,24 @@
     </Td>
 
     <Td
-      v-else-if="cell.column.id === 'post_count'"
       :style="{
-        width: `${cell.column.getSize()}px`,
+        width: '100px',
       }"
     >
       {{ user.posts }}
     </Td>
 
     <Td
-      v-else-if="cell.column.id === 'votes_count'"
       :style="{
-        width: `${cell.column.getSize()}px`,
+        width: '100px',
       }"
     >
       {{ user.votes }}
     </Td>
 
     <Td
-      v-else-if="cell.column.id === 'more' && settings.developer_mode"
       :style="{
-        width: `${cell.column.getSize()}px`,
+        width: '100px',
       }"
       :ignore-px="true"
       :ignore-py="true"
@@ -64,12 +51,11 @@
         <MoreOptionsDropdown />
       </div>
     </Td>
-  </template>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { provide, defineAsyncComponent } from "vue";
-import type { Row } from "@tanstack/vue-table";
 import type { IUser, ISiteSettings } from "@logchimp/types";
 
 import { userIdKey } from "./options";
@@ -85,7 +71,6 @@ const UserInfoDialog = defineAsyncComponent(
 );
 
 interface Props {
-  row: Row<IUser>;
   user: IUser;
   settings: ISiteSettings;
 }
