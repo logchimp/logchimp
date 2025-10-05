@@ -46,7 +46,7 @@
 
     <Td
       :style="{
-        width: '100px',
+        width: '40px',
       }"
       :ignore-px="true"
       :ignore-py="true"
