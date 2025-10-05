@@ -25,12 +25,6 @@ export async function updateBoard(
 ) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
-  // @ts-expect-error
-  const boardId = req.board.boardId;
-  // @ts-expect-error
-  const boardUrl = req.board.url;
-
-  const { name, url, color, view_voters, display } = req.body;
 
   const checkPermission = permissions.includes("board:update");
   if (!checkPermission) {
@@ -40,15 +34,31 @@ export async function updateBoard(
     });
   }
 
+  // @ts-expect-error
+  const boardId = req.board.boardId;
+  // @ts-expect-error
+  const boardUrl = req.board.url;
+
+  const { name, url, color, view_voters, display } = req.body;
+
+  const trimmedName = name.trim();
+
+  if (!trimmedName) {
+    return res.status(400).send({
+      message: error.api.boards.nameMissing,
+      code: "BOARD_NAME_MISSING",
+    });
+  }
+
   if (!url) {
     return res.status(400).send({
       errors: [
         url
           ? undefined
           : {
-              message: error.api.boards.urlMissing,
-              code: "BOARD_URL_MISSING",
-            },
+            message: error.api.boards.urlMissing,
+            code: "BOARD_URL_MISSING",
+          },
       ],
     });
   }
@@ -74,7 +84,7 @@ export async function updateBoard(
   try {
     const boards = await database
       .update({
-        name,
+        name: trimmedName,
         url: slimUrl,
         color,
         view_voters,

@@ -33,6 +33,8 @@
             v-model="board.name"
             label="Name"
             placeholder="Enter board name"
+            :error="boardFieldError"
+            @hide-error="hideNameError"
           />
 
           <color-input v-model="board.color" />
@@ -115,7 +117,23 @@ const updateBoardPermissionDisabled = computed(() => {
   return !permissions.includes("board:update");
 });
 
+const boardFieldError = reactive({
+  show: false,
+  message: "",
+});
+
+function hideNameError(event: FormFieldErrorType) {
+  boardFieldError.show = event.show;
+  boardFieldError.message = event.message;
+}
+
 async function update() {
+  if (!board.name.trim()) {
+    boardFieldError.show = true;
+    boardFieldError.message = "Please enter a valid board name";
+    return;
+  }
+
   saveButtonLoading.value = true;
   try {
     const body = {
