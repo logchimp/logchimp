@@ -36,6 +36,14 @@ export async function updateRoadmap(
 
   const id = req.ctx.roadmap.id;
   const { name, url, color, display } = req.body;
+  const trimmedName = name.trim();
+
+  if (!trimmedName) {
+    return res.status(400).send({
+      message: error.api.roadmaps.nameMissing,
+      code: "ROADMAP_NAME_MISSING",
+    });
+  }
 
   if (!url) {
     return res.status(400).send({
@@ -43,9 +51,9 @@ export async function updateRoadmap(
         url
           ? undefined
           : {
-              message: error.api.roadmaps.urlMissing,
-              code: "ROADMAP_URL_MISSING",
-            },
+            message: error.api.roadmaps.urlMissing,
+            code: "ROADMAP_URL_MISSING",
+          },
       ],
     });
   }
@@ -55,7 +63,7 @@ export async function updateRoadmap(
   try {
     const roadmaps = await database
       .update({
-        name,
+        name: trimmedName,
         url: slimUrl,
         color,
         display,
