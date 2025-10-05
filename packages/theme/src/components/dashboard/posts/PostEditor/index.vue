@@ -105,6 +105,7 @@ import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/S
 import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
 import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
 import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
