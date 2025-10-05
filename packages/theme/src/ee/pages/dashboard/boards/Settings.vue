@@ -84,6 +84,7 @@ import { useUserStore } from "../../../../store/user";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 // components
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";

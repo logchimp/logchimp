@@ -56,9 +56,9 @@ export async function updateBoard(
         url
           ? undefined
           : {
-            message: error.api.boards.urlMissing,
-            code: "BOARD_URL_MISSING",
-          },
+              message: error.api.boards.urlMissing,
+              code: "BOARD_URL_MISSING",
+            },
       ],
     });
   }

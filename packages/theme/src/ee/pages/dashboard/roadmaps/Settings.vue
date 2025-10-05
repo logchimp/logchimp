@@ -81,6 +81,7 @@ import { updateRoadmap } from "../../../modules/roadmaps";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 
 // components
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
