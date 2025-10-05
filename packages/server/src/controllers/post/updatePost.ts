@@ -31,12 +31,20 @@ export async function updatePost(
   const id = validUUID(_id);
   const boardId = validUUID(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
+  const trimmedTitle = title.trim();
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
     return res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
+
+  if (!trimmedTitle) {
+    return res.status(400).send({
+      message: error.api.posts.titleMissing,
+      code: "POST_TITLE_MISSING",
     });
   }
 
@@ -50,7 +58,7 @@ export async function updatePost(
   try {
     const posts = await database
       .update({
-        title,
+        title: trimmedTitle,
         slug,
         contentMarkdown,
         boardId,
