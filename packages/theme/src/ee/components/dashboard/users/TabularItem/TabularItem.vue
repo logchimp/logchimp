@@ -45,6 +45,7 @@
     </Td>
 
     <Td
+      v-if="settings.developer_mode"
       :style="{
         width: '40px',
       }"

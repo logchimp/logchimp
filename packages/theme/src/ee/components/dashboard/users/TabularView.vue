@@ -36,6 +36,7 @@
         Votes
       </Td>
       <Td
+        v-if="settings.developer_mode"
         :head="true"
         :style="{
           width: '40px',
@@ -47,7 +48,7 @@
       v-for="row in dashboardUsers.users"
       :key="row.userId"
     >
-      <DashboardUsersTabularItem
+      <TabularItem
         :user="row"
         :settings="settings"
       />
@@ -63,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import DashboardUsersTabularItem from "./TabularItem/TabularItem.vue";
+import TabularItem from "./TabularItem/TabularItem.vue";
 import Table from "../../../../components/ui/Table/Table.vue";
 import Td from "../../../../components/ui/Table/Td.vue";
 import Tr from "../../../../components/ui/Table/Tr.vue";
