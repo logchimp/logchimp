@@ -202,7 +202,6 @@ async function updateSettingsHandler() {
       siteName.error.show = true;
       siteName.error.message = "Required";
     }
-
     if (!accentColor.value) {
       accentColor.error.show = true;
       accentColor.error.message = "Required";
@@ -222,16 +221,16 @@ async function updateSettingsHandler() {
   };
 
   try {
+   if (siteName.value && accentColor.value) {
     const response = await updateSettings(siteData);
-
     siteName.value = response.data.settings.title;
     logo.value = response.data.settings.logo;
     description.value = response.data.settings.description;
     accentColor.value = response.data.settings.accentColor;
     googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
     developer_mode.value = response.data.settings.developer_mode;
-
     update(response.data.settings);
+    }
   } catch (error) {
     console.error(error);
   } finally {
