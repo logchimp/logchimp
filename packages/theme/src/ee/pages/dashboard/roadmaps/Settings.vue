@@ -34,6 +34,8 @@
             v-model="roadmap.name"
             label="Name"
             placeholder="Enter roadmap name"
+            :error="roadmapFieldError"
+            @hide-error="hideNameError"
           />
 
           <color-input v-model="roadmap.color" />
@@ -113,7 +115,23 @@ const slimUrl = computed(() => {
     .toLowerCase();
 });
 
+const roadmapFieldError = reactive({
+  show: false,
+  message: "",
+});
+
+function hideNameError(event: FormFieldErrorType) {
+  roadmapFieldError.show = event.show;
+  roadmapFieldError.message = event.message;
+}
+
 async function updateHandler() {
+  if (!roadmap.name.trim()) {
+    roadmapFieldError.show = true;
+    roadmapFieldError.message = "Please enter a valid roadmap name";
+    return;
+  }
+
   updateButtonLoading.value = true;
 
   try {

@@ -58,6 +58,7 @@
       "boardNotFound": "Board not found"
     },
     "roadmaps": {
+      "nameMissing": "Roadmap name missing",
       "urlMissing": "Roadmap url cannot be empty",
       "roadmapNotFound": "Roadmap not found"
     },
