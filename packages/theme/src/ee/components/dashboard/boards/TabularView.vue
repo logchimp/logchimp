@@ -38,7 +38,6 @@
     >
       <TabularItem
         :board="board"
-        :index="index"
       />
     </Tr>
 

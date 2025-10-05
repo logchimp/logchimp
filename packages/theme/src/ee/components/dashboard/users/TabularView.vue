@@ -1,9 +1,7 @@
 <template>
   <Table>
     <template #header>
-      <Td
-        :head="true"
-      />
+      <Td :head="true" />
       <Td
         :head="true"
         :style="{
@@ -40,7 +38,7 @@
       <Td
         :head="true"
         :style="{
-          width: '100px',
+          width: '40px',
         }"
       />
     </template>

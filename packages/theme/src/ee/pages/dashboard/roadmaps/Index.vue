@@ -80,9 +80,3 @@ defineOptions({
   name: "DashboardRoadmaps",
 });
 </script>
-
-<style lang='scss'>
-.roadmap-table-name {
-  flex: 6;
-}
-</style>

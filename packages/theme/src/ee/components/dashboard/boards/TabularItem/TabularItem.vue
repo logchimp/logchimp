@@ -61,7 +61,6 @@ import Td from "../../../../../components/ui/Table/Td.vue";
 
 interface Props {
   board: IBoardPrivate;
-  index: number;
 }
 const props = defineProps<Props>();
 provide(boardKey, props.board);

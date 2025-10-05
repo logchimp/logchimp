@@ -79,15 +79,3 @@ defineOptions({
   name: "DashboardBoards",
 });
 </script>
-
-<style lang='sass'>
-.boards-table
-	.boards-table-name
-		flex: 6
-		font-weight: 500
-		padding-left: 0.5rem
-
-	.boards-table-posts
-		flex: 1
-		text-align: right
-</style>

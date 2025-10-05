@@ -1,5 +1,5 @@
 <template>
-  <DropdownV2 class="table-icon-group boards-table-icons">
+  <DropdownV2>
     <template #trigger>
       <DropdownMenuTrigger
         :class="[
