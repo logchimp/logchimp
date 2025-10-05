@@ -44,12 +44,6 @@ export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  if (req.query?.page || req.query?.limit) {
-    logger.warn(
-      "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
-    );
-  }
-
   const query = querySchema.safeParse(req.query);
 
   if (!query.success) {
@@ -59,22 +53,14 @@ export async function filterPost(
       errors: query.error.issues,
     });
   }
-
+  const { after, first, page, limit, created } = query.data;
   const boardId = validUUIDs(req.body.boardId || []);
   const roadmapId = validUUID(req.body.roadmapId);
-  /**
-   * top, latest, oldest, trending
-   */
-  const created = req.body.created || "DESC";
-  const limit = parseAndValidateLimit(req.body?.limit, GET_POSTS_FILTER_COUNT);
-  const page = parseAndValidatePage(req.body?.page);
-
   // @ts-expect-error
   const userId: string | undefined = req.user?.userId;
 
   try {
-    const { rows: response } = await database.raw(
-      `
+    let sql = `
         SELECT
           "postId",
           "title",
@@ -86,24 +72,60 @@ export async function filterPost(
           "updatedAt"
         FROM
           posts
-        ${
-          boardId.length > 0
-            ? `WHERE "boardId" IN (${boardId.map((item) => {
-                return `'${item}'`;
-              })})`
-            : ""
-        }
-        ${roadmapId ? "WHERE roadmap_id = :roadmapId" : ""}
-        ORDER BY "createdAt" ${created}
-        LIMIT :limit
-        OFFSET :offset;
-    `,
-      {
-        limit,
-        offset: limit * (page - 1),
-        roadmapId,
-      },
-    );
+    `;
+    const conditions: string[] = [];
+
+    if (boardId.length > 0) {
+      conditions.push(
+        `"boardId" IN (${boardId.map((id) => `'${id}'`).join(",")})`,
+      );
+    }
+    if (roadmapId) {
+      conditions.push(`"roadmap_id" = :roadmapId`);
+    }
+
+    if (conditions.length > 0) {
+      sql += ` WHERE ${conditions.join(" AND ")} `;
+    }
+
+    if (after) {
+      // Fetch posts after a specific cursor (createdAt of that post)
+      const cursorPost = await database("posts")
+        .select("createdAt")
+        .where({ postId: after })
+        .first();
+
+      if (cursorPost) {
+        sql += conditions.length > 0 ? " AND " : " WHERE ";
+        sql += `"createdAt" ${created === "ASC" ? ">" : "<"} :cursorCreatedAt `;
+      }
+    }
+
+    sql += ` ORDER BY "createdAt" ${created} `;
+
+    if (after) {
+      sql += ` LIMIT :limit `;
+    } else {
+      // offset-based pagination
+      sql += ` LIMIT :limit OFFSET :offset `;
+    }
+    const bindings: Record<string, any> = {
+      limit: limit ?? first,
+      offset: page ? (limit ?? first) * (page - 1) : 0,
+      roadmapId,
+    };
+
+    if (after) {
+      const cursorPost = await database("posts")
+        .select("createdAt")
+        .where({ postId: after })
+        .first();
+      if (cursorPost) {
+        bindings.cursorCreatedAt = cursorPost.createdAt;
+      }
+    }
+
+    const { rows: response } = await database.raw(sql, bindings);
 
     const posts = [];
 
