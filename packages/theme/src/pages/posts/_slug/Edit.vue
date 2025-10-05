@@ -131,6 +131,8 @@ async function getPost() {
     post.postId = response.data.post.postId;
     post.slugId = response.data.post.slugId;
     post.author = response.data.post.author;
+    post.board = response.data.post.board;
+    post.roadmap = response.data.post.roadmap;
   } catch (error: any) {
     if (error.response.data.code === "POST_NOT_FOUND") {
       isPostExist.value = false;
@@ -141,7 +143,7 @@ async function getPost() {
 }
 
 async function savePost() {
-  if (!post.title) {
+  if (!post.title.trim()) {
     postFieldError.show = true;
     postFieldError.message = "Please enter a valid post title";
     return;
@@ -155,6 +157,8 @@ async function savePost() {
     contentMarkdown: post.contentMarkdown,
     slugId: post.slugId,
     userId: post.author.userId,
+    boardId: post.board?.boardId,
+    roadmapId: post.roadmap?.id,
   };
 
   try {
