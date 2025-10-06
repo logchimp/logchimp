@@ -604,6 +604,35 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
   });
 
+  it('should throw error "ROADMAP_NAME_MISSING"', async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "Roadmap update",
+    });
+    const r1 = await generateRoadmap({}, true);
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        id: r1.id,
+        url: r1.url,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+
+    expect(response.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: "ROADMAP_NAME_MISSING",
+        }),
+      ]),
+    );
+  });
+
   it('should throw error "ROADMAP_URL_MISSING"', async () => {
     const { user } = await createUser({
       isVerified: true,
@@ -627,7 +656,7 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          code: "ROADMAP_URL_MISSING",
+          message: "ROADMAP_URL_MISSING",
         }),
       ]),
     );

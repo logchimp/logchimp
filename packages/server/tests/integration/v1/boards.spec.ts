@@ -525,6 +525,37 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
+  it("should throw error 'BOARD_NAME_MISSING'", async () => {
+    const board: BoardInsertRecord = await generateBoards({}, true);
+    const newBoard: BoardInsertRecord = await generateBoards({}, false);
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+        url: newBoard.url,
+        color: newBoard.color,
+        view_voters: newBoard.view_voters,
+        display: newBoard.display,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: "BOARD_NAME_MISSING",
+        }),
+      ]),
+    );
+  });
+
   it("should throw error 'BOARD_URL_MISSING'", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const newBoard: BoardInsertRecord = await generateBoards({}, false);
@@ -550,8 +581,7 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: "Board url cannot be empty",
-          code: "BOARD_URL_MISSING",
+          message: "BOARD_URL_MISSING",
         }),
       ]),
     );
