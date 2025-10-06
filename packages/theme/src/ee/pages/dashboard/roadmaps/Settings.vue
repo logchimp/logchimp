@@ -9,7 +9,7 @@
         <!-- Show divider & title once data loaded -->
         <template v-if="title">
           <BreadcrumbDivider />
-          <BreadcrumbItem>
+          <BreadcrumbItem class="truncate max-w-[20vw] min-w-0">
             {{ title }}
           </BreadcrumbItem>
         </template>
