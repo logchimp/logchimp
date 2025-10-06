@@ -22,19 +22,7 @@
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
-    <div class="table-container">
-      <div class="table-header">
-        <div class="table-header-item flex-1">name</div>
-        <div class="table-header-item" />
-      </div>
-      <div class="table-body">
-        <div v-for="role in dashboardRoles.roles" :key="role.id" class="table-row">
-          <DashboardRolesTabularItem :role="role" />
-        </div>
-
-        <infinite-scroll :on-infinite="dashboardRoles.fetchRoles" :state="dashboardRoles.state" />
-      </div>
-    </div>
+    <TabularView />
   </div>
 </template>
 
@@ -51,12 +39,11 @@ import { createRole } from "../../../../modules/roles";
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
 
 // components
-import InfiniteScroll from "../../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../../components/ui/Button.vue";
 import Breadcrumbs from "../../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
-import DashboardRolesTabularItem from "../../../../components/dashboard/roles/TabularItem.vue";
+import TabularView from "../../../../components/dashboard/roles/TabularView.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();

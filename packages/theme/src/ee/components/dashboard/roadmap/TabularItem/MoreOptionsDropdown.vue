@@ -12,14 +12,7 @@
       </DropdownMenuTrigger>
     </template>
 
-    <DropdownV2Content
-      align="end"
-      side="bottom"
-      :loop="true"
-      class="relative z-[2]"
-    >
-      <MoreOptionsDropdownContent />
-    </DropdownV2Content>
+    <Content />
   </DropdownV2>
 </template>
 
@@ -28,6 +21,5 @@ import { MoreHorizontalIcon } from "lucide-vue";
 import { DropdownMenuTrigger } from "reka-ui";
 
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
-import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
-import MoreOptionsDropdownContent from "./MoreOptionsDropdownContent.vue";
+import Content from "./MoreOptionsDropdownContent.vue";
 </script>
