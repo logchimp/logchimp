@@ -33,7 +33,7 @@
     </template>
 
     <Tr
-      v-for="(board, index) in dashboardBoards.boards"
+      v-for="board in dashboardBoards.boards"
       :key="board.boardId"
     >
       <TabularItem
