@@ -5,38 +5,26 @@
       <Td
         :head="true"
         :style="{
-          minWidth: '150px',
-        }"
-      >
-        Name
-      </Td>
-       <Td
-         :head="true"
-         :style="{
           minWidth: '350px',
         }"
         class="flex-1"
-       >
-         Roles
+      >
+        Name
       </Td>
       <Td
-        :head="true"
         :style="{
           width: '100px',
         }"
+        :head="true"
       >
         Posts
       </Td>
       <Td
-        :head="true"
         :style="{
-          width: '100px',
+          width: '50px',
         }"
-      >
-        Votes
-      </Td>
+      />
       <Td
-        v-if="settings.developer_mode"
         :head="true"
         :style="{
           width: '40px',
@@ -45,19 +33,18 @@
     </template>
 
     <Tr
-      v-for="row in dashboardUsers.users"
-      :key="row.userId"
+      v-for="board in dashboardBoards.boards"
+      :key="board.boardId"
     >
       <TabularItem
-        :user="row"
-        :settings="settings"
+        :board="board"
       />
     </Tr>
 
     <template #infinite-loader>
       <infinite-scroll
-        :on-infinite="dashboardUsers.fetchUsers"
-        :state="dashboardUsers.state"
+        :on-infinite="dashboardBoards.fetchBoards"
+        :state="dashboardBoards.state"
       />
     </template>
   </Table>
@@ -66,16 +53,10 @@
 <script setup lang="ts">
 import TabularItem from "./TabularItem/TabularItem.vue";
 import Table from "../../../../components/ui/Table/Table.vue";
+import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
+import { useDashboardBoards } from "../../../store/dashboard/boards";
 import Td from "../../../../components/ui/Table/Td.vue";
 import Tr from "../../../../components/ui/Table/Tr.vue";
-import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
-import { useSettingStore } from "../../../../store/settings";
-import { useDashboardUsers } from "../../../../store/dashboard/users";
 
-const { settings } = useSettingStore();
-const dashboardUsers = useDashboardUsers();
-
-defineOptions({
-  name: "DashboardUsersTabularView",
-});
+const dashboardBoards = useDashboardBoards();
 </script>
