@@ -149,7 +149,7 @@ export async function filter(
         type: "success",
       },
       users,
-      results: users,
+      // results: users,
       ...(page
         ? {}
         : {

@@ -21,15 +21,20 @@ export async function filter(
   req: Request<unknown, unknown, unknown, TFilterBoardRequestQuery>,
   res: Response<ResponseBody>,
 ) {
-  const created = req.query.created;
+  const created = req.query.created?.toUpperCase() === "ASC" ? "ASC" : "DESC";
   const limit = parseAndValidateLimit(
     req.query?.limit,
     GET_BOARDS_FILTER_COUNT,
   );
   const page = parseAndValidatePage(req.query?.page);
 
+  const rawCursor = req.query.cursor?.replace(" ", "T");
+  const cursor = rawCursor ? new Date(rawCursor) : null;
+
+
   try {
-    const boards = await database
+
+    let query = database
       .select(
         "boards.boardId",
         "boards.name",
@@ -45,10 +50,25 @@ export async function filter(
       })
       .groupBy("boards.boardId")
       .orderBy("boards.createdAt", created)
-      .limit(limit)
-      .offset(limit * (page - 1));
 
-    res.status(200).send({ boards });
+    if (cursor && !isNaN(cursor.getTime())) {
+      if (created === "DESC") {
+        query = query.where("boards.createdAt", "<", cursor).limit(limit);
+      } else {
+        query = query.where("boards.createdAt", ">", cursor).limit(limit);
+      }
+    } else {
+      query = query.limit(limit).offset(limit * (page - 1));
+    }
+
+    const boards = await query;
+
+    let nextCursor = null;
+    if (boards.length > 0) {
+      nextCursor = boards[boards.length - 1].createdAt;
+    }
+
+    res.status(200).send({ boards, nextCursor });
   } catch (err) {
     logger.log({
       level: "error",
