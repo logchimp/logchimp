@@ -9,6 +9,7 @@ import type {
 } from "@logchimp/types";
 import type { ExpressRequestContext } from "../../../../express";
 import database from "../../../../database";
+import * as v from "valibot";
 
 // utils
 import logger from "../../../../utils/logger";
@@ -34,37 +35,50 @@ export async function updateRoadmap(
     });
   }
 
+  const bodySchema = v.object({
+    name: v.message(
+      v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
+      "ROADMAP_NAME_MISSING",
+    ),
+
+    url: v.message(
+      v.pipe(
+        v.optional(v.string(), ""),
+        v.trim(),
+        v.toLowerCase(),
+        v.transform((url) => url.replace(/\W+/gi, "-")),
+        v.nonEmpty(),
+      ),
+      "ROADMAP_URL_MISSING",
+    ),
+    color: v.optional(
+      v.pipe(
+        v.string(),
+        v.length(6, "BAD_HEX_LENGTH"),
+        v.hexadecimal("BAD_HEX_CHAR"),
+      ),
+    ),
+    display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
+  });
+
+  const body = v.safeParse(bodySchema, req.body);
+
+  if (!body.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues,
+    });
+  }
+
   const id = req.ctx.roadmap.id;
-  const { name, url, color, display } = req.body;
-  const trimmedName = name?.trim();
-
-  if (!trimmedName) {
-    return res.status(400).send({
-      message: error.api.roadmaps.nameMissing,
-      code: "ROADMAP_NAME_MISSING",
-    });
-  }
-
-  if (!url) {
-    return res.status(400).send({
-      errors: [
-        url
-          ? undefined
-          : {
-              message: error.api.roadmaps.urlMissing,
-              code: "ROADMAP_URL_MISSING",
-            },
-      ],
-    });
-  }
-
-  const slimUrl = url.replace(/\W+/gi, "-").trim().toLowerCase();
+  const { name, url, color, display } = body.output;
 
   try {
     const roadmaps = await database
       .update({
-        name: trimmedName,
-        url: slimUrl,
+        name,
+        url,
         color,
         display,
         updated_at: new Date().toJSON(),
