@@ -204,9 +204,6 @@ importers:
       vue-gtag:
         specifier: 3.5.2
         version: 3.5.2(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
-      vue-infinite-loading:
-        specifier: github:nvitius/vue-infinite-loading#next
-        version: https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d(vue@3.5.22(typescript@5.9.2))
       vue-router:
         specifier: 4.5.1
         version: 4.5.1(vue@3.5.22(typescript@5.9.2))
@@ -2911,9 +2908,6 @@ packages:
     resolution: {integrity: sha512-Cc+OraorugtXNfs50hU9KS369rFXCfgGLpfCfvlc+Ud5u6VWmUQsOAa9HbTvheQdYnrdJqqv1e5oIqXppMYnSw==}
     engines: {node: '>=8'}
 
-  tiny-emitter@2.1.0:
-    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
-
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -3202,12 +3196,6 @@ packages:
     peerDependenciesMeta:
       vue-router:
         optional: true
-
-  vue-infinite-loading@https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d:
-    resolution: {tarball: https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d}
-    version: 3.0.0-alpha.0
-    peerDependencies:
-      vue: ^3.0.5
 
   vue-router@4.5.1:
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
@@ -6276,8 +6264,6 @@ snapshots:
 
   tildify@2.0.0: {}
 
-  tiny-emitter@2.1.0: {}
-
   tinybench@2.9.0: {}
 
   tinyexec@0.3.2: {}
@@ -6519,11 +6505,6 @@ snapshots:
       vue: 3.5.22(typescript@5.9.2)
     optionalDependencies:
       vue-router: 4.5.1(vue@3.5.22(typescript@5.9.2))
-
-  vue-infinite-loading@https://codeload.github.com/nvitius/vue-infinite-loading/tar.gz/b339d982d6d66e1e91324a5182156682c237ac4d(vue@3.5.22(typescript@5.9.2)):
-    dependencies:
-      tiny-emitter: 2.1.0
-      vue: 3.5.22(typescript@5.9.2)
 
   vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)):
     dependencies:
