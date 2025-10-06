@@ -618,6 +618,7 @@ describe("PATCH /api/v1/roadmaps", () => {
       .set("Authorization", `Bearer ${user.authToken}`)
       .send({
         id: r1.id,
+        name: r1.name,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");

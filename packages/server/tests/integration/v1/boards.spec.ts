@@ -572,6 +572,10 @@ describe("PATCH /api/v1/boards", () => {
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
+        name: board.name,
+        color: board.color,
+        view_voters: board.view_voters,
+        display: board.display,
         url: preExistingBoard.url,
       });
 

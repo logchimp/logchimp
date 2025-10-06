@@ -41,7 +41,7 @@ export async function updateBoard(
 
   const { name, url, color, view_voters, display } = req.body;
 
-  const trimmedName = name.trim();
+  const trimmedName = name?.trim();
 
   if (!trimmedName) {
     return res.status(400).send({
