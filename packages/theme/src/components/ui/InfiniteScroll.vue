@@ -76,7 +76,6 @@ watch(
 
 function executeInfiniteScroll() {
   if (props.state === "COMPLETED" || props.state === "ERROR") return;
-  if (!navigator.onLine) return;
   props.onInfinite();
 }
 
