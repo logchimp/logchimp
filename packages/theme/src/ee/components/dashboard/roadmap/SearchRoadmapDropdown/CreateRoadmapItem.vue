@@ -25,11 +25,11 @@ import { createRoadmap } from "../../../../modules/roadmaps";
 interface Props {
   search: string;
   hasSuggestions: boolean;
+  created: (roadmap: IRoadmapPrivate) => void;
 }
 const props = withDefaults(defineProps<Props>(), {
   hasSuggestions: false,
 });
-const emit = defineEmits<(e: "created", event: IRoadmapPrivate) => void>();
 
 const loading = ref(false);
 
@@ -43,7 +43,7 @@ async function createRoadmapHandler() {
     });
     const roadmap = response.data.roadmap;
 
-    emit("created", roadmap);
+    props.created(roadmap);
     loading.value = false;
   } catch (err) {
     loading.value = false;

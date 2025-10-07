@@ -25,11 +25,11 @@ import { createBoard } from "../../../../modules/boards";
 interface Props {
   search: string;
   hasSuggestions: boolean;
+  created: (board: IBoardPrivate) => void;
 }
 const props = withDefaults(defineProps<Props>(), {
   hasSuggestions: false,
 });
-const emit = defineEmits<(e: "created", event: IBoardPrivate) => void>();
 
 const loading = ref(false);
 
@@ -43,7 +43,7 @@ async function createBoardHandler() {
     });
     const board = response.data.board;
 
-    emit("created", board);
+    props.created(board);
     loading.value = false;
   } catch (err) {
     loading.value = false;

@@ -38,7 +38,7 @@
       <CreateBoardItem
         :search="search"
         :has-suggestions="suggestions.length > 0"
-        @created="selectHandler"
+        :created="selectHandler"
       />
     </div>
   </DropdownMenuContent>
