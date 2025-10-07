@@ -54,7 +54,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   function appendRoadmap(roadmap: IRoadmapPrivate) {
-    roadmaps.value.unshift(roadmap);
+    roadmaps.value.push(roadmap);
   }
 
   function updateRoadmap(roadmap: IRoadmapPrivate) {
