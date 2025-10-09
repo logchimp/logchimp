@@ -77,7 +77,7 @@ async function loadMorePosts() {
   }
 }
 
-onMounted(() => {isSetup()});
+onMounted(() => isSetup());
 
 useHead({
   title: "Home",
