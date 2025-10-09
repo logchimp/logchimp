@@ -37,7 +37,7 @@ jobs:
           echo "This is the service name: $SERVICE_NAME and release version: $LATEST_VERSION"
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.node }}
 
