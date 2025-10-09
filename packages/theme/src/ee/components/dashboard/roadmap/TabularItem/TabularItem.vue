@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide } from "vue";
+import { provide, computed } from "vue";
 import {
   Eye as EyeIcon,
   EyeOff as EyeOffIcon,
@@ -69,7 +69,10 @@ interface Props {
   roadmap: IRoadmapPrivate;
 }
 const props = defineProps<Props>();
-provide(roadmapKey, props.roadmap);
+provide(
+  roadmapKey,
+  computed(() => props.roadmap),
+);
 
 defineOptions({
   name: "DashboardRoadmapTabularItem",
