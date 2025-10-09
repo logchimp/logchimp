@@ -81,14 +81,12 @@ function executeInfiniteScroll() {
   props.onInfinite();
 }
 
-// 👇 Normal infinite scroll observer
 useInfiniteScroll(infiniteTrigger, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
   canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
 });
 
-// 👇 FIX: Trigger once on mount if page is too short to scroll
 onMounted(async () => {
   await nextTick();
   const triggerEl = infiniteTrigger.value;
@@ -97,7 +95,6 @@ onMounted(async () => {
   const viewportHeight = window.innerHeight;
   const rect = triggerEl.getBoundingClientRect();
 
-  // If trigger already visible (no scrolling possible)
   if (rect.top < viewportHeight) {
     executeInfiniteScroll();
     console.log("trigger already visible (no scrolling")
