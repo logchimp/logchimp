@@ -4,7 +4,7 @@
       <color-dot :color="roadmap.color" />
       <div data-test="roadmap-name" class="text-sm text-(--color-gray-60)">{{ roadmap.name }}</div>
     </header>
-    <div data-test="roadmap-column" class="rounded-md bg-(--color-gray-95) p-3 flex-grow">
+    <div data-test="roadmap-column" class="rounded-md bg-(--color-gray-95) p-3 flex-grow overflow-y-auto h-[350px]">
       <roadmap-post-card
         v-for="post in posts"
         :key="post.postId"
