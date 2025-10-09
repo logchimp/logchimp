@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted, nextTick } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 
 // components
@@ -81,9 +81,26 @@ function executeInfiniteScroll() {
   props.onInfinite();
 }
 
+// 👇 Normal infinite scroll observer
 useInfiniteScroll(infiniteTrigger, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
   canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
+});
+
+// 👇 FIX: Trigger once on mount if page is too short to scroll
+onMounted(async () => {
+  await nextTick();
+  const triggerEl = infiniteTrigger.value;
+  if (!triggerEl) return;
+
+  const viewportHeight = window.innerHeight;
+  const rect = triggerEl.getBoundingClientRect();
+
+  // If trigger already visible (no scrolling possible)
+  if (rect.top < viewportHeight) {
+    executeInfiniteScroll();
+    console.log("trigger already visible (no scrolling")
+  }
 });
 </script>
