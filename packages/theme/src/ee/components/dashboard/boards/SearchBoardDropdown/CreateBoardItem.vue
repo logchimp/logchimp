@@ -7,6 +7,7 @@
     ]"
     @click="createBoardHandler"
     textValue=""
+    @select="(e: Event) => e.preventDefault()"
   >
     <PlusIcon class="size-4" aria-hidden="true" />
     Create "{{ search }}"
