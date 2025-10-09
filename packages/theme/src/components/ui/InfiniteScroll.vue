@@ -77,20 +77,18 @@ watch(
 );
 
 function executeInfiniteScroll() {
-  if (!props.canLoadMore || props.state === "COMPLETED" || props.state === "ERROR") return;
+  if (
+    !props.canLoadMore ||
+    props.state === "COMPLETED" ||
+    props.state === "ERROR") return;
   props.onInfinite();
 }
-
 
 useInfiniteScroll(infiniteTrigger, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
-  canLoadMore: () =>
-    props.canLoadMore &&
-    props.state !== "COMPLETED" &&
-    props.state !== "ERROR",
+  canLoadMore: () => props.canLoadMore && props.state !== "COMPLETED" && props.state !== "ERROR",
 });
-
 
 onMounted(async () => {
   await nextTick();
