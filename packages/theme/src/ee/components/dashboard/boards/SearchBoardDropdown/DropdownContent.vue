@@ -36,8 +36,8 @@
       />
 
       <CreateBoardItem
+        v-if="search && suggestions.length === 0"
         :search="search"
-        :has-suggestions="suggestions.length > 0"
         @created="selectHandler"
       />
     </div>
