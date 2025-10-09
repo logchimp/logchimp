@@ -80,6 +80,12 @@ function moveItem(
     ISortRoadmapRequestBody["to"]
   >,
 ) {
+  // Guard: ensure relatedContext.element exists
+  if (!event.relatedContext?.element) {
+    console.warn("Cannot sort: relatedContext.element is undefined");
+    return false;
+  }
+
   // current
   sort.value.to = {
     id: event.draggedContext.element.id,
@@ -95,6 +101,19 @@ function moveItem(
 
 async function initialiseSort() {
   try {
+    // Validate sort data before sending to server
+    if (!sort.value.from.id || !sort.value.to.id) {
+      console.error("Invalid sort data: missing roadmap IDs");
+      drag.value = false;
+      return;
+    }
+
+    // Skip API call if the order hasn't changed
+    if (sort.value.from.index === sort.value.to.index) {
+      drag.value = false;
+      return;
+    }
+
     const response = await sortRoadmap(sort.value);
 
     if (response.status === 200) {
@@ -102,7 +121,9 @@ async function initialiseSort() {
       dashboardRoadmaps.sortRoadmap(sort.value.from.index, sort.value.to.index);
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error sorting roadmaps:", err);
+    // Optionally, show a user-friendly error message
+    // For example, using a notification or modal
   } finally {
     drag.value = false;
   }
