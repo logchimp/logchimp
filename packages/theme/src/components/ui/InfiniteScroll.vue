@@ -97,7 +97,6 @@ onMounted(async () => {
 
   if (rect.top < viewportHeight) {
     executeInfiniteScroll();
-    console.log("trigger already visible (no scrolling")
   }
 });
 </script>
