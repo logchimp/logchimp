@@ -1,10 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+import path from "path";
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-require("dotenv").config();
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -35,6 +37,9 @@ export default defineConfig({
     process.env.CI_BRANCH_NAME === "master"
       ? // CI
         [
+          // Setup project
+          { name: "setup", testMatch: /.*\.setup\.ts/ },
+
           {
             name: "chromium",
             use: { ...devices["Desktop Chrome"] },
@@ -42,7 +47,10 @@ export default defineConfig({
           // Test against branded browsers
           {
             name: "Microsoft Edge",
-            use: { ...devices["Desktop Edge"], channel: "msedge" },
+            use: {
+              ...devices["Desktop Edge"],
+              channel: "msedge",
+            },
           },
           {
             name: "firefox",
@@ -59,11 +67,16 @@ export default defineConfig({
           },
           {
             name: "Mobile Safari",
-            use: { ...devices["iPhone 13 Pro"] },
+            use: {
+              ...devices["iPhone 13 Pro"],
+            },
           },
         ]
       : // Dev
         [
+          // Setup project
+          { name: "setup", testMatch: /.*\.setup\.ts/ },
+
           {
             name: "chromium",
             use: { ...devices["Desktop Chrome"] },
