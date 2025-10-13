@@ -28,7 +28,7 @@ importers:
         version: 24.5.2
       dotenv:
         specifier: ^17.0.0
-        version: 17.2.2
+        version: 17.2.3
 
   packages/server:
     dependencies:
@@ -43,7 +43,7 @@ importers:
         version: 3.2.7
       dotenv:
         specifier: ^17.0.0
-        version: 17.2.2
+        version: 17.2.3
       express:
         specifier: ^4.17.1
         version: 4.21.2
@@ -1716,8 +1716,8 @@ packages:
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
 
-  dotenv@17.2.2:
-    resolution: {integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==}
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -5042,7 +5042,7 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 4.3.1
 
-  dotenv@17.2.2: {}
+  dotenv@17.2.3: {}
 
   dunder-proto@1.0.1:
     dependencies:
