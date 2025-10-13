@@ -18,7 +18,7 @@
         </client-error>
       </slot>
     </template>
-     <div ref="infiniteTrigger" />
+      <div ref="infiniteTrigger" aria-hidden="true" style="height:1px;" />
   </div>
 </template>
 <script setup lang="ts">
