@@ -21,7 +21,6 @@
      <div ref="infiniteTrigger" />
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, watch, computed, onMounted, nextTick } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
