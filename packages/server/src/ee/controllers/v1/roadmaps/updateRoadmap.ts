@@ -46,6 +46,11 @@ const bodySchema = v.object({
   display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
 });
 
+const errorMap = {
+  ROADMAP_NAME_MISSING: error.api.roadmaps.nameMissing,
+  ROADMAP_URL_MISSING: error.api.roadmaps.urlMissing,
+};
+
 export async function updateRoadmap(
   req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
   res: Response<ResponseBody>,
@@ -66,7 +71,11 @@ export async function updateRoadmap(
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
-      errors: body.issues,
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: errorMap[issue.message],
+        code: issue.message,
+      })),
     });
   }
 

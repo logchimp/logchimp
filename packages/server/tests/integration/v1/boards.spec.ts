@@ -550,7 +550,8 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: "BOARD_NAME_MISSING",
+          message: "Board name missing",
+          code: "BOARD_NAME_MISSING",
         }),
       ]),
     );
@@ -581,7 +582,8 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: "BOARD_URL_MISSING",
+          message: "Board url cannot be empty",
+          code: "BOARD_URL_MISSING",
         }),
       ]),
     );

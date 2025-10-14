@@ -46,6 +46,11 @@ const bodySchema = v.object({
   display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
 });
 
+const errorMap = {
+  BOARD_NAME_MISSING: error.api.boards.nameMissing,
+  BOARD_URL_MISSING: error.api.boards.urlMissing,
+};
+
 export async function updateBoard(
   req: Request<unknown, unknown, IBoardUpdateRequestBody>,
   res: Response<ResponseBody>,
@@ -66,7 +71,11 @@ export async function updateBoard(
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
-      errors: body.issues,
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: errorMap[issue.message],
+        code: issue.message,
+      })),
     });
   }
 

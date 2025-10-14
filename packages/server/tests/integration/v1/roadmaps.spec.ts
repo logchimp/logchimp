@@ -627,7 +627,8 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: "ROADMAP_NAME_MISSING",
+          message: "Roadmap name missing",
+          code: "ROADMAP_NAME_MISSING",
         }),
       ]),
     );
@@ -656,7 +657,8 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(response.body.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: "ROADMAP_URL_MISSING",
+          message: "Roadmap url cannot be empty",
+          code: "ROADMAP_URL_MISSING",
         }),
       ]),
     );
