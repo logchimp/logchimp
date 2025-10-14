@@ -39,6 +39,7 @@ const bodySchema = v.object({
   color: v.optional(
     v.pipe(
       v.string(),
+      v.trim(),
       v.length(6, "BAD_HEX_LENGTH"),
       v.hexadecimal("BAD_HEX_CHAR"),
     ),
