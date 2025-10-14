@@ -21,6 +21,7 @@ export interface IGetBoardsRequestQuery {
   page: string;
   limit?: string;
   created: ApiSortType;
+  after?: string;
 }
 
 export interface IGetBoardsResponseBody {
