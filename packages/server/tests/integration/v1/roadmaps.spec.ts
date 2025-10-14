@@ -605,17 +605,22 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
   });
 
+  it("should throw error 'ROADMAP_ID_OR_URL_MISSING'", async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send();
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toEqual("ROADMAP_ID_OR_URL_MISSING");
+  });
+
   describe("Validation Errors", () => {
     const testCases = [
-      // {
-      //   testName: "ROADMAP_ID_OR_URL_MISSING",
-      //   omitField: "id",
-      //   expectedError: {
-      //     message: "Roadmap not found",
-      //     code: "ROADMAP_ID_OR_URL_MISSING",
-      //   },
-      //   expectedStatus: 400,
-      // },
       {
         testName: "ROADMAP_NAME_MISSING",
         omitField: "name",
