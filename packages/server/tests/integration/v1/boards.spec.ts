@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
-import type { IBoardDetail } from "@logchimp/types";
+import type { IBoardDetail, IBoardUpdateRequestBody } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -525,73 +525,124 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should throw error 'BOARD_NAME_MISSING'", async () => {
-    const board: BoardInsertRecord = await generateBoards({}, true);
-    const newBoard: BoardInsertRecord = await generateBoards({}, false);
-    const { user: authUser } = await createUser();
-
-    await createRoleWithPermissions(authUser.userId, ["board:update"], {
-      roleName: "Board Patcher",
-    });
-
-    const response = await supertest(app)
-      .patch("/api/v1/boards")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        boardId: board.boardId,
-        url: newBoard.url,
-        color: newBoard.color,
-        view_voters: newBoard.view_voters,
-        display: newBoard.display,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "BOARD_ID_OR_URL_MISSING",
+        omitField: "id",
+        expectedError: {
+          message: "Board not found",
+          code: "BOARD_ID_OR_URL_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_NAME_MISSING",
+        omitField: "name",
+        expectedError: {
           message: "Board name missing",
           code: "BOARD_NAME_MISSING",
-        }),
-      ]),
-    );
-  });
-
-  it("should throw error 'BOARD_URL_MISSING'", async () => {
-    const board: BoardInsertRecord = await generateBoards({}, true);
-    const newBoard: BoardInsertRecord = await generateBoards({}, false);
-    const { user: authUser } = await createUser();
-
-    await createRoleWithPermissions(authUser.userId, ["board:update"], {
-      roleName: "Board Patcher",
-    });
-
-    const response = await supertest(app)
-      .patch("/api/v1/boards")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        boardId: board.boardId,
-        name: newBoard.name,
-        color: newBoard.color,
-        view_voters: newBoard.view_voters,
-        display: newBoard.display,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_URL_MISSING",
+        omitField: "url",
+        expectedError: {
           message: "Board url cannot be empty",
           code: "BOARD_URL_MISSING",
-        }),
-      ]),
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BAD_HEX_LENGTH",
+        omitField: null,
+        overrideFields: { color: "fff" }, // 3 chars instead of 6
+        expectedError: {
+          message: "Hex color must be 6 characters",
+          code: "BAD_HEX_LENGTH",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BAD_HEX_CHAR",
+        omitField: null,
+        overrideFields: { color: "gggggg" }, // Invalid hex characters
+        expectedError: {
+          message: "Invalid hex color",
+          code: "BAD_HEX_CHAR",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for view_voters",
+        omitField: null,
+        overrideFields: { view_voters: "true" }, // String instead of boolean
+        expectedError: {
+          message: "Must be a boolean",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display",
+        omitField: null,
+        overrideFields: { display: 1 }, // Number instead of boolean
+        expectedError: {
+          message: "Must be a boolean",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error '$testName'",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoards({}, true);
+        const newBoard = await generateBoards({}, false);
+        const { user: authUser } = await createUser();
+
+        await createRoleWithPermissions(authUser.userId, ["board:update"], {
+          roleName: "Board Patcher",
+        });
+
+        // Build the request body
+        const requestBody: IBoardUpdateRequestBody = {
+          boardId: board.boardId,
+          name: newBoard.name,
+          url: newBoard.url,
+          color: newBoard.color,
+          view_voters: newBoard.view_voters,
+          display: newBoard.display,
+        };
+
+        // Omit field if specified
+        if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/boards")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([expect.objectContaining(expectedError)]),
+        );
+      },
     );
   });
 
   it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {
     const { user: authUser } = await createUser();
-
     const preExistingBoard = await generateBoards({}, true);
     const board = await generateBoards({}, true);
 
