@@ -29,8 +29,6 @@ export async function create(
   const name = req.body.name || "new board";
   const display = req.body.display;
 
-  console.log("hi")
-
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
     return res.status(403).send({
