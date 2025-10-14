@@ -7,9 +7,10 @@ import type {
   TPermission,
   TUpdateRoadmapResponseBody,
 } from "@logchimp/types";
+import * as v from "valibot";
+
 import type { ExpressRequestContext } from "../../../../express";
 import database from "../../../../database";
-import * as v from "valibot";
 
 // utils
 import logger from "../../../../utils/logger";
@@ -19,6 +20,31 @@ type ResponseBody =
   | TUpdateRoadmapResponseBody
   | IApiValidationErrorResponse
   | IApiErrorResponse;
+
+const bodySchema = v.object({
+  name: v.message(
+    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
+    "ROADMAP_NAME_MISSING",
+  ),
+  url: v.message(
+    v.pipe(
+      v.optional(v.string(), ""),
+      v.trim(),
+      v.toLowerCase(),
+      v.transform((url) => url.replace(/\W+/gi, "-")),
+      v.nonEmpty(),
+    ),
+    "ROADMAP_URL_MISSING",
+  ),
+  color: v.optional(
+    v.pipe(
+      v.string(),
+      v.length(6, "BAD_HEX_LENGTH"),
+      v.hexadecimal("BAD_HEX_CHAR"),
+    ),
+  ),
+  display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
+});
 
 export async function updateRoadmap(
   req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
@@ -35,34 +61,7 @@ export async function updateRoadmap(
     });
   }
 
-  const bodySchema = v.object({
-    name: v.message(
-      v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
-      "ROADMAP_NAME_MISSING",
-    ),
-
-    url: v.message(
-      v.pipe(
-        v.optional(v.string(), ""),
-        v.trim(),
-        v.toLowerCase(),
-        v.transform((url) => url.replace(/\W+/gi, "-")),
-        v.nonEmpty(),
-      ),
-      "ROADMAP_URL_MISSING",
-    ),
-    color: v.optional(
-      v.pipe(
-        v.string(),
-        v.length(6, "BAD_HEX_LENGTH"),
-        v.hexadecimal("BAD_HEX_CHAR"),
-      ),
-    ),
-    display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
-  });
-
   const body = v.safeParse(bodySchema, req.body);
-
   if (!body.success) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
