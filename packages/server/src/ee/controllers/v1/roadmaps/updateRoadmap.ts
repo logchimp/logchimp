@@ -50,6 +50,8 @@ const bodySchema = v.object({
 const errorMap = {
   ROADMAP_NAME_MISSING: error.api.roadmaps.nameMissing,
   ROADMAP_URL_MISSING: error.api.roadmaps.urlMissing,
+  BOARD_HEX_LENGTH: error.general.colorCodeLength,
+  BAD_HEX_CHAR: error.general.colorCodeInvalid,
 };
 
 export async function updateRoadmap(

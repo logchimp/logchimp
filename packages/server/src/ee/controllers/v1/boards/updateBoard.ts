@@ -50,6 +50,8 @@ const bodySchema = v.object({
 const errorMap = {
   BOARD_NAME_MISSING: error.api.boards.nameMissing,
   BOARD_URL_MISSING: error.api.boards.urlMissing,
+  BOARD_HEX_LENGTH: error.general.colorCodeLength,
+  BAD_HEX_CHAR: error.general.colorCodeInvalid,
 };
 
 export async function updateBoard(
