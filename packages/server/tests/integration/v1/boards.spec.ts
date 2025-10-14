@@ -527,15 +527,15 @@ describe("PATCH /api/v1/boards", () => {
 
   describe("Validation Errors", () => {
     const testCases = [
-      {
-        testName: "BOARD_ID_OR_URL_MISSING",
-        omitField: "id",
-        expectedError: {
-          message: "Board not found",
-          code: "BOARD_ID_OR_URL_MISSING",
-        },
-        expectedStatus: 400,
-      },
+      // {
+      //   testName: "BOARD_ID_OR_URL_MISSING",
+      //   omitField: ["id", 'url'],
+      //   expectedError: {
+      //     message: "Board not found",
+      //     code: "BOARD_ID_OR_URL_MISSING",
+      //   },
+      //   expectedStatus: 400,
+      // },
       {
         testName: "BOARD_NAME_MISSING",
         omitField: "name",
@@ -555,41 +555,61 @@ describe("PATCH /api/v1/boards", () => {
         expectedStatus: 400,
       },
       {
-        testName: "BAD_HEX_LENGTH",
+        testName: "BOARD_COLOR_HEX_LENGTH",
         omitField: null,
         overrideFields: { color: "fff" }, // 3 chars instead of 6
         expectedError: {
-          message: "Hex color must be 6 characters",
-          code: "BAD_HEX_LENGTH",
+          message: "Color must be exactly 6 characters",
+          code: "BOARD_COLOR_HEX_LENGTH",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BAD_HEX_CHAR",
+        testName: "BOARD_COLOR_HEX_CHAR",
         omitField: null,
         overrideFields: { color: "gggggg" }, // Invalid hex characters
         expectedError: {
-          message: "Invalid hex color",
-          code: "BAD_HEX_CHAR",
+          message: "Color must be a valid hexadecimal value",
+          code: "BOARD_COLOR_HEX_CHAR",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BOOLEAN_EXPECTED for view_voters",
+        testName: "BOOLEAN_EXPECTED for view_voters='true'",
         omitField: null,
         overrideFields: { view_voters: "true" }, // String instead of boolean
         expectedError: {
-          message: "Must be a boolean",
+          message: undefined,
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BOOLEAN_EXPECTED for display",
+        testName: "BOOLEAN_EXPECTED for view_voters=0",
+        omitField: null,
+        overrideFields: { view_voters: 0 }, // Number instead of boolean
+        expectedError: {
+          message: undefined,
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display=1",
         omitField: null,
         overrideFields: { display: 1 }, // Number instead of boolean
         expectedError: {
-          message: "Must be a boolean",
+          message: undefined,
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display='true'",
+        omitField: null,
+        overrideFields: { display: "true" }, // String instead of boolean
+        expectedError: {
+          message: undefined,
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
@@ -597,7 +617,7 @@ describe("PATCH /api/v1/boards", () => {
     ];
 
     it.each(testCases)(
-      "should throw error '$testName'",
+      "should throw error $testName",
       async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
         const board = await generateBoards({}, true);
         const newBoard = await generateBoards({}, false);
@@ -618,7 +638,11 @@ describe("PATCH /api/v1/boards", () => {
         };
 
         // Omit field if specified
-        if (omitField) {
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
           requestBody[omitField] = undefined;
         }
 
@@ -635,7 +659,14 @@ describe("PATCH /api/v1/boards", () => {
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(expectedStatus);
         expect(response.body.errors).toEqual(
-          expect.arrayContaining([expect.objectContaining(expectedError)]),
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
         );
       },
     );

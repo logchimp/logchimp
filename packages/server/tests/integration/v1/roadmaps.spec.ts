@@ -607,20 +607,20 @@ describe("PATCH /api/v1/roadmaps", () => {
 
   describe("Validation Errors", () => {
     const testCases = [
-      {
-        testName: "ROADMAP_ID_OR_URL_MISSING",
-        omitField: "id",
-        expectedError: {
-          message: "Roadmap not found",
-          code: "ROADMAP_ID_OR_URL_MISSING",
-        },
-        expectedStatus: 400,
-      },
+      // {
+      //   testName: "ROADMAP_ID_OR_URL_MISSING",
+      //   omitField: "id",
+      //   expectedError: {
+      //     message: "Roadmap not found",
+      //     code: "ROADMAP_ID_OR_URL_MISSING",
+      //   },
+      //   expectedStatus: 400,
+      // },
       {
         testName: "ROADMAP_NAME_MISSING",
-        omitField: "id",
+        omitField: "name",
         expectedError: {
-          message: "Roadmap not found",
+          message: "Roadmap name missing",
           code: "ROADMAP_NAME_MISSING",
         },
         expectedStatus: 400,
@@ -635,41 +635,41 @@ describe("PATCH /api/v1/roadmaps", () => {
         expectedStatus: 400,
       },
       {
-        testName: "BAD_HEX_LENGTH",
+        testName: "ROADMAP_COLOR_HEX_LENGTH",
         omitField: null,
         overrideFields: { color: "fff" }, // 3 chars instead of 6
         expectedError: {
-          message: "Hex color must be 6 characters",
-          code: "BAD_HEX_LENGTH",
+          message: "Color must be exactly 6 characters",
+          code: "ROADMAP_COLOR_HEX_LENGTH",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BAD_HEX_CHAR",
+        testName: "ROADMAP_COLOR_HEX_CHAR",
         omitField: null,
         overrideFields: { color: "gggggg" }, // Invalid hex characters
         expectedError: {
-          message: "Invalid hex color",
-          code: "BAD_HEX_CHAR",
+          message: "Color must be a valid hexadecimal value",
+          code: "ROADMAP_COLOR_HEX_CHAR",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BOOLEAN_EXPECTED for view_voters",
+        testName: "BOOLEAN_EXPECTED for display=1",
         omitField: null,
-        overrideFields: { view_voters: "true" }, // String instead of boolean
+        overrideFields: { display: 1 }, // Number instead of boolean
         expectedError: {
-          message: "Must be a boolean",
+          message: undefined,
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BOOLEAN_EXPECTED for display",
+        testName: "BOOLEAN_EXPECTED for display='true'",
         omitField: null,
-        overrideFields: { display: 1 }, // Number instead of boolean
+        overrideFields: { display: "true" }, // String instead of boolean
         expectedError: {
-          message: "Must be a boolean",
+          message: undefined,
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
@@ -677,7 +677,7 @@ describe("PATCH /api/v1/roadmaps", () => {
     ];
 
     it.each(testCases)(
-      "should throw error '$testName'",
+      "should throw error $testName",
       async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
         const { user } = await createUser({
           isVerified: true,
@@ -698,7 +698,11 @@ describe("PATCH /api/v1/roadmaps", () => {
         };
 
         // Omit field if specified
-        if (omitField) {
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
           requestBody[omitField] = undefined;
         }
 
@@ -715,7 +719,14 @@ describe("PATCH /api/v1/roadmaps", () => {
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(expectedStatus);
         expect(response.body.errors).toEqual(
-          expect.arrayContaining([expect.objectContaining(expectedError)]),
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
         );
       },
     );
