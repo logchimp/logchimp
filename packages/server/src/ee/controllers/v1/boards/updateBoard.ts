@@ -73,7 +73,7 @@ export async function updateBoard(
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
         ...issue,
-        message: errorMap[issue.message],
+        message: errorMap[issue.message] ? errorMap[issue.message] : undefined,
         code: issue.message,
       })),
     });
