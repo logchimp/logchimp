@@ -527,6 +527,9 @@ describe("PATCH /api/v1/boards", () => {
 
   it("should throw error 'BOARD_ID_OR_URL_MISSING'", async () => {
     const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
 
     const response = await supertest(app)
       .patch("/api/v1/boards")
@@ -626,7 +629,6 @@ describe("PATCH /api/v1/boards", () => {
         const board = await generateBoards({}, true);
         const newBoard = await generateBoards({}, false);
         const { user: authUser } = await createUser();
-
         await createRoleWithPermissions(authUser.userId, ["board:update"], {
           roleName: "Board Patcher",
         });

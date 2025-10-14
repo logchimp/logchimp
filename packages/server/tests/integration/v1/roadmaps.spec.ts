@@ -609,6 +609,10 @@ describe("PATCH /api/v1/roadmaps", () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
+    await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+      roleName: "Roadmap update",
+    });
+
     const response = await supertest(app)
       .patch("/api/v1/roadmaps")
       .set("Authorization", `Bearer ${authUser.authToken}`)
