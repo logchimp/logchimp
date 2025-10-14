@@ -52,7 +52,7 @@ export async function filter(
 
     let totalCount: number | null = null;
     let hasNextPage = false;
-    let nextCursor: string | null = null;
+    // let nextCursor: string | null = null;
     let currentPage = 1;
 
     const boardsMetaData = await getBoardMetaData({ after });
@@ -60,14 +60,14 @@ export async function filter(
     const remainingBoardsCount = boardsMetaData.remainingBoardsCount;
 
     if (after) {
-      hasNextPage = remainingBoardsCount > limit;
-      nextCursor = hasNextPage ? endCursor : null;
+      hasNextPage = remainingBoardsCount - limit > 0;
+      // nextCursor = hasNextPage ? endCursor : null;
 
       const seenResults = totalCount - remainingBoardsCount;
       currentPage = Math.floor(seenResults / limit) + 1;
     } else {
       const totalPages = Math.ceil(totalCount / limit);
-      const currentPage = page || 1;
+      currentPage = page || 1;
       hasNextPage = currentPage < totalPages;
     }
     
