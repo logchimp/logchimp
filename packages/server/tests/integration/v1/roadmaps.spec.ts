@@ -659,7 +659,7 @@ describe("PATCH /api/v1/roadmaps", () => {
         omitField: null,
         overrideFields: { display: 1 }, // Number instead of boolean
         expectedError: {
-          message: undefined,
+          message: "Boolean value expected",
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
@@ -669,7 +669,7 @@ describe("PATCH /api/v1/roadmaps", () => {
         omitField: null,
         overrideFields: { display: "true" }, // String instead of boolean
         expectedError: {
-          message: undefined,
+          message: "Boolean value expected",
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,

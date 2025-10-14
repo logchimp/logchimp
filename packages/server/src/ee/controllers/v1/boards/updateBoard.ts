@@ -39,19 +39,20 @@ const bodySchema = v.object({
     v.pipe(
       v.string(),
       v.trim(),
-      v.length(6, "BAD_HEX_LENGTH"),
-      v.hexadecimal("BAD_HEX_CHAR"),
+      v.length(6, "BOARD_COLOR_HEX_LENGTH"),
+      v.hexadecimal("BOARD_COLOR_HEX_CHAR"),
     ),
   ),
   view_voters: v.optional(v.boolean("BOOLEAN_EXPECTED")),
   display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
 });
 
-const errorMap = {
+const schemaBodyErrorMap = {
   BOARD_NAME_MISSING: error.api.boards.nameMissing,
   BOARD_URL_MISSING: error.api.boards.urlMissing,
-  BOARD_HEX_LENGTH: error.general.colorCodeLength,
-  BAD_HEX_CHAR: error.general.colorCodeInvalid,
+  BOARD_COLOR_HEX_LENGTH: error.general.colorCodeLength,
+  BOARD_COLOR_HEX_CHAR: error.general.colorCodeInvalid,
+  BOOLEAN_EXPECTED: error.general.booleanValue,
 };
 
 export async function updateBoard(
@@ -76,7 +77,9 @@ export async function updateBoard(
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
         ...issue,
-        message: errorMap[issue.message] ? errorMap[issue.message] : undefined,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
         code: issue.message,
       })),
     });

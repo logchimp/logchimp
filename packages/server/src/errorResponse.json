@@ -2,7 +2,8 @@
   "general": {
     "serverError": "Something went wrong!",
     "colorCodeLength": "Color must be exactly 6 characters",
-    "colorCodeInvalid": "Color must be a valid hexadecimal value"
+    "colorCodeInvalid": "Color must be a valid hexadecimal value",
+    "booleanValue": "Boolean value expected"
   },
   "middleware": {
     "auth": {

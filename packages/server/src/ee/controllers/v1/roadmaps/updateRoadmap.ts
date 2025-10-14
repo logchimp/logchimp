@@ -40,18 +40,19 @@ const bodySchema = v.object({
     v.pipe(
       v.string(),
       v.trim(),
-      v.length(6, "BAD_HEX_LENGTH"),
-      v.hexadecimal("BAD_HEX_CHAR"),
+      v.length(6, "ROADMAP_COLOR_HEX_LENGTH"),
+      v.hexadecimal("ROADMAP_COLOR_HEX_CHAR"),
     ),
   ),
   display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
 });
 
-const errorMap = {
+const schemaBodyErrorMap = {
   ROADMAP_NAME_MISSING: error.api.roadmaps.nameMissing,
   ROADMAP_URL_MISSING: error.api.roadmaps.urlMissing,
-  BOARD_HEX_LENGTH: error.general.colorCodeLength,
-  BAD_HEX_CHAR: error.general.colorCodeInvalid,
+  ROADMAP_COLOR_HEX_LENGTH: error.general.colorCodeLength,
+  ROADMAP_COLOR_HEX_CHAR: error.general.colorCodeInvalid,
+  BOOLEAN_EXPECTED: error.general.booleanValue,
 };
 
 export async function updateRoadmap(
@@ -76,7 +77,9 @@ export async function updateRoadmap(
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
         ...issue,
-        message: errorMap[issue.message] ? errorMap[issue.message] : undefined,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
         code: issue.message,
       })),
     });

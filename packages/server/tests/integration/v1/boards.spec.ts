@@ -579,7 +579,7 @@ describe("PATCH /api/v1/boards", () => {
         omitField: null,
         overrideFields: { view_voters: "true" }, // String instead of boolean
         expectedError: {
-          message: undefined,
+          message: "Boolean value expected",
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
@@ -589,7 +589,7 @@ describe("PATCH /api/v1/boards", () => {
         omitField: null,
         overrideFields: { view_voters: 0 }, // Number instead of boolean
         expectedError: {
-          message: undefined,
+          message: "Boolean value expected",
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
@@ -599,7 +599,7 @@ describe("PATCH /api/v1/boards", () => {
         omitField: null,
         overrideFields: { display: 1 }, // Number instead of boolean
         expectedError: {
-          message: undefined,
+          message: "Boolean value expected",
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
@@ -609,7 +609,7 @@ describe("PATCH /api/v1/boards", () => {
         omitField: null,
         overrideFields: { display: "true" }, // String instead of boolean
         expectedError: {
-          message: undefined,
+          message: "Boolean value expected",
           code: "BOOLEAN_EXPECTED",
         },
         expectedStatus: 400,
