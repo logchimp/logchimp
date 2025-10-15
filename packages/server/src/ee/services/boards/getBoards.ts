@@ -37,18 +37,35 @@ export async function getBoards({
             })
             .groupBy("boards.boardId")
             .orderBy("boards.createdAt", created)
+            .orderBy("boards.boardId", "asc")
             .limit(limit)
 
         if (page) {
             boards = boards.offset(limit * (page - 1));
         } else if (after) {
-            boards = boards
-                .where(
-                    "createdAt",
-                    ">=",
-                    database("boards").select("createdAt").where("boardId", "=", after),
-                )
-                .offset(1);
+
+            const afterBoard = await database("boards")
+                .select("createdAt", "boardId")
+                .where("boardId", "=", after)
+                .first();
+            if (created === "ASC") {
+                boards = boards.where(function () {
+                    this.where("createdAt", ">", afterBoard.createdAt)
+                        .orWhere(function () {
+                            this.where("createdAt", "=", afterBoard.createdAt)
+                                .andWhere("boardId", ">", after);
+                        });
+                });
+            } else {
+                boards = boards.where(function () {
+                    this.where("createdAt", "<", afterBoard.createdAt)
+                        .orWhere(function () {
+                            this.where("createdAt", "=", afterBoard.createdAt)
+                                .andWhere("boardId", "<", after);
+                        });
+                });
+            }
+
         }
         const boardsData = await boards;
         return boardsData;
@@ -82,10 +99,10 @@ export async function getBoardMetaData({ after }: getBoardMetaDataOptions) {
             const subQuery = database("boards")
                 .where("display", true)
                 .andWhere("createdAt", ">=", afterBoard.createdAt)
-                .offset(1); 
+                .offset(1);
 
             const remaining = await database
-            .count<{count: string}>("* as count")
+                .count<{ count: string }>("* as count")
                 .from(subQuery.as("next"))
                 .first();
 
