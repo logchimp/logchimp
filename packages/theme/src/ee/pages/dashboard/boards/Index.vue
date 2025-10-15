@@ -22,24 +22,7 @@
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
-		<Table class="boards-table">
-			<template #header>
-				<div class="w-14" />
-				<div class="table-header-item boards-table-name">name</div>
-				<div class="table-header-item boards-table-posts">posts</div>
-				<div class="table-header-item boards-table-icons" />
-			</template>
-
-      <div
-        v-for="(board, index) in dashboardBoards.boards"
-        :key="board.boardId"
-        class="table-row"
-      >
-        <DashboardBoardsTabularItem :board="board" :index="index" />
-      </div>
-
-      <infinite-scroll :on-infinite="dashboardBoards.fetchBoards" :state="dashboardBoards.state" />
-		</Table>
+		<TabularView />
 	</div>
 </template>
 
@@ -52,16 +35,14 @@ import { PhCrownSimple } from "@phosphor-icons/vue";
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { createBoard } from "../../../modules/boards";
+import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 // components
-import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import Button from "../../../../components/ui/Button.vue";
-import Table from "../../../../components/ui/Table/Table.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
-import DashboardBoardsTabularItem from "../../../components/dashboard/boards/TabularItem.vue";
-import { useDashboardBoards } from "../../../store/dashboard/boards";
+import TabularView from "../../../components/dashboard/boards/TabularView.vue";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
@@ -98,31 +79,3 @@ defineOptions({
   name: "DashboardBoards",
 });
 </script>
-
-<style lang='sass'>
-.boards-page-header
-	display: flex
-	align-items: center
-	margin-bottom: 1rem
-
-.boards-page-header-heading
-	margin-bottom: 0
-
-.boards-page-header-button
-	display: flex
-	margin-left: auto
-
-.boards-table
-	.boards-table-name
-		flex: 6
-		font-weight: 500
-		padding-left: 0.5rem
-
-	.boards-table-posts
-		flex: 1
-		text-align: right
-
-	.boards-table-icons
-		flex: 4
-		justify-content: flex-end
-</style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PanelLeftIcon } from "lucide-vue";
 
-import { useDashboard } from "../../store/dashboard.ts";
+import { useDashboard } from "../../store/dashboard";
 const dashboard = useDashboard();
 
 defineOptions({

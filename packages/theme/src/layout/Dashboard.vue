@@ -23,7 +23,3 @@ import PowerBy from "../components/PowerBy.vue";
 
 const { get: siteSettings } = useSettingStore();
 </script>
-
-<style lang='scss'>
-@import "../styles/ui/table.sass";
-</style>

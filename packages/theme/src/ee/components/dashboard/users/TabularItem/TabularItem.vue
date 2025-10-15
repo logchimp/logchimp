@@ -45,8 +45,9 @@
     </Td>
 
     <Td
+      v-if="settings.developer_mode"
       :style="{
-        width: '100px',
+        width: '40px',
       }"
       :ignore-px="true"
       :ignore-py="true"

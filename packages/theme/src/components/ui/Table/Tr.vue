@@ -1,7 +1,5 @@
 <template>
-  <div class="hover:bg-neutral-50">
+  <div class="hover:bg-neutral-50 px-2">
     <slot />
   </div>
 </template>
-<script setup lang="ts">
-</script>
