@@ -1,6 +1,8 @@
 # Contributing to LogChimp
 
-Thank you for showing an interest in contributing to LogChimp! All kinds on contributions are valuable to us. In this guide, we will cover how you can quickly onboard and make your first contribution.
+Thank you for showing an interest in contributing to LogChimp! All kinds on contributions are valuable to us.
+
+If you're a developer looking to contribute but aren't sure where to start, check out the [good first issue](https://github.com/logchimp/logchimp/labels/good%20first%20issue) label on GitHub. It contains small tasks suitable for new contributors. Or, if you're seeking something more challenging, explore the broader [help wanted](https://github.com/logchimp/logchimp/labels/help%20wanted) label, which includes issues that might pique your interest.
 
 ## Directory structure
 
@@ -13,14 +15,16 @@ packages
  └── types
 ```
 
+## Getting Started
+
+We will cover how you can quickly run LogChimp and make your first contribution.
+
 Please make sure you've enough hardware resources (Memory, CPU, Disk Space) to run the application on your machine or use cloud environments like GitHub Spaces
 
 1. [Docker](#1-docker)
 2. [GitHub CodeSpaces](#2-github-codespaces)
 
-## 1. Docker
-
-#### Setup the project
+### 1. Docker
 
 1. Clone the repository
 
@@ -65,10 +69,18 @@ cd ./packages/theme
 pnpm dev
 ```
 
-## 2. GitHub CodeSpaces
+### 2. GitHub CodeSpaces
 
 There are no prerequisites for software or hardware requirements except for the Web Browser.
 
 Once you run the CodeSpaces and the whole setup is complete.
 
 If opening inside VSCode, open the command (`Ctrl` / `Command` + `Shift` + `P`), type `Tasks: Run Task` and hit enter, you will find the task in the list `LogChimp Theme Dev` and hit enter.
+
+## Other Ways to Help
+
+While the primary means of contributing to LogChimp is through coding, there are still ways you can help even if you're not a developer. We always need help with:
+
+- Maintaining [LogChimp Docs](https://docs.logchimp.codecarrot.net)
+- Testing and quality assurance
+- Promoting LogChimp to others

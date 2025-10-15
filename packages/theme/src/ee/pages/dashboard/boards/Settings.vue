@@ -33,6 +33,8 @@
             v-model="board.name"
             label="Name"
             placeholder="Enter board name"
+            :error="boardFieldError"
+            @hide-error="hideNameError"
           />
 
           <color-input v-model="board.color" />
@@ -82,6 +84,7 @@ import { useUserStore } from "../../../../store/user";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 // components
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
@@ -115,7 +118,23 @@ const updateBoardPermissionDisabled = computed(() => {
   return !permissions.includes("board:update");
 });
 
+const boardFieldError = reactive({
+  show: false,
+  message: "",
+});
+
+function hideNameError(event: FormFieldErrorType) {
+  boardFieldError.show = event.show;
+  boardFieldError.message = event.message;
+}
+
 async function update() {
+  if (!board.name.trim()) {
+    boardFieldError.show = true;
+    boardFieldError.message = "Please enter a valid board name";
+    return;
+  }
+
   saveButtonLoading.value = true;
   try {
     const body = {

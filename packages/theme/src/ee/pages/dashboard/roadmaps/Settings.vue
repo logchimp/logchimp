@@ -34,6 +34,8 @@
             v-model="roadmap.name"
             label="Name"
             placeholder="Enter roadmap name"
+            :error="roadmapFieldError"
+            @hide-error="hideNameError"
           />
 
           <color-input v-model="roadmap.color" />
@@ -79,6 +81,7 @@ import { updateRoadmap } from "../../../modules/roadmaps";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 
 // components
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
@@ -113,7 +116,23 @@ const slimUrl = computed(() => {
     .toLowerCase();
 });
 
+const roadmapFieldError = reactive({
+  show: false,
+  message: "",
+});
+
+function hideNameError(event: FormFieldErrorType) {
+  roadmapFieldError.show = event.show;
+  roadmapFieldError.message = event.message;
+}
+
 async function updateHandler() {
+  if (!roadmap.name.trim()) {
+    roadmapFieldError.show = true;
+    roadmapFieldError.message = "Please enter a valid roadmap name";
+    return;
+  }
+
   updateButtonLoading.value = true;
 
   try {

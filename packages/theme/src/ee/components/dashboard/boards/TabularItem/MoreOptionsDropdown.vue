@@ -1,5 +1,5 @@
 <template>
-  <DropdownV2>
+  <dropdown-v2>
     <template #trigger>
       <DropdownMenuTrigger
         :class="[
@@ -12,22 +12,18 @@
       </DropdownMenuTrigger>
     </template>
 
-    <DropdownV2Content
-      align="end"
-      side="bottom"
-      :loop="true"
-      class="relative z-[2]"
-    >
-      <MoreOptionsDropdownContent />
-    </DropdownV2Content>
-  </DropdownV2>
+    <Content />
+  </dropdown-v2>
 </template>
 
 <script setup lang="ts">
-import { MoreHorizontalIcon } from "lucide-vue";
 import { DropdownMenuTrigger } from "reka-ui";
+import { MoreHorizontalIcon } from "lucide-vue";
 
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
-import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
-import MoreOptionsDropdownContent from "./MoreOptionsDropdownContent.vue";
+import Content from "./MoreOptionsDropdownContent.vue";
+
+defineOptions({
+  name: "DashboardBoardsTabularItemMoreOptionsDropdown",
+});
 </script>

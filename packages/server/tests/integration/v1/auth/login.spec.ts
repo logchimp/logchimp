@@ -49,7 +49,7 @@ describe("POST /api/v1/auth/login", () => {
     expect(response.body.code).toBe("INCORRECT_PASSWORD");
   });
 
-  it("should get login the user with credentials", async () => {
+  it("should login the user with credentials", async () => {
     const { user: u } = await createUser();
     const response = await supertest(app).post("/api/v1/auth/login").send({
       email: u.email,

@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+reviews:
+  poem: false
+  collapse_walkthrough: true
+  abort_on_close: false
+
+path_filters:
+  - "**/*"
+  - "!.idea"

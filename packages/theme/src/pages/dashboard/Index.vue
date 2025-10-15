@@ -1,58 +1,106 @@
 <template>
   <DashboardPageHeader class="md:hidden" />
 
-  <div class="flex items-start px-3 lg:px-6 py-6">
-    <div class="dashboard-overview-posts">
-      <div class="table-heading">Posts</div>
+  <div class="flex items-start gap-x-4 px-3 lg:px-6 py-6">
+    <div class="flex-2">
+      <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">Posts</div>
       <Table>
         <template #header>
-          <div class="table-header-item posts-table-title">title</div>
-          <div class="table-header-item posts-table-votes">votes</div>
+          <Td
+            :head="true"
+            :style="{
+              width: '200px',
+            }"
+            class="flex-1"
+          >
+            Title
+          </Td>
+          <Td :head="true">
+            Votes
+          </Td>
         </template>
 
-        <router-link
+        <Tr
           v-for="post in posts"
           :key="post.postId"
-          :to="`/dashboard/posts/${post.slug}`"
-          class="table-row"
         >
-          <div class="table-data posts-table-title">
-            {{ post.title }}
+          <div class="relative flex items-center">
+            <Td
+              :style="{
+                width: '200px',
+              }"
+              class="flex-1"
+            >
+              {{ post.title }}
+            </Td>
+            <Td>
+              {{ post.voters.votesCount }}
+            </Td>
+            <router-link
+              :to="`/dashboard/posts/${post.slug}`"
+              class="absolute inset-0"
+            />
           </div>
-          <div class="table-data posts-table-votes">
-            {{ post.voters.votesCount }}
-          </div>
-        </router-link>
+        </Tr>
 
-        <infinite-scroll :on-infinite="getRecentPosts" :state="postState" />
+        <template #infinite-loader>
+          <infinite-scroll :on-infinite="getRecentPosts" :state="postState" />
+        </template>
       </Table>
     </div>
-    <div class="dashboard-overview-boards">
-      <div class="table-heading">Boards</div>
+
+    <div class="flex-1">
+      <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">Boards</div>
       <Table>
         <template #header>
-          <div class="table-header-item boards-table-color" />
-          <div class="table-header-item boards-table-name">name</div>
-          <div class="table-header-item boards-table-posts">posts</div>
+          <Td
+            :head="true"
+            :style="{
+              minWidth: '350px',
+            }"
+            class="flex-1"
+          >
+            Name
+          </Td>
+          <Td
+            :style="{
+              width: '100px',
+            }"
+            :head="true"
+          >
+            Posts
+          </Td>
         </template>
 
-        <div
+        <Tr
           v-for="board in boards"
           :key="board.boardId"
-          class="table-row"
         >
-          <div class="table-data boards-table-color">
-            <color-dot :color="board.color" />
+          <div class="flex items-center">
+            <Td
+              :style="{
+                minWidth: '350px',
+              }"
+                class="flex-1 flex items-center gap-x-3"
+              >
+              <ColorDot :color="board.color" />
+              <span>
+                {{ board.name }}
+              </span>
+            </Td>
+            <Td
+              :style="{
+                width: '100px',
+              }"
+            >
+              {{ board.post_count }}
+            </Td>
           </div>
-          <div class="table-data boards-table-name">
-            {{ board.name }}
-          </div>
-          <div class="table-data boards-table-posts">
-            {{ board.post_count }}
-          </div>
-        </div>
+        </Tr>
 
-        <infinite-scroll :on-infinite="getBoards" :state="boardState" />
+        <template #infinite-loader>
+          <infinite-scroll :on-infinite="getBoards" :state="boardState" />
+        </template>
       </Table>
     </div>
   </div>
@@ -74,6 +122,8 @@ import InfiniteScroll, {
 import Table from "../../components/ui/Table/Table.vue";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
+import Tr from "../../components/ui/Table/Tr.vue";
+import Td from "../../components/ui/Table/Td.vue";
 
 const posts = ref<IPost[]>([]);
 const postState = ref<InfiniteScrollStateType>();
@@ -123,36 +173,3 @@ defineOptions({
   name: "DashboardOverview",
 });
 </script>
-
-<style lang='sass'>
-.dashboard-overview-posts
-  flex: 2
-  margin-right: 1rem
-
-.dashboard-overview-boards
-  flex: 1
-  margin-left: 1rem
-
-// posts
-.posts-table-title
-  flex: 6
-  font-weight: 500
-
-.posts-table-votes
-  flex: 1
-  text-align: right
-
-// boards
-.boards-table-color
-  flex: 0.5
-  padding-right: 0.5rem
-
-.boards-table-name
-  flex: 10
-  font-weight: 500
-  padding-left: 0.5rem
-
-.boards-table-posts
-  flex: 2
-  text-align: right
-</style>
