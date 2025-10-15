@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
-import type { IBoardDetail } from "@logchimp/types";
+import type { IBoardDetail, IBoardUpdateRequestBody } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -525,11 +525,8 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should throw error 'BOARD_URL_MISSING'", async () => {
-    const board: BoardInsertRecord = await generateBoards({}, true);
-    const newBoard: BoardInsertRecord = await generateBoards({}, false);
+  it("should throw error 'BOARD_ID_OR_URL_MISSING'", async () => {
     const { user: authUser } = await createUser();
-
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
       roleName: "Board Patcher",
     });
@@ -537,29 +534,154 @@ describe("PATCH /api/v1/boards", () => {
     const response = await supertest(app)
       .patch("/api/v1/boards")
       .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        boardId: board.boardId,
-        name: newBoard.name,
-        color: newBoard.color,
-        view_voters: newBoard.view_voters,
-        display: newBoard.display,
-      });
+      .send();
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("BOARD_ID_OR_URL_MISSING");
+  });
+
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "BOARD_NAME_MISSING",
+        omitField: "name",
+        expectedError: {
+          message: "Board name missing",
+          code: "BOARD_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_URL_MISSING",
+        omitField: "url",
+        expectedError: {
           message: "Board url cannot be empty",
           code: "BOARD_URL_MISSING",
-        }),
-      ]),
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_COLOR_HEX_LENGTH",
+        omitField: null,
+        overrideFields: { color: "fff" }, // 3 chars instead of 6
+        expectedError: {
+          message: "Color must be exactly 6 characters",
+          code: "BOARD_COLOR_HEX_LENGTH",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_COLOR_HEX_CHAR",
+        omitField: null,
+        overrideFields: { color: "gggggg" }, // Invalid hex characters
+        expectedError: {
+          message: "Color must be a valid hexadecimal value",
+          code: "BOARD_COLOR_HEX_CHAR",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for view_voters='true'",
+        omitField: null,
+        overrideFields: { view_voters: "true" }, // String instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for view_voters=0",
+        omitField: null,
+        overrideFields: { view_voters: 0 }, // Number instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display=1",
+        omitField: null,
+        overrideFields: { display: 1 }, // Number instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display='true'",
+        omitField: null,
+        overrideFields: { display: "true" }, // String instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoards({}, true);
+        const newBoard = await generateBoards({}, false);
+        const { user: authUser } = await createUser();
+        await createRoleWithPermissions(authUser.userId, ["board:update"], {
+          roleName: "Board Patcher",
+        });
+
+        // Build the request body
+        const requestBody: IBoardUpdateRequestBody = {
+          boardId: board.boardId,
+          name: newBoard.name,
+          url: newBoard.url,
+          color: newBoard.color,
+          view_voters: newBoard.view_voters,
+          display: newBoard.display,
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/boards")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
     );
   });
 
   it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {
     const { user: authUser } = await createUser();
-
     const preExistingBoard = await generateBoards({}, true);
     const board = await generateBoards({}, true);
 
@@ -572,6 +694,10 @@ describe("PATCH /api/v1/boards", () => {
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
+        name: board.name,
+        color: board.color,
+        view_voters: board.view_voters,
+        display: board.display,
         url: preExistingBoard.url,
       });
 

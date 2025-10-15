@@ -36,7 +36,7 @@
     "@vue/tsconfig": "^0.7.0",
     "jsdom": "^20.0.1",
     "sass": "1.69.5",
-    "typescript": "5.9.2",
+    "typescript": "5.9.3",
     "vite": "6.3.6",
     "vitest": "3.2.4",
     "vue-tsc": "3.0.8"
