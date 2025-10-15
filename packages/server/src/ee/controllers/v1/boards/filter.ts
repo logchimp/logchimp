@@ -52,7 +52,6 @@ export async function filter(
 
     let totalCount: number | null = null;
     let hasNextPage = false;
-    // let nextCursor: string | null = null;
     let currentPage = 1;
 
     const boardsMetaData = await getBoardMetaData({ after });
@@ -61,7 +60,6 @@ export async function filter(
 
     if (after) {
       hasNextPage = remainingBoardsCount - limit > 0;
-      // nextCursor = hasNextPage ? endCursor : null;
 
       const seenResults = totalCount - remainingBoardsCount;
       currentPage = Math.floor(seenResults / limit) + 1;
