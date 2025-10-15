@@ -1,4 +1,4 @@
-import type { ApiSortType } from "./common";
+import type { ApiSortType, IApiStatus, CursorPaginatedResponse } from "./common";
 
 export interface IBoard {
   boardId: string;
@@ -30,7 +30,8 @@ export interface IGetBoardsResponseBody {
 
 export type TFilterBoardRequestQuery = IGetBoardsRequestQuery;
 
-export interface IFilterBoardResponseBody {
+export interface IFilterBoardResponseBody extends Partial<CursorPaginatedResponse<IBoard>> {
+  status: IApiStatus;
   boards: IBoardDetail[];
 }
 
