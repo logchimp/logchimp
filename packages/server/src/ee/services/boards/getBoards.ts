@@ -46,12 +46,12 @@ export async function getBoards({
                 .where(
                     "createdAt",
                     ">=",
-                    database("boards").select("createAt").where("boardId", "=", after),
+                    database("boards").select("createdAt").where("boardId", "=", after),
                 )
                 .offset(1);
         }
-
-        return await boards;
+        const boardsData = await boards;
+        return boardsData;
     } catch (error) {
         logger.log({
             level: "error",
@@ -81,7 +81,7 @@ export async function getBoardMetaData({ after }: getBoardMetaDataOptions) {
 
             const subQuery = database("boards")
                 .where("display", true)
-                .andWhere("createdAt", ">", afterBoard.createdAt)
+                .andWhere("createdAt", ">=", afterBoard.createdAt)
                 .offset(1); 
 
             const remaining = await database
