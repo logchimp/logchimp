@@ -698,7 +698,6 @@ describe("PATCH /api/v1/roadmaps", () => {
         const roadmap = await generateRoadmap({}, false);
 
         const requestBody: IUpdateRoadmapRequestBody = {
-          // @ts-expect-error
           id: r1.id,
           name: roadmap.name,
           url: roadmap.url,
