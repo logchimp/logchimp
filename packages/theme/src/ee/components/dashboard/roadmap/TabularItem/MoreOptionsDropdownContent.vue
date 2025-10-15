@@ -6,7 +6,7 @@
   >
     <DropdownItem
       @click="router.push(`/dashboard/roadmaps/${roadmap?.url}/settings`)"
-      :disable="!roadmap"
+      :disabled="!roadmap"
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
