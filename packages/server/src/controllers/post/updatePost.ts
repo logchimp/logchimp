@@ -5,6 +5,7 @@ import type {
   TPermission,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
+import * as v from "valibot";
 import database from "../../database";
 
 // utils
@@ -13,6 +14,18 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
+
+const bodySchema = v.object({
+  title: v.message(
+    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
+    "POST_TITLE_MISSING",
+  ),
+  contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+});
+
+const schemaBodyErrorMap = {
+  POST_TITLE_MISSING: error.api.posts.titleMissing,
+};
 
 export async function updatePost(
   req: Request<unknown, unknown, IUpdatePostRequestBody>,
@@ -27,12 +40,6 @@ export async function updatePost(
   // @ts-expect-error
   const slugId = req.post.slugId;
 
-  const { id: _id, title, contentMarkdown } = req.body;
-  const id = validUUID(_id);
-  const boardId = validUUID(req.body.boardId);
-  const roadmapId = validUUID(req.body.roadmapId);
-  const trimmedTitle = title.trim();
-
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
     return res.status(403).send({
@@ -41,12 +48,25 @@ export async function updatePost(
     });
   }
 
-  if (!trimmedTitle) {
-    return res.status(400).send({
-      message: error.api.posts.titleMissing,
-      code: "POST_TITLE_MISSING",
+  const body = v.safeParse(bodySchema, req.body);
+  if (!body.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
   }
+
+  const id = validUUID(req.body.id);
+  const boardId = validUUID(req.body.boardId);
+  const roadmapId = validUUID(req.body.roadmapId);
+  const { title, contentMarkdown } = body.output;
 
   const slug = `${title
     .replace(/[^\w\s]/gi, "")
@@ -58,7 +78,7 @@ export async function updatePost(
   try {
     const posts = await database
       .update({
-        title: trimmedTitle,
+        title,
         slug,
         contentMarkdown,
         boardId,

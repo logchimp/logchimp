@@ -727,6 +727,8 @@ describe("PATCH /api/v1/roadmaps", () => {
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
         expect(response.body.errors).toEqual(
           expect.arrayContaining([
             expect.objectContaining({

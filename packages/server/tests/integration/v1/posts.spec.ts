@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
-import type { IBoard, IPost } from "@logchimp/types";
+import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
@@ -468,6 +468,102 @@ describe("PATCH /api/v1/posts", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(401);
     expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "POST_TITLE_MISSING for missing 'title'",
+        omitField: "title",
+        expectedError: {
+          message: "Post title missing",
+          code: "POST_TITLE_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "POST_TITLE_MISSING for title=''",
+        omitField: null,
+        overrideFields: { title: "" },
+        expectedError: {
+          message: "Post title missing",
+          code: "POST_TITLE_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "POST_TITLE_MISSING for title='            '",
+        omitField: null,
+        overrideFields: { title: "            " },
+        expectedError: {
+          message: "Post title missing",
+          code: "POST_TITLE_MISSING",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoard({}, true);
+        const roadmap = await generateRoadmap({}, true);
+        const { user: author } = await createUser({ isVerified: true });
+        const post = await generatePost(
+          {
+            userId: author.userId,
+            boardId: board.boardId,
+            roadmapId: roadmap.id,
+          },
+          true,
+        );
+
+        // Build the request body
+        const requestBody: IUpdatePostRequestBody = {
+          id: post.postId,
+          title: post.title,
+          slugId: post.slugId,
+          userId: author.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+          contentMarkdown: post.contentMarkdown,
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/posts")
+          .set("Authorization", `Bearer ${author.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
+    );
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION" when not author and without permission', async () => {
