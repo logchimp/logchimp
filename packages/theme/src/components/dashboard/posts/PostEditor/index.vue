@@ -34,6 +34,8 @@
             v-model="post.title"
             label="Title"
             placeholder="Name of the feature"
+            :error="postFieldError"
+            @hide-error="hideTitleError"
           />
 
           <l-textarea
@@ -103,6 +105,7 @@ import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/S
 import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
 import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
 import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
@@ -123,7 +126,23 @@ const updatePostPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
+const postFieldError = reactive({
+  show: false,
+  message: "",
+});
+
+function hideTitleError(event: FormFieldErrorType) {
+  postFieldError.show = event.show;
+  postFieldError.message = event.message;
+}
+
 async function updatePostHandler() {
+  if (!post.title.trim()) {
+    postFieldError.show = true;
+    postFieldError.message = "Please enter a valid post title";
+    return;
+  }
+
   saveBtnLoading.value = true;
 
   try {
