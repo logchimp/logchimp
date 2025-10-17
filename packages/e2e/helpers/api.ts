@@ -19,14 +19,17 @@ interface UserLoginOptions {
 
 export async function userSignup({
   requestContext,
-  baseURL,
+  baseURL: _baseURL,
   email: _email,
   password: _password,
   isOwner,
 }: UserSignupOptions): Promise<APIResponse> {
-  console.log('userSignup base url:', baseURL)
   const email = _email || faker.internet.email();
   const password = _password || "password";
+
+  // custom base URL used for executing API calls and fallback to web base URL
+  const baseURL = process.env.LOGCHIMP_API_URL || _baseURL;
+  console.log('userSignup base url:', baseURL)
 
   const url = isOwner
     ? `${baseURL}/api/v1/auth/setup`
@@ -49,11 +52,14 @@ export async function userSignup({
 
 export async function userLogin({
   requestContext,
-  baseURL,
+  baseURL: _baseURL,
   email,
   password,
 }: UserLoginOptions): Promise<APIResponse> {
-  console.log('userLogin base url:', baseURL)
+  // custom base URL used for executing API calls and fallback to web base URL
+  const baseURL = process.env.LOGCHIMP_API_URL || _baseURL;
+  console.log('userSignup base url:', baseURL)
+
   return await requestContext.post(`${baseURL}/api/v1/auth/login`, {
     data: {
       email,

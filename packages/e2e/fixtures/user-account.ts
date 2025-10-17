@@ -13,15 +13,11 @@ export const test = baseTest.extend({
     );
 
     if (!fs.existsSync(fileName)) {
-      const requestContext = await request.newContext({
-        // custom base URL used for executing API calls and fallback to web base URL
-        baseURL: process.env.LOGCHIMP_API_URL || baseURL,
-      });
+      const requestContext = await request.newContext();
       const res = await userSignup({
         requestContext,
         baseURL,
       });
-      console.log("res status:", res.status());
       const body = (await res.json()) as IAuthSignupResponseBody;
 
       const context = await browser.newContext();
