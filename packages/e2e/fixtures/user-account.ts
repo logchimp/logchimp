@@ -19,8 +19,6 @@ export const test = baseTest.extend({
         baseURL,
       });
       const body = (await res.json()) as IAuthSignupResponseBody;
-      console.log("user account -> body:");
-      console.log(body);
 
       const context = await browser.newContext();
       const page = await context.newPage();

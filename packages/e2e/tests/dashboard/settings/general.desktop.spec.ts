@@ -2,10 +2,14 @@ import { expect, type Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 
 import { test } from "../../../fixtures/owner-account";
-import { SITE_NAME } from "../../../helpers/constants";
+import { SITE_LOGO_URL, SITE_NAME } from "../../../helpers/constants";
 
 async function saveButton(page: Page) {
-  await page.getByRole("button", { name: "Save" }).click();
+  const button = page.getByRole("button", { name: "Save" });
+
+  await expect(button).toBeVisible();
+  await expect(button).toBeEnabled();
+  await button.click();
 }
 
 async function resetSiteSettings(page: Page) {
@@ -15,9 +19,7 @@ async function resetSiteSettings(page: Page) {
 
   // Logo
   const logoInput = page.getByTestId("logo-url");
-  await logoInput.fill(
-    "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
-  );
+  await logoInput.fill(SITE_LOGO_URL);
 
   // Description
   const descriptionInput = page.getByPlaceholder("Site description");
@@ -42,7 +44,7 @@ async function resetSiteSettings(page: Page) {
   const developerModeIsEnabled =
     await developerModeToggle.getAttribute("aria-checked");
   if (developerModeIsEnabled === "true") {
-    await allowSignupToggle.click();
+    await developerModeToggle.click();
   }
 
   await saveButton(page);
@@ -71,7 +73,7 @@ test.describe
       //   // Bug [https://github.com/logchimp/logchimp/issues/1312]
       //   // await expect(newSiteName).toHaveText(oldSiteName);
       //
-      //   await siteNameInput.fill("LogChimp");
+      //   await siteNameInput.fill(SITE_NAME);
       //   await resetSiteSettings(page);
       // });
 
@@ -84,8 +86,7 @@ test.describe
         await saveButton(page);
 
         await page.reload();
-        await page.waitForSelector("body[data-v-app]");
-        expect(await siteNameInput.inputValue()).toEqual(newSiteName);
+        await expect(siteNameInput).toHaveValue(newSiteName);
 
         await resetSiteSettings(page);
       });
@@ -100,7 +101,7 @@ test.describe
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
-      expect(await input.inputValue()).toEqual(fakerDescription);
+      await expect(input).toHaveValue(fakerDescription);
 
       await resetSiteSettings(page);
     });
@@ -118,7 +119,7 @@ test.describe
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
-      expect(await logoInput.inputValue()).toEqual(fakerImage);
+      await expect(logoInput).toHaveValue(fakerImage);
 
       await resetSiteSettings(page);
     });
@@ -129,16 +130,21 @@ test.describe
         'button[data-test="toggle"]',
       );
 
-      const isEnabled = await allowSignupToggle.getAttribute("aria-checked");
-      expect(isEnabled).toEqual("true");
+      expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
+        "true",
+      );
 
       await allowSignupToggle.click();
-      expect(isEnabled).toEqual("false");
+      expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
+        "false",
+      );
       await saveButton(page);
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
-      expect(isEnabled).toEqual("false");
+      expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
+        "false",
+      );
 
       await resetSiteSettings(page);
     });
@@ -161,16 +167,21 @@ test.describe
         'button[data-test="toggle"]',
       );
 
-      const isEnabled = developerModeToggle.getAttribute("aria-checked");
-      expect(isEnabled).toEqual("false");
+      expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
+        "false",
+      );
 
       await developerModeToggle.click();
-      expect(isEnabled).toEqual("true");
+      expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
+        "true",
+      );
       await saveButton(page);
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
-      expect(isEnabled).toEqual("true");
+      expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
+        "true",
+      );
 
       await resetSiteSettings(page);
     });

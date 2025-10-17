@@ -10,6 +10,13 @@ interface UserSignupOptions {
   isOwner?: boolean;
 }
 
+interface UserLoginOptions {
+  requestContext: APIRequestContext;
+  baseURL: string;
+  email?: string;
+  password?: string;
+}
+
 export async function userSignup({
   requestContext,
   baseURL,
@@ -44,7 +51,7 @@ export async function userLogin({
   baseURL,
   email,
   password,
-}: UserSignupOptions): Promise<APIResponse> {
+}: UserLoginOptions): Promise<APIResponse> {
   return await requestContext.post(`${baseURL}/api/v1/auth/login`, {
     data: {
       email,

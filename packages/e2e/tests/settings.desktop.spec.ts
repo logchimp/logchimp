@@ -20,7 +20,7 @@ test.describe("Settings", () => {
   //   test.skip("should show failed status after clicking 'Resend' button", async () => {});
   // });
 
-  test.describe("Account settings form", async () => {
+  test.describe("Account settings form", () => {
     test("should have 'username' & 'email' field disabled", async ({
       page,
     }) => {

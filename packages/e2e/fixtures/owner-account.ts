@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import type {
+  IApiErrorResponse,
   IAuthLoginResponseBody,
   IAuthSignupResponseBody,
   IAuthUser,
@@ -43,14 +44,16 @@ export const test = baseTest.extend({
 
     if (!fs.existsSync(fileName)) {
       const requestContext = await request.newContext();
+      const emailEnv = (process.env.LOGCHIMP_OWNER_EMAIL || "").trim();
 
       const res = await userSignup({
         requestContext,
         baseURL,
         isOwner: true,
+        email: emailEnv,
       });
 
-      let body: any = null;
+      let body: IAuthSignupResponseBody | IApiErrorResponse;
       try {
         body = await res.json();
       } catch (_e) {}
@@ -63,7 +66,7 @@ export const test = baseTest.extend({
       ) {
         const { user } = body as IAuthSignupResponseBody;
         await writeStorageWithUser(user);
-      } else if (body && body.code === "SETUP_COMPLETED") {
+      } else if (body && "code" in body && body.code === "SETUP_COMPLETED") {
         // Case 2: Setup already completed -> login to existing owner account
         let emailFromStorage: string | undefined;
         if (fs.existsSync(fileName)) {

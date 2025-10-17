@@ -52,6 +52,7 @@ jobs:
       run: pnpm --filter @logchimp/e2e exec playwright test
       env:
         BASE_URL: ${{ env.WEB_URL }}
+        LOGCHIMP_OWNER_EMAIL: "owner@example.com"
         CI_BRANCH_NAME: ${{ github.ref_name }}
 
     - uses: actions/upload-artifact@v4

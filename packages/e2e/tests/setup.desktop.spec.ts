@@ -1,24 +1,33 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../fixtures/pageTest";
+import { faker } from "@faker-js/faker";
 
 test.skip("Setup", async ({ page }) => {
-  await page.goto("/setup/create-account");
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/setup/create-account");
+  });
 
   if (page.url() === "/setup/create-account") {
-    const siteTitle = page.locator("input[placeholder='My awesome site']");
-    await siteTitle.fill("LogChimp");
+    const ownerAccountForm = page.getByTestId("owner-account-form");
 
-    const fullName = page.locator("input[placeholder='Mike M. Smit']");
+    const siteTitle = ownerAccountForm.getByPlaceholder("My awesome site");
+    const newSiteName = faker.company.name();
+    await siteTitle.fill(newSiteName);
+
+    const fullName = ownerAccountForm.getByPlaceholder("Mike M. Smit");
     await fullName.fill("e2e Admin");
 
-    const email = page.locator("input[placeholder='Eg. email@example.com']");
+    const email = ownerAccountForm.getByPlaceholder("Eg. email@example.com");
     await email.fill("e2e@logchimp.com");
 
-    const password = page.locator("input[placeholder='At least 10 character']");
+    const password = ownerAccountForm.getByPlaceholder("At least 10 character");
     await password.fill("password");
 
-    await page.locator("text= Create account ").click();
+    const createAccountButton = ownerAccountForm.getByRole("button", {
+      name: "Create account",
+    });
+    await createAccountButton.click();
     await page.waitForLoadState("networkidle");
 
     await page.locator('a[href="/dashboard"]:has-text("skip")').click();
