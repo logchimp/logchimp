@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WEB_URL: "http://localhost:3000"
+      API_URL: "http://localhost:8000"
 
     steps:
     - uses: actions/checkout@v4
@@ -40,7 +41,7 @@ jobs:
         LOGCHIMP_MACHINE_SIGNATURE: xxx-xxx-xxx-xxx-xxx
 
         # Theme
-        LOGCHIMP_API_URL: "http://localhost:8000"
+        LOGCHIMP_API_URL: ${{ env.API_URL }}
 
     - name: Wait for frontend
       run: npx wait-on http://localhost:3000
@@ -52,6 +53,7 @@ jobs:
       run: pnpm --filter @logchimp/e2e exec playwright test
       env:
         BASE_URL: ${{ env.WEB_URL }}
+        LOGCHIMP_API_URL: ${{ env.API_URL }}
         LOGCHIMP_OWNER_EMAIL: "owner@example.com"
         CI_BRANCH_NAME: ${{ github.ref_name }}
 

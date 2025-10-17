@@ -13,7 +13,10 @@ export const test = baseTest.extend({
     );
 
     if (!fs.existsSync(fileName)) {
-      const requestContext = await request.newContext();
+      const requestContext = await request.newContext({
+        // custom base URL used for executing API calls and fallback to web base URL
+        baseURL: process.env.LOGCHIMP_API_URL || baseURL,
+      });
       const res = await userSignup({
         requestContext,
         baseURL,
