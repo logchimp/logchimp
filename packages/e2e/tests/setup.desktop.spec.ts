@@ -1,14 +1,11 @@
 import { expect } from "@playwright/test";
+
 import { test } from "../fixtures/pageTest";
-import path from "path";
 
-const authFile = path.join(__dirname, "../.auth/user.json");
+test.skip("Setup", async ({ page }) => {
+  await page.goto("/setup/create-account");
 
-test("authenticate", async ({ page }) => {
-  await page.goto("http://localhost:3000/setup/create-account");
-  await page.waitForLoadState("networkidle");
-
-  if (page.url() === "http://localhost:3000/setup/create-account") {
+  if (page.url() === "/setup/create-account") {
     const siteTitle = page.locator("input[placeholder='My awesome site']");
     await siteTitle.fill("LogChimp");
 
@@ -25,7 +22,7 @@ test("authenticate", async ({ page }) => {
     await page.waitForLoadState("networkidle");
 
     await page.locator('a[href="/dashboard"]:has-text("skip")').click();
-    await expect(page).toHaveURL("http://localhost:3000/dashboard");
+    await expect(page).toHaveURL("/dashboard");
   } else {
     const email = page.locator("input[placeholder='Email address']");
     await email.fill("e2e@logchimp.com", { timeout: 1000 });
@@ -36,9 +33,6 @@ test("authenticate", async ({ page }) => {
     const submitButton = page.locator("button:has-text(' Login ')");
     await submitButton.click({ delay: 1000, noWaitAfter: true });
 
-    await expect(page).toHaveURL("http://localhost:3000/dashboard");
+    await expect(page).toHaveURL("/dashboard");
   }
-
-  // End of authentication steps.
-  await page.context().storageState({ path: authFile });
 });

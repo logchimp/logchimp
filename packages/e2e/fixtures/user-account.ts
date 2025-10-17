@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import type { IAuthUser } from "@logchimp/types";
+import type { IAuthSignupResponseBody, IAuthUser } from "@logchimp/types";
 import { request, test as baseTest } from "@playwright/test";
 
 import { userSignup } from "../helpers/api";
@@ -14,10 +14,13 @@ export const test = baseTest.extend({
 
     if (!fs.existsSync(fileName)) {
       const requestContext = await request.newContext();
-      const { user } = await userSignup({
+      const res = await userSignup({
         requestContext,
         baseURL,
       });
+      const body = (await res.json()) as IAuthSignupResponseBody;
+      console.log('user account -> body:');
+      console.log(body);
 
       const context = await browser.newContext();
       const page = await context.newPage();
@@ -25,8 +28,8 @@ export const test = baseTest.extend({
 
       // Store the auth token in localStorage (or use cookies/sessionStorage based on your app)
       await page.evaluate((payload: IAuthUser) => {
-        localStorage.setItem('user', JSON.stringify(payload));
-      }, user);
+        localStorage.setItem("user", JSON.stringify(payload));
+      }, body.user);
 
       await context.storageState({ path: fileName });
       await requestContext.dispose();

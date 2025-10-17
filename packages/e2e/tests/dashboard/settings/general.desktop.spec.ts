@@ -1,0 +1,177 @@
+import { expect, type Page } from "@playwright/test";
+import { faker } from "@faker-js/faker";
+
+import { test } from "../../../fixtures/owner-account";
+import { SITE_NAME } from "../../../helpers/constants";
+
+async function saveButton(page: Page) {
+  await page.getByRole("button", { name: "Save" }).click();
+}
+
+async function resetSiteSettings(page: Page) {
+  // Site name
+  const siteNameInput = page.getByPlaceholder("Enter site name");
+  await siteNameInput.fill(SITE_NAME);
+
+  // Logo
+  const logoInput = page.getByTestId("logo-url");
+  await logoInput.fill(
+    "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
+  );
+
+  // Description
+  const descriptionInput = page.getByPlaceholder("Site description");
+  await descriptionInput.clear();
+
+  // Allow signups
+  const allowSignupComponent = page.getByTestId("allow-signup");
+  const allowSignupToggle = allowSignupComponent.locator(
+    'button[data-test="toggle"]',
+  );
+  const allowSignupIsEnabled =
+    await allowSignupToggle.getAttribute("aria-checked");
+  if (allowSignupIsEnabled === "false") {
+    await allowSignupToggle.click();
+  }
+
+  // Developer mode
+  const developerModeComponent = page.getByTestId("developer-mode");
+  const developerModeToggle = developerModeComponent.locator(
+    'button[data-test="toggle"]',
+  );
+  const developerModeIsEnabled =
+    await developerModeToggle.getAttribute("aria-checked");
+  if (developerModeIsEnabled === "true") {
+    await allowSignupToggle.click();
+  }
+
+  await saveButton(page);
+}
+
+test.describe
+  .serial("Dashboard Settings > General", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto("/dashboard/settings/general");
+    });
+
+    test.describe("Site name", () => {
+      // test.skip("should display error for empty site name", async ({ page }) => {
+      //   const siteNameInput = page.locator(
+      //     "input[placeholder='Enter site name']",
+      //   );
+      //   // const oldSiteName = await siteNameInput.inputValue();
+      //
+      //   await siteNameInput.clear();
+      //   await saveButton(page)
+      //   await page.getByRole("button", { name: "Save" }).click();
+      //
+      //   // const newSiteName = await page.getByTestId("site-name");
+      //
+      //   await expect(siteNameInput).toContainClass("input-error");
+      //   // Bug [https://github.com/logchimp/logchimp/issues/1312]
+      //   // await expect(newSiteName).toHaveText(oldSiteName);
+      //
+      //   await siteNameInput.fill("LogChimp");
+      //   await resetSiteSettings(page);
+      // });
+
+      test("should change Site Name", async ({ page }) => {
+        const siteNameInput = page.getByPlaceholder("Enter site name");
+
+        const newSiteName = faker.company.name();
+        await siteNameInput.fill(newSiteName);
+
+        await saveButton(page);
+
+        await page.reload();
+        await page.waitForSelector("body[data-v-app]");
+        expect(await siteNameInput.inputValue()).toEqual(newSiteName);
+
+        await resetSiteSettings(page);
+      });
+    });
+
+    test("should update 'Description'", async ({ page }) => {
+      const input = page.getByPlaceholder("Site description");
+
+      const fakerDescription = faker.company.buzzPhrase();
+      await input.fill(fakerDescription);
+      await saveButton(page);
+
+      await page.reload();
+      await page.waitForSelector("body[data-v-app]");
+      expect(await input.inputValue()).toEqual(fakerDescription);
+
+      await resetSiteSettings(page);
+    });
+
+    test("should update logo url", async ({ page }) => {
+      const logoInput = page.getByTestId("logo-url");
+
+      const fakerImage = faker.image.avatar();
+      await logoInput.fill(fakerImage);
+      await saveButton(page);
+
+      // TODO: should check the logo update in:
+      // - dashboard sidebar
+      // - public homepage header
+
+      await page.reload();
+      await page.waitForSelector("body[data-v-app]");
+      expect(await logoInput.inputValue()).toEqual(fakerImage);
+
+      await resetSiteSettings(page);
+    });
+
+    test("should toggle 'Allow signups'", async ({ page }) => {
+      const allowSignupComponent = page.getByTestId("allow-signup");
+      const allowSignupToggle = allowSignupComponent.locator(
+        'button[data-test="toggle"]',
+      );
+
+      const isEnabled = await allowSignupToggle.getAttribute("aria-checked");
+      expect(isEnabled).toEqual("true");
+
+      await allowSignupToggle.click();
+      expect(isEnabled).toEqual("false");
+      await saveButton(page);
+
+      await page.reload();
+      await page.waitForSelector("body[data-v-app]");
+      expect(isEnabled).toEqual("false");
+
+      await resetSiteSettings(page);
+    });
+
+    // test.skip("should update 'Google Analytics'", async ({ page }) => {
+    //   const input = page.locator("input[placeholder='UA-12345678-0']");
+    //   const new_analytics = faker.string.nanoid();
+    //
+    //   await input.fill(new_analytics);
+    //   await page.getByRole("button", { name: "Save" }).click();
+    //
+    //   await page.reload();
+    //   await page.waitForSelector("body[data-v-app]");
+    //   await expect(input).toHaveValue(new_analytics);
+    // });
+
+    test("should toggle 'Developer mode'", async ({ page }) => {
+      const developerModeComponent = page.getByTestId("developer-mode");
+      const developerModeToggle = developerModeComponent.locator(
+        'button[data-test="toggle"]',
+      );
+
+      const isEnabled = developerModeToggle.getAttribute("aria-checked");
+      expect(isEnabled).toEqual("false");
+
+      await developerModeToggle.click();
+      expect(isEnabled).toEqual("true");
+      await saveButton(page);
+
+      await page.reload();
+      await page.waitForSelector("body[data-v-app]");
+      expect(isEnabled).toEqual("true");
+
+      await resetSiteSettings(page);
+    });
+  });

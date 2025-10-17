@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 
 import { test } from "../fixtures/user-account";
 
-test.describe("Settings", (): void => {
+test.describe("Settings", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/settings");
   })
@@ -13,7 +13,7 @@ test.describe("Settings", (): void => {
     await expect(heading).toHaveText("Account settings");
   })
 
-  // test.describe("Email verification", (): void => {
+  // test.describe("Email verification", () => {
   //   test.skip("should display 'Email verification' alert for un-verified users", async () => {});
   //   test.skip("should show success status after clicking 'Resend' button", async () => {});
   //   // BTW, we can test this case by intercepting the API request

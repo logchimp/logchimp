@@ -1,12 +1,12 @@
 import { expect } from "@playwright/test";
 import { test } from "../fixtures/pageTest";
 
-test.describe("Signup", (): void => {
+test.describe("Signup", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/join");
   });
 
-  test.describe("Header", (): void => {
+  test.describe("Header", () => {
     test("should display LogChimp branding", async ({ page }) => {
       const siteBranding = page.getByTestId("site-branding");
       expect(siteBranding).toBeDefined();
@@ -30,7 +30,7 @@ test.describe("Signup", (): void => {
     test.skip("should display heading 'Create your account!'", async () => {});
   });
 
-  test.describe("Footer", (): void => {
+  test.describe("Footer", () => {
     test("should have link to login page", async ({ page }) => {
       const signUpLink = page.getByRole("link", { name: "Log in" });
 
@@ -39,7 +39,7 @@ test.describe("Signup", (): void => {
     });
   });
 
-  test.describe("Form", (): void => {
+  test.describe("Form", () => {
     test("should render sign-up form", async ({ page }) => {
       const form = page.getByTestId("signup-form");
       await expect(form).toBeVisible();

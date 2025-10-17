@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test";
 import { test } from "../fixtures/pageTest";
 
-test.describe("Homepage", (): void => {
-  test.describe("Header", (): void => {
+test.describe("Homepage", () => {
+  test.describe("Header", () => {
     test("should display LogChimp branding", async ({ page }) => {
       const header = page.getByTestId("header");
 
