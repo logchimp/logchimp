@@ -1,6 +1,10 @@
 import * as path from "path";
 import * as fs from "fs";
-import type { IAuthLoginResponseBody, IAuthSignupResponseBody, IAuthUser } from "@logchimp/types";
+import type {
+  IAuthLoginResponseBody,
+  IAuthSignupResponseBody,
+  IAuthUser,
+} from "@logchimp/types";
 import { request, test as baseTest } from "@playwright/test";
 
 import { userLogin, userSignup } from "../helpers/api";
@@ -52,7 +56,11 @@ export const test = baseTest.extend({
       } catch (_e) {}
 
       // Case 1: Owner account created
-      if (res.status() === 201 && body && (body as IAuthSignupResponseBody).user) {
+      if (
+        res.status() === 201 &&
+        body &&
+        (body as IAuthSignupResponseBody).user
+      ) {
         const { user } = body as IAuthSignupResponseBody;
         await writeStorageWithUser(user);
       } else if (body && body.code === "SETUP_COMPLETED") {
