@@ -5,7 +5,7 @@
     <div v-for="i in 3" :key="i" class="flex flex-col gap-2.5 animate-pulse">
       <header class="flex items-center gap-x-1.5">
         <div class="size-2.5 rounded-full bg-(--color-gray-95)"></div>
-        <div class="h-3 w-24 bg-gray-300 rounded"></div>
+        <div class="h-3 w-24 bg-(--color-gray-95) rounded"></div>
       </header>
       <div class="rounded-md bg-gray-300 p-3 flex-grow space-y-2">
         <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
