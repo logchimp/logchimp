@@ -7,7 +7,7 @@
         <div class="size-2.5 rounded-full bg-(--color-gray-95)"></div>
         <div class="h-3 w-24 bg-(--color-gray-95) rounded"></div>
       </header>
-      <div class="rounded-md bg-gray-300 p-3 flex-grow space-y-2">
+      <div class="rounded-md bg-(--color-gray-95) p-3 flex-grow min-h-0 overflow-y-auto">
         <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
         <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
         <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
