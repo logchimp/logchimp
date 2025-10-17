@@ -24,6 +24,7 @@ export async function userSignup({
   password: _password,
   isOwner,
 }: UserSignupOptions): Promise<APIResponse> {
+  console.log('userSignup base url:', baseURL)
   const email = _email || faker.internet.email();
   const password = _password || "password";
 
@@ -52,6 +53,7 @@ export async function userLogin({
   email,
   password,
 }: UserLoginOptions): Promise<APIResponse> {
+  console.log('userLogin base url:', baseURL)
   return await requestContext.post(`${baseURL}/api/v1/auth/login`, {
     data: {
       email,

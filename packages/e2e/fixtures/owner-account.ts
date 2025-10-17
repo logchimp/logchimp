@@ -43,10 +43,13 @@ export const test = baseTest.extend({
     }
 
     if (!fs.existsSync(fileName)) {
+      console.log("owner account");
+
       const requestContext = await request.newContext({
         // custom base URL used for executing API calls and fallback to web base URL
         baseURL: process.env.LOGCHIMP_API_URL || baseURL,
       });
+      console.log('request url:', process.env.LOGCHIMP_API_URL || baseURL)
       const emailEnv = (process.env.LOGCHIMP_OWNER_EMAIL || "").trim();
 
       const res = await userSignup({
@@ -55,6 +58,8 @@ export const test = baseTest.extend({
         isOwner: true,
         email: emailEnv,
       });
+      console.log("res status:", res.status());
+
 
       let body: IAuthSignupResponseBody | IApiErrorResponse;
       try {
