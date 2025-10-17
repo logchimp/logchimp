@@ -8,10 +8,10 @@
         <div class="h-3 w-24 bg-(--color-gray-95) rounded"></div>
       </header>
       <div class="rounded-md bg-(--color-gray-95) p-3 flex-grow min-h-0 overflow-y-auto">
-        <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
-        <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
-        <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
-        <div class="h-25 w-full mb-3 bg-(--color-white) rounded"></div>
+        <div class="h-24 w-full mb-3 bg-white rounded"></div>
+        <div class="h-24 w-full mb-3 bg-white rounded"></div>
+        <div class="h-24 w-full mb-3 bg-white rounded"></div>
+        <div class="h-24 w-full mb-3 bg-white rounded"></div>
       </div>
     </div>
   </div>
