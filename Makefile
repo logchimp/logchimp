@@ -29,5 +29,6 @@ playwright-ui:
 		pnpm_cmd="pkgx +nodejs.org@22 +pnpm.io pnpm"; \
 	fi && \
 	LOGCHIMP_OWNER_EMAIL="owner@example.com" \
+	LOGCHIMP_API_URL="http://localhost:8000" \
 	BASE_URL="http://localhost:3000" \
 	$$pnpm_cmd playwright test --ui

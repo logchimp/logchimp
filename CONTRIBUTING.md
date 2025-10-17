@@ -10,10 +10,13 @@ The repository is a monorepo, with backend APIs and frontend in a single reposit
 
 ```
 packages
+ ├── e2e
  ├── server
  ├── theme
  └── types
 ```
+
+Contributing guide for E2E docs can be read [here](packages/e2e/README.md).
 
 ## Getting Started
 
@@ -39,7 +42,8 @@ Run this command from the root directory.
 
 ```shell
 cp ./packages/server/.env.example ./packages/server/.env; \
-  cp ./packages/theme/.env.example ./packages/theme/.env
+  cp ./packages/theme/.env.example ./packages/theme/.env; \
+  cp ./packages/e2e/.env.example ./packages/e2e/.env
 ```
 
 3. Build the LogChimp Types package
