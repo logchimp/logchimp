@@ -1,4 +1,7 @@
 <template>
+   <!-- Show skeleton while loading -->
+  <roadmap-skeleton v-if="loading" />
+
   <!-- Show roadmaps grid only when we have roadmaps -->
   <div
     v-if="roadmaps.length > 0"
@@ -13,6 +16,13 @@
       :key="roadmap.id"
       :roadmap="roadmap"
     />
+
+    <div
+      v-if="scrollLoading"
+      class="flex items-center justify-center"
+    >
+      <roadmap-skeleton />
+    </div>
   </div>
 </template>
 
@@ -28,6 +38,7 @@ import { useSettingStore } from "../store/settings";
 
 // components
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
+import RoadmapSkeleton from "../ee/components/roadmap/RoadmapSkeleton.vue";
 
 const { get: siteSettings } = useSettingStore();
 
@@ -36,8 +47,14 @@ const roadmaps = ref<IRoadmap[]>([]);
 const endCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
 
-async function getRoadmaps(after: string | undefined) {
+const loading = ref(true); // for initial load
+const scrollLoading = ref(false); // for infinite scroll load
+
+async function getRoadmaps(after: string | undefined, isScroll = false) {
   try {
+    if (isScroll) scrollLoading.value = true;
+    else loading.value = true;
+
     const response = await getAllRoadmaps({
       first: "4",
       after: after == null ? undefined : after,
@@ -54,19 +71,20 @@ async function getRoadmaps(after: string | undefined) {
     hasNextPage.value = paginatedData.page_info.has_next_page;
   } catch (err) {
     console.error("Error fetching roadmaps:", err);
+  } finally {
+    loading.value = false;
+    scrollLoading.value = false;
   }
 }
 
 useInfiniteScroll(
   roadmapElement,
   async () => {
-    getRoadmaps(endCursor.value);
+    getRoadmaps(endCursor.value, true);
   },
   {
     direction: "right",
-    canLoadMore: () => {
-      return hasNextPage.value;
-    },
+    canLoadMore: () => hasNextPage.value && !scrollLoading.value,
   },
 );
 
