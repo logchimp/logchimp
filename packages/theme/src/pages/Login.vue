@@ -1,10 +1,13 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">
+    <div class="flex flex-col items-center mb-8">
+      <site-branding
+        :title="siteSettings.title"
+        :logo="siteSettings.logo"
+      />
+      <h1 class="text-3xl font-normal text-center mt-4 mb-0">
         Welcome back!
-      </h3>
+      </h1>
     </div>
 
     <form class="card" data-testid="login-form" @submit.prevent="login">
@@ -40,7 +43,7 @@
       </div>
     </form>
 
-    <footer class="auth-form-other">
+    <AuthFormHelperText>
       <router-link to="/password-reset">
         Forgot password?
       </router-link>
@@ -50,7 +53,7 @@
           Sign up
         </router-link>
       </div>
-    </footer>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -68,6 +71,7 @@ import { useUserStore } from "../store/user";
 
 // component
 import AuthForm from "../layout/AuthForm.vue";
+import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";

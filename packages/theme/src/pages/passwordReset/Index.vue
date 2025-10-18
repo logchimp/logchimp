@@ -1,9 +1,15 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">Forgot password</h3>
+    <div class="flex flex-col items-center mb-8">
+      <site-branding
+        :title="siteSettings.title"
+        :logo="siteSettings.logo"
+      />
+      <h1 class="text-3xl font-normal text-center mt-4 mb-0">
+        Forgot password
+      </h1>
     </div>
+
     <server-error v-if="serverError" @close="serverError = false" />
     <div v-if="!hideForm" class="card">
       <l-text
@@ -30,12 +36,12 @@
     <div v-if="requestError" class="card">
       <p>Something went wrong!</p>
     </div>
-    <div v-if="siteSettings.allowSignup" class="auth-form-other">
+    <AuthFormHelperText v-if="siteSettings.allowSignup">
       Don't have an account yet?
       <router-link to="/join">
         Sign up
       </router-link>
-    </div>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -49,6 +55,7 @@ import { useSettingStore } from "../../store/settings";
 
 // component
 import AuthForm from "../../layout/AuthForm.vue";
+import AuthFormHelperText from "../../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
 import LText from "../../components/ui/input/LText.vue";

@@ -1,7 +1,10 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
+    <div class="flex flex-col items-center mb-8">
+      <site-branding
+        :title="siteSettings.title"
+        :logo="siteSettings.logo"
+      />
     </div>
 
     <!-- Success -->
@@ -14,9 +17,9 @@
         </p>
       </div>
 
-      <div class="auth-form-other">
+      <AuthFormHelperText>
         You may close this window.
-      </div>
+      </AuthFormHelperText>
     </template>
 
     <!-- Error -->
@@ -46,6 +49,7 @@ import { verifyUserEmail } from "../modules/auth";
 
 // components
 import AuthForm from "../layout/AuthForm.vue";
+import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import LoaderContainer from "../components/ui/LoaderContainer.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";
 

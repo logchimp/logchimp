@@ -1,10 +1,13 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">
+    <div class="flex flex-col items-center mb-8">
+      <site-branding
+        :title="siteSettings.title"
+        :logo="siteSettings.logo"
+      />
+      <h1 class="text-3xl font-normal text-center mt-4 mb-0">
         Create your account
-      </h3>
+      </h1>
     </div>
 
     <server-error v-if="serverError" @close="serverError = false" />
@@ -43,12 +46,12 @@
       </div>
     </form>
 
-    <footer class="auth-form-other">
+    <AuthFormHelperText>
       Already have an account?
       <router-link to="/login">
         Log in
       </router-link>
-    </footer>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -65,6 +68,7 @@ import { useUserStore } from "../store/user";
 
 // component
 import AuthForm from "../layout/AuthForm.vue";
+import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
