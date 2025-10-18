@@ -193,8 +193,8 @@ importers:
         specifier: 1.11.18
         version: 1.11.18
       lucide-vue:
-        specifier: npm:lucide-vue-next@0.544.0
-        version: lucide-vue-next@0.544.0(vue@3.5.22(typescript@5.9.3))
+        specifier: npm:lucide-vue-next@0.546.0
+        version: lucide-vue-next@0.546.0(vue@3.5.22(typescript@5.9.3))
       pinia:
         specifier: 2.3.1
         version: 2.3.1(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
@@ -2318,8 +2318,8 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lucide-vue-next@0.544.0:
-    resolution: {integrity: sha512-mDp/AdGOPIDkpFHnFiTWgQgCST9aBXHVaiobZfOMIvv7nrOukzF/TP+7KoOwrngdWRaH9TMiepMBIX1vsgKJ3g==}
+  lucide-vue-next@0.546.0:
+    resolution: {integrity: sha512-Ra4lNbm0m9uSb82ZBMCUg3c2xQ4qaU9b87fAFvFPoLC0/u7JxG5FJjhUFqfNfofk1xdZiDpF6EnCbaxTHXzLcw==}
     peerDependencies:
       vue: '>=3.0.1'
 
@@ -5667,7 +5667,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lucide-vue-next@0.544.0(vue@3.5.22(typescript@5.9.3)):
+  lucide-vue-next@0.546.0(vue@3.5.22(typescript@5.9.3)):
     dependencies:
       vue: 3.5.22(typescript@5.9.3)
 
