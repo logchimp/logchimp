@@ -9,11 +9,3 @@ defineOptions({
   name: "AuthFormLayout",
 });
 </script>
-
-<style lang='sass'>
-.auth-form-other
-	font-size: 0.8rem
-	text-align: center
-	color: var(--color-gray-60)
-	margin-top: 1.5rem
-</style>

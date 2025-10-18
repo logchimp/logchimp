@@ -32,9 +32,9 @@
       </div>
     </div>
 
-    <div class="auth-form-other">
+    <AuthFormHelperText>
       You can <router-link to="/dashboard">skip</router-link> and create one later.
-    </div>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -50,6 +50,7 @@ import { createBoard } from "../../ee/modules/boards";
 
 // components
 import AuthForm from "../../layout/AuthForm.vue";
+import AuthFormHelperText from "../../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";

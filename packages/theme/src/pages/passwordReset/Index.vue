@@ -36,12 +36,12 @@
     <div v-if="requestError" class="card">
       <p>Something went wrong!</p>
     </div>
-    <div v-if="siteSettings.allowSignup" class="auth-form-other">
+    <AuthFormHelperText v-if="siteSettings.allowSignup">
       Don't have an account yet?
       <router-link to="/join">
         Sign up
       </router-link>
-    </div>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -55,6 +55,7 @@ import { useSettingStore } from "../../store/settings";
 
 // component
 import AuthForm from "../../layout/AuthForm.vue";
+import AuthFormHelperText from "../../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
 import LText from "../../components/ui/input/LText.vue";

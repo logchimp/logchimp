@@ -43,7 +43,7 @@
       </div>
     </form>
 
-    <footer class="auth-form-other">
+    <AuthFormHelperText>
       <router-link to="/password-reset">
         Forgot password?
       </router-link>
@@ -53,7 +53,7 @@
           Sign up
         </router-link>
       </div>
-    </footer>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -71,6 +71,7 @@ import { useUserStore } from "../store/user";
 
 // component
 import AuthForm from "../layout/AuthForm.vue";
+import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
 import SiteBranding from "../components/site/SiteBranding.vue";
