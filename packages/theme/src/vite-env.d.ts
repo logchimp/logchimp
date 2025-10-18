@@ -13,6 +13,7 @@ interface RuntimeEnv {
   readonly VITE_IS_SELF_HOSTED: string | undefined;
   readonly VITE_LOGCHIMP_VERSION: string | undefined;
   readonly VITE_SHOW_TELEMETRY_FORM: string | undefined;
+  readonly VITE_SHOW_LANGUAGE_DROPDOWN: string | undefined;
 }
 
 interface Window {
