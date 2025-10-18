@@ -32,10 +32,9 @@ test.describe
       await descriptionInput.clear();
 
       // Allow signups
-      const allowSignupComponent = page.getByTestId("allow-signup");
-      const allowSignupToggle = allowSignupComponent.locator(
-        'button[data-test="toggle"]',
-      );
+      const allowSignupToggle = page
+        .getByTestId("allow-signup")
+        .locator('button[data-test="toggle"]');
       const allowSignupIsEnabled =
         await allowSignupToggle.getAttribute("aria-checked");
       if (allowSignupIsEnabled === "false") {
@@ -43,10 +42,9 @@ test.describe
       }
 
       // Developer mode
-      const developerModeComponent = page.getByTestId("developer-mode");
-      const developerModeToggle = developerModeComponent.locator(
-        'button[data-test="toggle"]',
-      );
+      const developerModeToggle = page
+        .getByTestId("developer-mode")
+        .locator('button[data-test="toggle"]');
       const developerModeIsEnabled =
         await developerModeToggle.getAttribute("aria-checked");
       if (developerModeIsEnabled === "true") {
@@ -119,26 +117,22 @@ test.describe
     });
 
     test("should toggle 'Allow signups'", async ({ page }) => {
-      const allowSignupComponent = page.getByTestId("allow-signup");
-      const allowSignupToggle = allowSignupComponent.locator(
-        'button[data-test="toggle"]',
-      );
+      const allowSignupToggle = page
+        .getByTestId("allow-signup")
+        .locator('button[data-test="toggle"]');
 
-      expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
-        "true",
-      );
+      await expect(allowSignupToggle).toHaveAttribute("aria-checked", "true");
 
       await allowSignupToggle.click();
-      expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
-        "false",
-      );
+      await expect(allowSignupToggle).toHaveAttribute("aria-checked", "false");
+
       await saveButton(page);
 
       await page.reload();
-      await page.waitForSelector("body[data-v-app]");
-      expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
-        "false",
-      );
+      const toggleAfterReload = page
+        .getByTestId("allow-signup")
+        .locator('button[data-test="toggle"]');
+      await expect(toggleAfterReload).toHaveAttribute("aria-checked", "false");
     });
 
     // test.skip("should update 'Google Analytics'", async ({ page }) => {
@@ -154,25 +148,23 @@ test.describe
     // });
 
     test("should toggle 'Developer mode'", async ({ page }) => {
-      const developerModeComponent = page.getByTestId("developer-mode");
-      const developerModeToggle = developerModeComponent.locator(
-        'button[data-test="toggle"]',
-      );
+      const developerModeToggle = page
+        .getByTestId("developer-mode")
+        .locator('button[data-test="toggle"]');
 
-      expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
+      await expect(developerModeToggle).toHaveAttribute(
+        "aria-checked",
         "false",
       );
 
       await developerModeToggle.click();
-      expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
-        "true",
-      );
+      await expect(developerModeToggle).toHaveAttribute("aria-checked", "true");
       await saveButton(page);
 
       await page.reload();
-      await page.waitForSelector("body[data-v-app]");
-      expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
-        "true",
-      );
+      const developerModeReload = page
+        .getByTestId("developer-mode")
+        .locator('button[data-test="toggle"]');
+      await expect(developerModeReload).toHaveAttribute("aria-checked", "true");
     });
   });
