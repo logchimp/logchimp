@@ -1,5 +1,5 @@
 <template>
-  <DropdownV2>
+  <DropdownV2 v-if="showLanguageDropdown">
     <template #trigger>
       <DropdownMenuTrigger>
         <button type="button" class="px-3 py-1 text-sm bg-white text-black rounded-lg ">
@@ -49,4 +49,8 @@ const currentLanguageLabel = computed(() => {
 const setLanguage = (lang: string) => {
   locale.value = lang;
 };
+
+const showLanguageDropdown = computed(
+  () => import.meta.env.VITE_SHOW_LANGUAGE_DROPDOWN === "true",
+);
 </script>
