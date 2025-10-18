@@ -46,12 +46,12 @@
       </div>
     </form>
 
-    <footer class="auth-form-other">
+    <AuthFormHelperText>
       Already have an account?
       <router-link to="/login">
         Log in
       </router-link>
-    </footer>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -68,6 +68,7 @@ import { useUserStore } from "../store/user";
 
 // component
 import AuthForm from "../layout/AuthForm.vue";
+import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
