@@ -1,5 +1,5 @@
 <template>
-  <DropdownMenuRoot class="p-1">
+  <DropdownMenuRoot>
     <slot name="trigger" />
 
     <DropdownMenuPortal>
