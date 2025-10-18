@@ -124,19 +124,11 @@ test.describe
         'button[data-test="toggle"]',
       );
 
-      console.log(
-        "first check:",
-        await allowSignupToggle.getAttribute("aria-checked"),
-      );
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "true",
       );
 
       await allowSignupToggle.click();
-      console.log(
-        "second check:",
-        await allowSignupToggle.getAttribute("aria-checked"),
-      );
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "false",
       );
@@ -144,10 +136,6 @@ test.describe
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
-      console.log(
-        "third check:",
-        await allowSignupToggle.getAttribute("aria-checked"),
-      );
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "false",
       );
