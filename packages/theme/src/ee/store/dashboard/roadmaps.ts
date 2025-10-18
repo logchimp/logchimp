@@ -11,7 +11,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
 
   const hasNextPage = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
-  const error = ref<unknown>(undefined);
+  const error = ref<unknown>(undefined); 
 
   const currentCursor = ref<string>();
 

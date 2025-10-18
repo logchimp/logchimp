@@ -4,7 +4,6 @@ import type {
   TFilterBoardRequestQuery,
   IFilterBoardResponseBody,
 } from "@logchimp/types";
-import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
@@ -14,6 +13,7 @@ import {
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../helpers";
+import { getBoards, getBoardMetaData } from "../../../services/boards/getBoards";
 
 type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
 
@@ -21,34 +21,69 @@ export async function filter(
   req: Request<unknown, unknown, unknown, TFilterBoardRequestQuery>,
   res: Response<ResponseBody>,
 ) {
-  const created = req.query.created;
+
+  if (req.query?.page) {
+    logger.warn(
+      "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
+    );
+  }
+
+  const created = req.query.created?.toUpperCase() === "ASC" ? "ASC" : "DESC";
   const limit = parseAndValidateLimit(
     req.query?.limit,
     GET_BOARDS_FILTER_COUNT,
   );
   const page = parseAndValidatePage(req.query?.page);
 
-  try {
-    const boards = await database
-      .select(
-        "boards.boardId",
-        "boards.name",
-        "boards.color",
-        "boards.url",
-        "boards.createdAt",
-      )
-      .count("posts", { as: "post_count" })
-      .from("boards")
-      .leftJoin("posts", "boards.boardId", "posts.boardId")
-      .where({
-        display: true,
-      })
-      .groupBy("boards.boardId")
-      .orderBy("boards.createdAt", created)
-      .limit(limit)
-      .offset(limit * (page - 1));
+  const after = req.query?.after;
 
-    res.status(200).send({ boards });
+  try {
+
+    const boards = await getBoards({ limit, page, after, created });
+    const boardsLength = boards.length;
+
+    let startCursor: string | null = null;
+    let endCursor: string | null = null;
+
+    if (boardsLength > 0) {
+      startCursor = boardsLength > 0 ? String(boards[0].boardId) : null;
+      endCursor = boardsLength > 0 ? String(boards[boardsLength - 1].boardId) : null;
+    }
+
+    let totalCount: number | null = null;
+    let hasNextPage = false;
+    let currentPage = 1;
+
+    const boardsMetaData = await getBoardMetaData({ after });
+    totalCount = boardsMetaData.totalBoardsCount;
+    const remainingBoardsCount = boardsMetaData.remainingBoardsCount;
+
+    if (after) {
+      hasNextPage = remainingBoardsCount - limit > 0;
+
+      const seenResults = totalCount - remainingBoardsCount;
+      currentPage = Math.floor(seenResults / limit) + 1;
+    } else {
+      const totalPages = Math.ceil(totalCount / limit);
+      currentPage = page || 1;
+      hasNextPage = currentPage < totalPages;
+    }
+    
+    res.status(200).send({
+      status: {
+        code: 200,
+        type: "success",
+      },
+      boards,
+      page_info: {
+        count: boardsLength,
+        current_page: currentPage,
+        has_next_page: hasNextPage,
+        end_cursor: endCursor,
+        start_cursor: startCursor,
+      }
+    })
+
   } catch (err) {
     logger.log({
       level: "error",
