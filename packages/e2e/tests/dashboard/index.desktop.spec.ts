@@ -10,7 +10,7 @@ userAccount(
     await page.goto("/dashboard");
 
     // Wait for any navigation to complete
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     const url = page.url();
     expect(url).not.toContain("/dashboard");

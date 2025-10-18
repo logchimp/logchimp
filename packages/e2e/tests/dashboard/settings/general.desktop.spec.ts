@@ -54,7 +54,7 @@ test.describe
       }
 
       await saveButton(page);
-    })
+    });
 
     test.describe("Site name", () => {
       // test.skip("should display error for empty site name", async ({ page }) => {
@@ -124,13 +124,19 @@ test.describe
         'button[data-test="toggle"]',
       );
 
-      console.log('first check:', await allowSignupToggle.getAttribute("aria-checked"));
+      console.log(
+        "first check:",
+        await allowSignupToggle.getAttribute("aria-checked"),
+      );
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "true",
       );
 
       await allowSignupToggle.click();
-      console.log('second check:', await allowSignupToggle.getAttribute("aria-checked"));
+      console.log(
+        "second check:",
+        await allowSignupToggle.getAttribute("aria-checked"),
+      );
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "false",
       );
@@ -138,7 +144,10 @@ test.describe
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
-      console.log('third check:', await allowSignupToggle.getAttribute("aria-checked"));
+      console.log(
+        "third check:",
+        await allowSignupToggle.getAttribute("aria-checked"),
+      );
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "false",
       );

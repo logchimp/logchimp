@@ -29,7 +29,7 @@ export async function userSignup({
 
   // custom base URL used for executing API calls and fallback to web base URL
   const baseURL = process.env.LOGCHIMP_API_URL || _baseURL;
-  console.log('userSignup base url:', baseURL)
+  console.log("userSignup base url:", baseURL);
 
   const url = isOwner
     ? `${baseURL}/api/v1/auth/setup`
@@ -58,7 +58,7 @@ export async function userLogin({
 }: UserLoginOptions): Promise<APIResponse> {
   // custom base URL used for executing API calls and fallback to web base URL
   const baseURL = process.env.LOGCHIMP_API_URL || _baseURL;
-  console.log('userSignup base url:', baseURL)
+  console.log("userSignup base url:", baseURL);
 
   return await requestContext.post(`${baseURL}/api/v1/auth/login`, {
     data: {
