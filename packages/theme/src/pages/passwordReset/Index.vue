@@ -1,9 +1,15 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">Forgot password</h3>
+    <div class="flex flex-col items-center mb-8">
+      <site-branding
+        :title="siteSettings.title"
+        :logo="siteSettings.logo"
+      />
+      <h1 class="text-3xl font-normal text-center mt-4 mb-0">
+        Forgot password
+      </h1>
     </div>
+
     <server-error v-if="serverError" @close="serverError = false" />
     <div v-if="!hideForm" class="card">
       <l-text
