@@ -1,0 +1,32 @@
+{
+  "navbar": {
+    "home": "Home",
+    "roadmaps": "Roadmaps",
+    "boards": "Boards"
+  },
+  "header": {
+    "login": "Login",
+    "createAccount": "Create an account"
+  },
+  "powerBy": {
+    "poweredByLogchimp": "Powered by LogChimp"
+  },
+  "topPublicBoards": {
+    "title": "Boards",
+    "viewAll": "View all boards",
+    "none": "No boards available"
+  },
+  "setupCard": {
+    "title": "Setup your LogChimp site",
+    "label": "Complete your LogChimp site setup to access dashboard.",
+    "cta": "Create owner account"
+  },
+  "setupWelcome": {
+    "heading": "Welcome to",
+    "label": "Let’s setup your LogChimp site to track user feedback for building better products.",
+    "cta": "Create owner account"
+  },
+  "setupCreateAccount": {
+    "heading": "Create an account"
+  }
+}
