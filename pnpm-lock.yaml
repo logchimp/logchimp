@@ -211,8 +211,8 @@ importers:
         specifier: 3.5.22
         version: 3.5.22(typescript@5.9.3)
       vue-gtag:
-        specifier: 3.5.2
-        version: 3.5.2(vue-router@4.5.1(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3))
+        specifier: 3.6.2
+        version: 3.6.2(vue-router@4.5.1(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3))
       vue-router:
         specifier: 4.5.1
         version: 4.5.1(vue@3.5.22(typescript@5.9.3))
@@ -3192,8 +3192,8 @@ packages:
       '@vue/composition-api':
         optional: true
 
-  vue-gtag@3.5.2:
-    resolution: {integrity: sha512-efTY4yrkNraFSu6CZqhFZLX5LggqCr44d6kcPnPPtzYhvu5ywrTFUnuvM2Vm238QC+YT43HkVEXV/L1OYnHvNg==}
+  vue-gtag@3.6.2:
+    resolution: {integrity: sha512-6uBjncUSVc5Jal/Bg11bnGYL9sezor+GlvcJoInK+DAhPDpHMh8D2S6IbHTSAsKSaUFSuCgFNWxxayFvYItcXg==}
     peerDependencies:
       vue: ^3.5.13
       vue-router: ^4.5.0
@@ -6497,7 +6497,7 @@ snapshots:
     dependencies:
       vue: 3.5.22(typescript@5.9.3)
 
-  vue-gtag@3.5.2(vue-router@4.5.1(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3)):
+  vue-gtag@3.6.2(vue-router@4.5.1(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3)):
     dependencies:
       vue: 3.5.22(typescript@5.9.3)
     optionalDependencies:
