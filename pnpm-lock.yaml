@@ -20,6 +20,12 @@ importers:
 
   packages/e2e:
     devDependencies:
+      '@faker-js/faker':
+        specifier: ^9.9.0
+        version: 9.9.0
+      '@logchimp/types':
+        specifier: workspace:*
+        version: link:../types
       '@playwright/test':
         specifier: ^1.55.0
         version: 1.56.0

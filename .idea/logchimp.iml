@@ -8,6 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/packages/theme/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/e2e/playwright-report" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/e2e/test-results" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
