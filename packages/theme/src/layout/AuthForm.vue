@@ -11,18 +11,6 @@ defineOptions({
 </script>
 
 <style lang='sass'>
-.auth-form-header
-	margin-bottom: 2rem
-	display: flex
-	flex-direction: column
-	align-items: center
-
-.auth-form-heading
-	font-weight: 400
-	text-align: center
-	margin-top: 1rem
-	margin-bottom: 0
-
 .auth-form-other
 	font-size: 0.8rem
 	text-align: center

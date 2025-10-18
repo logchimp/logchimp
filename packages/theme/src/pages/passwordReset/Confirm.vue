@@ -1,10 +1,16 @@
 <template>
   <auth-form>
     <div>
-      <div class="auth-form-header">
-        <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-        <h3 class="auth-form-heading">Set new password</h3>
+      <div class="flex flex-col items-center mb-8">
+        <site-branding
+          :title="siteSettings.title"
+          :logo="siteSettings.logo"
+        />
+        <h1 class="text-3xl font-normal text-center mt-4 mb-0">
+          Set new password
+        </h1>
       </div>
+
       <div v-if="validToken.success">
         <div v-if="!changePassword.success" class="card">
           <l-text
