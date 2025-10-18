@@ -21,7 +21,7 @@
     "dotenv": "^17.0.0",
     "express": "^4.17.1",
     "fs-extra": "^11.0.0",
-    "html-to-text": "^8.1.0",
+    "html-to-text": "^9.0.0",
     "iovalkey": "^0.3.3",
     "jsdom": "^20.0.3",
     "jsonwebtoken": "^9.0.0",
