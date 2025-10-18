@@ -12,49 +12,49 @@ async function saveButton(page: Page) {
   await button.click();
 }
 
-async function resetSiteSettings(page: Page) {
-  // Site name
-  const siteNameInput = page.getByPlaceholder("Enter site name");
-  await siteNameInput.fill(SITE_NAME);
-
-  // Logo
-  const logoInput = page.getByTestId("logo-url");
-  await logoInput.fill(SITE_LOGO_URL);
-
-  // Description
-  const descriptionInput = page.getByPlaceholder("Site description");
-  await descriptionInput.clear();
-
-  // Allow signups
-  const allowSignupComponent = page.getByTestId("allow-signup");
-  const allowSignupToggle = allowSignupComponent.locator(
-    'button[data-test="toggle"]',
-  );
-  const allowSignupIsEnabled =
-    await allowSignupToggle.getAttribute("aria-checked");
-  if (allowSignupIsEnabled === "false") {
-    await allowSignupToggle.click();
-  }
-
-  // Developer mode
-  const developerModeComponent = page.getByTestId("developer-mode");
-  const developerModeToggle = developerModeComponent.locator(
-    'button[data-test="toggle"]',
-  );
-  const developerModeIsEnabled =
-    await developerModeToggle.getAttribute("aria-checked");
-  if (developerModeIsEnabled === "true") {
-    await developerModeToggle.click();
-  }
-
-  await saveButton(page);
-}
-
 test.describe
   .serial("Dashboard Settings > General", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/dashboard/settings/general");
     });
+
+    test.afterEach(async ({ page }) => {
+      // Site name
+      const siteNameInput = page.getByPlaceholder("Enter site name");
+      await siteNameInput.fill(SITE_NAME);
+
+      // Logo
+      const logoInput = page.getByTestId("logo-url");
+      await logoInput.fill(SITE_LOGO_URL);
+
+      // Description
+      const descriptionInput = page.getByPlaceholder("Site description");
+      await descriptionInput.clear();
+
+      // Allow signups
+      const allowSignupComponent = page.getByTestId("allow-signup");
+      const allowSignupToggle = allowSignupComponent.locator(
+        'button[data-test="toggle"]',
+      );
+      const allowSignupIsEnabled =
+        await allowSignupToggle.getAttribute("aria-checked");
+      if (allowSignupIsEnabled === "false") {
+        await allowSignupToggle.click();
+      }
+
+      // Developer mode
+      const developerModeComponent = page.getByTestId("developer-mode");
+      const developerModeToggle = developerModeComponent.locator(
+        'button[data-test="toggle"]',
+      );
+      const developerModeIsEnabled =
+        await developerModeToggle.getAttribute("aria-checked");
+      if (developerModeIsEnabled === "true") {
+        await developerModeToggle.click();
+      }
+
+      await saveButton(page);
+    })
 
     test.describe("Site name", () => {
       // test.skip("should display error for empty site name", async ({ page }) => {
@@ -87,8 +87,6 @@ test.describe
 
         await page.reload();
         await expect(siteNameInput).toHaveValue(newSiteName);
-
-        await resetSiteSettings(page);
       });
     });
 
@@ -102,8 +100,6 @@ test.describe
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
       await expect(input).toHaveValue(fakerDescription);
-
-      await resetSiteSettings(page);
     });
 
     test("should update logo url", async ({ page }) => {
@@ -120,8 +116,6 @@ test.describe
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
       await expect(logoInput).toHaveValue(fakerImage);
-
-      await resetSiteSettings(page);
     });
 
     test("should toggle 'Allow signups'", async ({ page }) => {
@@ -130,11 +124,13 @@ test.describe
         'button[data-test="toggle"]',
       );
 
+      console.log('first check:', await allowSignupToggle.getAttribute("aria-checked"));
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "true",
       );
 
       await allowSignupToggle.click();
+      console.log('second check:', await allowSignupToggle.getAttribute("aria-checked"));
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "false",
       );
@@ -142,11 +138,10 @@ test.describe
 
       await page.reload();
       await page.waitForSelector("body[data-v-app]");
+      console.log('third check:', await allowSignupToggle.getAttribute("aria-checked"));
       expect(await allowSignupToggle.getAttribute("aria-checked")).toEqual(
         "false",
       );
-
-      await resetSiteSettings(page);
     });
 
     // test.skip("should update 'Google Analytics'", async ({ page }) => {
@@ -182,7 +177,5 @@ test.describe
       expect(await developerModeToggle.getAttribute("aria-checked")).toEqual(
         "true",
       );
-
-      await resetSiteSettings(page);
     });
   });

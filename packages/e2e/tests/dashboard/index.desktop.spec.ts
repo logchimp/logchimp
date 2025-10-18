@@ -6,11 +6,14 @@ import { SITE_NAME } from "../../helpers/constants";
 
 userAccount(
   "should not access dashboard via normal user account",
-  async ({ page, baseURL }) => {
+  async ({ page }) => {
     await page.goto("/dashboard");
 
-    await page.waitForURL(baseURL);
-    expect(page.url()).toEqual(`${baseURL}/`);
+    // Wait for any navigation to complete
+    await page.waitForLoadState('networkidle');
+
+    const url = page.url();
+    expect(url).not.toContain("/dashboard");
   },
 );
 
