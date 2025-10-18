@@ -20,3 +20,15 @@ server-integration-test:
     $$pnpm_cmd vitest run \
 		--config ./vitest.config.integration.ts \
 		./tests/integration/base.spec.js
+
+playwright-ui:
+	cd ./packages/e2e; \
+	if command -v pnpm >/dev/null 2>&1; then \
+		pnpm_cmd="pnpm"; \
+	else \
+		pnpm_cmd="pkgx +nodejs.org@22 +pnpm.io pnpm"; \
+	fi && \
+	LOGCHIMP_OWNER_EMAIL="owner@example.com" \
+	LOGCHIMP_API_URL="http://localhost:8000" \
+	BASE_URL="http://localhost:3000" \
+	$$pnpm_cmd playwright test --ui

@@ -34,11 +34,13 @@
             @update:model-value="(value) => description.value = value ?? null"
             label="Description"
             placeholder="Site description"
+            data-testid="site-description"
             :error="description.error"
             @hide-error="hideDescriptionError"
           />
 
           <toggle-item
+            data-testid="allow-signup"
             v-model="allowSignup"
             label="Allow signups"
             note="Allows users to create account?"
@@ -67,6 +69,7 @@
               :model-value="logo ?? undefined"
               @update:model-value="(value) => logo = value ?? null"
               label="Logo URL"
+              data-testid="logo-url"
               placeholder="https://avatar-url.png"
             />
           </div>
@@ -101,7 +104,9 @@
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="developer_mode" label="Developer Mode" />
+          <toggle-item
+            data-testid="developer-mode"
+            v-model="developer_mode" label="Developer Mode" />
         </div>
       </div>
     </div>

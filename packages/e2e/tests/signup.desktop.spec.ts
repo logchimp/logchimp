@@ -1,12 +1,13 @@
 import { expect } from "@playwright/test";
 import { test } from "../fixtures/pageTest";
+import { SITE_LOGO_URL, SITE_NAME } from "../helpers/constants";
 
-test.describe("Signup", (): void => {
+test.describe("Signup", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/join");
   });
 
-  test.describe("Header", (): void => {
+  test.describe("Header", () => {
     test("should display LogChimp branding", async ({ page }) => {
       const siteBranding = page.getByTestId("site-branding");
       expect(siteBranding).toBeDefined();
@@ -15,22 +16,19 @@ test.describe("Signup", (): void => {
       // Site logo
       const logo = siteBranding.getByRole("img");
       expect(logo).toBeDefined();
-      await expect(logo).toHaveAttribute(
-        "src",
-        "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
-      );
-      await expect(logo).toHaveAttribute("alt", "LogChimp");
+      await expect(logo).toHaveAttribute("src", SITE_LOGO_URL);
+      await expect(logo).toHaveAttribute("alt", SITE_NAME);
 
       // Site name
       const siteName = siteBranding.getByTestId("site-name");
       expect(siteName).toBeDefined();
-      await expect(siteName).toHaveText("LogChimp");
+      await expect(siteName).toHaveText(SITE_NAME);
     });
 
     test.skip("should display heading 'Create your account!'", async () => {});
   });
 
-  test.describe("Footer", (): void => {
+  test.describe("Footer", () => {
     test("should have link to login page", async ({ page }) => {
       const signUpLink = page.getByRole("link", { name: "Log in" });
 
@@ -39,7 +37,7 @@ test.describe("Signup", (): void => {
     });
   });
 
-  test.describe("Form", (): void => {
+  test.describe("Form", () => {
     test("should render sign-up form", async ({ page }) => {
       const form = page.getByTestId("signup-form");
       await expect(form).toBeVisible();

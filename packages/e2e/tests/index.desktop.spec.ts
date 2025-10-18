@@ -1,8 +1,10 @@
 import { expect } from "@playwright/test";
-import { test } from "../fixtures/pageTest";
 
-test.describe("Homepage", (): void => {
-  test.describe("Header", (): void => {
+import { test } from "../fixtures/pageTest";
+import { SITE_LOGO_URL, SITE_NAME } from "../helpers/constants";
+
+test.describe("Homepage", () => {
+  test.describe("Header", () => {
     test("should display LogChimp branding", async ({ page }) => {
       const header = page.getByTestId("header");
 
@@ -16,16 +18,13 @@ test.describe("Homepage", (): void => {
       // Site logo
       const logo = siteBranding.getByRole("img");
       expect(logo).toBeDefined();
-      await expect(logo).toHaveAttribute(
-        "src",
-        "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
-      );
-      await expect(logo).toHaveAttribute("alt", "LogChimp");
+      await expect(logo).toHaveAttribute("src", SITE_LOGO_URL);
+      await expect(logo).toHaveAttribute("alt", SITE_NAME);
 
       // Site name
       const siteName = siteBranding.getByTestId("site-name");
       expect(siteName).toBeDefined();
-      await expect(siteName).toHaveText("LogChimp");
+      await expect(siteName).toHaveText(SITE_NAME);
     });
   });
 });

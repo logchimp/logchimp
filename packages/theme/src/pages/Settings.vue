@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="form-header">
+    <h4 class="form-header" data-testid="page-title">
       Account settings
     </h4>
     <loader-container v-if="loading" />
