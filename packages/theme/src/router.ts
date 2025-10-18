@@ -196,9 +196,9 @@ const routes = [
         component: () => import("./pages/dashboard/settings/Labs.vue"),
       },
       {
-        path: "/dashboard/*",
+        path: "/dashboard/:pathMatch(.*)*",
         name: "Dashboard page not found",
-        component: () => import("./pages/pageNotFound.vue"),
+        component: () => import("./pages/dashboard/PageNotFound.vue"),
       },
     ],
   },
@@ -228,9 +228,9 @@ const routes = [
     component: () => import("./pages/passwordReset/Confirm.vue"),
   },
   {
-    path: "/(.*)",
+    path: "/:pathMatch(.*)*",
     name: "Page not found",
-    component: () => () => import("./pages/pageNotFound.vue"),
+    component: () => import("./pages/PageNotFound.vue"),
   },
 ];
 
