@@ -1,32 +1,37 @@
 {
-  "navbar": {
-    "home": "Home",
-    "roadmaps": "Roadmaps",
-    "boards": "Boards"
+  "dashboard": {
+    "settings": {
+      "labs": {
+        "breadcrumbNavigate": "Settings",
+        "breadcrumb": "Labs",
+        "saveButton": "Save",
+        "form": {
+          "title": "Beta features",
+          "toggleItem": {
+            "label": "Comments",
+            "note": "Allow users to comment on posts"
+          }
+        },
+        "metaTitle": "Labs • Settings • Dashboard"
+      }
+    }
   },
-  "header": {
-    "login": "Login",
-    "createAccount": "Create an account"
-  },
-  "powerBy": {
-    "poweredByLogchimp": "Powered by LogChimp"
-  },
-  "topPublicBoards": {
-    "title": "Boards",
-    "viewAll": "View all boards",
-    "none": "No boards available"
-  },
-  "setupCard": {
-    "title": "Setup your LogChimp site",
-    "label": "Complete your LogChimp site setup to access dashboard.",
-    "cta": "Create owner account"
-  },
-  "setupWelcome": {
-    "heading": "Welcome to",
-    "label": "Let’s setup your LogChimp site to track user feedback for building better products.",
-    "cta": "Create owner account"
-  },
-  "setupCreateAccount": {
-    "heading": "Create an account"
+  "ee": {
+    "dashboard": {
+      "settings": {
+        "billing": {
+          "breadcrumb": "Billing",
+          "alert": {
+            "title": "We are working on defining its pricing model at the moment.",
+            "description": "Please keep in mind that a few <strong>free</strong> plan features will be converted to paid plans."
+          },
+          "activePlan": {
+            "title": "Active Plan",
+            "current": "You're currently on <strong>free</strong> plan."
+          },
+          "metaTitle": "Billing • Settings • Dashboard"
+        }
+      }
+    }
   }
 }
