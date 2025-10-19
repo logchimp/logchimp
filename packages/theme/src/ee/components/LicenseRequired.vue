@@ -3,10 +3,10 @@ import { onMounted } from "vue";
 import { KeyIcon } from "lucide-vue";
 
 import { useSettingStore } from "../../store/settings";
-import { Alert } from "../../components/ui/Alert";
 import EmptyScreen from "../../components/EmptyScreen.vue";
 import Button from "../../components/ui/Button.vue";
 import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../constants";
+import LocalLicenseAlert from "./license/LocalLicenseAlert.vue";
 
 const settingsStore = useSettingStore();
 
@@ -22,18 +22,7 @@ onMounted(() => {
 <template>
   <slot v-if="settingsStore.settings.hasValidLicense" />
   <div v-else-if="IS_DEV">
-    <alert
-      title="You can test this feature locally but not on production."
-      type="warning"
-      class="mb-4"
-    >
-      <template #description>
-        To purchase a commercial license, please reach out to our sales team. If a license key is already in place, please contact logchimp@codecarrot.net for help.
-        <a class="underline" :href="DEFAULT_LOGCHIMP_PILOT_URL">
-          Contact Sales
-        </a>
-      </template>
-    </alert>
+    <LocalLicenseAlert class="mb-4" />
     <slot />
   </div>
   <EmptyScreen
