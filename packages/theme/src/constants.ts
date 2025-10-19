@@ -10,3 +10,6 @@ export const IS_SELF_HOSTED =
   import.meta.env.VITE_IS_SELF_HOSTED === "true";
 
 export const MAX_TITLE_LENGTH = 100;
+
+export const DEFAULT_LOGCHIMP_PILOT_URL =
+  "https://pilot.logchimp.codecarrot.net";
