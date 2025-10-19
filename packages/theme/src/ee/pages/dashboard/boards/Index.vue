@@ -6,19 +6,22 @@
       </Breadcrumbs>
     </template>
 
-    <Button
-      type="primary"
-      :disabled="createBoardPermissionDisabled"
-      :loading="createBoardButtonLoading"
-      @click="createBoardHandler"
-    >
-      Create board
-      <PhCrownSimple
-        :size="20"
-        weight="regular"
-        class="fill-white"
-      />
-    </Button>
+    <UpgradeTooltip :has-valid-license="settingsStore.settings.hasValidLicense">
+      <Button
+        type="primary"
+        :disabled="createBoardPermissionDisabled"
+        :loading="createBoardButtonLoading"
+        @click="createBoardHandler"
+      >
+        Create board
+        <PhCrownSimple
+          v-if="!settingsStore.settings.hasValidLicense"
+          :size="20"
+          weight="regular"
+          class="fill-white"
+        />
+      </Button>
+    </UpgradeTooltip>
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
@@ -38,6 +41,7 @@ import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { createBoard } from "../../../modules/boards";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
+import { useSettingStore } from "../../../../store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -46,9 +50,11 @@ import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import LicenseRequired from "../../../components/LicenseRequired.vue";
 import TabularView from "../../../components/dashboard/boards/TabularView.vue";
+import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
+const settingsStore = useSettingStore();
 
 const createBoardButtonLoading = ref(false);
 
