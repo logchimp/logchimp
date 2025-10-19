@@ -12,7 +12,7 @@ defineOptions({
     <div class="flex flex-col items-center justify-center gap-y-2">
       <div  class="font-medium">
         <slot>
-          Not found
+          Page not found
         </slot>
       </div>
       <p class="text-xs text-neutral-800">
