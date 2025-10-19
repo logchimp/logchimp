@@ -15,6 +15,9 @@
       "invalidAuthHeader": "Authorization header missing",
       "invalidToken": "Invalid JWT token"
     },
+    "license": {
+      "verification": "LogChimp license validation failed"
+    },
     "user": {
       "userNotFound": "User not found",
       "userBlocked": "User is Blocked",
