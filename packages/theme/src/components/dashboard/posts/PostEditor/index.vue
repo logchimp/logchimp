@@ -34,10 +34,17 @@
             v-model="post.title"
             label="Title"
             placeholder="Name of the feature"
+            :maxlength="maxTitleLength"
             :error="postFieldError"
             @hide-error="hideTitleError"
           />
-
+          
+          <HelperText
+            :value="post.title"
+            :max-length="maxTitleLength"
+            :key="post.title"
+          />
+          
           <l-textarea
             :model-value="post.contentMarkdown ?? undefined"
             @update:model-value="(value) => post.contentMarkdown = value ?? null"
@@ -45,6 +52,7 @@
             rows="4"
             placeholder="What would you use it for?"
           />
+
         </div>
 
         <div class="form-column">
@@ -93,6 +101,7 @@ import { useUserStore } from "../../../../store/user";
 import { useDashboardPosts } from "../../../../store/dashboard/posts";
 
 // components
+import HelperText from "../../../../components/ui/input/HelperText.vue";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import LTextarea from "../../../../components/ui/input/LTextarea.vue";
@@ -106,6 +115,8 @@ import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/Sear
 import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
 import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
 import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
+
+const maxTitleLength = 100; 
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
@@ -137,7 +148,7 @@ function hideTitleError(event: FormFieldErrorType) {
 }
 
 async function updatePostHandler() {
-  if (!post.title.trim()) {
+  if (!post.title.trim() && post.title.length <= maxTitleLength) {
     postFieldError.show = true;
     postFieldError.message = "Please enter a valid post title";
     return;
