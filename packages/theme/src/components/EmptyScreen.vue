@@ -26,11 +26,11 @@ withDefaults(defineProps<Props>(), {
   >
     <div
       v-if="icon"
-      class=""
+      class="size-16 flex items-center justify-center bg-neutral-50 rounded-2xl border border-neutral-200"
     >
       <component
         :is="icon"
-        class="size-12"
+        class="size-8 stroke-neutral-800"
         aria-hidden="true"
       />
     </div>
@@ -43,10 +43,10 @@ withDefaults(defineProps<Props>(), {
         }
       ]"
     >
-      <h2
-        class="text-semibold text-2xl text-center">
+      <p
+        class="font-medium text-base text-center text-neutral-950">
         {{title}}
-      </h2>
+      </p>
 
       <p
         v-if="description"
