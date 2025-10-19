@@ -70,28 +70,32 @@ const post = reactive<IDashboardPost>({
   },
 });
 
-async function postBySlug() {
+async function postBySlug(slug: string) {
   loading.value = true;
   errorCode.value = undefined;
 
-  const route = router.currentRoute.value;
-  if (route.params.slug) {
-    try {
-      const slug = route.params.slug.toString();
-      const response = await getPostBySlug(slug);
+  try {
+    const response = await getPostBySlug(slug);
 
-      Object.assign(post, response.data.post);
-      loading.value = false;
-    } catch (err) {
-      console.error(err);
-      // @ts-expect-error
-      errorCode.value = err.response.data.code;
-      loading.value = false;
-    }
+    Object.assign(post, response.data.post);
+    loading.value = false;
+  } catch (err) {
+    console.error(err);
+    // @ts-expect-error
+    errorCode.value = err.response.data.code;
+    loading.value = false;
   }
 }
 
-onMounted(() => postBySlug());
+onMounted(() => {
+  const route = router.currentRoute.value;
+  const slugParam = (route.params.slug || "").toString();
+  if (slugParam) {
+    postBySlug(slugParam);
+  } else {
+    router.push("/dashboard/posts");
+  }
+});
 
 useHead({
   title: () => `${post.title ? `${post.title} • ` : ""}Post • Dashboard`,
