@@ -8,3 +8,6 @@ export const VITE_API_URL =
 export const IS_SELF_HOSTED =
   window.__APP_ENV__?.VITE_IS_SELF_HOSTED === "true" ||
   import.meta.env.VITE_IS_SELF_HOSTED === "true";
+
+export const DEFAULT_LOGCHIMP_PILOT_URL =
+  "https://pilot.logchimp.codecarrot.net";

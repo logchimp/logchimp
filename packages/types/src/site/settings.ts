@@ -8,6 +8,7 @@ export interface ISiteSettings {
   isPoweredBy: boolean;
   allowSignup: boolean;
   developer_mode: boolean;
+  hasValidLicense: boolean;
   labs: ISiteSettingsLab;
 }
 
