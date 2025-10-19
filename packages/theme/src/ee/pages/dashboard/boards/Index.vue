@@ -22,7 +22,9 @@
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
-		<TabularView />
+    <LicenseRequired>
+      <TabularView />
+    </LicenseRequired>
 	</div>
 </template>
 
@@ -42,6 +44,7 @@ import Button from "../../../../components/ui/Button.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import LicenseRequired from "../../../components/LicenseRequired.vue";
 import TabularView from "../../../components/dashboard/boards/TabularView.vue";
 
 const { permissions } = useUserStore();
