@@ -5,19 +5,23 @@
         <BreadcrumbItem>Posts</BreadcrumbItem>
       </Breadcrumbs>
     </template>
-    <Button
-      type="primary"
-      :disabled="createPostPermissionDisabled"
-      :loading="createPostButtonLoading"
-      @click="createPostHandler"
-    >
-      Create Post
-      <PhCrownSimple
-        :size="20"
-        weight="regular"
-        class="fill-white"
-      />
-    </Button>
+
+    <UpgradeTooltip :has-valid-license="settingsStore.settings.hasValidLicense">
+      <Button
+        type="primary"
+        :disabled="createPostPermissionDisabled"
+        :loading="createPostButtonLoading"
+        @click="createPostHandler"
+      >
+        Create Post
+        <PhCrownSimple
+          v-if="!settingsStore.settings.hasValidLicense"
+          :size="20"
+          weight="regular"
+          class="fill-white"
+        />
+      </Button>
+    </UpgradeTooltip>
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
@@ -45,6 +49,7 @@ import { useDashboardPosts } from "../../../store/dashboard/posts";
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
 import { createPost } from "../../../modules/posts";
+import { useSettingStore } from "../../../store/settings";
 
 // components
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
@@ -53,9 +58,11 @@ import PostItem from "../../../components/post/PostItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import Button from "../../../components/ui/Button.vue";
+import UpgradeTooltip from "../../../ee/components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
+const settingsStore = useSettingStore();
 
 const createPostButtonLoading = ref(false);
 

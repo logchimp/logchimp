@@ -1,4 +1,5 @@
 export const IS_DEV = import.meta.env.DEV;
+export const IS_PROD = import.meta.env.PROD;
 
 export const VITE_LOGCHIMP_VERSION =
   window.__APP_ENV__?.VITE_LOGCHIMP_VERSION ||
