@@ -8,19 +8,22 @@
       </Breadcrumbs>
     </template>
 
-    <Button
-      type="primary"
-      :disabled="createRoadmapButtonDisabled"
-      :loading="createRoadmapButtonLoading"
-      @click="createRoadmapHandler"
-    >
-      Create roadmap
-      <PhCrownSimple
-        :size="20"
-        weight="regular"
-        class="fill-white"
-      />
-    </Button>
+    <UpgradeTooltip :has-valid-license="settingsStore.settings.hasValidLicense">
+      <Button
+        type="primary"
+        :disabled="createRoadmapButtonDisabled"
+        :loading="createRoadmapButtonLoading"
+        @click="createRoadmapHandler"
+      >
+        Create roadmap
+        <PhCrownSimple
+          v-if="!settingsStore.settings.hasValidLicense"
+          :size="20"
+          weight="regular"
+          class="fill-white"
+        />
+      </Button>
+    </UpgradeTooltip>
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
@@ -40,6 +43,7 @@ import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 import { createRoadmap } from "../../../modules/roadmaps";
+import { useSettingStore } from "../../../../store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -48,9 +52,11 @@ import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import TabularView from "../../../components/dashboard/roadmap/TabularView.vue";
 import LicenseRequired from "../../../components/LicenseRequired.vue";
+import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
+const settingsStore = useSettingStore();
 
 const createRoadmapButtonLoading = ref(false);
 
