@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { onMounted } from "vue";
 import { KeyIcon } from "lucide-vue";
 
 import { useSettingStore } from "../../store/settings";
 import { Alert } from "../../components/ui/Alert";
 import EmptyScreen from "../../components/EmptyScreen.vue";
 import Button from "../../components/ui/Button.vue";
-import { DEFAULT_LOGCHIMP_PILOT_URL } from "../../constants";
+import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../constants";
 
 const settingsStore = useSettingStore();
-const isDev = computed(() => import.meta.env.DEV);
 
 onMounted(() => {
-  if (isDev.value && settingsStore.settings.hasValidLicense === false) {
+  if (IS_DEV && !settingsStore.settings.hasValidLicense) {
     console.warn(
       `You're using a feature that requires a valid license. Please enter a license key.`,
     );
@@ -22,7 +21,7 @@ onMounted(() => {
 
 <template>
   <slot v-if="settingsStore.settings.hasValidLicense" />
-  <div v-else-if="isDev">
+  <div v-else-if="IS_DEV">
     <alert
       title="You can test this feature locally but not on production."
       type="warning"
@@ -30,7 +29,7 @@ onMounted(() => {
     >
       <template #description>
         To purchase a commercial license, please reach out to our sales team. If a license key is already in place, please contact logchimp@codecarrot.net for help.
-        <a className="underline" :href="DEFAULT_LOGCHIMP_PILOT_URL">
+        <a class="underline" :href="DEFAULT_LOGCHIMP_PILOT_URL">
           Contact Sales
         </a>
       </template>
