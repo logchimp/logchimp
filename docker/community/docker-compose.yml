@@ -105,6 +105,7 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${THEME_PORT:-3000}
+      VITE_WEBAPP_URL: ${LOGCHIMP_WEB_URL}
       VITE_API_URL: ${LOGCHIMP_API_URL}
       VITE_IS_SELF_HOSTED: true
     ports:
