@@ -58,7 +58,7 @@ export const getPosts = async ({
   boardId = [],
   roadmapId = undefined,
 }: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
-  const { getUserId } = useUserStore();
+  const { getUserId, authToken } = useUserStore();
 
   return await axios({
     method: "POST",
@@ -70,6 +70,9 @@ export const getPosts = async ({
       userId: getUserId,
       boardId,
       roadmapId,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 };
