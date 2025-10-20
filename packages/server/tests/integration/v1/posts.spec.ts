@@ -15,9 +15,102 @@ import {
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { isActive } from "../../../src/cache";
+import { createToken } from "../../../src/services/token.service";
+import { removeRoleFromUserId } from "../../utils/roles";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const response = await supertest(app).post("/api/v1/posts/get");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    const res = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(401);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  it("should throw INVALID_TOKEN", async () => {
+    const response = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", "Bearer InvalidJWTToken");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.statusCode).toBe(401);
+    expect(response.body.code).toBe("INVALID_TOKEN");
+  });
+
+  it("should throw 'SERVER_ERROR' for passing empty JWT token", async () => {
+    const fakeToken = createToken({}, {});
+
+    const response = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", `Bearer ${fakeToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.statusCode).toBe(500);
+    expect(response.body.code).toBe("SERVER_ERROR");
+  });
+
+  it("should throw 'USER_NOT_FOUND' error with fake user ID", async () => {
+    const nonExistentUserId = uuid();
+    const fakeToken = createToken(
+      { userId: nonExistentUserId },
+      { expiresIn: "1h" },
+    );
+
+    const response = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", `Bearer ${fakeToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.statusCode).toBe(404);
+    expect(response.body.code).toBe("USER_NOT_FOUND");
+  });
+
+  it("should throw 'USER_BLOCK' error for blocked user", async () => {
+    const userId = uuid();
+    await createUser({
+      id: userId,
+      isBlocked: true,
+    });
+    const token = createToken({ userId }, { expiresIn: "1h" });
+
+    const response = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("USER_BLOCK");
+  });
+
+  it("should throw 'ACCESS_DENIED' when user has no permissions", async () => {
+    const { user } = await createUser();
+    const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
+    await removeRoleFromUserId(user.userId, {
+      name: "@everyone",
+    });
+
+    const response = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("ACCESS_DENIED");
+  });
+
   it("should use default page=1 and default limit when no filters are provided", async () => {
     const { user: authUser } = await createUser({ isVerified: true });
     const board = await generateBoard({}, true);
