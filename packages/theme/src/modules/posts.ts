@@ -58,7 +58,7 @@ export const getPosts = async ({
   boardId = [],
   roadmapId = undefined,
 }: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
-  const { getUserId, authToken } = useUserStore();
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
@@ -67,7 +67,6 @@ export const getPosts = async ({
       page,
       limit,
       created,
-      userId: getUserId,
       boardId,
       roadmapId,
     },
