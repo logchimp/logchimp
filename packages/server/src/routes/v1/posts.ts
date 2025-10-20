@@ -9,7 +9,7 @@ import * as post from "../../controllers/post";
 import { authRequired } from "../../middlewares/auth";
 import { postExists } from "../../middlewares/postExists";
 
-router.post("/posts/get", post.filterPost);
+router.post("/posts/get", authRequired, post.filterPost);
 router.post("/posts/slug", postExists, post.postBySlug);
 
 router.post("/posts", authRequired, post.create);
