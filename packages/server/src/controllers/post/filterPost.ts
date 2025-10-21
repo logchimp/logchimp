@@ -4,6 +4,7 @@ import type {
   IApiErrorResponse,
   IFilterPostRequestBody,
   IFilterPostResponseBody,
+  IPost,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -45,7 +46,6 @@ export async function filterPost(
   res: Response<ResponseBody>,
 ) {
   const query = querySchema.safeParse(req.query);
-
   if (!query.success) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
@@ -53,7 +53,10 @@ export async function filterPost(
       errors: query.error.issues,
     });
   }
-  const { after, first, page, limit, created } = query.data;
+
+  const { first: _first, page, after, created, limit } = query.data;
+  const first = req.query?.limit ? limit : _first;
+
   const boardId = validUUIDs(req.body.boardId || []);
   const roadmapId = validUUID(req.body.roadmapId);
   // @ts-expect-error
@@ -61,108 +64,119 @@ export async function filterPost(
 
   try {
     let sql = `
-        SELECT
-          "postId",
-          "title",
-          "slug",
-          "boardId",
-          "roadmap_id",
-          "contentMarkdown",
-          "createdAt",
-          "updatedAt"
-        FROM
-          posts
+      SELECT
+        "postId",
+        "title",
+        "slug",
+        "boardId",
+        "roadmap_id",
+        "contentMarkdown",
+        "createdAt",
+        "updatedAt"
+      FROM posts
     `;
+
     const conditions: string[] = [];
+    const bindings: Record<string, string | number> = {
+      limit: first,
+      offset: page ? first * (page - 1) : 0,
+      roadmapId,
+    };
 
     if (boardId.length > 0) {
       conditions.push(
         `"boardId" IN (${boardId.map((id) => `'${id}'`).join(",")})`,
       );
     }
+
     if (roadmapId) {
       conditions.push(`"roadmap_id" = :roadmapId`);
+    }
+
+    if (after) {
+      const cursorPost = await database("posts")
+        .select("createdAt")
+        .where({ postId: after })
+        .first();
+
+      if (cursorPost) {
+        bindings.cursorCreatedAt = cursorPost.createdAt;
+        conditions.push(
+          `"createdAt" ${created === "ASC" ? ">=" : "<="} :cursorCreatedAt`,
+        );
+      }
     }
 
     if (conditions.length > 0) {
       sql += ` WHERE ${conditions.join(" AND ")} `;
     }
 
-    if (after) {
-      // Fetch posts after a specific cursor (createdAt of that post)
-      const cursorPost = await database("posts")
-        .select("createdAt")
-        .where({ postId: after })
-        .first();
-
-      if (cursorPost) {
-        sql += conditions.length > 0 ? " AND " : " WHERE ";
-        sql += `"createdAt" ${created === "ASC" ? ">" : "<"} :cursorCreatedAt `;
-      }
-    }
-
     sql += ` ORDER BY "createdAt" ${created} `;
 
     if (after) {
-      sql += ` LIMIT :limit `;
+      sql += ` LIMIT :limit OFFSET 1 `;
     } else {
-      // offset-based pagination
       sql += ` LIMIT :limit OFFSET :offset `;
-    }
-    const bindings: Record<string, any> = {
-      limit: limit ?? first,
-      offset: page ? (limit ?? first) * (page - 1) : 0,
-      roadmapId,
-    };
-
-    if (after) {
-      const cursorPost = await database("posts")
-        .select("createdAt")
-        .where({ postId: after })
-        .first();
-      if (cursorPost) {
-        bindings.cursorCreatedAt = cursorPost.createdAt;
-      }
     }
 
     const { rows: response } = await database.raw(sql, bindings);
 
-    const posts = [];
-
-    for (let i = 0; i < response.length; i++) {
-      const postId = response[i].postId;
-      const boardId = response[i].boardId;
-      const roadmapId = response[i].roadmap_id;
-
+    const posts: IPost[] = [];
+    for (const post of response) {
       try {
-        const board = await getBoardById(boardId);
-        const voters = await getVotes(postId, userId);
+        const board = await getBoardById(post.boardId);
+        const voters = await getVotes(post.postId, userId);
         const roadmap = await database
           .select("id", "name", "url", "color")
           .from("roadmaps")
-          .where({
-            id: roadmapId,
-          })
+          .where({ id: post.roadmap_id })
           .first();
 
-        response[i].boardId = undefined;
-        response[i].roadmap_id = undefined;
-
         posts.push({
-          ...response[i],
+          ...post,
           board,
           roadmap,
           voters,
         });
       } catch (err) {
-        logger.log({
-          level: "error",
-          message: err,
-        });
+        logger.log({ level: "error", message: err });
       }
     }
 
-    res.status(200).send({ posts });
+    const metadata = await getPostMetadata({ after });
+    const totalCount = metadata.totalCount;
+    const totalPages = Math.ceil(totalCount / first);
+    const userDataLength = posts.length;
+
+    const startCursor = userDataLength > 0 ? String(posts[0].postId) : null;
+    const endCursor =
+      userDataLength > 0 ? String(posts[userDataLength - 1].postId) : null;
+
+    const hasNextPage = metadata.remainingResultsCount - first > 0;
+
+    const currentPage = page ?? 1;
+
+    res.status(200).send({
+      status: {
+        code: 200,
+        type: "success",
+      },
+      posts,
+      results: posts,
+      ...(page
+        ? {}
+        : {
+            page_info: {
+              count: userDataLength,
+              current_page: currentPage,
+              has_next_page: hasNextPage,
+              end_cursor: endCursor,
+              start_cursor: startCursor,
+            },
+            total_pages: totalPages,
+            total_count: totalCount,
+          }),
+    });
   } catch (err) {
     logger.log({
       level: "error",
@@ -174,4 +188,33 @@ export async function filterPost(
       code: "SERVER_ERROR",
     });
   }
+}
+
+async function getPostMetadata({ after }: { after?: string }) {
+  return database.transaction(async (trx) => {
+    // Total count
+    const totalCountResult = await trx("posts").count("* as count").first();
+
+    // Remaining results after cursor
+    let remainingQuery = trx("posts").as("next");
+    if (after) {
+      remainingQuery = remainingQuery
+        .where(
+          "createdAt",
+          ">=",
+          trx("posts").select("createdAt").where("postId", "=", after),
+        )
+        .offset(1);
+    }
+
+    const remainingResult = await trx
+      .count("* as count")
+      .from(remainingQuery)
+      .first();
+
+    const totalCount = Number(totalCountResult?.count || 0);
+    const remainingResultsCount = Number(remainingResult?.count || 0);
+
+    return { totalCount, remainingResultsCount };
+  });
 }
