@@ -100,7 +100,7 @@ onMounted(async () => {
   const viewportHeight = window.innerHeight;
   const rect = triggerEl.getBoundingClientRect();
 
-  if (rect.top < viewportHeight) {
+  if (viewportHeight < 200 || rect.top < viewportHeight) {
     executeInfiniteScroll();
   }
 });
