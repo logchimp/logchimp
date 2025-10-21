@@ -3,7 +3,7 @@ import type {
   IApiErrorResponse,
   TFilterBoardRequestQuery,
   IFilterBoardResponseBody,
-  getBoardQueryOptions
+  getBoardQueryOptions,
 } from "@logchimp/types";
 
 import database from "../../../../database";
@@ -17,106 +17,104 @@ import {
   parseAndValidatePage,
 } from "../../../../helpers";
 
-
-
 export async function getBoards({
-    limit,
-    after,
-    created,
-    page }: getBoardQueryOptions) {
-    try {
-        let boards = database
-            .select(
-                "boards.boardId",
-                "boards.name",
-                "boards.color",
-                "boards.url",
-                "boards.createdAt",
-            )
-            .count("posts", { as: "post_count" })
-            .from("boards")
-            .leftJoin("posts", "boards.boardId", "posts.boardId")
-            .where({
-                "boards.display": true,
-            })
-            .groupBy("boards.boardId")
-            .orderBy("boards.createdAt", created)
-            .orderBy("boards.boardId", "asc")
-            .limit(limit)
+  limit,
+  after,
+  created,
+  page,
+}: getBoardQueryOptions) {
+  try {
+    let boards = database
+      .select(
+        "boards.boardId",
+        "boards.name",
+        "boards.color",
+        "boards.url",
+        "boards.createdAt",
+      )
+      .count("posts", { as: "post_count" })
+      .from("boards")
+      .leftJoin("posts", "boards.boardId", "posts.boardId")
+      .where({
+        "boards.display": true,
+      })
+      .groupBy("boards.boardId")
+      .orderBy("boards.createdAt", created)
+      .orderBy("boards.boardId", "asc")
+      .limit(limit);
 
-        if (after) {
-            
-            const afterBoard = await database("boards")
-                .select("createdAt", "boardId")
-                .where("boardId", after)
-                .first();
+    if (after) {
+      const afterBoard = await database("boards")
+        .select("createdAt", "boardId")
+        .where("boardId", after)
+        .first();
 
-            if (!afterBoard) return [];
+      if (!afterBoard) return [];
 
-            const operator = created === "ASC" ? ">" : "<";
-            
-            boards = boards.where(function () {
-                this.where("boards.createdAt", operator, afterBoard.createdAt)
-                    .orWhere(function () {
-                        this.where("boards.createdAt", "=", afterBoard.createdAt)
-                            .andWhere("boards.boardId", operator, after);
-                    });
-            }); 
+      const operator = created === "ASC" ? ">" : "<";
 
-            boards = boards.whereNot("boards.boardId", after);
+      boards = boards.where(function () {
+        this.where("boards.createdAt", operator, afterBoard.createdAt).orWhere(
+          function () {
+            this.where("boards.createdAt", "=", afterBoard.createdAt).andWhere(
+              "boards.boardId",
+              operator,
+              after,
+            );
+          },
+        );
+      });
 
-        } else if (page) {
-            boards = boards.offset(limit * (page - 1));
-            console.log("page")
-        } 
-        const boardsData = await boards;
-        return boardsData;
-    } catch (error) {
-        logger.log({
-            level: "error",
-            message: error
-        })
+      boards = boards.whereNot("boards.boardId", after);
+    } else if (page) {
+      boards = boards.offset(limit * (page - 1));
     }
+    const boardsData = await boards;
+    return boardsData;
+  } catch (error) {
+    logger.log({
+      level: "error",
+      message: error,
+    });
+  }
 
-    return [];
+  return [];
 }
 
 export async function getBoardMetaData({ after }: { after?: string }) {
-    const totalCountResult = await database("boards")
+  const totalCountResult = await database("boards")
+    .where("display", true)
+    .count<{ count: string }>("* as count")
+    .first();
+
+  const totalBoardsCount = Number(totalCountResult?.count || 0);
+
+  let remainingBoardsCount = totalBoardsCount;
+  if (after) {
+    const afterBoard = await database("boards")
+      .select("createdAt")
+      .where("boardId", after)
+      .first();
+
+    if (afterBoard) {
+      const subQuery = database("boards")
         .where("display", true)
+        .andWhere("createdAt", ">=", afterBoard.createdAt)
+        .offset(1);
+
+      const remaining = await database
         .count<{ count: string }>("* as count")
+        .from(subQuery.as("next"))
         .first();
 
-    const totalBoardsCount = Number(totalCountResult?.count || 0);
-
-    let remainingBoardsCount = totalBoardsCount;
-    if (after) {
-        const afterBoard = await database("boards")
-            .select("createdAt")
-            .where("boardId", after)
-            .first();
-
-        if (afterBoard) {
-
-            const subQuery = database("boards")
-                .where("display", true)
-                .andWhere("createdAt", ">=", afterBoard.createdAt)
-                .offset(1);
-
-            const remaining = await database
-                .count<{ count: string }>("* as count")
-                .from(subQuery.as("next"))
-                .first();
-
-            remainingBoardsCount = Number(remaining?.count || 0);
-        }
+      remainingBoardsCount = Number(remaining?.count || 0);
     }
+  }
 
-    return {
-        totalBoardsCount,
-        remainingBoardsCount
-    };
-
+  return {
+    totalBoardsCount,
+    remainingBoardsCount,
+  };
 }
 
 type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
@@ -125,7 +123,6 @@ export async function filter(
   req: Request<unknown, unknown, unknown, TFilterBoardRequestQuery>,
   res: Response<ResponseBody>,
 ) {
-
   if (req.query?.page) {
     logger.warn(
       "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
@@ -142,7 +139,6 @@ export async function filter(
   const after = req.query?.after;
 
   try {
-
     const boards = await getBoards({ limit, page, after, created });
     const boardsLength = boards.length;
 
@@ -151,14 +147,15 @@ export async function filter(
 
     if (boardsLength > 0) {
       startCursor = boardsLength > 0 ? String(boards[0].boardId) : null;
-      endCursor = boardsLength > 0 ? String(boards[boardsLength - 1].boardId) : null;
+      endCursor =
+        boardsLength > 0 ? String(boards[boardsLength - 1].boardId) : null;
     }
 
     let totalCount: number | null = null;
     let hasNextPage = false;
     let currentPage = 1;
 
-    const boardsMetaData = await getBoardMetaData({after});
+    const boardsMetaData = await getBoardMetaData({ after });
     totalCount = boardsMetaData.totalBoardsCount;
     const remainingBoardsCount = boardsMetaData.remainingBoardsCount;
 
@@ -172,7 +169,7 @@ export async function filter(
       currentPage = page || 1;
       hasNextPage = currentPage < totalPages;
     }
-    
+
     res.status(200).send({
       status: {
         code: 200,
@@ -185,9 +182,8 @@ export async function filter(
         has_next_page: hasNextPage,
         end_cursor: endCursor,
         start_cursor: startCursor,
-      }
-    })
-
+      },
+    });
   } catch (err) {
     logger.log({
       level: "error",

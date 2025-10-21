@@ -33,7 +33,7 @@ export type TFilterBoardRequestQuery = IGetBoardsRequestQuery;
 export interface IFilterBoardResponseBody {
   status: IApiStatus;
   boards: IBoardDetail[];
- page_info?: PageInfo;
+  page_info?: PageInfo;
 }
 
 export interface IGetBoardByUrlRequestParams {
@@ -99,8 +99,8 @@ export interface ISearchBoardResponseBody {
 }
 
 export interface getBoardQueryOptions {
-    limit: number;
-    after?: string;
-    created: ApiSortType;
-    page?: number;
+  limit: number;
+  after?: string;
+  created: ApiSortType;
+  page?: number;
 }
