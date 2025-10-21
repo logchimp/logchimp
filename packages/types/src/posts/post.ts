@@ -2,7 +2,12 @@ import type { IPublicUserInfo } from "../user";
 import type { IPostVote } from "../vote";
 import type { IRoadmap } from "../roadmap";
 import type { IBoard } from "../board";
-import type { ApiSortType } from "../common";
+import type {
+  ApiSortType,
+  CursorPaginatedResponse,
+  CursorPaginationParams,
+  IApiStatus,
+} from "../common";
 
 export interface IPost extends IPostInfo {
   board: IBoard | null;
@@ -24,7 +29,7 @@ interface IPostInfo {
   createdAt: Date;
 }
 
-export interface IFilterPostRequestBody {
+export interface IFilterPostRequestBody extends CursorPaginationParams {
   boardId: string[];
   roadmapId?: string;
   page: string;
@@ -32,7 +37,9 @@ export interface IFilterPostRequestBody {
   created: ApiSortType;
 }
 
-export interface IFilterPostResponseBody {
+export interface IFilterPostResponseBody
+  extends Partial<CursorPaginatedResponse<IPost>> {
+  status: IApiStatus;
   posts: IPost[];
 }
 
