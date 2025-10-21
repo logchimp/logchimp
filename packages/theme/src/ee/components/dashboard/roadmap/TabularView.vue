@@ -24,7 +24,7 @@
       :list="dashboardRoadmaps.roadmaps"
       group="roadmap"
       handle=".grip-handler"
-      item-key="roadmap"
+      item-key="id"
       :move="moveItem"
       @start="drag = true"
       @end="initialiseSort"

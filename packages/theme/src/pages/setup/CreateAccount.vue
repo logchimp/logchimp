@@ -6,7 +6,7 @@
       </h2>
     </div>
     <server-error v-if="serverError" @close="serverError = false" />
-    <card>
+    <card data-testid="owner-account-form">
       <l-text
         v-model="siteTitle.value"
         label="Site title"
@@ -47,7 +47,7 @@
         @keyup-enter="createAccount"
         @hide-error="hidePasswordError"
       />
-      <div style="display: flex; justify-content: center">
+      <div class="flex justify-center">
         <Button :loading="buttonLoading" type="primary" @click="createAccount">
           Create account
         </Button>
