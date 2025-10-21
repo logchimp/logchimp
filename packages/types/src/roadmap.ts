@@ -49,6 +49,7 @@ export interface ICreateRoadmapRequestBody {
 export type TCreateRoadmapResponseBody = IGetRoadmapByUrlResponseBody;
 
 export interface IUpdateRoadmapRequestBody {
+  id: string;
   name: string;
   url: string;
   color: string;

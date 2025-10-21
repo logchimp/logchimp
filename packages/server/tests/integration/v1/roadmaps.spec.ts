@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import type {
   IGetRoadmapByUrlResponseBody,
   IRoadmapPrivate,
+  IUpdateRoadmapRequestBody,
 } from "@logchimp/types";
 
 import app from "../../../src/app";
@@ -37,7 +38,9 @@ describe("GET /api/v1/roadmaps", () => {
   });
 
   it.skip("should return correct data for last page", async () => {
-    const res = await supertest(app).get("/api/v1/roadmaps?first=20");
+    const res = await supertest(app)
+      .get("/api/v1/roadmaps")
+      .query({ first: 20 });
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
@@ -65,6 +68,11 @@ describe("GET /api/v1/roadmaps", () => {
       expect(Array.isArray(res.body.results)).toBeTruthy();
       expect(Array.isArray(res.body.roadmaps)).toBeTruthy();
 
+      expect(res.body.page_info).toBeDefined();
+      expect(typeof res.body.page_info.count).toBe("number");
+      expect(typeof res.body.page_info.current_page).toBe("number");
+      expect(typeof res.body.page_info.has_next_page).toBe("boolean");
+
       expect(res.body.page_info.start_cursor).toBe(firstItem.id);
       expect(res.body.page_info.end_cursor).toBe(lastItem.id);
       expect(res.body.page_info.start_cursor).toBeTypeOf("string");
@@ -75,7 +83,9 @@ describe("GET /api/v1/roadmaps", () => {
     });
 
     it("should return 5 items per page with '?first=5'", async () => {
-      const res = await supertest(app).get("/api/v1/roadmaps?first=5");
+      const res = await supertest(app)
+        .get("/api/v1/roadmaps")
+        .query({ first: 5 });
 
       const firstItem: IRoadmapPrivate = res.body.results[0];
       const lastItem: IRoadmapPrivate =
@@ -104,7 +114,9 @@ describe("GET /api/v1/roadmaps", () => {
     });
 
     it("should cap the '?first=' param value with 20 max items", async () => {
-      const res = await supertest(app).get("/api/v1/roadmaps?first=25");
+      const res = await supertest(app)
+        .get("/api/v1/roadmaps")
+        .query({ first: 25 });
 
       const firstItem: IRoadmapPrivate = res.body.results[0];
       const lastItem: IRoadmapPrivate =
@@ -129,10 +141,13 @@ describe("GET /api/v1/roadmaps", () => {
     });
 
     it("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
-      const response = await supertest(app).get("/api/v1/roadmaps?first=0");
+      const response = await supertest(app)
+        .get("/api/v1/roadmaps")
+        .query({ first: 0 });
 
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(400);
+
       expect(response.body.code).toBe("VALIDATION_ERROR");
       expect(response.body.errors[0]?.message).toBe(
         "Too small: expected number to be >=1",
@@ -142,13 +157,16 @@ describe("GET /api/v1/roadmaps", () => {
 
   describe("'?after=' param", () => {
     it("should handle cursor pagination correctly", async () => {
-      const res1 = await supertest(app).get("/api/v1/roadmaps?first=3");
+      const res1 = await supertest(app)
+        .get("/api/v1/roadmaps")
+        .query({ first: 3 });
       expect(res1.headers["content-type"]).toContain("application/json");
       const lastId = res1.body.results[2].id;
 
-      const res2 = await supertest(app).get(
-        `/api/v1/roadmaps?first=3&after=${lastId}`,
-      );
+      const res2 = await supertest(app).get("/api/v1/roadmaps").query({
+        first: 3,
+        after: lastId,
+      });
       expect(res2.headers["content-type"]).toContain("application/json");
       expect(res2.status).toBe(200);
       expect(res2.body.results).toHaveLength(3);
@@ -161,9 +179,9 @@ describe("GET /api/v1/roadmaps", () => {
     });
 
     it("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
-      const res = await supertest(app).get(
-        "/api/v1/roadmaps?after=invalid-uuid",
-      );
+      const res = await supertest(app).get("/api/v1/roadmaps").query({
+        after: "invalid-uuid",
+      });
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(400);
@@ -172,22 +190,25 @@ describe("GET /api/v1/roadmaps", () => {
     });
 
     it("should handle empty '?after=' param gracefully", async () => {
-      const res = await supertest(app).get("/api/v1/roadmaps?after=");
+      const res = await supertest(app).get("/api/v1/roadmaps").query({
+        after: "",
+      });
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(400);
+
       expect(res.body.code).toBe("VALIDATION_ERROR");
       expect(res.body.message).toBe("Invalid query parameters");
-
       expect(res.body.errors?.[0]?.message).toMatch(/invalid uuid/gi);
     });
   });
 
   describe("'?visibility=' param", () => {
     it("should set default '?visibility=public' without permission", async () => {
-      const resPrivate = await supertest(app).get(
-        "/api/v1/roadmaps?visibility=private&first=10",
-      );
+      const resPrivate = await supertest(app).get("/api/v1/roadmaps").query({
+        visibility: "private",
+        first: 10,
+      });
 
       expect(resPrivate.headers["content-type"]).toContain("application/json");
       expect(resPrivate.status).toBe(200);
@@ -206,9 +227,10 @@ describe("GET /api/v1/roadmaps", () => {
       // expect(resPrivate.body.total_count).toBe(10);
       // expect(resPrivate.body.page_info.has_next_page).toBe(false);
 
-      const resBoth = await supertest(app).get(
-        "/api/v1/roadmaps?visibility=public,private&first=10",
-      );
+      const resBoth = await supertest(app).get("/api/v1/roadmaps").query({
+        visibility: "public",
+        first: 10,
+      });
       expect(resBoth.headers["content-type"]).toContain("application/json");
       expect(resBoth.status).toBe(200);
 
@@ -220,9 +242,9 @@ describe("GET /api/v1/roadmaps", () => {
     });
 
     it("should get roadmaps '?visibility=public' without permission", async () => {
-      const res = await supertest(app).get(
-        "/api/v1/roadmaps?visibility=public",
-      );
+      const res = await supertest(app)
+        .get("/api/v1/roadmaps")
+        .query({ visibility: "public" });
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(200);
       // expect(res.body.total_count).toBe(10);
@@ -238,8 +260,9 @@ describe("GET /api/v1/roadmaps", () => {
       });
 
       const resPrivate = await supertest(app)
-        .get("/api/v1/roadmaps?visibility=private")
-        .set("Authorization", `Bearer ${user.authToken}`);
+        .get("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .query({ visibility: "private" });
 
       expect(resPrivate.headers["content-type"]).toContain("application/json");
       expect(resPrivate.status).toBe(200);
@@ -251,8 +274,9 @@ describe("GET /api/v1/roadmaps", () => {
       ).toBeTruthy();
 
       const resPublic = await supertest(app)
-        .get("/api/v1/roadmaps?visibility=public")
-        .set("Authorization", `Bearer ${user.authToken}`);
+        .get("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .query({ visibility: "public" });
 
       expect(resPublic.headers["content-type"]).toContain("application/json");
       expect(resPublic.status).toBe(200);
@@ -264,8 +288,9 @@ describe("GET /api/v1/roadmaps", () => {
       ).toBeTruthy();
 
       const resBoth = await supertest(app)
-        .get("/api/v1/roadmaps?visibility=public,private")
-        .set("Authorization", `Bearer ${user.authToken}`);
+        .get("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .query({ visibility: "public,private" });
 
       expect(resBoth.headers["content-type"]).toContain("application/json");
       expect(resBoth.status).toBe(200);
@@ -274,7 +299,9 @@ describe("GET /api/v1/roadmaps", () => {
 
     it("should calculate 'has_next_page' correctly with '?visibility=' filters", async () => {
       // Page 1
-      const page1 = await supertest(app).get("/api/v1/roadmaps?first=6");
+      const page1 = await supertest(app).get("/api/v1/roadmaps").query({
+        first: 6,
+      });
 
       expect(page1.headers["content-type"]).toContain("application/json");
       expect(page1.status).toBe(200);
@@ -283,9 +310,10 @@ describe("GET /api/v1/roadmaps", () => {
 
       // Page 2
       const after = page1.body.page_info.end_cursor;
-      const page2 = await supertest(app).get(
-        `/api/v1/roadmaps?first=6&after=${after}`,
-      );
+      const page2 = await supertest(app).get("/api/v1/roadmaps").query({
+        first: 6,
+        after,
+      });
 
       expect(page2.headers["content-type"]).toContain("application/json");
       expect(page2.status).toBe(200);
@@ -577,31 +605,140 @@ describe("PATCH /api/v1/roadmaps", () => {
     expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should throw error "ROADMAP_URL_MISSING"', async () => {
-    const { user } = await createUser({
+  it("should throw error 'ROADMAP_ID_OR_URL_MISSING'", async () => {
+    const { user: authUser } = await createUser({
       isVerified: true,
     });
-    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+    await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
       roleName: "Roadmap update",
     });
-    const r1 = await generateRoadmap({}, true);
 
     const response = await supertest(app)
       .patch("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${user.authToken}`)
-      .send({
-        id: r1.id,
-      });
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send();
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
+    expect(response.body.code).toEqual("ROADMAP_ID_OR_URL_MISSING");
+  });
 
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "ROADMAP_NAME_MISSING",
+        omitField: "name",
+        expectedError: {
+          message: "Roadmap name missing",
+          code: "ROADMAP_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "ROADMAP_URL_MISSING",
+        omitField: "url",
+        expectedError: {
+          message: "Roadmap url cannot be empty",
           code: "ROADMAP_URL_MISSING",
-        }),
-      ]),
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "ROADMAP_COLOR_HEX_LENGTH",
+        omitField: null,
+        overrideFields: { color: "fff" }, // 3 chars instead of 6
+        expectedError: {
+          message: "Color must be exactly 6 characters",
+          code: "ROADMAP_COLOR_HEX_LENGTH",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "ROADMAP_COLOR_HEX_CHAR",
+        omitField: null,
+        overrideFields: { color: "gggggg" }, // Invalid hex characters
+        expectedError: {
+          message: "Color must be a valid hexadecimal value",
+          code: "ROADMAP_COLOR_HEX_CHAR",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display=1",
+        omitField: null,
+        overrideFields: { display: 1 }, // Number instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display='true'",
+        omitField: null,
+        overrideFields: { display: "true" }, // String instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const { user } = await createUser({
+          isVerified: true,
+        });
+        await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+          roleName: "Roadmap update",
+        });
+        const r1 = await generateRoadmap({}, true);
+        const roadmap = await generateRoadmap({}, false);
+
+        const requestBody: IUpdateRoadmapRequestBody = {
+          id: r1.id,
+          name: roadmap.name,
+          url: roadmap.url,
+          color: roadmap.color,
+          display: roadmap.display,
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
     );
   });
 

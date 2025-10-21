@@ -6,10 +6,10 @@
           Boards
         </BreadcrumbItem>
 
-        <template v-if="title">
+        <template v-if="board?.name">
           <BreadcrumbDivider />
           <BreadcrumbItem>
-            {{ title }}
+            {{ board.name }}
           </BreadcrumbItem>
         </template>
       </Breadcrumbs>
@@ -18,7 +18,7 @@
     <Button
       type="primary"
       :loading="saveButtonLoading"
-      :disabled="createBoardPermissionDisabled"
+      :disabled="updateBoardPermissionDisabled"
       @click="update"
     >
       Save
@@ -33,21 +33,17 @@
             v-model="board.name"
             label="Name"
             placeholder="Enter board name"
+            :error="boardFieldError"
+            @hide-error="hideNameError"
           />
 
           <color-input v-model="board.color" />
         </div>
 
         <div class="form-column">
-          <l-text
-            v-model="slugUrl"
-            label="Slug"
-            placeholder="Board slug url"
-            :error="{
-              show: urlAvailableError,
-              message: 'Not available'
-            }"
-            @keyup="validateBoardUrl"
+          <SlugInputField
+            :current-value="board.url"
+            @update="(value) => (boardSlug = value)"
           />
         </div>
       </div>
@@ -77,20 +73,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, defineAsyncComponent } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IBoardUpdateRequestBody } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import {
-  getBoardByUrl,
-  updateBoard,
-  checkBoardName,
-} from "../../../modules/boards";
+import { getBoardByUrl, updateBoard } from "../../../modules/boards";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
 
 // components
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
@@ -99,9 +93,14 @@ import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
+const SlugInputField = defineAsyncComponent(
+  () =>
+    import(
+      "../../../components/dashboard/boards/BoardSettingsForm/SlugInputField.vue"
+    ),
+);
 
-const title = ref("");
-const board = reactive({
+const board = reactive<IBoardUpdateRequestBody>({
   boardId: "",
   name: "",
   url: "",
@@ -109,66 +108,47 @@ const board = reactive({
   view_voters: false,
   display: false,
 });
-const urlAvailableError = ref(false);
+const boardSlug = ref("");
 const saveButtonLoading = ref(false);
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 
-const createBoardPermissionDisabled = computed(() => {
-  const checkPermission = permissions.includes("board:update");
-  return !checkPermission;
+const updateBoardPermissionDisabled = computed(() => {
+  return !permissions.includes("board:update");
 });
 
-const slugUrl = computed({
-  get() {
-    return board.url;
-  },
-  set(value) {
-    board.url = value
-      .trim()
-      .replace(/[^\w]+/gi, "-")
-      .toLowerCase();
-  },
+const boardFieldError = reactive({
+  show: false,
+  message: "",
 });
 
-async function validateBoardUrl(event: KeyboardEvent) {
-  const keyCode = event.keyCode;
-
-  // only accept letters, numbers, & numpad numbers
-  if (
-    !(
-      (keyCode > 65 && keyCode < 90) ||
-      (keyCode > 45 && keyCode < 57) ||
-      (keyCode > 96 && keyCode < 105) ||
-      keyCode === 8
-    )
-  )
-    return false;
-
-  urlAvailableError.value = false;
-
-  try {
-    const response = await checkBoardName(board.url);
-    if (!response.data.available) {
-      urlAvailableError.value = true;
-    }
-  } catch (err) {
-    console.error(err);
-  }
+function hideNameError(event: FormFieldErrorType) {
+  boardFieldError.show = event.show;
+  boardFieldError.message = event.message;
 }
 
 async function update() {
+  if (!board.name.trim()) {
+    boardFieldError.show = true;
+    boardFieldError.message = "Please enter a valid board name";
+    return;
+  }
+
   saveButtonLoading.value = true;
   try {
-    const response = await updateBoard({
+    const body = {
       boardId: board.boardId,
       color: board.color,
       name: board.name,
       url: board.url,
       view_voters: board.view_voters,
       display: board.display,
-    });
+    };
+    if (boardSlug.value) {
+      body.url = boardSlug.value;
+    }
+    const response = await updateBoard(body);
 
     dashboardBoards.updateBoard(response.data.board);
     router.push("/dashboard/boards");
@@ -187,7 +167,6 @@ async function getBoard() {
     const response = await getBoardByUrl(url);
 
     Object.assign(board, response.data.board);
-    title.value = response.data.board.name;
   } catch (error) {
     console.error(error);
   }
@@ -196,7 +175,7 @@ async function getBoard() {
 onMounted(() => getBoard());
 
 useHead({
-  title: () => `${title.value ? `${title.value} • ` : ""}Board • Dashboard`,
+  title: () => `${board.name ? `${board.name} • ` : ""}Board • Dashboard`,
 });
 
 defineOptions({

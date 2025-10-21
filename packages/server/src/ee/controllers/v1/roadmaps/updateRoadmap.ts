@@ -7,6 +7,8 @@ import type {
   TPermission,
   TUpdateRoadmapResponseBody,
 } from "@logchimp/types";
+import * as v from "valibot";
+
 import type { ExpressRequestContext } from "../../../../express";
 import database from "../../../../database";
 
@@ -18,6 +20,40 @@ type ResponseBody =
   | TUpdateRoadmapResponseBody
   | IApiValidationErrorResponse
   | IApiErrorResponse;
+
+const bodySchema = v.object({
+  name: v.message(
+    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
+    "ROADMAP_NAME_MISSING",
+  ),
+  url: v.message(
+    v.pipe(
+      v.optional(v.string(), ""),
+      v.trim(),
+      v.toLowerCase(),
+      v.transform((url) => url.replace(/\W+/gi, "-")),
+      v.nonEmpty(),
+    ),
+    "ROADMAP_URL_MISSING",
+  ),
+  color: v.optional(
+    v.pipe(
+      v.string(),
+      v.trim(),
+      v.length(6, "ROADMAP_COLOR_HEX_LENGTH"),
+      v.hexadecimal("ROADMAP_COLOR_HEX_CHAR"),
+    ),
+  ),
+  display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
+});
+
+const schemaBodyErrorMap = {
+  ROADMAP_NAME_MISSING: error.api.roadmaps.nameMissing,
+  ROADMAP_URL_MISSING: error.api.roadmaps.urlMissing,
+  ROADMAP_COLOR_HEX_LENGTH: error.general.colorCodeLength,
+  ROADMAP_COLOR_HEX_CHAR: error.general.colorCodeInvalid,
+  BOOLEAN_EXPECTED: error.general.booleanValue,
+};
 
 export async function updateRoadmap(
   req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
@@ -34,29 +70,29 @@ export async function updateRoadmap(
     });
   }
 
-  const id = req.ctx.roadmap.id;
-  const { name, url, color, display } = req.body;
-
-  if (!url) {
-    return res.status(400).send({
-      errors: [
-        url
-          ? undefined
-          : {
-              message: error.api.roadmaps.urlMissing,
-              code: "ROADMAP_URL_MISSING",
-            },
-      ],
+  const body = v.safeParse(bodySchema, req.body);
+  if (!body.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
   }
 
-  const slimUrl = url.replace(/\W+/gi, "-").trim().toLowerCase();
+  const id = req.ctx.roadmap.id;
+  const { name, url, color, display } = body.output;
 
   try {
     const roadmaps = await database
       .update({
         name,
-        url: slimUrl,
+        url,
         color,
         display,
         updated_at: new Date().toJSON(),

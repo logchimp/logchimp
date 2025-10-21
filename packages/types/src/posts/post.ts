@@ -5,9 +5,9 @@ import type { IBoard } from "../board";
 import type { ApiSortType } from "../common";
 
 export interface IPost extends IPostInfo {
-  board: IBoard;
+  board: IBoard | null;
   author: IPublicUserInfo;
-  roadmap?: IRoadmap;
+  roadmap: IRoadmap | null;
   voters: IPostVote;
 }
 
@@ -47,9 +47,9 @@ export interface IGetPostBySlugResponseBody {
 }
 
 export interface ICreatePostRequestBody {
-  title: string;
-  contentMarkdown: string | null;
-  boardId: string;
+  title?: string;
+  contentMarkdown?: string | null;
+  boardId?: string;
   roadmapId?: string;
 }
 
@@ -74,8 +74,8 @@ export interface IUpdatePostRequestBody {
   contentMarkdown: string | null;
   slugId: string;
   userId: string;
-  boardId?: string;
-  roadmapId?: string;
+  boardId?: string | null;
+  roadmapId?: string | null;
 }
 
 export type TUpdatePostResponseBody = ICreatePostResponseBody;

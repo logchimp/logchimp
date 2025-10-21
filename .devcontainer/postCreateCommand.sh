@@ -23,16 +23,13 @@ set_env_var() {
 LC_SECRET=$(generate_random_string 12)
 LOGCHIMP_MACHINE_SIGNATURE=$(generate_random_string 64)
 
+cp ./packages/theme/.env.example ./packages/theme/.env
+
 # API (Server)
 set_env_var "LOGCHIMP_SECRET_KEY" "$LC_SECRET" "packages/server/.env"
 set_env_var "LOGCHIMP_MACHINE_SIGNATURE" "$LOGCHIMP_MACHINE_SIGNATURE" "packages/server/.env"
 set_env_var "LOGCHIMP_IS_SELF_HOSTED" "true" "packages/server/.env"
 set_env_var "LOGCHIMP_WEB_URL" "http://localhost:3000" "packages/server/.env"
-
-# Theme
-set_env_var "VITE_API_URL" "http://localhost:8000" "packages/theme/.env"
-set_env_var "VITE_IS_SELF_HOSTED" "true" "packages/theme/.env"
-
 
 #############################
 # Wait4X

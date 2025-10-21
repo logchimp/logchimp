@@ -22,13 +22,11 @@
       />
     </div>
 
-    <div class="p-1 w-full">
-      <div
-        v-if="!search && suggestions.length === 0"
-        class="text-center text-sm text-neutral-500 py-3.5"
-      >
-        No matches
-      </div>
+    <div class="w-full">
+     <NoRoadmap
+       v-if="searchRoadmap.roadmap"
+       @select="selectHandler"
+     />
 
       <ItemSuggestionDropdownItem
         v-for="item in suggestions"
@@ -38,8 +36,8 @@
       />
 
       <CreateRoadmapItem
+        v-if="search && suggestions.length === 0"
         :search="search"
-        :has-suggestions="suggestions.length > 0"
         @created="selectHandler"
       />
     </div>
@@ -53,10 +51,11 @@ import { watchDebounced } from "@vueuse/core";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { searchRoadmap as searchRoadmapApi } from "../../../../../modules/roadmaps";
-import { useRoadmapSearch } from "./search";
+import { type TCurrentRoadmap, useRoadmapSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
 import CreateRoadmapItem from "./CreateRoadmapItem.vue";
+import NoRoadmap from "./NoRoadmap.vue";
 
 const search = ref("");
 const suggestions = ref<IRoadmapPrivate[]>([]);
@@ -102,7 +101,8 @@ watchDebounced(
   { debounce: 600 },
 );
 
-function selectHandler(e: IRoadmapPrivate) {
+function selectHandler(e: TCurrentRoadmap) {
+  if (!e) return;
   searchRoadmap.select(e);
 }
 

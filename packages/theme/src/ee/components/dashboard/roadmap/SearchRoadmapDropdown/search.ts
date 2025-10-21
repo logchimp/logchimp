@@ -1,15 +1,16 @@
 import { ref } from "vue";
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { IRoadmap, IRoadmapPrivate } from "@logchimp/types";
 
-const currentRoadmap = ref<IRoadmapPrivate>();
+export type TCurrentRoadmap = IRoadmap | IRoadmapPrivate | null;
+const currentRoadmap = ref<TCurrentRoadmap>(null);
 
 export function useRoadmapSearch() {
-  function select(_roadmap: IRoadmapPrivate) {
+  function select(_roadmap: TCurrentRoadmap) {
     currentRoadmap.value = _roadmap;
   }
 
   function clear() {
-    currentRoadmap.value = undefined;
+    currentRoadmap.value = null;
   }
 
   return {

@@ -1,6 +1,9 @@
 {
   "general": {
-    "serverError": "Something went wrong!"
+    "serverError": "Something went wrong!",
+    "colorCodeLength": "Color must be exactly 6 characters",
+    "colorCodeInvalid": "Color must be a valid hexadecimal value",
+    "booleanValue": "Boolean value expected"
   },
   "middleware": {
     "auth": {
@@ -54,9 +57,11 @@
       "urlMissing": "Board url cannot be empty",
       "boardIdMissing": "Board ID missing",
       "exists": "Board already exists",
+      "urlExists": "Board url already exists",
       "boardNotFound": "Board not found"
     },
     "roadmaps": {
+      "nameMissing": "Roadmap name missing",
       "urlMissing": "Roadmap url cannot be empty",
       "roadmapNotFound": "Roadmap not found"
     },

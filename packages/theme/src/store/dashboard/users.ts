@@ -10,18 +10,38 @@ const usersServices = new Users();
 export const useDashboardUsers = defineStore("dashboardUsers", () => {
   const users = ref<IUser[]>([]);
   const state = ref<InfiniteScrollStateType>();
+
+  const hasNextPage = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
   const error = ref<unknown>(undefined);
+  const currentCursor = ref<string>();
 
   async function fetchUsers() {
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
     state.value = "LOADING";
     isLoading.value = true;
     error.value = undefined;
 
     try {
-      const response = await usersServices.getAll();
-      users.value = response.users;
-      state.value = "COMPLETED";
+      const response = await usersServices.getAll({
+        after: currentCursor.value,
+      });
+
+      const results = response.users;
+      const pageInfo = response.page_info;
+
+      if (results.length > 0) {
+        users.value.push(...results);
+
+        currentCursor.value = pageInfo?.end_cursor || undefined;
+        hasNextPage.value = pageInfo?.has_next_page || false;
+
+        state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
+      } else {
+        state.value = "COMPLETED";
+        hasNextPage.value = false;
+      }
     } catch (err) {
       error.value = err;
       state.value = "ERROR";

@@ -2,7 +2,7 @@ name: Test
 
 on:
   push:
-    branches: [main,master]
+    branches: [main, master]
     paths:
       - ".github/workflows/test.yml"
       - "packages/**"
@@ -113,9 +113,10 @@ jobs:
         run: pnpm --filter @logchimp/api test:unit
 
   api-integration:
-    name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    name: API / Integration Tests - OS ${{ matrix.os }} - Node v${{ matrix.node }} - Postgres v${{ matrix.postgres }}
     runs-on: ${{ matrix.os }}
     needs: [api-unit]
+
     env:
       NODE_ENV: "ci"
       LOGCHIMP_DB_DATABASE: db
@@ -132,13 +133,15 @@ jobs:
       LOGCHIMP_MAIL_PORT: 1025
 
     strategy:
+      fail-fast: false
       matrix:
         node: [22]
+        postgres: [12.18, 14, 16, 17, 18]
         os: [ubuntu-24.04]
 
     services:
       postgres:
-        image: postgres:12.18
+        image: postgres:${{ matrix.postgres }}
         env:
           POSTGRES_DB: db
           POSTGRES_USER: user
@@ -195,9 +198,5 @@ jobs:
       - name: Store Code Coverage
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.runs-on }}
+          name: coverage-node@22-pg@${{ matrix.postgres }}
           path: ./coverage
-
-  biome-tools:
-    name: "Biome CLI"
-    uses: ./.github/workflows/biome-tools.yml

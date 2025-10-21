@@ -34,6 +34,8 @@
             v-model="post.title"
             label="Title"
             placeholder="Name of the feature"
+            :error="postFieldError"
+            @hide-error="hideTitleError"
           />
 
           <l-textarea
@@ -64,11 +66,16 @@
       </h6>
       <div class="form-columns">
         <div class="form-column">
-          <SearchBoardDropdown @selected="selectBoard" />
+          <SearchBoardDropdown
+            :board="post.board"
+            @selected="selectBoard"
+          />
         </div>
 
         <div class="form-column">
-          <SearchRoadmapDropdown @selected="selectRoadmap" />
+          <SearchRoadmapDropdown
+            :roadmap="post.roadmap"
+            @selected="selectRoadmap" />
         </div>
       </div>
     </div>
@@ -77,16 +84,13 @@
 
 <script setup lang="ts">
 import { computed, ref, reactive } from "vue";
-import type {
-  IBoardPrivate,
-  IDashboardPost,
-  IRoadmapPrivate,
-} from "@logchimp/types";
+import type { IDashboardPost } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
 import { updatePost } from "../../../../modules/posts";
 import { useUserStore } from "../../../../store/user";
+import { useDashboardPosts } from "../../../../store/dashboard/posts";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -99,12 +103,17 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import SearchRoadmapDropdown from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/Dropdown.vue";
 import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/Dropdown.vue";
+import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
+import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
+import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
 
 const { permissions } = useUserStore();
+const dashboardPosts = useDashboardPosts();
 
 interface Props {
   post: IDashboardPost;
 }
+
 const props = defineProps<Props>();
 
 const saveBtnLoading = ref(false);
@@ -117,7 +126,23 @@ const updatePostPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
+const postFieldError = reactive({
+  show: false,
+  message: "",
+});
+
+function hideTitleError(event: FormFieldErrorType) {
+  postFieldError.show = event.show;
+  postFieldError.message = event.message;
+}
+
 async function updatePostHandler() {
+  if (!post.title.trim()) {
+    postFieldError.show = true;
+    postFieldError.message = "Please enter a valid post title";
+    return;
+  }
+
   saveBtnLoading.value = true;
 
   try {
@@ -127,13 +152,13 @@ async function updatePostHandler() {
       contentMarkdown: post.contentMarkdown,
       slugId: post.slugId,
       userId: post.author.userId,
-      boardId: post.board ? post.board.boardId : undefined,
-      roadmapId: post.roadmap ? post.roadmap.id : undefined,
+      boardId: post.board ? post.board.boardId : null,
+      roadmapId: post.roadmap ? post.roadmap.id : null,
     });
 
-    if (response.status === 200) {
-      router.push("/dashboard/posts");
-    }
+    Object.assign(post, response.data.post);
+    dashboardPosts.updatePost(post);
+    router.push("/dashboard/posts");
   } catch (err) {
     console.error(err);
   } finally {
@@ -141,13 +166,13 @@ async function updatePostHandler() {
   }
 }
 
-function selectBoard(board: IBoardPrivate) {
+function selectBoard(board: TCurrentBoard) {
   Object.assign(post, {
     board,
   });
 }
 
-function selectRoadmap(roadmap: IRoadmapPrivate) {
+function selectRoadmap(roadmap: TCurrentRoadmap) {
   Object.assign(post, {
     roadmap,
   });

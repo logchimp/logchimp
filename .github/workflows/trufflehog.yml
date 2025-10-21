@@ -1,0 +1,47 @@
+name: TruffleHog
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+  schedule:
+    # Run weekly scan on Monday at 12:00 AM
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+  pull-requests: write
+  security-events: write
+  actions: read
+
+env:
+  TRUFFLEHOG_VERSION: 3.90.8
+
+jobs:
+  trufflehog-cli:
+    name: 🔎 Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install TruffleHog CLI
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin v${{ env.TRUFFLEHOG_VERSION }}
+          trufflehog --version
+
+      - name: Scan current commit
+        id: trufflehog
+        run: |
+          trufflehog filesystem . \
+            --results=unverified,verified \
+            --github-actions \
+            --exclude-paths .config/.trufflehogignore \
+            --fail

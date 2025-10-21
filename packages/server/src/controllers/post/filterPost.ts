@@ -7,7 +7,7 @@ import type {
 import database from "../../database";
 
 // services
-import { getBoardById } from "../../services/boards/getBoardById";
+import { getBoardById } from "../../ee/services/boards/getBoardById";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils

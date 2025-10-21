@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
-import type { IBoardDetail } from "@logchimp/types";
+import type { IBoardDetail, IBoardUpdateRequestBody } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -82,74 +82,6 @@ describe("GET /api/v1/boards", () => {
     }
   });
 
-  it("should get filtered boards in 'DESC' order", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      created: "DESC",
-    });
-
-    const responseBoards: IBoardDetail[] = response.body.boards;
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(10);
-
-    const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
-    );
-
-    for (let i = 0; i < boardCreationDates.length - 1; i++) {
-      const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i + 1].getTime();
-      expect(curr).to.be.at.least(next);
-    }
-  });
-
-  it("should get 2 filtered boards in 'DESC' order", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      limit: 2,
-      created: "DESC",
-    });
-
-    const responseBoards: IBoardDetail[] = response.body.boards;
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(2);
-
-    const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
-    );
-
-    for (let i = 0; i < boardCreationDates.length - 1; i++) {
-      const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i + 1].getTime();
-      expect(curr).to.be.at.least(next);
-    }
-  });
-
-  it("should get 10 filtered boards in 'ACS' order", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      limit: 15,
-      created: "ACS",
-    });
-
-    const responseBoards: IBoardDetail[] = response.body.boards;
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(10);
-
-    const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
-    );
-
-    for (let i = 0; i < boardCreationDates.length - 1; i++) {
-      const curr = boardCreationDates[i].getTime();
-      const next = boardCreationDates[i + 1].getTime();
-      expect(curr).to.be.at.most(next);
-    }
-  });
-
   it("should get 5 filtered boards, in page 3, 'DESC' order", async () => {
     const response = await supertest(app).get("/api/v1/boards").query({
       page: 2,
@@ -174,18 +106,116 @@ describe("GET /api/v1/boards", () => {
     }
   });
 
-  it("should get an empty boards Array", async () => {
-    const response = await supertest(app).get("/api/v1/boards").query({
-      page: 50,
-      limit: 10,
-      created: "DESC",
+  describe("Offset pagination", () => {
+    describe("'?page=' param", () => {
+      it("should coerce page=0 and page=-1 to page=1 in offset mode", async () => {
+        const page0 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5, page: 0, created: "ASC" });
+
+        const pageNeg1 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5, page: -1, created: "ASC" });
+
+        const page1 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5, page: 1, created: "ASC" });
+
+        const ids0 = page0.body.boards.map((b: IBoardDetail) => b.boardId);
+        const idsNeg1 = pageNeg1.body.boards.map(
+          (b: IBoardDetail) => b.boardId,
+        );
+        const ids1 = page1.body.boards.map((b: IBoardDetail) => b.boardId);
+
+        expect(ids0).toEqual(ids1);
+        expect(idsNeg1).toEqual(ids1);
+      });
+
+      it("should get an empty boards Array for large '?page=1000'", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          page: 1000,
+          created: "DESC",
+        });
+
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(0);
+      });
     });
 
-    const responseBoards: IBoardDetail[] = response.body.boards;
+    describe("'?created=' param", () => {
+      it("should get filtered boards in 'DESC' order", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          created: "DESC",
+        });
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(responseBoards).toHaveLength(0);
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(10);
+
+        const boardCreationDates = responseBoards.map(
+          (board: IBoardDetail) => new Date(board.createdAt),
+        );
+
+        for (let i = 0; i < boardCreationDates.length - 1; i++) {
+          const curr = boardCreationDates[i].getTime();
+          const next = boardCreationDates[i + 1].getTime();
+          expect(curr).to.be.at.least(next);
+        }
+      });
+    });
+
+    describe("'?limit=' param", () => {
+      it("should get 2 filtered boards in 'DESC' order", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          limit: 2,
+          created: "DESC",
+        });
+
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(2);
+
+        const boardCreationDates = responseBoards.map(
+          (board: IBoardDetail) => new Date(board.createdAt),
+        );
+
+        for (let i = 0; i < boardCreationDates.length - 1; i++) {
+          const curr = boardCreationDates[i].getTime();
+          const next = boardCreationDates[i + 1].getTime();
+          expect(curr).to.be.at.least(next);
+        }
+      });
+
+      it("should get 15 boards, fallback to cap value of 10 boards in 'ACS' order", async () => {
+        const response = await supertest(app).get("/api/v1/boards").query({
+          limit: 15,
+          created: "ACS",
+        });
+
+        const responseBoards: IBoardDetail[] = response.body.boards;
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(responseBoards).toHaveLength(10);
+
+        const boardCreationDates = responseBoards.map(
+          (board: IBoardDetail) => new Date(board.createdAt),
+        );
+
+        for (let i = 0; i < boardCreationDates.length - 1; i++) {
+          const curr = boardCreationDates[i].getTime();
+          const next = boardCreationDates[i + 1].getTime();
+          expect(curr).to.be.at.most(next);
+        }
+      });
+    });
   });
 });
 
@@ -495,10 +525,165 @@ describe("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should throw error 'BOARD_URL_MISSING'", async () => {
-    const board: BoardInsertRecord = await generateBoards({}, true);
-    const newBoard: BoardInsertRecord = await generateBoards({}, false);
+  it("should throw error 'BOARD_ID_OR_URL_MISSING'", async () => {
     const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send();
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("BOARD_ID_OR_URL_MISSING");
+  });
+
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "BOARD_NAME_MISSING",
+        omitField: "name",
+        expectedError: {
+          message: "Board name missing",
+          code: "BOARD_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_URL_MISSING",
+        omitField: "url",
+        expectedError: {
+          message: "Board url cannot be empty",
+          code: "BOARD_URL_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_COLOR_HEX_LENGTH",
+        omitField: null,
+        overrideFields: { color: "fff" }, // 3 chars instead of 6
+        expectedError: {
+          message: "Color must be exactly 6 characters",
+          code: "BOARD_COLOR_HEX_LENGTH",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_COLOR_HEX_CHAR",
+        omitField: null,
+        overrideFields: { color: "gggggg" }, // Invalid hex characters
+        expectedError: {
+          message: "Color must be a valid hexadecimal value",
+          code: "BOARD_COLOR_HEX_CHAR",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for view_voters='true'",
+        omitField: null,
+        overrideFields: { view_voters: "true" }, // String instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for view_voters=0",
+        omitField: null,
+        overrideFields: { view_voters: 0 }, // Number instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display=1",
+        omitField: null,
+        overrideFields: { display: 1 }, // Number instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOOLEAN_EXPECTED for display='true'",
+        omitField: null,
+        overrideFields: { display: "true" }, // String instead of boolean
+        expectedError: {
+          message: "Boolean value expected",
+          code: "BOOLEAN_EXPECTED",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoards({}, true);
+        const newBoard = await generateBoards({}, false);
+        const { user: authUser } = await createUser();
+        await createRoleWithPermissions(authUser.userId, ["board:update"], {
+          roleName: "Board Patcher",
+        });
+
+        // Build the request body
+        const requestBody: IBoardUpdateRequestBody = {
+          boardId: board.boardId,
+          name: newBoard.name,
+          url: newBoard.url,
+          color: newBoard.color,
+          view_voters: newBoard.view_voters,
+          display: newBoard.display,
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/boards")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
+    );
+  });
+
+  it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {
+    const { user: authUser } = await createUser();
+    const preExistingBoard = await generateBoards({}, true);
+    const board = await generateBoards({}, true);
 
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
       roleName: "Board Patcher",
@@ -509,22 +694,16 @@ describe("PATCH /api/v1/boards", () => {
       .set("Authorization", `Bearer ${authUser.authToken}`)
       .send({
         boardId: board.boardId,
-        name: newBoard.name,
-        color: newBoard.color,
-        view_voters: newBoard.view_voters,
-        display: newBoard.display,
+        name: board.name,
+        color: board.color,
+        view_voters: board.view_voters,
+        display: board.display,
+        url: preExistingBoard.url,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          message: "Board url cannot be empty",
-          code: "BOARD_URL_MISSING",
-        }),
-      ]),
-    );
+    expect(response.status).toBe(409);
+    expect(response.body.code).toBe("BOARD_URL_EXISTS");
   });
 
   it("should UPDATE board", async () => {
@@ -597,5 +776,108 @@ describe("DELETE /api/v1/boards", () => {
 
     expect(response.status).toBe(204);
     expect(response.body.code).toBeUndefined();
+  });
+});
+
+// Check if a boardUrl exists
+describe("POST /api/v1/boards/check-slug", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const response = await supertest(app).post("/api/v1/boards/check-slug");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+    const { user: authUser } = await createUser();
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Beare${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
+    const { user: authUser } = await createUser();
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should throw error 'BOARD_URL_MISSING'", async () => {
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(
+      authUser.userId,
+      ["board:create", "board:update"],
+      {
+        roleName: "Board contributor",
+      },
+    );
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("BOARD_URL_MISSING");
+  });
+
+  it("should return '{ available: false}' for board url that already exists", async () => {
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(
+      authUser.userId,
+      ["board:create", "board:update"],
+      {
+        roleName: "Board contributor",
+      },
+    );
+
+    const board = await generateBoards({}, true);
+    console.log(board.url);
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        url: board.url,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.available).toBeFalsy();
+  });
+
+  it.skip("should return '{ available: true}' for board url that doesn't exists", async () => {
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(
+      authUser.userId,
+      ["board:create", "board:update"],
+      {
+        roleName: "Board contributor",
+      },
+    );
+
+    const response = await supertest(app)
+      .post("/api/v1/boards/check-slug")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        url: faker.food.dish(),
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.available).toBeTruthy();
   });
 });

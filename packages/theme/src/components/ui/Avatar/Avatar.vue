@@ -1,5 +1,5 @@
 <template>
-  <div class="select-none overflow-hidden" @click="$emit('click')">
+  <div class="select-none overflow-hidden">
     <div
       v-if="src"
       data-test="avatar-image"

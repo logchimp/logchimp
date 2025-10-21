@@ -1,4 +1,9 @@
-import type { ApiSortType, IApiStatus } from "./common";
+import {
+  ApiSortType,
+  CursorPaginatedResponse,
+  CursorPaginationParams,
+  IApiStatus,
+} from "./common";
 
 export interface IPublicUserInfo {
   userId: string;
@@ -44,13 +49,18 @@ export type TGetUserInfoResponseBody = {
   user: IUserInfo;
 };
 
-export interface IGetUsersRequestQuery {
-  page: string;
-  limit?: string;
+export interface IGetUsersRequestQuery extends CursorPaginationParams {
   created: ApiSortType;
+  /**
+   * For backward compatibility to support offset pagination,
+   * will be removed in the next major release.
+   */
+  page?: string;
+  limit?: string;
 }
 
-export interface IGetUsersResponseBody {
+export interface IGetUsersResponseBody
+  extends Partial<CursorPaginatedResponse<IUser>> {
   status: IApiStatus;
   users: IUser[];
 }

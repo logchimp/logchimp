@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
-import type { IBoard, IPost } from "@logchimp/types";
+import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
@@ -371,38 +371,8 @@ describe("POST /api/v1/posts", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should throw error "BOARD_ID_MISSING"', async () => {
-    const { user: authUser } = await createUser({
-      isVerified: true,
-    });
-    await createRoleWithPermissions(authUser.userId, ["post:create"], {
-      roleName: "Post Creator",
-    });
-
-    const response = await supertest(app)
-      .post(`/api/v1/posts/`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        title: faker.food.dish,
-        contentMarkdown: faker.food.description,
-        userId: authUser.userId,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          message: "Board ID missing",
-          code: "BOARD_ID_MISSING",
-        }),
-      ]),
-    );
-  });
-
-  it('should throw error "POST_TITLE_MISSING"', async () => {
+  it("should create a post without title", async () => {
     const board = await generateBoard({}, true);
-    await generateRoadmap({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -420,15 +390,35 @@ describe("POST /api/v1/posts", () => {
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.errors).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          message: "Post title missing",
-          code: "POST_TITLE_MISSING",
-        }),
-      ]),
-    );
+    expect(response.status).toBe(201);
+    const postResponse = response.body.post;
+    expect(postResponse.title).toBe("new post");
+    expect(postResponse.boardId).toBe(board.boardId);
+  });
+
+  it("should create a post without a board", async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+    const title = faker.food.dish();
+    await createRoleWithPermissions(authUser.userId, ["post:create"], {
+      roleName: "Post Creator",
+    });
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/`)
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        title,
+        contentMarkdown: faker.food.description,
+        userId: authUser.userId,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+    const postResponse = response.body.post;
+    expect(postResponse.title).toBe(title);
+    expect(postResponse.boardId).toBeNull();
   });
 
   it("should create a post with '@everyone' role", async () => {
@@ -478,6 +468,102 @@ describe("PATCH /api/v1/posts", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(401);
     expect(res.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+  });
+
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "POST_TITLE_MISSING for missing 'title'",
+        omitField: "title",
+        expectedError: {
+          message: "Post title missing",
+          code: "POST_TITLE_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "POST_TITLE_MISSING for title=''",
+        omitField: null,
+        overrideFields: { title: "" },
+        expectedError: {
+          message: "Post title missing",
+          code: "POST_TITLE_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "POST_TITLE_MISSING for title='            '",
+        omitField: null,
+        overrideFields: { title: "            " },
+        expectedError: {
+          message: "Post title missing",
+          code: "POST_TITLE_MISSING",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoard({}, true);
+        const roadmap = await generateRoadmap({}, true);
+        const { user: author } = await createUser({ isVerified: true });
+        const post = await generatePost(
+          {
+            userId: author.userId,
+            boardId: board.boardId,
+            roadmapId: roadmap.id,
+          },
+          true,
+        );
+
+        // Build the request body
+        const requestBody: IUpdatePostRequestBody = {
+          id: post.postId,
+          title: post.title,
+          slugId: post.slugId,
+          userId: author.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+          contentMarkdown: post.contentMarkdown,
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/posts")
+          .set("Authorization", `Bearer ${author.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
+    );
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION" when not author and without permission', async () => {
