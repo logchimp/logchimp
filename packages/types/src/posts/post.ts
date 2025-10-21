@@ -6,6 +6,7 @@ import type {
   ApiSortType,
   CursorPaginatedResponse,
   CursorPaginationParams,
+  IApiStatus,
 } from "../common";
 
 export interface IPost extends IPostInfo {
@@ -28,7 +29,7 @@ interface IPostInfo {
   createdAt: Date;
 }
 
-export interface IFilterPostRequestBody {
+export interface IFilterPostRequestBody extends CursorPaginationParams {
   boardId: string[];
   roadmapId?: string;
   page: string;
@@ -36,7 +37,9 @@ export interface IFilterPostRequestBody {
   created: ApiSortType;
 }
 
-export interface IFilterPostResponseBody {
+export interface IFilterPostResponseBody
+  extends Partial<CursorPaginatedResponse<IPost>> {
+  status: IApiStatus;
   posts: IPost[];
 }
 
