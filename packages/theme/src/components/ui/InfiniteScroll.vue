@@ -82,7 +82,7 @@ function executeInfiniteScroll() {
 useInfiniteScroll(window, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
-  canLoadMore: () => navigator.onLine && (!noMoreResults.value || props.state !== "ERROR"),
-
+  canLoadMore: () =>
+   navigator.onLine && (!noMoreResults.value || props.state !== "ERROR"),
 });
 </script>
