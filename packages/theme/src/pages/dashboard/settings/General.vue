@@ -9,7 +9,7 @@
     <Button
       type="primary"
       :loading="updateSettingsButtonLoading"
-      :disabled="updateSettingsPermissionDisabled"
+      :disabled="updateSettingsPermissionDisabled || !isFormValid"
       @click="updateSettingsHandler"
     >
       Save
@@ -47,22 +47,23 @@
 
         <div class="form-column">
           <div class="grid gap-y-4">
-           <div>
-             <InputLabel html-for="logo_preview">Logo</InputLabel>
-             <div
-               :class="[
-                'size-16 border border-(--color-gray-90) bg-(--color-gray-97)',
-                'rounded-full select-none pointer-events-none overflow-hidden'
-              ]"
-             >
-               <img
-                 v-if="logo"
-                 :src="logo"
-                 :alt="siteName.value || ''"
-                 class="w-full h-full"
-               />
-             </div>
-           </div>
+            <div>
+              <InputLabel html-for="logo_preview">Logo</InputLabel>
+              <div
+                :class="[
+                  'size-16 border border-(--color-gray-90) bg-(--color-gray-97)',
+                  'rounded-full select-none pointer-events-none overflow-hidden'
+                ]"
+              >
+                <img
+                  v-if="logo"
+                  :src="logo"
+                  :alt="siteName.value || ''"
+                  class="w-full h-full"
+                />
+              </div>
+            </div>
+
             <l-text
               :model-value="logo ?? undefined"
               @update:model-value="(value) => logo = value ?? null"
@@ -75,7 +76,7 @@
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">Appearances</h6>
+      <h6 class="form-section-title">Appearance</h6>
       <div class="form-columns">
         <div class="form-column">
           <color-input
@@ -144,79 +145,72 @@ type TextInputField = {
 
 const siteName = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: { show: false, message: "" },
 });
+
 const logo = ref<string | null>("");
 const description = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: { show: false, message: "" },
 });
 const allowSignup = ref(false);
 const accentColor = reactive<TextInputField>({
   value: "484d7c",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: { show: false, message: "" },
 });
 const googleAnalyticsId = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: { show: false, message: "" },
 });
 const developer_mode = ref(false);
 const updateSettingsButtonLoading = ref(false);
 
+// Check user permissions
 const updateSettingsPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("settings:update");
   return !checkPermission;
 });
 
+// ✅ Disable Save button when form invalid (blank site name)
+const isFormValid = computed(() => {
+  const site = siteName.value?.trim();
+  return site && site.length > 0;
+});
+
+// ===== Error Handlers =====
 function hideSiteNameError(event: FormFieldErrorType) {
   siteName.error = event;
 }
-
 function hideDescriptionError(event: FormFieldErrorType) {
   description.error = event;
 }
-
-// function hideAccentColorError(event: FormFieldErrorType) {
-//   accentColor.error = event;
-// }
-
 function hideGoogleAnalyticsError(event: FormFieldErrorType) {
   googleAnalyticsId.error = event;
 }
 
+// ===== Save Handler =====
 async function updateSettingsHandler() {
-  if (!(siteName.value && accentColor.value)) {
-    if (!siteName.value) {
-      siteName.error.show = true;
-      siteName.error.message = "Required";
-    }
+  // Validation
+  if (!siteName.value || siteName.value.trim() === "") {
+    siteName.error.show = true;
+    siteName.error.message = "Site name is required.";
+    return;
+  }
 
-    if (!accentColor.value) {
-      accentColor.error.show = true;
-      accentColor.error.message = "Required";
-    }
+  if (!accentColor.value || accentColor.value.trim() === "") {
+    accentColor.error.show = true;
+    accentColor.error.message = "Accent color is required.";
+    return;
   }
 
   updateSettingsButtonLoading.value = true;
 
   const siteData = {
-    title: siteName.value,
-    description: description.value,
-    accentColor: accentColor.value,
-    logo: logo.value,
-    googleAnalyticsId: googleAnalyticsId.value,
+    title: siteName.value.trim(),
+    description: description.value?.trim() || "",
+    accentColor: accentColor.value.trim(),
+    logo: logo.value || "",
+    googleAnalyticsId: googleAnalyticsId.value?.trim() || "",
     allowSignup: allowSignup.value,
     developer_mode: developer_mode.value,
   };
@@ -239,6 +233,7 @@ async function updateSettingsHandler() {
   }
 }
 
+// ===== Fetch Settings =====
 async function getSettingsHandler() {
   try {
     const response = await getSettings();
