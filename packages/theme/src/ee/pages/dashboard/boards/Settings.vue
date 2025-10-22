@@ -56,11 +56,11 @@ async function getBoard(url: string) {
 
     title.value = response.data.board.name;
     Object.assign(board, response.data.board);
-    loading.value = false;
   } catch (err) {
     console.error(err);
     // @ts-expect-error
     errorCode.value = err.response.data.code;
+  } finally {
     loading.value = false;
   }
 }

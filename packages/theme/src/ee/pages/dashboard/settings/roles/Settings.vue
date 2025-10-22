@@ -97,6 +97,9 @@ const permissions = reactive<IPermissionsState>({
 });
 
 async function getRoleHandler(id: string) {
+  loading.value = true;
+  errorCode.value = undefined;
+
   try {
     const response = await getRole(id);
 
@@ -119,6 +122,10 @@ async function getRoleHandler(id: string) {
     });
   } catch (err) {
     console.error(err);
+    // @ts-expect-error
+    errorCode.value = err.response.data.code;
+  } finally {
+    loading.value = false;
   }
 }
 

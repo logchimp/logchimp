@@ -59,11 +59,11 @@ async function getRoadmap(url: string) {
       color: response.data.roadmap.color,
       display: response.data.roadmap.display,
     });
-    loading.value = false;
   } catch (err) {
     console.error(err);
     // @ts-expect-error
     errorCode.value = err.response.data.code;
+  } finally {
     loading.value = false;
   }
 }

@@ -76,13 +76,12 @@ async function postBySlug(slug: string) {
 
   try {
     const response = await getPostBySlug(slug);
-
     Object.assign(post, response.data.post);
-    loading.value = false;
   } catch (err) {
     console.error(err);
     // @ts-expect-error
     errorCode.value = err.response.data.code;
+  } finally {
     loading.value = false;
   }
 }
