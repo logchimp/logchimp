@@ -171,10 +171,11 @@ const updateSettingsPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
-// ✅ Disable Save button when form invalid (blank site name)
+// ✅ Disable Save button when form invalid (blank site name or accent color)
 const isFormValid = computed(() => {
   const site = siteName.value?.trim();
-  return site && site.length > 0;
+  const color = accentColor.value?.trim();
+  return site && site.length > 0 && color && color.length > 0;
 });
 
 // ===== Error Handlers =====
