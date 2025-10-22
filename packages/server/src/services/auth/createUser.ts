@@ -11,7 +11,11 @@ import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 
 // utils
-import { sanitiseUsername, sanitiseName } from "../../helpers";
+import {
+  generateNanoID as nanoid,
+  sanitiseUsername,
+  sanitiseName,
+} from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -51,7 +55,11 @@ const createUser = async (
   const name = sanitiseName(userData.name);
 
   // get username from email address after truncating to first 30 characters and sanitise
-  const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
+  const baseUsername = sanitiseUsername(
+    userData.email.split("@")[0].slice(0, 30),
+  );
+
+  const username = await generateUniqueUsername(baseUsername);
 
   // get avatar by hashing email
   const userMd5Hash = md5(email);
@@ -149,3 +157,16 @@ const createUser = async (
 };
 
 export { createUser };
+
+async function generateUniqueUsername(baseUsername: string): Promise<string> {
+  let username = baseUsername;
+  let exists = await database("users").where({ username }).first();
+
+  while (exists) {
+    const suffix = nanoid(5);
+    username = `${baseUsername}-${suffix}`.slice(0, 30);
+    exists = await database("users").where({ username }).first();
+  }
+
+  return username;
+}
