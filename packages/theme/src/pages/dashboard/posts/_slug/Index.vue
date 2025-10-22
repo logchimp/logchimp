@@ -15,6 +15,9 @@
     <Dashboard404 v-else-if="errorCode === 'POST_NOT_FOUND'">
       Post not found
     </Dashboard404>
+    <Dashboard500 v-else>
+      Something went wrong.
+    </Dashboard500>
   </div>
 </template>
 
@@ -29,6 +32,7 @@ import { getPostBySlug } from "../../../../modules/posts";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
+import Dashboard500 from "../../../../components/dashboard/500.vue";
 import DashboardPostEditor from "../../../../components/dashboard/posts/PostEditor/index.vue";
 import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
 

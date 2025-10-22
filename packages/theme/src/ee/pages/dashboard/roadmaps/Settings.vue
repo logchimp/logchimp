@@ -16,6 +16,9 @@
     <Dashboard404 v-else-if="errorCode === 'ROADMAP_NOT_FOUND'">
       Roadmap not found
     </Dashboard404>
+    <Dashboard500 v-else>
+      Something went wrong.
+    </Dashboard500>
   </div>
 </template>
 
@@ -30,6 +33,7 @@ import { getRoadmapByUrl } from "../../../../modules/roadmaps";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
+import Dashboard500 from "../../../../components/dashboard/500.vue";
 import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
 import RoadmapEditor from "../../../components/roadmap/RoadmapEditor.vue";
 

@@ -107,9 +107,7 @@ const props = defineProps<Props>();
 
 const boardSlug = ref("");
 const saveButtonLoading = ref(false);
-const board = reactive<IBoardPrivate>({
-  ...props.board,
-});
+const board = reactive<IBoardPrivate>(props.board);
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
