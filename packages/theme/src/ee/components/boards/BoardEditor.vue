@@ -6,10 +6,10 @@
           Boards
         </BreadcrumbItem>
 
-        <template v-if="board?.name">
+        <template v-if="title">
           <BreadcrumbDivider />
           <BreadcrumbItem>
-            {{ board.name }}
+            {{ title }}
           </BreadcrumbItem>
         </template>
       </Breadcrumbs>
@@ -100,6 +100,7 @@ const SlugInputField = defineAsyncComponent(
 );
 
 interface Props {
+  title: string;
   board: IBoardPrivate;
 }
 const props = defineProps<Props>();

@@ -10,6 +10,7 @@
     <LoaderContainer v-if="loading" />
     <BoardEditor
       v-else-if="board.boardId && !errorCode"
+      :title="title"
       :board="board"
     />
     <Dashboard404 v-else-if="errorCode === 'BOARD_NOT_FOUND'">
@@ -34,6 +35,7 @@ import BoardEditor from "../../../components/boards/BoardEditor.vue";
 
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
+const title = ref<string>("");
 const board = reactive<IBoardPrivate>({
   boardId: "",
   name: "",
@@ -52,6 +54,7 @@ async function getBoard(url: string) {
   try {
     const response = await getBoardByUrl(url);
 
+    title.value = response.data.board.name;
     Object.assign(board, response.data.board);
     loading.value = false;
   } catch (err) {
