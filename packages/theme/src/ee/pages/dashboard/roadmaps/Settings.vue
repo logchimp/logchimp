@@ -51,10 +51,10 @@ async function getRoadmap(url: string) {
   try {
     const response = await getRoadmapByUrl(url);
 
-    const title = response.data.roadmap.name;
+    title.value = response.data.roadmap.name;
     Object.assign(roadmap, {
       id: response.data.roadmap.id,
-      name: title,
+      name: title.value,
       url: response.data.roadmap.url,
       color: response.data.roadmap.color,
       display: response.data.roadmap.display,
