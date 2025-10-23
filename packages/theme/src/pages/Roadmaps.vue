@@ -1,5 +1,4 @@
 <template>
-   <!-- Show skeleton while loading -->
   <roadmap-skeleton v-if="loading" />
 
   <!-- Show roadmaps grid only when we have roadmaps -->
@@ -47,14 +46,14 @@ const roadmaps = ref<IRoadmap[]>([]);
 const endCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
 
-const loading = ref(true); // for initial load
-const scrollLoading = ref(false); // for infinite scroll load
+const loading = ref(true);
+const scrollLoading = ref(false);
 
 async function getRoadmaps(after: string | undefined, isScroll = false) {
-  try {
-    if (isScroll) scrollLoading.value = true;
-    else loading.value = true;
+  if (isScroll) scrollLoading.value = true;
+  else loading.value = true;
 
+  try {
     const response = await getAllRoadmaps({
       first: "4",
       after: after == null ? undefined : after,
