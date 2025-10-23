@@ -1,12 +1,23 @@
 import type { Request, Response } from "express";
-import type { TPermission } from "@logchimp/types";
+import type {
+  IRole,
+  IApiErrorResponse,
+  IGetAllRoles,
+  TPermission,
+  IGetRolesParams,
+} from "@logchimp/types";
 import database from "../../../../database";
 
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 
-export async function get(req: Request, res: Response) {
+type ResponseBody = IGetAllRoles | IApiErrorResponse;
+
+export async function get(
+  req: Request<IGetRolesParams>,
+  res: Response<ResponseBody>,
+) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("role:read");
@@ -18,7 +29,7 @@ export async function get(req: Request, res: Response) {
   }
 
   try {
-    const roles = await database.select().from("roles");
+    const roles = await database.select<IRole[]>().from("roles");
 
     res.status(200).send({ roles });
   } catch (err) {
