@@ -1,4 +1,7 @@
-import type { CursorPaginationParams } from "../common";
+import type {
+  CursorPaginatedResponse,
+  CursorPaginationParams,
+} from "../common";
 import type { TPermission } from "./permissions";
 import type { IUserRole } from "../user";
 
@@ -12,7 +15,8 @@ export interface IRole {
 
 export interface IGetRolesParams extends CursorPaginationParams {}
 
-export interface IGetAllRoles {
+export interface IPaginatedRolesResponse
+  extends CursorPaginatedResponse<IRole> {
   roles: IRole[];
 }
 
