@@ -15,6 +15,9 @@
     <Dashboard404 v-else-if="errorCode === 'POST_NOT_FOUND'">
       Post not found
     </Dashboard404>
+    <Dashboard500 v-else>
+      Something went wrong.
+    </Dashboard500>
   </div>
 </template>
 
@@ -29,6 +32,7 @@ import { getPostBySlug } from "../../../../modules/posts";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
+import Dashboard500 from "../../../../components/dashboard/500.vue";
 import DashboardPostEditor from "../../../../components/dashboard/posts/PostEditor/index.vue";
 import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
 
@@ -70,28 +74,31 @@ const post = reactive<IDashboardPost>({
   },
 });
 
-async function postBySlug() {
+async function postBySlug(slug: string) {
   loading.value = true;
   errorCode.value = undefined;
 
-  const route = router.currentRoute.value;
-  if (route.params.slug) {
-    try {
-      const slug = route.params.slug.toString();
-      const response = await getPostBySlug(slug);
-
-      Object.assign(post, response.data.post);
-      loading.value = false;
-    } catch (err) {
-      console.error(err);
-      // @ts-expect-error
-      errorCode.value = err.response.data.code;
-      loading.value = false;
-    }
+  try {
+    const response = await getPostBySlug(slug);
+    Object.assign(post, response.data.post);
+  } catch (err) {
+    console.error(err);
+    // @ts-expect-error
+    errorCode.value = err.response.data.code;
+  } finally {
+    loading.value = false;
   }
 }
 
-onMounted(() => postBySlug());
+onMounted(() => {
+  const route = router.currentRoute.value;
+  const slugParam = (route.params.slug || "").toString();
+  if (slugParam) {
+    postBySlug(slugParam);
+  } else {
+    router.push("/dashboard/posts");
+  }
+});
 
 useHead({
   title: () => `${post.title ? `${post.title} • ` : ""}Post • Dashboard`,
