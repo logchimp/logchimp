@@ -1,3 +1,4 @@
+import type { CursorPaginationParams } from "../common";
 import type { TPermission } from "./permissions";
 import type { IUserRole } from "../user";
 
@@ -8,6 +9,8 @@ export interface IRole {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface IGetRolesParams extends CursorPaginationParams {}
 
 export interface IGetAllRoles {
   roles: IRole[];
