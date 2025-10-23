@@ -1,7 +1,8 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
   ICreateRoleResponseBody,
-  IGetAllRoles,
+  IGetRolesParams,
+  IPaginatedRolesResponse,
   IGetRoleByIdResponseBody,
   IUpdateRoleRequestBody,
   IUpdateRoleResponseBody,
@@ -81,8 +82,21 @@ export class Roles extends APIService {
     super(baseURL || `${VITE_API_URL}/api`);
   }
 
-  async getAll(): Promise<IGetAllRoles> {
-    return this.get("/v1/roles")
+  async getAll(params: IGetRolesParams = {}): Promise<IPaginatedRolesResponse> {
+    const searchParams = new URLSearchParams();
+
+    for (const paramsKey in params) {
+      const value = params[paramsKey as keyof IGetRolesParams];
+      if (value) {
+        searchParams.append(paramsKey, value.toString());
+      }
+    }
+
+    const url = `/v1/roles${
+      searchParams.toString() ? `?${searchParams.toString()}` : ""
+    }`;
+
+    return this.get(url)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
