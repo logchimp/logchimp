@@ -65,7 +65,7 @@ useInfiniteScroll(
   {
     direction: "right",
     canLoadMore: () => {
-      return hasNextPage.value;
+      return hasNextPage.value && navigator.onLine;
     },
   },
 );
