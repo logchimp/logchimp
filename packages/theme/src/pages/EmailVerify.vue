@@ -1,11 +1,6 @@
 <template>
   <auth-form>
-    <div class="flex flex-col items-center mb-8">
-      <site-branding
-        :title="siteSettings.title"
-        :logo="siteSettings.logo"
-      />
-    </div>
+    <AuthFormHeader />
 
     <!-- Success -->
     <template v-if="success">
@@ -51,7 +46,7 @@ import { verifyUserEmail } from "../modules/auth";
 import AuthForm from "../layout/AuthForm.vue";
 import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import LoaderContainer from "../components/ui/LoaderContainer.vue";
-import SiteBranding from "../components/site/SiteBranding.vue";
+import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 

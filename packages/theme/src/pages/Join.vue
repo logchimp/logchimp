@@ -1,14 +1,10 @@
 <template>
   <auth-form>
-    <div class="flex flex-col items-center mb-8">
-      <site-branding
-        :title="siteSettings.title"
-        :logo="siteSettings.logo"
-      />
-      <h1 class="text-3xl font-normal text-center mt-4 mb-0">
+    <AuthFormHeader>
+      <template #heading>
         Create your account
-      </h1>
-    </div>
+      </template>
+    </AuthFormHeader>
 
     <server-error v-if="serverError" @close="serverError = false" />
 
@@ -73,7 +69,7 @@ import type { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
-import SiteBranding from "../components/site/SiteBranding.vue";
+import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { getUserId, login, setPermissions } = useUserStore();
