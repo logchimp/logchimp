@@ -58,7 +58,7 @@ export const getPosts = async ({
   boardId = [],
   roadmapId = undefined,
 }: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
-  const { getUserId } = useUserStore();
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
@@ -67,9 +67,11 @@ export const getPosts = async ({
       page,
       limit,
       created,
-      userId: getUserId,
       boardId,
       roadmapId,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 };
@@ -82,14 +84,16 @@ export const getPosts = async ({
 export const getPostBySlug = async (
   slug: string,
 ): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
-  const { getUserId } = useUserStore();
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/posts/slug`,
     data: {
       slug,
-      userId: getUserId,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 };

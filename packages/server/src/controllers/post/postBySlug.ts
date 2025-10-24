@@ -22,7 +22,8 @@ export async function postBySlug(
 ) {
   // @ts-expect-error
   const post = req.post;
-  const userId = validUUID(req.body?.userId);
+  // @ts-expect-error
+  const userId: string | undefined = req.user?.userId;
 
   try {
     const author = await database
