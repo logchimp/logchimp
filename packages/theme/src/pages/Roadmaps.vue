@@ -20,7 +20,7 @@
       v-if="scrollLoading"
       class="flex items-center justify-center"
     >
-      <roadmap-skeleton />
+      <LoaderContainer />
     </div>
   </div>
 </template>
@@ -38,6 +38,7 @@ import { useSettingStore } from "../store/settings";
 // components
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 import RoadmapSkeleton from "../ee/components/roadmap/RoadmapSkeleton.vue";
+import LoaderContainer from "../components/ui/LoaderContainer.vue";
 
 const { get: siteSettings } = useSettingStore();
 
