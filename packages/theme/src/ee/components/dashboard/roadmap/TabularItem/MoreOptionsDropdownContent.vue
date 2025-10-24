@@ -27,7 +27,7 @@
     <DropdownItem
       :disabled="deleteRoadmapPermissionDisabled"
       variant="danger"
-      @click="openConfirmDialog=true"
+      @click="openConfirmDialog = true"
     >
       <template #icon>
         <delete-icon aria-hidden="true" />
@@ -37,10 +37,10 @@
   </DropdownV2Content>
 
   <Dialog v-model:open="openConfirmDialog">
-    <template #title>Delete Board</template>
+    <template #title>Delete Roadmap</template>
 
     <template #description>
-      Are you sure you want to delete this board? This action cannot be undone.
+      Are you sure you want to delete this roadmap? This action cannot be undone.
     </template>
 
     <template #footer>
@@ -81,6 +81,7 @@ import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
 import DropdownSeparator from "../../../../../components/ui/DropdownV2/DropdownSeparator.vue";
+import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 
 const roadmap = inject(roadmapKey);
 const { settings } = useSettingStore();
