@@ -10,7 +10,7 @@ import { authOptional, authRequired } from "../../middlewares/auth";
 import { postExists } from "../../middlewares/postExists";
 
 router.post("/posts/get", authOptional, post.filterPost);
-router.post("/posts/slug", postExists, post.postBySlug);
+router.post("/posts/slug", authOptional, postExists, post.postBySlug);
 
 router.post("/posts", authRequired, post.create);
 router.patch("/posts", authRequired, postExists, post.updatePost);

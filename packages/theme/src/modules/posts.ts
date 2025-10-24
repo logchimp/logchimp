@@ -84,14 +84,16 @@ export const getPosts = async ({
 export const getPostBySlug = async (
   slug: string,
 ): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
-  const { getUserId } = useUserStore();
+  const { authToken } = useUserStore();
 
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/posts/slug`,
     data: {
       slug,
-      userId: getUserId,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 };

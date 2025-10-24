@@ -38,7 +38,6 @@ export interface IFilterPostResponseBody {
 
 export interface IGetPostBySlugRequestBody {
   slug: string;
-  userId?: string;
 }
 
 export interface IGetPostBySlugResponseBody {
