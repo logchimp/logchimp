@@ -6,12 +6,14 @@ import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
+import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import { updateSettings } from "../../utils/seed/settings";
 import {
   board as generateBoard,
   roadmap as generateRoadmap,
   post as generatePost,
+  vote as assignVote,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { isActive } from "../../../src/cache";
@@ -332,6 +334,69 @@ describe("POST /api/v1/posts/get", () => {
       const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
       expect(board).toMatchObject(boardCache);
     }
+  });
+
+  it("should get posts with authToken have 'viewerVote' property", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({ isVerified: true });
+
+    const p1 = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    // Seed a vote by the requesting user so viewerVote should be present
+    await assignVote(user.userId, p1.postId);
+
+    const res = await supertest(app)
+      .post("/api/v1/posts/get")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({ boardId: [board.boardId], limit: 10, page: 1 });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+
+    const found = res.body.posts.find((p: IPost) => p.slug === p1.slug);
+    expect(found).toBeDefined();
+    expect(found.voters).toBeDefined();
+    expect(found.voters.viewerVote).toBeDefined();
+    expect(found.voters.viewerVote.userId).toBe(user.userId);
+    expect(found.voters.viewerVote.postId).toBe(p1.postId);
+  });
+
+  it("should get posts without authToken not have 'viewerVote' property", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({ isVerified: true });
+
+    const p1 = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    // User votes on the post, but we will fetch without Authorization
+    await assignVote(user.userId, p1.postId);
+
+    const res = await supertest(app)
+      .post("/api/v1/posts/get")
+      .send({ boardId: [board.boardId], limit: 10, page: 1 });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+
+    const found = res.body.posts.find((p: IPost) => p.slug === p1.slug);
+    expect(found).toBeDefined();
+    expect(found.voters).toBeDefined();
+    expect(found.voters.viewerVote).toBeUndefined();
   });
 });
 
@@ -830,6 +895,64 @@ describe("POST /api/v1/posts/slug", () => {
     expect(body.board.boardId).toBe(board.boardId);
     expect(body.roadmap.id).toBe(roadmap.id);
     expect(body.author.userId).toBe(authUser.userId);
+  });
+
+  it("should get posts with authToken have 'viewerVote' property", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({ isVerified: true });
+
+    const p1 = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    await assignVote(user.userId, p1.postId);
+
+    const res = await supertest(app)
+      .post("/api/v1/posts/slug")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({ slug: p1.slug });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+
+    const post = res.body.post as IPost;
+    expect(post.voters).toBeDefined();
+    expect(post.voters.viewerVote).toBeDefined();
+    expect(post.voters.viewerVote.userId).toBe(user.userId);
+    expect(post.voters.viewerVote.postId).toBe(p1.postId);
+  });
+
+  it("should get posts without authToken not have 'viewerVote' property", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({ isVerified: true });
+
+    const p1 = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    await assignVote(user.userId, p1.postId);
+
+    const res = await supertest(app)
+      .post("/api/v1/posts/slug")
+      .send({ slug: p1.slug });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+
+    const post = res.body.post as IPost;
+    expect(post.voters.viewerVote).toBeUndefined();
   });
 });
 
