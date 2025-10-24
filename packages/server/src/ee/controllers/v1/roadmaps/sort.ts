@@ -38,6 +38,7 @@ export async function sort(
   }
 
   try {
+    // to
     await database
       .update({
         index: to.index,
@@ -56,7 +57,9 @@ export async function sort(
       .where({
         id: from.id,
       });
-    } catch (err) {
+
+    res.sendStatus(200);
+  } catch (err) {
     logger.error({
       message: err,
     });
