@@ -1,174 +1,90 @@
 <template>
-  <DashboardPageHeader>
-    <template v-slot:left>
-      <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/roadmaps">
-          Roadmaps
-        </BreadcrumbItem>
-
-        <!-- Show divider & title once data loaded -->
-        <template v-if="title">
-          <BreadcrumbDivider />
-          <BreadcrumbItem>
-            {{ title }}
-          </BreadcrumbItem>
-        </template>
-      </Breadcrumbs>
-    </template>
-
-    <Button
-      type="primary"
-      :loading="updateButtonLoading"
-      :disabled="updateRoadmapButtonDisabled"
-      @click="updateHandler"
-    >
-      Save
-    </Button>
-  </DashboardPageHeader>
-
-  <div class="px-3 lg:px-6">
-    <div class="form-section">
-      <div class="form-columns">
-        <div class="form-column">
-          <l-text
-            v-model="roadmap.name"
-            label="Name"
-            placeholder="Enter roadmap name"
-            :error="roadmapFieldError"
-            @hide-error="hideNameError"
-          />
-
-          <color-input v-model="roadmap.color" />
-        </div>
-
-        <div class="form-column">
-          <l-text
-            v-model="roadmap.url"
-            label="Slug"
-            placeholder="Roadmap slug url"
-            :description="slimUrl"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h6 class="form-section-title">
-        Privacy
-      </h6>
-      <div class="form-columns">
-        <div class="form-column">
-          <toggle-item
-            v-model="roadmap.display"
-            label="Display on site"
-            note="Show this roadmap on the site"
-          />
-        </div>
-      </div>
-    </div>
+  <div
+    :class="[
+      'flex-1',
+      {
+        'flex items-center': loading || errorCode
+      }
+    ]"
+  >
+    <LoaderContainer v-if="loading" />
+    <RoadmapEditor
+      v-else-if="roadmap.id && !errorCode"
+      :title="title"
+      :roadmap="roadmap"
+    />
+    <Dashboard404 v-else-if="errorCode === 'ROADMAP_NOT_FOUND'">
+      Roadmap not found
+    </Dashboard404>
+    <Dashboard500 v-else>
+      Something went wrong.
+    </Dashboard500>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import { useUserStore } from "../../../../store/user";
 import { getRoadmapByUrl } from "../../../../modules/roadmaps";
-import { updateRoadmap } from "../../../modules/roadmaps";
-import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 
 // components
-import type { FormFieldErrorType } from "../../../../components/ui/input/formBaseProps";
-import Button from "../../../../components/ui/Button.vue";
-import LText from "../../../../components/ui/input/LText.vue";
-import ToggleItem from "../../../../components/ui/input/ToggleItem.vue";
-import ColorInput from "../../../../components/ui/ColorInput.vue";
-import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
-import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
-import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
-import BreadcrumbDivider from "../../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
+import Dashboard404 from "../../../../components/dashboard/404.vue";
+import Dashboard500 from "../../../../components/dashboard/500.vue";
+import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
+import RoadmapEditor from "../../../components/roadmap/RoadmapEditor.vue";
 
-const { permissions } = useUserStore();
-const dashboardRoadmaps = useDashboardRoadmaps();
-
+const errorCode = ref<string | undefined>();
+const loading = ref<boolean>(false);
 const title = ref<string>("");
-const roadmap = reactive({
+const roadmap = reactive<IUpdateRoadmapRequestBody>({
   id: "",
   name: "",
   url: "",
   color: "",
   display: false,
 });
-const updateButtonLoading = ref<boolean>(false);
 
-const updateRoadmapButtonDisabled = computed<boolean>(() => {
-  const checkPermission = permissions.includes("roadmap:update");
-  return !checkPermission;
-});
+async function getRoadmap(url: string) {
+  loading.value = true;
+  errorCode.value = undefined;
 
-const slimUrl = computed(() => {
-  return roadmap.url
-    .replace(/[^\w]+/gi, "-")
-    .trim()
-    .toLowerCase();
-});
-
-const roadmapFieldError = reactive({
-  show: false,
-  message: "",
-});
-
-function hideNameError(event: FormFieldErrorType) {
-  roadmapFieldError.show = event.show;
-  roadmapFieldError.message = event.message;
-}
-
-async function updateHandler() {
-  if (!roadmap.name.trim()) {
-    roadmapFieldError.show = true;
-    roadmapFieldError.message = "Please enter a valid roadmap name";
-    return;
-  }
-
-  updateButtonLoading.value = true;
-
-  try {
-    const response = await updateRoadmap({
-      ...roadmap,
-    });
-
-    if (response.status === 200) {
-      dashboardRoadmaps.updateRoadmap(response.data.roadmap);
-      router.push("/dashboard/roadmaps");
-    }
-  } catch (err) {
-    console.error(err);
-  } finally {
-    updateButtonLoading.value = false;
-  }
-}
-
-async function getRoadmap() {
-  const route = router.currentRoute.value;
-
-  const url = route.params.url.toString();
   try {
     const response = await getRoadmapByUrl(url);
 
-    Object.assign(roadmap, response.data.roadmap);
     title.value = response.data.roadmap.name;
+    Object.assign(roadmap, {
+      id: response.data.roadmap.id,
+      name: title.value,
+      url: response.data.roadmap.url,
+      color: response.data.roadmap.color,
+      display: response.data.roadmap.display,
+    });
   } catch (err) {
     console.error(err);
+    // @ts-expect-error
+    errorCode.value = err.response.data.code;
+  } finally {
+    loading.value = false;
   }
 }
 
-onMounted(() => getRoadmap());
+onMounted(() => {
+  const route = router.currentRoute.value;
+  const urlParam = (route.params.url || "").toString();
+  if (urlParam) {
+    getRoadmap(urlParam);
+  } else {
+    router.push("/dashboard/roadmaps");
+  }
+});
 
 useHead({
-  title: () => `${title.value ? `${title.value} • ` : ""}Roadmap • Dashboard`,
+  title: () =>
+    `${roadmap?.name ? `${roadmap.name} • ` : ""}Roadmap • Dashboard`,
 });
 
 defineOptions({
