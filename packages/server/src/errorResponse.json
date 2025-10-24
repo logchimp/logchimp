@@ -63,7 +63,8 @@
     "roadmaps": {
       "nameMissing": "Roadmap name missing",
       "urlMissing": "Roadmap url cannot be empty",
-      "roadmapNotFound": "Roadmap not found"
+      "roadmapNotFound": "Roadmap not found",
+      "noOperation": "No sort action required"
     },
     "votes": {
       "exists": "Vote already exists",

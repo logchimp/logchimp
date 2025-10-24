@@ -31,8 +31,8 @@ export async function sort(
   }
 
   if (from.id === to.id) {
-    return res.status(200).send({
-      message: "No sort action required",
+    return res.status(400).send({
+      message: error.api.roadmaps.noOperation,
       code: "NO_OPERATION",
     });
   }
