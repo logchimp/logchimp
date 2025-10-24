@@ -16,7 +16,7 @@ type ResponseBody = TSortRoadmapResponseBody | IApiErrorResponse;
 
 export async function sort(
   req: Request<unknown, unknown, ISortRoadmapRequestBody>,
-  res: Response<ResponseBody>,
+  res: Response<ResponseBody>
 ) {
   const { from, to } = req.body;
   // @ts-expect-error
@@ -30,8 +30,14 @@ export async function sort(
     });
   }
 
+  if (from.id === to.id || from.index === to.index) {
+    return res.status(200).send({
+      message: "No sort action required",
+      code: "NO_OPERATION",
+    });
+  }
+
   try {
-    // to
     await database
       .update({
         index: to.index,
@@ -50,9 +56,7 @@ export async function sort(
       .where({
         id: from.id,
       });
-
-    res.sendStatus(200);
-  } catch (err) {
+    }catch (err) {
     logger.error({
       message: err,
     });
