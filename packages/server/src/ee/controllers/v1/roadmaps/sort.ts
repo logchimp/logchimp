@@ -16,7 +16,7 @@ type ResponseBody = TSortRoadmapResponseBody | IApiErrorResponse;
 
 export async function sort(
   req: Request<unknown, unknown, ISortRoadmapRequestBody>,
-  res: Response<ResponseBody>
+  res: Response<ResponseBody>,
 ) {
   const { from, to } = req.body;
   // @ts-expect-error
@@ -56,7 +56,7 @@ export async function sort(
       .where({
         id: from.id,
       });
-    }catch (err) {
+    } catch (err) {
     logger.error({
       message: err,
     });
