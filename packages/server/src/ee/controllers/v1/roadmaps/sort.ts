@@ -30,7 +30,7 @@ export async function sort(
     });
   }
 
-  if (from.id === to.id){
+  if (from.id === to.id) {
     return res.status(200).send({
       message: "No sort action required",
       code: "NO_OPERATION",
