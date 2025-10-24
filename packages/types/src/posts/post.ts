@@ -25,7 +25,6 @@ interface IPostInfo {
 }
 
 export interface IFilterPostRequestBody {
-  userId?: string;
   boardId: string[];
   roadmapId?: string;
   page: string;

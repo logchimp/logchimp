@@ -36,7 +36,8 @@ export async function filterPost(
   const limit = parseAndValidateLimit(req.body?.limit, GET_POSTS_FILTER_COUNT);
   const page = parseAndValidatePage(req.body?.page);
 
-  const userId = validUUID(req.body?.userId);
+  // @ts-expect-error
+  const userId = req.user?.userId;
 
   try {
     const { rows: response } = await database.raw(
