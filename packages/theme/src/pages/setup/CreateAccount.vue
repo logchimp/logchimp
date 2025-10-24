@@ -53,10 +53,10 @@
         </Button>
       </div>
     </card>
-    <!-- <p class="auth-form-other">
+    <!-- <AuthFormHelperText>
       By continuing, you agree to LogChimp's <strong>Terms</strong> and
       <strong>Privacy</strong> policy.
-    </p> -->
+    </AuthFormHelperText> -->
   </auth-layout>
 </template>
 

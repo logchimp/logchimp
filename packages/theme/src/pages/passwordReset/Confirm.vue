@@ -1,10 +1,12 @@
 <template>
   <auth-form>
     <div>
-      <div class="auth-form-header">
-        <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-        <h3 class="auth-form-heading">Set new password</h3>
-      </div>
+      <AuthFormHeader>
+        <template #heading>
+          Set new password
+        </template>
+      </AuthFormHeader>
+
       <div v-if="validToken.success">
         <div v-if="!changePassword.success" class="card">
           <l-text
@@ -72,7 +74,7 @@ import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps
 import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
-import SiteBranding from "../../components/site/SiteBranding.vue";
+import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 
