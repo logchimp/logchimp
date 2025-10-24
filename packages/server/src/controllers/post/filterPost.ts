@@ -37,7 +37,7 @@ export async function filterPost(
   const page = parseAndValidatePage(req.body?.page);
 
   // @ts-expect-error
-  const userId = req.user?.userId;
+  const userId: string | undefined = req.user?.userId;
 
   try {
     const { rows: response } = await database.raw(
