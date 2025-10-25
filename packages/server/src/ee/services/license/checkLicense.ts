@@ -27,7 +27,7 @@ export async function checkLicense(): Promise<boolean> {
     }
   }
 
-  const response = await fetch(`${config.licensePilotUrl}/license/check`, {
+  const response = await fetch(`${config.licensePilotUrl}/v1/license/check`, {
     method: "POST",
     mode: "cors",
     body: JSON.stringify({
