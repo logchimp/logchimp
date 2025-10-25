@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template v-slot:left>
       <Breadcrumbs>
-        <BreadcrumbItem>{{ t('ee.dashboard.settings.billing.breadcrumb') }}</BreadcrumbItem>
+        <BreadcrumbItem>Billing</BreadcrumbItem>
       </Breadcrumbs>
     </template>
   </DashboardPageHeader>
@@ -10,7 +10,7 @@
   <div class="px-3 lg:px-6">
     <div class="form-section">
       <alert
-        :title="t('ee.dashboard.settings.billing.alert.title')"
+        title="We are working on defining its pricing model at the moment."
         type="warning"
       >
         <template #icon>
@@ -21,17 +21,17 @@
           />
         </template>
         <template #description>
-          <p v-html="t('ee.dashboard.settings.billing.alert.description')">
+          <p> Please keep in mind that a few <strong>free</strong> plan features will be converted to paid plans.
           </p>
         </template>
       </alert>
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">{{ t('ee.dashboard.settings.billing.activePlan.title') }}</h6>
+      <h6 class="form-section-title">Active Plan</h6>
 
       <div class="form-columns">
-        <div class="form-column" v-html="t('ee.dashboard.settings.billing.activePlan.current')"></div>
+        <div class="form-column">You're currently on <strong>free</strong> plan.</div>
       </div>
     </div>
   </div>
@@ -40,7 +40,6 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head";
 import { PhCrownSimple } from "@phosphor-icons/vue";
-import { useI18n } from "vue-i18n";
 
 // components
 import { Alert } from "../../../../components/ui/Alert";
@@ -48,10 +47,8 @@ import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 
-const { t } = useI18n();
-
 useHead({
-  title: t("ee.dashboard.settings.billing.metaTitle"),
+  title: "Billing • Settings • Dashboard",
 });
 
 defineOptions({
