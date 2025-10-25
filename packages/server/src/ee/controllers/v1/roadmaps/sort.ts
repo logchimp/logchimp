@@ -30,12 +30,9 @@ export async function sort(
     });
   }
 
-  if (from.id === to.id) {
-    return res.status(400).send({
-      message: error.api.roadmaps.noOperation,
-      code: "NO_OPERATION",
-    });
-  }
+ if (from.id === to.id) {
+  return res.status(204).send();
+}
 
   try {
     // to
