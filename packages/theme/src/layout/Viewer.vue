@@ -5,7 +5,10 @@
       <router-view />
 
       <div class="mt-8 mb-4 px-3 lg:px-6">
-        <power-by v-if="settingsStore.get.isPoweredBy" />
+        <PowerBy v-if="settingsStore.get.isPoweredBy" />
+        <div class="text-sm text-gray-500 mt-2">
+          LogChimp v{{ version }}
+        </div>
       </div>
     </div>
   </div>
@@ -17,6 +20,9 @@ import { useSettingStore } from "../store/settings";
 // components
 import Header from "../components/Header.vue";
 import PowerBy from "../components/PowerBy.vue";
+
+// Import LogChimp version
+import { version } from "../../package.json"; // adjust path if needed
 
 const settingsStore = useSettingStore();
 </script>
