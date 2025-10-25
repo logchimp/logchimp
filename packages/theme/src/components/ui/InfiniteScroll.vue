@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 
 // components
@@ -48,12 +48,18 @@ interface Props {
   state?: InfiniteScrollStateType;
   onInfinite: () => Promise<void> | void;
   canLoadMore?: boolean;
+  /**
+   * Useful when the content is not tall enough to fill up the scrollable container.
+   * @default true
+   */
+  immediateCheck?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   distance: 20,
   state: "LOADING",
   canLoadMore: true,
+  immediateCheck: true,
 });
 
 const isFirstLoad = ref(true);
@@ -83,5 +89,11 @@ useInfiniteScroll(window, executeInfiniteScroll, {
   distance: props.distance,
   direction: "bottom",
   canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
+});
+
+onMounted(() => {
+  if (props.immediateCheck) {
+    executeInfiniteScroll();
+  }
 });
 </script>

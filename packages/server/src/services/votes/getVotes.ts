@@ -3,7 +3,7 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 
-export async function getVotes(postId: string, userId: string) {
+export async function getVotes(postId: string, userId?: string) {
   try {
     const votesCount = (await database
       .count("voteId")

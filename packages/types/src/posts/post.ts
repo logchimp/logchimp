@@ -25,7 +25,6 @@ interface IPostInfo {
 }
 
 export interface IFilterPostRequestBody {
-  userId?: string;
   boardId: string[];
   roadmapId?: string;
   page: string;
@@ -39,7 +38,6 @@ export interface IFilterPostResponseBody {
 
 export interface IGetPostBySlugRequestBody {
   slug: string;
-  userId?: string;
 }
 
 export interface IGetPostBySlugResponseBody {

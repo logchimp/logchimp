@@ -1,9 +1,11 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">Forgot password</h3>
-    </div>
+    <AuthFormHeader>
+      <template #heading>
+        Forgot password
+      </template>
+    </AuthFormHeader>
+
     <server-error v-if="serverError" @close="serverError = false" />
     <div v-if="!hideForm" class="card">
       <l-text
@@ -30,12 +32,12 @@
     <div v-if="requestError" class="card">
       <p>Something went wrong!</p>
     </div>
-    <div v-if="siteSettings.allowSignup" class="auth-form-other">
+    <AuthFormHelperText v-if="siteSettings.allowSignup">
       Don't have an account yet?
       <router-link to="/join">
         Sign up
       </router-link>
-    </div>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -49,11 +51,12 @@ import { useSettingStore } from "../../store/settings";
 
 // component
 import AuthForm from "../../layout/AuthForm.vue";
+import AuthFormHelperText from "../../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import ServerError from "../../components/serverError.vue";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
-import SiteBranding from "../../components/site/SiteBranding.vue";
+import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 
