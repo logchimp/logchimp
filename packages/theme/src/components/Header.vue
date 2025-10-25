@@ -8,6 +8,9 @@
           text-color="white"
         />
 
+       
+       <div class="flex items-center gap-5">
+        <LanguageDropdown/>
         <nav>
           <HeaderAuthDropdown
             v-if="userStore.user.userId"
@@ -25,6 +28,7 @@
             </Button>
           </div>
         </nav>
+        </div>
       </div>
 
       <navbar class="mt-2" />
@@ -41,6 +45,7 @@ import Navbar from "./Navbar.vue";
 import SiteBranding from "./site/SiteBranding.vue";
 import Button from "./ui/Button.vue";
 import HeaderAuthDropdown from "./HeaderAuthDropdown.vue";
+import LanguageDropdown from "./ui/LanguageDropdown.vue";
 
 const settingsStore = useSettingStore();
 const userStore = useUserStore();
