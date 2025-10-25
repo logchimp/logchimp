@@ -59,8 +59,6 @@ const createUser = async (
     userData.email.split("@")[0].slice(0, 30),
   );
 
-  const username = await generateUniqueUsername(baseUsername);
-
   // get avatar by hashing email
   const userMd5Hash = md5(email);
   const avatar = `https://www.gravatar.com/avatar/${userMd5Hash}`;
@@ -90,6 +88,8 @@ const createUser = async (
       });
       return null;
     }
+
+    const username = await generateUniqueUsername(baseUsername);
 
     // insert user to database
     const [newUser] = await database
