@@ -34,17 +34,14 @@
             v-model="post.title"
             label="Title"
             placeholder="Name of the feature"
-            :maxlength="maxTitleLength"
             :error="postFieldError"
             @hide-error="hideTitleError"
           />
-          
-          <HelperText
-            :value="post.title"
-            :max-length="maxTitleLength"
-            :key="post.title"
-          />
-          
+
+          <HelperText :isError="post.title.length > maxTitleLength">
+            {{ maxTitleLength - post.title.length }}
+          </HelperText>
+
           <l-textarea
             :model-value="post.contentMarkdown ?? undefined"
             @update:model-value="(value) => post.contentMarkdown = value ?? null"

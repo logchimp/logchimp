@@ -18,7 +18,6 @@
       :value="modelValue"
       :placeholder="placeholder"
       :disabled="disabled"
-      :maxlength="maxLength"
       @input="input"
       @click="hideError"
       @keyup.enter="keyUpEnter"
@@ -46,10 +45,6 @@ const props = defineProps({
   type: {
     type: String,
     default: "text",
-  },
-  maxLength: {
-    type: Number,
-    default: undefined,
   },
   ...formBaseProps,
   ...formInputBind,
