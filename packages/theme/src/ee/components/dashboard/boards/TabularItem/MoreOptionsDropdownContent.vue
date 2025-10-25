@@ -27,7 +27,7 @@
     <dropdown-item
       :disabled="deleteBoardPermissionDisabled"
       variant="danger"
-      @click="board ? deleteBoardHandler(board?.boardId) : undefined"
+      @click="openConfirmDialog = true"
     >
       <template #icon>
         <delete-icon aria-hidden="true" />
@@ -35,10 +35,35 @@
       Delete
     </dropdown-item>
   </DropdownV2Content>
+
+  <Dialog v-model:open="openConfirmDialog">
+    <template #title>Delete Board</template>
+
+    <template #description>
+      Are you sure you want to delete this board? This action cannot be undone.
+    </template>
+
+    <template #footer>
+      <div class="flex justify-end gap-3 mt-4">
+        <button
+          class="px-3 py-2 text-sm rounded-md border border-gray-600 hover:bg-gray-100"
+          @click="openConfirmDialog = false"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-800"
+          @click="deleteBoardHandler"
+        >
+          Delete
+        </button>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from "vue";
+import { computed, inject, ref } from "vue";
 import {
   Clipboard as CopyIcon,
   Settings as SettingsIcon,
@@ -56,6 +81,7 @@ import { deleteBoard } from "../../../../modules/boards";
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
 import DropdownSeparator from "../../../../../components/ui/DropdownV2/DropdownSeparator.vue";
+import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 
 const board = inject(boardKey);
 const { settings } = useSettingStore();
@@ -68,12 +94,15 @@ const deleteBoardPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
-async function deleteBoardHandler(id: string) {
+const openConfirmDialog = ref(false);
+
+async function deleteBoardHandler() {
+  if (!board) return;
   try {
-    const response = await deleteBoard(id);
+    const response = await deleteBoard(board.boardId);
 
     if (response.status === 204) {
-      dashboardBoards.removeBoard(id);
+      dashboardBoards.removeBoard(board.boardId);
     }
   } catch (error) {
     console.error(error);
