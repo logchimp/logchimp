@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import fsExtra from "fs-extra";
 import logger from "./logger";
+import packageJson from "../../package.json";
 
 const DEFAULT_SERVER_PORT = 8000;
 const DEFAULT_DATABASE_PORT = 5432;
@@ -9,6 +10,8 @@ const DEFAULT_MAIL_PORT = 465;
 const DEFAULT_LOGCHIMP_PILOT_URL = "https://pilot.logchimp.codecarrot.net";
 
 interface Config {
+  version: string;
+
   secretKey: string | undefined;
   machineSignature: string | undefined;
   isSelfHosted: boolean | undefined;
@@ -151,6 +154,8 @@ class ConfigManager {
       mailUser: config.mail?.user,
       mailPassword: config.mail?.password,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
+
+      version: "",
     };
   }
 
@@ -208,6 +213,8 @@ class ConfigManager {
       mailUser: process.env.LOGCHIMP_MAIL_USER,
       mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : DEFAULT_MAIL_PORT,
+
+      version: "",
     };
   }
 
@@ -215,6 +222,7 @@ class ConfigManager {
     return {
       ...envConfig,
       ...(fileConfig || {}),
+      version: packageJson.version,
     };
   }
 
