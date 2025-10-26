@@ -131,7 +131,7 @@ export async function filterPost(
       }
     }
 
-    const metadata = await getPostMetadata({ after });
+    const metadata = await getPostMetadata({ after, boardId, roadmapId });
     const totalCount = metadata.totalCount;
     const totalPages = Math.ceil(totalCount / first);
     const userDataLength = posts.length;
@@ -177,13 +177,38 @@ export async function filterPost(
   }
 }
 
-async function getPostMetadata({ after }: { after?: string }) {
+async function getPostMetadata({
+  after,
+  boardId = [] as string[],
+  roadmapId,
+}: {
+  after?: string;
+  boardId?: string[];
+  roadmapId?: string | null;
+}) {
   return database.transaction(async (trx) => {
     // Total count
-    const totalCountResult = await trx("posts").count("* as count").first();
+    const totalCountQuery = trx("posts").count("* as count");
+
+    if (boardId.length > 0) {
+      totalCountQuery.whereIn("boardId", boardId);
+    }
+    if (roadmapId) {
+      totalCountQuery.where("roadmap_id", roadmapId);
+    }
+
+    const totalCountResult = await totalCountQuery.first();
 
     // Remaining results after cursor
     let remainingQuery = trx("posts").as("next");
+
+    if (boardId.length > 0) {
+      remainingQuery = remainingQuery.whereIn("boardId", boardId);
+    }
+    if (roadmapId) {
+      remainingQuery = remainingQuery.where("roadmap_id", roadmapId);
+    }
+
     if (after) {
       remainingQuery = remainingQuery
         .where(
