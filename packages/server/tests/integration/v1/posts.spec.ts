@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
@@ -17,9 +17,33 @@ import {
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { isActive } from "../../../src/cache";
+import { GET_POSTS_FILTER_COUNT } from "../../../src/constants";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
+  let authUser: any;
+  let board: any;
+  let roadmap: any;
+
+  beforeAll(async () => {
+    const userData = await createUser({ isVerified: true });
+    authUser = userData.user;
+    board = await generateBoard({}, true);
+    roadmap = await generateRoadmap({}, true);
+
+    // Generate 15 posts for pagination
+    for (let i = 0; i < 15; i++) {
+      await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+    }
+  });
+
   it("should use default page=1 and default limit when no filters are provided", async () => {
     const { user: authUser } = await createUser({ isVerified: true });
     const board = await generateBoard({}, true);
@@ -397,6 +421,229 @@ describe("POST /api/v1/posts/get", () => {
     expect(found).toBeDefined();
     expect(found.voters).toBeDefined();
     expect(found.voters.viewerVote).toBeUndefined();
+  });
+
+  describe("Cursor Pagination", () => {
+    it("should return default first page (no after param)", async () => {
+      const res = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ boardId: [board.boardId], created: "DESC" });
+
+      expect(res.status).toBe(200);
+      expect(res.headers["content-type"]).toContain("application/json");
+
+      const posts: IPost[] = res.body.posts;
+      expect(Array.isArray(posts)).toBeTruthy();
+      expect(posts.length).toBeGreaterThan(0);
+
+      const pageInfo = res.body.page_info;
+      expect(pageInfo).toBeDefined();
+      expect(typeof pageInfo.start_cursor).toBe("string");
+      expect(typeof pageInfo.end_cursor).toBe("string");
+      expect(typeof pageInfo.has_next_page).toBe("boolean");
+      expect(typeof pageInfo.current_page).toBe("number");
+    });
+
+    it("should default to cursor pagination return default list when no '?first=' param", async () => {
+      const res = await supertest(app).get("/api/v1/posts/get");
+
+      const firstItem: IPost = res.body.posts[0];
+      const lastItem: IPost = res.body.posts[res.body.posts.length - 1];
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(200);
+
+      expect(res.body.results).toHaveLength(GET_POSTS_FILTER_COUNT);
+      expect(res.body.posts).toHaveLength(GET_POSTS_FILTER_COUNT);
+      expect(Array.isArray(res.body.results)).toBeTruthy();
+      expect(Array.isArray(res.body.posts)).toBeTruthy();
+
+      expect(res.body.page_info).toBeDefined();
+      expect(typeof res.body.page_info.count).toBe("number");
+      expect(typeof res.body.page_info.current_page).toBe("number");
+      expect(typeof res.body.page_info.has_next_page).toBe("boolean");
+
+      // start_cursor and end_cursor are either string (uuid) or null when no data
+      const { start_cursor, end_cursor } = res.body.page_info;
+
+      expect(typeof start_cursor).toBe("string");
+      expect(typeof end_cursor).toBe("string");
+
+      expect(res.body.page_info.start_cursor).toBe(firstItem.slug);
+      expect(res.body.page_info.end_cursor).toBe(lastItem.slug);
+
+      // total_count and total_pages should be present in cursor mode
+      expect(typeof res.body.total_count).toBe("number");
+    });
+
+    it("should paginate using 'after' param and increase current_page", async () => {
+      const firstPage = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ first: 5, created: "ASC", boardId: [board.boardId] });
+
+      expect(firstPage.status).toBe(200);
+      expect(firstPage.body.page_info).toBeDefined();
+      expect(firstPage.body.page_info.count).toBeLessThanOrEqual(5);
+
+      const endCursor = firstPage.body.page_info.end_cursor;
+      const firstPageSlugs = firstPage.body.posts.map((p: IPost) => p.slug);
+
+      const secondPage = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({
+          first: 5,
+          after: endCursor,
+          created: "ASC",
+          boardId: [board.boardId],
+        });
+
+      expect(secondPage.status).toBe(200);
+      expect(secondPage.body.page_info).toBeDefined();
+      expect(secondPage.body.page_info.current_page).toBeGreaterThanOrEqual(2);
+
+      const page2Slugs = secondPage.body.posts.map((p: IPost) => p.slug);
+
+      const overlap = page2Slugs.filter((s) => firstPageSlugs.includes(s));
+      expect(overlap.length).toBe(0);
+
+      expect(secondPage.body.page_info.current_page).toBeGreaterThanOrEqual(2);
+    });
+
+    it("should compute has_next_page correctly for small first value", async () => {
+      const res = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ first: 3, created: "DESC", boardId: [board.boardId] });
+
+      expect(res.status).toBe(200);
+      expect(res.body.page_info).toBeDefined();
+      expect(res.body.page_info.count).toBeLessThanOrEqual(3);
+      expect(res.body.page_info.has_next_page).toBe(true);
+    });
+
+    it("should throw VALIDATION_ERROR for invalid 'after' param", async () => {
+      const res = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ first: 5, after: "not-a-uuid", boardId: [board.boardId] });
+
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe("VALIDATION_ERROR");
+    });
+
+    it("should sort posts by 'created' ASC and DESC", async () => {
+      const ascRes = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ first: 5, created: "ASC", boardId: [board.boardId] });
+      const descRes = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ first: 5, created: "DESC", boardId: [board.boardId] });
+
+      expect(ascRes.status).toBe(200);
+      expect(descRes.status).toBe(200);
+
+      const ascDates = ascRes.body.posts.map(
+        (p: IPost) => new Date(p.createdAt),
+      );
+      const descDates = descRes.body.posts.map(
+        (p: IPost) => new Date(p.createdAt),
+      );
+
+      for (let i = 0; i < ascDates.length - 1; i++) {
+        expect(ascDates[i].getTime()).toBeLessThanOrEqual(
+          ascDates[i + 1].getTime(),
+        );
+      }
+      for (let i = 0; i < descDates.length - 1; i++) {
+        expect(descDates[i].getTime()).toBeGreaterThanOrEqual(
+          descDates[i + 1].getTime(),
+        );
+      }
+    });
+
+    it("should handle empty '?after=' param gracefully", async () => {
+      const res = await supertest(app).get("/api/v1/posts/get").query({
+        after: "",
+      });
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(400);
+
+      expect(res.body.code).toBe("VALIDATION_ERROR");
+      expect(res.body.message).toBe("Invalid query parameters");
+      expect(res.body.errors?.[0]?.message).toMatch(/invalid uuid/gi);
+    });
+
+    it("should handle cursor pagination correctly", async () => {
+      const res1 = await supertest(app)
+        .get("/api/v1/posts/get")
+        .query({ first: 3 });
+      expect(res1.headers["content-type"]).toContain("application/json");
+      const lastId = res1.body.results[2].userId;
+
+      const res2 = await supertest(app).get("/api/v1/posts/get").query({
+        first: 3,
+        after: lastId,
+      });
+
+      expect(res2.headers["content-type"]).toContain("application/json");
+      expect(res2.status).toBe(200);
+
+      expect(res2.body.results).toHaveLength(3);
+      expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
+      expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
+
+      const ids1 = res1.body.results.map((p: IPost) => p.slug);
+      const ids2 = res2.body.results.map((p: IPost) => p.slug);
+      expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
+    });
+  });
+  describe("Offset Pagination", () => {
+    it("should support offset pagination via page param", async () => {
+      const page1 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ limit: 5, page: 1, boardId: [board.boardId], created: "ASC" });
+      const page2 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ limit: 5, page: 2, boardId: [board.boardId], created: "ASC" });
+
+      expect(page1.status).toBe(200);
+      expect(page2.status).toBe(200);
+
+      expect(page1.body.page_info).toBeUndefined();
+
+      const ids1 = page1.body.posts.map((p: IPost) => p.slug);
+      const ids2 = page2.body.posts.map((p: IPost) => p.slug);
+
+      const overlap = ids1.filter((id: string) => ids2.includes(id));
+      expect(overlap.length).toBe(0);
+    });
+
+    it("should coerce page=0 or -1 to page=1", async () => {
+      const page0 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ limit: 5, page: 0, boardId: [board.boardId] });
+      const pageNeg1 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ limit: 5, page: -1, boardId: [board.boardId] });
+      const page1 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ limit: 5, page: 1, boardId: [board.boardId] });
+
+      const ids0 = page0.body.posts.map((p: IPost) => p.slug);
+      const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.slug);
+      const ids1 = page1.body.posts.map((p: IPost) => p.slug);
+
+      expect(ids0).toEqual(ids1);
+      expect(idsNeg1).toEqual(ids1);
+    });
+
+    it("should return empty posts when '?page=1000'", async () => {
+      const res = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ page: 1000, boardId: [board.boardId] });
+
+      expect(res.status).toBe(200);
+      expect(res.body.posts).toHaveLength(0);
+    });
   });
 });
 
