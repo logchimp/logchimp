@@ -1,11 +1,20 @@
 export interface ICheckLicenseRequestBody {
   license_key: string;
-  machine_signature: string;
+  metadata: {
+    version: string;
+    deploymentProvider: string | "unknown";
+  };
   timestamp: string;
 }
 
 export interface ICheckLicenseResponseBody {
-  status: boolean;
+  encrypted_payload: string;
   timestamp: Date;
-  // encrypted_payload: string;
+}
+
+export interface ICheckLicenseDecryptedPayload {
+  response_nonce: string;
+  server_time: string;
+  status: string;
+  // features: string[];
 }
