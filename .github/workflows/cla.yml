@@ -32,5 +32,6 @@ jobs:
           remote-organization-name: "logchimp"
           remote-repository-name: "cla-signatures"
           custom-notsigned-prcomment: |
-            Thank you for your interest in contributing to open source software projects (“Projects”) made available by Shinkly Private Limited (SPL).
-            If you have any questions respecting this Agreement, please contact [opensource@codecarrot.net](mailto:opensource@codecarrot.net).
+            Thank you for your submission, we really appreciate it. This open-source project (“Projects”) made available by Shinkly Private Limited (SPL). We ask that you sign our [Contributor License Agreement](https://github.com/codecarrotlabs/cla-document/blob/main/readme.md) before we can accept your contribution. You can sign the CLA by just posting a Pull Request comment same as the below format. If you have any questions respecting this Agreement, please contact [opensource@codecarrot.net](mailto:opensource@codecarrot.net).
+          signed-commit-message: |
+            $contributorName has signed the CLA in $pullRequestNo
