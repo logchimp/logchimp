@@ -11,7 +11,7 @@ export async function licenseGuard(
 ) {
   const result = await checkLicense();
 
-  if (!result) {
+  if (result.status !== "active") {
     return res.status(403).send({
       message: error.middleware.license.verification,
       code: "LICENSE_VALIDATION_FAILED",
