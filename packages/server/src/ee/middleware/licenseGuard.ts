@@ -10,8 +10,6 @@ export async function licenseGuard(
   next: NextFunction,
 ) {
   const result = await checkLicense();
-  console.log("license guard.");
-  console.log("result:", result);
 
   if (!result) {
     return res.status(403).send({
