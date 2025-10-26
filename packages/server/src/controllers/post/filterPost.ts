@@ -63,34 +63,23 @@ export async function filterPost(
   const userId: string | undefined = req.user?.userId;
 
   try {
-    let sql = `
-      SELECT
-        "postId",
-        "title",
-        "slug",
-        "boardId",
-        "roadmap_id",
-        "contentMarkdown",
-        "createdAt",
-        "updatedAt"
-      FROM posts
-    `;
-
-    const conditions: string[] = [];
-    const bindings: Record<string, string | number> = {
-      limit: first,
-      offset: page ? first * (page - 1) : 0,
-      roadmapId,
-    };
+    let queryBuilder = database("posts").select(
+      "postId",
+      "title",
+      "slug",
+      "boardId",
+      "roadmap_id",
+      "contentMarkdown",
+      "createdAt",
+      "updatedAt",
+    );
 
     if (boardId.length > 0) {
-      conditions.push(
-        `"boardId" IN (${boardId.map((id) => `'${id}'`).join(",")})`,
-      );
+      queryBuilder = queryBuilder.whereIn("boardId", boardId);
     }
 
     if (roadmapId) {
-      conditions.push(`"roadmap_id" = :roadmapId`);
+      queryBuilder = queryBuilder.where("roadmap_id", roadmapId);
     }
 
     if (after) {
@@ -100,27 +89,26 @@ export async function filterPost(
         .first();
 
       if (cursorPost) {
-        bindings.cursorCreatedAt = cursorPost.createdAt;
-        conditions.push(
-          `"createdAt" ${created === "ASC" ? ">=" : "<="} :cursorCreatedAt`,
+        queryBuilder = queryBuilder.where(
+          "createdAt",
+          created === "ASC" ? ">=" : "<=",
+          cursorPost.createdAt,
         );
       }
     }
 
-    if (conditions.length > 0) {
-      sql += ` WHERE ${conditions.join(" AND ")} `;
-    }
-
-    sql += ` ORDER BY "createdAt" ${created} `;
+    queryBuilder = queryBuilder.orderBy("createdAt", created);
 
     if (after) {
-      sql += ` LIMIT :limit OFFSET 1 `;
+      queryBuilder = queryBuilder.limit(first).offset(1);
     } else {
-      sql += ` LIMIT :limit OFFSET :offset `;
+      const offset = page ? first * (page - 1) : 0;
+      queryBuilder = queryBuilder.limit(first).offset(offset);
     }
 
-    const { rows: response } = await database.raw(sql, bindings);
+    const response = await queryBuilder;
 
+    // Enrich posts with board, roadmap, and votes
     const posts: IPost[] = [];
     for (const post of response) {
       try {
@@ -153,7 +141,6 @@ export async function filterPost(
       userDataLength > 0 ? String(posts[userDataLength - 1].postId) : null;
 
     const hasNextPage = metadata.remainingResultsCount - first > 0;
-
     const currentPage = page ?? 1;
 
     res.status(200).send({
