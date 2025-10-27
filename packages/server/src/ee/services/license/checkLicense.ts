@@ -47,7 +47,15 @@ export async function checkLicense(): Promise<
 > {
   const licenseKey = config.licenseKey;
   if (!licenseKey) {
+    logger.warn(
+      "License key is not configured. Check your environment variables or 'logchimp.config.json' file.",
+    );
     return EMPTY_LICENSE_RESPONSE;
+  }
+  if (!config.licenseSignature) {
+    logger.warn(
+      "License signature is not configured. Check your environment variables or 'logchimp.config.json' file.",
+    );
   }
 
   const now = Date.now();
