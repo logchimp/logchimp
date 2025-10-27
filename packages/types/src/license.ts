@@ -14,6 +14,7 @@ export interface ICheckLicenseResponseBody {
 
 export interface ICheckLicenseDecryptedPayload {
   response_nonce: string;
+  license_key: string;
   server_time: string;
   status: string;
   // features: string[];
