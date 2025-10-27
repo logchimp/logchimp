@@ -2,6 +2,7 @@ import type {
   ICheckLicenseDecryptedPayload,
   ICheckLicenseRequestBody,
   ICheckLicenseResponseBody,
+  IApiErrorResponse,
 } from "@logchimp/types";
 import jwt from "jsonwebtoken";
 
@@ -26,7 +27,7 @@ const EMPTY_LICENSE_RESPONSE: ICheckLicenseDecryptedPayload = {
 
 // In-memory cache for ultra-fast access
 interface IMemoryCache {
-  payload: ICheckLicenseDecryptedPayload | null;
+  payload: ICheckLicenseDecryptedPayload | IApiErrorResponse | null;
   expiresAt: number;
 }
 const EMPTY_MEMORY_CACHE: IMemoryCache = {
@@ -41,7 +42,9 @@ let memoryCache: IMemoryCache = {
 // Prevent multiple simultaneous license server requests
 let pendingLicenseCheck: Promise<ICheckLicenseDecryptedPayload> | null = null;
 
-export async function checkLicense(): Promise<ICheckLicenseDecryptedPayload> {
+export async function checkLicense(): Promise<
+  ICheckLicenseDecryptedPayload | IApiErrorResponse
+> {
   const licenseKey = config.licenseKey;
   if (!licenseKey) {
     return EMPTY_LICENSE_RESPONSE;
@@ -92,6 +95,7 @@ async function performLicenseCheck(
   try {
     const data = await pingLicenseServer();
     if ("code" in data || !data.encrypted_payload) {
+      updateMemoryCache(data as IApiErrorResponse, now);
       return EMPTY_LICENSE_RESPONSE;
     }
 
@@ -137,7 +141,7 @@ async function performLicenseCheck(
 }
 
 function updateMemoryCache(
-  payload: ICheckLicenseDecryptedPayload,
+  payload: ICheckLicenseDecryptedPayload | IApiErrorResponse,
   now: number,
 ): void {
   const expiresAt = now + 60 * 60 * 1000;
@@ -147,7 +151,9 @@ function updateMemoryCache(
   };
 }
 
-async function pingLicenseServer() {
+async function pingLicenseServer(): Promise<
+  ICheckLicenseResponseBody | IApiErrorResponse
+> {
   const requestBody: ICheckLicenseRequestBody = {
     license_key: config.licenseKey,
     // machine_signature: config.machineSignature,
@@ -177,7 +183,9 @@ async function pingLicenseServer() {
       );
     }
 
-    return (await response.json()) as ICheckLicenseResponseBody;
+    return (await response.json()) as
+      | ICheckLicenseResponseBody
+      | IApiErrorResponse;
   } catch (e) {
     clearTimeout(timeoutId);
     throw e;
