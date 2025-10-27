@@ -94,7 +94,7 @@ importers:
         version: 1.1.0(typescript@5.9.3)
       validator:
         specifier: ^13.15.15
-        version: 13.15.15
+        version: 13.15.20
       winston:
         specifier: ^3.3.3
         version: 3.18.3
@@ -3331,8 +3331,8 @@ packages:
       typescript:
         optional: true
 
-  validator@13.15.15:
-    resolution: {integrity: sha512-BgWVbCI72aIQy937xbawcs+hrVaN/CZ2UwutgaJ36hGqRrLNM+f5LUT/YPRbo8IV/ASeFzXszezV+y2+rq3l8A==}
+  validator@13.15.20:
+    resolution: {integrity: sha512-KxPOq3V2LmfQPP4eqf3Mq/zrT0Dqp2Vmx2Bn285LwVahLc+CsxOM0crBHczm8ijlcjZ0Q5Xd6LW3z3odTPnlrw==}
     engines: {node: '>= 0.10'}
 
   vary@1.1.2:
@@ -6856,7 +6856,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  validator@13.15.15: {}
+  validator@13.15.20: {}
 
   vary@1.1.2: {}
 
