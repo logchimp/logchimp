@@ -19,15 +19,21 @@ const deploymentProvider = getDeploymentProvider();
 
 const EMPTY_LICENSE_RESPONSE: ICheckLicenseDecryptedPayload = {
   status: "",
+  license_key: "",
   response_nonce: "",
   server_time: "",
 };
 
 // In-memory cache for ultra-fast access
-let memoryCache: {
+interface IMemoryCache {
   payload: ICheckLicenseDecryptedPayload | null;
   expiresAt: number;
-} = {
+}
+const EMPTY_MEMORY_CACHE: IMemoryCache = {
+  payload: null,
+  expiresAt: 0,
+};
+let memoryCache: IMemoryCache = {
   payload: null,
   expiresAt: 0,
 };
@@ -71,7 +77,7 @@ async function performLicenseCheck(
         getLogChimpCacheKey(licenseKey),
       );
       if (encryptedPayload) {
-        const decrypted = decryptPayload(encryptedPayload);
+        const decrypted = await decryptPayload(encryptedPayload);
         updateMemoryCache(decrypted, now);
         return decrypted;
       }
@@ -90,15 +96,12 @@ async function performLicenseCheck(
     }
 
     encryptedPayload = data.encrypted_payload;
-    const decrypted = decryptPayload(encryptedPayload);
-
-    updateMemoryCache(decrypted, now);
 
     if (cache.isActive) {
       try {
         await cache.valkey.set(
           getLogChimpCacheKey(licenseKey),
-          data.encrypted_payload,
+          encryptedPayload,
           "EX",
           LOGCHIMP_LICENSE_CACHE_TTL_IN_SEC,
         );
@@ -118,23 +121,16 @@ async function performLicenseCheck(
   }
 
   try {
-    return decryptPayload(encryptedPayload);
+    const decrypted = await decryptPayload(encryptedPayload);
+    updateMemoryCache(decrypted, now);
+
+    return decrypted;
   } catch (e) {
     logger.error({
       message: "failed to decrypt license payload",
       error: e,
     });
-
-    if (cache.isActive) {
-      try {
-        await cache.valkey.del(getLogChimpCacheKey(licenseKey));
-      } catch (e) {
-        logger.error({
-          message: "error deleting invalid cached license payload",
-          error: e,
-        });
-      }
-    }
+    console.log(e);
 
     return EMPTY_LICENSE_RESPONSE;
   }
@@ -188,15 +184,30 @@ async function pingLicenseServer() {
   }
 }
 
-function deleteLicenseCache() {}
-
-function decryptPayload(
+async function decryptPayload(
   encryptedPayload: string,
-): ICheckLicenseDecryptedPayload {
-  return jwt.verify(
+): Promise<ICheckLicenseDecryptedPayload> {
+  if (!config.licenseSignature) {
+    throw new Error("License signature not configured");
+  }
+
+  const decoded = jwt.verify(
     encryptedPayload,
     config.licenseSignature,
   ) as ICheckLicenseDecryptedPayload;
+
+  // todo: check is jwt is expired
+  if (decoded.license_key !== config.licenseKey) {
+    try {
+      await clearCache();
+    } catch (_) {}
+
+    throw new Error(
+      "License key mismatch: payload does not match requesting license",
+    );
+  }
+
+  return decoded;
 }
 
 function getDeploymentProvider() {
@@ -208,5 +219,20 @@ function getDeploymentProvider() {
     return "railway";
   } else {
     return "unknown";
+  }
+}
+
+async function clearCache() {
+  memoryCache = EMPTY_MEMORY_CACHE;
+
+  if (cache.isActive) {
+    try {
+      await cache.valkey.del(getLogChimpCacheKey(config.licenseKey));
+    } catch (e) {
+      logger.error({
+        message: "error deleting invalid cached license payload",
+        error: e,
+      });
+    }
   }
 }
