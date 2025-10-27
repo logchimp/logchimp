@@ -3,8 +3,8 @@ import express from "express";
 const router = express.Router();
 
 // controller
-import * as license from "../../controllers/v1/license";
+import * as license from "../../controllers/v1/checkLicense";
 
-router.get("/check-license", license.checkLicense);
+router.get("/license", license.checkLicense);
 
 export default router;
