@@ -469,8 +469,8 @@ describe("POST /api/v1/posts/get", () => {
       expect(typeof start_cursor).toBe("string");
       expect(typeof end_cursor).toBe("string");
 
-      expect(res.body.page_info.start_cursor).toBe(firstItem.slug);
-      expect(res.body.page_info.end_cursor).toBe(lastItem.slug);
+      expect(res.body.page_info.start_cursor).toBe(firstItem.postId);
+      expect(res.body.page_info.end_cursor).toBe(lastItem.postId);
 
       // total_count and total_pages should be present in cursor mode
       expect(typeof res.body.total_count).toBe("number");
@@ -486,7 +486,7 @@ describe("POST /api/v1/posts/get", () => {
       expect(firstPage.body.page_info.count).toBeLessThanOrEqual(5);
 
       const endCursor = firstPage.body.page_info.end_cursor;
-      const firstPageSlugs = firstPage.body.posts.map((p: IPost) => p.slug);
+      const firstPageId = firstPage.body.posts.map((p: IPost) => p.postId);
 
       const secondPage = await supertest(app)
         .post("/api/v1/posts/get")
@@ -501,9 +501,9 @@ describe("POST /api/v1/posts/get", () => {
       expect(secondPage.body.page_info).toBeDefined();
       expect(secondPage.body.page_info.current_page).toBeGreaterThanOrEqual(2);
 
-      const page2Slugs = secondPage.body.posts.map((p: IPost) => p.slug);
+      const secondPageId = secondPage.body.posts.map((p: IPost) => p.postId);
 
-      const overlap = page2Slugs.filter((s) => firstPageSlugs.includes(s));
+      const overlap = secondPageId.filter((s) => firstPageId.includes(s));
       expect(overlap.length).toBe(0);
 
       expect(secondPage.body.page_info.current_page).toBeGreaterThanOrEqual(2);
@@ -577,7 +577,7 @@ describe("POST /api/v1/posts/get", () => {
         .get("/api/v1/posts/get")
         .query({ first: 3 });
       expect(res1.headers["content-type"]).toContain("application/json");
-      const lastId = res1.body.results[2].userId;
+      const lastId = res1.body.results[2].postId;
 
       const res2 = await supertest(app).get("/api/v1/posts/get").query({
         first: 3,
@@ -591,8 +591,8 @@ describe("POST /api/v1/posts/get", () => {
       expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
       expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
 
-      const ids1 = res1.body.results.map((p: IPost) => p.slug);
-      const ids2 = res2.body.results.map((p: IPost) => p.slug);
+      const ids1 = res1.body.results.map((p: IPost) => p.postId);
+      const ids2 = res2.body.results.map((p: IPost) => p.postId);
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
   });
@@ -610,8 +610,8 @@ describe("POST /api/v1/posts/get", () => {
 
       expect(page1.body.page_info).toBeUndefined();
 
-      const ids1 = page1.body.posts.map((p: IPost) => p.slug);
-      const ids2 = page2.body.posts.map((p: IPost) => p.slug);
+      const ids1 = page1.body.posts.map((p: IPost) => p.postId);
+      const ids2 = page2.body.posts.map((p: IPost) => p.postId);
 
       const overlap = ids1.filter((id: string) => ids2.includes(id));
       expect(overlap.length).toBe(0);
@@ -628,9 +628,9 @@ describe("POST /api/v1/posts/get", () => {
         .post("/api/v1/posts/get")
         .send({ limit: 5, page: 1, boardId: [board.boardId] });
 
-      const ids0 = page0.body.posts.map((p: IPost) => p.slug);
-      const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.slug);
-      const ids1 = page1.body.posts.map((p: IPost) => p.slug);
+      const ids0 = page0.body.posts.map((p: IPost) => p.postId);
+      const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.postId);
+      const ids1 = page1.body.posts.map((p: IPost) => p.postId);
 
       expect(ids0).toEqual(ids1);
       expect(idsNeg1).toEqual(ids1);
