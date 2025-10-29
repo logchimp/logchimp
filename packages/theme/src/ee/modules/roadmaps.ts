@@ -67,8 +67,9 @@ export const updateRoadmap = async (
  * Sort roadmap
  */
 export const sortRoadmap = async ({
-  from,
-  to,
+  id,
+  prevRoadmapId,
+  nextRoadmapId,
 }: ISortRoadmapRequestBody): Promise<
   AxiosResponse<TSortRoadmapResponseBody>
 > => {
@@ -78,8 +79,9 @@ export const sortRoadmap = async ({
     method: "PATCH",
     url: `${VITE_API_URL}/api/v1/roadmaps/sort`,
     data: {
-      from,
-      to,
+      id,
+      prevRoadmapId,
+      nextRoadmapId,
     },
     headers: {
       Authorization: `Bearer ${authToken}`,

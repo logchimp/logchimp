@@ -12,7 +12,7 @@ export interface IRoadmap {
 }
 
 export interface IRoadmapPrivate extends IRoadmap {
-  index: number;
+  index: string;
   display: boolean;
   created_at: Date;
 }
@@ -65,14 +65,11 @@ export interface IDeleteRoadmapRequestBody {
 export type TDeleteRoadmapResponseBody = string;
 
 export interface ISortRoadmapRequestBody {
-  from: {
-    id: string;
-    index: number;
-  };
-  to: {
-    id: string;
-    index: number;
-  };
+  id: string;
+  prevRoadmapId: string;
+  nextRoadmapId: string;
 }
 
-export type TSortRoadmapResponseBody = "OK";
+export type TSortRoadmapResponseBody = {
+  index: string;
+};
