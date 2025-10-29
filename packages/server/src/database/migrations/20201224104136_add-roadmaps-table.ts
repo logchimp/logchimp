@@ -7,7 +7,7 @@ exports.up = (knex) => {
       table.uuid("id").notNullable().unique().primary();
       table.string("name", 50).notNullable();
       table.string("url", 50).notNullable().unique();
-      table.integer("index").notNullable();
+      table.string("index", 50).notNullable();
       table.string("color", 6).notNullable();
       table.boolean("display").defaultTo(false);
       table.timestamp("created_at").defaultTo(knex.fn.now()).notNullable();
