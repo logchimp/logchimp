@@ -1,5 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { LexoRank } from "lexorank";
+
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { getAllRoadmaps } from "../../../modules/roadmaps";
@@ -34,7 +36,14 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
       const pageInfo = response.data.page_info;
 
       if (results.length > 0) {
-        roadmaps.value.push(...results);
+        const sortedResults = results.sort(
+          (a: IRoadmapPrivate, b: IRoadmapPrivate) => {
+            const aRank = a.index || `0|${String(a.index).padStart(6, "0")}:`;
+            const bRank = b.index || `0|${String(b.index).padStart(6, "0")}:`;
+            return aRank.localeCompare(bRank);
+          },
+        );
+        roadmaps.value.push(...sortedResults);
 
         currentCursor.value = pageInfo.end_cursor || undefined;
         hasNextPage.value = pageInfo.has_next_page;
@@ -54,48 +63,59 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   function appendRoadmap(roadmap: IRoadmapPrivate) {
+    if (roadmaps.value.length === 0) {
+      roadmap.index = LexoRank.middle().toString();
+    } else {
+      const lastRoadmap = roadmaps.value[roadmaps.value.length - 1];
+      const lastIndex = lastRoadmap.index
+        ? LexoRank.parse(lastRoadmap.index)
+        : LexoRank.middle();
+      roadmap.index = lastIndex.genNext().toString();
+    }
     roadmaps.value.push(roadmap);
   }
 
   function updateRoadmap(roadmap: IRoadmapPrivate) {
     const roadmapIdx = roadmaps.value.findIndex(
-      (item) => item.id === roadmap.id,
+      (item: IRoadmapPrivate) => item.id === roadmap.id,
     );
     if (roadmapIdx === -1) return;
 
     Object.assign(roadmaps.value[roadmapIdx], roadmap);
   }
 
+  function updateRoadmapIndex(roadmapId: string, roadmapRankIndex: string) {
+    const roadmap = roadmaps.value.find(
+      (item: IRoadmapPrivate) => item.id === roadmapId,
+    );
+    if (!roadmap) return;
+
+    roadmap.index = roadmapRankIndex;
+
+    return roadmap.index;
+  }
+
   function removeRoadmap(roadmapId: string) {
     const roadmapIdx = roadmaps.value.findIndex(
-      (item) => item.id === roadmapId,
+      (item: IRoadmapPrivate) => item.id === roadmapId,
     );
     if (roadmapIdx === -1) return;
 
     roadmaps.value.splice(roadmapIdx, 1);
   }
 
-  function sortRoadmap(fromIndex: number, toIndex: number) {
-    if (
-      fromIndex === toIndex ||
-      fromIndex < 0 ||
-      toIndex < 0 ||
-      fromIndex >= roadmaps.value.length ||
-      toIndex >= roadmaps.value.length
-    ) {
-      return;
-    }
+  function sortRoadmap(roadmapId: string, newIndex: string) {
+    const roadmap = roadmaps.value.find(
+      (roadmap: IRoadmapPrivate) => roadmap.id === roadmapId,
+    );
+    if (!roadmap) return;
 
-    const fromRoadmap = roadmaps.value[fromIndex];
-    const toRoadmap = roadmaps.value[toIndex];
+    roadmap.index = newIndex;
 
-    updateRoadmap({
-      ...fromRoadmap,
-      index: toIndex,
-    });
-    updateRoadmap({
-      ...toRoadmap,
-      index: fromIndex,
+    roadmaps.value.sort((a: IRoadmapPrivate, b: IRoadmapPrivate) => {
+      const aRank = a.index || `0|${String(a.index || 0).padStart(6, "0")}:`;
+      const bRank = b.index || `0|${String(b.index || 0).padStart(6, "0")}:`;
+      return aRank.localeCompare(bRank);
     });
   }
 
@@ -108,5 +128,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     updateRoadmap,
     removeRoadmap,
     sortRoadmap,
+    updateRoadmapIndex,
   };
 });
