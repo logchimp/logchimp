@@ -50,7 +50,6 @@ import { ref } from "vue";
 import type { ISortRoadmapRequestBody } from "@logchimp/types";
 
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
-import type { VueDraggableEvent } from "../../../lib/vuedraggable/types";
 import { sortRoadmap } from "../../../modules/roadmaps";
 
 import Table from "../../../../components/ui/Table/Table.vue";
@@ -67,7 +66,7 @@ function onDragStart() {
   drag.value = true;
 }
 
-async function onDragEnd(event: any) {
+async function onDragEnd(event: { oldIndex: number; newIndex: number }) {
   try {
     const roadmapId = dashboardRoadmaps.roadmaps[event.newIndex].id;
     const roadmapFromArrayIndex = event.oldIndex;
@@ -89,7 +88,7 @@ async function onDragEnd(event: any) {
       id: roadmapId,
       prevRoadmapId: prevRoadmap?.id,
       nextRoadmapId: nextRoadmap?.id,
-    });
+    } as ISortRoadmapRequestBody);
 
     if (response.status === 200) {
       dashboardRoadmaps.updateRoadmapIndex(roadmapId, response.data.index);
