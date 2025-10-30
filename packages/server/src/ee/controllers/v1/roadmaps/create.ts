@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import { LexoRank } from "lexorank";
 import type {
   IApiErrorResponse,
   TCreateRoadmapResponseBody,
@@ -43,8 +44,20 @@ export async function create(
   }
 
   try {
-    // get maximum index value of roadmap
-    const roadmapIndex = await database.max("index").from("roadmaps").first();
+    const lastRoadmap = await database
+      .select("index")
+      .from("roadmaps")
+      .orderBy("index", "desc")
+      .first();
+
+    let nextIndex: string;
+
+    if (!lastRoadmap) {
+      nextIndex = LexoRank.middle().toString();
+    } else {
+      const prevLexoRank = LexoRank.parse(lastRoadmap.index);
+      nextIndex = prevLexoRank.genNext().toString();
+    }
 
     const createRoadmap = await database
       .insert({
@@ -52,7 +65,7 @@ export async function create(
         name: name || "new roadmap",
         url: `new-roadmap-${nanoid(10)}`,
         color: generateHexColor(),
-        index: roadmapIndex.max + 1,
+        index: nextIndex,
       })
       .into("roadmaps")
       .returning<IRoadmapPrivate[]>([

@@ -10,6 +10,7 @@ import {
   generateNanoID as nanoid,
 } from "../../src/helpers";
 import database from "../../src/database";
+import { LexoRank } from "lexorank";
 
 const user = () => {
   return {
@@ -30,19 +31,28 @@ const user = () => {
 interface RoadmapArgs {
   name: string;
   url: string;
-  index: number;
+  index: string;
   color: string;
   display: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
+// Store the lexorank to create roadmaps
+let roadmapLastIndex: LexoRank;
+
 async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
+  if (!roadmapLastIndex) {
+    roadmapLastIndex = LexoRank.min();
+  } else {
+    roadmapLastIndex = roadmapLastIndex.genNext();
+  }
+
   const name = roadmap?.name || faker.commerce.productName();
 
   const id = uuid();
   const url = roadmap?.url || `${sanitiseURL(name)}-${nanoid(10)}`;
-  const index = faker.number.int({ min: 1, max: 100000 });
+  const index = roadmapLastIndex.toString();
   const color = generateHexColor();
   const display = faker.datatype.boolean();
   const created_at = new Date().toJSON();

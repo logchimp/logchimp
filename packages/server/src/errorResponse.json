@@ -61,9 +61,12 @@
       "boardNotFound": "Board not found"
     },
     "roadmaps": {
+      "idMissing": "Roadmap id missing",
+      "idInvalid": "Roadmap id invalid",
       "nameMissing": "Roadmap name missing",
       "urlMissing": "Roadmap url cannot be empty",
-      "roadmapNotFound": "Roadmap not found"
+      "roadmapNotFound": "Roadmap not found",
+      "neighbourInvalid": "Previous and Next roadmap has invalid neighbour count"
     },
     "votes": {
       "exists": "Vote already exists",

@@ -25,9 +25,8 @@
       group="roadmap"
       handle=".grip-handler"
       item-key="id"
-      :move="moveItem"
-      @start="drag = true"
-      @end="initialiseSort"
+      @start="onDragStart"
+      @end="onDragEnd"
     >
       <template #item="{ element: row }">
         <Tr>
@@ -51,7 +50,6 @@ import { ref } from "vue";
 import type { ISortRoadmapRequestBody } from "@logchimp/types";
 
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
-import type { VueDraggableEvent } from "../../../lib/vuedraggable/types";
 import { sortRoadmap } from "../../../modules/roadmaps";
 
 import Table from "../../../../components/ui/Table/Table.vue";
@@ -62,44 +60,38 @@ import Tr from "../../../../components/ui/Table/Tr.vue";
 
 const dashboardRoadmaps = useDashboardRoadmaps();
 
-const sort = ref<ISortRoadmapRequestBody>({
-  from: {
-    id: "",
-    index: 0,
-  },
-  to: {
-    id: "",
-    index: 0,
-  },
-});
 const drag = ref(false);
 
-function moveItem(
-  event: VueDraggableEvent<
-    ISortRoadmapRequestBody["from"],
-    ISortRoadmapRequestBody["to"]
-  >,
-) {
-  // current
-  sort.value.to = {
-    id: event.draggedContext.element.id,
-    index: event.draggedContext.futureIndex + 1,
-  };
-
-  // replaced with
-  sort.value.from = {
-    id: event.relatedContext.element.id,
-    index: event.draggedContext.index + 1,
-  };
+function onDragStart() {
+  drag.value = true;
 }
 
-async function initialiseSort() {
+async function onDragEnd(event: { oldIndex: number; newIndex: number }) {
   try {
-    const response = await sortRoadmap(sort.value);
+    const roadmapId = dashboardRoadmaps.roadmaps[event.newIndex].id;
+    const roadmapFromArrayIndex = event.oldIndex;
+    const roadmapToArrayIndex = event.newIndex;
+
+    // incomplete drag
+    if (roadmapFromArrayIndex === roadmapToArrayIndex) return;
+
+    const prevRoadmap =
+      roadmapToArrayIndex > 0
+        ? dashboardRoadmaps.roadmaps[roadmapToArrayIndex - 1]
+        : null;
+    const nextRoadmap =
+      roadmapToArrayIndex < dashboardRoadmaps.roadmaps.length - 1
+        ? dashboardRoadmaps.roadmaps[roadmapToArrayIndex + 1]
+        : null;
+
+    const response = await sortRoadmap({
+      id: roadmapId,
+      prevRoadmapId: prevRoadmap?.id,
+      nextRoadmapId: nextRoadmap?.id,
+    } as ISortRoadmapRequestBody);
 
     if (response.status === 200) {
-      drag.value = false;
-      dashboardRoadmaps.sortRoadmap(sort.value.from.index, sort.value.to.index);
+      dashboardRoadmaps.updateRoadmapIndex(roadmapId, response.data.index);
     }
   } catch (err) {
     console.error(err);

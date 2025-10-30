@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { getAllRoadmaps } from "../../../modules/roadmaps";
@@ -59,44 +60,31 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
 
   function updateRoadmap(roadmap: IRoadmapPrivate) {
     const roadmapIdx = roadmaps.value.findIndex(
-      (item) => item.id === roadmap.id,
+      (item: IRoadmapPrivate) => item.id === roadmap.id,
     );
     if (roadmapIdx === -1) return;
 
     Object.assign(roadmaps.value[roadmapIdx], roadmap);
   }
 
+  function updateRoadmapIndex(roadmapId: string, roadmapRankIndex: string) {
+    const roadmap = roadmaps.value.find(
+      (item: IRoadmapPrivate) => item.id === roadmapId,
+    );
+    if (!roadmap) return;
+
+    roadmap.index = roadmapRankIndex;
+
+    return roadmap.index;
+  }
+
   function removeRoadmap(roadmapId: string) {
     const roadmapIdx = roadmaps.value.findIndex(
-      (item) => item.id === roadmapId,
+      (item: IRoadmapPrivate) => item.id === roadmapId,
     );
     if (roadmapIdx === -1) return;
 
     roadmaps.value.splice(roadmapIdx, 1);
-  }
-
-  function sortRoadmap(fromIndex: number, toIndex: number) {
-    if (
-      fromIndex === toIndex ||
-      fromIndex < 0 ||
-      toIndex < 0 ||
-      fromIndex >= roadmaps.value.length ||
-      toIndex >= roadmaps.value.length
-    ) {
-      return;
-    }
-
-    const fromRoadmap = roadmaps.value[fromIndex];
-    const toRoadmap = roadmaps.value[toIndex];
-
-    updateRoadmap({
-      ...fromRoadmap,
-      index: toIndex,
-    });
-    updateRoadmap({
-      ...toRoadmap,
-      index: fromIndex,
-    });
   }
 
   return {
@@ -107,6 +95,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     appendRoadmap,
     updateRoadmap,
     removeRoadmap,
-    sortRoadmap,
+    updateRoadmapIndex,
   };
 });
