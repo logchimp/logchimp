@@ -27,7 +27,7 @@
     <DropdownItem
       :disabled="deleteRoadmapPermissionDisabled"
       variant="danger"
-      @click="roadmap?.id ? deleteRoadmapHandler(roadmap.id) : undefined"
+      @click="openConfirmDialog = true"
     >
       <template #icon>
         <delete-icon aria-hidden="true" />
@@ -35,10 +35,35 @@
       Delete
     </DropdownItem>
   </DropdownV2Content>
+
+  <Dialog v-model:open="openConfirmDialog">
+    <template #title>Delete Roadmap</template>
+
+    <template #description>
+      Are you sure you want to delete this roadmap? This action cannot be undone.
+    </template>
+
+    <template #footer>
+      <div class="flex justify-end gap-3 mt-4">
+        <button
+          class="px-3 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-100"
+          @click="openConfirmDialog = false"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+          @click="roadmap?.id ? deleteRoadmapHandler(roadmap.id) : undefined"
+        >
+          Delete
+        </button>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from "vue";
+import { computed, inject, ref } from "vue";
 import {
   Clipboard as CopyIcon,
   Settings as SettingsIcon,
@@ -56,6 +81,7 @@ import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
 import DropdownSeparator from "../../../../../components/ui/DropdownV2/DropdownSeparator.vue";
+import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 
 const roadmap = inject(roadmapKey);
 const { settings } = useSettingStore();
@@ -67,6 +93,8 @@ const deleteRoadmapPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("roadmap:destroy");
   return !checkPermission;
 });
+
+const openConfirmDialog = ref(false);
 
 async function deleteRoadmapHandler(id: string) {
   try {
