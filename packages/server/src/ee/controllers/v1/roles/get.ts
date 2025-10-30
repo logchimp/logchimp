@@ -24,7 +24,7 @@ const querySchema = v.object({
       parseAndValidateLimit(String(value), GET_ROLES_FILTER_COUNT),
     ),
   ),
-  after: v.optional(v.pipe(v.string(), v.trim())),
+  after: v.optional(v.pipe(v.string(), v.trim(), v.uuid("INVALID_UUID"))),
 });
 
 export async function get(
@@ -36,7 +36,7 @@ export async function get(
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
-      // errors: query.error.issues,
+      errors: query.issues,
     });
   }
 
