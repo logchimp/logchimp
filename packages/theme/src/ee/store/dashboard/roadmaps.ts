@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { LexoRank } from "lexorank";
 
 import type { IRoadmapPrivate } from "@logchimp/types";
 
@@ -36,14 +35,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
       const pageInfo = response.data.page_info;
 
       if (results.length > 0) {
-        const sortedResults = results.sort(
-          (a: IRoadmapPrivate, b: IRoadmapPrivate) => {
-            const aRank = a.index || `0|${String(a.index).padStart(6, "0")}:`;
-            const bRank = b.index || `0|${String(b.index).padStart(6, "0")}:`;
-            return aRank.localeCompare(bRank);
-          },
-        );
-        roadmaps.value.push(...sortedResults);
+        roadmaps.value.push(...results);
 
         currentCursor.value = pageInfo.end_cursor || undefined;
         hasNextPage.value = pageInfo.has_next_page;
@@ -63,15 +55,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   function appendRoadmap(roadmap: IRoadmapPrivate) {
-    if (roadmaps.value.length === 0) {
-      roadmap.index = LexoRank.middle().toString();
-    } else {
-      const lastRoadmap = roadmaps.value[roadmaps.value.length - 1];
-      const lastIndex = lastRoadmap.index
-        ? LexoRank.parse(lastRoadmap.index)
-        : LexoRank.middle();
-      roadmap.index = lastIndex.genNext().toString();
-    }
     roadmaps.value.push(roadmap);
   }
 
@@ -104,21 +87,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     roadmaps.value.splice(roadmapIdx, 1);
   }
 
-  function sortRoadmap(roadmapId: string, newIndex: string) {
-    const roadmap = roadmaps.value.find(
-      (roadmap: IRoadmapPrivate) => roadmap.id === roadmapId,
-    );
-    if (!roadmap) return;
-
-    roadmap.index = newIndex;
-
-    roadmaps.value.sort((a: IRoadmapPrivate, b: IRoadmapPrivate) => {
-      const aRank = a.index || `0|${String(a.index || 0).padStart(6, "0")}:`;
-      const bRank = b.index || `0|${String(b.index || 0).padStart(6, "0")}:`;
-      return aRank.localeCompare(bRank);
-    });
-  }
-
   return {
     roadmaps,
     state,
@@ -127,7 +95,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     appendRoadmap,
     updateRoadmap,
     removeRoadmap,
-    sortRoadmap,
     updateRoadmapIndex,
   };
 });
