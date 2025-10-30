@@ -195,9 +195,6 @@ importers:
       dayjs:
         specifier: 1.11.18
         version: 1.11.18
-      lexorank:
-        specifier: ^1.0.5
-        version: 1.0.5
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.22(typescript@5.9.3))
@@ -5159,7 +5156,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -5393,6 +5390,10 @@ snapshots:
   debug@4.3.4:
     dependencies:
       ms: 2.1.2
+
+  debug@4.4.1:
+    dependencies:
+      ms: 2.1.3
 
   debug@4.4.1(supports-color@5.5.0):
     dependencies:
@@ -5804,14 +5805,14 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -6875,7 +6876,7 @@ snapshots:
   vite-node@3.2.4(@types/node@24.8.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
       es-module-lexer: 1.7.0
       pathe: 2.0.3
       vite: 6.4.1(@types/node@24.8.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
@@ -6934,7 +6935,7 @@ snapshots:
       '@vitest/spy': 3.2.4
       '@vitest/utils': 3.2.4
       chai: 5.2.1
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
       expect-type: 1.2.2
       magic-string: 0.30.17
       pathe: 2.0.3
