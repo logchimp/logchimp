@@ -41,6 +41,10 @@ const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>();
 
 async function getBoards() {
+  if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
+  state.value = "LOADING";
+
   try {
     const response = await getPublicBoards({
       page: page.value.toString(),

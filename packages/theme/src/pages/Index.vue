@@ -55,6 +55,8 @@ async function isSetup() {
 }
 
 async function loadMorePosts() {
+  if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
   state.value = "LOADING";
 
   try {
