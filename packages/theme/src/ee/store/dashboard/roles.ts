@@ -14,6 +14,8 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
   const error = ref<unknown>(undefined);
 
   async function fetchRoles() {
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
     state.value = "LOADING";
     isLoading.value = true;
     error.value = undefined;
