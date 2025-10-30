@@ -42,9 +42,7 @@ const state = ref<InfiniteScrollStateType>();
 
 async function getBoards() {
   try {
-    if (state.value === "LOADING" || state.value === "COMPLETED") {
-      return;
-    }
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
 
