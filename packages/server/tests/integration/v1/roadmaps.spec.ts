@@ -6,6 +6,7 @@ import type {
   IGetRoadmapByUrlResponseBody,
   IRoadmapPrivate,
   IUpdateRoadmapRequestBody,
+  ISortRoadmapRequestBody,
 } from "@logchimp/types";
 
 import app from "../../../src/app";
@@ -22,7 +23,7 @@ describe("GET /api/v1/roadmaps", () => {
       // Seed 100 roadmaps with ascending indices: 50 public, 50 private
       for (let i = 0; i < 100; i++) {
         const isPublic = i < 50; // first 50 public
-        const r = await generateRoadmap({ display: isPublic, index: i + 1 });
+        const r = await generateRoadmap({ display: isPublic });
         await trx.insert(r).into("roadmaps");
       }
     });
@@ -840,4 +841,256 @@ describe("DELETE /api/v1/roadmaps/", () => {
   });
 });
 
-// TODO: Sort roadmaps
+// Sort roadmaps
+describe("PATCH /api/v1/roadmaps/sort", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const res = await supertest(app).patch("/api/v1/roadmaps/sort");
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error for missing 'roadmap:update' permission", async () => {
+    const { user } = await createUser({ isVerified: true });
+
+    const res = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  describe("Validation Errors", () => {
+    const testCases = [
+      {
+        testName: "ROADMAP_ID_INVALID",
+        omitField: "id",
+        expectedError: {
+          message: "Roadmap id invalid",
+          code: "ROADMAP_ID_INVALID",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "PREV_ROADMAP_ID_INVALID",
+        omitField: "prevRoadmapId",
+        expectedError: {
+          message: "Roadmap id invalid",
+          code: "ROADMAP_ID_INVALID",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "NEXT_ROADMAP_ID_INVALID",
+        omitField: "nextRoadmapId",
+        expectedError: {
+          message: "Roadmap id invalid",
+          code: "ROADMAP_ID_INVALID",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "PREV_ROADMAP_ID_OR_NEXT_ROADMAP_ID_REQUIRED",
+        omitField: ["prevRoadmapId", "nextRoadmapId"],
+        expectedError: {
+          message: "Roadmap id missing",
+          code: "PREV_ROADMAP_ID_OR_NEXT_ROADMAP_ID_REQUIRED",
+        },
+        expectedStatus: 400,
+      },
+    ];
+
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const { user } = await createUser({
+          isVerified: true,
+        });
+        await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+          roleName: "Roadmap editor",
+        });
+        const roadmap = await generateRoadmap({}, true);
+
+        const requestBody: ISortRoadmapRequestBody = {
+          id: roadmap.id,
+          prevRoadmapId: "prev_roadmapId_not_an_uuid",
+          nextRoadmapId: "next_roadmapId_not_an_uuid",
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/roadmaps/sort")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
+    );
+  });
+
+  it("should throw error 'ROADMAP_NEIGHBOUR_INVALID' when non-adjacent roadmapIds are given", async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "Roadmap editor",
+    });
+
+    const roadmaps: IRoadmapPrivate[] = [];
+    for (let i = 0; i < 4; i++) {
+      const roadmap: IRoadmapPrivate = await generateRoadmap({}, true);
+      roadmaps.push(roadmap);
+    }
+
+    const requestBody: ISortRoadmapRequestBody = {
+      id: roadmaps[0].id,
+      prevRoadmapId: roadmaps[1].id,
+      nextRoadmapId: roadmaps[3].id,
+    };
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send(requestBody);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("ROADMAP_NEIGHBOUR_INVALID");
+    expect(response.body.message).toBe(
+      "Previous and Next roadmap has invalid neighbour count",
+    );
+  });
+
+  it("should throw error 'ROADMAP_NEIGHBOUR_INVALID' when roadmaps are given with prev index greater than next index", async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "Roadmap editor",
+    });
+
+    const roadmaps: IRoadmapPrivate[] = [];
+    for (let i = 0; i < 3; i++) {
+      const roadmap: IRoadmapPrivate = await generateRoadmap({}, true);
+      roadmaps.push(roadmap);
+    }
+
+    const requestBody: ISortRoadmapRequestBody = {
+      id: roadmaps[0].id,
+      prevRoadmapId: roadmaps[2].id,
+      nextRoadmapId: roadmaps[1].id,
+    };
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send(requestBody);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(400);
+    expect(response.body.code).toBe("ROADMAP_NEIGHBOUR_INVALID");
+    expect(response.body.message).toBe(
+      "Previous and Next roadmap has invalid neighbour count",
+    );
+  });
+
+  it("should sort roadmap", async () => {
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "Roadmap editor",
+    });
+
+    const roadmaps: IRoadmapPrivate[] = [];
+    for (let i = 0; i < 4; i++) {
+      const roadmap: IRoadmapPrivate = await generateRoadmap({}, true);
+      roadmaps.push(roadmap);
+    }
+
+    // top to bottom swap
+    for (let i = 0; i < 3; i++) {
+      const requestBody: ISortRoadmapRequestBody = {
+        id: roadmaps[i].id,
+        prevRoadmapId: roadmaps[i + 1].id,
+        nextRoadmapId: roadmaps[i + 2]?.id,
+      };
+
+      const response = await supertest(app)
+        .patch("/api/v1/roadmaps/sort")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send(requestBody);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+      expect(response.body.index).toMatch(/0|.*/);
+
+      // simulating the dragging operation
+      roadmaps[i].index = response.body.index;
+      roadmaps.splice(i + 1, 0, ...roadmaps.splice(i, 1));
+
+      let roadmapIndex = "";
+      for (let j = 0; j < 4; j++) {
+        expect(roadmapIndex).not.toEqual(roadmaps[j].index);
+        expect(roadmapIndex < roadmaps[j].index).toBeTruthy();
+        roadmapIndex = roadmaps[j].index;
+      }
+    }
+
+    // bottom to top swap
+    for (let i = 1; i < 4; i++) {
+      const requestBody: ISortRoadmapRequestBody = {
+        id: roadmaps[i].id,
+        prevRoadmapId: roadmaps[i - 2]?.id,
+        nextRoadmapId: roadmaps[i - 1].id,
+      };
+
+      const response = await supertest(app)
+        .patch("/api/v1/roadmaps/sort")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send(requestBody);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+      expect(response.body.index).toMatch(/0|.*/);
+
+      // simulating the dragging operation
+      roadmaps[i].index = response.body.index;
+      roadmaps.splice(i - 1, 0, ...roadmaps.splice(i, 1));
+
+      let roadmapIndex = "";
+      for (let j = 0; j < 4; j++) {
+        expect(roadmapIndex).not.toEqual(roadmaps[j].index);
+        expect(roadmapIndex < roadmaps[j].index).toBeTruthy();
+        roadmapIndex = roadmaps[j].index;
+      }
+    }
+  });
+});
