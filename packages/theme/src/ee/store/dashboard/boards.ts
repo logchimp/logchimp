@@ -14,9 +14,7 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
   const page = ref<number>(1);
 
   async function fetchBoards() {
-    if (state.value === "LOADING" || state.value === "COMPLETED") {
-      return;
-    }
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
     isLoading.value = true;
