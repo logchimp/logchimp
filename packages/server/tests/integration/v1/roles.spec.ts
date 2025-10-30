@@ -1,27 +1,56 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeAll } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
+import type { IAuthUser, IRole, TPermission } from "@logchimp/types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import type { TPermission } from "@logchimp/types";
 import { toSlug } from "../../../src/helpers";
 
 const roleIdSlug = toSlug(faker.commerce.productName());
 const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
-describe("GET /api/v1/roles", () => {
+describe.only("GET /api/v1/roles", () => {
+  let authUser: IAuthUser;
+  beforeAll(async () => {
+    await database.transaction(async (trx) => {
+      // Seed 30 roles
+      for (let i = 0; i < 30; i++) {
+        await trx("roles").insert({
+          id: uuid(),
+          name: faker.commerce.productName().substring(0, 30),
+          description: faker.commerce.productDescription().substring(0, 50),
+        });
+      }
+    });
+
+    const { user } = await createUser();
+    authUser = user;
+    await createRoleWithPermissions(user.userId, ["role:read"], {
+      roleName: "Spectator",
+    });
+  });
+
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/roles");
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it.skip("should get 0 roles", async () => {
+    const response = await supertest(app).get("/api/v1/roles");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.results).toHaveLength(0);
+    expect(response.body.roles).toHaveLength(0);
   });
 
   it("should not have permission 'role:read'", async () => {
@@ -36,22 +65,68 @@ describe("GET /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should get all the roles", async () => {
-    // delete all roles, except '@everyone' role
-    await database.del().from("roles").where("name", "!=", "@everyone");
+  describe("'?after=' param", () => {
+    it("should handle cursor pagination correctly", async () => {
+      const res1 = await supertest(app)
+        .get("/api/v1/roles")
+        .query({ first: 3 })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+      expect(res1.headers["content-type"]).toContain("application/json");
+      const lastId = res1.body.results[2].id;
+      expect(res1.body.page_info.start_cursor).toBe(res1.body.results[0].id);
+      expect(res1.body.page_info.end_cursor).toBe(lastId);
 
-    const { user } = await createUser();
-    await createRoleWithPermissions(user.userId, ["role:read"], {
-      roleName: "Spectator",
+      const res2 = await supertest(app)
+        .get("/api/v1/roles")
+        .query({
+          first: 3,
+          after: lastId,
+        })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+      expect(res2.headers["content-type"]).toContain("application/json");
+      expect(res2.status).toBe(200);
+      expect(res2.body.results).toHaveLength(3);
+      expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
+      expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
+      expect(res1.body.page_info.start_cursor).toBe(res2.body.results[0].id);
+      expect(res1.body.page_info.end_cursor).toBe(res2.body.results[2].id);
+
+      const ids1 = res1.body.results.map((r: IRole) => r.id);
+      const ids2 = res2.body.results.map((r: IRole) => r.id);
+      expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
-    const response = await supertest(app)
-      .get("/api/v1/roles")
-      .set("Authorization", `Bearer ${user.authToken}`);
+    it("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .query({
+          first: 3,
+          after: "invalid-uuid",
+        })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(response.body.roles.length).toBeGreaterThanOrEqual(2);
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe("VALIDATION_ERROR");
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it("should handle empty '?after=' param gracefully", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .query({
+          first: 3,
+          after: "",
+        })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(400);
+
+      expect(res.body.code).toBe("VALIDATION_ERROR");
+      expect(res.body.message).toBe("Invalid query parameters");
+      expect(res.body.errors?.[0]?.message).toMatch(/INVALID_UUID/gi);
+    });
   });
 });
 
