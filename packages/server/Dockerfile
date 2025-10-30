@@ -26,6 +26,9 @@ COPY --from=builder /app/packages/types/package.json ./packages/types/package.js
 COPY --from=builder /app/packages/server/package.json ./packages/server/package.json
 COPY --from=builder /app/packages/server/dist ./packages/server/dist
 
+# Copy raw email templates
+COPY --from=builder /app/packages/server/src/services/mail/templates ./packages/server/dist/services/mail
+
 RUN \
     npm i -g pnpm && \
     pnpm install --filter="@logchimp/api";
