@@ -231,7 +231,7 @@ describe("GET /api/v1/roles", () => {
 
       expect(res.body.code).toBe("VALIDATION_ERROR");
       expect(res.body.message).toBe("Invalid query parameters");
-      expect(res.body.errors?.[0]?.message).toMatch(/INVALID_UUID/gi);
+      expect(res.body.errors?.[0]?.code).toMatch(/INVALID_UUID/gi);
     });
   });
 });
