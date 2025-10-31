@@ -88,8 +88,8 @@ describe.only("GET /api/v1/roles", () => {
       expect(res2.body.results).toHaveLength(3);
       expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
       expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
-      expect(res1.body.page_info.start_cursor).toBe(res2.body.results[0].id);
-      expect(res1.body.page_info.end_cursor).toBe(res2.body.results[2].id);
+      expect(res2.body.page_info.start_cursor).toBe(res2.body.results[0].id);
+      expect(res2.body.page_info.end_cursor).toBe(res2.body.results[2].id);
 
       const ids1 = res1.body.results.map((r: IRole) => r.id);
       const ids2 = res2.body.results.map((r: IRole) => r.id);
