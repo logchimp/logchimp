@@ -7,7 +7,6 @@ import {
   sanitiseUsername,
   sanitiseURL,
   toSlug,
-  generateNanoID as nanoid,
 } from "../../src/helpers";
 import database from "../../src/database";
 

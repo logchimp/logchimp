@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      valibot:
-        specifier: ^1.1.0
-        version: 1.1.0(typescript@5.9.3)
     devDependencies:
       '@biomejs/biome':
         specifier: 2.2.6
