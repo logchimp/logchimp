@@ -115,17 +115,17 @@ async function getRolesQuery({ first, after }: GetRolesQueryOptions) {
   let query = database
     .select<IRole[]>("id", "name", "description", "created_at", "updated_at")
     .from("roles")
-    .orderBy("created_at", "desc")
+    .orderBy([
+      { column: "created_at", order: "desc" },
+      { column: "id", order: "desc" },
+    ])
     .limit(first);
 
   if (after) {
-    query = query
-      .where(
-        "created_at",
-        "<=",
-        database("roles").select("created_at").where("id", "=", after),
-      )
-      .offset(1);
+    query = query.whereRaw(
+      "(created_at, id) < (SELECT created_at, id FROM roles WHERE id = ?)",
+      [after],
+    );
   }
 
   return query;
@@ -138,7 +138,7 @@ interface GetRolesMetadataOptions {
 function getRoleMetadata({ after }: GetRolesMetadataOptions) {
   return database.transaction(async (trx) => {
     // Total count
-    let totalCountQuery = trx("roles");
+    const totalCountQuery = trx("roles");
     const totalCountResult = await totalCountQuery
       .count<{ count: string | number }[]>("* as count")
       .first();
@@ -146,9 +146,10 @@ function getRoleMetadata({ after }: GetRolesMetadataOptions) {
     // Has next page
     let hasNextPageSubquery = trx("roles").as("next");
     if (after) {
-      hasNextPageSubquery = hasNextPageSubquery
-        .where("id", ">=", after)
-        .offset(1);
+      hasNextPageSubquery = hasNextPageSubquery.whereRaw(
+        "(created_at, id) < (SELECT created_at, id FROM roles WHERE id = ?)",
+        [after],
+      );
     }
 
     const hasNextPageResult = await trx
