@@ -886,30 +886,29 @@ describe("PATCH /api/v1/roadmaps/sort", () => {
 
     const r1 = await generateRoadmap({ index: 1 }, true);
     const r2 = await generateRoadmap({ index: 2 }, true);
-const res = await supertest(app)
-  .patch("/api/v1/roadmaps/sort")
-  .set("Authorization", `Bearer ${user.authToken}`)
-  .send({
-    from: { id: r1.id, index: r2.index },
-    to: { id: r2.id, index: r1.index },
-  });
+    const res = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        from: { id: r1.id, index: r2.index },
+        to: { id: r2.id, index: r1.index },
+      });
 
-expect(res.status).toBe(200);
+    expect(res.status).toBe(200);
 
-const updatedR1 = await database
-  .select("index")
-  .from("roadmaps")
-  .where({ id: r1.id })
-  .first();
+    const updatedR1 = await database
+      .select("index")
+      .from("roadmaps")
+      .where({ id: r1.id })
+      .first();
 
-const updatedR2 = await database
-  .select("index")
-  .from("roadmaps")
-  .where({ id: r2.id })
-  .first();
+    const updatedR2 = await database
+      .select("index")
+      .from("roadmaps")
+      .where({ id: r2.id })
+      .first();
 
-expect(updatedR1.index).toBe(r2.index);
-expect(updatedR2.index).toBe(r1.index);
-
+    expect(updatedR1.index).toBe(r2.index);
+    expect(updatedR2.index).toBe(r1.index);
   });
 });
