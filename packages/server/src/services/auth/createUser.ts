@@ -89,7 +89,7 @@ const createUser = async (
       return null;
     }
 
-    const username = await generateUniqueUsername(baseUsername);
+    const username = generateUniqueUsername(baseUsername);
 
     // insert user to database
     const [newUser] = await database
@@ -158,15 +158,11 @@ const createUser = async (
 
 export { createUser };
 
-async function generateUniqueUsername(baseUsername: string): Promise<string> {
+function generateUniqueUsername(baseUsername: string): string {
   let username = baseUsername;
-  let exists = await database("users").where({ username }).first();
 
-  while (exists) {
-    const suffix = nanoid(5);
-    username = `${baseUsername}-${suffix}`.slice(0, 30);
-    exists = await database("users").where({ username }).first();
-  }
+  const suffix = nanoid(8);
+  username = `${baseUsername}-${suffix}`.slice(0, 30);
 
   return username;
 }
