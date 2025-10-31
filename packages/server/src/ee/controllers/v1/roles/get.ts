@@ -84,12 +84,14 @@ export async function get(
     if (metadataResults) {
       totalCount = metadataResults.totalCount;
       totalPages = Math.ceil(metadataResults.totalCount / first);
-      hasNextPage = metadataResults.remainingResultsCount - first > 0;
+      hasNextPage = metadataResults.remainingResultsCount > dataLength;
 
-      if (after) {
-        const seenResults = totalCount - metadataResults.remainingResultsCount;
-        currentPage = Math.ceil(seenResults / first);
-      }
+      const seenResults = totalCount - metadataResults.remainingResultsCount;
+      const deliveredThroughCurrentPage = seenResults + dataLength;
+      currentPage =
+        deliveredThroughCurrentPage > 0
+          ? Math.ceil(deliveredThroughCurrentPage / first)
+          : currentPage;
     }
 
     res.status(200).send({
