@@ -23,9 +23,14 @@ const querySchema = v.object({
     v.transform((value) =>
       parseAndValidateLimit(String(value), GET_ROLES_FILTER_COUNT),
     ),
+    v.minValue(1, "MIN_VALUE_1"),
   ),
   after: v.optional(v.pipe(v.string(), v.trim(), v.uuid("INVALID_UUID"))),
 });
+
+const querySchemaErrorMap = {
+  MIN_VALUE_1: error.general.minValue1,
+};
 
 export async function get(
   req: Request<IGetRolesParams>,
@@ -36,7 +41,13 @@ export async function get(
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
-      errors: query.issues,
+      errors: query.issues.map((issue) => ({
+        ...issue,
+        message: querySchemaErrorMap[issue.message]
+          ? querySchemaErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
   }
 
