@@ -15,7 +15,7 @@ const roleIdSlug = toSlug(faker.commerce.productName());
 const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
-describe.only("GET /api/v1/roles", () => {
+describe("GET /api/v1/roles", () => {
   let authUser: IAuthUser;
   beforeAll(async () => {
     await database.transaction(async (trx) => {
