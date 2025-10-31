@@ -82,7 +82,7 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       nanoid:
-        specifier: ^3.3.2
+        specifier: ^3.3.11
         version: 3.3.11
       nodemailer:
         specifier: 7.0.9
@@ -139,9 +139,6 @@ importers:
       '@types/nodemailer':
         specifier: ^7.0.2
         version: 7.0.3
-      '@types/omgopass':
-        specifier: ^3.2.3
-        version: 3.2.3
       '@types/supertest':
         specifier: ^6.0.3
         version: 6.0.3
@@ -154,9 +151,6 @@ importers:
       nodemon:
         specifier: ^3.1.7
         version: 3.1.10
-      omgopass:
-        specifier: 3.2.1
-        version: 3.2.1
       supertest:
         specifier: ^7.1.4
         version: 7.1.4
@@ -318,6 +312,7 @@ packages:
   '@aws-sdk/credential-provider-web-identity@3.917.0':
     resolution: {integrity: sha512-pZncQhFbwW04pB0jcD5OFv3x2gAddDYCVxyJVixgyhSw7bKCYxqu6ramfq1NxyVpmm+qsw+ijwi/3cCmhUHF/A==}
     engines: {node: '>=18.0.0'}
+    deprecated: This version contains a compilation TypeScript error https://github.com/aws/aws-sdk-js-v3/issues/7457 - please use @aws-sdk/credential-providers@3.918.0 or higher
 
   '@aws-sdk/middleware-host-header@3.914.0':
     resolution: {integrity: sha512-7r9ToySQ15+iIgXMF/h616PcQStByylVkCshmQqcdeynD/lCn2l667ynckxW4+ql0Q+Bo/URljuhJRxVJzydNA==}
@@ -1438,9 +1433,6 @@ packages:
 
   '@types/nodemailer@7.0.3':
     resolution: {integrity: sha512-fC8w49YQ868IuPWRXqPfLf+MuTRex5Z1qxMoG8rr70riqqbOp2F5xgOKE9fODEBPzpnvjkJXFgK6IL2xgMSTnA==}
-
-  '@types/omgopass@3.2.3':
-    resolution: {integrity: sha512-tBihWcBapTQb2tLgtAJ3kepzeP/Qg9lvem2VSsYbkttKMINRBfUWFUDGqP9QXSukIqjK4qpDnNaOiwKHNQpQfA==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -2734,9 +2726,6 @@ packages:
 
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
-
-  omgopass@3.2.1:
-    resolution: {integrity: sha512-Q0QqwwL3ag1Pyjhx6vfieaz73pHNLa3v59qhRcTCUINmJOwdcLu0kNKncBSF2ylnzrqmZw9VRgOEdAwvCSxffA==}
 
   on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
@@ -4882,8 +4871,6 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@types/omgopass@3.2.3': {}
-
   '@types/qs@6.14.0': {}
 
   '@types/range-parser@1.2.7': {}
@@ -6246,8 +6233,6 @@ snapshots:
   object-inspect@1.13.4: {}
 
   ohash@2.0.11: {}
-
-  omgopass@3.2.1: {}
 
   on-finished@2.4.1:
     dependencies:
