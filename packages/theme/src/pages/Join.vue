@@ -1,11 +1,10 @@
 <template>
   <auth-form>
-    <div class="auth-form-header">
-      <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
-      <h3 class="auth-form-heading">
+    <AuthFormHeader>
+      <template #heading>
         Create your account
-      </h3>
-    </div>
+      </template>
+    </AuthFormHeader>
 
     <server-error v-if="serverError" @close="serverError = false" />
 
@@ -43,12 +42,12 @@
       </div>
     </form>
 
-    <footer class="auth-form-other">
+    <AuthFormHelperText>
       Already have an account?
       <router-link to="/login">
         Log in
       </router-link>
-    </footer>
+    </AuthFormHelperText>
   </auth-form>
 </template>
 
@@ -65,11 +64,12 @@ import { useUserStore } from "../store/user";
 
 // component
 import AuthForm from "../layout/AuthForm.vue";
+import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../components/ui/input/formBaseProps";
 import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
-import SiteBranding from "../components/site/SiteBranding.vue";
+import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { getUserId, login, setPermissions } = useUserStore();

@@ -840,4 +840,74 @@ describe("DELETE /api/v1/roadmaps/", () => {
   });
 });
 
-// TODO: Sort roadmaps
+// Sort roadmaps
+describe("PATCH /api/v1/roadmaps/sort", () => {
+  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+    const res = await supertest(app).patch("/api/v1/roadmaps/sort");
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it("should throw error for missing 'roadmap:update' permission", async () => {
+    const { user } = await createUser({ isVerified: true });
+    const from = await generateRoadmap({}, true);
+    const to = await generateRoadmap({}, true);
+
+    const res = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({ from, to });
+
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  it("should return 204 if from.id === to.id", async () => {
+    const { user } = await createUser({ isVerified: true });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "roadmap-sort",
+    });
+    const roadmap = await generateRoadmap({}, true);
+
+    const res = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({ from: roadmap, to: roadmap });
+
+    expect(res.status).toBe(204);
+  });
+
+  it("should successfully swap roadmap indexes", async () => {
+    const { user } = await createUser({ isVerified: true });
+    await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+      roleName: "roadmap-sort",
+    });
+
+    const r1 = await generateRoadmap({ index: 1 }, true);
+    const r2 = await generateRoadmap({ index: 2 }, true);
+    const res = await supertest(app)
+      .patch("/api/v1/roadmaps/sort")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        from: { id: r1.id, index: r2.index },
+        to: { id: r2.id, index: r1.index },
+      });
+
+    expect(res.status).toBe(200);
+
+    const updatedR1 = await database
+      .select("index")
+      .from("roadmaps")
+      .where({ id: r1.id })
+      .first();
+
+    const updatedR2 = await database
+      .select("index")
+      .from("roadmaps")
+      .where({ id: r2.id })
+      .first();
+    expect(updatedR1.index).toBe(r2.index);
+    expect(updatedR2.index).toBe(r1.index);
+  });
+});

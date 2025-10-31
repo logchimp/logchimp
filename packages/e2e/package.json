@@ -5,7 +5,7 @@
     "playwright:ui": "BASE_URL=\"http://localhost:3000\" playwright test --ui"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.9.0",
+    "@faker-js/faker": "^10.0.0",
     "@logchimp/types": "workspace:*",
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.3.1",
