@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { KeyIcon } from "lucide-vue";
+import { storeToRefs } from "pinia";
 
 import { useSettingsEEStore } from "../store/settings";
 import EmptyScreen from "../../components/EmptyScreen.vue";
@@ -8,10 +9,11 @@ import Button from "../../components/ui/Button.vue";
 import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../constants";
 import LocalLicenseAlert from "./license/LocalLicenseAlert.vue";
 
-const { hasValidLicense } = useSettingsEEStore();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 onMounted(() => {
-  if (IS_DEV && !hasValidLicense) {
+  if (IS_DEV && !hasValidLicense.value) {
     console.warn(
       `You're using a feature that requires a valid license. Please enter a license key.`,
     );

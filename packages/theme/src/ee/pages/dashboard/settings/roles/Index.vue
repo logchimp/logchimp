@@ -30,6 +30,7 @@
 // packages
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { storeToRefs } from "pinia";
 
 // modules
 import { router } from "../../../../../router";
@@ -50,7 +51,8 @@ import LicenseCrown from "../../../../components/icons/LicenseCrown.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
-const { hasValidLicense } = useSettingsEEStore();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 const createRoleButtonLoading = ref(false);
 

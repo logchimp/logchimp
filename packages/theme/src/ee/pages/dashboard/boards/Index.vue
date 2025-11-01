@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { storeToRefs } from "pinia";
 
 // modules
 import { router } from "../../../../router";
@@ -49,7 +50,8 @@ import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
-const { hasValidLicense } = useSettingsEEStore();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 const createBoardButtonLoading = ref(false);
 
