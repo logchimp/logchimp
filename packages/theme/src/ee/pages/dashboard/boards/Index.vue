@@ -14,12 +14,7 @@
         @click="createBoardHandler"
       >
         Create board
-        <PhCrownSimple
-          v-if="!hasValidLicense"
-          :size="20"
-          weight="regular"
-          class="fill-white"
-        />
+        <LicenseCrown v-if="!hasValidLicense" />
       </Button>
     </UpgradeTooltip>
   </DashboardPageHeader>
@@ -34,7 +29,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
 import { router } from "../../../../router";
@@ -51,6 +45,7 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import LicenseRequired from "../../../components/LicenseRequired.vue";
 import TabularView from "../../../components/dashboard/boards/TabularView.vue";
 import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
+import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
