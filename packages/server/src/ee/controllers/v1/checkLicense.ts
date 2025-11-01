@@ -1,8 +1,10 @@
+import type { Request, Response } from "express";
+
 import error from "../../../errorResponse.json";
 import logger from "../../../utils/logger";
 import { checkLicense as checkLicenseService } from "../../services/license/checkLicense";
 
-export async function checkLicenseController(req, res, next) {
+export async function checkLicenseController(_: Request, res: Response) {
   try {
     const result = await checkLicenseService();
 
