@@ -8,7 +8,7 @@
       </Breadcrumbs>
     </template>
 
-    <UpgradeTooltip :has-valid-license="settingsStore.settings.hasValidLicense">
+    <UpgradeTooltip :has-valid-license="hasValidLicense">
       <Button
         type="primary"
         :disabled="createRoadmapButtonDisabled"
@@ -17,7 +17,7 @@
       >
         Create roadmap
         <PhCrownSimple
-          v-if="!settingsStore.settings.hasValidLicense"
+          v-if="!hasValidLicense"
           :size="20"
           weight="regular"
           class="fill-white"
@@ -43,7 +43,7 @@ import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 import { createRoadmap } from "../../../modules/roadmaps";
-import { useSettingStore } from "../../../../store/settings";
+import { useSettingsEEStore } from "../../../store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -56,7 +56,7 @@ import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
-const settingsStore = useSettingStore();
+const { hasValidLicense } = useSettingsEEStore();
 
 const createRoadmapButtonLoading = ref(false);
 

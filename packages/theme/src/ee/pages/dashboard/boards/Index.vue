@@ -6,7 +6,7 @@
       </Breadcrumbs>
     </template>
 
-    <UpgradeTooltip :has-valid-license="settingsStore.settings.hasValidLicense">
+    <UpgradeTooltip :has-valid-license="hasValidLicense">
       <Button
         type="primary"
         :disabled="createBoardPermissionDisabled"
@@ -15,7 +15,7 @@
       >
         Create board
         <PhCrownSimple
-          v-if="!settingsStore.settings.hasValidLicense"
+          v-if="!hasValidLicense"
           :size="20"
           weight="regular"
           class="fill-white"
@@ -41,7 +41,7 @@ import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { createBoard } from "../../../modules/boards";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
-import { useSettingStore } from "../../../../store/settings";
+import { useSettingsEEStore } from "../../../store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -54,7 +54,7 @@ import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
-const settingsStore = useSettingStore();
+const { hasValidLicense } = useSettingsEEStore();
 
 const createBoardButtonLoading = ref(false);
 
