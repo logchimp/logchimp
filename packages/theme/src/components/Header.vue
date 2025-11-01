@@ -8,7 +8,6 @@
           text-color="white"
         />
 
-       
        <div class="flex items-center gap-5">
         <LanguageDropdown/>
         <nav>
