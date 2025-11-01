@@ -13,9 +13,9 @@ RUN go version
 RUN go install github.com/air-verse/air@latest;
 
 WORKDIR /app
-COPY ./../packages/types/ ./../packages/types/
-COPY ./../packages/server/ ./../packages/server/
-COPY ./../package.json ./../pnpm-lock.yaml ./../pnpm-workspace.yaml ./
+COPY ./packages/types/ ./packages/types/
+COPY ./packages/server/ ./packages/server/
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 
 ENV NODE_ENV=development
 
