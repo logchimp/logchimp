@@ -6,7 +6,6 @@ import type {
 } from "@logchimp/types";
 
 import database from "../../database";
-import { checkLicense } from "../../ee/services/license/checkLicense";
 
 // utils
 import logger from "../../utils/logger";
@@ -20,12 +19,9 @@ export async function siteSettings(_: Request, res: Response<ResponseBody>) {
       .select("*", database.raw("labs::json as labs"))
       .first();
 
-    const hasValidLicense = await checkLicense();
-
     res.status(200).send({
       settings: {
         ...settings,
-        hasValidLicense,
       },
     });
   } catch (err) {
