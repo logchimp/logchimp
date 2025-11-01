@@ -1,13 +1,12 @@
 import { faker } from "@faker-js/faker";
 import { v4 as uuidv4, v4 as uuid } from "uuid";
-import generatePassword from "omgopass";
+import { nanoid } from "nanoid";
 
 import {
   generateHexColor,
   sanitiseUsername,
   sanitiseURL,
   toSlug,
-  generateNanoID as nanoid,
 } from "../../src/helpers";
 import database from "../../src/database";
 
@@ -16,7 +15,7 @@ const user = () => {
     userId: uuid(),
     name: faker.person.fullName(),
     email: faker.internet.email().toLowerCase(),
-    password: generatePassword(),
+    password: nanoid(),
     username: sanitiseUsername(faker.internet.username()),
     avatar: faker.image.avatar(),
     isVerified: faker.datatype.boolean(),
