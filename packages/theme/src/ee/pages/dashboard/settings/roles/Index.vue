@@ -6,7 +6,7 @@
       </Breadcrumbs>
     </template>
 
-    <UpgradeTooltip :has-valid-license="settingsStore.settings.hasValidLicense">
+    <UpgradeTooltip :has-valid-license="hasValidLicense">
       <Button
         type="primary"
         :loading="createRoleButtonLoading"
@@ -15,7 +15,7 @@
       >
         Create
         <PhCrownSimple
-          v-if="!settingsStore.settings.hasValidLicense"
+          v-if="!hasValidLicense"
           :size="20"
           weight="regular"
           class="fill-white"
@@ -42,7 +42,7 @@ import { router } from "../../../../../router";
 import { useUserStore } from "../../../../../store/user";
 import { createRole } from "../../../../modules/roles";
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
-import { useSettingStore } from "../../../../../store/settings";
+import { useSettingsEEStore } from "../../../../store/settings";
 
 // components
 import Button from "../../../../../components/ui/Button.vue";
@@ -55,7 +55,7 @@ import UpgradeTooltip from "../../../../components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
-const settingsStore = useSettingStore();
+const { hasValidLicense } = useSettingsEEStore();
 
 const createRoleButtonLoading = ref(false);
 
