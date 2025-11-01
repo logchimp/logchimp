@@ -1,3 +1,6 @@
+export const IS_DEV = import.meta.env.DEV;
+export const IS_PROD = import.meta.env.PROD;
+
 export const VITE_LOGCHIMP_VERSION =
   window.__APP_ENV__?.VITE_LOGCHIMP_VERSION ||
   import.meta.env.VITE_LOGCHIMP_VERSION;
@@ -8,3 +11,6 @@ export const VITE_API_URL =
 export const IS_SELF_HOSTED =
   window.__APP_ENV__?.VITE_IS_SELF_HOSTED === "true" ||
   import.meta.env.VITE_IS_SELF_HOSTED === "true";
+
+export const DEFAULT_LOGCHIMP_PILOT_URL =
+  "https://pilot.logchimp.codecarrot.net";

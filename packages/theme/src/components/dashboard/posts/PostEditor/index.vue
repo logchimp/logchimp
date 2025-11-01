@@ -66,6 +66,14 @@
       </h6>
       <div class="form-columns">
         <div class="form-column">
+          <div class="flex items-center justify-between gap-2">
+            <InputLabel html-for="" class="mb-0">
+              Board
+            </InputLabel>
+            <UpgradeTooltip v-if="!hasValidLicense" :has-valid-license="hasValidLicense">
+              <LicenseCrown color="neutral" />
+            </UpgradeTooltip>
+          </div>
           <SearchBoardDropdown
             :board="post.board"
             @selected="selectBoard"
@@ -73,6 +81,14 @@
         </div>
 
         <div class="form-column">
+          <div class="flex items-center justify-between gap-2">
+            <InputLabel html-for="" class="mb-0">
+              Roadmap
+            </InputLabel>
+            <UpgradeTooltip v-if="!hasValidLicense" :has-valid-license="hasValidLicense">
+              <LicenseCrown color="neutral" />
+            </UpgradeTooltip>
+          </div>
           <SearchRoadmapDropdown
             :roadmap="post.roadmap"
             @selected="selectRoadmap" />
@@ -85,12 +101,14 @@
 <script setup lang="ts">
 import { computed, ref, reactive } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
+import { storeToRefs } from "pinia";
 
 // modules
 import { router } from "../../../../router";
 import { updatePost } from "../../../../modules/posts";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardPosts } from "../../../../store/dashboard/posts";
+import { useSettingsEEStore } from "../../../../ee/store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -106,9 +124,14 @@ import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/Sear
 import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
 import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
 import type { FormFieldErrorType } from "../../../ui/input/formBaseProps";
+import InputLabel from "../../../ui/input/InputLabel.vue";
+import LicenseCrown from "../../../../ee/components/icons/LicenseCrown.vue";
+import UpgradeTooltip from "../../../../ee/components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 interface Props {
   post: IDashboardPost;

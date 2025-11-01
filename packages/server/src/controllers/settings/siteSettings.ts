@@ -4,7 +4,7 @@ import type {
   IGetSiteSettingsResponseBody,
   ISiteSettings,
 } from "@logchimp/types";
-// database
+
 import database from "../../database";
 
 // utils
@@ -20,7 +20,9 @@ export async function siteSettings(_: Request, res: Response<ResponseBody>) {
       .first();
 
     res.status(200).send({
-      settings,
+      settings: {
+        ...settings,
+      },
     });
   } catch (err) {
     logger.log({
