@@ -179,6 +179,9 @@ async function pingLicenseServer(): Promise<
     const response = await fetch(`${config.licensePilotUrl}/v1/license/check`, {
       method: "POST",
       mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(requestBody),
       signal: controller.signal,
     });
@@ -212,7 +215,6 @@ async function decryptPayload(
     config.licenseSignature,
   ) as ICheckLicenseDecryptedPayload;
 
-  // todo: check is jwt is expired
   if (decoded.license_key !== config.licenseKey) {
     try {
       await clearCache();
