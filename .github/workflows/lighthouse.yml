@@ -29,6 +29,13 @@ jobs:
       - name: Install wait-on and pnpm
         run: npm install -g wait-on pnpm serve
 
+      - name: Debug paths
+        run: |
+            echo "Current directory: $(pwd)"
+            echo "Repo files:"
+            find . -maxdepth 3 -type f | sort
+
+
       - name: Run docker compose
         working-directory: ${{ github.workspace }}
         run: docker compose -f ./docker/local/docker-compose.ci.yml up -d --build
