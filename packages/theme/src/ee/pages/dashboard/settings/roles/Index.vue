@@ -14,12 +14,7 @@
         @click="createRoleHandler"
       >
         Create
-        <PhCrownSimple
-          v-if="!hasValidLicense"
-          :size="20"
-          weight="regular"
-          class="fill-white"
-        />
+        <LicenseCrown v-if="!hasValidLicense" />
       </Button>
     </UpgradeTooltip>
   </DashboardPageHeader>
@@ -35,7 +30,6 @@
 // packages
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { PhCrownSimple } from "@phosphor-icons/vue";
 
 // modules
 import { router } from "../../../../../router";
@@ -52,6 +46,7 @@ import BreadcrumbItem from "../../../../../components/ui/breadcrumbs/BreadcrumbI
 import LicenseRequired from "../../../../components/LicenseRequired.vue";
 import TabularView from "../../../../components/dashboard/roles/TabularView.vue";
 import UpgradeTooltip from "../../../../components/UpgradeTooltip.vue";
+import LicenseCrown from "../../../../components/icons/LicenseCrown.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
