@@ -34,10 +34,7 @@ const EMPTY_MEMORY_CACHE: IMemoryCache = {
   payload: null,
   expiresAt: 0,
 };
-let memoryCache: IMemoryCache = {
-  payload: null,
-  expiresAt: 0,
-};
+let memoryCache: IMemoryCache = EMPTY_MEMORY_CACHE;
 
 // Prevent multiple simultaneous license server requests
 let pendingLicenseCheck: Promise<ICheckLicenseDecryptedPayload> | null = null;
