@@ -101,6 +101,7 @@
 <script setup lang="ts">
 import { computed, ref, reactive } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
+import { storeToRefs } from "pinia";
 
 // modules
 import { router } from "../../../../router";
@@ -129,7 +130,8 @@ import UpgradeTooltip from "../../../../ee/components/UpgradeTooltip.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
-const { hasValidLicense } = useSettingsEEStore();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 interface Props {
   post: IDashboardPost;
