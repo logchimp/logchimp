@@ -69,50 +69,14 @@ export async function filterPost(
   const userId: string | undefined = req.user?.userId;
 
   try {
-    let queryBuilder = database("posts").select(
-      "postId",
-      "title",
-      "slug",
-      "boardId",
-      "roadmap_id",
-      "contentMarkdown",
-      "createdAt",
-      "updatedAt",
-    );
-
-    if (boardId.length > 0) {
-      queryBuilder = queryBuilder.whereIn("boardId", boardId);
-    }
-
-    if (roadmapId) {
-      queryBuilder = queryBuilder.where("roadmap_id", roadmapId);
-    }
-
-    if (after) {
-      const cursorPost = await database("posts")
-        .select("createdAt")
-        .where({ postId: after })
-        .first();
-
-      if (cursorPost) {
-        queryBuilder = queryBuilder.where(
-          "createdAt",
-          created === "ASC" ? ">=" : "<=",
-          cursorPost.createdAt,
-        );
-      }
-    }
-
-    queryBuilder = queryBuilder.orderBy("createdAt", created);
-
-    if (after) {
-      queryBuilder = queryBuilder.limit(first).offset(1);
-    } else {
-      const offset = page ? first * (page - 1) : 0;
-      queryBuilder = queryBuilder.limit(first).offset(offset);
-    }
-
-    const response = await queryBuilder;
+    const response = await buildPostsQuery({
+      first,
+      page,
+      after,
+      created,
+      boardId,
+      roadmapId,
+    });
 
     // Enrich posts with board, roadmap, and votes
     const posts: IPost[] = [];
@@ -181,6 +145,68 @@ export async function filterPost(
       code: "SERVER_ERROR",
     });
   }
+}
+
+async function buildPostsQuery({
+  first,
+  page,
+  after,
+  created,
+  boardId,
+  roadmapId,
+}: {
+  first: number;
+  page?: number;
+  after?: string;
+  created: "ASC" | "DESC";
+  boardId: string[];
+  roadmapId?: string | null;
+}) {
+  let queryBuilder = database("posts").select(
+    "postId",
+    "title",
+    "slug",
+    "boardId",
+    "roadmap_id",
+    "contentMarkdown",
+    "createdAt",
+    "updatedAt",
+  );
+
+  // Apply filters
+  if (boardId.length > 0) {
+    queryBuilder = queryBuilder.whereIn("boardId", boardId);
+  }
+  if (roadmapId) {
+    queryBuilder = queryBuilder.where("roadmap_id", roadmapId);
+  }
+
+  // Apply cursor if exists
+  if (after) {
+    const cursorPost = await database("posts")
+      .select("createdAt")
+      .where({ postId: after })
+      .first();
+
+    if (cursorPost) {
+      queryBuilder = queryBuilder.where(
+        "createdAt",
+        created === "ASC" ? ">=" : "<=",
+        cursorPost.createdAt,
+      );
+    }
+  }
+
+  queryBuilder = queryBuilder.orderBy("createdAt", created);
+
+  if (after) {
+    queryBuilder = queryBuilder.limit(first).offset(1);
+  } else {
+    const offset = page ? first * (page - 1) : 0;
+    queryBuilder = queryBuilder.limit(first).offset(offset);
+  }
+
+  return queryBuilder;
 }
 
 async function getPostMetadata({
