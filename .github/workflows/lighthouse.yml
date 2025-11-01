@@ -30,7 +30,7 @@ jobs:
         run: npm install -g wait-on pnpm serve
 
       - name: Run docker compose
-        run: docker compose -f ./docker/local/docker-compose.ci.yml up -d --build
+        run: docker compose -f "${{ github.workspace }}/docker/local/docker-compose.ci.yml" up -d --build
         env:
           # Server
           LOGCHIMP_WEB_URL: "http://localhost:3000"
