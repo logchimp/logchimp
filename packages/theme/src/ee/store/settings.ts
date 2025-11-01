@@ -24,6 +24,6 @@ export const useSettingsEEStore = defineStore("settingsEE", () => {
   });
 
   return {
-    hasValidLicense: hasValidLicense.value,
+    hasValidLicense,
   };
 });
