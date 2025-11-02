@@ -120,7 +120,7 @@ export async function getBoards({
       })
       .groupBy("boards.boardId")
       .orderBy("boards.createdAt", created)
-      .orderBy("boards.boardId", "asc")
+      .orderBy("boards.boardId", created)
       .limit(limit);
 
     if (after) {
