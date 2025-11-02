@@ -1,8 +1,2 @@
 packages:
-  - packages/*
-
-ignoredBuiltDependencies:
-  - '@tailwindcss/oxide'
-  - esbuild
-  - lefthook
-  - vue-demi
+  - 'packages/*'
