@@ -94,3 +94,10 @@ export interface ISearchBoardRequestParams {
 export interface ISearchBoardResponseBody {
   boards: IBoardPrivate[];
 }
+
+export interface IGetBoardQueryOptions {
+  limit: number;
+  after?: string;
+  created: ApiSortType;
+  page?: number;
+}
