@@ -172,13 +172,8 @@ const updateSettingsPermissionDisabled = computed(() => {
 
 const isFormValid = computed(() => {
   const site = siteName.value?.trim();
-  const logoUrl = logo.value?.trim();
   const color = accentColor.value?.trim();
-
-  const hasSiteOrLogo =
-    (site && site.length > 0) || (logoUrl && logoUrl.length > 0);
-
-  return hasSiteOrLogo && color && color.length > 0;
+  return site && site.length > 0 && color && color.length > 0;
 });
 
 // ===== Error Handlers =====
@@ -194,15 +189,10 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 
 // ===== Save Handler =====
 async function updateSettingsHandler() {
-  // Validation: Either site name or logo is required
-  const hasSite =
-    siteName.value && siteName.value.trim() !== "";
-  const hasLogo =
-    logo.value && logo.value.trim() !== "";
-
-  if (!hasSite && !hasLogo) {
+  // Validation
+  if (!siteName.value || siteName.value.trim() === "") {
     siteName.error.show = true;
-    siteName.error.message = "Either site name or logo is required.";
+    siteName.error.message = "Site name is required.";
     return;
   }
 
@@ -217,7 +207,7 @@ async function updateSettingsHandler() {
   const siteData = {
     title: siteName.value?.trim() || "",
     description: description.value?.trim() || "",
-    accentColor: accentColor.value.trim(),
+    accentColor: accentColor.value?.trim() || "",
     logo: logo.value?.trim() || "",
     googleAnalyticsId: googleAnalyticsId.value?.trim() || "",
     allowSignup: allowSignup.value,
@@ -237,6 +227,7 @@ async function updateSettingsHandler() {
     update(response.data.settings);
   } catch (error) {
     console.error(error);
+    alert("⚠️ Failed to save settings. Please try again later.");
   } finally {
     updateSettingsButtonLoading.value = false;
   }
@@ -256,6 +247,7 @@ async function getSettingsHandler() {
     developer_mode.value = response.data.settings.developer_mode;
   } catch (error) {
     console.error(error);
+    alert(" Failed to load settings. Please refresh or try again.");
   }
 }
 
@@ -269,4 +261,3 @@ defineOptions({
   name: "DashboardSettings",
 });
 </script>
- 
