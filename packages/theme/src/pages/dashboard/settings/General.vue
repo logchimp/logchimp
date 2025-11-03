@@ -165,17 +165,20 @@ const googleAnalyticsId = reactive<TextInputField>({
 const developer_mode = ref(false);
 const updateSettingsButtonLoading = ref(false);
 
-// Check user permissions
 const updateSettingsPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("settings:update");
   return !checkPermission;
 });
 
-// ✅ Disable Save button when form invalid (blank site name or accent color)
 const isFormValid = computed(() => {
   const site = siteName.value?.trim();
+  const logoUrl = logo.value?.trim();
   const color = accentColor.value?.trim();
-  return site && site.length > 0 && color && color.length > 0;
+
+  const hasSiteOrLogo =
+    (site && site.length > 0) || (logoUrl && logoUrl.length > 0);
+
+  return hasSiteOrLogo && color && color.length > 0;
 });
 
 // ===== Error Handlers =====
@@ -191,10 +194,15 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 
 // ===== Save Handler =====
 async function updateSettingsHandler() {
-  // Validation
-  if (!siteName.value || siteName.value.trim() === "") {
+  // Validation: Either site name or logo is required
+  const hasSite =
+    siteName.value && siteName.value.trim() !== "";
+  const hasLogo =
+    logo.value && logo.value.trim() !== "";
+
+  if (!hasSite && !hasLogo) {
     siteName.error.show = true;
-    siteName.error.message = "Site name is required.";
+    siteName.error.message = "Either site name or logo is required.";
     return;
   }
 
@@ -207,10 +215,10 @@ async function updateSettingsHandler() {
   updateSettingsButtonLoading.value = true;
 
   const siteData = {
-    title: siteName.value.trim(),
+    title: siteName.value?.trim() || "",
     description: description.value?.trim() || "",
     accentColor: accentColor.value.trim(),
-    logo: logo.value || "",
+    logo: logo.value?.trim() || "",
     googleAnalyticsId: googleAnalyticsId.value?.trim() || "",
     allowSignup: allowSignup.value,
     developer_mode: developer_mode.value,
@@ -261,3 +269,4 @@ defineOptions({
   name: "DashboardSettings",
 });
 </script>
+ 
