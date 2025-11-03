@@ -247,7 +247,7 @@ async function getSettingsHandler() {
     developer_mode.value = response.data.settings.developer_mode;
   } catch (error) {
     console.error(error);
-    alert(" Failed to load settings. Please refresh or try again.");
+    alert("Failed to load settings. Please refresh or try again.");
   }
 }
 
