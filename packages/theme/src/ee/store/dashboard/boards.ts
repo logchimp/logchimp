@@ -52,7 +52,7 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
     );
     if (boardIdx === -1) return;
 
-    Object.assign(boards.value[boardIdx], board);
+    if(boards.value[boardIdx]) Object.assign(boards.value[boardIdx], board);
   }
 
   function removeBoard(boardId: string) {

@@ -96,10 +96,10 @@ function updateTab(tabValue: string) {
 
 async function getBoard() {
   loading.value = true;
-  const url = route.params.url.toString();
+  const url = route.params.url?.toString();
 
   try {
-    const response = await getBoardByUrl(url);
+    const response = await getBoardByUrl(url!);
 
     isBoardExist.value = true;
     loading.value = false;

@@ -63,7 +63,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     );
     if (roadmapIdx === -1) return;
 
-    Object.assign(roadmaps.value[roadmapIdx], roadmap);
+   if(roadmaps.value[roadmapIdx]) Object.assign(roadmaps.value[roadmapIdx], roadmap);
   }
 
   function removeRoadmap(roadmapId: string) {
@@ -88,6 +88,8 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
 
     const fromRoadmap = roadmaps.value[fromIndex];
     const toRoadmap = roadmaps.value[toIndex];
+
+if (!fromRoadmap || !toRoadmap) return;
 
     updateRoadmap({
       ...fromRoadmap,
