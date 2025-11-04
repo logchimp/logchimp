@@ -182,13 +182,11 @@ const googleAnalyticsId = reactive<TextInputField>({
 const developer_mode = ref(false);
 const updateSettingsButtonLoading = ref(false);
 
-// Check user permissions
 const updateSettingsPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("settings:update");
   return !checkPermission;
 });
 
-// ===== Error Handlers =====
 function hideSiteNameError(event: FormFieldErrorType) {
   siteName.error = event;
 }
@@ -201,7 +199,6 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
   googleAnalyticsId.error = event;
 }
 
-// ===== Save Handler =====
 async function updateSettingsHandler() {
   if (!siteName.value || siteName.value.trim() === "") {
     siteName.error.show = true;
@@ -245,7 +242,6 @@ async function updateSettingsHandler() {
   }
 }
 
-// ===== Fetch Settings =====
 async function getSettingsHandler() {
   try {
     const response = await getSettings();
