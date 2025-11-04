@@ -1,0 +1,35 @@
+name: storybook
+
+on:
+  push:
+    paths:
+      - .github/workflows/storybook.yml
+      - package.json
+      - src/components/**
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+
+    - name: Yarn install
+      run: yarn --pure-lockfile
+
+    - name: Build storybook
+      run: yarn build-storybook
+
+    - name: Deploy storybook
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+        echo "Deploying to production server on branch $GITHUB_REF"
+
+        curl ${{ secrets.STORYBOOK_WEBSITE_DEPLOY_WEBHOOK }}

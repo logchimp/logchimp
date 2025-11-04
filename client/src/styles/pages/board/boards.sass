@@ -1,0 +1,20 @@
+.boards-lists
+	display: grid
+	grid-template-columns: 1fr
+	grid-column-gap: 1rem
+	grid-row-gap: 1rem
+	justify-content: space-between
+	margin-bottom: 4rem
+
+@media (min-width: 768px)
+	.boards-lists
+		grid-template-columns: repeat(auto-fill, 48%)
+		grid-row-gap: 1.5rem
+
+@media (min-width: 992px)
+	.boards-lists
+		grid-template-columns: repeat(auto-fill, 30%)
+
+@media (min-width: 1200px)
+	.boards-lists
+		grid-template-columns: repeat(auto-fill, 23%)

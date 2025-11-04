@@ -1,0 +1,90 @@
+name: "LogChimp"
+
+services:
+  cache:
+    image: valkey/valkey:8
+    ports:
+      - "6379:6379"
+    command: [ "valkey-server", "--save", "60", "1", "--loglevel", "warning", "--dir", "/data" ]
+    volumes:
+      - valkey-data:/data
+    networks:
+      - logchimp
+
+  db:
+    image: postgres:12
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - logchimp
+
+  api:
+    image: ghcr.io/logchimp/logchimp/api:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${API_PORT:-8000}
+      LOGCHIMP_API_HOST: ${LOGCHIMP_API_HOST}
+      LOGCHIMP_IS_SELF_HOSTED: true
+      LOGCHIMP_SECRET_KEY: ${LOGCHIMP_SECRET_KEY}
+      LOGCHIMP_MACHINE_SIGNATURE: ${LOGCHIMP_MACHINE_SIGNATURE}
+      LOGCHIMP_WEB_URL: ${LOGCHIMP_WEB_URL}
+
+      # Database
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: ${POSTGRES_DB}
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: ${POSTGRES_USER}
+      LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      LOGCHIMP_DB_SSL: ${LOGCHIMP_DB_SSL:-false}
+
+      # Cache
+      LOGCHIMP_VALKEY_URL: cache:6379
+
+      # Mail
+      LOGCHIMP_MAIL_HOST: ${LOGCHIMP_MAIL_HOST}
+      LOGCHIMP_MAIL_USER: ${LOGCHIMP_MAIL_USER}
+      LOGCHIMP_MAIL_PASSWORD: ${LOGCHIMP_MAIL_PASSWORD}
+      LOGCHIMP_MAIL_PORT: ${LOGCHIMP_MAIL_PORT}
+    ports:
+      - "${API_PORT:-8000}:${API_PORT:-8000}"
+    networks:
+      - logchimp
+
+  theme:
+    image: ghcr.io/logchimp/logchimp/theme:latest
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${THEME_PORT:-3000}
+      VITE_API_URL: ${LOGCHIMP_API_URL}
+      VITE_IS_SELF_HOSTED: true
+    ports:
+      - "${THEME_PORT:-3000}:${THEME_PORT:-3000}"
+    networks:
+      - logchimp
+
+networks:
+  logchimp:
+    driver: bridge
+
+volumes:
+  valkey-data:
+  postgres:

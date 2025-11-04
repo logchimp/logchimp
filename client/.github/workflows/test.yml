@@ -1,0 +1,37 @@
+name: test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [12, 14]
+
+    name: Node v${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Yarn install
+        run: yarn --pure-lockfile
+
+      - name: eslint:check
+        run: yarn eslint:check
+
+      - name: Unit tests
+        run: yarn test
+
+      - name: Stylelint
+        run: yarn stylelint
+
+      - name: Build
+        run: yarn build
