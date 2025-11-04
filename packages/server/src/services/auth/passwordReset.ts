@@ -41,10 +41,14 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
       .from("settings");
 
     const siteTitle = siteInfo[0].title;
-    const siteColor = siteInfo[0].accentColor;
+    let siteColor = siteInfo[0].accentColor;
     const siteLogo =
       siteInfo[0].logo ||
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png";
+
+    if (siteColor && !siteColor.startsWith("#")) {
+      siteColor = `#${siteColor}`;
+    }
 
     const urlObject = new URL(config.webUrl);
     const passwordResetMailContent = await generateContent("reset", {
