@@ -9,7 +9,7 @@
     <Button
       type="primary"
       :loading="updateSettingsButtonLoading"
-      :disabled="updateSettingsPermissionDisabled || !isFormValid"
+      :disabled="updateSettingsPermissionDisabled"
       @click="updateSettingsHandler"
     >
       Save
@@ -145,51 +145,64 @@ type TextInputField = {
 
 const siteName = reactive<TextInputField>({
   value: "",
-  error: { show: false, message: "" },
+  error: {
+    show: false,
+    message: "",
+  },
 });
 
 const logo = ref<string | null>("");
+
 const description = reactive<TextInputField>({
   value: "",
-  error: { show: false, message: "" },
+  error: {
+    show: false,
+    message: "",
+  },
 });
+
 const allowSignup = ref(false);
+
 const accentColor = reactive<TextInputField>({
   value: "484d7c",
-  error: { show: false, message: "" },
+  error: {
+    show: false,
+    message: "",
+  },
 });
+
 const googleAnalyticsId = reactive<TextInputField>({
   value: "",
-  error: { show: false, message: "" },
+  error: {
+    show: false,
+    message: "",
+  },
 });
+
 const developer_mode = ref(false);
 const updateSettingsButtonLoading = ref(false);
 
+// Check user permissions
 const updateSettingsPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("settings:update");
   return !checkPermission;
-});
-
-const isFormValid = computed(() => {
-  const site = siteName.value?.trim();
-  const color = accentColor.value?.trim();
-  return site && site.length > 0 && color && color.length > 0;
 });
 
 // ===== Error Handlers =====
 function hideSiteNameError(event: FormFieldErrorType) {
   siteName.error = event;
 }
+
 function hideDescriptionError(event: FormFieldErrorType) {
   description.error = event;
 }
+
 function hideGoogleAnalyticsError(event: FormFieldErrorType) {
   googleAnalyticsId.error = event;
 }
 
 // ===== Save Handler =====
 async function updateSettingsHandler() {
-  // Validation
   if (!siteName.value || siteName.value.trim() === "") {
     siteName.error.show = true;
     siteName.error.message = "Site name is required.";
@@ -205,10 +218,10 @@ async function updateSettingsHandler() {
   updateSettingsButtonLoading.value = true;
 
   const siteData = {
-    title: siteName.value?.trim() || "",
+    title: siteName.value.trim(),
     description: description.value?.trim() || "",
-    accentColor: accentColor.value?.trim() || "",
-    logo: logo.value?.trim() || "",
+    accentColor: accentColor.value.trim(),
+    logo: logo.value || "",
     googleAnalyticsId: googleAnalyticsId.value?.trim() || "",
     allowSignup: allowSignup.value,
     developer_mode: developer_mode.value,
@@ -227,7 +240,6 @@ async function updateSettingsHandler() {
     update(response.data.settings);
   } catch (error) {
     console.error(error);
-    alert("⚠️ Failed to save settings. Please try again later.");
   } finally {
     updateSettingsButtonLoading.value = false;
   }
@@ -247,7 +259,6 @@ async function getSettingsHandler() {
     developer_mode.value = response.data.settings.developer_mode;
   } catch (error) {
     console.error(error);
-    alert("Failed to load settings. Please refresh or try again.");
   }
 }
 
