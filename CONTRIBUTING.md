@@ -59,7 +59,7 @@ pnpm --filter="@logchimp/types" build
 Run this command from the root directory.
 
 ```shell
-docker compose -f ./docker-compose.dev.yml up -d
+docker compose -f ./docker/local/docker-compose.dev.yml up -d
 ```
 
 5. Start the LogChimp theme

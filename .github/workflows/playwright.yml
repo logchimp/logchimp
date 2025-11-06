@@ -33,7 +33,7 @@ jobs:
         pnpm_version: ${{ env.pnpm-version }}
 
     - name: Run docker compose
-      run: docker compose -f ./docker-compose.ci.yml up -d --build
+      run: docker compose -f ./docker/local/docker-compose.ci.yml up -d --build
       env:
         # Server
         LOGCHIMP_WEB_URL: ${{ env.WEB_URL }}
