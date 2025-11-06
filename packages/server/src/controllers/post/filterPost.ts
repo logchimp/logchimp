@@ -191,7 +191,7 @@ async function buildPostsQuery({
     if (cursorPost) {
       queryBuilder = queryBuilder.where(
         "createdAt",
-        created === "ASC" ? ">=" : "<=",
+        created === "ASC" ? ">" : "<",
         cursorPost.createdAt,
       );
     }
