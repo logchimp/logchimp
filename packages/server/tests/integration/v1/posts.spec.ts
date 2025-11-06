@@ -445,7 +445,7 @@ describe("POST /api/v1/posts/get", () => {
     });
 
     it("should default to cursor pagination return default list when no '?first=' param", async () => {
-      const res = await supertest(app).get("/api/v1/posts/get");
+      const res = await supertest(app).post("/api/v1/posts/get");
 
       const firstItem: IPost = res.body.posts[0];
       const lastItem: IPost = res.body.posts[res.body.posts.length - 1];
@@ -560,7 +560,7 @@ describe("POST /api/v1/posts/get", () => {
     });
 
     it("should handle empty '?after=' param gracefully", async () => {
-      const res = await supertest(app).get("/api/v1/posts/get").query({
+      const res = await supertest(app).post("/api/v1/posts/get").query({
         after: "",
       });
 
@@ -574,7 +574,7 @@ describe("POST /api/v1/posts/get", () => {
 
     it("should handle cursor pagination correctly", async () => {
       const res1 = await supertest(app)
-        .get("/api/v1/posts/get")
+        .post("/api/v1/posts/get")
         .query({ first: 3 });
       expect(res1.headers["content-type"]).toContain("application/json");
       const lastId = res1.body.results[2].postId;
