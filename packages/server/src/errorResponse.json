@@ -3,7 +3,8 @@
     "serverError": "Something went wrong!",
     "colorCodeLength": "Color must be exactly 6 characters",
     "colorCodeInvalid": "Color must be a valid hexadecimal value",
-    "booleanValue": "Boolean value expected"
+    "booleanValue": "Boolean value expected",
+    "minValue1": "Too small: expected number to be >=1"
   },
   "middleware": {
     "auth": {
