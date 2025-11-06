@@ -61,7 +61,7 @@ export async function filterPost(
   }
 
   const { first: _first, page, after, created, limit } = query.data;
-  const first = req.query?.limit ? limit : _first;
+  const first = limit ?? _first ?? GET_POSTS_FILTER_COUNT;
 
   const boardId = validUUIDs(req.body.boardId || []);
   const roadmapId = validUUID(req.body.roadmapId);
