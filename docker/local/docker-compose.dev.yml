@@ -59,6 +59,8 @@ services:
     environment:
       PORT: 8000
       # Database
+      # Enter postgres db url below if connecting via full db url
+      # LOGCHIMP_DB_URL: postgresql://lc:password@db:5432/db
       LOGCHIMP_DB_HOST: db
       LOGCHIMP_DB_DATABASE: db
       LOGCHIMP_DB_PORT: 5432
