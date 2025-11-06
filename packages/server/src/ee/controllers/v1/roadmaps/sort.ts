@@ -30,6 +30,10 @@ export async function sort(
     });
   }
 
+  if (from.id === to.id) {
+    return res.status(204).send();
+  }
+
   try {
     // to
     await database
