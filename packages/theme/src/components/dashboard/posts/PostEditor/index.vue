@@ -36,7 +36,12 @@
             placeholder="Name of the feature"
             :error="postFieldError"
             @hide-error="hideTitleError"
+            class="!mb-1"
           />
+
+          <HelperText :isError="post.title.length > MAX_TITLE_LENGTH">
+            {{ MAX_TITLE_LENGTH - post.title.length }} characters
+          </HelperText>
 
           <l-textarea
             :model-value="post.contentMarkdown ?? undefined"
@@ -93,6 +98,7 @@ import { useUserStore } from "../../../../store/user";
 import { useDashboardPosts } from "../../../../store/dashboard/posts";
 
 // components
+import HelperText from "../../../../components/ui/input/HelperText.vue";
 import Button from "../../../../components/ui/Button.vue";
 import LText from "../../../../components/ui/input/LText.vue";
 import LTextarea from "../../../../components/ui/input/LTextarea.vue";
@@ -106,6 +112,7 @@ import SearchBoardDropdown from "../../../../ee/components/dashboard/boards/Sear
 import type { TCurrentBoard } from "../../../../ee/components/dashboard/boards/SearchBoardDropdown/search";
 import type { TCurrentRoadmap } from "../../../../ee/components/dashboard/roadmap/SearchRoadmapDropdown/search";
 import type { FormFieldErrorType } from "../../../ui/input/formBaseProps";
+import { MAX_TITLE_LENGTH } from "../../../../constants";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
@@ -137,7 +144,7 @@ function hideTitleError(event: FormFieldErrorType) {
 }
 
 async function updatePostHandler() {
-  if (!post.title.trim()) {
+  if (!post.title.trim() || post.title.length > MAX_TITLE_LENGTH) {
     postFieldError.show = true;
     postFieldError.message = "Please enter a valid post title";
     return;

@@ -23,7 +23,7 @@ pre-commit:
     - run: |
         if [ -x "$(command -v pnpm)" ]; then
           pnpm biome format --write {staged_files}
-        else 
+        else
           pkgx +nodejs.org@20 +pnpm.io \
             pnpm biome format --write {staged_files}
         fi
