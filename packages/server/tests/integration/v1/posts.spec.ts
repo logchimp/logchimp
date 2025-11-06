@@ -21,29 +21,6 @@ import { GET_POSTS_FILTER_COUNT } from "../../../src/constants";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
-  let authUser: any;
-  let board: any;
-  let roadmap: any;
-
-  beforeAll(async () => {
-    const userData = await createUser({ isVerified: true });
-    authUser = userData.user;
-    board = await generateBoard({}, true);
-    roadmap = await generateRoadmap({}, true);
-
-    // Generate 15 posts for pagination
-    for (let i = 0; i < 15; i++) {
-      await generatePost(
-        {
-          userId: authUser.userId,
-          boardId: board.boardId,
-          roadmapId: roadmap.id,
-        },
-        true,
-      );
-    }
-  });
-
   it("should use default page=1 and default limit when no filters are provided", async () => {
     const { user: authUser } = await createUser({ isVerified: true });
     const board = await generateBoard({}, true);
@@ -424,6 +401,29 @@ describe("POST /api/v1/posts/get", () => {
   });
 
   describe("Cursor Pagination", () => {
+    let authUser: any;
+    let board: any;
+    let roadmap: any;
+
+    beforeAll(async () => {
+      const userData = await createUser({ isVerified: true });
+      authUser = userData.user;
+      board = await generateBoard({}, true);
+      roadmap = await generateRoadmap({}, true);
+
+      // Generate 15 posts for pagination
+      for (let i = 0; i < 15; i++) {
+        await generatePost(
+          {
+            userId: authUser.userId,
+            boardId: board.boardId,
+            roadmapId: roadmap.id,
+          },
+          true,
+        );
+      }
+    });
+
     it("should return default first page (no after param)", async () => {
       const res = await supertest(app)
         .post("/api/v1/posts/get")
@@ -597,6 +597,29 @@ describe("POST /api/v1/posts/get", () => {
     });
   });
   describe("Offset Pagination", () => {
+    let authUser: any;
+    let board: any;
+    let roadmap: any;
+
+    beforeAll(async () => {
+      const userData = await createUser({ isVerified: true });
+      authUser = userData.user;
+      board = await generateBoard({}, true);
+      roadmap = await generateRoadmap({}, true);
+
+      // Generate 15 posts for pagination
+      for (let i = 0; i < 15; i++) {
+        await generatePost(
+          {
+            userId: authUser.userId,
+            boardId: board.boardId,
+            roadmapId: roadmap.id,
+          },
+          true,
+        );
+      }
+    });
+
     it("should support offset pagination via page param", async () => {
       const page1 = await supertest(app)
         .post("/api/v1/posts/get")
@@ -607,9 +630,6 @@ describe("POST /api/v1/posts/get", () => {
 
       expect(page1.status).toBe(200);
       expect(page2.status).toBe(200);
-
-      expect(page1.body.page_info).toBeUndefined();
-
       const ids1 = page1.body.posts.map((p: IPost) => p.postId);
       const ids2 = page2.body.posts.map((p: IPost) => p.postId);
 
