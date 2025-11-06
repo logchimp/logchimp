@@ -204,7 +204,7 @@ async function buildPostsQuery({
     queryBuilder = queryBuilder.limit(first).offset(1);
   } else {
     const offset = page ? first * (page - 1) : 0;
-    queryBuilder = queryBuilder.limit(first).offset(offset);
+    queryBuilder = queryBuilder.offset(offset).limit(first);
   }
 
   return queryBuilder;
