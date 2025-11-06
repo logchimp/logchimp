@@ -1,27 +1,57 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeAll } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
+import type { IAuthUser, IRole, TPermission } from "@logchimp/types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import type { TPermission } from "@logchimp/types";
 import { toSlug } from "../../../src/helpers";
+import { GET_ROLES_FILTER_COUNT } from "../../../src/constants";
 
 const roleIdSlug = toSlug(faker.commerce.productName());
 const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
 describe("GET /api/v1/roles", () => {
+  let authUser: IAuthUser;
+  beforeAll(async () => {
+    await database.transaction(async (trx) => {
+      // Seed 30 roles
+      for (let i = 0; i < 30; i++) {
+        await trx("roles").insert({
+          id: uuid(),
+          name: faker.commerce.productName().substring(0, 30),
+          description: faker.commerce.productDescription().substring(0, 50),
+        });
+      }
+    });
+
+    const { user } = await createUser();
+    authUser = user;
+    await createRoleWithPermissions(user.userId, ["role:read"], {
+      roleName: "Spectator",
+    });
+  });
+
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/roles");
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
+  });
+
+  it.skip("should get 0 roles", async () => {
+    const response = await supertest(app).get("/api/v1/roles");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.results).toHaveLength(0);
+    expect(response.body.roles).toHaveLength(0);
   });
 
   it("should not have permission 'role:read'", async () => {
@@ -36,22 +66,173 @@ describe("GET /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should get all the roles", async () => {
-    // delete all roles, except '@everyone' role
-    await database.del().from("roles").where("name", "!=", "@everyone");
+  describe("'?first=' param", () => {
+    it("should return default list when no '?first=' param", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    const { user } = await createUser();
-    await createRoleWithPermissions(user.userId, ["role:read"], {
-      roleName: "Spectator",
+      const firstItem: IRole = res.body.results[0];
+      const lastItem: IRole = res.body.results[res.body.results.length - 1];
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(200);
+
+      expect(res.body.results).toHaveLength(GET_ROLES_FILTER_COUNT);
+      expect(res.body.roles).toHaveLength(GET_ROLES_FILTER_COUNT);
+      expect(Array.isArray(res.body.results)).toBeTruthy();
+      expect(Array.isArray(res.body.roles)).toBeTruthy();
+
+      expect(res.body.page_info).toBeDefined();
+      expect(typeof res.body.page_info.count).toBe("number");
+      expect(typeof res.body.page_info.current_page).toBe("number");
+      expect(typeof res.body.page_info.has_next_page).toBe("boolean");
+
+      expect(res.body.page_info.start_cursor).toBe(firstItem.id);
+      expect(res.body.page_info.end_cursor).toBe(lastItem.id);
+      expect(res.body.page_info.start_cursor).toBeTypeOf("string");
+      expect(res.body.page_info.end_cursor).toBeTypeOf("string");
+      expect(res.body.page_info.has_next_page).toBe(true);
+
+      // expect(res.body.total_count).toBe(15);
     });
 
-    const response = await supertest(app)
-      .get("/api/v1/roles")
-      .set("Authorization", `Bearer ${user.authToken}`);
+    it("should return 5 items per page with '?first=5'", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .query({ first: 5 })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(response.body.roles.length).toBeGreaterThanOrEqual(2);
+      const firstItem: IRole = res.body.results[0];
+      const lastItem: IRole = res.body.results[res.body.results.length - 1];
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(200);
+
+      expect(res.body.results).toHaveLength(5);
+      expect(res.body.roles).toHaveLength(5);
+      expect(Array.isArray(res.body.results)).toBeTruthy();
+      expect(Array.isArray(res.body.roles)).toBeTruthy();
+
+      expect(res.body.page_info.start_cursor).toBe(firstItem.id);
+      expect(res.body.page_info.end_cursor).toBe(lastItem.id);
+      expect(res.body.page_info.start_cursor).toBeTypeOf("string");
+      expect(res.body.page_info.end_cursor).toBeTypeOf("string");
+      expect(res.body.page_info.has_next_page).toBe(true);
+      expect(res.body.page_info.end_cursor).not.toBe(
+        res.body.page_info.start_cursor,
+      );
+      expect(res.body.page_info.count).toBe(5);
+
+      // expect(res.body.total_pages).toBe(2); // 10 public / 5 per page
+      // expect(res.body.total_count).toBe(10);
+    });
+
+    it("should cap the '?first=' param value with 10 max items", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .query({ first: 25 })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      const firstItem: IRole = res.body.results[0];
+      const lastItem: IRole = res.body.results[res.body.results.length - 1];
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(200);
+
+      expect(res.body.results).toHaveLength(GET_ROLES_FILTER_COUNT);
+      expect(res.body.roles).toHaveLength(GET_ROLES_FILTER_COUNT);
+      expect(Array.isArray(res.body.results)).toBeTruthy();
+      expect(Array.isArray(res.body.roles)).toBeTruthy();
+
+      expect(res.body.page_info.start_cursor).toBe(firstItem.id);
+      expect(res.body.page_info.end_cursor).toBe(lastItem.id);
+      expect(res.body.page_info.start_cursor).toBeTypeOf("string");
+      expect(res.body.page_info.end_cursor).toBeTypeOf("string");
+      expect(res.body.page_info.has_next_page).toBe(true);
+      expect(res.body.page_info.end_cursor).not.toBe(
+        res.body.page_info.start_cursor,
+      );
+    });
+
+    it("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
+      const response = await supertest(app)
+        .get("/api/v1/roles")
+        .query({ first: 0 })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+
+      expect(response.body.code).toBe("VALIDATION_ERROR");
+      expect(response.body.errors[0]?.message).toBe(
+        "Too small: expected number to be >=1",
+      );
+    });
+  });
+
+  describe("'?after=' param", () => {
+    it("should handle cursor pagination correctly", async () => {
+      const res1 = await supertest(app)
+        .get("/api/v1/roles")
+        .query({ first: 3 })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+      expect(res1.headers["content-type"]).toContain("application/json");
+      const lastId = res1.body.results[2].id;
+      expect(res1.body.page_info.start_cursor).toBe(res1.body.results[0].id);
+      expect(res1.body.page_info.end_cursor).toBe(lastId);
+
+      const res2 = await supertest(app)
+        .get("/api/v1/roles")
+        .query({
+          first: 3,
+          after: lastId,
+        })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+      expect(res2.headers["content-type"]).toContain("application/json");
+      expect(res2.status).toBe(200);
+      expect(res2.body.results).toHaveLength(3);
+      expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
+      expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
+      expect(res2.body.page_info.start_cursor).toBe(res2.body.results[0].id);
+      expect(res2.body.page_info.end_cursor).toBe(res2.body.results[2].id);
+
+      const ids1 = res1.body.results.map((r: IRole) => r.id);
+      const ids2 = res2.body.results.map((r: IRole) => r.id);
+      expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
+    });
+
+    it("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .query({
+          first: 3,
+          after: "invalid-uuid",
+        })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(400);
+      expect(res.body.code).toBe("VALIDATION_ERROR");
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it("should handle empty '?after=' param gracefully", async () => {
+      const res = await supertest(app)
+        .get("/api/v1/roles")
+        .query({
+          first: 3,
+          after: "",
+        })
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(400);
+
+      expect(res.body.code).toBe("VALIDATION_ERROR");
+      expect(res.body.message).toBe("Invalid query parameters");
+      expect(res.body.errors?.[0]?.code).toMatch(/INVALID_UUID/gi);
+    });
   });
 });
 

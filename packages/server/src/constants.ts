@@ -5,3 +5,4 @@ export const GET_USERS_FILTER_COUNT = 10;
 export const GET_POSTS_FILTER_COUNT = 10;
 export const GET_BOARDS_FILTER_COUNT = 10;
 export const GET_ROADMAPS_FILTER_COUNT = 20;
+export const GET_ROLES_FILTER_COUNT = 10;
