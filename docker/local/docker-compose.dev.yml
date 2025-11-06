@@ -41,11 +41,11 @@ services:
   logchimp:
     build:
       dockerfile: docker/local/server.Dockerfile
-      context: .
+      context: ../..
       args:
         DOCKER_BUILDKIT: 1
     volumes:
-      - .:/app
+      - ../..:/app
       - /app/node_modules
       - /app/packages/server/node_modules
       - /app/packages/types/node_modules
@@ -72,7 +72,7 @@ services:
       LOGCHIMP_MAIL_USER: test
       LOGCHIMP_MAIL_PASSWORD: test
     env_file:
-      - packages/server/.env
+      - ../../packages/server/.env
     ports:
       - "8000:8000"
 
