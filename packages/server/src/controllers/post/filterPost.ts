@@ -26,6 +26,7 @@ import { GET_POSTS_FILTER_COUNT } from "../../constants";
 const querySchema = z.object({
   first: z.coerce
     .string()
+    .default(String(GET_POSTS_FILTER_COUNT))
     .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
   page: z.coerce
     .string()
