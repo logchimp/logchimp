@@ -201,7 +201,7 @@ async function buildPostsQuery({
   queryBuilder = queryBuilder.orderBy("createdAt", created);
 
   if (after) {
-    queryBuilder = queryBuilder.limit(first).offset(1);
+    queryBuilder = queryBuilder.limit(first);
   } else {
     const offset = page ? first * (page - 1) : 0;
     queryBuilder = queryBuilder.offset(offset).limit(first);
