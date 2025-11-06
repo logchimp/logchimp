@@ -86,6 +86,13 @@ export async function filterPost(
       roadmapId,
     });
 
+    if (page && response.length === 0) {
+      return res.status(200).json({
+        status: { code: 200, type: "success" },
+        posts: [],
+        results: [],
+      });
+    }
     // Enrich posts with board, roadmap, and votes
     const posts: IPost[] = [];
     for (const post of response) {
