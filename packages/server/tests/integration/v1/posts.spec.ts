@@ -479,7 +479,8 @@ describe("POST /api/v1/posts/get", () => {
     it("should paginate using 'after' param and increase current_page", async () => {
       const firstPage = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ first: 5, created: "ASC", boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ first: 5, created: "ASC" });
 
       expect(firstPage.status).toBe(200);
       expect(firstPage.body.page_info).toBeDefined();
@@ -490,12 +491,8 @@ describe("POST /api/v1/posts/get", () => {
 
       const secondPage = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({
-          first: 5,
-          after: endCursor,
-          created: "ASC",
-          boardId: [board.boardId],
-        });
+        .send({ boardId: [board.boardId] })
+        .query({ first: 5, after: endCursor, created: "ASC" });
 
       expect(secondPage.status).toBe(200);
       expect(secondPage.body.page_info).toBeDefined();
@@ -512,7 +509,8 @@ describe("POST /api/v1/posts/get", () => {
     it("should compute has_next_page correctly for small first value", async () => {
       const res = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ first: 3, created: "DESC", boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ first: 3, created: "DESC" });
 
       expect(res.status).toBe(200);
       expect(res.body.page_info).toBeDefined();
@@ -523,7 +521,8 @@ describe("POST /api/v1/posts/get", () => {
     it("should throw VALIDATION_ERROR for invalid 'after' param", async () => {
       const res = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ first: 5, after: "not-a-uuid", boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ first: 5, after: "not-a-uuid" });
 
       expect(res.status).toBe(400);
       expect(res.body.code).toBe("VALIDATION_ERROR");
@@ -532,10 +531,13 @@ describe("POST /api/v1/posts/get", () => {
     it("should sort posts by 'created' ASC and DESC", async () => {
       const ascRes = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ first: 5, created: "ASC", boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ first: 5, created: "ASC" });
+
       const descRes = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ first: 5, created: "DESC", boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ first: 5, created: "DESC" });
 
       expect(ascRes.status).toBe(200);
       expect(descRes.status).toBe(200);
@@ -575,14 +577,19 @@ describe("POST /api/v1/posts/get", () => {
     it("should handle cursor pagination correctly", async () => {
       const res1 = await supertest(app)
         .post("/api/v1/posts/get")
+        .send({ boardId: [board.boardId] })
         .query({ first: 3 });
+
       expect(res1.headers["content-type"]).toContain("application/json");
       const lastId = res1.body.results[2].postId;
 
-      const res2 = await supertest(app).get("/api/v1/posts/get").query({
-        first: 3,
-        after: lastId,
-      });
+      const res2 = await supertest(app)
+        .get("/api/v1/posts/get")
+        .send({ boardId: [board.boardId] })
+        .query({
+          first: 3,
+          after: lastId,
+        });
 
       expect(res2.headers["content-type"]).toContain("application/json");
       expect(res2.status).toBe(200);
@@ -623,10 +630,13 @@ describe("POST /api/v1/posts/get", () => {
     it("should support offset pagination via page param", async () => {
       const page1 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ limit: 5, page: 1, boardId: [board.boardId], created: "ASC" });
+        .send({ boardId: [board.boardId] })
+        .query({ limit: 5, page: 1, created: "ASC" });
+
       const page2 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ limit: 5, page: 2, boardId: [board.boardId], created: "ASC" });
+        .send({ boardId: [board.boardId] })
+        .query({ limit: 5, page: 2, created: "ASC" });
 
       expect(page1.status).toBe(200);
       expect(page2.status).toBe(200);
@@ -640,13 +650,18 @@ describe("POST /api/v1/posts/get", () => {
     it("should coerce page=0 or -1 to page=1", async () => {
       const page0 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ limit: 5, page: 0, boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ limit: 5, page: 0 });
+
       const pageNeg1 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ limit: 5, page: -1, boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ limit: 5, page: -1 });
+
       const page1 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ limit: 5, page: 1, boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ limit: 5, page: 1 });
 
       const ids0 = page0.body.posts.map((p: IPost) => p.postId);
       const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.postId);
@@ -659,7 +674,8 @@ describe("POST /api/v1/posts/get", () => {
     it("should return empty posts when '?page=1000'", async () => {
       const res = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ page: 1000, boardId: [board.boardId] });
+        .send({ boardId: [board.boardId] })
+        .query({ page: 1000 });
 
       expect(res.status).toBe(200);
       expect(res.body.posts).toHaveLength(0);
