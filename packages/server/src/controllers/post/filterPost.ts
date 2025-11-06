@@ -64,6 +64,13 @@ export async function filterPost(
   const { first: _first, page, after, created, limit } = query.data;
   const first = limit ?? _first ?? GET_POSTS_FILTER_COUNT;
 
+  if (after && !validUUID(after)) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid cursor format",
+    });
+  }
+
   const boardId = validUUIDs(req.body.boardId || []);
   const roadmapId = validUUID(req.body.roadmapId);
   // @ts-expect-error
