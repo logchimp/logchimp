@@ -238,10 +238,12 @@ describe("POST /api/v1/posts/get", () => {
 
     const page0 = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], limit: 2, page: 1, userId: "" });
+      .send({ boardId: [board.boardId], userId: "" })
+      .query({ limit: 2, page: 1 });
     const page1 = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], limit: 2, page: 2, userId: "" });
+      .send({ boardId: [board.boardId], userId: "" })
+      .query({ limit: 2, page: 2 });
 
     expect(page0.status).toBe(200);
     expect(page1.status).toBe(200);
@@ -427,7 +429,8 @@ describe("POST /api/v1/posts/get", () => {
     it("should return default first page (no after param)", async () => {
       const res = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], created: "DESC" });
+        .send({ boardId: [board.boardId] })
+        .query({ created: "DESC" });
 
       expect(res.status).toBe(200);
       expect(res.headers["content-type"]).toContain("application/json");
