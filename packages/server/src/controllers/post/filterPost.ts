@@ -136,6 +136,7 @@ export async function filterPost(
         after,
         boardId,
         roadmapId,
+        created,
       });
       if (metadataResults) {
         totalCount = metadataResults.totalCount;
@@ -221,14 +222,41 @@ async function buildPostsQuery({
   if (page) {
     queryBuilder = queryBuilder.offset(first * (page - 1));
   } else if (after) {
-    queryBuilder = queryBuilder.where(
-      "createdAt",
-      ">",
-      database("posts").select("createdAt").where("postId", "=", after),
-    );
+    // Fetch the cursor post's createdAt timestamp
+    const cursorPost = await database("posts")
+      .select("createdAt")
+      .where("postId", "=", after)
+      .first();
+
+    if (cursorPost) {
+      if (created === "DESC") {
+        queryBuilder = queryBuilder.where((builder) => {
+          builder
+            .where("createdAt", "<", cursorPost.createdAt)
+            .orWhere((subBuilder) => {
+              subBuilder
+                .where("createdAt", "=", cursorPost.createdAt)
+                .where("postId", "<", after);
+            });
+        });
+      } else {
+        queryBuilder = queryBuilder.where((builder) => {
+          builder
+            .where("createdAt", ">", cursorPost.createdAt)
+            .orWhere((subBuilder) => {
+              subBuilder
+                .where("createdAt", "=", cursorPost.createdAt)
+                .where("postId", ">", after);
+            });
+        });
+      }
+    }
   }
 
-  queryBuilder = queryBuilder.orderBy("createdAt", created).limit(first);
+  queryBuilder = queryBuilder
+    .orderBy("createdAt", created)
+    .orderBy("postId", created)
+    .limit(first);
 
   return queryBuilder;
 }
@@ -237,10 +265,12 @@ async function getPostMetadata({
   after,
   boardId = [] as string[],
   roadmapId,
+  created = "DESC",
 }: {
   after?: string;
   boardId?: string[];
   roadmapId?: string | null;
+  created?: "ASC" | "DESC";
 }) {
   return database.transaction(async (trx) => {
     // Total count
@@ -266,11 +296,34 @@ async function getPostMetadata({
     }
 
     if (after) {
-      remainingQuery = remainingQuery.where(
-        "createdAt",
-        ">",
-        trx("posts").select("createdAt").where("postId", "=", after),
-      );
+      const cursorPost = await trx("posts")
+        .select("createdAt")
+        .where("postId", "=", after)
+        .first();
+
+      if (cursorPost) {
+        if (created === "DESC") {
+          remainingQuery = remainingQuery.where((builder) => {
+            builder
+              .where("createdAt", "<", cursorPost.createdAt)
+              .orWhere((subBuilder) => {
+                subBuilder
+                  .where("createdAt", "=", cursorPost.createdAt)
+                  .where("postId", "<", after);
+              });
+          });
+        } else {
+          remainingQuery = remainingQuery.where((builder) => {
+            builder
+              .where("createdAt", ">", cursorPost.createdAt)
+              .orWhere((subBuilder) => {
+                subBuilder
+                  .where("createdAt", "=", cursorPost.createdAt)
+                  .where("postId", ">", after);
+              });
+          });
+        }
+      }
     }
 
     const remainingResult = await trx
