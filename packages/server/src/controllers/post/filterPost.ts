@@ -115,17 +115,40 @@ export async function filterPost(
       }
     }
 
-    const metadata = await getPostMetadata({ after, boardId, roadmapId });
-    const totalCount = metadata.totalCount;
-    const totalPages = Math.ceil(totalCount / first);
-    const userDataLength = posts.length;
+    const postDataLength = posts.length;
 
-    const startCursor = userDataLength > 0 ? String(posts[0].postId) : null;
-    const endCursor =
-      userDataLength > 0 ? String(posts[userDataLength - 1].postId) : null;
+    let startCursor: string | null = null;
+    let endCursor: string | null = null;
 
-    const hasNextPage = metadata.remainingResultsCount - first > 0;
-    const currentPage = page ?? 1;
+    if (!page) {
+      startCursor = postDataLength > 0 ? String(posts[0].postId) : null;
+      endCursor =
+        postDataLength > 0 ? String(posts[postDataLength - 1].postId) : null;
+    }
+
+    let totalCount: number | null = null;
+    let totalPages: number | null = null;
+    let currentPage = 1;
+    let hasNextPage = false;
+
+    if (!page) {
+      const metadataResults = await getPostMetadata({
+        after,
+        boardId,
+        roadmapId,
+      });
+      if (metadataResults) {
+        totalCount = metadataResults.totalCount;
+        totalPages = Math.ceil(metadataResults.totalCount / first);
+        hasNextPage = metadataResults.remainingResultsCount - first > 0;
+
+        if (after) {
+          const seenResults =
+            totalCount - metadataResults.remainingResultsCount;
+          currentPage = Math.floor(seenResults / first) + 1;
+        }
+      }
+    }
 
     res.status(200).send({
       status: {
@@ -138,7 +161,7 @@ export async function filterPost(
         ? {}
         : {
             page_info: {
-              count: userDataLength,
+              count: postDataLength,
               current_page: currentPage,
               has_next_page: hasNextPage,
               end_cursor: endCursor,
@@ -195,30 +218,17 @@ async function buildPostsQuery({
     queryBuilder = queryBuilder.where("roadmap_id", roadmapId);
   }
 
-  // Apply cursor if exists
-  if (after) {
-    const cursorPost = await database("posts")
-      .select("createdAt")
-      .where({ postId: after })
-      .first();
-
-    if (cursorPost) {
-      queryBuilder = queryBuilder.where(
-        "createdAt",
-        created === "ASC" ? ">" : "<",
-        cursorPost.createdAt,
-      );
-    }
+  if (page) {
+    queryBuilder = queryBuilder.offset(first * (page - 1));
+  } else if (after) {
+    queryBuilder = queryBuilder.where(
+      "createdAt",
+      ">",
+      database("posts").select("createdAt").where("postId", "=", after),
+    );
   }
 
-  queryBuilder = queryBuilder.orderBy("createdAt", created);
-
-  if (after) {
-    queryBuilder = queryBuilder.limit(first);
-  } else {
-    const offset = page ? first * (page - 1) : 0;
-    queryBuilder = queryBuilder.offset(offset).limit(first);
-  }
+  queryBuilder = queryBuilder.orderBy("createdAt", created).limit(first);
 
   return queryBuilder;
 }
@@ -256,13 +266,11 @@ async function getPostMetadata({
     }
 
     if (after) {
-      remainingQuery = remainingQuery
-        .where(
-          "createdAt",
-          ">=",
-          trx("posts").select("createdAt").where("postId", "=", after),
-        )
-        .offset(1);
+      remainingQuery = remainingQuery.where(
+        "createdAt",
+        ">",
+        trx("posts").select("createdAt").where("postId", "=", after),
+      );
     }
 
     const remainingResult = await trx
@@ -270,8 +278,11 @@ async function getPostMetadata({
       .from(remainingQuery)
       .first();
 
-    const totalCount = Number(totalCountResult?.count || 0);
-    const remainingResultsCount = Number(remainingResult?.count || 0);
+    const totalCount = Number.parseInt(String(totalCountResult.count), 10);
+    const remainingResultsCount = Number.parseInt(
+      String(remainingResult.count),
+      10,
+    );
 
     return { totalCount, remainingResultsCount };
   });
