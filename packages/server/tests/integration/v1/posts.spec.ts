@@ -64,7 +64,7 @@ describe("POST /api/v1/posts/get", () => {
     // Now request page 2 explicitly to ensure default was page 1
     const resPage2 = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ page: 2 });
+      .query({ page: 2 });
     expect(resPage2.headers["content-type"]).toContain("application/json");
     expect(resPage2.status).toBe(200);
 
@@ -309,13 +309,8 @@ describe("POST /api/v1/posts/get", () => {
 
     const asc = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({
-        boardId: [board.boardId],
-        created: "ASC",
-        limit: 10,
-        page: 1,
-        userId: "",
-      });
+      .send({ boardId: [board.boardId], userId: "" })
+      .query({ created: "ASC", limit: 10, page: 1 });
 
     expect(asc.headers["content-type"]).toContain("application/json");
     expect(asc.status).toBe(200);
