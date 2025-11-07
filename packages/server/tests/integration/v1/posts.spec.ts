@@ -582,7 +582,7 @@ describe("POST /api/v1/posts/get", () => {
       const lastId = res1.body.results[2].postId;
 
       const res2 = await supertest(app)
-        .get("/api/v1/posts/get")
+        .post("/api/v1/posts/get")
         .send({ boardId: [board.boardId] })
         .query({
           first: 3,
