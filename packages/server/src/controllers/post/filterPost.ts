@@ -61,7 +61,7 @@ export async function filterPost(
   }
 
   const { first: _first, page, after, created, limit } = query.data;
-  const first = limit ?? _first ?? GET_POSTS_FILTER_COUNT;
+  const first = req.query?.limit ? limit : _first;
 
   if (after && !validUUID(after)) {
     return res.status(400).json({
