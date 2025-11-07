@@ -408,8 +408,8 @@ describe("POST /api/v1/posts/get", () => {
       board = await generateBoard({}, true);
       roadmap = await generateRoadmap({}, true);
 
-      // Generate 15 posts for pagination
-      for (let i = 0; i < 15; i++) {
+      // Generate 20 posts for pagination
+      for (let i = 0; i < 20; i++) {
         await generatePost(
           {
             userId: authUser.userId,
