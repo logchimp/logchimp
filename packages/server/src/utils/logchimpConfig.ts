@@ -18,7 +18,7 @@ interface Config {
   webUrl: string | undefined;
 
   // Database
-  databaseUrl: string | undefined; 
+  databaseUrl: string | undefined;
   databaseHost: string | undefined;
   databaseUser: string | undefined;
   databasePort: number;
