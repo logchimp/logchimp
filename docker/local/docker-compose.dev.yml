@@ -29,6 +29,33 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
+  migrate:
+    build:
+      dockerfile: docker/local/server.Dockerfile
+      context: ../..
+      args:
+        DOCKER_BUILDKIT: 1
+    working_dir: /app/packages/server
+    entrypoint: ""
+    command: sh -c "pnpm db:migrate && echo ' Migration done' && exit 0"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: db
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: lc
+      LOGCHIMP_DB_PASSWORD: password
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD", "echo", "ok"]
+      interval: 1s
+      timeout: 1s
+      retries: 1
+      
+
   # Local SMTP mailbox
   mail:
     image: mailhog/mailhog
@@ -53,6 +80,8 @@ services:
       - /app/packages/types/dist
     depends_on:
       db:
+        condition: service_healthy
+      migrate:
         condition: service_healthy
     networks:
       - dev-network
