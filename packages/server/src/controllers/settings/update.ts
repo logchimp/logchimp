@@ -14,6 +14,10 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
+// cache
+import { valkey, isActive } from "../../cache/index";
+import { CACHE_KEYS } from "../../cache/keys";
+
 type ResponseBody = TUpdateSiteSettingsResponseBody | IApiErrorResponse;
 
 export async function update(
@@ -84,6 +88,8 @@ export async function update(
     }
   }
 
+  const cacheKey = CACHE_KEYS.SITE_SETTINGS;
+
   try {
     const updateSettings = await database
       .update({
@@ -100,6 +106,10 @@ export async function update(
       .returning(["*", database.raw("labs::json as labs")]);
 
     const settings = updateSettings[0];
+
+    if (isActive && valkey) {
+      await valkey.del(cacheKey);
+    }
 
     res.status(200).send({
       settings,
