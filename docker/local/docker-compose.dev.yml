@@ -50,8 +50,8 @@ services:
     networks:
       - dev-network
     healthcheck:
-      test: ["CMD", "echo", "ok"]
-      interval: 1s
+      test: ["CMD", "sh", "-c", "pnpm knex migrate:status --knexfile ./src/database/config.ts"]
+      interval: 5s
       timeout: 1s
       retries: 1
     restart: "no"
@@ -83,7 +83,7 @@ services:
       db:
         condition: service_healthy
       migrate:
-        condition: service_healthy
+        condition: service_completed_successfully
     networks:
       - dev-network
     environment:
