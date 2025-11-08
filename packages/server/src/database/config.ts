@@ -17,6 +17,7 @@ const dbConfig = {
   client: "pg",
   version: "12.4",
   connection: {
+    connectionString: config.databaseUrl,
     host: config.databaseHost,
     user: config.databaseUser,
     password: config.databasePassword,
