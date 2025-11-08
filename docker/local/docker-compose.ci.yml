@@ -49,6 +49,7 @@ services:
       interval: 1s
       timeout: 1s
       retries: 1
+    restart: "no"
 
   mail:
     image: mailhog/mailhog
