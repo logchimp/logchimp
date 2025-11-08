@@ -18,6 +18,7 @@ interface Config {
   webUrl: string | undefined;
 
   // Database
+  databaseUrl: string | undefined;
   databaseHost: string | undefined;
   databaseUser: string | undefined;
   databasePort: number;
@@ -120,6 +121,7 @@ class ConfigManager {
       webUrl: config.server?.webUrl,
 
       // Database
+      databaseUrl: config.database?.url,
       databaseHost: config.database?.host,
       databaseUser: config.database?.user,
       databasePassword: config.database?.password,
@@ -171,6 +173,7 @@ class ConfigManager {
       webUrl: process.env.LOGCHIMP_WEB_URL,
 
       // Database
+      databaseUrl: process.env.LOGCHIMP_DB_URL,
       databaseHost: process.env.LOGCHIMP_DB_HOST,
       databaseUser: process.env.LOGCHIMP_DB_USER,
       databasePassword: process.env.LOGCHIMP_DB_PASSWORD,
