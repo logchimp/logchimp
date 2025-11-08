@@ -30,11 +30,39 @@ services:
     networks:
       - logchimp
 
+  migrate:
+    build:
+      dockerfile: ./packages/server/Dockerfile
+      context: ../..
+      args:
+        DOCKER_BUILDKIT: 1
+    working_dir: /app/packages/server
+    entrypoint: ""
+    command: sh -c "pnpm db:migrate && echo ' Migration done' && exit 0"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: ${POSTGRES_DB:-db}
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: ${POSTGRES_USER:-lc}
+      LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    networks:
+      - ci-network
+    healthcheck:
+      test: ["CMD", "echo", "ok"]
+      interval: 1s
+      timeout: 1s
+      retries: 1
+
   api:
     image: ghcr.io/logchimp/logchimp/api:latest
     restart: unless-stopped
     depends_on:
       db:
+        condition: service_healthy
+      migrate:
         condition: service_healthy
     environment:
       NODE_ENV: ${NODE_ENV:-production}
