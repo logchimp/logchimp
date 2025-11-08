@@ -49,7 +49,7 @@ services:
       LOGCHIMP_DB_USER: ${POSTGRES_USER:-lc}
       LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
     networks:
-      - ci-network
+      - logchimp
     healthcheck:
       test: ["CMD", "echo", "ok"]
       interval: 1s
