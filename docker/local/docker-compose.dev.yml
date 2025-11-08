@@ -54,6 +54,7 @@ services:
       interval: 1s
       timeout: 1s
       retries: 1
+    restart: "no"
       
 
   # Local SMTP mailbox
