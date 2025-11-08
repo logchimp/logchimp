@@ -44,6 +44,11 @@ services:
       LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
     networks:
       - ci-network
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pnpm knex migrate:status --knexfile ./src/database/config.ts"]
+      interval: 5s
+      timeout: 1s
+      retries: 1
     restart: "no"
 
   mail:
