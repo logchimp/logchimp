@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import generatePassword from "omgopass";
+import { generateNanoID as nanoid } from "./../helpers";
 
 // utils
 import { hashPassword, validatePassword } from "./password";
@@ -11,7 +11,7 @@ test("Hash empty string as password", () => {
 });
 
 test("Validate hash random password", async () => {
-  const password = generatePassword();
+  const password = nanoid(10);
   const hash = hashPassword(password);
   const validPassword = await validatePassword(password, hash);
 
@@ -19,7 +19,7 @@ test("Validate hash random password", async () => {
 });
 
 test("Validate hash random password with missing hash", async () => {
-  const password = generatePassword();
+  const password = nanoid(10);
   const validPassword = await validatePassword(password, "");
 
   expect(validPassword).toBe(false);
