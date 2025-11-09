@@ -88,8 +88,6 @@ export async function update(
     }
   }
 
-  const cacheKey = CACHE_KEYS.SITE_SETTINGS;
-
   try {
     const updateSettings = await database
       .update({
@@ -108,7 +106,11 @@ export async function update(
     const settings = updateSettings[0];
 
     if (isActive && valkey) {
-      await valkey.del(cacheKey);
+      try {
+        await valkey.del(CACHE_KEYS.SITE_SETTINGS);
+      } catch (err) {
+        logger.log({ level: "error", message: err });
+      }
     }
 
     res.status(200).send({
