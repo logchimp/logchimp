@@ -59,8 +59,17 @@ export async function sort(
       });
 
     //invalidating cache when roadmap sorts
-    await cache.valkey.unlink("roadmaps:search:*");
-    await cache.valkey.unlink("roadmaps:url:*");
+    try {
+      const searchKeys = await cache.valkey.keys("roadmaps:search:*");
+      const urlKeys = await cache.valkey.keys("roadmaps:url:*");
+      if (searchKeys.length > 0) await cache.valkey.unlink(...searchKeys);
+      if (urlKeys.length > 0) await cache.valkey.unlink(...urlKeys);
+    } catch (cacheErr) {
+      logger.error({
+        message: "Failed to invalidate roadmap cache after sort",
+        error: cacheErr,
+      });
+    }
 
     res.sendStatus(200);
   } catch (err) {
