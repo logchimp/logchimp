@@ -2,7 +2,7 @@ import type { Response } from "express";
 import type {
   IGetRoadmapByUrlRequestParam,
   IGetRoadmapByUrlResponseBody,
-  IApiErrorResponse
+  IApiErrorResponse,
 } from "@logchimp/types";
 import type { ExpressRequestContext } from "../../express";
 
@@ -17,7 +17,6 @@ export async function roadmapByUrl(
   req: ExpressRequestContext<IGetRoadmapByUrlRequestParam>,
   res: Response<IGetRoadmapByUrlResponseBody | IApiErrorResponse>,
 ) {
-
   const cacheKey = `roadmaps:url:${req.params.url}`;
   if (cache.isActive) {
     try {
@@ -27,25 +26,20 @@ export async function roadmapByUrl(
         return res.status(200).send({ roadmap });
       }
     } catch (err) {
-      logger.error({ 
-        message: "Cache read failed", 
-        err 
+      logger.error({
+        message: "Cache read failed",
+        err,
       });
     }
   }
 
   const roadmap = req.ctx.roadmap;
 
-  if(roadmap && cache.isActive) {
+  if (roadmap && cache.isActive) {
     try {
-      await cache.valkey.set(
-        cacheKey,
-        JSON.stringify(roadmap),
-        "EX",
-        DAY*7
-      )
-    } catch(err) {
-        logger.error({
+      await cache.valkey.set(cacheKey, JSON.stringify(roadmap), "EX", DAY * 7);
+    } catch (err) {
+      logger.error({
         message: err,
       });
 
@@ -54,7 +48,7 @@ export async function roadmapByUrl(
         code: "SERVER_ERROR",
       });
     }
-  } 
+  }
 
   res.status(200).send({ roadmap });
 }

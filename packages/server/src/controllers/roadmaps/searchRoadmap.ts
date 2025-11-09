@@ -39,19 +39,18 @@ export async function searchRoadmap(
   const cacheKey = `roadmaps:search:${name}`;
 
   try {
-
-    if(cache.isActive) {
+    if (cache.isActive) {
       try {
         const cachedRoadmap = await cache.valkey.get(cacheKey);
-        if(cachedRoadmap) {
+        if (cachedRoadmap) {
           const roadmaps = JSON.parse(cachedRoadmap);
-          return res.status(200).send({ roadmaps })
+          return res.status(200).send({ roadmaps });
         }
-      } catch(err) {
+      } catch (err) {
         logger.error({
           message: "Cache hit failed",
-          error: err
-        })
+          error: err,
+        });
       }
     }
 
@@ -59,19 +58,19 @@ export async function searchRoadmap(
       .select()
       .where("name", "ILIKE", `${name}%`);
 
-    if(cache.isActive && roadmaps) {
+    if (cache.isActive && roadmaps) {
       try {
         await cache.valkey.set(
           cacheKey,
           JSON.stringify(roadmaps),
           "EX",
-          DAY*7
-        )
-      } catch(err) {
+          DAY * 7,
+        );
+      } catch (err) {
         logger.error({
           message: "Cache write failed",
-          error: err
-        })
+          error: err,
+        });
       }
     }
 
