@@ -12,6 +12,9 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//cache
+import * as cache from "../../../../cache/index";
+
 type ResponseBody = TSortRoadmapResponseBody | IApiErrorResponse;
 
 export async function sort(
@@ -54,6 +57,10 @@ export async function sort(
       .where({
         id: from.id,
       });
+
+    //invalidating cache when roadmap sorts
+    await cache.valkey.unlink("roadmaps:search:*");
+    await cache.valkey.unlink("roadmaps:url:*");
 
     res.sendStatus(200);
   } catch (err) {

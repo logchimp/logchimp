@@ -16,6 +16,9 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//cache
+import * as cache from "../../../../cache/index";
+
 type ResponseBody =
   | TUpdateRoadmapResponseBody
   | IApiValidationErrorResponse
@@ -110,6 +113,10 @@ export async function updateRoadmap(
         "display",
         "created_at",
       ]);
+
+    //invalidating cache when roadmap updates
+    await cache.valkey.del(`roadmaps:search:${name}`);
+    await cache.valkey.del(`roadmaps:url:${url}`);
 
     const roadmap = roadmaps[0];
 

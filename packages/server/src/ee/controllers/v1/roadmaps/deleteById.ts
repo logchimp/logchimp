@@ -12,6 +12,9 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//cache
+import * as cache from "../../../../cache/index";
+
 type ResponseBody = TDeleteRoadmapResponseBody | IApiErrorResponse;
 
 export async function deleteById(
@@ -35,6 +38,10 @@ export async function deleteById(
     await database.delete().from("roadmaps").where({
       id: id,
     });
+
+    //invalidating cache when roadmap deletes
+    await cache.valkey.unlink("roadmaps:search:*");
+    await cache.valkey.unlink("roadmaps:url:*");
 
     res.sendStatus(204);
   } catch (err) {
