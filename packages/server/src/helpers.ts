@@ -4,6 +4,7 @@ import fs from "fs";
 import { isEmail } from "validator";
 import { OFFSET_PAGINATION_UPPER_LIMIT } from "./constants";
 import { customAlphabet } from "nanoid";
+import valkey from "./cache/index";
 
 /**
  * Check value is valid email
@@ -191,6 +192,25 @@ function generateUniqueUsername(baseUsername: string): string {
   return `${trimmedBase}_${generateNanoID(8)}`;
 }
 
+/**
+ * Non-blocking batch deletion for a pattern in cache
+ * @param {string} pattern
+ */
+async function deleteKeysByPattern(pattern: string) {
+  let cursor = "0";
+  do {
+    const [nextCursor, keys] = await valkey.scan(
+      cursor,
+      "MATCH",
+      pattern,
+      "COUNT",
+      100,
+    );
+    if (keys.length > 0) await valkey.unlink(...keys);
+    cursor = nextCursor;
+  } while (cursor !== "0");
+}
+
 export {
   validEmail,
   validUUID,
@@ -206,4 +226,5 @@ export {
   parseAndValidateLimit,
   generateNanoID,
   generateUniqueUsername,
+  deleteKeysByPattern,
 };

@@ -6,7 +6,12 @@ import type {
   ISearchRoadmapResponseBody,
   TPermission,
 } from "@logchimp/types";
+
+//database
 import database from "../../database";
+
+import * as cache from "../../cache/index";
+import { DAY } from "../../cache/time";
 
 // utils
 import logger from "../../utils/logger";
@@ -30,10 +35,43 @@ export async function searchRoadmap(
     });
   }
 
+  const cacheKey = `roadmaps:search:${name}`;
+
   try {
+    if (cache.isActive) {
+      try {
+        const cachedRoadmap = await cache.valkey.get(cacheKey);
+        if (cachedRoadmap) {
+          const roadmaps = JSON.parse(cachedRoadmap);
+          return res.status(200).send({ roadmaps });
+        }
+      } catch (err) {
+        logger.error({
+          message: "Cache hit failed",
+          error: err,
+        });
+      }
+    }
+
     const roadmaps = await database<IRoadmapPrivate>("roadmaps")
       .select()
       .where("name", "ILIKE", `${name}%`);
+
+    if (cache.isActive && roadmaps) {
+      try {
+        await cache.valkey.set(
+          cacheKey,
+          JSON.stringify(roadmaps),
+          "EX",
+          DAY * 7,
+        );
+      } catch (err) {
+        logger.error({
+          message: "Cache write failed",
+          error: err,
+        });
+      }
+    }
 
     res.status(200).send({
       roadmaps,

@@ -16,6 +16,9 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//cache
+import * as cache from "../../../../cache/index";
+
 type ResponseBody =
   | TUpdateRoadmapResponseBody
   | IApiValidationErrorResponse
@@ -88,6 +91,9 @@ export async function updateRoadmap(
   const id = req.ctx.roadmap.id;
   const { name, url, color, display } = body.output;
 
+  const oldName = req.ctx.roadmap.name;
+  const oldUrl = req.ctx.roadmap.url;
+
   try {
     const roadmaps = await database
       .update({
@@ -110,6 +116,23 @@ export async function updateRoadmap(
         "display",
         "created_at",
       ]);
+
+    // Invalidate cache using old values (and new values if changed)
+    try {
+      await cache.valkey.del(`roadmaps:search:${oldName}`);
+      await cache.valkey.del(`roadmaps:url:${oldUrl}`);
+      if (name && name !== oldName) {
+        await cache.valkey.del(`roadmaps:search:${name}`);
+      }
+      if (url && url !== oldUrl) {
+        await cache.valkey.del(`roadmaps:url:${url}`);
+      }
+    } catch (cacheErr) {
+      logger.error({
+        message: "Failed to invalidate roadmap cache after update",
+        error: cacheErr,
+      });
+    }
 
     const roadmap = roadmaps[0];
 
