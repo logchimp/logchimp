@@ -38,12 +38,8 @@ export async function roadmapByUrl(
       await cache.valkey.set(cacheKey, JSON.stringify(roadmap), "EX", DAY * 7);
     } catch (err) {
       logger.error({
-        message: err,
-      });
-
-      return res.status(500).send({
-        message: err.general.serverError,
-        code: "SERVER_ERROR",
+        message: "Cache write failed",
+        error: err,
       });
     }
   }

@@ -44,7 +44,7 @@ export async function deleteById(
       await deleteKeysByPattern("roadmaps:url:*");
     } catch (cacheErr) {
       logger.error({
-        message: "Failed to invalidate roadmap cache after sort",
+        message: "Failed to invalidate roadmap cache after delete",
         error: cacheErr,
       });
     }
