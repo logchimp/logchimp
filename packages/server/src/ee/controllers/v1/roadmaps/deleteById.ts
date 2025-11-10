@@ -12,6 +12,9 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//helpers
+import { deleteKeysByPattern } from "../../../../helpers";
+
 type ResponseBody = TDeleteRoadmapResponseBody | IApiErrorResponse;
 
 export async function deleteById(
@@ -35,6 +38,16 @@ export async function deleteById(
     await database.delete().from("roadmaps").where({
       id: id,
     });
+
+    try {
+      await deleteKeysByPattern("roadmaps:search:*");
+      await deleteKeysByPattern("roadmaps:url:*");
+    } catch (cacheErr) {
+      logger.error({
+        message: "Failed to invalidate roadmap cache after sort",
+        error: cacheErr,
+      });
+    }
 
     res.sendStatus(204);
   } catch (err) {
