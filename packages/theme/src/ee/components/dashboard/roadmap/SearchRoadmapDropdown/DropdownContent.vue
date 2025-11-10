@@ -1,45 +1,21 @@
 <template>
-  <DropdownMenuContent
-    :class="[
-      'w-(--reka-popper-anchor-width) max-h-60 overflow-y-auto',
-      'shadow-sm border border-neutral-300 bg-white rounded-lg'
-    ]"
-    side="bottom"
-    :loop="true"
-    :side-offset="10"
-    align="start"
-  >
+  <DropdownMenuContent :class="[
+    'w-(--reka-popper-anchor-width) max-h-60 overflow-y-auto',
+    'shadow-sm border border-neutral-300 bg-white rounded-lg'
+  ]" side="bottom" :loop="true" :side-offset="10" align="start">
     <div class="border-b border-neutral-300 sticky top-0 bg-white">
-      <input
-        :id="searchInputId"
-        v-model="search"
-        placeholder="Search roadmaps..."
-        class="px-4 py-3 outline-none grow border-none sm:text-sm w-full"
-        autocomplete="off"
-        autocorrect="off"
-        spellCheck="false"
-        ref="searchInputRef"
-      />
+      <input :id="searchInputId" v-model="search" placeholder="Search roadmaps..."
+        class="px-4 py-3 outline-none grow border-none sm:text-sm w-full" autocomplete="off" autocorrect="off"
+        spellCheck="false" ref="searchInputRef" />
     </div>
 
     <div class="w-full">
-     <NoRoadmap
-       v-if="searchRoadmap.roadmap"
-       @select="selectHandler"
-     />
+      <NoRoadmap v-if="searchRoadmap.roadmap" @select="selectHandler" />
 
-      <ItemSuggestionDropdownItem
-        v-for="item in suggestions"
-        :key="item.id"
-        :suggestion="item"
-        @select="selectHandler"
-      />
+      <ItemSuggestionDropdownItem v-for="item in suggestions" :key="item.id" :suggestion="item"
+        @select="selectHandler" />
 
-      <CreateRoadmapItem
-        v-if="search && suggestions.length === 0"
-        :search="search"
-        @created="selectHandler"
-      />
+      <CreateRoadmapItem v-if="search && suggestions.length === 0" :search="search" @created="selectHandler" />
     </div>
   </DropdownMenuContent>
 </template>
@@ -51,7 +27,7 @@ import { watchDebounced } from "@vueuse/core";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { searchRoadmap as searchRoadmapApi } from "../../../../../modules/roadmaps";
-import { type TCurrentRoadmap, useRoadmapSearch } from "./search";
+import { useRoadmapSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
 import CreateRoadmapItem from "./CreateRoadmapItem.vue";
@@ -101,9 +77,13 @@ watchDebounced(
   { debounce: 600 },
 );
 
-function selectHandler(e: TCurrentRoadmap) {
+function selectHandler(e: IRoadmapPrivate) {
   if (!e) return;
-  searchRoadmap.select(e);
+  searchRoadmap.select(e); // this just updates current roadmap
+
+  // need to push new roadmap to suggestions for it to appear immediately
+  suggestions.value.push(e)
+
 }
 
 function resetSuggestions() {
