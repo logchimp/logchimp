@@ -16,8 +16,8 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-//cache
-import * as cache from "../../../../cache/index";
+//services
+import { invalidateRoadmapCache } from "../../../services/roadmaps/invalidateRoadmapCache";
 
 type ResponseBody =
   | TUpdateRoadmapResponseBody
@@ -119,14 +119,7 @@ export async function updateRoadmap(
 
     // Invalidate cache using old values (and new values if changed)
     try {
-      await cache.valkey.del(`roadmaps:search:${oldName}`);
-      await cache.valkey.del(`roadmaps:url:${oldUrl}`);
-      if (name && name !== oldName) {
-        await cache.valkey.del(`roadmaps:search:${name}`);
-      }
-      if (url && url !== oldUrl) {
-        await cache.valkey.del(`roadmaps:url:${url}`);
-      }
+      await invalidateRoadmapCache({ oldName, oldUrl, name, url });
     } catch (cacheErr) {
       logger.error({
         message: "Failed to invalidate roadmap cache after update",
