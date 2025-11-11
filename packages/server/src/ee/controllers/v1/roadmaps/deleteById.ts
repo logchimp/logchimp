@@ -12,8 +12,8 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-//helpers
-import { deleteKeysByPattern } from "../../../../helpers";
+//services
+import { invalidateRoadmapCache } from "../../../services/roadmaps/invalidateRoadmapCache";
 
 type ResponseBody = TDeleteRoadmapResponseBody | IApiErrorResponse;
 
@@ -40,8 +40,7 @@ export async function deleteById(
     });
 
     try {
-      await deleteKeysByPattern("roadmaps:search:*");
-      await deleteKeysByPattern("roadmaps:url:*");
+      await invalidateRoadmapCache({ all: true });
     } catch (cacheErr) {
       logger.error({
         message: "Failed to invalidate roadmap cache after delete",
