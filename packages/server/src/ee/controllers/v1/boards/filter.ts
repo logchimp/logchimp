@@ -112,6 +112,7 @@ export async function filter(
         code: 200,
         type: "success",
       },
+      boards,
       results: boards,
       ...(page
         ? {}

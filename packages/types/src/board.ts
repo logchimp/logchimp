@@ -37,6 +37,7 @@ export type TFilterBoardRequestQuery = IGetBoardsRequestQuery &
 
 export interface IFilterBoardResponseBody
   extends Partial<CursorPaginatedResponse<IBoardDetail>> {
+  boards: IBoardDetail[];
   status: IApiStatus;
 }
 
