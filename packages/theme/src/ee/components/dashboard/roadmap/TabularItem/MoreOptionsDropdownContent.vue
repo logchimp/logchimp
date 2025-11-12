@@ -27,7 +27,7 @@
     <DropdownItem
       :disabled="deleteRoadmapPermissionDisabled"
       variant="danger"
-      @click="roadmap?.id ? deleteRoadmapHandler(roadmap.id) : undefined"
+      @click="openConfirmDialog = true"
     >
       <template #icon>
         <delete-icon aria-hidden="true" />
@@ -35,10 +35,12 @@
       Delete
     </DropdownItem>
   </DropdownV2Content>
+
+  <DeleteRoadmapDialog :open="openConfirmDialog" @close="(e) => openConfirmDialog = e" />
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from "vue";
+import { computed, defineAsyncComponent, inject, ref } from "vue";
 import {
   Clipboard as CopyIcon,
   Settings as SettingsIcon,
@@ -50,17 +52,17 @@ import { useCopyText } from "../../../../../hooks";
 import { useSettingStore } from "../../../../../store/settings";
 import { useUserStore } from "../../../../../store/user";
 import { roadmapKey } from "./options";
-import { deleteRoadmap } from "../../../../modules/roadmaps";
-import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
 import DropdownSeparator from "../../../../../components/ui/DropdownV2/DropdownSeparator.vue";
+const DeleteRoadmapDialog = defineAsyncComponent(
+  () => import("./DeleteRoadmapDialog.vue"),
+);
 
 const roadmap = inject(roadmapKey);
 const { settings } = useSettingStore();
 const { permissions } = useUserStore();
-const dashboardRoadmaps = useDashboardRoadmaps();
 
 const deleteRoadmapPermissionDisabled = computed(() => {
   if (!roadmap) return true;
@@ -68,17 +70,7 @@ const deleteRoadmapPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
-async function deleteRoadmapHandler(id: string) {
-  try {
-    const response = await deleteRoadmap({ id });
-
-    if (response.status === 204) {
-      dashboardRoadmaps.removeRoadmap(id);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
+const openConfirmDialog = ref(false);
 
 defineOptions({
   name: "DashboardRoadmapTabularItemMoreOptionsDropdownContent",
