@@ -148,6 +148,15 @@ useHead({
       content: settingsStore.get.accentColor,
     },
   ],
+  link: [
+    {
+      rel: "icon",
+      type: "image/svg+xml",
+      href: computed(() => {
+        return settingsStore.get.icon || "/logchimp.svg";
+      }),
+    },
+  ],
 });
 </script>
 
