@@ -15,14 +15,18 @@
     <template #footer>
       <div class="flex justify-end gap-3 mt-4">
         <button
-          class="px-3 py-2 text-sm rounded-md border border-gray-600 hover:bg-gray-100"
+          class="px-3 py-2 text-sm rounded-md border border-gray-600 hover:bg-gray-100 select-none"
           @click="() => $emit('close', false)"
         >
           Cancel
         </button>
         <button
-          class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-800"
+          :class="[
+            'px-3 py-2 text-sm rounded-md bg-red-600 text-white select-none',
+            'not-disabled:hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed'
+          ]"
           @click="deleteBoardHandler"
+          :disabled="loading"
         >
           {{ loading ? "Deleting..." : "Delete" }}
         </button>
@@ -47,7 +51,7 @@ interface Props {
 }
 defineProps<Props>();
 const emit = defineEmits<(e: "close", value: boolean) => void>();
-const loading = ref(false);
+const loading = ref<boolean>(false);
 
 async function deleteBoardHandler() {
   if (!board) return;
