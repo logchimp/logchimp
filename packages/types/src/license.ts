@@ -1,3 +1,13 @@
+export type TDeploymentProvider =
+  | "aws"
+  | "gcp"
+  | "azure"
+  | "vercel"
+  | "render"
+  | "railway"
+  | "heroku"
+  | "unknown";
+
 export type TLicenseSubscriptionType =
   | "free"
   | "starter"
@@ -8,7 +18,7 @@ export interface ICheckLicenseRequestBody {
   license_key: string;
   metadata: {
     version: string;
-    deploymentProvider: string | "unknown";
+    deploymentProvider: TDeploymentProvider;
   };
   timestamp: string;
 }
