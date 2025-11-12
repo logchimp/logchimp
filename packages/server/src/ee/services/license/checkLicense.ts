@@ -5,6 +5,7 @@ import type {
   ICheckLicenseResponseBody,
   IApiErrorResponse,
   TLicenseSubscriptionType,
+  TDeploymentProvider,
 } from "@logchimp/types";
 import jwt from "jsonwebtoken";
 
@@ -238,7 +239,7 @@ async function decryptPayload(
   return decoded;
 }
 
-function getDeploymentProvider() {
+function getDeploymentProvider(): TDeploymentProvider {
   if (process.env.VERCEL) {
     return "vercel";
   } else if (process.env.RENDER) {
