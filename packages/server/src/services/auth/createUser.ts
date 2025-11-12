@@ -61,29 +61,8 @@ const createUser = async (
   const hashedPassword = hashPassword(userData.password);
 
   try {
-    const {
-      rows: [getUser],
-    } = await database.raw(
-      `
-        SELECT EXISTS (
-          SELECT * FROM users WHERE LOWER(email) = LOWER(:email)
-        )
-      `,
-      {
-        email,
-      },
-    );
-
-    const userExists = getUser.exists;
-    if (userExists) {
-      res.status(409).send({
-        message: error.middleware.user.userExists,
-        code: "USER_EXISTS",
-      });
-      return null;
-    }
-
     // insert user to database
+    // The database unique constraint on email will prevent duplicates atomically
     const [newUser] = await database
       .insert({
         userId,
@@ -134,7 +113,16 @@ const createUser = async (
       authToken,
       ...newUser,
     };
-  } catch (err) {
+  } catch (err: any) {
+    // Check if error is a unique constraint violation on email
+    if (err.code === "23505" && err.constraint?.includes("email")) {
+      res.status(409).send({
+        message: error.middleware.user.userExists,
+        code: "USER_EXISTS",
+      });
+      return null;
+    }
+
     logger.log({
       level: "error",
       message: err,
