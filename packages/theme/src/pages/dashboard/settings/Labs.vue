@@ -77,6 +77,8 @@ const updateSettingsPermissionDisabled = computed(() => {
 
 const { t } = useI18n();
 
+const metaTitle = computed(() => t("dashboard.settings.labs.metaTitle"));
+
 async function updateSettings() {
   updateSettingsButtonLoading.value = true;
 
@@ -102,7 +104,7 @@ async function getSettings() {
 onMounted(() => getSettings());
 
 useHead({
-  title: t("dashboard.settings.labs.metaTitle"),
+  title: metaTitle,
 });
 
 defineOptions({
