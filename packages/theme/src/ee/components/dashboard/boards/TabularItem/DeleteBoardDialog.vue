@@ -3,7 +3,13 @@
     <template #title>Delete Board</template>
 
     <template #description>
-      Are you sure you want to delete this board? This action cannot be undone.
+      <div class="space-y-1">
+        <p>
+          Are you sure you want to delete this board? This action cannot be undone.
+        </p>
+
+        <p>Posts linked to this board won’t be deleted, but they’ll be unassigned from it.</p>
+      </div>
     </template>
 
     <template #footer>
