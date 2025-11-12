@@ -1,0 +1,58 @@
+<template>
+  <Dialog :open="open" @update:open="e => $emit('close', e)">
+    <template #title>Delete Roadmap</template>
+
+    <template #description>
+      Are you sure you want to delete this roadmap? This action cannot be undone.
+    </template>
+
+    <template #footer>
+      <div class="flex justify-end gap-3 mt-4">
+        <button
+          class="px-3 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-100"
+          @click="() => $emit('close', false)"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+          @click="deleteRoadmapHandler"
+        >
+          Delete
+        </button>
+      </div>
+    </template>
+  </Dialog>
+</template>
+
+<script setup lang="ts">
+import { inject } from "vue";
+
+import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
+import { deleteRoadmap } from "../../../../modules/roadmaps";
+import { roadmapKey } from "./options";
+import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
+
+const roadmap = inject(roadmapKey);
+const dashboardRoadmaps = useDashboardRoadmaps();
+
+interface Props {
+  open: boolean;
+}
+defineProps<Props>();
+defineEmits<(e: "close", value: boolean) => void>();
+
+async function deleteRoadmapHandler() {
+  if (!roadmap) return;
+
+  try {
+    const response = await deleteRoadmap({ id: roadmap.id });
+
+    if (response.status === 204) {
+      dashboardRoadmaps.removeRoadmap(roadmap.id);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+</script>
