@@ -4,9 +4,9 @@
 
     <template #description>
       <div class="gap-y-2">
-       <p>
-        Are you sure you want to delete this roadmap? This action cannot be undone.
-       </p>
+        <p>
+          Are you sure you want to delete this roadmap? This action cannot be undone.
+        </p>
         <p>
           Posts linked to this roadmap won’t be deleted, but they’ll be unassigned from it.
         </p>
@@ -16,13 +16,16 @@
     <template #footer>
       <div class="flex justify-end gap-3 mt-4">
         <button
-          class="px-3 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-100"
+          class="px-3 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-100 select-none"
           @click="() => $emit('close', false)"
         >
           Cancel
         </button>
         <button
-          class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
+          :class="[
+            'px-3 py-2 text-sm rounded-md bg-red-600 text-white select-none',
+            'not-disabled:hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed'
+          ]"
           @click="deleteRoadmapHandler"
           :disabled="loading"
         >
@@ -48,7 +51,7 @@ interface Props {
   open: boolean;
 }
 defineProps<Props>();
-defineEmits<(e: "close", value: boolean) => void>();
+const emit = defineEmits<(e: "close", value: boolean) => void>();
 const loading = ref<boolean>(false);
 
 async function deleteRoadmapHandler() {
@@ -62,6 +65,7 @@ async function deleteRoadmapHandler() {
 
     if (response.status === 204) {
       dashboardRoadmaps.removeRoadmap(roadmap.id);
+      emit("close", false);
     }
   } catch (error) {
     console.error(error);
