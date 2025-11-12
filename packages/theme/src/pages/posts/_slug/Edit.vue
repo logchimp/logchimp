@@ -122,8 +122,11 @@ async function getPost() {
 
   const route = router.currentRoute.value;
   const slug = route.params.slug?.toString();
-
-  if (!slug) return;
+  if (!slug) {
+    isPostExist.value = false;
+    postLoading.value = false;
+    return;
+  }
 
   try {
     const response = await getPostBySlug(slug);
