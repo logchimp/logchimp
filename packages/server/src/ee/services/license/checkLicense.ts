@@ -1,8 +1,10 @@
 import type {
+  ILicenseServiceResponse,
   ICheckLicenseDecryptedPayload,
   ICheckLicenseRequestBody,
   ICheckLicenseResponseBody,
   IApiErrorResponse,
+  TLicenseSubscriptionType,
 } from "@logchimp/types";
 import jwt from "jsonwebtoken";
 
@@ -18,17 +20,18 @@ const getLogChimpCacheKey = (licenseKey: string) =>
 
 const deploymentProvider = getDeploymentProvider();
 
-const EMPTY_LICENSE_RESPONSE: ICheckLicenseDecryptedPayload = {
+const EMPTY_LICENSE_RESPONSE: ILicenseServiceResponse = {
   status: "",
   license_key: "",
   response_nonce: "",
   server_time: "",
   subscription_type: "free",
+  hierarchy: 0,
 };
 
 // In-memory cache for ultra-fast access
 interface IMemoryCache {
-  payload: ICheckLicenseDecryptedPayload | IApiErrorResponse | null;
+  payload: ILicenseServiceResponse | IApiErrorResponse | null;
   expiresAt: number;
 }
 const EMPTY_MEMORY_CACHE: IMemoryCache = {
@@ -38,10 +41,10 @@ const EMPTY_MEMORY_CACHE: IMemoryCache = {
 let memoryCache: IMemoryCache = EMPTY_MEMORY_CACHE;
 
 // Prevent multiple simultaneous license server requests
-let pendingLicenseCheck: Promise<ICheckLicenseDecryptedPayload> | null = null;
+let pendingLicenseCheck: Promise<ILicenseServiceResponse> | null = null;
 
 export async function checkLicense(): Promise<
-  ICheckLicenseDecryptedPayload | IApiErrorResponse
+  ILicenseServiceResponse | IApiErrorResponse
 > {
   const licenseKey = config.licenseKey;
   if (!licenseKey) {
@@ -78,7 +81,7 @@ export async function checkLicense(): Promise<
 async function performLicenseCheck(
   licenseKey: string,
   now: number,
-): Promise<ICheckLicenseDecryptedPayload> {
+): Promise<ILicenseServiceResponse> {
   let encryptedPayload: string | null = null;
   if (cache.isActive) {
     try {
@@ -87,8 +90,13 @@ async function performLicenseCheck(
       );
       if (encryptedPayload) {
         const decrypted = await decryptPayload(encryptedPayload);
-        updateMemoryCache(decrypted, now);
-        return decrypted;
+
+        const response = {
+          ...decrypted,
+          hierarchy: getSubscriptionTypeHierarchy(decrypted.subscription_type),
+        } satisfies ILicenseServiceResponse;
+        updateMemoryCache(response, now);
+        return response;
       }
     } catch (e) {
       logger.error({
@@ -132,9 +140,13 @@ async function performLicenseCheck(
 
   try {
     const decrypted = await decryptPayload(encryptedPayload);
-    updateMemoryCache(decrypted, now);
 
-    return decrypted;
+    const response = {
+      ...decrypted,
+      hierarchy: getSubscriptionTypeHierarchy(decrypted.subscription_type),
+    } satisfies ILicenseServiceResponse;
+    updateMemoryCache(response, now);
+    return response;
   } catch (e) {
     logger.error({
       message: "failed to decrypt license payload",
@@ -147,7 +159,7 @@ async function performLicenseCheck(
 }
 
 function updateMemoryCache(
-  payload: ICheckLicenseDecryptedPayload | IApiErrorResponse,
+  payload: ILicenseServiceResponse | IApiErrorResponse,
   now: number,
 ): void {
   const expiresAt = now + 60 * 60 * 1000;
@@ -250,5 +262,22 @@ async function clearCache() {
         error: e,
       });
     }
+  }
+}
+
+function getSubscriptionTypeHierarchy(
+  subscriptionType: TLicenseSubscriptionType,
+): number {
+  switch (subscriptionType) {
+    case "free":
+      return 0;
+    case "starter":
+      return 1;
+    case "growth":
+      return 2;
+    case "enterprise":
+      return 3;
+    default:
+      return 0;
   }
 }

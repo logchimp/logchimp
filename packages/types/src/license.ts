@@ -25,3 +25,7 @@ export interface ICheckLicenseDecryptedPayload {
   status: string;
   subscription_type: TLicenseSubscriptionType;
 }
+
+export interface ILicenseServiceResponse extends ICheckLicenseDecryptedPayload {
+  hierarchy: number;
+}
