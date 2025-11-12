@@ -63,7 +63,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     );
     if (roadmapIdx === -1) return;
 
-    if (roadmaps.value[roadmapIdx]) return;
+    if (!roadmaps.value[roadmapIdx]) return;
     Object.assign(roadmaps.value[roadmapIdx], roadmap);
   }
 

@@ -55,7 +55,7 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
     );
     if (postIdx === -1) return;
 
-    if (posts.value[postIdx]) return;
+    if (!posts.value[postIdx]) return;
     Object.assign(posts.value[postIdx], post);
   }
 

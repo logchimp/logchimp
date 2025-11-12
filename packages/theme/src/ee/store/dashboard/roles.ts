@@ -58,7 +58,7 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
     const roleIdx = roles.value.findIndex((item) => item.id === role.id);
     if (roleIdx === -1) return;
 
-    if (roles.value[roleIdx]) return;
+    if (!roles.value[roleIdx]) return;
     Object.assign(roles.value[roleIdx], role);
   }
 
