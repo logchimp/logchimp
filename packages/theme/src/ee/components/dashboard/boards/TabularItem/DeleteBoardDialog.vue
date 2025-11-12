@@ -18,7 +18,7 @@
           class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-800"
           @click="deleteBoardHandler"
         >
-          Delete
+          {{ loading ? "Deleting..." : "Delete" }}
         </button>
       </div>
     </template>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
+import { inject, ref } from "vue";
 
 import { boardKey } from "./options";
 import { deleteBoard } from "../../../../modules/boards";
@@ -41,9 +41,14 @@ interface Props {
 }
 defineProps<Props>();
 const emit = defineEmits<(e: "close", value: boolean) => void>();
+const loading = ref(false);
 
 async function deleteBoardHandler() {
   if (!board) return;
+
+  if (loading.value) return;
+  loading.value = true;
+
   try {
     const response = await deleteBoard(board.boardId);
 
@@ -53,6 +58,8 @@ async function deleteBoardHandler() {
     }
   } catch (error) {
     console.error(error);
+  } finally {
+    loading.value = false;
   }
 }
 </script>
