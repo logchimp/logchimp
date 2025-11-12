@@ -1,9 +1,11 @@
 import type { Request, Response } from "express";
+import { z } from "zod";
 import type {
   IApiErrorResponse,
   TFilterBoardRequestQuery,
   IFilterBoardResponseBody,
-  IGetBoardQueryOptions,
+  ApiSortType,
+  IBoardPrivate,
 } from "@logchimp/types";
 
 import database from "../../../../database";
@@ -17,6 +19,37 @@ import {
   parseAndValidatePage,
 } from "../../../../helpers";
 
+interface IGetBoardQueryOptions {
+  first: number;
+  after?: string;
+  created: ApiSortType;
+  page?: number;
+}
+
+const querySchema = z.object({
+  first: z.coerce
+    .string()
+    .transform((value) =>
+      parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
+    ),
+  /**
+   * For backward compatibility to support offset pagination,
+   * will be removed in the next major release.
+   */
+  page: z.coerce
+    .string()
+    .optional()
+    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
+  limit: z.coerce
+    .string()
+    .optional()
+    .transform((value) =>
+      parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
+    ),
+  after: z.uuid().optional(),
+  created: z.enum(["ASC", "DESC"]).default("ASC"),
+});
+
 type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
 
 export async function filter(
@@ -29,45 +62,49 @@ export async function filter(
     );
   }
 
-  const created = req.query.created?.toUpperCase() === "ASC" ? "ASC" : "DESC";
-  const limit = parseAndValidateLimit(
-    req.query?.limit,
-    GET_BOARDS_FILTER_COUNT,
-  );
-  const page = parseAndValidatePage(req.query?.page);
+  const query = querySchema.safeParse(req.query);
+  if (!query.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid query parameters",
+      errors: query.error.issues,
+    });
+  }
 
-  const after = req.query?.after;
+  const { first: _first, page, after, created, limit } = query.data;
+  const first = req.query?.limit ? limit : _first;
 
   try {
-    const boards = await getBoards({ limit, page, after, created });
+    const boards = await getBoards({ first, page, after, created });
     const boardsLength = boards.length;
 
     let startCursor: string | null = null;
     let endCursor: string | null = null;
 
-    if (boardsLength > 0) {
+    if (!page) {
       startCursor = boardsLength > 0 ? String(boards[0].boardId) : null;
       endCursor =
         boardsLength > 0 ? String(boards[boardsLength - 1].boardId) : null;
     }
 
     let totalCount: number | null = null;
-    let hasNextPage = false;
+    let totalPages: number | null = null;
     let currentPage = 1;
+    let hasNextPage = false;
 
-    const boardsMetaData = await getBoardMetaData({ after });
-    totalCount = boardsMetaData.totalBoardsCount;
-    const remainingBoardsCount = boardsMetaData.remainingBoardsCount;
+    if (!page) {
+      const boardsMetaData = await getBoardMetaData({ after });
 
-    if (after) {
-      hasNextPage = remainingBoardsCount - limit > 0;
+      if (boardsMetaData) {
+        totalCount = boardsMetaData.totalBoardsCount;
+        totalPages = Math.ceil(boardsMetaData.totalBoardsCount / first);
+        hasNextPage = boardsMetaData.remainingBoardsCount - first > 0;
+      }
 
-      const seenResults = totalCount - remainingBoardsCount;
-      currentPage = Math.floor(seenResults / limit) + 1;
-    } else {
-      const totalPages = Math.ceil(totalCount / limit);
-      currentPage = page || 1;
-      hasNextPage = currentPage < totalPages;
+      if (after) {
+        const seenBoards = totalCount - boardsMetaData.remainingBoardsCount;
+        currentPage = Math.floor(seenBoards / first) + 1;
+      }
     }
 
     res.status(200).send({
@@ -75,14 +112,20 @@ export async function filter(
         code: 200,
         type: "success",
       },
-      boards,
-      page_info: {
-        count: boardsLength,
-        current_page: currentPage,
-        has_next_page: hasNextPage,
-        end_cursor: endCursor,
-        start_cursor: startCursor,
-      },
+      results: boards,
+      ...(page
+        ? {}
+        : {
+            page_info: {
+              count: boardsLength,
+              current_page: currentPage,
+              has_next_page: hasNextPage,
+              end_cursor: endCursor,
+              start_cursor: startCursor,
+            },
+            total_pages: totalPages,
+            total_count: totalCount,
+          }),
     });
   } catch (err) {
     logger.log({
@@ -98,22 +141,23 @@ export async function filter(
 }
 
 export async function getBoards({
-  limit,
+  first,
   after,
   created,
   page,
 }: IGetBoardQueryOptions) {
   try {
-    let boards = database
+    let boardsQuery = database<IBoardPrivate>("boards")
       .select(
         "boards.boardId",
         "boards.name",
         "boards.color",
         "boards.url",
         "boards.createdAt",
+        "display",
+        "view_voters",
       )
       .count("posts", { as: "post_count" })
-      .from("boards")
       .leftJoin("posts", "boards.boardId", "posts.boardId")
       .where({
         "boards.display": true,
@@ -121,9 +165,11 @@ export async function getBoards({
       .groupBy("boards.boardId")
       .orderBy("boards.createdAt", created)
       .orderBy("boards.boardId", created)
-      .limit(limit);
+      .limit(first);
 
-    if (after) {
+    if (page) {
+      boardsQuery = boardsQuery.offset(first * (page - 1));
+    } else if (after) {
       const afterBoard = await database("boards")
         .select("createdAt", "boardId")
         .where("boardId", after)
@@ -133,7 +179,7 @@ export async function getBoards({
 
       const operator = created === "ASC" ? ">" : "<";
 
-      boards = boards.where(function () {
+      boardsQuery = boardsQuery.where(function () {
         this.where("boards.createdAt", operator, afterBoard.createdAt).orWhere(
           function () {
             this.where("boards.createdAt", "=", afterBoard.createdAt).andWhere(
@@ -145,11 +191,10 @@ export async function getBoards({
         );
       });
 
-      boards = boards.whereNot("boards.boardId", after);
-    } else if (page) {
-      boards = boards.offset(limit * (page - 1));
+      boardsQuery = boardsQuery.whereNot("boards.boardId", after);
     }
-    const boardsData = await boards;
+
+    const boardsData = await boardsQuery;
     return boardsData;
   } catch (error) {
     logger.log({

@@ -1,4 +1,9 @@
-import type { ApiSortType, IApiStatus, PageInfo } from "./common";
+import type {
+  ApiSortType,
+  IApiStatus,
+  CursorPaginationParams,
+  CursorPaginatedResponse,
+} from "./common";
 
 export interface IBoard {
   boardId: string;
@@ -21,19 +26,18 @@ export interface IGetBoardsRequestQuery {
   page: string;
   limit?: string;
   created: ApiSortType;
-  after?: string;
 }
 
 export interface IGetBoardsResponseBody {
   boards: IBoardPrivate[];
 }
 
-export type TFilterBoardRequestQuery = IGetBoardsRequestQuery;
+export type TFilterBoardRequestQuery = IGetBoardsRequestQuery &
+  CursorPaginationParams;
 
-export interface IFilterBoardResponseBody {
+export interface IFilterBoardResponseBody
+  extends Partial<CursorPaginatedResponse<IBoardDetail>> {
   status: IApiStatus;
-  boards: IBoardDetail[];
-  page_info?: PageInfo;
 }
 
 export interface IGetBoardByUrlRequestParams {
@@ -96,11 +100,4 @@ export interface ISearchBoardRequestParams {
 
 export interface ISearchBoardResponseBody {
   boards: IBoardPrivate[];
-}
-
-export interface IGetBoardQueryOptions {
-  limit: number;
-  after?: string;
-  created: ApiSortType;
-  page?: number;
 }
