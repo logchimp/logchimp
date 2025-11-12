@@ -14,7 +14,7 @@ import * as post from "../../../ee/controllers/v1/posts";
 
 // middleware
 import { authRequired } from "../../../middlewares/auth";
-import { licenseGuard } from "../../middleware/licenseGuard";
+import { withLicenseGuard } from "../../middleware/licenseGuard";
 
 // post activity
 router.get<
@@ -25,31 +25,42 @@ router.get<
 >(
   "/posts/:post_id/activity",
   // @ts-expect-error
-  licenseGuard,
-  post.activity.get,
+  withLicenseGuard(post.activity.get, {
+    // starter <= comments
+    // growth <= activity (post status changed)
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
 );
 
 // post comment
 router.post<TCreatePostCommentRequestParam>(
   "/posts/:post_id/comments",
   // @ts-expect-error
-  licenseGuard,
   authRequired,
-  post.comments.create,
+  // @ts-expect-error
+  withLicenseGuard(post.comments.create, {
+    // starter <= public comment
+    // growth <= internal comment
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
 );
 router.put<IUpdatePostCommentRequestParam>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
-  licenseGuard,
   authRequired,
-  post.comments.update,
+  // @ts-expect-error
+  withLicenseGuard(post.comments.update, {
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
 );
 router.delete<TDeletePostCommentRequestParam>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
-  licenseGuard,
   authRequired,
-  post.comments.destroy,
+  // @ts-expect-error
+  withLicenseGuard(post.comments.destroy, {
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
 );
 
 export default router;
