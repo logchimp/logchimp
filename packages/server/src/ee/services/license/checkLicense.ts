@@ -23,6 +23,7 @@ const EMPTY_LICENSE_RESPONSE: ICheckLicenseDecryptedPayload = {
   license_key: "",
   response_nonce: "",
   server_time: "",
+  subscription_type: "free",
 };
 
 // In-memory cache for ultra-fast access

@@ -1,3 +1,9 @@
+export type TLicenseSubscriptionType =
+  | "free"
+  | "starter"
+  | "growth"
+  | "enterprise";
+
 export interface ICheckLicenseRequestBody {
   license_key: string;
   metadata: {
@@ -17,5 +23,5 @@ export interface ICheckLicenseDecryptedPayload {
   license_key: string;
   server_time: string;
   status: string;
-  // features: string[];
+  subscription_type: TLicenseSubscriptionType;
 }
