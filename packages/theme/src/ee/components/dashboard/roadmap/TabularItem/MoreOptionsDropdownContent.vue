@@ -56,7 +56,9 @@ import { roadmapKey } from "./options";
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../../../../../components/ui/DropdownV2/DropdownItem.vue";
 import DropdownSeparator from "../../../../../components/ui/DropdownV2/DropdownSeparator.vue";
-const DeleteRoadmapDialog = defineAsyncComponent(() => import("./DeleteRoadmapDialog.vue"));
+const DeleteRoadmapDialog = defineAsyncComponent(
+  () => import("./DeleteRoadmapDialog.vue"),
+);
 
 const roadmap = inject(roadmapKey);
 const { settings } = useSettingStore();
