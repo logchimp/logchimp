@@ -20,7 +20,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
     "lefthook": "^1.12.2",
-    "nodemon": "3.1.10"
+    "nodemon": "3.1.11"
   },
   "keywords": [
     "logchimp",
