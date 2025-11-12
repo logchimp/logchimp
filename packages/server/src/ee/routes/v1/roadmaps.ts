@@ -8,25 +8,39 @@ import * as roadmaps from "../../controllers/v1/roadmaps";
 // middleware
 import { authRequired } from "../../../middlewares/auth";
 import { roadmapExists } from "../../../middlewares/roadmapExists";
-import { licenseGuard } from "../../middleware/licenseGuard";
+import { withLicenseGuard } from "../../middleware/licenseGuard";
 
-router.post("/roadmaps", licenseGuard, authRequired, roadmaps.create);
+router.post(
+  "/roadmaps",
+  authRequired,
+  withLicenseGuard(roadmaps.create, {
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
+);
 
 router.patch(
   "/roadmaps",
-  licenseGuard,
   authRequired,
   roadmapExists,
-  roadmaps.updateRoadmap,
+  withLicenseGuard(roadmaps.updateRoadmap, {
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
 );
-router.patch("/roadmaps/sort", licenseGuard, authRequired, roadmaps.sort);
+router.patch(
+  "/roadmaps/sort",
+  authRequired,
+  withLicenseGuard(roadmaps.sort, {
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
+);
 
 router.delete(
   "/roadmaps",
-  licenseGuard,
   authRequired,
   roadmapExists,
-  roadmaps.deleteById,
+  withLicenseGuard(roadmaps.deleteById, {
+    requiredPlan: ["starter", "growth", "enterprise"],
+  }),
 );
 
 export default router;

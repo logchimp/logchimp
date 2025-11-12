@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
@@ -9,7 +9,6 @@ import type {
 } from "@logchimp/types";
 import * as v from "valibot";
 
-import type { ExpressRequestContext } from "../../../../express";
 import database from "../../../../database";
 
 // utils
@@ -56,7 +55,7 @@ const schemaBodyErrorMap = {
 };
 
 export async function updateRoadmap(
-  req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
+  req: Request<unknown, unknown, IUpdateRoadmapRequestBody>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
@@ -85,7 +84,8 @@ export async function updateRoadmap(
     });
   }
 
-  const id = req.ctx.roadmap.id;
+  // @ts-expect-error
+  const id = (req.roadmap as IRoadmapPrivate).id;
   const { name, url, color, display } = body.output;
 
   try {

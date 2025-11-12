@@ -16,7 +16,8 @@
       "invalidToken": "Invalid JWT token"
     },
     "license": {
-      "verification": "LogChimp license validation failed"
+      "verification": "LogChimp license validation failed",
+      "higherPlan": "Need higher plan to access this feature"
     },
     "user": {
       "userNotFound": "User not found",
