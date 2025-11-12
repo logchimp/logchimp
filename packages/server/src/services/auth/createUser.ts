@@ -159,10 +159,16 @@ const createUser = async (
 export { createUser };
 
 function generateUniqueUsername(baseUsername: string): string {
-  let username = baseUsername;
-
   const suffix = nanoid(8);
-  username = `${baseUsername}-${suffix}`.slice(0, 30);
+  const separator = "_";
 
-  return username;
+  let trimmedBase: string;
+
+  if (baseUsername.length >= 22) {
+    trimmedBase = baseUsername.slice(0, 21);
+  } else {
+    trimmedBase = baseUsername;
+  }
+
+  return `${trimmedBase}${separator}${suffix}`;
 }
