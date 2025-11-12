@@ -17,8 +17,9 @@
         <button
           class="px-3 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700"
           @click="deleteRoadmapHandler"
+          :disabled="loading"
         >
-          Delete
+          {{ loading ? "Deleting..." : "Delete" }}
         </button>
       </div>
     </template>
@@ -26,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
+import { inject, ref } from "vue";
 
 import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 import { deleteRoadmap } from "../../../../modules/roadmaps";
@@ -41,9 +42,13 @@ interface Props {
 }
 defineProps<Props>();
 defineEmits<(e: "close", value: boolean) => void>();
+const loading = ref<boolean>(false);
 
 async function deleteRoadmapHandler() {
   if (!roadmap) return;
+
+  if (loading.value) return;
+  loading.value = true;
 
   try {
     const response = await deleteRoadmap({ id: roadmap.id });
@@ -53,6 +58,8 @@ async function deleteRoadmapHandler() {
     }
   } catch (error) {
     console.error(error);
+  } finally {
+    loading.value = false;
   }
 }
 </script>
