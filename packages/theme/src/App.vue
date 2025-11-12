@@ -151,10 +151,14 @@ useHead({
   link: [
     {
       rel: "icon",
-      type: "image/svg+xml",
-      href: computed(() => {
-        return settingsStore.get.icon || "/logchimp.svg";
-      }),
+      type: () => {
+        const icon = settingsStore.get.icon || "/logchimp.svg";
+        if (icon.endsWith(".svg")) return "image/svg+xml";
+        if (icon.endsWith(".png")) return "image/png";
+        if (icon.endsWith(".ico")) return "image/x-icon";
+        return "image/svg+xml";
+      },
+      href: () => settingsStore.get.icon || "/logchimp.svg",
     },
   ],
 });
