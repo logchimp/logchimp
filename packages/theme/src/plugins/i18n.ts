@@ -1,4 +1,5 @@
 import { createI18n } from "vue-i18n";
+import { watchEffect } from "vue";
 
 //locales
 import en from "../locales/en.json";
@@ -16,6 +17,10 @@ const i18n = createI18n({
     fr,
     hi,
   },
+});
+
+watchEffect(() => {
+  localStorage.setItem("locale", i18n.global.locale.value);
 });
 
 export default i18n;
