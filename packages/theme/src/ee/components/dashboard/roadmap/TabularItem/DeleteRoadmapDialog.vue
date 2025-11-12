@@ -3,7 +3,14 @@
     <template #title>Delete Roadmap</template>
 
     <template #description>
-      Are you sure you want to delete this roadmap? This action cannot be undone.
+      <div class="gap-y-2">
+       <p>
+        Are you sure you want to delete this roadmap? This action cannot be undone.
+       </p>
+        <p>
+          Posts linked to this roadmap won’t be deleted, but they’ll be unassigned from it.
+        </p>
+      </div>
     </template>
 
     <template #footer>
