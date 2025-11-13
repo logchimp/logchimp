@@ -121,7 +121,7 @@ async function getPost() {
   postLoading.value = true;
 
   const route = router.currentRoute.value;
-  const slug = route.params.slug?.toString();
+  const slug = (route.params.slug || "").toString();
   if (!slug) {
     isPostExist.value = false;
     postLoading.value = false;
