@@ -51,6 +51,7 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
       (item) => item.boardId === board.boardId,
     );
     if (boardIdx === -1) return;
+    if (!boards.value[boardIdx]) return;
 
     Object.assign(boards.value[boardIdx], board);
   }
