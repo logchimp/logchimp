@@ -15,7 +15,7 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
 // cache
-import { valkey, isActive } from "../../cache/index";
+import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
 
 type ResponseBody = TUpdateSiteSettingsResponseBody | IApiErrorResponse;
@@ -105,11 +105,11 @@ export async function update(
 
     const settings = updateSettings[0];
 
-    if (isActive && valkey) {
+    if (cache.isActive) {
       try {
-        await valkey.del(CACHE_KEYS.SITE_SETTINGS);
+        await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
       } catch (err) {
-        logger.log({ level: "error", message: err });
+        logger.error({ message: err });
       }
     }
 
