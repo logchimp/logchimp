@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 
 // components
@@ -53,8 +53,15 @@ interface Props {
    * @default true
    */
   immediateCheck?: boolean;
+  /**
+   * @default "bottom"
+   */
   direction?: "top" | "bottom" | "left" | "right";
-  target?: HTMLElement | Window;
+  /**
+   * Target should be provided for horizontal scrolling
+   * @default window
+   */
+  target?: HTMLElement | Window | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -75,11 +82,32 @@ const noResults = computed<boolean>(
   () => props.state === "COMPLETED" && isFirstLoad.value,
 );
 
+let cleanupHorizontalScroll: (() => void) | undefined;
+
 watch(
   () => props.state,
   (newValue) => {
     if (newValue === "LOADED" || newValue === "COMPLETED") {
       isFirstLoad.value = false;
+    }
+  },
+);
+
+watch(
+  () => props.target,
+  (target) => {
+    if (cleanupHorizontalScroll) {
+      cleanupHorizontalScroll();
+      cleanupHorizontalScroll = undefined;
+    }
+    if (
+      target &&
+      target instanceof HTMLElement &&
+      (props.direction === "left" || props.direction === "right")
+    ) {
+      target.addEventListener("scroll", handleHorizontalScroll);
+      cleanupHorizontalScroll = () =>
+        target.removeEventListener("scroll", handleHorizontalScroll);
     }
   },
 );
@@ -90,14 +118,15 @@ function executeInfiniteScroll() {
 }
 
 function handleHorizontalScroll() {
-  if (
-    props.state === "COMPLETED" ||
-    props.state === "ERROR" ||
-    props.state === "LOADING"
-  ) {
+  if (props.state === "COMPLETED" || props.state === "ERROR") {
     return;
   }
   const target = props.target as HTMLElement;
+
+  if (!target) {
+    executeInfiniteScroll();
+    return;
+  }
 
   const scrollLeft = target.scrollLeft;
   const scrollWidth = target.scrollWidth;
@@ -131,19 +160,27 @@ onMounted(() => {
     executeInfiniteScroll();
   }
 
-  const target = props.target as HTMLElement;
+  const target = props.target;
 
   if (props.direction === "left" || props.direction === "right") {
-    if (props.direction === "right") {
-      target.scrollLeft = 0;
-    } else if (props.direction === "left") {
-      target.scrollLeft = target.scrollWidth;
-    }
+    if (target && target instanceof HTMLElement) {
+      if (props.direction === "right") {
+        target.scrollLeft = 0;
+      } else if (props.direction === "left") {
+        target.scrollLeft = target.scrollWidth;
+      }
 
-    target.addEventListener("scroll", handleHorizontalScroll);
-    if (props.immediateCheck) {
+      cleanupHorizontalScroll = () =>
+        target.removeEventListener("scroll", handleHorizontalScroll);
+    } else if (props.immediateCheck) {
       handleHorizontalScroll();
     }
+  }
+});
+
+onUnmounted(() => {
+  if (cleanupHorizontalScroll) {
+    cleanupHorizontalScroll();
   }
 });
 </script>
