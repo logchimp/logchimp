@@ -126,6 +126,9 @@ importers:
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
+      '@types/md5':
+        specifier: ^2.3.6
+        version: 2.3.6
       '@types/mocha':
         specifier: ^10.0.10
         version: 10.0.10
@@ -1423,6 +1426,9 @@ packages:
 
   '@types/lodash@4.17.20':
     resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
+
+  '@types/md5@2.3.6':
+    resolution: {integrity: sha512-WD69gNXtRBnpknfZcb4TRQ0XJQbUPZcai/Qdhmka3sxUR3Et8NrXoeAoknG/LghYHTf4ve795rInVYHBTQdNVA==}
 
   '@types/methods@1.1.4':
     resolution: {integrity: sha512-ymXWVrDiCxTBE3+RIrrP533E70eA+9qu7zdWoHuOmGujkYtzf4HQF96b8nwHLqhuf4ykX61IGRIB38CC6/sImQ==}
@@ -4870,6 +4876,8 @@ snapshots:
       '@types/node': 24.8.1
 
   '@types/lodash@4.17.20': {}
+
+  '@types/md5@2.3.6': {}
 
   '@types/methods@1.1.4': {}
 

@@ -46,6 +46,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.20",
+    "@types/md5": "^2.3.6",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
     "@types/nodemailer": "^7.0.2",
