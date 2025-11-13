@@ -17,6 +17,7 @@ server-integration-test:
 	LOGCHIMP_MAIL_PORT=1025 \
 	LOGCHIMP_MAIL_USER=test \
 	LOGCHIMP_MAIL_PASSWORD=test \
+	LOGCHIMP_VALKEY_URL=localhost:6379 \
     $$pnpm_cmd vitest run \
 		--config ./vitest.config.integration.ts \
 		./tests/integration/base.spec.js
