@@ -82,7 +82,7 @@ const createUser = async (
     return null;
   }
 
-  let usernameAttempts = 1;
+  let usernameAttempts = 0;
   let newUser: TCreatedUser | null;
 
   async function insertUser() {
@@ -115,7 +115,7 @@ const createUser = async (
 
         if (err.constraint === "users_username_unique") {
           usernameAttempts++;
-          await insertUser();
+          return await insertUser();
         }
       }
 
