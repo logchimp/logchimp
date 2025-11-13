@@ -16,6 +16,15 @@ function renderContent() {
   // Case 1: asChild — apply classes to direct child
   if (props.asChild && defaultSlot?.length === 1) {
     const vnode = defaultSlot[0];
+    if (!vnode) {
+      return h(
+        "div",
+        {
+          class: defaultClasses,
+        },
+        defaultSlot,
+      );
+    }
 
     const existingClass = vnode.props?.class || "";
     const mergedClass = [defaultClasses, existingClass]

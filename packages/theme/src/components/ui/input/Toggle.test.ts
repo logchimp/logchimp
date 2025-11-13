@@ -41,7 +41,7 @@ describe("toggle", () => {
     wrapper.emitted("update:modelValue");
     const emitted = wrapper.emitted<boolean[]>("update:modelValue");
     expect(emitted).not.toBeUndefined();
-    expect(emitted?.[0][0]).toBe(true);
+    expect(emitted?.[0]?.[0]).toBe(true);
 
     // Toggle state updated
     console.log(component.attributes("data-state"));

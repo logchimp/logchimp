@@ -62,6 +62,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
       (item) => item.id === roadmap.id,
     );
     if (roadmapIdx === -1) return;
+    if (!roadmaps.value[roadmapIdx]) return;
 
     Object.assign(roadmaps.value[roadmapIdx], roadmap);
   }
@@ -88,6 +89,8 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
 
     const fromRoadmap = roadmaps.value[fromIndex];
     const toRoadmap = roadmaps.value[toIndex];
+
+    if (!fromRoadmap || !toRoadmap) return;
 
     updateRoadmap({
       ...fromRoadmap,
