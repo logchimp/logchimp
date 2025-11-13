@@ -34,7 +34,7 @@ export async function siteSettings(_: Request, res: Response<ResponseBody>) {
   }
 
   try {
-    const settings = await database<ISiteSettings>("settings")
+    const settings = await database("settings")
       .select<ISiteSettings>("*", database.raw("labs::json as labs"))
       .first();
 
