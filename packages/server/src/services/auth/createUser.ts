@@ -62,7 +62,7 @@ const createUser = async (
   const hashedPassword = hashPassword(userData.password);
 
   try {
-    if (await _isEmailUniqueQuery(email)) {
+    if (!(await _isEmailUniqueQuery(email))) {
       res.status(409).send({
         message: error.middleware.user.userExists,
         code: "USER_EXISTS",
