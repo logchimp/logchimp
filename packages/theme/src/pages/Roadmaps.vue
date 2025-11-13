@@ -27,17 +27,15 @@
     />
   </div>
   <infinite-scroll
-    v-if="roadmapElement"
     :on-infinite="getRoadmaps"
     :state="state"
     direction="right"
     :target="roadmapElement"
-  >
-  </infinite-scroll>
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, onMounted } from "vue";
+import { ref, useTemplateRef } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 
@@ -102,10 +100,6 @@ useHead({
       content: () => `Roadmaps • ${siteSettings.title}`,
     },
   ],
-});
-
-onMounted(() => {
-  getRoadmaps();
 });
 
 defineOptions({
