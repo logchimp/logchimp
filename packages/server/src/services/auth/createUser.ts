@@ -11,7 +11,11 @@ import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 
 // utils
-import { sanitiseUsername, sanitiseName } from "../../helpers";
+import {
+  generateNanoID as nanoid,
+  sanitiseUsername,
+  sanitiseName,
+} from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
@@ -51,7 +55,9 @@ const createUser = async (
   const name = sanitiseName(userData.name);
 
   // get username from email address after truncating to first 30 characters and sanitise
-  const username = sanitiseUsername(userData.email.split("@")[0].slice(0, 30));
+  const baseUsername = sanitiseUsername(
+    userData.email.split("@")[0].slice(0, 30),
+  );
 
   // get avatar by hashing email
   const userMd5Hash = md5(email);
@@ -82,6 +88,8 @@ const createUser = async (
       });
       return null;
     }
+
+    const username = generateUniqueUsername(baseUsername);
 
     // insert user to database
     const [newUser] = await database
@@ -149,3 +157,18 @@ const createUser = async (
 };
 
 export { createUser };
+
+function generateUniqueUsername(baseUsername: string): string {
+  const suffix = nanoid(8);
+  const separator = "_";
+
+  let trimmedBase: string;
+
+  if (baseUsername.length >= 22) {
+    trimmedBase = baseUsername.slice(0, 21);
+  } else {
+    trimmedBase = baseUsername;
+  }
+
+  return `${trimmedBase}${separator}${suffix}`;
+}
