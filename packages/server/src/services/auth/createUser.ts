@@ -174,6 +174,15 @@ async function _isEmailUniqueQuery(email: string): Promise<boolean> {
   return count === 0;
 }
 
+interface IInsertUserQuery {
+  userId: string;
+  name: string;
+  username: string;
+  email: string;
+  hashedPassword: string;
+  avatar: string;
+}
+
 async function _insertUserQuery({
   name,
   email,
@@ -181,7 +190,7 @@ async function _insertUserQuery({
   avatar,
   username,
   userId,
-}) {
+}: IInsertUserQuery): Promise<TCreatedUser> {
   try {
     const [newUser] = await database
       .insert({
