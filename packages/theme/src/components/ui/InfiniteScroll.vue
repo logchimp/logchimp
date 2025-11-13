@@ -53,6 +53,8 @@ interface Props {
    * @default true
    */
   immediateCheck?: boolean;
+  direction?: "top" | "bottom" | "left" | "right";
+  target?: HTMLElement | Window;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -60,6 +62,8 @@ const props = withDefaults(defineProps<Props>(), {
   state: "LOADING",
   canLoadMore: true,
   immediateCheck: true,
+  direction: "bottom",
+  target: () => window,
 });
 
 const isFirstLoad = ref(true);
@@ -85,15 +89,62 @@ function executeInfiniteScroll() {
   props.onInfinite();
 }
 
-useInfiniteScroll(window, executeInfiniteScroll, {
-  distance: props.distance,
-  direction: "bottom",
-  canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
-});
+function handleHorizontalScroll() {
+  if (
+    props.state === "COMPLETED" ||
+    props.state === "ERROR" ||
+    props.state === "LOADING"
+  ) {
+    return;
+  }
+  const target = props.target as HTMLElement;
+
+  const scrollLeft = target.scrollLeft;
+  const scrollWidth = target.scrollWidth;
+  const clientWidth = target.clientWidth;
+
+  if (props.direction === "right") {
+    const distanceFromRight = scrollWidth - (scrollLeft + clientWidth);
+    if (distanceFromRight <= props.distance) {
+      executeInfiniteScroll();
+    }
+  } else if (props.direction === "left") {
+    if (scrollLeft <= props.distance) {
+      executeInfiniteScroll();
+    }
+  }
+}
+
+if (props.direction === "top" || props.direction === "bottom") {
+  useInfiniteScroll(props.target, executeInfiniteScroll, {
+    distance: props.distance,
+    direction: props.direction,
+    canLoadMore: () => !noMoreResults.value && props.state !== "ERROR",
+  });
+}
 
 onMounted(() => {
-  if (props.immediateCheck) {
+  if (
+    props.immediateCheck &&
+    (props.direction === "top" || props.direction === "bottom")
+  ) {
     executeInfiniteScroll();
+  }
+
+  if (
+    (props.direction === "left" || props.direction === "right") &&
+    props.target !== window
+  ) {
+    if (props.direction === "right") {
+      props.target.scrollLeft = 0;
+    } else if (props.direction === "left") {
+      props.target.scrollLeft = target.scrollWidth;
+    }
+
+    props.target.addEventListener("scroll", handleHorizontalScroll);
+    if (props.immediateCheck) {
+      handleHorizontalScroll();
+    }
   }
 });
 </script>
