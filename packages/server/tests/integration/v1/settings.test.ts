@@ -1,12 +1,14 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import supertest from "supertest";
 import type { IAuthUser } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
+import * as cache from "../../../src/cache";
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { updateSettings } from "../../utils/seed/settings";
+import { CACHE_KEYS } from "../../../src/cache/keys";
 
 describe("GET /api/v1/settings/site", () => {
   it("should get all settings", async () => {
@@ -43,6 +45,7 @@ describe("GET /api/v1/settings/site", () => {
     const response = await supertest(app).get("/api/v1/settings/site");
 
     expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["x-cache"]).toBe("MISS");
     expect(response.status).toBe(200);
 
     const settings = response.body.settings;
@@ -250,6 +253,12 @@ describe("PATCH /api/v1/settings/site", () => {
             "application/json",
           );
           // validate success
+
+          // expect site settings from cache
+          const getSiteSettingsCache = await cache.valkey.get(
+            CACHE_KEYS.SITE_SETTINGS,
+          );
+          expect(getSiteSettingsCache).toBeNull();
         } else if (response.status === 400) {
           expect(response.headers["content-type"]).toContain(
             "application/json",
@@ -303,6 +312,11 @@ describe("PATCH /api/v1/settings/site", () => {
 
     const settings = res.body.settings;
     expect(settings.accentColor).toBeNull();
+
+    const getSiteSettingsCache = await cache.valkey.get(
+      CACHE_KEYS.SITE_SETTINGS,
+    );
+    expect(getSiteSettingsCache).toBeNull();
   });
 
   it("should remove accent color when 'empty' string is passed", async () => {
@@ -321,6 +335,11 @@ describe("PATCH /api/v1/settings/site", () => {
 
     const settings = res.body.settings;
     expect(settings.accentColor).toBeNull();
+
+    const getSiteSettingsCache = await cache.valkey.get(
+      CACHE_KEYS.SITE_SETTINGS,
+    );
+    expect(getSiteSettingsCache).toBeNull();
   });
 
   it("should not touch accent color if not provided", async () => {
@@ -341,6 +360,11 @@ describe("PATCH /api/v1/settings/site", () => {
 
     const settings = res.body.settings;
     expect(settings.accentColor).toBe(response.body.settings.accentColor);
+
+    const getSiteSettingsCache = await cache.valkey.get(
+      CACHE_KEYS.SITE_SETTINGS,
+    );
+    expect(getSiteSettingsCache).toBeNull();
   });
 
   it("should update site settings", async () => {
@@ -369,6 +393,11 @@ describe("PATCH /api/v1/settings/site", () => {
     const settings = response.body.settings;
     expect(settings.title).toBe(title);
     expect(settings.accentColor).toBe(accentColor);
+
+    const getSiteSettingsCache = await cache.valkey.get(
+      CACHE_KEYS.SITE_SETTINGS,
+    );
+    expect(getSiteSettingsCache).toBeNull();
   });
 });
 
