@@ -131,17 +131,16 @@ onMounted(() => {
     executeInfiniteScroll();
   }
 
-  if (
-    (props.direction === "left" || props.direction === "right") &&
-    props.target !== window
-  ) {
+  const target = props.target as HTMLElement;
+
+  if (props.direction === "left" || props.direction === "right") {
     if (props.direction === "right") {
-      props.target.scrollLeft = 0;
+      target.scrollLeft = 0;
     } else if (props.direction === "left") {
-      props.target.scrollLeft = target.scrollWidth;
+      target.scrollLeft = target.scrollWidth;
     }
 
-    props.target.addEventListener("scroll", handleHorizontalScroll);
+    target.addEventListener("scroll", handleHorizontalScroll);
     if (props.immediateCheck) {
       handleHorizontalScroll();
     }
