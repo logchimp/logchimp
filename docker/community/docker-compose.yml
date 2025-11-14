@@ -30,7 +30,7 @@ services:
     networks:
       - logchimp
 
-  migrate:
+  migrator:
     build:
       dockerfile: ./packages/server/Dockerfile
       context: ../..

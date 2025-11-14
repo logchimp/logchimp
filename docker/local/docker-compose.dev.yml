@@ -29,7 +29,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
-  migrate:
+  migrator:
     build:
       dockerfile: docker/local/server.Dockerfile
       context: ../..
@@ -55,7 +55,6 @@ services:
       timeout: 1s
       retries: 1
     restart: "no"
-      
 
   # Local SMTP mailbox
   mail:
