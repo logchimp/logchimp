@@ -108,10 +108,6 @@ export async function filter(
     }
 
     res.status(200).send({
-      status: {
-        code: 200,
-        type: "success",
-      },
       boards,
       results: boards,
       ...(page

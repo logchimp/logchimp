@@ -1,6 +1,5 @@
 import type {
   ApiSortType,
-  IApiStatus,
   CursorPaginationParams,
   CursorPaginatedResponse,
 } from "./common";
@@ -38,7 +37,6 @@ export type TFilterBoardRequestQuery = IGetBoardsRequestQuery &
 export interface IFilterBoardResponseBody
   extends Partial<CursorPaginatedResponse<IBoardDetail>> {
   boards: IBoardDetail[];
-  status: IApiStatus;
 }
 
 export interface IGetBoardByUrlRequestParams {
