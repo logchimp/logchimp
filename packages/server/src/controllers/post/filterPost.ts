@@ -51,7 +51,7 @@ const bodySchema = z.object({
   boardId: z
     .array(z.string())
     .optional()
-    .transform((value) => validUUIDs(value) || []),
+    .transform((value) => (Array.isArray(value) ? validUUIDs(value) : [])),
   roadmapId: z
     .string()
     .optional()
