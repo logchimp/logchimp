@@ -6,6 +6,8 @@ import type { IAuthLoginResponseBody } from "@logchimp/types";
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
+import { sanitiseUsername } from "../../../src/helpers";
+import { generateUniqueUsername } from "../../../src/services/auth/createUser";
 
 interface CreateUserArgs {
   id: string;
@@ -30,7 +32,11 @@ export async function createUser(
   const userId = user?.id || uuid();
   const name = user?.name;
   const email = (user?.email || faker.internet.email()).toLowerCase();
-  const username = user?.username ? user.username : email.split("@")[0];
+
+  const baseUsername = sanitiseUsername(email.split("@")[0].slice(0, 30));
+  const newUsername = generateUniqueUsername(baseUsername);
+
+  const username = user?.username ? user.username : newUsername;
   const password = user?.password || "password";
   const isVerified = user?.isVerified || false;
   const isOwner = user?.isOwner || false;
