@@ -62,7 +62,7 @@ const createUser = async (
   const hashedPassword = hashPassword(userData.password);
 
   try {
-    if (!(await _isEmailUniqueQuery(email))) {
+    if (await _isEmailUniqueQuery(email)) {
       res.status(409).send({
         message: error.middleware.user.userExists,
         code: "USER_EXISTS",
@@ -168,10 +168,10 @@ const createUser = async (
 };
 
 async function _isEmailUniqueQuery(email: string): Promise<boolean> {
-  const [{ count }] = await database("users")
-    .where(database.raw("LOWER(email) = ?", [email.toLowerCase()]))
-    .count("userId as count");
-  return count === 0;
+  const result = await database("users")
+    .where(database.raw("LOWER(email) = LOWER(?)", [email]))
+    .first<{ userId: string }>("userId");
+  return !!result?.userId;
 }
 
 interface IInsertUserQuery {
