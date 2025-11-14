@@ -90,7 +90,6 @@ export const getPosts = async ({
   created = "DESC",
   boardId = [],
   roadmapId = undefined,
-  after = undefined,
 }: IFilterPostRequestBody): Promise<AxiosResponse<IFilterPostResponseBody>> => {
   const { authToken } = useUserStore();
 
@@ -103,7 +102,6 @@ export const getPosts = async ({
       created,
       boardId,
       roadmapId,
-      after,
     },
     headers: {
       Authorization: `Bearer ${authToken}`,
