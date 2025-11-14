@@ -204,37 +204,44 @@ export async function getBoards({
 }
 
 export async function getBoardMetaData({ after }: { after?: string }) {
-  const totalCountResult = await database("boards")
-    .where("display", true)
-    .count<{ count: string }>("* as count")
-    .first();
-
-  const totalBoardsCount = Number(totalCountResult?.count || 0);
-
-  let remainingBoardsCount = totalBoardsCount;
-  if (after) {
-    const afterBoard = await database("boards")
-      .select("createdAt")
-      .where("boardId", after)
+  return database.transaction(async (trx) => {
+    const totalCountResult = await trx("boards")
+      .where("display", true)
+      .count<{ count: string }>("* as count")
       .first();
 
-    if (afterBoard) {
-      const subQuery = database("boards")
-        .where("display", true)
-        .andWhere("createdAt", ">=", afterBoard.createdAt)
-        .offset(1);
+    const totalBoardsCount = Number.parseInt(totalCountResult.count, 10);
 
-      const remaining = await database
-        .count<{ count: string }>("* as count")
-        .from(subQuery.as("next"))
+    let remainingBoardsCount = totalBoardsCount;
+    if (after) {
+      const afterBoard = await trx("boards")
+        .select<{
+          createdAt: string;
+        }>("createdAt")
+        .where({
+          boardId: after,
+          display: true,
+        })
         .first();
 
-      remainingBoardsCount = Number(remaining?.count || 0);
-    }
-  }
+      if (afterBoard) {
+        const subQuery = trx("boards")
+          .where("display", true)
+          .andWhere("createdAt", ">=", afterBoard.createdAt)
+          .offset(1);
 
-  return {
-    totalBoardsCount,
-    remainingBoardsCount,
-  };
+        const remaining = await trx
+          .count<{ count: string }>("* as count")
+          .from(subQuery.as("next"))
+          .first();
+
+        remainingBoardsCount = Number.parseInt(remaining.count, 10);
+      }
+    }
+
+    return {
+      totalBoardsCount,
+      remainingBoardsCount,
+    };
+  });
 }
