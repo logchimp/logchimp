@@ -39,13 +39,32 @@ const querySchema = z.object({
   created: z.enum(["ASC", "DESC"]).default("DESC"),
 });
 
+const bodySchema = z.object({
+  page: z.coerce
+    .string()
+    .optional()
+    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
+  limit: z.coerce
+    .string()
+    .optional()
+    .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
+  boardId: z
+    .array(z.string())
+    .optional()
+    .transform((value) => validUUIDs(value) || []),
+  roadmapId: z
+    .string()
+    .optional()
+    .transform((value) => validUUID(value)),
+});
+
 type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
 
 export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  if (req.query?.page || req.query?.limit) {
+  if (req.body?.page || req.body?.limit) {
     logger.warn(
       "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
     );
@@ -60,8 +79,20 @@ export async function filterPost(
     });
   }
 
-  const { first: _first, page, after, created, limit } = query.data;
-  const first = req.query?.limit ? limit : _first;
+  const body = bodySchema.safeParse(req.body);
+  if (!body.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.error.issues,
+    });
+  }
+
+  const { page, limit, boardId, roadmapId } = body.data;
+
+  const { first: _first, after, created } = query.data;
+
+  const first = req.body?.limit ? limit : _first;
 
   if (after && !validUUID(after)) {
     return res.status(400).json({
@@ -70,8 +101,6 @@ export async function filterPost(
     });
   }
 
-  const boardId = validUUIDs(req.body.boardId || []);
-  const roadmapId = validUUID(req.body.roadmapId);
   // @ts-expect-error
   const userId: string | undefined = req.user?.userId;
 
