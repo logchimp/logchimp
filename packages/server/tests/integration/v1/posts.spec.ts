@@ -64,7 +64,7 @@ describe("POST /api/v1/posts/get", () => {
     // Now request page 2 explicitly to ensure default was page 1
     const resPage2 = await supertest(app)
       .post("/api/v1/posts/get")
-      .query({ page: 2 });
+      .send({ page: 2 });
     expect(resPage2.headers["content-type"]).toContain("application/json");
     expect(resPage2.status).toBe(200);
 
@@ -238,12 +238,10 @@ describe("POST /api/v1/posts/get", () => {
 
     const page0 = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], userId: "" })
-      .query({ limit: 2, page: 1 });
+      .send({ boardId: [board.boardId], userId: "", limit: 2, page: 1 });
     const page1 = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], userId: "" })
-      .query({ limit: 2, page: 2 });
+      .send({ boardId: [board.boardId], userId: "", limit: 2, page: 2 });
 
     expect(page0.status).toBe(200);
     expect(page1.status).toBe(200);
@@ -309,8 +307,8 @@ describe("POST /api/v1/posts/get", () => {
 
     const asc = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], userId: "" })
-      .query({ created: "ASC", limit: 10, page: 1 });
+      .send({ boardId: [board.boardId], userId: "", limit: 10, page: 1 })
+      .query({ created: "ASC" });
 
     expect(asc.headers["content-type"]).toContain("application/json");
     expect(asc.status).toBe(200);
@@ -628,13 +626,13 @@ describe("POST /api/v1/posts/get", () => {
     it("should support offset pagination via page param", async () => {
       const page1 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId] })
-        .query({ limit: 5, page: 1, created: "ASC" });
+        .send({ boardId: [board.boardId], limit: 5, page: 1 })
+        .query({ created: "ASC" });
 
       const page2 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId] })
-        .query({ limit: 5, page: 2, created: "ASC" });
+        .send({ boardId: [board.boardId], limit: 5, page: 2 })
+        .query({ created: "ASC" });
 
       expect(page1.status).toBe(200);
       expect(page2.status).toBe(200);
@@ -648,18 +646,15 @@ describe("POST /api/v1/posts/get", () => {
     it("should coerce page=0 or -1 to page=1", async () => {
       const page0 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId] })
-        .query({ limit: 5, page: 0 });
+        .send({ boardId: [board.boardId], limit: 5, page: 0 });
 
       const pageNeg1 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId] })
-        .query({ limit: 5, page: -1 });
+        .send({ boardId: [board.boardId], limit: 5, page: -1 });
 
       const page1 = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId] })
-        .query({ limit: 5, page: 1 });
+        .send({ boardId: [board.boardId], limit: 5, page: 1 });
 
       const ids0 = page0.body.posts.map((p: IPost) => p.postId);
       const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.postId);
@@ -672,8 +667,7 @@ describe("POST /api/v1/posts/get", () => {
     it("should return empty posts when '?page=1000'", async () => {
       const res = await supertest(app)
         .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId] })
-        .query({ page: 1000 });
+        .send({ boardId: [board.boardId], page: 1000 });
 
       expect(res.status).toBe(200);
       expect(res.body.posts).toHaveLength(0);
