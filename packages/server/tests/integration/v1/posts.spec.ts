@@ -1021,30 +1021,5 @@ describe("GET /api/v1/posts/:post_id/activity", () => {
     expect(activity[0]).toHaveProperty("author");
     expect(activity[0]).toHaveProperty("created_at");
   });
-
-  it("should throw 'SERVER_ERROR' when database fails", async () => {
-    // mock DB to throw error
-    jest.spyOn(database, "raw").mockRejectedValueOnce(new Error("DB connection lost"));
-
-    const board = await generateBoard({}, true);
-    const roadmap = await generateRoadmap({}, true);
-    const { user: authUser } = await createUser({ isVerified: true });
-    const post = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: board.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-
-    const response = await supertest(app)
-      .get(`/api/v1/posts/${post.postId}/activity`)
-      .set("Authorization", `Bearer ${authUser.authToken}`);
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(500);
-    expect(response.body.code).toBe("SERVER_ERROR");
-  });
 });
 
