@@ -45,7 +45,7 @@ services:
     networks:
       - ci-network
     healthcheck:
-      test: ["CMD", "sh", "-c", "pnpm knex migrate:status --knexfile ./src/database/config.ts"]
+      test: ["CMD", "sh", "-c", "pnpm knex --knexfile ./dist/database/config.js migrate:status"]
       interval: 5s
       timeout: 1s
       retries: 1
