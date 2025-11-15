@@ -88,3 +88,9 @@ While the primary means of contributing to LogChimp is through coding, there are
 - Maintaining [LogChimp Docs](https://docs.logchimp.codecarrot.net)
 - Testing and quality assurance
 - Promoting LogChimp to others
+
+## Database
+
+We use Knex ORM for integration with database and migrations.
+
+We have a dedicated service called `migrator` in Docker Compose for running the database migrations.
