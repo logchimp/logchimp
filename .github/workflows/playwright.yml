@@ -43,12 +43,6 @@ jobs:
         # Theme
         LOGCHIMP_API_URL: ${{ env.API_URL }}
 
-    - name: Show migrator logs on failure
-      if: failure()
-      run: |
-        docker compose -f ./docker/local/docker-compose.ci.yml logs migrator || true
-        docker compose -f ./docker/local/docker-compose.ci.yml ps
-
     - name: Wait for frontend
       run: npx wait-on http://localhost:3000
 
