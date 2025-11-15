@@ -12,6 +12,7 @@ import {
   parseAndValidateLimit,
   generateNanoID,
 } from "../../src/helpers";
+import { generateUniqueUsername } from "../../src/services/auth/createUser";
 
 describe("validate email", () => {
   it('should be a valid email "yashu@codecarrot.net"', () => {
@@ -375,5 +376,44 @@ describe("generateNanoID", () => {
       expect(randomId.length).toBe(length);
       expect(randomId).toMatch(nanoIdRegex);
     }
+  });
+});
+
+describe("generateUniqueUsername", () => {
+  it("should append suffix when baseUsername < 22 chars", () => {
+    const base = "Mike";
+    const username = generateUniqueUsername(base);
+
+    expect(username.length).toBe(base.length + 1 + 8);
+  });
+
+  it("should trim base to 21 chars when baseUsername >= 22 chars", () => {
+    const longBase = "abcdefghijklmnopqrstuvwxyz"; // 26 chars
+    const username = generateUniqueUsername(longBase);
+
+    expect(username.startsWith(longBase.slice(0, 21))).toBe(true);
+    expect(username.length).toBe(21 + 1 + 8);
+  });
+
+  it("should always use '_' separator", () => {
+    const base = "testuser";
+    const username = generateUniqueUsername(base);
+
+    expect(username.includes("_")).toBe(true);
+    expect(username.split("_")[0]).toBe(base);
+  });
+
+  it("should always append an 8-character suffix", () => {
+    const username = generateUniqueUsername("test");
+
+    const suffix = username.split("_")[1];
+    expect(suffix.length).toBe(8);
+  });
+
+  it("should return different usernames on separate calls (randomness check)", () => {
+    const first = generateUniqueUsername("user");
+    const second = generateUniqueUsername("user");
+
+    expect(first).not.toBe(second);
   });
 });
