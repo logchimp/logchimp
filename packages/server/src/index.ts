@@ -1,37 +1,10 @@
 const startTime = Date.now();
 
-import database from "./database";
 import app from "./app";
 
 // utils
 import logger from "./utils/logger";
 import { configManager } from "./utils/logchimpConfig";
-
-// run database migrations
-database.migrate
-  .latest()
-  .then(() => {
-    logger.info("Database migration complete");
-  })
-  .catch((err) => {
-    logger.error({
-      code: "DATABASE_MIGRATIONS",
-      message: err,
-    });
-
-    if (err.message === "SSL/TLS required") {
-      logger.error({
-        code: "DATABASE_CONNECTION",
-        message: "Enable SSL/TLS on your database connection",
-      });
-
-      logger.error({
-        code: "DATABASE_CONNECTION",
-        message: `Connecting to database at ${err.address}:${err.port}`,
-        err,
-      });
-    }
-  });
 
 const config = configManager.getConfig();
 

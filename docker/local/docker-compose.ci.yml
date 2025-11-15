@@ -24,6 +24,33 @@ services:
       timeout: 5s
       retries: 5
 
+  migrator:
+    build:
+      dockerfile: ./packages/server/Dockerfile
+      context: ../..
+      args:
+        DOCKER_BUILDKIT: 1
+    working_dir: /app/packages/server
+    entrypoint: ""
+    command: sh -c "pnpm knex --knexfile ./dist/database/config.js migrate:latest && echo ' Migration done'"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOGCHIMP_DB_HOST: db
+      LOGCHIMP_DB_DATABASE: ${POSTGRES_DB:-db}
+      LOGCHIMP_DB_PORT: 5432
+      LOGCHIMP_DB_USER: ${POSTGRES_USER:-lc}
+      LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    networks:
+      - ci-network
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pnpm knex --knexfile ./dist/database/config.js migrate:status"]
+      interval: 5s
+      timeout: 1s
+      retries: 1
+    restart: "no"
+
   mail:
     image: mailhog/mailhog
     ports:
@@ -41,6 +68,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
     environment:
       NODE_ENV: ${NODE_ENV:-ci}
       PORT: ${API_PORT:-8000}
