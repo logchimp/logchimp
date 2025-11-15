@@ -21,7 +21,7 @@ describe("GET /api/v1/boards", () => {
       .first();
     const existingBoardsCount = Number.parseInt(
       existingBoardsCountResult?.count?.toString() || "0",
-      10,
+      10
     );
 
     if (existingBoardsCount < requiredBoards) {
@@ -33,7 +33,7 @@ describe("GET /api/v1/boards", () => {
           {
             display: true,
           },
-          false,
+          false
         );
         boards.push(board);
       }
@@ -72,7 +72,7 @@ describe("GET /api/v1/boards", () => {
     expect(responseBoards).toHaveLength(10);
 
     const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
+      (board: IBoardDetail) => new Date(board.createdAt)
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -96,7 +96,7 @@ describe("GET /api/v1/boards", () => {
     expect(responseBoards).toHaveLength(5);
 
     const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
+      (board: IBoardDetail) => new Date(board.createdAt)
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -123,7 +123,7 @@ describe("GET /api/v1/boards", () => {
 
         const ids0 = page0.body.boards.map((b: IBoardDetail) => b.boardId);
         const idsNeg1 = pageNeg1.body.boards.map(
-          (b: IBoardDetail) => b.boardId,
+          (b: IBoardDetail) => b.boardId
         );
         const ids1 = page1.body.boards.map((b: IBoardDetail) => b.boardId);
 
@@ -158,7 +158,7 @@ describe("GET /api/v1/boards", () => {
         expect(responseBoards).toHaveLength(10);
 
         const boardCreationDates = responseBoards.map(
-          (board: IBoardDetail) => new Date(board.createdAt),
+          (board: IBoardDetail) => new Date(board.createdAt)
         );
 
         for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -183,7 +183,7 @@ describe("GET /api/v1/boards", () => {
         expect(responseBoards).toHaveLength(2);
 
         const boardCreationDates = responseBoards.map(
-          (board: IBoardDetail) => new Date(board.createdAt),
+          (board: IBoardDetail) => new Date(board.createdAt)
         );
 
         for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -206,7 +206,7 @@ describe("GET /api/v1/boards", () => {
         expect(responseBoards).toHaveLength(10);
 
         const boardCreationDates = responseBoards.map(
-          (board: IBoardDetail) => new Date(board.createdAt),
+          (board: IBoardDetail) => new Date(board.createdAt)
         );
 
         for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -238,7 +238,7 @@ describe("GET /boards/:url", () => {
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(404);
       expect(res.body.code).toBe("BOARD_NOT_FOUND");
-    }),
+    })
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
@@ -247,7 +247,7 @@ describe("GET /boards/:url", () => {
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(400);
       expect(res.body.code).toBe("DECODE_URI_ERROR");
-    }),
+    })
   );
 
   it("should get board by url", async () => {
@@ -313,7 +313,7 @@ describe("GET /boards/search/:name", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(200);
       expect(response.body.boards).toHaveLength(0);
-    }),
+    })
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
@@ -330,7 +330,7 @@ describe("GET /boards/search/:name", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(400);
       expect(response.body.code).toBe("DECODE_URI_ERROR");
-    }),
+    })
   );
 
   const boardName = faker.commerce
@@ -344,13 +344,13 @@ describe("GET /boards/search/:name", () => {
       {
         name: `${boardName}_one`,
       },
-      true,
+      true
     );
     const board2 = await generateBoards(
       {
         name: `${boardName}_two`,
       },
-      true,
+      true
     );
 
     const { user: authUser } = await createUser();
@@ -384,7 +384,7 @@ describe("GET /boards/search/:name", () => {
           color: board2.color,
           display: board2.display,
         }),
-      ]),
+      ])
     );
   });
 });
@@ -674,9 +674,9 @@ describe("PATCH /api/v1/boards", () => {
               }),
               code: expectedError.code,
             }),
-          ]),
+          ])
         );
-      },
+      }
     );
   });
 
@@ -821,7 +821,7 @@ describe("POST /api/v1/boards/check-slug", () => {
       ["board:create", "board:update"],
       {
         roleName: "Board contributor",
-      },
+      }
     );
 
     const response = await supertest(app)
@@ -841,7 +841,7 @@ describe("POST /api/v1/boards/check-slug", () => {
       ["board:create", "board:update"],
       {
         roleName: "Board contributor",
-      },
+      }
     );
 
     const board = await generateBoards({}, true);
@@ -866,7 +866,7 @@ describe("POST /api/v1/boards/check-slug", () => {
       ["board:create", "board:update"],
       {
         roleName: "Board contributor",
-      },
+      }
     );
 
     const response = await supertest(app)
@@ -879,5 +879,94 @@ describe("POST /api/v1/boards/check-slug", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(response.body.available).toBeTruthy();
+  });
+});
+// Get all boards
+describe("GET /api/v1/boards", () => {
+  beforeAll(async () => {
+    const requiredBoards = 20;
+    const existingBoardsCountResult = await database("boards")
+      .count({ count: "*" })
+      .first();
+
+    const existingBoardsCount = Number.parseInt(
+      existingBoardsCountResult?.count?.toString() || "0",
+      10
+    );
+
+    if (existingBoardsCount < requiredBoards) {
+      const boards: BoardInsertRecord[] = [];
+      const trx = await database.transaction();
+
+      for (let i = 0; i < requiredBoards; i++) {
+        const board = await generateBoards(
+          {
+            display: true,
+          },
+          false
+        );
+        boards.push(board);
+      }
+
+      await database.batchInsert("boards", boards).transacting(trx);
+      await trx.commit();
+    }
+  });
+
+  it("should return an array of boards", async () => {
+    const response = await supertest(app).get("/api/v1/boards");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.boards).toBeInstanceOf(Array);
+  });
+
+  it("should apply default filter values correctly", async () => {
+    const response = await supertest(app).get("/api/v1/boards");
+
+    const boards: IBoardDetail[] = response.body.boards;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(boards).toHaveLength(10); // default limit = 10
+
+    // Ensure ascending order by createdAt
+    const createdDates = boards.map((b) => new Date(b.createdAt).getTime());
+
+    for (let i = 0; i < createdDates.length - 1; i++) {
+      expect(createdDates[i]).toBeLessThanOrEqual(createdDates[i + 1]);
+    }
+  });
+
+  it("should support pagination (page=2, limit=5)", async () => {
+    const response = await supertest(app)
+      .get("/api/v1/boards")
+      .query({ page: 2, limit: 5 });
+
+    expect(response.status).toBe(200);
+    expect(response.body.boards).toHaveLength(5);
+  });
+
+  it("should support DESC ordering", async () => {
+    const response = await supertest(app)
+      .get("/api/v1/boards")
+      .query({ created: "DESC" });
+
+    const boards: IBoardDetail[] = response.body.boards;
+
+    const createdDates = boards.map((b) => new Date(b.createdAt).getTime());
+
+    for (let i = 0; i < createdDates.length - 1; i++) {
+      expect(createdDates[i]).toBeGreaterThanOrEqual(createdDates[i + 1]);
+    }
+  });
+
+  it("should handle invalid query parameters gracefully", async () => {
+    const response = await supertest(app)
+      .get("/api/v1/boards")
+      .query({ page: -5, limit: "nope" });
+
+    expect(response.status).toBe(200); // server normalizes
+    expect(response.body.boards).toBeInstanceOf(Array);
   });
 });
