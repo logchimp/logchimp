@@ -44,10 +44,10 @@ services:
         condition: service_healthy
     environment:
       LOGCHIMP_DB_HOST: db
-      LOGCHIMP_DB_DATABASE: ${POSTGRES_DB:-db}
+      LOGCHIMP_DB_DATABASE: ${POSTGRES_DB}
       LOGCHIMP_DB_PORT: 5432
-      LOGCHIMP_DB_USER: ${POSTGRES_USER:-lc}
-      LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      LOGCHIMP_DB_USER: ${POSTGRES_USER}
+      LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - logchimp
     healthcheck:
