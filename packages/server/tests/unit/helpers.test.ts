@@ -416,4 +416,27 @@ describe("generateUniqueUsername", () => {
 
     expect(first).not.toBe(second);
   });
+
+  it("should not trim base when exactly 21 chars", () => {
+    const base = "a".repeat(21);
+    const username = generateUniqueUsername(base);
+
+    expect(username.startsWith(base)).toBe(true);
+    expect(username.length).toBe(21 + 1 + 8);
+  });
+
+  it("should trim base when exactly 22 chars", () => {
+    const base = "a".repeat(22);
+    const username = generateUniqueUsername(base);
+
+    expect(username.startsWith(base.slice(0, 21))).toBe(true);
+    expect(username.length).toBe(21 + 1 + 8);
+  });
+
+  it("should handle empty string", () => {
+    const username = generateUniqueUsername("");
+
+    expect(username.length).toBe(0 + 1 + 8);
+    expect(username.startsWith("_")).toBe(true);
+  });
 });
