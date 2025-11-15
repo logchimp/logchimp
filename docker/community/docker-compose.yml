@@ -38,7 +38,7 @@ services:
         DOCKER_BUILDKIT: 1
     working_dir: /app/packages/server
     entrypoint: ""
-    command: sh -c "pnpm db:migrate && echo ' Migration done' && exit 0"
+    command: sh -c "pnpm knex --knexfile ./dist/database/config.ts migrate:latest && echo ' Migration done' && exit 0"
     depends_on:
       db:
         condition: service_healthy
