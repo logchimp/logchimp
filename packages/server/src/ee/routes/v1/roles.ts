@@ -14,36 +14,59 @@ import * as roles from "../../controllers/v1/roles";
 import { authRequired } from "../../../middlewares/auth";
 import { roleExists } from "../../middleware/roleExists";
 import { userExists } from "../../../middlewares/userExists";
+import { withLicenseGuard } from "../../middleware/licenseGuard";
 
-router.get("/roles", authRequired, roles.get);
+router.get(
+  "/roles",
+  authRequired,
+  withLicenseGuard(roles.get, {
+    requiredPlan: ["enterprise"],
+  }),
+);
 router.get<IGetRoleByIdRequestParams>(
   "/roles/:role_id",
-  // @ts-expect-error
   authRequired,
   roleExists,
-  roles.getOne,
+  withLicenseGuard(roles.getOne, {
+    requiredPlan: ["enterprise"],
+  }),
 );
 
-router.post("/roles", authRequired, roles.create);
+router.post(
+  "/roles",
+  authRequired,
+  withLicenseGuard(roles.create, {
+    requiredPlan: ["enterprise"],
+  }),
+);
 
-router.patch("/roles", authRequired, roleExists, roles.update);
+router.patch(
+  "/roles",
+  authRequired,
+  roleExists,
+  withLicenseGuard(roles.update, {
+    requiredPlan: ["enterprise"],
+  }),
+);
 
 router.put<IAssignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
-  // @ts-expect-error
   authRequired,
   roleExists,
   userExists,
-  roles.addRoleToUser,
+  withLicenseGuard(roles.addRoleToUser, {
+    requiredPlan: ["enterprise"],
+  }),
 );
 
 router.delete<TUnassignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
-  // @ts-expect-error
   authRequired,
   roleExists,
   userExists,
-  roles.deleteRoleFromUser,
+  withLicenseGuard(roles.deleteRoleFromUser, {
+    requiredPlan: ["enterprise"],
+  }),
 );
 
 export default router;
