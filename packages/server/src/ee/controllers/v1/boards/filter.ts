@@ -19,13 +19,6 @@ import {
   parseAndValidatePage,
 } from "../../../../helpers";
 
-interface IGetBoardQueryOptions {
-  first: number;
-  after?: string;
-  created: ApiSortType;
-  page?: number;
-}
-
 const querySchema = z.object({
   first: z.coerce
     .string()
@@ -137,6 +130,13 @@ export async function filter(
   }
 }
 
+interface IGetBoardQueryOptions {
+  first: number;
+  after?: string;
+  created: ApiSortType;
+  page?: number;
+}
+
 export async function getBoards({
   first,
   after,
@@ -168,7 +168,10 @@ export async function getBoards({
       boardsQuery = boardsQuery.offset(first * (page - 1));
     } else if (after) {
       const afterBoard = await database("boards")
-        .select("createdAt", "boardId")
+        .select<{
+          boardId: string;
+          createdAt: string;
+        }>("boardId", "createdAt")
         .where("boardId", after)
         .first();
 
