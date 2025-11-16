@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { storeToRefs } from "pinia";
 
@@ -76,6 +76,10 @@ async function createBoardHandler() {
     createBoardButtonLoading.value = false;
   }
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 useHead({
   title: "Boards • Dashboard",

@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { storeToRefs } from "pinia";
 
@@ -77,6 +77,10 @@ async function createRoadmapHandler() {
     console.error(err);
   }
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 useHead({
   title: "Roadmaps • Dashboard",
