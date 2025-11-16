@@ -26,7 +26,8 @@
     "authentication": {
       "invalidEmail": "Enter valid email",
       "noPasswordProvided": "No password provided",
-      "setupAlreadyCompleted": "Setup has already been completed."
+      "setupAlreadyCompleted": "Setup has already been completed.",
+      "usernameExists": "Username already exists"
     },
     "roles": {
       "invalidRoleId": "Invalid role ID",
