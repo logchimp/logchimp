@@ -1,5 +1,6 @@
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
+import { useThrottleFn } from "@vueuse/core";
 
 import { SettingsEE } from "../modules/settings";
 
@@ -8,7 +9,7 @@ const settingsEEStore = new SettingsEE();
 export const useSettingsEEStore = defineStore("settingsEE", () => {
   const hasValidLicense = ref<boolean>(false);
 
-  async function getLicenseInfo() {
+  const getLicenseInfo = useThrottleFn(async () => {
     try {
       const response = await settingsEEStore.checkLicense();
       hasValidLicense.value = response.status === "active" || false;
@@ -17,13 +18,11 @@ export const useSettingsEEStore = defineStore("settingsEE", () => {
       const isInvalid = e.response?.data?.code === "LICENSE_VALIDATION_FAILED";
       hasValidLicense.value = !isInvalid;
     }
-  }
-
-  onMounted(() => {
-    getLicenseInfo();
-  });
+    // 5 seconds
+  }, 5000);
 
   return {
+    getLicenseInfo,
     hasValidLicense,
   };
 });

@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive } from "vue";
+import { computed, ref, reactive, onMounted } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
 import { storeToRefs } from "pinia";
 
@@ -207,6 +207,10 @@ function selectRoadmap(roadmap: TCurrentRoadmap) {
     roadmap,
   });
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 defineOptions({
   name: "DashboardPostEditor",

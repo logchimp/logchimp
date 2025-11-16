@@ -27,8 +27,7 @@
 </template>
 
 <script setup lang="ts">
-// packages
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { storeToRefs } from "pinia";
 
@@ -75,6 +74,10 @@ async function createRoleHandler() {
     createRoleButtonLoading.value = false;
   }
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 useHead({
   title: "Roles • Settings • Dashboard",
