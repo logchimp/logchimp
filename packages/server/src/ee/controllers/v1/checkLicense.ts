@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import error from "../../../errorResponse.json";
 import logger from "../../../utils/logger";
-import { checkLicense as checkLicenseService } from "../../services/license/checkLicense";
+import { checkLicense as checkLicenseService } from "../../do-not-remove/services/checkLicense";
 
 export async function checkLicenseController(_: Request, res: Response) {
   try {

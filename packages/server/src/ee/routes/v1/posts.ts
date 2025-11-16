@@ -14,7 +14,7 @@ import * as post from "../../../ee/controllers/v1/posts";
 
 // middleware
 import { authRequired } from "../../../middlewares/auth";
-import { withLicenseGuard } from "../../middleware/licenseGuard";
+import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
 // post activity
 router.get<
