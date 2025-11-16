@@ -42,6 +42,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_started
     environment:
       LOGCHIMP_DB_HOST: db
       LOGCHIMP_DB_DATABASE: ${POSTGRES_DB}
