@@ -1,9 +1,5 @@
 import type { Request } from "express";
-import type {
-  IRoadmapPrivate,
-  TEmailVerification,
-  TResetPassword,
-} from "@logchimp/types";
+import type { TEmailVerification, TResetPassword } from "@logchimp/types";
 
 export interface ExpressRequestContext<
   P = core.ParamsDictionary,
@@ -14,6 +10,5 @@ export interface ExpressRequestContext<
 > extends Request<P, ResBody, ReqBody, ReqQuery, Locals> {
   ctx: {
     token?: TEmailVerification | TResetPassword;
-    roadmap?: IRoadmapPrivate;
   };
 }
