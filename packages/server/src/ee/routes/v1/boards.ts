@@ -13,16 +13,18 @@ import * as boards from "../../controllers/v1/boards";
 // middleware
 import { authRequired } from "../../../middlewares/auth";
 import { boardExists } from "../../middleware/boardExists";
-import { withLicenseGuard } from "../../middleware/licenseGuard";
+import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
 router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
   "/boards",
+  // @ts-expect-error
   withLicenseGuard(boards.filter, {
     requiredPlan: ["starter", "growth", "enterprise"],
   }),
 );
 router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
   "/boards/get",
+  // @ts-expect-error
   withLicenseGuard(boards.get, {
     requiredPlan: ["starter", "growth", "enterprise"],
   }),
@@ -30,13 +32,16 @@ router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
 router.get<IGetBoardByUrlRequestParams>(
   "/boards/:url",
   boardExists,
+  // @ts-expect-error
   withLicenseGuard(boards.boardByUrl, {
     requiredPlan: ["starter", "growth", "enterprise"],
   }),
 );
 router.get<ISearchBoardRequestParams>(
   "/boards/search/:name",
+  // @ts-expect-error
   authRequired,
+  // @ts-expect-error
   withLicenseGuard(boards.searchBoard, {
     requiredPlan: ["starter", "growth", "enterprise"],
   }),
@@ -59,6 +64,7 @@ router.post(
 router.patch(
   "/boards",
   authRequired,
+  // @ts-expect-error
   boardExists,
   withLicenseGuard(boards.updateBoard, {
     requiredPlan: ["starter", "growth", "enterprise"],
@@ -68,6 +74,7 @@ router.patch(
 router.delete(
   "/boards",
   authRequired,
+  // @ts-expect-error
   boardExists,
   withLicenseGuard(boards.deleteById, {
     requiredPlan: ["starter", "growth", "enterprise"],

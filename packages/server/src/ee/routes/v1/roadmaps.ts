@@ -8,7 +8,7 @@ import * as roadmaps from "../../controllers/v1/roadmaps";
 // middleware
 import { authRequired } from "../../../middlewares/auth";
 import { roadmapExists } from "../../../middlewares/roadmapExists";
-import { withLicenseGuard } from "../../middleware/licenseGuard";
+import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
 router.post(
   "/roadmaps",

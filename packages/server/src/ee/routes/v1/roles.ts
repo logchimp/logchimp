@@ -14,7 +14,7 @@ import * as roles from "../../controllers/v1/roles";
 import { authRequired } from "../../../middlewares/auth";
 import { roleExists } from "../../middleware/roleExists";
 import { userExists } from "../../../middlewares/userExists";
-import { withLicenseGuard } from "../../middleware/licenseGuard";
+import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
 router.get(
   "/roles",
@@ -25,8 +25,10 @@ router.get(
 );
 router.get<IGetRoleByIdRequestParams>(
   "/roles/:role_id",
+  // @ts-expect-error
   authRequired,
   roleExists,
+  // @ts-expect-error
   withLicenseGuard(roles.getOne, {
     requiredPlan: ["enterprise"],
   }),
@@ -51,9 +53,11 @@ router.patch(
 
 router.put<IAssignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
+  // @ts-expect-error
   authRequired,
   roleExists,
   userExists,
+  // @ts-expect-error
   withLicenseGuard(roles.addRoleToUser, {
     requiredPlan: ["enterprise"],
   }),
@@ -61,9 +65,11 @@ router.put<IAssignRoleToUserRequestParams>(
 
 router.delete<TUnassignRoleToUserRequestParams>(
   "/roles/:role_id/users/:user_id",
+  // @ts-expect-error
   authRequired,
   roleExists,
   userExists,
+  // @ts-expect-error
   withLicenseGuard(roles.deleteRoleFromUser, {
     requiredPlan: ["enterprise"],
   }),
