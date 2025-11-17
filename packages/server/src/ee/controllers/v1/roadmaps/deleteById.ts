@@ -12,6 +12,9 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//services
+import { invalidateRoadmapCache } from "../../../services/roadmaps/invalidateRoadmapCache";
+
 type ResponseBody = TDeleteRoadmapResponseBody | IApiErrorResponse;
 
 export async function deleteById(
@@ -35,6 +38,15 @@ export async function deleteById(
     await database.delete().from("roadmaps").where({
       id: id,
     });
+
+    try {
+      await invalidateRoadmapCache({ all: true });
+    } catch (cacheErr) {
+      logger.error({
+        message: "Failed to invalidate roadmap cache after delete",
+        error: cacheErr,
+      });
+    }
 
     res.sendStatus(204);
   } catch (err) {
