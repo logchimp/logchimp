@@ -63,6 +63,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_started
       migrator:
         condition: service_completed_successfully
     environment:
