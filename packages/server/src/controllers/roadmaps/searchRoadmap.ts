@@ -35,7 +35,7 @@ export async function searchRoadmap(
     });
   }
 
-  const cacheKey = `roadmaps:search:${name}`;
+  const cacheKey = `roadmaps:search:${name.toLowerCase()}`;
 
   try {
     if (cache.isActive) {
