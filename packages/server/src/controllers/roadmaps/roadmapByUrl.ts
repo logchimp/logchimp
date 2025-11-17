@@ -15,7 +15,7 @@ export async function roadmapByUrl(
   req: ExpressRequestContext<IGetRoadmapByUrlRequestParam>,
   res: Response<IGetRoadmapByUrlResponseBody | IApiErrorResponse>,
 ) {
-  const cacheKey = `roadmaps:url:${req.params.url}`;
+  const cacheKey = `roadmaps:url:${req.params.url.toLowerCase()}`;
   if (cache.isActive) {
     try {
       const cached = await cache.valkey.get(cacheKey);

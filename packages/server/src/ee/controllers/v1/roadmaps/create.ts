@@ -19,6 +19,9 @@ import {
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//services
+import { invalidateRoadmapCache } from "../../../services/roadmaps/invalidateRoadmapCache";
+
 type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
 
 export async function create(
@@ -45,6 +48,8 @@ export async function create(
   try {
     // get maximum index value of roadmap
     const roadmapIndex = await database.max("index").from("roadmaps").first();
+
+    invalidateRoadmapCache({ all:true })
 
     const createRoadmap = await database
       .insert({
