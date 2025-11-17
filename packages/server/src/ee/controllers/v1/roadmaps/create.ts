@@ -49,8 +49,6 @@ export async function create(
     // get maximum index value of roadmap
     const roadmapIndex = await database.max("index").from("roadmaps").first();
 
-    invalidateRoadmapCache({ all: true });
-
     const createRoadmap = await database
       .insert({
         id: uuidv4(),
@@ -71,6 +69,8 @@ export async function create(
       ]);
 
     const roadmap = createRoadmap[0];
+
+    await invalidateRoadmapCache({ all: true });
 
     res.status(201).send({ roadmap });
   } catch (err) {
