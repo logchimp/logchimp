@@ -47,7 +47,9 @@ describe("post", () => {
   });
 
   it("title", () => {
-    expect(wrapper.find("[data-test=post-link] h5").text()).toBe("Post title");
+    expect(
+      wrapper.find("[data-test=post-link] [data-testid=title]").text(),
+    ).toBe("Post title");
   });
 
   it("description", () => {
