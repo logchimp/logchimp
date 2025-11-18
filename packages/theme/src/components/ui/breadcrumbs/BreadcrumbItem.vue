@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, useSlots } from "vue";
+import { h, useSlots, useAttrs } from "vue";
 import { RouterLink, type RouteLocationRaw } from "vue-router";
 
 const props = defineProps<{
@@ -8,6 +8,7 @@ const props = defineProps<{
 }>();
 
 const slots = useSlots();
+const attrs = useAttrs();
 
 function renderContent() {
   const defaultSlot = slots.default?.();
@@ -26,19 +27,20 @@ function renderContent() {
       );
     }
 
-    const existingClass = vnode.props?.class || "";
-    const mergedClass = [defaultClasses, existingClass]
+    const existingClass = (vnode.props as any)?.class || "";
+    const mergedClass = [defaultClasses, existingClass, (attrs as any).class]
       .filter(Boolean)
       .join(" ");
 
     return h(
-      // @ts-ignore
+      // @ts-expect-error
       vnode.type,
       {
-        ...vnode.props,
+        ...(vnode.props as any),
+        ...attrs,
         class: mergedClass,
       },
-      vnode.children,
+      (vnode as any).children,
     );
   }
 
@@ -48,7 +50,8 @@ function renderContent() {
       RouterLink,
       {
         to: props.to,
-        class: defaultClasses,
+        ...attrs,
+        class: [defaultClasses, (attrs as any).class].filter(Boolean).join(" "),
       },
       {
         default: () => defaultSlot,
@@ -60,7 +63,8 @@ function renderContent() {
   return h(
     "div",
     {
-      class: defaultClasses,
+      ...attrs,
+      class: [defaultClasses, (attrs as any).class].filter(Boolean).join(" "),
     },
     defaultSlot,
   );
