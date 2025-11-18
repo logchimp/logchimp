@@ -8,9 +8,9 @@ import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 import database from "../../database";
 import {
-  generateNanoID as nanoid,
   sanitiseName,
   sanitiseUsername,
+  generateUniqueUsername as _generateUniqueUsername,
 } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
@@ -238,12 +238,6 @@ async function _assignEveryoneRoleQuery(userId: string) {
       user_id: userId,
     })
     .into("roles_users");
-}
-
-function _generateUniqueUsername(baseUsername: string): string {
-  const trimmedBase =
-    baseUsername.length >= 22 ? baseUsername.slice(0, 21) : baseUsername;
-  return `${trimmedBase}_${nanoid(8)}`;
 }
 
 export { createUser };
