@@ -11,8 +11,8 @@ import {
   parseAndValidatePage,
   parseAndValidateLimit,
   generateNanoID,
+  generateUniqueUsername,
 } from "../../src/helpers";
-import { generateUniqueUsername } from "../../src/services/auth/createUser";
 
 describe("validate email", () => {
   it('should be a valid email "yashu@codecarrot.net"', () => {
