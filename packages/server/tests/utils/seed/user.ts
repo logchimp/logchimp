@@ -6,8 +6,7 @@ import type { IAuthLoginResponseBody } from "@logchimp/types";
 import app from "../../../src/app";
 import database from "../../../src/database";
 import { hashPassword } from "../../../src/utils/password";
-import { sanitiseUsername } from "../../../src/helpers";
-import { generateUniqueUsername } from "../../../src/services/auth/createUser";
+import { sanitiseUsername, generateUniqueUsername } from "../../../src/helpers";
 
 interface CreateUserArgs {
   id: string;
