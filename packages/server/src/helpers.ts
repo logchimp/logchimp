@@ -180,6 +180,17 @@ function generateNanoID(length: number): string {
   return nanoid();
 }
 
+/**
+ * Generate unique username based on base username.
+ * If the base username is too long, it will be trimmed to 21 characters.
+ * @param baseUsername
+ */
+function generateUniqueUsername(baseUsername: string): string {
+  const trimmedBase =
+    baseUsername.length >= 22 ? baseUsername.slice(0, 21) : baseUsername;
+  return `${trimmedBase}_${generateNanoID(8)}`;
+}
+
 export {
   validEmail,
   validUUID,
@@ -194,4 +205,5 @@ export {
   parseAndValidatePage,
   parseAndValidateLimit,
   generateNanoID,
+  generateUniqueUsername,
 };
