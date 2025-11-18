@@ -1,5 +1,5 @@
 <template>
-  <div class="post">
+  <div class="flex items-start mb-5 last:mb-0">
     <vote
       :post-id="postData.postId"
       :votes-count="postData.voters.votesCount"
@@ -8,27 +8,33 @@
     />
     <div>
       <router-link
-        class="post-content-link"
         data-test="post-link"
         :to="`${dashboardUrl}/posts/${postData.slug}`"
       >
-        <h5 class="post-content-title">
+        <div
+          data-testid="title"
+          class="text-(--color-text-black) text-xl font-medium break-all">
           {{ postData.title }}
-        </h5>
+        </div>
       </router-link>
       <p
         v-if="postData.roadmap?.id"
-        class="post-roadmap"
+        class="mt-1 uppercase font-medium text-sm break-all"
         :style="{
           color: `#${postData.roadmap.color}`
         }"
       >
         {{ postData.roadmap.name }}
       </p>
-      <p v-if="postData.contentMarkdown" data-test="post-description" class="post-content-description">
+      <p
+        v-if="postData.contentMarkdown"
+        data-test="post-description"
+        class="mt-2 text-(--color-gray-40)"
+      >
         {{ useTrim(postData.contentMarkdown, 120) }}
       </p>
       <board-badge
+        class="mt-2.5"
         v-if="postData.board?.boardId"
         :show-board="showBoard"
         :name="postData.board.name"
@@ -71,35 +77,3 @@ function updateVoters(voters: IPostVote) {
   postData.value.voters.viewerVote = voters.viewerVote;
 }
 </script>
-
-<style lang='sass'>
-.post
-	display: flex
-	align-items: flex-start
-	margin-bottom: 1.25rem
-
-	&:last-child
-		margin-bottom: 0
-
-.post-content-link
-	text-decoration: none
-
-.post-content-title
-	color: var(--color-text-black)
-	margin-bottom: 0
-
-.post-roadmap
-	text-transform: uppercase
-	font-weight: 500
-	font-size: 0.875rem
-	margin-top: 0.25rem
-
-.post-content-description
-	margin-top: 0.5rem
-	color: var(--color-gray-40)
-	margin-bottom: 0.625rem
-
-.post-date
-	color: var(--color-gray-70)
-	font-size: 0.875rem
-</style>

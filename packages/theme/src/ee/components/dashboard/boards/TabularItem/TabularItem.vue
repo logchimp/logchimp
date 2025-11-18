@@ -7,8 +7,8 @@
       }"
       class="flex-1 flex items-center gap-x-3"
     >
-      <ColorDot :color="board.color" />
-      <span>
+      <ColorDot :color="board.color" class="shrink-0" />
+      <span class="line-clamp-1 truncate hover:line-clamp-none hover:break-all hover:whitespace-normal">
         {{ board.name }}
       </span>
     </Td>

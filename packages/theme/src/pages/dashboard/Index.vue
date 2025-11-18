@@ -11,7 +11,7 @@
             :style="{
               width: '200px',
             }"
-            class="flex-1"
+            class="flex-1 break-all"
           >
             Title
           </Td>
@@ -29,7 +29,7 @@
               :style="{
                 width: '200px',
               }"
-              class="flex-1"
+              class="flex-1 line-clamp-1 truncate hover:line-clamp-none hover:break-all hover:whitespace-normal"
             >
               {{ post.title }}
             </Td>

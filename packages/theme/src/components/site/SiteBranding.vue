@@ -1,6 +1,6 @@
 <template>
 	<router-link data-testid="site-branding" :to="link" class="flex items-center gap-x-2.5 select-none">
-		<div v-if="logo" class="size-7 bg-neutral-100 rounded-full overflow-hidden">
+		<div v-if="logo" class="size-7 bg-neutral-100 rounded-full overflow-hidden shrink-0">
 			<img
         class="size-7 rounded-full"
 				:src="logo"
@@ -9,11 +9,13 @@
 		</div>
 		<p
 			v-if="title"
-			:class="{
-        'font-semibold text-lg': true,
-				'text-neutral-800': textColor === 'black',
-				'text-white': textColor === 'white'
-			}"
+			:class="[
+        'font-semibold text-lg break-all',
+        {
+          'text-neutral-800': textColor === 'black',
+          'text-white': textColor === 'white'
+        }
+      ]"
       data-testid="site-name"
 		>
 			{{ title }}

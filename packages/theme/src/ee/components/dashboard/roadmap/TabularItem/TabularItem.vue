@@ -25,7 +25,7 @@
       :style="{
         width: '500px',
       }"
-      class="flex-1"
+      class="flex-1 line-clamp-1 truncate hover:line-clamp-none hover:break-all hover:whitespace-normal"
     >
       {{ roadmap.name }}
     </Td>

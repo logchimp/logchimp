@@ -7,8 +7,15 @@
         minWidth: '150px',
       }"
     >
-      <avatar :src="user.avatar" :name="user.name || user.username" />
-      <span class="text-black">{{ user.name || user.username }}</span>
+      <avatar
+        :src="user.avatar" :name="user.name || user.username"
+        class="shrink-0"
+      />
+      <span
+        class="text-black line-clamp-1 truncate"
+      >
+        {{ user.name || user.username }}
+      </span>
       <UserInfoDialog :user="user" />
     </Td>
 
