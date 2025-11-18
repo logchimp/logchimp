@@ -11,7 +11,9 @@
         data-test="post-link"
         :to="`${dashboardUrl}/posts/${postData.slug}`"
       >
-        <div class="text-(--color-text-black) text-xl font-medium break-all">
+        <div
+          data-testid="title"
+          class="text-(--color-text-black) text-xl font-medium break-all">
           {{ postData.title }}
         </div>
       </router-link>
