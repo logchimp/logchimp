@@ -49,11 +49,14 @@ export async function destroy(
       });
     }
 
-    await database.delete().from("posts_activity").where({
-      post_id: post_id,
-      posts_comments_id: comment_id,
-    });
-    await database.delete().from("posts_comments").where({ id: comment_id });
+    try {
+      await commentDeleteStatement(post_id, comment_id);
+    } catch (err) {
+      logger.error({
+        message: "Error deleting comment",
+        error: err,
+      });
+    }
 
     res.sendStatus(204);
   } catch (err) {
@@ -67,4 +70,14 @@ export async function destroy(
       code: "SERVER_ERROR",
     });
   }
+}
+
+async function commentDeleteStatement(postId: string, commentId: string) {
+  await database.transaction(async (trx) => {
+    await trx.delete().from("posts_activity").where({
+      post_id: postId,
+      posts_comments_id: commentId,
+    });
+    await trx.delete().from("posts_comments").where({ id: commentId });
+  });
 }
