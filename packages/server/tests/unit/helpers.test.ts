@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import _ from "lodash";
-
+import { faker } from "@faker-js/faker";
 import {
   validEmail,
   validUUID,
@@ -11,6 +11,7 @@ import {
   parseAndValidatePage,
   parseAndValidateLimit,
   generateNanoID,
+  generateUniqueUsername,
 } from "../../src/helpers";
 
 describe("validate email", () => {
@@ -375,5 +376,71 @@ describe("generateNanoID", () => {
       expect(randomId.length).toBe(length);
       expect(randomId).toMatch(nanoIdRegex);
     }
+  });
+});
+
+describe("generateUniqueUsername", () => {
+  it("should append suffix when baseUsername < 22 chars", () => {
+    const base = faker.string.alpha({ length: { min: 1, max: 21 } });
+    const username = generateUniqueUsername(base);
+
+    expect(username.length).toBe(base.length + 1 + 8);
+  });
+
+  it("should trim base to 21 chars when baseUsername >= 22 chars", () => {
+    const longBase = faker.string.alpha({ length: { min: 22, max: 40 } });
+    const username = generateUniqueUsername(longBase);
+
+    const trimmed = longBase.slice(0, 21);
+    expect(username.startsWith(trimmed)).toBe(true);
+    expect(username.length).toBe(21 + 1 + 8);
+  });
+
+  it("should always use '_' separator", () => {
+    const base = faker.string.alpha(10);
+    const username = generateUniqueUsername(base);
+
+    expect(username.includes("_")).toBe(true);
+    expect(username.split("_")[0]).toBe(base);
+  });
+
+  it("should always append an 8-character suffix", () => {
+    const base = faker.string.alpha(10);
+    const username = generateUniqueUsername(base);
+
+    const suffix = username.split("_")[1];
+    expect(suffix.length).toBe(8);
+  });
+
+  it("should return different usernames on separate calls (randomness check)", () => {
+    const base = faker.string.alpha(10);
+
+    const first = generateUniqueUsername(base);
+    const second = generateUniqueUsername(base);
+
+    expect(first).not.toBe(second);
+  });
+
+  it("should not trim base when exactly 21 chars", () => {
+    const base = faker.string.alpha(21);
+    const username = generateUniqueUsername(base);
+
+    expect(username.startsWith(base)).toBe(true);
+    expect(username.length).toBe(21 + 1 + 8);
+  });
+
+  it("should trim base when exactly 22 chars", () => {
+    const base = faker.string.alpha(22);
+    const username = generateUniqueUsername(base);
+
+    expect(username.startsWith(base.slice(0, 21))).toBe(true);
+    expect(username.length).toBe(21 + 1 + 8);
+  });
+
+  it("should handle empty string", () => {
+    const username = generateUniqueUsername("");
+
+    expect(username.length).toBe(0 + 1 + 8);
+    expect(username.startsWith("_")).toBe(true);
   });
 });
