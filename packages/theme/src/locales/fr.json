@@ -1,0 +1,37 @@
+{
+  "dashboard": {
+    "settings": {
+      "labs": {
+        "breadcrumbNavigate": "Paramètres",
+        "breadcrumb": "Labs",
+        "button": "Enregistrer",
+        "form": {
+          "title": "Fonctionnalités bêta",
+          "toggleItem": {
+            "label": "Commentaires",
+            "note": "Autoriser les utilisateurs à commenter les publications"
+          }
+        },
+        "metaTitle": "Laboratoires • Paramètres • Tableau de bord"
+      }
+    }
+  },
+  "ee": {
+    "dashboard": {
+      "settings": {
+        "billing": {
+          "breadcrumb": "Facturation",
+          "alert": {
+            "title": "Nous travaillons actuellement à définir son modèle tarifaire.",
+            "description": "Veuillez noter que certaines fonctionnalités du plan <strong>gratuit</strong> seront converties en plans payants."
+          },
+          "activePlan": {
+            "title": "Plan actif",
+            "current": "Vous êtes actuellement sur le plan <strong>gratuit</strong>."
+          },
+          "metaTitle": "Facturation • Paramètres • Tableau de bord"
+        }
+      }
+    }
+  }
+}
