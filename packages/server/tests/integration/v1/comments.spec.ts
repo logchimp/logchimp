@@ -163,7 +163,7 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(201);
-    const { author, comment } = res.body.comment;
+    const { author, comment } = res.body.activity;
 
     // check author details
     expect(author.userId).toBe(authUser.userId);
@@ -197,7 +197,7 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(201);
-    const { author, comment } = res.body.comment;
+    const { author, comment } = res.body.activity;
 
     // check author details
     expect(author.userId).toBe(authUser.userId);
@@ -238,7 +238,7 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(201);
-    const { author, comment: childComment } = res.body.comment;
+    const { author, comment: childComment } = res.body.activity;
 
     // check author details
     expect(author.userId).toBe(authUser.userId);
