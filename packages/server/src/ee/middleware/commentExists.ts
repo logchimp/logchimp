@@ -44,6 +44,15 @@ export async function commentExists(
   }
 
   // @ts-expect-error
+  const post = req.post;
+  if (!post || comment.post_id !== post.postId) {
+    return res.status(404).send({
+      message: error.api.comments.commentNotFound,
+      code: "COMMENT_NOT_FOUND",
+    });
+  }
+
+  // @ts-expect-error
   req.comment = comment;
   next();
 }
