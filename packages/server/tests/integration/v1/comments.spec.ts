@@ -90,6 +90,12 @@ describe("LABS_DISABLED", () => {
 });
 
 describe("POST /api/v1/posts/:post_id/comments", () => {
+  beforeAll(async () => {
+    await updateSettings({
+      labs: { comments: true },
+    });
+  });
+
   // ToDo: add tests to check for permission before creating comments
 
   it("should throw 'INVALID_AUTH_HEADER'", async () => {
@@ -252,6 +258,12 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
 });
 
 describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
+  beforeAll(async () => {
+    await updateSettings({
+      labs: { comments: true },
+    });
+  });
+
   // ToDo: add tests to check for permission before updating comments
 
   it("should throw 'INVALID_AUTH_HEADER'", async () => {
@@ -387,6 +399,12 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
 });
 
 describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
+  beforeAll(async () => {
+    await updateSettings({
+      labs: { comments: true },
+    });
+  });
+
   // ToDo: add tests to check for permission before delete comments
 
   it("should throw 'INVALID_AUTH_HEADER'", async () => {
@@ -485,6 +503,12 @@ describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
 });
 
 describe("GET /api/v1/posts/:post_id/activity", () => {
+  beforeAll(async () => {
+    await updateSettings({
+      labs: { comments: true },
+    });
+  });
+
   it("should throw error 'POST_NOT_FOUND'", async () => {
     const { user: authUser } = await createUser();
 
