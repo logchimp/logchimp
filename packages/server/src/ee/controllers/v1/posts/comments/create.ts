@@ -58,8 +58,13 @@ export async function create(
       return
     }
 
-    const results = await createCommentStatement({
+    const parentCommentId = await parentCommentExists({
       parentId,
+      postId: post_id,
+    });
+
+    const results = await createCommentStatement({
+      parentId: parentCommentId,
       isInternal: is_internal,
       body,
       postId: post_id,
@@ -82,6 +87,35 @@ export async function create(
   }
 }
 
+interface ParentCommentExists {
+  parentId: string | null;
+  postId: string;
+}
+
+const parentCommentExists = async ({
+  parentId: _parentId,
+  postId: _postId,
+}: ParentCommentExists): Promise<string | null> => {
+  if (!_parentId) {
+    return null;
+  }
+
+  const parentExists = await database("posts_comments as pc")
+    .leftJoin("posts_activity as pa", "pa.posts_comments_id", "pc.id")
+    .select<{
+      id: string;
+      post_id: string;
+    }>("pc.id", "pa.post_id")
+    .where("pc.id", "=", _parentId)
+    .first();
+
+  if (!parentExists || parentExists?.post_id !== _postId) {
+    return null;
+  }
+
+  return parentExists?.id;
+};
+
 interface ICreateCommentStmt {
   parentId: string | null;
   isInternal: boolean;
@@ -91,7 +125,7 @@ interface ICreateCommentStmt {
 }
 
 const createCommentStatement = ({
-  parentId: _parentId,
+  parentId,
   isInternal,
   body,
   postId,
@@ -101,24 +135,6 @@ const createCommentStatement = ({
     const now = new Date().toJSON();
     // postActivityId will be shared b/w "posts_comments" and "posts_activity" table
     const postActivityId = uuid();
-
-    // checking if the parent comment exists
-    let parentId: string | null = null;
-    if (_parentId) {
-      const parentExists = await trx
-        .select<{
-          id: string;
-        }>("id")
-        .from("posts_comments")
-        .where({
-          id: _parentId,
-        })
-        .first();
-
-      if (parentExists.id) {
-        parentId = parentExists.id;
-      }
-    }
 
     const [comment] = await trx("posts_comments")
       .insert(
