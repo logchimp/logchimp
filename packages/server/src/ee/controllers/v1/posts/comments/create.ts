@@ -65,7 +65,7 @@ export async function create(
     });
 
     res.status(201).send({
-      comment: results,
+      activity: results,
     });
   } catch (err) {
     logger.log({
