@@ -275,7 +275,7 @@ describe("GET /boards/:url", () => {
     expect(res.body.code).toBe("BOARD_NOT_FOUND");
   });
 
-  // Unicode characters in URL (should return DECODE_URI_ERROR or BOARD_NOT_FOUND depending on backend behavior)
+  // Unicode characters in URL (should return DECODE_URI_ERROR or BOARD_NOT_FOUND depending on backend behavior).
   it("should return error for Unicode characters in board url", async () => {
     const unicodeUrl = "बोर्ड"; // Hindi characters
 
