@@ -179,19 +179,9 @@ export async function getBoards({
 
       const operator = created === "ASC" ? ">" : "<";
 
-      boardsQuery = boardsQuery.where(function () {
-        this.where("boards.createdAt", operator, afterBoard.createdAt).orWhere(
-          function () {
-            this.where("boards.createdAt", "=", afterBoard.createdAt).andWhere(
-              "boards.boardId",
-              operator,
-              after,
-            );
-          },
-        );
-      });
-
-      boardsQuery = boardsQuery.whereNot("boards.boardId", after);
+      boardsQuery = boardsQuery.whereRaw('("boards"."createdAt", "boards"."boardId")' + operator + '(?, ?)',
+        [afterBoard.createdAt, after])
+        .offset(1);
     }
 
     const boardsData = await boardsQuery;
