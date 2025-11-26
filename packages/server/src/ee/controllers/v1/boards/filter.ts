@@ -179,8 +179,11 @@ export async function getBoards({
 
       const operator = created === "ASC" ? ">" : "<";
 
-      boardsQuery = boardsQuery.whereRaw('("boards"."createdAt", "boards"."boardId")' + operator + '(?, ?)',
-        [afterBoard.createdAt, after])
+      boardsQuery = boardsQuery
+        .whereRaw(
+          '("boards"."createdAt", "boards"."boardId")' + operator + "(?, ?)",
+          [afterBoard.createdAt, after],
+        )
         .offset(1);
     }
 
