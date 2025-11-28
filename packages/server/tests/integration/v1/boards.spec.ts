@@ -264,6 +264,31 @@ describe("GET /boards/:url", () => {
       post_count: "0",
     });
   });
+  // Extremely long URL string (should return BOARD_NOT_FOUND)
+  it("should return BOARD_NOT_FOUND for extremely long board url", async () => {
+    const longUrl = "a".repeat(5000); // 5000 characters
+
+    const res = await supertest(app).get(`/api/v1/boards/${longUrl}`);
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(404);
+    expect(res.body.code).toBe("BOARD_NOT_FOUND");
+  });
+
+  // Unicode characters in URL (should return DECODE_URI_ERROR or BOARD_NOT_FOUND depending on backend behavior).
+  it("should return error for Unicode characters in board url", async () => {
+    const unicodeUrl = "बोर्ड"; // Hindi characters
+
+    const res = await supertest(app).get(`/api/v1/boards/${unicodeUrl}`);
+
+    expect(res.headers["content-type"]).toContain("application/json");
+
+    // If backend breaks while decoding → 400 DECODE_URI_ERROR  
+    // Else → 404 BOARD_NOT_FOUND  
+    expect([400, 404]).toContain(res.status);
+
+    expect(["DECODE_URI_ERROR", "BOARD_NOT_FOUND"]).toContain(res.body.code);
+  });
 });
 
 // Search board by name
