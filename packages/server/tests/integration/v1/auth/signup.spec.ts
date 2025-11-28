@@ -39,18 +39,22 @@ describe("POST /api/v1/auth/signup", () => {
   it("should not create new user and throws 'USER EXISTS'", async () => {
     const randomEmail = faker.internet.email();
 
-    await supertest(app).post("/api/v1/auth/signup").send({
+    const r1 = await supertest(app).post("/api/v1/auth/signup").send({
       email: randomEmail,
       password: "password",
     });
 
-    const response = await supertest(app).post("/api/v1/auth/signup").send({
+    expect(r1.status).toBe(201);
+    const user = r1.body.user;
+    expect(user.email).toBe(randomEmail.toLowerCase());
+
+    const r2 = await supertest(app).post("/api/v1/auth/signup").send({
       email: randomEmail,
       password: "password",
     });
 
-    expect(response.status).toBe(409);
-    expect(response.body.code).toBe("USER_EXISTS");
+    expect(r2.status).toBe(409);
+    expect(r2.body.code).toBe("USER_EXISTS");
   });
 
   it("should not create new user with different casing in email", async () => {
