@@ -11,7 +11,11 @@
       :disabled="createPostPermissionDisabled"
       @keyup-enter="submitPost"
       @hide-error="hideTitleError"
+      @input="handleTitleInput"
     />
+    <HelperText v-if="title.value.length >= 85 && description.length <= 15">
+      After the title limit, you’ll automatically jump to description.
+    </HelperText>
     <l-textarea
       v-model="description"
       label="Description"
@@ -19,6 +23,7 @@
       name="Post description"
       placeholder="What would you use it for?"
       :disabled="createPostPermissionDisabled"
+      ref="descriptionInput"
     />
     <div style="display: flex; justify-content: center;">
       <Button
@@ -47,10 +52,13 @@ import type { FormFieldErrorType } from "../ui/input/formBaseProps";
 import LText from "../ui/input/LText.vue";
 import LTextarea from "../ui/input/LTextarea.vue";
 import Button from "../ui/Button.vue";
+import HelperText from "../ui/input/HelperText.vue";
 
 // utils
 import validateUUID from "../../utils/validateUUID";
 import tokenError from "../../utils/tokenError";
+
+import { MAX_TITLE_LENGTH } from "../../constants";
 
 const { permissions } = useUserStore();
 
@@ -81,6 +89,19 @@ const createPostPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("post:create");
   return !checkPermission;
 });
+
+const descriptionInput = ref<{ focus: () => void } | null>(null);
+const handleTitleInput = () => {
+  const titleInput = title.value;
+
+  if (titleInput.length >= MAX_TITLE_LENGTH) {
+    const extraText = titleInput.slice(MAX_TITLE_LENGTH);
+    title.value = titleInput.slice(0, MAX_TITLE_LENGTH);
+    description.value += extraText;
+
+    descriptionInput.value?.focus();
+  }
+};
 
 function hideTitleError(event: FormFieldErrorType) {
   title.error = event;
