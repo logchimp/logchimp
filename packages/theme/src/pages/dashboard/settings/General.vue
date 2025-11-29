@@ -212,8 +212,6 @@ async function updateSettingsHandler() {
       accentColor.error.show = true;
       accentColor.error.message = "Required";
     }
-
-    return;
   }
 
   updateSettingsButtonLoading.value = true;

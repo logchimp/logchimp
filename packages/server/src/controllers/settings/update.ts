@@ -40,10 +40,10 @@ export async function update(
   const { title, description, allowSignup, googleAnalyticsId, developer_mode } =
     req.body;
 
-  if (!title || title.trim() === "") {
+  if (!title || !title.trim()) {
     return res.status(400).send({
-      message: "Site name is required",
-      code: "SITE_NAME_REQUIRED",
+      message: error.api.settings.titleMissing,
+      code: "TITLE_MISSING",
     });
   }
 

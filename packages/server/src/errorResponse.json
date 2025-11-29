@@ -73,6 +73,9 @@
     },
     "labs": {
       "disabled": "This feature is disabled"
+    },
+    "settings": {
+      "titleMissing": "Site name is required"
     }
   }
 }
