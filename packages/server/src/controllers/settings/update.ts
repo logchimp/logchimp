@@ -40,7 +40,6 @@ export async function update(
   const { title, description, allowSignup, googleAnalyticsId, developer_mode } =
     req.body;
 
-  // Validate required fields
   if (!title || title.trim() === "") {
     return res.status(400).send({
       message: "Site name is required",
