@@ -13,7 +13,9 @@ const router = express.Router();
 import * as post from "../../../ee/controllers/v1/posts";
 
 // middleware
-import { authRequired } from "../../../middlewares/auth";
+import { authOptional, authRequired } from "../../../middlewares/auth";
+import { postExists } from "../../../middlewares/postExists";
+import { commentExists } from "../../middleware/commentExists";
 
 // post activity
 router.get<
@@ -21,25 +23,36 @@ router.get<
   unknown,
   unknown,
   IGetPostActivityRequestQuery
->("/posts/:post_id/activity", post.activity.get);
+>(
+  "/posts/:post_id/activity",
+  // @ts-expect-error
+  authOptional,
+  postExists,
+  post.activity.get,
+);
 
 // post comment
 router.post<TCreatePostCommentRequestParam>(
   "/posts/:post_id/comments",
   // @ts-expect-error
   authRequired,
+  postExists,
   post.comments.create,
 );
 router.put<IUpdatePostCommentRequestParam>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
   authRequired,
+  postExists,
+  commentExists,
   post.comments.update,
 );
 router.delete<TDeletePostCommentRequestParam>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
   authRequired,
+  postExists,
+  commentExists,
   post.comments.destroy,
 );
 
