@@ -38,7 +38,7 @@
       <CreateBoardItem
         v-if="search && suggestions.length === 0"
         :search="search"
-        @created="selectHandler"
+        @created="onBoardCreated"
       />
     </div>
   </DropdownMenuContent>
@@ -104,6 +104,13 @@ watchDebounced(
 function selectHandler(e: TCurrentBoard) {
   if (!e) return;
   searchBoard.select(e);
+}
+
+function onBoardCreated(board: TCurrentBoard) {
+  if (board) {
+    suggestions.value.unshift(board as IBoardPrivate);
+  }
+  selectHandler(board);
 }
 
 function resetSuggestions() {
