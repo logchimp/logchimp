@@ -122,7 +122,7 @@ export async function updateRoadmap(
       await invalidateRoadmapCache({ oldName, oldUrl, name, url });
     } catch (_) {
       logger.error({
-        message: "Failed to invalidate roadmap cache after update"
+        message: "Failed to invalidate roadmap cache after update",
       });
     }
 

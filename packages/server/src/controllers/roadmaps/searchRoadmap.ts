@@ -42,7 +42,7 @@ export async function searchRoadmap(
       try {
         const cachedRoadmaps = await cache.valkey.get(cacheKey);
         if (cachedRoadmaps) {
-          const roadmaps : IRoadmapPrivate[] = JSON.parse(cachedRoadmaps);
+          const roadmaps: IRoadmapPrivate[] = JSON.parse(cachedRoadmaps);
           return res.status(200).send({ roadmaps });
         }
       } catch (err) {

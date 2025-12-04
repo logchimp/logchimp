@@ -40,7 +40,7 @@ export async function roadmapByUrl(
     try {
       const cached = await cache.valkey.get(cacheKey);
       if (cached) {
-        const roadmap : IRoadmapPrivate = JSON.parse(cached);
+        const roadmap: IRoadmapPrivate = JSON.parse(cached);
         return res.status(200).send({ roadmap });
       }
     } catch (err) {
