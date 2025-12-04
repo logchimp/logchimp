@@ -1,4 +1,4 @@
-import * as cache from "../../../cache/index";
+import * as cache from "../../../cache";
 import logger from "../../../utils/logger";
 import { deleteKeysByPattern } from "../../../helpers";
 

@@ -60,10 +60,9 @@ export async function sort(
 
     try {
       await invalidateRoadmapCache({ all: true });
-    } catch (cacheErr) {
+    } catch (_) {
       logger.error({
-        message: "Failed to invalidate roadmap cache after sort",
-        error: cacheErr,
+        message: "Failed to invalidate roadmap cache after sort"
       });
     }
     res.sendStatus(200);

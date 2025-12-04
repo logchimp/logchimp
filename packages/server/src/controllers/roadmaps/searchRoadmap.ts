@@ -10,7 +10,7 @@ import type {
 //database
 import database from "../../database";
 
-import * as cache from "../../cache/index";
+import * as cache from "../../cache";
 import { DAY } from "../../cache/time";
 
 // utils
@@ -40,9 +40,9 @@ export async function searchRoadmap(
   try {
     if (cache.isActive) {
       try {
-        const cachedRoadmap = await cache.valkey.get(cacheKey);
-        if (cachedRoadmap) {
-          const roadmaps = JSON.parse(cachedRoadmap);
+        const cachedRoadmaps = await cache.valkey.get(cacheKey);
+        if (cachedRoadmaps) {
+          const roadmaps : IRoadmapPrivate[] = JSON.parse(cachedRoadmaps);
           return res.status(200).send({ roadmaps });
         }
       } catch (err) {

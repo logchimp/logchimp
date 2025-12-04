@@ -41,10 +41,9 @@ export async function deleteById(
 
     try {
       await invalidateRoadmapCache({ all: true });
-    } catch (cacheErr) {
+    } catch (_) {
       logger.error({
         message: "Failed to invalidate roadmap cache after delete",
-        error: cacheErr,
       });
     }
 

@@ -4,7 +4,8 @@ import fs from "fs";
 import { isEmail } from "validator";
 import { OFFSET_PAGINATION_UPPER_LIMIT } from "./constants";
 import { customAlphabet } from "nanoid";
-import valkey from "./cache/index";
+import valkey from "./cache";
+import logger from "./utils/logger";
 
 /**
  * Check value is valid email
@@ -197,18 +198,22 @@ function generateUniqueUsername(baseUsername: string): string {
  * @param {string} pattern
  */
 async function deleteKeysByPattern(pattern: string) {
-  let cursor = "0";
-  do {
-    const [nextCursor, keys] = await valkey.scan(
-      cursor,
-      "MATCH",
-      pattern,
-      "COUNT",
-      100,
-    );
-    if (keys.length > 0) await valkey.unlink(...keys);
-    cursor = nextCursor;
-  } while (cursor !== "0");
+  try {
+    let cursor = "0";
+    do {
+      const [nextCursor, keys] = await valkey.scan(
+        cursor,
+        "MATCH",
+        pattern,
+        "COUNT",
+        100,
+      );
+      if (keys.length > 0) await valkey.unlink(...keys);
+      cursor = nextCursor;
+    } while (cursor !== "0");
+  } catch (error) {
+    logger.error("Failed to delete Cache keys by pattern", error);
+  }
 }
 
 export {
