@@ -21,15 +21,17 @@ export async function invalidateRoadmapCache(options?: {
     // Otherwise, invalidate by specific name/url combinations
     const keys: string[] = [];
 
-    if (options?.oldName) keys.push(`roadmaps:search:${options.oldName.toLowerCase()}`);
-    if (options?.oldUrl) keys.push(`roadmaps:url:${options.oldUrl.toLowerCase()}`);
-    if (options?.name && options.name !== options.oldName.toLowerCase())
+    if (options?.oldName)
+      keys.push(`roadmaps:search:${options.oldName.toLowerCase()}`);
+    if (options?.oldUrl)
+      keys.push(`roadmaps:url:${options.oldUrl.toLowerCase()}`);
+    if (options?.name && options.name !== options.oldName)
       keys.push(`roadmaps:search:${options.name.toLowerCase()}`);
     if (options?.url && options.url !== options.oldUrl)
       keys.push(`roadmaps:url:${options.url.toLowerCase()}`);
 
     if (keys.length > 0) {
-      await cache.valkey.del(keys);
+      await cache.valkey.del(...keys);
     }
   } catch (err) {
     logger.error({
