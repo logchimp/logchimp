@@ -14,6 +14,7 @@ import error from "../../errorResponse.json";
 //cache
 import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
+import { DAY } from "../../cache/time";
 
 type ResponseBody = TUpdateSiteSettingsLabResponseBody | IApiErrorResponse;
 
@@ -51,7 +52,12 @@ export async function updateLabs(
 
     if (cache.isActive) {
       try {
-        await cache.valkey.del(CACHE_KEYS.LABS_SETTINGS);
+        await cache.valkey.set(
+          CACHE_KEYS.LABS_SETTINGS,
+          JSON.stringify(response[0]),
+          "EX",
+          7 * DAY,
+        );
       } catch (err) {
         logger.error({ message: err });
       }
