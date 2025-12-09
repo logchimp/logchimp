@@ -11,6 +11,10 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
+//cache
+import * as cache from "../../cache";
+import { CACHE_KEYS } from "../../cache/keys";
+
 type ResponseBody = TUpdateSiteSettingsLabResponseBody | IApiErrorResponse;
 
 /**
@@ -44,6 +48,14 @@ export async function updateLabs(
       })
       .from("settings")
       .returning(database.raw("labs::json"));
+
+    if (cache.isActive) {
+      try {
+        await cache.valkey.del(CACHE_KEYS.LABS_SETTINGS);
+      } catch (err) {
+        logger.error({ message: err });
+      }
+    }
 
     const labs = response[0];
     res.status(200).send({
