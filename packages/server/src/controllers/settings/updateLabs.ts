@@ -54,7 +54,7 @@ export async function updateLabs(
       try {
         await cache.valkey.set(
           CACHE_KEYS.LABS_SETTINGS,
-          JSON.stringify(response[0]),
+          stringify,
           "EX",
           7 * DAY,
         );
