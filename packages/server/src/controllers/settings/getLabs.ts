@@ -11,7 +11,7 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-//cache
+// cache
 import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
 import { DAY } from "../../cache/time";
