@@ -1,5 +1,21 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
-  "labels": ["dependencies"]
+  "labels": ["dependencies"],
+  "timezone": "Asia/Kolkata",
+  "packageRules": [
+    {
+      "description": "MINOR & MAJOR updates — twice a month (1st and 15th)",
+      "matchUpdateTypes": ["minor", "major"],
+      "schedule": [
+        "on the 1st day of the month",
+        "on the 15th day of the month"
+      ]
+    },
+    {
+      "description": "PATCH updates — 3 times a week (Mon, Wed, Fri)",
+      "matchUpdateTypes": ["patch"],
+      "schedule": ["on Monday", "on Wednesday", "on Friday"]
+    }
+  ]
 }
