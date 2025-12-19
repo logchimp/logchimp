@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import { createHead } from "@vueuse/head";
 import { createPinia } from "pinia";
+import i18n from "./plugins/i18n";
 
 import App from "./App.vue";
 import { router } from "./router";
@@ -14,5 +15,6 @@ const head = createHead();
 app.use(router);
 app.use(store);
 app.use(head);
+app.use(i18n);
 
 app.mount("body");

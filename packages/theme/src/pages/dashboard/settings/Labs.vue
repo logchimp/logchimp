@@ -3,11 +3,11 @@
     <template v-slot:left>
       <Breadcrumbs>
         <BreadcrumbItem to="/dashboard/settings">
-          Settings
+          {{ t('dashboard.settings.labs.breadcrumbNavigate') }}
         </BreadcrumbItem>
         <BreadcrumbDivider />
         <BreadcrumbItem>
-          Labs
+          {{ t('dashboard.settings.labs.breadcrumb') }}
         </BreadcrumbItem>
       </Breadcrumbs>
     </template>
@@ -18,22 +18,22 @@
       :disabled="updateSettingsPermissionDisabled"
       @click="updateSettings"
     >
-      Save
+      {{ t('dashboard.settings.labs.saveButton') }}
     </Button>
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
     <div class="form-section">
       <p class="form-section-title">
-        Beta features
+        {{ t('dashboard.settings.labs.form.title') }}
       </p>
 
       <div class="form-columns">
         <div class="form-column">
           <toggle-item
             v-model="labs.comments"
-            label="Comments"
-            note="Allow users to comment on posts"
+            :label="t('dashboard.settings.labs.form.toggleItem.label')"
+            :note="t('dashboard.settings.labs.form.toggleItem.note')"
           />
         </div>
 
@@ -47,6 +47,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { ISiteSettingsLab } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { useSettingStore } from "../../../store/settings";
@@ -74,6 +75,10 @@ const updateSettingsPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
+const { t } = useI18n();
+
+const metaTitle = computed(() => t("dashboard.settings.labs.metaTitle"));
+
 async function updateSettings() {
   updateSettingsButtonLoading.value = true;
 
@@ -99,7 +104,7 @@ async function getSettings() {
 onMounted(() => getSettings());
 
 useHead({
-  title: "Labs • Settings • Dashboard",
+  title: metaTitle,
 });
 
 defineOptions({
