@@ -19,6 +19,9 @@ import {
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//services
+import { invalidateRoadmapCache } from "../../../services/roadmaps/invalidateRoadmapCache";
+
 type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
 
 export async function create(
@@ -66,6 +69,8 @@ export async function create(
       ]);
 
     const roadmap = createRoadmap[0];
+
+    await invalidateRoadmapCache({ all: true });
 
     res.status(201).send({ roadmap });
   } catch (err) {

@@ -12,6 +12,9 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+//services
+import { invalidateRoadmapCache } from "../../../services/roadmaps/invalidateRoadmapCache";
+
 type ResponseBody = TSortRoadmapResponseBody | IApiErrorResponse;
 
 export async function sort(
@@ -55,6 +58,13 @@ export async function sort(
         id: from.id,
       });
 
+    try {
+      await invalidateRoadmapCache({ all: true });
+    } catch (_) {
+      logger.error({
+        message: "Failed to invalidate roadmap cache after sort",
+      });
+    }
     res.sendStatus(200);
   } catch (err) {
     logger.error({
