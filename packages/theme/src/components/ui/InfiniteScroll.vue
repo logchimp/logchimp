@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 
 // components
@@ -53,6 +53,15 @@ interface Props {
    * @default true
    */
   immediateCheck?: boolean;
+  /**
+   * @default "bottom"
+   */
+  direction?: "top" | "bottom" | "left" | "right";
+  /**
+   * Target should be provided for horizontal scrolling
+   * @default window
+   */
+  target?: HTMLElement | Window | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -60,6 +69,8 @@ const props = withDefaults(defineProps<Props>(), {
   state: "LOADING",
   canLoadMore: true,
   immediateCheck: true,
+  direction: "bottom",
+  target: () => window,
 });
 
 const isFirstLoad = ref(true);
@@ -71,6 +82,8 @@ const noResults = computed<boolean>(
   () => props.state === "COMPLETED" && isFirstLoad.value,
 );
 
+let cleanupHorizontalScroll: (() => void) | undefined;
+
 watch(
   () => props.state,
   (newValue) => {
@@ -80,20 +93,94 @@ watch(
   },
 );
 
+watch(
+  () => props.target,
+  (target) => {
+    if (cleanupHorizontalScroll) {
+      cleanupHorizontalScroll();
+      cleanupHorizontalScroll = undefined;
+    }
+    if (
+      target &&
+      target instanceof HTMLElement &&
+      (props.direction === "left" || props.direction === "right")
+    ) {
+      target.addEventListener("scroll", handleHorizontalScroll);
+      cleanupHorizontalScroll = () =>
+        target.removeEventListener("scroll", handleHorizontalScroll);
+    }
+  },
+);
+
 function executeInfiniteScroll() {
   if (props.state === "COMPLETED" || props.state === "ERROR") return;
   props.onInfinite();
 }
 
-useInfiniteScroll(window, executeInfiniteScroll, {
-  distance: props.distance,
-  direction: "bottom",
-  canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
-});
+function handleHorizontalScroll() {
+  if (props.state === "COMPLETED" || props.state === "ERROR") {
+    return;
+  }
+  const target = props.target as HTMLElement;
+
+  if (!target) {
+    executeInfiniteScroll();
+    return;
+  }
+
+  const scrollLeft = target.scrollLeft;
+  const scrollWidth = target.scrollWidth;
+  const clientWidth = target.clientWidth;
+
+  if (props.direction === "right") {
+    const distanceFromRight = scrollWidth - (scrollLeft + clientWidth);
+    if (distanceFromRight <= props.distance) {
+      executeInfiniteScroll();
+    }
+  } else if (props.direction === "left") {
+    if (scrollLeft <= props.distance) {
+      executeInfiniteScroll();
+    }
+  }
+}
+
+if (props.direction === "top" || props.direction === "bottom") {
+  useInfiniteScroll(props.target, executeInfiniteScroll, {
+    distance: props.distance,
+    direction: props.direction,
+    canLoadMore: () => !noMoreResults.value && props.state !== "ERROR",
+  });
+}
 
 onMounted(() => {
-  if (props.immediateCheck) {
+  if (
+    props.immediateCheck &&
+    (props.direction === "top" || props.direction === "bottom")
+  ) {
     executeInfiniteScroll();
+  }
+
+  const target = props.target;
+
+  if (props.direction === "left" || props.direction === "right") {
+    if (target && target instanceof HTMLElement) {
+      if (props.direction === "right") {
+        target.scrollLeft = 0;
+      } else if (props.direction === "left") {
+        target.scrollLeft = target.scrollWidth;
+      }
+
+      cleanupHorizontalScroll = () =>
+        target.removeEventListener("scroll", handleHorizontalScroll);
+    } else if (props.immediateCheck) {
+      handleHorizontalScroll();
+    }
+  }
+});
+
+onUnmounted(() => {
+  if (cleanupHorizontalScroll) {
+    cleanupHorizontalScroll();
   }
 });
 </script>
