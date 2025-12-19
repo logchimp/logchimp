@@ -38,7 +38,7 @@
       <CreateRoadmapItem
         v-if="search && suggestions.length === 0"
         :search="search"
-        @created="selectHandler"
+        @created="onRoadmapCreated"
       />
     </div>
   </DropdownMenuContent>
@@ -104,6 +104,13 @@ watchDebounced(
 function selectHandler(e: TCurrentRoadmap) {
   if (!e) return;
   searchRoadmap.select(e);
+}
+
+function onRoadmapCreated(roadmap: TCurrentRoadmap) {
+  if (roadmap) {
+    suggestions.value.unshift(roadmap as IRoadmapPrivate);
+  }
+  selectHandler(roadmap);
 }
 
 function resetSuggestions() {
