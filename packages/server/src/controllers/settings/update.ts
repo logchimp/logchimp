@@ -40,6 +40,17 @@ export async function update(
   const { title, description, allowSignup, googleAnalyticsId, developer_mode } =
     req.body;
 
+  // Check if at least one of title or logo is provided
+  const hasTitle = title && title.trim();
+  const hasLogo = req.body.logo && req.body.logo.trim();
+
+  if (!hasTitle && !hasLogo) {
+    return res.status(400).send({
+      message: error.api.settings.titleOrLogoRequired,
+      code: "TITLE_OR_LOGO_REQUIRED",
+    });
+  }
+
   let logo: string | null | undefined;
   if ("logo" in req.body) {
     const _logo = req.body.logo;
