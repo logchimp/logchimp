@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node index.js",
-    "format": "prettier --write \"**/*.{js}\"",
     "test:unit": "vitest --config ./vitest.config.unit.ts",
     "test:integration": "vitest --config ./vitest.config.integration.ts",
     "db:migrate": "knex --knexfile ./src/database/config.ts migrate:latest",
@@ -29,7 +28,7 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "nanoid": "^3.3.2",
-    "nodemailer": "7.0.10",
+    "nodemailer": "7.0.11",
     "pg": "^8.7.1",
     "uuid": "^9.0.0",
     "valibot": "^1.2.0",
