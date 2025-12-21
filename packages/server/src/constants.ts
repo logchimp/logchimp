@@ -8,3 +8,4 @@ export const GET_ROADMAPS_FILTER_COUNT = 20;
 export const GET_ROLES_FILTER_COUNT = 10;
 
 export const SIGNUP_USERNAME_MAX_ATTEMPTS = 2;
+export const POST_TITLE_MAX_LENGTH = 100;
