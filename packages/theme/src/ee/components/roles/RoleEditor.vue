@@ -281,7 +281,12 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import type { IRole, TPermission, IPermissionsState } from "@logchimp/types";
+import type {
+  IRole,
+  TPermission,
+  PermissionAction,
+  IPermissionsState,
+} from "@logchimp/types";
 import { ShieldAlert } from "lucide-vue";
 
 // modules
@@ -320,7 +325,13 @@ const updateRoleButtonDisabled = computed(() => {
   return !checkPermission;
 });
 
-const permissionPrerequisite = {
+type PermissionPrerequisiteMap = {
+  [K in keyof IPermissionsState]: Partial<{
+    [action: string]: PermissionAction[];
+  }>;
+};
+
+const permissionPrerequisite: PermissionPrerequisiteMap = {
   post: {
     create: ["read"],
     update: ["read"],
@@ -350,36 +361,57 @@ const permissionPrerequisite = {
   settings: {
     update: ["read"],
   },
+  vote: {},
+  dashboard: {},
 };
+const reversePrerequisites = {} as PermissionPrerequisiteMap;
 
-const reversePrerequisites = {};
-Object.keys(permissionPrerequisite).forEach((permission) => {
-  reversePrerequisites[permission] = {};
-  Object.keys(permissionPrerequisite[permission]).forEach((action) => {
-    permissionPrerequisite[permission][action].forEach((required) => {
-      if (!reversePrerequisites[permission][required]) {
-        reversePrerequisites[permission][required] = [];
-      }
-      reversePrerequisites[permission][required].push(action);
-    });
-  });
-});
+(Object.keys(permissionPrerequisite) as Array<keyof IPermissionsState>).forEach(
+  (permission) => {
+    reversePrerequisites[permission] = {};
+    const permissionConfig = permissionPrerequisite[permission];
 
-const handlePermissionChange = (permission, action) => {
-  const isEnabled = props.permissions[permission][action];
+    if (permissionConfig) {
+      Object.keys(permissionConfig).forEach((action) => {
+        const actionPrereqs = permissionConfig[action];
+
+        if (actionPrereqs) {
+          actionPrereqs.forEach((required: PermissionAction) => {
+            if (!reversePrerequisites[permission][required]) {
+              reversePrerequisites[permission][required] = [];
+            }
+            reversePrerequisites[permission][required].push(
+              action as PermissionAction,
+            );
+          });
+        }
+      });
+    }
+  },
+);
+
+const handlePermissionChange = (
+  permission: keyof IPermissionsState,
+  action: string,
+): void => {
+  const permissionObj = permissions[permission] as Record<string, boolean>;
+  const isEnabled = permissionObj[action];
 
   if (isEnabled) {
-    const prerequisites = permissionPrerequisite[permission]?.[action] || [];
-    prerequisites.forEach((prerequisite) => {
-      if (!props.permissions[permission][prerequisite]) {
-        props.permissions[permission][prerequisite] = true;
+    const prerequisites =
+      (
+        permissionPrerequisite[permission] as Record<string, PermissionAction[]>
+      )?.[action] || [];
+    prerequisites.forEach((prerequisite: PermissionAction) => {
+      if (!permissionObj[prerequisite]) {
+        permissionObj[prerequisite] = true;
       }
     });
   } else {
     const prerequisites = reversePrerequisites[permission]?.[action] || [];
-    prerequisites.forEach((prerequisite) => {
-      if (props.permissions[permission][prerequisite]) {
-        props.permissions[permission][prerequisite] = false;
+    prerequisites.forEach((prerequisite: PermissionAction) => {
+      if (permissionObj[prerequisite]) {
+        permissionObj[prerequisite] = false;
       }
     });
   }
