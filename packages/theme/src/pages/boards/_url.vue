@@ -110,9 +110,10 @@ async function getBoard() {
     loading.value = false;
     Object.assign(board, response.data.board);
   } catch (error: any) {
+    loading.value = false;
+
     if (error.response.data.code === "BOARD_NOT_FOUND") {
       isBoardExist.value = false;
-      loading.value = false;
     }
   }
 }
