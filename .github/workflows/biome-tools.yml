@@ -24,6 +24,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: biomejs/setup-biome@v2
 
@@ -36,6 +38,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: biomejs/setup-biome@v2
 

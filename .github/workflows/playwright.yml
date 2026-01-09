@@ -26,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
       with:

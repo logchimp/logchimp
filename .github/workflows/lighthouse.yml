@@ -20,6 +20,7 @@ jobs:
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
+          submodules: recursive
 
       - name: Setup node
         uses: actions/setup-node@v6
