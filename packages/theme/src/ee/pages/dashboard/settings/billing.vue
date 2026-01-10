@@ -31,7 +31,7 @@ import { useHead } from "@vueuse/head";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
-import { DEFAULT_LOGCHIMP_PILOT_URL } from "../../../../constants.ts";
+import { DEFAULT_LOGCHIMP_PILOT_URL } from "../../../../constants";
 import LocalLicenseAlert from "../../../components/license/LocalLicenseAlert.vue";
 
 useHead({
