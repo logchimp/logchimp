@@ -14,7 +14,7 @@ router.post(
   "/roadmaps",
   authRequired,
   withLicenseGuard(roadmaps.create, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
@@ -23,14 +23,14 @@ router.patch(
   authRequired,
   roadmapExists,
   withLicenseGuard(roadmaps.updateRoadmap, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.patch(
   "/roadmaps/sort",
   authRequired,
   withLicenseGuard(roadmaps.sort, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
@@ -39,7 +39,7 @@ router.delete(
   authRequired,
   roadmapExists,
   withLicenseGuard(roadmaps.deleteById, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 

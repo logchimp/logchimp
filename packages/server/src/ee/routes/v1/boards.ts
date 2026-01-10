@@ -19,14 +19,14 @@ router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
   "/boards",
   // @ts-expect-error
   withLicenseGuard(boards.filter, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
   "/boards/get",
   // @ts-expect-error
   withLicenseGuard(boards.get, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.get<IGetBoardByUrlRequestParams>(
@@ -34,7 +34,7 @@ router.get<IGetBoardByUrlRequestParams>(
   boardExists,
   // @ts-expect-error
   withLicenseGuard(boards.boardByUrl, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.get<ISearchBoardRequestParams>(
@@ -43,7 +43,7 @@ router.get<ISearchBoardRequestParams>(
   authRequired,
   // @ts-expect-error
   withLicenseGuard(boards.searchBoard, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
@@ -51,14 +51,14 @@ router.post(
   "/boards/check-slug",
   authRequired,
   withLicenseGuard(boards.checkSlug, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.post(
   "/boards",
   authRequired,
   withLicenseGuard(boards.create, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.patch(
@@ -67,7 +67,7 @@ router.patch(
   // @ts-expect-error
   boardExists,
   withLicenseGuard(boards.updateBoard, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
@@ -77,7 +77,7 @@ router.delete(
   // @ts-expect-error
   boardExists,
   withLicenseGuard(boards.deleteById, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
@@ -86,7 +86,7 @@ router.post(
   "/boards/check-name",
   authRequired,
   withLicenseGuard(boards.checkName, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 // -- End: Deprecated ---

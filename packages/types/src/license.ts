@@ -10,8 +10,8 @@ export type TDeploymentProvider =
 
 export type TLicenseSubscriptionType =
   | "free"
-  | "starter"
-  | "growth"
+  | "pro"
+  | "business"
   | "enterprise";
 
 export interface ICheckLicenseRequestBody {

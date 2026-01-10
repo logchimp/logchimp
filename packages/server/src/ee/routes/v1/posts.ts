@@ -26,9 +26,9 @@ router.get<
   "/posts/:post_id/activity",
   // @ts-expect-error
   withLicenseGuard(post.activity.get, {
-    // starter <= comments
-    // growth <= activity (post status changed)
-    requiredPlan: ["starter", "growth", "enterprise"],
+    // pro <= comments
+    // business <= activity (post status changed)
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
@@ -39,9 +39,9 @@ router.post<TCreatePostCommentRequestParam>(
   authRequired,
   // @ts-expect-error
   withLicenseGuard(post.comments.create, {
-    // starter <= public comment
-    // growth <= internal comment
-    requiredPlan: ["starter", "growth", "enterprise"],
+    // pro <= public comment
+    // business <= internal comment
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.put<IUpdatePostCommentRequestParam>(
@@ -50,7 +50,7 @@ router.put<IUpdatePostCommentRequestParam>(
   authRequired,
   // @ts-expect-error
   withLicenseGuard(post.comments.update, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.delete<TDeletePostCommentRequestParam>(
@@ -59,7 +59,7 @@ router.delete<TDeletePostCommentRequestParam>(
   authRequired,
   // @ts-expect-error
   withLicenseGuard(post.comments.destroy, {
-    requiredPlan: ["starter", "growth", "enterprise"],
+    requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 
