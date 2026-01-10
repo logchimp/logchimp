@@ -6,46 +6,52 @@
       </Breadcrumbs>
     </template>
 
-    <Button
-      type="primary"
-      :disabled="createBoardPermissionDisabled"
-      :loading="createBoardButtonLoading"
-      @click="createBoardHandler"
-    >
-      Create board
-      <PhCrownSimple
-        :size="20"
-        weight="regular"
-        class="fill-white"
-      />
-    </Button>
+    <UpgradeTooltip :has-valid-license="hasValidLicense">
+      <Button
+        type="primary"
+        :disabled="createBoardPermissionDisabled"
+        :loading="createBoardButtonLoading"
+        @click="createBoardHandler"
+      >
+        Create board
+        <LicenseCrown v-if="!hasValidLicense" />
+      </Button>
+    </UpgradeTooltip>
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
-		<TabularView />
+    <LicenseRequired>
+      <TabularView />
+    </LicenseRequired>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { PhCrownSimple } from "@phosphor-icons/vue";
+import { storeToRefs } from "pinia";
 
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { createBoard } from "../../../modules/boards";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
+import { useSettingsEEStore } from "../../../store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
+import LicenseRequired from "../../../components/LicenseRequired.vue";
 import TabularView from "../../../components/dashboard/boards/TabularView.vue";
+import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
+import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 const createBoardButtonLoading = ref(false);
 
@@ -70,6 +76,10 @@ async function createBoardHandler() {
     createBoardButtonLoading.value = false;
   }
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 useHead({
   title: "Boards • Dashboard",

@@ -2,12 +2,16 @@ import path from "path";
 import fs from "fs";
 import fsExtra from "fs-extra";
 import logger from "./logger";
+import packageJson from "../../package.json";
 
 const DEFAULT_SERVER_PORT = 8000;
 const DEFAULT_DATABASE_PORT = 5432;
 const DEFAULT_MAIL_PORT = 465;
+const DEFAULT_LOGCHIMP_PILOT_URL = "https://pilot.logchimp.codecarrot.net";
 
 interface Config {
+  version: string;
+
   secretKey: string | undefined;
   machineSignature: string | undefined;
   isSelfHosted: boolean | undefined;
@@ -16,6 +20,11 @@ interface Config {
   serverHost: string | undefined;
   serverPort: number | undefined;
   webUrl: string | undefined;
+
+  // License
+  licenseKey: string | undefined;
+  licenseSignature: string | undefined;
+  licensePilotUrl: string | undefined;
 
   // Database
   databaseUrl: string | undefined;
@@ -27,6 +36,7 @@ interface Config {
   databaseSsl: boolean;
 
   // Cache
+  cachePrefix: string | undefined;
   cacheUrl: string | undefined;
 
   // Mail
@@ -120,6 +130,11 @@ class ConfigManager {
         : DEFAULT_SERVER_PORT,
       webUrl: config.server?.webUrl,
 
+      // License
+      licenseKey: config?.license?.key,
+      licenseSignature: config?.license?.signature,
+      licensePilotUrl: config?.license?.pilotUrl || DEFAULT_LOGCHIMP_PILOT_URL,
+
       // Database
       databaseUrl: config.database?.url,
       databaseHost: config.database?.host,
@@ -133,6 +148,7 @@ class ConfigManager {
         false,
 
       // Cache
+      cachePrefix: config?.cache?.prefix,
       cacheUrl: config.cache?.url,
 
       // Mail
@@ -140,6 +156,8 @@ class ConfigManager {
       mailUser: config.mail?.user,
       mailPassword: config.mail?.password,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
+
+      version: "",
     };
   }
 
@@ -172,6 +190,12 @@ class ConfigManager {
         : DEFAULT_SERVER_PORT,
       webUrl: process.env.LOGCHIMP_WEB_URL,
 
+      // License
+      licenseKey: process.env.LOGCHIMP_LICENSE_KEY,
+      licenseSignature: process.env.LOGCHIMP_SIGNATURE_TOKEN,
+      licensePilotUrl:
+        process.env.LOGCHIMP_PILOT_URL || DEFAULT_LOGCHIMP_PILOT_URL,
+
       // Database
       databaseUrl: process.env.LOGCHIMP_DB_URL,
       databaseHost: process.env.LOGCHIMP_DB_HOST,
@@ -184,6 +208,7 @@ class ConfigManager {
       databaseSsl: process.env.LOGCHIMP_DB_SSL === "true",
 
       // Cache
+      cachePrefix: process.env.LOGCHIMP_CACHE_PREFIX || "logchimp:",
       cacheUrl: process.env.LOGCHIMP_VALKEY_URL,
 
       // Mail
@@ -191,6 +216,8 @@ class ConfigManager {
       mailUser: process.env.LOGCHIMP_MAIL_USER,
       mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : DEFAULT_MAIL_PORT,
+
+      version: "",
     };
   }
 
@@ -198,8 +225,26 @@ class ConfigManager {
     return {
       ...envConfig,
       ...(fileConfig || {}),
+      version: packageJson.version,
     };
   }
+
+  // private getEnv = <K extends keyof NodeJS.ProcessEnv>(key: K, fallback?: NodeJS.ProcessEnv[K]): NodeJS.ProcessEnv[K] => {
+  //   const value = process.env[key] as NodeJS.ProcessEnv[K] | undefined;
+  //
+  //   if (value === undefined) {
+  //     // handle fallback falsy cases that should still be used as value
+  //     if (fallback === false || fallback === "" || fallback === 0) {
+  //       return fallback;
+  //     }
+  //     if (fallback) {
+  //       return fallback;
+  //     }
+  //     throw new Error(`Missing environment variable: ${key}.`);
+  //   }
+  //
+  //   return value;
+  // };
 }
 
 export const configManager = new ConfigManager();

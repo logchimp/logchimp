@@ -7,3 +7,4 @@ export * from "./vote";
 export * from "./posts";
 export * from "./roles";
 export * from "./site";
+export * from "./license";
