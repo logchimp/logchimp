@@ -171,8 +171,8 @@ function parseAndValidateLimit(value: string, max: number): number {
  * @returns {string}
  */
 function generateNanoID(length: number): string {
-  // Generate nanoid only with [_0-9a-z]
-  const allowedChars = "_0123456789abcdefghijklmnopqrstuvwxyz";
+  // Generate nanoid only with [0-9a-z]
+  const allowedChars = "0123456789abcdefghijklmnopqrstuvwxyz";
   const nanoid = customAlphabet(
     allowedChars,
     Math.min(Math.max(length, 2), allowedChars.length),
