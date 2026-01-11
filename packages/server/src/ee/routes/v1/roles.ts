@@ -28,7 +28,6 @@ router.get<IGetRoleByIdRequestParams>(
   // @ts-expect-error
   authRequired,
   roleExists,
-  // @ts-expect-error
   withLicenseGuard(roles.getOne, {
     requiredPlan: ["enterprise"],
   }),
@@ -57,7 +56,6 @@ router.put<IAssignRoleToUserRequestParams>(
   authRequired,
   roleExists,
   userExists,
-  // @ts-expect-error
   withLicenseGuard(roles.addRoleToUser, {
     requiredPlan: ["enterprise"],
   }),
@@ -69,7 +67,6 @@ router.delete<TUnassignRoleToUserRequestParams>(
   authRequired,
   roleExists,
   userExists,
-  // @ts-expect-error
   withLicenseGuard(roles.deleteRoleFromUser, {
     requiredPlan: ["enterprise"],
   }),

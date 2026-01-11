@@ -25,10 +25,11 @@ export async function deleteById(
 
   const checkPermission = permissions.includes("roadmap:destroy");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {

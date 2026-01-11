@@ -63,15 +63,16 @@ export async function updateRoadmap(
 
   const checkPermission = permissions.includes("roadmap:update");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const body = v.safeParse(bodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -82,6 +83,7 @@ export async function updateRoadmap(
         code: issue.message,
       })),
     });
+    return;
   }
 
   // @ts-expect-error

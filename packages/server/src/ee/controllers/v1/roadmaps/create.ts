@@ -30,10 +30,11 @@ export async function create(
 
   const checkPermission = permissions.includes("roadmap:create");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   let name: string | undefined;

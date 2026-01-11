@@ -64,15 +64,16 @@ export async function updateBoard(
 
   const checkPermission = permissions.includes("board:update");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const body = v.safeParse(bodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -83,6 +84,7 @@ export async function updateBoard(
         code: issue.message,
       })),
     });
+    return;
   }
 
   // @ts-expect-error
@@ -101,10 +103,11 @@ export async function updateBoard(
       })
       .first();
     if (urlExists) {
-      return res.status(409).send({
+      res.status(409).send({
         message: error.api.boards.urlExists,
         code: "BOARD_URL_EXISTS",
       });
+      return;
     }
   }
 

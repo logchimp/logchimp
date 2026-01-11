@@ -23,10 +23,11 @@ export async function searchBoard(
 
   const checkPermission = permissions.includes("board:read");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {

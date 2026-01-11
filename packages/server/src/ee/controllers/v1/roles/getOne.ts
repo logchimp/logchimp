@@ -23,10 +23,11 @@ export async function getOne(
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {
@@ -54,6 +55,7 @@ export async function getOne(
         message: error.api.roles.roleNotFound,
         code: "ROLE_NOT_FOUND",
       });
+      return;
     }
 
     res.status(200).send({

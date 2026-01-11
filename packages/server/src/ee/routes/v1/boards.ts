@@ -17,14 +17,12 @@ import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
 router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
   "/boards",
-  // @ts-expect-error
   withLicenseGuard(boards.filter, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
   "/boards/get",
-  // @ts-expect-error
   withLicenseGuard(boards.get, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
@@ -32,7 +30,6 @@ router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
 router.get<IGetBoardByUrlRequestParams>(
   "/boards/:url",
   boardExists,
-  // @ts-expect-error
   withLicenseGuard(boards.boardByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
@@ -41,7 +38,6 @@ router.get<ISearchBoardRequestParams>(
   "/boards/search/:name",
   // @ts-expect-error
   authRequired,
-  // @ts-expect-error
   withLicenseGuard(boards.searchBoard, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),

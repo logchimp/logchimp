@@ -23,10 +23,11 @@ export async function destroy(
       .first()) as unknown as { labs: ISiteSettingsLab };
 
     if (!labSettings.labs.comments) {
-      return res.status(403).send({
+      res.status(403).send({
         message: error.api.labs.disabled,
         code: "LABS_DISABLED",
       });
+      return;
     }
 
     await database.delete().from("posts_comments").where({ id: comment_id });
