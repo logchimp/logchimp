@@ -84,6 +84,8 @@
       </li>
     </ul>
 
+    <LanguageDropdown/>
+    
     <div class="mt-auto relative">
       <dashboard-sidebar-auth-user-dropdown />
     </div>
@@ -112,6 +114,7 @@ import RoadmapIcon from "../../icons/Roadmap.vue";
 import SidebarList from "./SidebarList.vue";
 import SidebarListHeading from "./SidebarListHeading.vue";
 import DashboardSidebarAuthUserDropdown from "./AuthUser/Dropdown.vue";
+import LanguageDropdown from "../../ui/LanguageDropdown.vue";
 
 const { get: siteSettings } = useSettingStore();
 </script>

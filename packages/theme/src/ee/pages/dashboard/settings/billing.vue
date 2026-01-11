@@ -21,8 +21,7 @@
           />
         </template>
         <template #description>
-          <p>
-            Please keep in mind that a few <strong>free</strong> plan features will be converted to paid plans.
+          <p> Please keep in mind that a few <strong>free</strong> plan features will be converted to paid plans.
           </p>
         </template>
       </alert>
@@ -32,9 +31,7 @@
       <h6 class="form-section-title">Active Plan</h6>
 
       <div class="form-columns">
-        <div class="form-column">
-          You're currently on <strong>free</strong> plan.
-        </div>
+        <div class="form-column">You're currently on <strong>free</strong> plan.</div>
       </div>
     </div>
   </div>
