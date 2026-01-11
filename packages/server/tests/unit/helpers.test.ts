@@ -357,20 +357,20 @@ describe("parseAndValidateLimit", () => {
 });
 
 describe("generateNanoID", () => {
-  const nanoIdRegex = /^[_0-9a-z]+$/;
+  const nanoIdRegex = /^[0-9a-z]+$/;
   it("should create a random ID of length 2 if length <= 2", () => {
     const randomId = generateNanoID(Number.MIN_SAFE_INTEGER);
     expect(randomId.length).toBe(2);
     expect(randomId).toMatch(nanoIdRegex);
   });
 
-  it("should create a random ID of length 37 if length >= 37", () => {
+  it("should create a random ID of length 36 if length >= 36", () => {
     const randomId = generateNanoID(Number.MAX_SAFE_INTEGER);
-    expect(randomId.length).toBe(37);
+    expect(randomId.length).toBe(36);
     expect(randomId).toMatch(nanoIdRegex);
   });
 
-  it("should create a random ID only using [_a-z0-9]", () => {
+  it("should create a random ID only using [a-z0-9]", () => {
     for (let length = 2; length < 10; length++) {
       const randomId = generateNanoID(length);
       expect(randomId.length).toBe(length);
