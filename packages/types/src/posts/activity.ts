@@ -43,7 +43,7 @@ export interface ICreatePostCommentRequestBody {
 }
 
 export interface ICreatePostCommentResponseBody {
-  comment: IPostActivity;
+  activity: IPostActivity;
 }
 
 export interface IUpdatePostCommentRequestParam {
