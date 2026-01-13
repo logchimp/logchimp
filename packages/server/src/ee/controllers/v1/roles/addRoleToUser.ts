@@ -26,10 +26,11 @@ export async function addRoleToUser(
 
   const checkPermission = permissions.find((item) => item === "role:assign");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {
@@ -42,9 +43,10 @@ export async function addRoleToUser(
     });
   } catch (err) {
     if (err.message === "ROLE_USER_CONFLICT") {
-      return res.status(409).send({
+      res.status(409).send({
         success: 0,
       });
+      return;
     }
 
     logger.error({

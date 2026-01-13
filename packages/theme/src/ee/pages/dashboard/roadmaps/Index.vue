@@ -8,36 +8,37 @@
       </Breadcrumbs>
     </template>
 
-    <Button
-      type="primary"
-      :disabled="createRoadmapButtonDisabled"
-      :loading="createRoadmapButtonLoading"
-      @click="createRoadmapHandler"
-    >
-      Create roadmap
-      <PhCrownSimple
-        :size="20"
-        weight="regular"
-        class="fill-white"
-      />
-    </Button>
+    <UpgradeTooltip :has-valid-license="hasValidLicense">
+      <Button
+        type="primary"
+        :disabled="createRoadmapButtonDisabled"
+        :loading="createRoadmapButtonLoading"
+        @click="createRoadmapHandler"
+      >
+        Create roadmap
+        <LicenseCrown v-if="!hasValidLicense" />
+      </Button>
+    </UpgradeTooltip>
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
-    <TabularView />
+    <LicenseRequired>
+      <TabularView />
+    </LicenseRequired>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { PhCrownSimple } from "@phosphor-icons/vue";
+import { storeToRefs } from "pinia";
 
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 import { createRoadmap } from "../../../modules/roadmaps";
+import { useSettingsEEStore } from "../../../store/settings";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -45,9 +46,14 @@ import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import TabularView from "../../../components/dashboard/roadmap/TabularView.vue";
+import LicenseRequired from "../../../components/LicenseRequired.vue";
+import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
+import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
+const settingsEEStore = useSettingsEEStore();
+const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 const createRoadmapButtonLoading = ref(false);
 
@@ -71,6 +77,10 @@ async function createRoadmapHandler() {
     console.error(err);
   }
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 useHead({
   title: "Roadmaps • Dashboard",

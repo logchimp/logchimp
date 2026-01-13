@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
@@ -9,7 +9,6 @@ import type {
 } from "@logchimp/types";
 import * as v from "valibot";
 
-import type { ExpressRequestContext } from "../../../../express";
 import database from "../../../../database";
 
 // utils
@@ -56,7 +55,7 @@ const schemaBodyErrorMap = {
 };
 
 export async function updateRoadmap(
-  req: ExpressRequestContext<unknown, unknown, IUpdateRoadmapRequestBody>,
+  req: Request<unknown, unknown, IUpdateRoadmapRequestBody>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
@@ -64,15 +63,16 @@ export async function updateRoadmap(
 
   const checkPermission = permissions.includes("roadmap:update");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const body = v.safeParse(bodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -83,9 +83,11 @@ export async function updateRoadmap(
         code: issue.message,
       })),
     });
+    return;
   }
 
-  const id = req.ctx.roadmap.id;
+  // @ts-expect-error
+  const id = (req.roadmap as IRoadmapPrivate).id;
   const { name, url, color, display } = body.output;
 
   try {

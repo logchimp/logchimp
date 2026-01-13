@@ -13,35 +13,78 @@ import * as boards from "../../controllers/v1/boards";
 // middleware
 import { authRequired } from "../../../middlewares/auth";
 import { boardExists } from "../../middleware/boardExists";
+import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
 router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
   "/boards",
-  boards.filter,
+  withLicenseGuard(boards.filter, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
 );
 router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
   "/boards/get",
-  boards.get,
+  withLicenseGuard(boards.get, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
 );
 router.get<IGetBoardByUrlRequestParams>(
   "/boards/:url",
   boardExists,
-  boards.boardByUrl,
+  withLicenseGuard(boards.boardByUrl, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
 );
 router.get<ISearchBoardRequestParams>(
   "/boards/search/:name",
   // @ts-expect-error
   authRequired,
-  boards.searchBoard,
+  withLicenseGuard(boards.searchBoard, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
 );
 
-router.post("/boards/check-slug", authRequired, boards.checkSlug);
-router.post("/boards", authRequired, boards.create);
-router.patch("/boards", authRequired, boardExists, boards.updateBoard);
+router.post(
+  "/boards/check-slug",
+  authRequired,
+  withLicenseGuard(boards.checkSlug, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
+router.post(
+  "/boards",
+  authRequired,
+  withLicenseGuard(boards.create, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
+router.patch(
+  "/boards",
+  authRequired,
+  // @ts-expect-error
+  boardExists,
+  withLicenseGuard(boards.updateBoard, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
 
-router.delete("/boards", authRequired, boardExists, boards.deleteById);
+router.delete(
+  "/boards",
+  authRequired,
+  // @ts-expect-error
+  boardExists,
+  withLicenseGuard(boards.deleteById, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
 
 // --- Start: Deprecated, will be removed in next major release ---
-router.post("/boards/check-name", authRequired, boards.checkName);
+router.post(
+  "/boards/check-name",
+  authRequired,
+  withLicenseGuard(boards.checkName, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
 // -- End: Deprecated ---
 
 export default router;

@@ -38,7 +38,7 @@ export async function get(
 ) {
   const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
@@ -49,16 +49,18 @@ export async function get(
         code: issue.message,
       })),
     });
+    return;
   }
 
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const { first, after } = query.output;

@@ -24,14 +24,16 @@ export async function sort(
 
   const checkPermission = permissions.includes("roadmap:update");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   if (from.id === to.id) {
-    return res.status(204).send();
+    res.status(204).send();
+    return;
   }
 
   try {

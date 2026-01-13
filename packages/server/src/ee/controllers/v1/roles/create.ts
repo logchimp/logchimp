@@ -21,10 +21,11 @@ export async function create(req: Request, res: Response<ResponseBody>) {
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("role:create");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {

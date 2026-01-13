@@ -24,6 +24,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: biomejs/setup-biome@v2
 
@@ -36,6 +39,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: biomejs/setup-biome@v2
 
