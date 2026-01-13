@@ -8,3 +8,6 @@ export const GET_ROADMAPS_FILTER_COUNT = 20;
 export const GET_ROLES_FILTER_COUNT = 10;
 
 export const SIGNUP_USERNAME_MAX_ATTEMPTS = 2;
+
+// 1 day in seconds
+export const LOGCHIMP_LICENSE_CACHE_TTL_IN_SEC = 60 * 60 * 24;

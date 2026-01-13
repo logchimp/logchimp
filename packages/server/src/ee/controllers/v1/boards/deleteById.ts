@@ -22,14 +22,16 @@ export async function deleteById(
       message: error.api.boards.boardIdMissing,
       code: "BOARD_ID_MISSING",
     });
+    return;
   }
 
   const checkPermission = permissions.includes("board:destroy");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   let boardDeleted: number;

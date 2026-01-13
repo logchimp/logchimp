@@ -1,10 +1,9 @@
-import type { Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import type {
   IApiErrorResponse,
   IGetRoadmapByUrlRequestParam,
   IRoadmapPrivate,
 } from "@logchimp/types";
-import type { ExpressRequestContext } from "../express";
 
 import database from "../database";
 
@@ -13,10 +12,10 @@ import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
 import logger from "../utils/logger";
 
-type RequestParams = IGetRoadmapByUrlRequestParam;
+type RequestParams = Partial<IGetRoadmapByUrlRequestParam>;
 
 export async function roadmapExists(
-  req: ExpressRequestContext<RequestParams>,
+  req: Request<RequestParams>,
   res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
@@ -48,10 +47,8 @@ export async function roadmapExists(
       return;
     }
 
-    if (!req.ctx) {
-      req.ctx = {};
-    }
-    req.ctx.roadmap = roadmap;
+    // @ts-expect-error
+    req.roadmap = roadmap;
     next();
   } catch (err) {
     logger.error({

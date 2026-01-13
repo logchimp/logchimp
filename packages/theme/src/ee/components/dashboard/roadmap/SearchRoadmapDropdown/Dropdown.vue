@@ -9,6 +9,7 @@
             'data-[state=open]:ring-4 data-[state=open]:ring-neutral-200/70',
             'text-left text-sm font-medium',
             'flex items-center justify-between gap-x-4',
+            'disabled:bg-neutral-100 disabled:cursor-not-allowed',
             roadmap?.id ? 'py-1.5' : 'py-2.5'
           ]"
           :disabled="disabled"
@@ -29,13 +30,13 @@
             </div>
           </template>
           <template v-else>
-            <div class="text-neutral-500">
+            <div class="text-neutral-500 group-disabled:text-neutral-400">
               Select Roadmap
             </div>
           </template>
           <ChevronDown
             aria-hidden="true"
-            :class="['stroke-neutral-700 flex-shrink-0 size-6','group-data-[state=open]:rotate-180 transition duration-150']"
+            :class="['stroke-neutral-700 group-disabled:stroke-neutral-500 flex-shrink-0 size-6','group-data-[state=open]:rotate-180 transition duration-150']"
           />
         </DropdownMenuTrigger>
       </template>

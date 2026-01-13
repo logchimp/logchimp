@@ -13,6 +13,7 @@ export const useSettingStore = defineStore("settings", () => {
     isPoweredBy: true,
     allowSignup: true,
     developer_mode: false,
+    hasValidLicense: false,
 
     // experimental features
     labs: {
