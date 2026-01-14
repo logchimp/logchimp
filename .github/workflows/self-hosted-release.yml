@@ -14,8 +14,50 @@ env:
   pnpm-version: 10
 
 jobs:
+  deploy-target:
+    runs-on: ubuntu-latest
+    outputs:
+      latest_version: ${{ steps.deploy-target.outputs.latest_version }}
+      is_latest: ${{ steps.deploy-target.outputs.is_latest }}
+      is_prerelease: ${{ steps.deploy-target.outputs.is_prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Determine deploy target
+        id: deploy-target
+        run: |
+          GITHUB_REF_NAME="${{ github.ref_name }}"
+          VERSION="${GITHUB_REF_NAME#v}"  # Remove 'v' prefix
+          echo "latest_version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Check if this is a prerelease (contains beta, alpha, rc, nightly)
+          PRERELEASE="beta|alpha|rc|canary|nightly"
+          
+          if [[ "$VERSION" =~ ($PRERELEASE) ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "is_latest=false" >> $GITHUB_OUTPUT
+            echo "This is a prerelease: $VERSION"
+          else
+            # For stable releases, check if this is actually the latest
+            # Get all tags, filter out prereleases, sort by version, get the latest
+            LATEST_STABLE=$(git tag -l 'v*' | grep -v -E "($PRERELEASE)" | sort -V | tail -n1)
+            LATEST_STABLE="${LATEST_STABLE#v}"
+          
+            if [ "$VERSION" = "$LATEST_STABLE" ]; then
+              echo "is_latest=true" >> $GITHUB_OUTPUT
+              echo "This is the latest stable release: $VERSION"
+            else
+              echo "is_latest=false" >> $GITHUB_OUTPUT
+              echo "This is a stable release but not the latest: $VERSION (latest is $LATEST_STABLE)"
+            fi
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
   build:
     runs-on: ubuntu-latest
+    needs: deploy-target
     strategy:
       fail-fast: false
       matrix:
@@ -30,17 +72,18 @@ jobs:
       - name: Variables
         run: |
           service=${{ matrix.name }}
-          LATEST_VERSION=$(jq -r '.version'  packages/server/package.json)
           SERVICE_NAME=$(basename "${service//-/-}")
           SERVICE_COMMON_NAME=$(echo "$SERVICE_NAME" | sed 's/-ee$//')
-          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+          
           echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
           echo "SERVICE_COMMON_NAME=$SERVICE_COMMON_NAME" >> $GITHUB_ENV
           echo "REGISTRY_OWNER=logchimp" >> $GITHUB_ENV
-          echo "This is the service name: $SERVICE_NAME and release version: $LATEST_VERSION"
+          echo "LATEST_VERSION=${{ needs.deploy-target.outputs.latest_version }}" >> $GITHUB_ENV
+          echo "IS_LATEST=${{ needs.deploy-target.outputs.is_latest }}" >> $GITHUB_ENV
+          echo "IS_PRERELEASE=${{ needs.deploy-target.outputs.is_prerelease }}" >> $GITHUB_ENV
+          echo "This is the service name: $SERVICE_NAME and release version: ${{ needs.deploy-target.outputs.latest_version }}"
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.node }}
 
@@ -101,7 +144,15 @@ jobs:
       - name: Tag and Push docker image
         shell: bash
         run: |
+          # Always push the version tag
           docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ env.LATEST_VERSION }}
-          docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
           docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ env.LATEST_VERSION }}
-          docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
+          
+          # Only tag as 'latest' if this is the latest stable release
+          if [ "$IS_LATEST" == "true" ]; then
+            echo "Tagging as latest..."
+            docker tag logchimp-$SERVICE_COMMON_NAME ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
+            docker push ghcr.io/${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
+          else
+            echo "Skipping 'latest' tag (IS_LATEST=$IS_LATEST, IS_PRERELEASE=$IS_PRERELEASE)"
+          fi
