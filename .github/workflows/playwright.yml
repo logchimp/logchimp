@@ -25,7 +25,7 @@ jobs:
       API_URL: "http://localhost:8000"
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
         token: ${{ secrets.LC_SUBMODULES_TOKEN }}

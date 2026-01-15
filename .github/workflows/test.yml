@@ -34,7 +34,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
@@ -84,7 +84,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
@@ -111,7 +111,7 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
@@ -176,7 +176,7 @@ jobs:
           - 1025:1025
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
