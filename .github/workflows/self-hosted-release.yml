@@ -21,7 +21,7 @@ jobs:
       is_latest: ${{ steps.deploy-target.outputs.is_latest }}
       is_prerelease: ${{ steps.deploy-target.outputs.is_prerelease }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -72,7 +72,7 @@ jobs:
         name: [ 'logchimp/api', 'logchimp/theme' ]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
