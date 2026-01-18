@@ -21,6 +21,7 @@ import { PlusIcon } from "lucide-vue";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { createRoadmap } from "../../../../modules/roadmaps";
+import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 
 interface Props {
   search: string;
@@ -29,6 +30,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<(e: "created", event: IRoadmapPrivate) => void>();
 
 const loading = ref(false);
+const dashboardRoadmaps = useDashboardRoadmaps();
 
 async function createRoadmapHandler() {
   if (loading.value) return;
@@ -39,6 +41,8 @@ async function createRoadmapHandler() {
       name: props.search,
     });
     const roadmap = response.data.roadmap;
+
+    dashboardRoadmaps.appendRoadmap(roadmap);
 
     emit("created", roadmap);
     loading.value = false;

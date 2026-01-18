@@ -21,6 +21,7 @@ import { PlusIcon } from "lucide-vue";
 import type { IBoardPrivate } from "@logchimp/types";
 
 import { createBoard } from "../../../../modules/boards";
+import { useDashboardBoards } from "../../../../store/dashboard/boards";
 
 interface Props {
   search: string;
@@ -29,6 +30,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<(e: "created", event: IBoardPrivate) => void>();
 
 const loading = ref(false);
+const dashboardBoards = useDashboardBoards();
 
 async function createBoardHandler() {
   if (loading.value) return;
@@ -39,6 +41,8 @@ async function createBoardHandler() {
       name: props.search,
     });
     const board = response.data.board;
+
+    dashboardBoards.appendBoard(board);
 
     emit("created", board);
     loading.value = false;
