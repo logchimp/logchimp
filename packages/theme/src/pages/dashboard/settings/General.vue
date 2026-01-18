@@ -18,6 +18,10 @@
 
   <div class="px-3 lg:px-6">
     <div class="form-section">
+      <h6 class="form-section-title">Branding</h6>
+      <p class="text-sm text-neutral-600 mb-4">
+        At least one of Site name or Logo is required for site branding.
+      </p>
       <div class="form-columns">
         <div class="form-column">
           <l-text
@@ -202,16 +206,28 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 }
 
 async function updateSettingsHandler() {
-  if (!(siteName.value && accentColor.value)) {
-    if (!siteName.value) {
-      siteName.error.show = true;
-      siteName.error.message = "Required";
-    }
+  // Reset errors
+  siteName.error.show = false;
+  accentColor.error.show = false;
 
-    if (!accentColor.value) {
-      accentColor.error.show = true;
-      accentColor.error.message = "Required";
-    }
+  let hasError = false;
+
+  // Check if at least one of site name or logo is provided
+  if (!siteName.value?.trim() && !logo.value?.trim()) {
+    siteName.error.show = true;
+    siteName.error.message = "Either Site name or Logo is required";
+    hasError = true;
+  }
+
+  // Accent color is still required
+  if (!accentColor.value) {
+    accentColor.error.show = true;
+    accentColor.error.message = "Required";
+    hasError = true;
+  }
+
+  if (hasError) {
+    return;
   }
 
   updateSettingsButtonLoading.value = true;
