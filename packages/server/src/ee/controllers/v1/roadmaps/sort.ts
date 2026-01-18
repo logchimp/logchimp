@@ -36,6 +36,10 @@ export async function sort(
     return;
   }
 
+  if (from.id === to.id) {
+    return res.status(204).send();
+  }
+
   try {
     // to
     await database
