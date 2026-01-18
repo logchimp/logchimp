@@ -119,6 +119,22 @@ describe("POST /api/v1/votes", () => {
       true,
     );
 
+    it("should allow another verified user to vote on a post", async () => {
+      const { user: creator } = await createUser({ isVerified: true });
+      const { user: voter } = await createUser({ isVerified: true });
+
+      const post = await generatePost({ userId: creator.userId }, true);
+
+      const response = await supertest(app)
+        .post("/api/v1/votes")
+        .set("Authorization", `Bearer ${voter.authToken}`)
+        .send({ postId: post.postId });
+
+      expect(response.status).toBe(201);
+      expect(response.body.voters.votesCount).toBe(1);
+      expect(response.body.voters.viewerVote.userId).toBe(voter.userId);
+    });
+
     const response = await supertest(app)
       .post(`/api/v1/votes`)
       .set("Authorization", `Bearer ${user.authToken}`)
@@ -254,6 +270,43 @@ describe("DELETE /api/v1/votes", () => {
 
     expect(response.body.voters.votesCount).toBe(0);
     expect(response.body.voters.votes).toHaveLength(0);
+    expect(response.body.voters.viewerVote).toBeUndefined();
+  });
+
+  // Test case
+  it("should not allow a user to delete another user's vote", async () => {
+    const { user: voter } = await createUser({ isVerified: true });
+    const { user: other } = await createUser({ isVerified: true });
+
+    const post = await generatePost({ userId: voter.userId }, true);
+
+    // Voter adds a vote
+    await assignVote(voter.userId, post.postId);
+
+    // Other user tries to delete Voter's vote
+    const response = await supertest(app)
+      .delete("/api/v1/votes")
+      .set("Authorization", `Bearer ${other.authToken}`)
+      .send({ postId: post.postId });
+
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
+  });
+
+  // Test case
+  it("should allow the vote owner to delete their own vote", async () => {
+    const { user } = await createUser({ isVerified: true });
+    const post = await generatePost({ userId: user.userId }, true);
+
+    await assignVote(user.userId, post.postId);
+
+    const response = await supertest(app)
+      .delete("/api/v1/votes")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({ postId: post.postId });
+
+    expect(response.status).toBe(200);
+    expect(response.body.voters.votesCount).toBe(0);
     expect(response.body.voters.viewerVote).toBeUndefined();
   });
 });
