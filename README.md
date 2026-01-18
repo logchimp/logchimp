@@ -80,3 +80,7 @@ We welcome contributions! To ensure your work doesn't conflict with ongoing work
 3. Get approval from a core team member
 
 This helps us align efforts and prevents duplicated or conflicting work.
+
+## Stargazers over time
+
+[![Star History Chart](https://api.star-history.com/svg?repos=logchimp/logchimp&type=timeline&legend=top-left)](https://www.star-history.com/#logchimp/logchimp&type=timeline&legend=top-left)
