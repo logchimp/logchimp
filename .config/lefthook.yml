@@ -27,7 +27,7 @@ pre-commit:
           pkgx +nodejs.org@20 +pnpm.io \
             pnpm biome format --write {staged_files}
         fi
-      glob: "*.{js,ts,vue,json,md}"
+      glob: "*.{js,ts,vue,json,css,html}"
       stage_fixed: true
 
 #     - name: rubocop
