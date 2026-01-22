@@ -144,6 +144,11 @@ async function join() {
       emailError.show = true;
       emailError.message = "Exists";
     }
+
+    if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+      emailError.show = true;
+      emailError.message = "Email domain is blacklisted";
+    }
   } finally {
     buttonLoading.value = false;
   }

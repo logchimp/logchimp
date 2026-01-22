@@ -143,7 +143,7 @@ async function login() {
 
     if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
       emailError.show = true;
-      emailError.message = "Email domain blacklisted";
+      emailError.message = "Email domain is blacklisted";
     }
 
     if (error.response.data.code === "INCORRECT_PASSWORD") {
