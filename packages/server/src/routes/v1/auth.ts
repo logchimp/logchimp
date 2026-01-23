@@ -12,25 +12,25 @@ import { validateEmailToken } from "../../middlewares/validateEmailToken";
 import { authRequired } from "../../middlewares/auth";
 import { domainBlacklist } from "../../middlewares/domainBlacklist";
 
-router.post("/auth/signup", domainBlacklist, mailConfigExists, auth.signup);
+router.post("/auth/signup", mailConfigExists, domainBlacklist, auth.signup);
 router.post("/auth/login", domainBlacklist, userExists, auth.login);
 
-router.post("/auth/setup", domainBlacklist, mailConfigExists, auth.setup);
+router.post("/auth/setup", mailConfigExists, domainBlacklist, auth.setup);
 router.get("/auth/setup", auth.isSiteSetup);
 
 // email
 router.post(
   "/auth/email/verify",
-  domainBlacklist,
   mailConfigExists,
   authRequired,
+  domainBlacklist,
   userExists,
   auth.email.verify,
 );
 router.post(
   "/auth/email/validate",
-  domainBlacklist,
   validateEmailToken,
+  domainBlacklist,
   userExists,
   auth.email.validate,
 );
@@ -38,8 +38,8 @@ router.post(
 // password
 router.post(
   "/auth/password/reset",
-  domainBlacklist,
   mailConfigExists,
+  domainBlacklist,
   userExists,
   auth.password.reset,
 );
@@ -51,8 +51,8 @@ router.post(
 );
 router.post(
   "/auth/password/set",
-  domainBlacklist,
   validateEmailToken,
+  domainBlacklist,
   userExists,
   auth.password.set,
 );
