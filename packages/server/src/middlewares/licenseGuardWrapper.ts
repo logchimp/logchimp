@@ -38,7 +38,7 @@ let loadAttempted = false;
 const createFallbackGuard = (): WithLicenseGuardFunction => {
   return <P = any, ResBody = any, ReqBody = any, ReqQuery = any>(
     controllerFn: ControllerHandler<P, ResBody, ReqBody, ReqQuery>,
-    { requiredPlan }: LicenseGuardOptions,
+    { requiredPlan, skipHandlerOnFailure }: LicenseGuardOptions,
   ) => {
     return async (
       req: Request<P, ResBody, ReqBody, ReqQuery>,
@@ -48,10 +48,14 @@ const createFallbackGuard = (): WithLicenseGuardFunction => {
       if (requiredPlan.includes("free")) {
         controllerFn(req, res, next);
       } else {
-        res.status(403).send({
-          message: "This feature requires a premium plan",
-          code: "PREMIUM_FEATURE_REQUIRED",
-        });
+        if (skipHandlerOnFailure) {
+          next();
+        } else {
+          res.status(403).send({
+            message: "This feature requires a premium plan",
+            code: "PREMIUM_FEATURE_REQUIRED",
+          });
+        }
       }
     };
   };
@@ -107,3 +111,4 @@ const withLicenseGuardWrapper: WithLicenseGuardFunction = <
 };
 
 export { withLicenseGuardWrapper };
+export type { LicenseGuardOptions, ControllerHandler, IApiErrorResponse };

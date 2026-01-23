@@ -33,4 +33,5 @@ export interface IVerifyEmailJwtPayload {
 
 export interface LicenseGuardOptions {
   requiredPlan: Array<TLicenseSubscriptionType>;
+  skipHandlerOnFailure: boolean;
 }
