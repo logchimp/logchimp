@@ -141,6 +141,11 @@ async function login() {
       emailError.message = "User not found";
     }
 
+    if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+      emailError.show = true;
+      emailError.message = "Email domain is blacklisted";
+    }
+
     if (error.response.data.code === "INCORRECT_PASSWORD") {
       passwordError.show = true;
       passwordError.message = "Incorrect password";
