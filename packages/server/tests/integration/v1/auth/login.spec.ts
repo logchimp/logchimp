@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker";
 import app from "../../../../src/app";
 import { verifyToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
+import { blacklistManager } from "../../../../src/middlewares/domainBlacklist";
 
 describe("POST /api/v1/auth/login", () => {
   it("should throw EMAIL_DOMAIN_BLACKLISTED", async () => {
@@ -18,6 +19,9 @@ describe("POST /api/v1/auth/login", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("EMAIL_DOMAIN_BLACKLISTED");
+
+    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = undefined;
+    blacklistManager.reset();
   });
 
   it('should throw error "EMAIL_INVALID"', async () => {
