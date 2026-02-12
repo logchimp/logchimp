@@ -32,8 +32,7 @@ type WithLicenseGuardFunction = <
   next: NextFunction,
 ) => Promise<void>;
 
-let licenseGuardCache: WithLicenseGuardFunction | null = null;
-let loadAttempted = false;
+let licenseGuardPromise: Promise<WithLicenseGuardFunction> | null = null;
 
 const createFallbackGuard = (): WithLicenseGuardFunction => {
   return <P = any, ResBody = any, ReqBody = any, ReqQuery = any>(
@@ -62,24 +61,13 @@ const createFallbackGuard = (): WithLicenseGuardFunction => {
 };
 
 const getLicenseGuard = async (): Promise<WithLicenseGuardFunction> => {
-  if (licenseGuardCache) {
-    return licenseGuardCache;
+  if (!licenseGuardPromise) {
+    licenseGuardPromise = import("../ee/do-not-remove/middleware/licenseGuard")
+      .then((mod) => mod.withLicenseGuard as WithLicenseGuardFunction)
+      .catch(() => createFallbackGuard());
   }
 
-  if (!loadAttempted) {
-    loadAttempted = true;
-    try {
-      const licenseModule = await import(
-        "../ee/do-not-remove/middleware/licenseGuard"
-      );
-      licenseGuardCache =
-        licenseModule.withLicenseGuard as WithLicenseGuardFunction;
-    } catch (_) {
-      licenseGuardCache = createFallbackGuard();
-    }
-  }
-
-  return licenseGuardCache;
+  return licenseGuardPromise;
 };
 
 const withLicenseGuardWrapper: WithLicenseGuardFunction = <
