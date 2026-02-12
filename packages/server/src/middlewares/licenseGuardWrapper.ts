@@ -45,7 +45,7 @@ const createFallbackGuard = (): WithLicenseGuardFunction => {
       next: NextFunction,
     ) => {
       if (requiredPlan.includes("free")) {
-        controllerFn(req, res, next);
+        await controllerFn(req, res, next);
       } else {
         if (skipHandlerOnFailure) {
           next();
