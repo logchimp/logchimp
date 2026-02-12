@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 import type { LicenseGuardOptions } from "../types";
+import logger from "../utils/logger";
 
 type ControllerHandler<
   P = any,
@@ -84,16 +85,40 @@ const withLicenseGuardWrapper: WithLicenseGuardFunction = <
     res: Response<ResBody | IApiErrorResponse>,
     next: NextFunction,
   ) => {
+    let guardedHandler: (
+      req: Request<P, ResBody, ReqBody, ReqQuery>,
+      res: Response<ResBody | IApiErrorResponse>,
+      next: NextFunction,
+    ) => Promise<void>;
+
     try {
       const guard = await getLicenseGuard();
-      const guardedHandler = guard(controllerFn, options);
-      await guardedHandler(req, res, next);
+      guardedHandler = guard(controllerFn, options);
     } catch (error) {
-      console.error("License guard initialization error:", error);
+      logger.error({
+        message: "License guard initialization error",
+        error,
+      });
+
       res.status(500).send({
         message: "Failed to initialize license validation",
         code: "LICENSE_GUARD_ERROR",
       });
+      return;
+    }
+
+    try {
+      await guardedHandler(req, res, next);
+    } catch (error) {
+      logger.error({
+        message: error,
+      });
+
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
     }
   };
 };
