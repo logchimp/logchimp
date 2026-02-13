@@ -13,12 +13,13 @@ import * as cache from "../../cache/";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { CACHE_KEYS } from "src/cache/keys";
 
 type ResponseBody = IGetSiteSetupResponseBody | IApiErrorResponse;
 
 export async function isSiteSetup(_: Request, res: Response<ResponseBody>) {
   try {
-    const cacheKey = `setup:site`;
+    const cacheKey = CACHE_KEYS.SITE_SETUP;
 
     if (cache.isActive) {
       try {
