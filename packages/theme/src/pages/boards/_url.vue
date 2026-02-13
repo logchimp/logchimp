@@ -95,6 +95,8 @@ function updateTab(tabValue: string) {
 }
 
 async function getBoard() {
+  if (loading.value) return;
+
   loading.value = true;
   const url = (route.params.url || "").toString();
   if (!url) {
@@ -105,16 +107,14 @@ async function getBoard() {
 
   try {
     const response = await getBoardByUrl(url);
-
     isBoardExist.value = true;
-    loading.value = false;
     Object.assign(board, response.data.board);
   } catch (error: any) {
-    loading.value = false;
-
     if (error.response.data.code === "BOARD_NOT_FOUND") {
       isBoardExist.value = false;
     }
+  } finally {
+    loading.value = false;
   }
 }
 
