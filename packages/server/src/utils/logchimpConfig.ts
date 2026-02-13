@@ -7,7 +7,7 @@ import packageJson from "../../package.json";
 const DEFAULT_SERVER_PORT = 8000;
 const DEFAULT_DATABASE_PORT = 5432;
 const DEFAULT_MAIL_PORT = 465;
-const DEFAULT_LOGCHIMP_PILOT_URL = "https://pilot.logchimp.codecarrot.net";
+const DEFAULT_LOGCHIMP_PILOT_URL = "https://l.logchimp.codecarrot.net";
 
 interface Config {
   version: string;
