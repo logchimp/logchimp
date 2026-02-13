@@ -7,7 +7,6 @@ import packageJson from "../../package.json";
 const DEFAULT_SERVER_PORT = 8000;
 const DEFAULT_DATABASE_PORT = 5432;
 const DEFAULT_MAIL_PORT = 465;
-const DEFAULT_LOGCHIMP_PILOT_URL = "https://l.logchimp.codecarrot.net";
 
 interface Config {
   version: string;
@@ -133,7 +132,7 @@ class ConfigManager {
       // License
       licenseKey: config?.license?.key,
       licenseSignature: config?.license?.signature,
-      licensePilotUrl: config?.license?.pilotUrl || DEFAULT_LOGCHIMP_PILOT_URL,
+      licensePilotUrl: config?.license?.pilotUrl,
 
       // Database
       databaseUrl: config.database?.url,
@@ -193,8 +192,7 @@ class ConfigManager {
       // License
       licenseKey: process.env.LOGCHIMP_LICENSE_KEY,
       licenseSignature: process.env.LOGCHIMP_SIGNATURE_TOKEN,
-      licensePilotUrl:
-        process.env.LOGCHIMP_PILOT_URL || DEFAULT_LOGCHIMP_PILOT_URL,
+      licensePilotUrl: process.env.LOGCHIMP_PILOT_URL,
 
       // Database
       databaseUrl: process.env.LOGCHIMP_DB_URL,
