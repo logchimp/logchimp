@@ -25,12 +25,16 @@ ENV NODE_ENV=production
 COPY --from=builder /app/packages/types/package.json ./packages/types/package.json
 COPY --from=builder /app/packages/server/package.json ./packages/server/package.json
 COPY --from=builder /app/packages/server/dist ./packages/server/dist
+COPY --from=builder /app/packages/server/scripts ./packages/server/scripts
 
 # Copy raw email templates
 COPY --from=builder /app/packages/server/src/services/mail/templates ./packages/server/dist/services/mail/templates
 
 RUN \
     npm i -g pnpm && \
-    pnpm install --filter="@logchimp/api";
+    pnpm install --filter="@logchimp/api" && \
+    chmod +x ./packages/server/scripts/*.sh
 
-ENTRYPOINT ["node", "./packages/server/dist/index.js"]
+WORKDIR /app/packages/server
+
+CMD ["node", "./dist/index.js"]
