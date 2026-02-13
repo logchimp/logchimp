@@ -1,5 +1,8 @@
 name: "LogChimp"
 
+x-api-image: &api-image
+  image: ghcr.io/logchimp/logchimp/api:latest
+
 services:
   cache:
     image: valkey/valkey:8
@@ -31,14 +34,8 @@ services:
       - logchimp
 
   migrator:
-    build:
-      dockerfile: ./packages/server/Dockerfile
-      context: ../..
-      args:
-        DOCKER_BUILDKIT: 1
-    working_dir: /app/packages/server
-    entrypoint: ""
-    command: sh -c "pnpm knex --knexfile ./dist/database/config.js migrate:latest && echo ' Migration done'"
+    <<: *api-image
+    command: [ "./scripts/migrate.sh" ]
     depends_on:
       db:
         condition: service_healthy
@@ -50,15 +47,9 @@ services:
       LOGCHIMP_DB_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - logchimp
-    healthcheck:
-      test: ["CMD", "sh", "-c", "pnpm knex --knexfile ./dist/database/config.js migrate:status"]
-      interval: 5s
-      timeout: 1s
-      retries: 1
-    restart: "no"
 
   api:
-    image: ghcr.io/logchimp/logchimp/api:latest
+    <<: *api-image
     restart: unless-stopped
     depends_on:
       db:
