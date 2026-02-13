@@ -222,8 +222,12 @@ class ConfigManager {
 
   private mergeConfigs(fileConfig: Config | null, envConfig: Config) {
     if (!isDevTestEnv) {
-      envConfig.licensePilotUrl = undefined;
-      fileConfig.licensePilotUrl = undefined;
+      if (envConfig?.licenseKey) {
+        envConfig.licensePilotUrl = undefined;
+      }
+      if (fileConfig?.licensePilotUrl) {
+        fileConfig.licensePilotUrl = undefined;
+      }
     }
 
     return {
