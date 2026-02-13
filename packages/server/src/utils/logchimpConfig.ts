@@ -3,6 +3,7 @@ import fs from "fs";
 import fsExtra from "fs-extra";
 import logger from "./logger";
 import packageJson from "../../package.json";
+import { isDevTestEnv } from "../helpers";
 
 const DEFAULT_SERVER_PORT = 8000;
 const DEFAULT_DATABASE_PORT = 5432;
@@ -222,6 +223,11 @@ class ConfigManager {
   }
 
   private mergeConfigs(fileConfig: Config | null, envConfig: Config) {
+    if (!isDevTestEnv) {
+      envConfig.licensePilotUrl = undefined;
+      fileConfig.licensePilotUrl = undefined;
+    }
+
     return {
       ...envConfig,
       ...(fileConfig || {}),
