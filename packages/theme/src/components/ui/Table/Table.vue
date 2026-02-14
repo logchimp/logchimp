@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+interface Props {
+  disableDividers?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  disableDividers: false,
+});
+</script>
+
 <template>
   <div
     :class="[
@@ -18,7 +28,11 @@
       <slot name="header" />
     </div>
 
-    <div class="divide-y-1 divide-neutral-200">
+    <div
+      :class="[
+        disableDividers ? [] : ['divide-y-1 divide-neutral-200'],
+      ]"
+    >
       <slot />
     </div>
 
