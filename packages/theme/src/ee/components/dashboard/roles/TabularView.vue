@@ -73,7 +73,7 @@ import TabularItem from "./TabularItem/TabularItem.vue";
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import Tr from "../../../../components/ui/Table/Tr.vue";
 import Td from "../../../../components/ui/Table/Td.vue";
-import { EXAMPLE_ROLES_DATA } from "./example-data.ts";
+import { EXAMPLE_ROLES_DATA } from "./example-data";
 import EmptyScreen from "../../../../components/EmptyScreen.vue";
 import Button from "../../../../components/ui/Button.vue";
 
