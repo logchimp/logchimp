@@ -60,6 +60,7 @@ withDefaults(defineProps<Props>(), {
           <a
             :href="learnMore"
             target="_blank"
+            rel="noopener"
             class="underline underline-offset-2 hover:text-neutral-800"
           >
             Learn more ↗
