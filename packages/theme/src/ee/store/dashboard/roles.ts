@@ -43,7 +43,8 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
         hasNextPage.value = false;
       }
     } catch (err) {
-      error.value = err;
+      // @ts-expect-error
+      error.value = err?.response?.data?.code ?? err;
       state.value = "ERROR";
     } finally {
       isLoading.value = false;
