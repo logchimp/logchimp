@@ -3,6 +3,11 @@
 Thank you for showing an interest in contributing to LogChimp! All kinds on contributions are valuable to us.
 
 If you're a developer looking to contribute but aren't sure where to start, check out the [good first issue](https://github.com/logchimp/logchimp/labels/good%20first%20issue) label on GitHub. It contains small tasks suitable for new contributors. Or, if you're seeking something more challenging, explore the broader [help wanted](https://github.com/logchimp/logchimp/labels/help%20wanted) label, which includes issues that might pique your interest.
+If in doubt, please open a [discussion](https://github.com/logchimp/logchimp/discussions); we can always convert that to an issue later.
+
+## AI Usage
+
+The LogChimp project has strict rules for AI usage. Please see the AI Usage Policy. **This is very important**. 
 
 ## Directory structure
 
