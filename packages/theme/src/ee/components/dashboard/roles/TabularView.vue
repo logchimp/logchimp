@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { ShieldIcon } from "lucide-vue"
+import { ShieldIcon } from "lucide-vue";
 
 import { useDashboardRoles } from "../../../store/dashboard/roles";
 import Table from "../../../../components/ui/Table/Table.vue";
@@ -78,7 +78,9 @@ import EmptyScreen from "../../../../components/EmptyScreen.vue";
 import Button from "../../../../components/ui/Button.vue";
 
 const dashboardRoles = useDashboardRoles();
-const requireUpgrade = computed(() => dashboardRoles.error === 'LICENSE_INSUFFICIENT_TIER');
+const requireUpgrade = computed(
+  () => dashboardRoles.error === "LICENSE_INSUFFICIENT_TIER",
+);
 
 defineOptions({
   name: "DashboardRolesTabularView",

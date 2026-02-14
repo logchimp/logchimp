@@ -5,7 +5,7 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {
   disableDividers: false,
-})
+});
 </script>
 
 <template>
