@@ -7,7 +7,7 @@ If in doubt, please open a [discussion](https://github.com/logchimp/logchimp/dis
 
 ## AI Usage
 
-The LogChimp project has strict rules for AI usage. Please see the AI Usage Policy. **This is very important**. 
+The LogChimp project has strict rules for AI usage. Please see the [AI Usage Policy](./AI_POLICY.md). **This is very important**. 
 
 ## Directory structure
 
