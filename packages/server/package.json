@@ -2,14 +2,13 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@logchimp/api",
   "description": "LogChimp APIs",
-  "version": "0.7.0",
+  "version": "0.8.0-beta.5",
   "main": "./index.js",
   "scripts": {
     "dev": "nodemon",
     "start": "node index.js",
     "test:unit": "vitest --config ./vitest.config.unit.ts",
     "test:integration": "vitest --config ./vitest.config.integration.ts",
-    "db:migrate": "knex --knexfile ./src/database/config.ts migrate:latest",
     "db:migrate:create": "knex --knexfile ./src/database/config.ts migrate:make",
     "db:seed:run": "knex --knexfile ./src/database/config.ts seed:run"
   },

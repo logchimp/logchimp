@@ -10,7 +10,7 @@ import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../constants";
 import LocalLicenseAlert from "./license/LocalLicenseAlert.vue";
 
 const settingsEEStore = useSettingsEEStore();
-const { hasValidLicense } = storeToRefs(settingsEEStore);
+const { hasValidLicense, loading } = storeToRefs(settingsEEStore);
 
 onMounted(() => {
   if (IS_DEV && !hasValidLicense.value) {
@@ -22,7 +22,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <slot v-if="hasValidLicense" />
+  <div v-if="loading" aria-busy="true">
+    <div class="grid gap-y-3" aria-hidden="true">
+      <div
+        v-for="_ in 4"
+        :key="_" class="animate-pulse h-4 bg-neutral-200 rounded-md w-full h-10"
+      />
+    </div>
+  </div>
+  <slot v-else-if="hasValidLicense" />
   <div v-else-if="IS_DEV">
     <LocalLicenseAlert class="mb-4" />
     <slot />

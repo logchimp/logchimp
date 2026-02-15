@@ -21,8 +21,9 @@ ENV NODE_ENV=development
 
 RUN \
     npm i -g pnpm && \
-    pnpm install
+    pnpm install && \
+    chmod +x ./packages/server/scripts/*.sh
 
 WORKDIR /app/packages/server
 
-ENTRYPOINT ["sh", "docker-dev-entrypoint.sh"]
+CMD ["sh", "docker-dev-entrypoint.sh"]
