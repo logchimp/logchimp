@@ -38,6 +38,7 @@ const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>();
 
 async function getMorePosts() {
+  if (state.value === "LOADING" || state.value === "COMPLETED") return;
   const boardId = props.board.boardId;
   state.value = "LOADING";
 
