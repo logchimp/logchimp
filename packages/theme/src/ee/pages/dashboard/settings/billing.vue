@@ -8,7 +8,7 @@
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
-    <div class="form-section">
+    <div class="form-section" v-if="IS_DEV">
       <LocalLicenseAlert />
     </div>
 
@@ -31,7 +31,7 @@ import { useHead } from "@vueuse/head";
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
-import { DEFAULT_LOGCHIMP_PILOT_URL } from "../../../../constants";
+import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../../../constants";
 import LocalLicenseAlert from "../../../components/license/LocalLicenseAlert.vue";
 
 useHead({

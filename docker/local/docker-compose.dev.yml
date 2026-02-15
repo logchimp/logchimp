@@ -35,9 +35,7 @@ services:
       context: ../..
       args:
         DOCKER_BUILDKIT: 1
-    working_dir: /app/packages/server
-    entrypoint: ""
-    command: sh -c "pnpm db:migrate && echo ' Migration done'"
+    command: [ "./scripts/migrate.sh"]
     depends_on:
       db:
         condition: service_healthy

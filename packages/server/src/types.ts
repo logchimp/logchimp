@@ -1,4 +1,4 @@
-import type { TPermission } from "@logchimp/types";
+import type { TLicenseSubscriptionType, TPermission } from "@logchimp/types";
 
 export interface IAuthenticationTokenPayload {
   userId: string;
@@ -29,4 +29,9 @@ export interface IVerifyEmailJwtPayload {
   userId: string;
   email: string;
   type: "emailVerification";
+}
+
+export interface LicenseGuardOptions {
+  requiredPlan: Array<TLicenseSubscriptionType>;
+  skipHandlerOnFailure: boolean;
 }
