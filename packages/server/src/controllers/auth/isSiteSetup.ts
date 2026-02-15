@@ -13,32 +13,35 @@ import * as cache from "../../cache/";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { CACHE_KEYS } from "src/cache/keys";
+import { CACHE_KEYS } from "../../cache/keys";
 
 type ResponseBody = IGetSiteSetupResponseBody | IApiErrorResponse;
 
 export async function isSiteSetup(_: Request, res: Response<ResponseBody>) {
-  try {
-    const cacheKey = CACHE_KEYS.SITE_SETUP;
+  const cacheKey = CACHE_KEYS.SITE_SETUP;
 
-    if (cache.isActive) {
-      try {
-        const cachedSiteSetup = await cache.valkey.get(cacheKey);
-        if (cachedSiteSetup) {
-          return res.status(200).send({
-            is_setup: true,
-          });
-        }
-      } catch (err) {
-        logger.log({
-          level: "error",
-          message: err,
+  if (cache.isActive) {
+    try {
+      const cachedSiteSetup = await cache.valkey.get(cacheKey);
+      if (cachedSiteSetup) {
+        res.setHeader("X-Cache", "HIT");
+        return res.status(200).send({
+          is_setup: true,
         });
       }
+    } catch (err) {
+      logger.log({
+        level: "error",
+        message: err,
+      });
     }
+  }
 
+  try {
     const isSetup = await database
-      .select("userId")
+      .select<{
+        userId: string;
+      }>("userId")
       .from("users")
       .where({
         isOwner: true,
@@ -47,15 +50,19 @@ export async function isSiteSetup(_: Request, res: Response<ResponseBody>) {
 
     const is_setup: boolean = typeof isSetup !== "undefined";
 
-    if (is_setup && cache.isActive) {
-      try {
-        await cache.valkey.set(cacheKey, "true");
-      } catch (err) {
-        logger.log({
-          level: "error",
-          message: err,
-        });
+    if (cache.isActive) {
+      if (is_setup) {
+        try {
+          await cache.valkey.set(cacheKey, "true");
+        } catch (err) {
+          logger.log({
+            level: "error",
+            message: err,
+          });
+        }
       }
+
+      res.setHeader("X-Cache", "MISS");
     }
 
     res.status(200).send({
