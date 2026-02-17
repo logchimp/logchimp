@@ -38,6 +38,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",
     "@logchimp/types": "workspace:*",
+    "@types/cors": "^2.8.19",
     "@types/dompurify": "^3.2.0",
     "@types/express": "^5.0.3",
     "@types/html-to-text": "^9.0.4",
