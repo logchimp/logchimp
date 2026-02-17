@@ -540,6 +540,35 @@ describe("POST /api/v1/posts", () => {
     expect(postResponse.title.length).toBe(100);
     expect(postResponse.contentMarkdown).toBe(`...${chunks[1]}`);
   });
+
+  it("should automatically truncate post title, with contentMarkdown", async () => {
+    const { user: authUser } = await createUser({
+      isVerified: true,
+    });
+
+    const str = Array.from({ length: 105 })
+      .map((_, i) => String.fromCharCode(97 + (i % 26)))
+      .join("");
+    const contentMarkdown = "This is a test description"
+
+    const response = await supertest(app)
+      .post("/api/v1/posts")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        title: str,
+        contentMarkdown,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(201);
+
+    const postResponse = response.body.post;
+    const chunks = str.match(/.{1,97}/g) || [];
+
+    expect(postResponse.title).toBe(`${chunks[0]}...`);
+    expect(postResponse.title.length).toBe(100);
+    expect(postResponse.contentMarkdown).toBe(`...${chunks[1]}\n\n${contentMarkdown}`);
+  });
 });
 
 describe("PATCH /api/v1/posts", () => {

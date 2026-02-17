@@ -39,7 +39,7 @@ export async function create(
     const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
     title = `${title.slice(0, POST_TITLE_MAX_LENGTH - 3)}...`;
 
-    contentMarkdown = `...${exceedingText}${contentMarkdown}`;
+    contentMarkdown = `...${exceedingText}${contentMarkdown ? `\n\n${contentMarkdown}` : ""}`;
   }
 
   const checkPermission = permissions.includes("post:create");
