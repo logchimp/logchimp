@@ -34,7 +34,9 @@ import InfiniteScroll, {
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
-const CreatePost = defineAsyncComponent(() => import("../components/post/CreatePost.vue"));
+const CreatePost = defineAsyncComponent(
+  () => import("../components/post/CreatePost.vue"),
+);
 
 const settingsStore = useSettingStore();
 
