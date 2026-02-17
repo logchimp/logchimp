@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
 // modules
 import { createPost } from "../../modules/posts";
 import { useUserStore } from "../../store/user";
-import { router } from "../../router";
 
 // components
 import type { FormFieldErrorType } from "../ui/input/formBaseProps";
@@ -50,6 +50,7 @@ import Button from "../ui/Button.vue";
 // utils
 import tokenError from "../../utils/tokenError";
 
+const router = useRouter();
 const { permissions, getUserId } = useUserStore();
 
 const props = defineProps({
@@ -86,7 +87,10 @@ function hideTitleError(event: FormFieldErrorType) {
 
 async function submitPost() {
   if (!getUserId) {
-    await router.push("/login");
+    await router.push({
+      path: "/login",
+      query: { redirect: router.currentRoute.value.path },
+    });
     return;
   }
 
