@@ -32,7 +32,7 @@ export async function create(
   const permissions = req.user.permissions as TPermission[];
 
   let title = req.body.title || "new post";
-  let contentMarkdown = req.body.contentMarkdown;
+  let contentMarkdown = req.body.contentMarkdown || "";
   const boardId = validUUID(req.body.boardId);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
