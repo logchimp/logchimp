@@ -49,7 +49,6 @@ import LTextarea from "../ui/input/LTextarea.vue";
 import Button from "../ui/Button.vue";
 
 // utils
-import validateUUID from "../../utils/validateUUID";
 import tokenError from "../../utils/tokenError";
 
 const { permissions } = useUserStore();
@@ -57,8 +56,6 @@ const { permissions } = useUserStore();
 const props = defineProps({
   boardId: {
     type: String,
-    required: true,
-    validator: validateUUID,
   },
   dashboard: {
     type: Boolean,
