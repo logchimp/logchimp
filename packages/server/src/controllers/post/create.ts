@@ -7,6 +7,7 @@ import type {
   ICreatePostResponseBody,
   TPermission,
 } from "@logchimp/types";
+import { POST_TITLE_MAX_LENGTH } from "../../constants";
 
 import database from "../../database";
 
@@ -30,9 +31,16 @@ export async function create(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const title = req.body.title || "new post";
-  const contentMarkdown = req.body.contentMarkdown;
+  let title = req.body.title || "new post";
+  let contentMarkdown = req.body.contentMarkdown || "";
   const boardId = validUUID(req.body.boardId);
+
+  if (title.length > POST_TITLE_MAX_LENGTH) {
+    const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
+    title = `${title.slice(0, POST_TITLE_MAX_LENGTH - 3)}...`;
+
+    contentMarkdown = `...${exceedingText}${contentMarkdown}`;
+  }
 
   const checkPermission = permissions.includes("post:create");
   if (!checkPermission) {
