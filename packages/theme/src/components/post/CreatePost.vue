@@ -20,17 +20,16 @@
       placeholder="What would you use it for?"
       :disabled="createPostPermissionDisabled"
     />
-    <div style="display: flex; justify-content: center;">
-      <Button
-        type="primary"
-        data-test="create-post-button"
-        :loading="loading"
-        :disabled="createPostPermissionDisabled"
-        @click="submitPost"
-      >
-        Submit
-      </Button>
-    </div>
+    <Button
+      type="primary"
+      data-test="create-post-button"
+      :loading="loading"
+      :full-width="true"
+      :disabled="createPostPermissionDisabled"
+      @click="submitPost"
+    >
+      Submit
+    </Button>
   </div>
 </template>
 
@@ -51,7 +50,7 @@ import Button from "../ui/Button.vue";
 // utils
 import tokenError from "../../utils/tokenError";
 
-const { permissions } = useUserStore();
+const { permissions, getUserId } = useUserStore();
 
 const props = defineProps({
   boardId: {
@@ -75,6 +74,8 @@ const loading = ref<boolean>(false);
 
 const dashboardUrl = computed(() => (props.dashboard ? "/dashboard" : ""));
 const createPostPermissionDisabled = computed(() => {
+  if (!getUserId) return false;
+
   const checkPermission = permissions.includes("post:create");
   return !checkPermission;
 });
@@ -84,6 +85,11 @@ function hideTitleError(event: FormFieldErrorType) {
 }
 
 async function submitPost() {
+  if (!getUserId) {
+    await router.push("/login");
+    return;
+  }
+
   if (!title.value) {
     title.error.show = true;
     title.error.message = "You forgot to enter a post title";
