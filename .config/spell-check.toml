@@ -1,0 +1,5 @@
+[files]
+extend-exclude = [
+  "dist",
+  "node_modules",
+]
