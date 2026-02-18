@@ -61,7 +61,8 @@ export function domainBlacklist(
   res: Response,
   next: NextFunction,
 ) {
-  const { email } = req.body;
+  // @ts-expect-error
+  const email = (req.body?.email || req.user?.email || "").toLowerCase();
 
   if (!validEmail(email)) {
     return res.status(400).json({
