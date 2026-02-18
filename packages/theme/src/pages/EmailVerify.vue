@@ -36,6 +36,8 @@
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
+import { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../router";
@@ -71,7 +73,11 @@ async function verifyEmail() {
       loading.value = false;
     }
   } catch (err) {
-    if (err.response.data.code === "USER_ALREADY_VERIFIED") {
+    if (
+      err instanceof AxiosError &&
+      (err as AxiosError<IApiErrorResponse>).response?.data.code ===
+        "USER_ALREADY_VERIFIED"
+    ) {
       return router.push("/");
     }
 
