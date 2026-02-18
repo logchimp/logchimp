@@ -70,8 +70,8 @@ async function verifyEmail() {
       success.value = true;
       loading.value = false;
     }
-  } catch (error: any) {
-    if (error.response.data.code === "USER_ALREADY_VERIFIED") {
+  } catch (err) {
+    if (err.response.data.code === "USER_ALREADY_VERIFIED") {
       return router.push("/");
     }
 
