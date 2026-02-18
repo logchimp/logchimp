@@ -11,14 +11,14 @@
     </main>
     <aside class="flex-1 h-full mb-6 lg:mb-0 grid grid-cols-1 gap-y-4 lg:sticky lg:top-20">
       <site-setup-card v-if="showSiteSetupCard" />
-      <login-card v-if="!userStore.getUserId && !showSiteSetupCard" />
+      <create-post v-else />
       <top-public-boards-list />
     </aside>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineAsyncComponent } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPost } from "@logchimp/types";
 
@@ -26,7 +26,6 @@ import type { IPost } from "@logchimp/types";
 import { isSiteSetup } from "../modules/site";
 import { getPosts } from "../modules/posts";
 import { useSettingStore } from "../store/settings";
-import { useUserStore } from "../store/user";
 
 // components
 import InfiniteScroll, {
@@ -34,11 +33,12 @@ import InfiniteScroll, {
 } from "../components/ui/InfiniteScroll.vue";
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
-import LoginCard from "../components/auth/LoginCard.vue";
 import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
+const CreatePost = defineAsyncComponent(
+  () => import("../components/post/CreatePost.vue"),
+);
 
 const settingsStore = useSettingStore();
-const userStore = useUserStore();
 
 const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
