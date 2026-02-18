@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
+import { validEmail } from "../helpers";
 
 export function isValidDomain(domain: string) {
   if (typeof domain !== "string") return false;
@@ -62,7 +63,7 @@ export function domainBlacklist(
 ) {
   const { email } = req.body;
 
-  if (!email || typeof email !== "string") {
+  if (!validEmail(email)) {
     return res.status(400).json({
       message: error.api.authentication.invalidEmail,
       code: "EMAIL_INVALID",
@@ -70,12 +71,6 @@ export function domainBlacklist(
   }
 
   const parts = email.trim().split("@");
-  if (parts.length !== 2) {
-    return res.status(400).json({
-      message: error.api.authentication.invalidEmailFormat,
-      code: "INVALID_EMAIL_FORMAT",
-    });
-  }
 
   const domain = parts[1].trim().toLowerCase();
 
