@@ -185,6 +185,11 @@ async function createAccount() {
       email.error.show = true;
     }
 
+    if (error.response.data.code === "INVALID_EMAIL_DOMAIN") {
+      email.error.message = "Invalid email domain";
+      email.error.show = true;
+    }
+
     console.error(error);
   } finally {
     buttonLoading.value = false;
