@@ -28,8 +28,7 @@
           <component :is="activeTab" :board="board" />
         </main>
         <aside class="flex-1 mb-6 lg:mb-0">
-          <create-post v-if="getUserId" :board-id="board.boardId" />
-          <login-card v-else />
+          <create-post :board-id="board.boardId" />
         </aside>
       </div>
     </div>
@@ -57,10 +56,8 @@ import TabItem from "../../components/ui/tab/TabItem.vue";
 import LatestPosts from "../../components/post/LatestPosts.vue";
 import OldestPosts from "../../components/post/OldestPosts.vue";
 import CreatePost from "../../components/post/CreatePost.vue";
-import LoginCard from "../../components/auth/LoginCard.vue";
 
 import { useSettingStore } from "../../store/settings";
-import { useUserStore } from "../../store/user";
 
 const route = useRoute();
 const tab = ref("latest");
@@ -78,7 +75,6 @@ const loading = ref<boolean>(false);
 const isBoardExist = ref<boolean>(false);
 
 const { get: siteSettings } = useSettingStore();
-const { getUserId } = useUserStore();
 
 const activeTab = computed(() => {
   switch (tab.value) {

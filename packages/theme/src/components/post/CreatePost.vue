@@ -20,27 +20,26 @@
       placeholder="What would you use it for?"
       :disabled="createPostPermissionDisabled"
     />
-    <div style="display: flex; justify-content: center;">
-      <Button
-        type="primary"
-        data-test="create-post-button"
-        :loading="loading"
-        :disabled="createPostPermissionDisabled"
-        @click="submitPost"
-      >
-        Submit
-      </Button>
-    </div>
+    <Button
+      type="primary"
+      data-test="create-post-button"
+      :loading="loading"
+      :full-width="true"
+      :disabled="createPostPermissionDisabled"
+      @click="submitPost"
+    >
+      Submit
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
 // modules
 import { createPost } from "../../modules/posts";
 import { useUserStore } from "../../store/user";
-import { router } from "../../router";
 
 // components
 import type { FormFieldErrorType } from "../ui/input/formBaseProps";
@@ -49,16 +48,14 @@ import LTextarea from "../ui/input/LTextarea.vue";
 import Button from "../ui/Button.vue";
 
 // utils
-import validateUUID from "../../utils/validateUUID";
 import tokenError from "../../utils/tokenError";
 
-const { permissions } = useUserStore();
+const router = useRouter();
+const { permissions, getUserId } = useUserStore();
 
 const props = defineProps({
   boardId: {
     type: String,
-    required: true,
-    validator: validateUUID,
   },
   dashboard: {
     type: Boolean,
@@ -78,6 +75,8 @@ const loading = ref<boolean>(false);
 
 const dashboardUrl = computed(() => (props.dashboard ? "/dashboard" : ""));
 const createPostPermissionDisabled = computed(() => {
+  if (!getUserId) return false;
+
   const checkPermission = permissions.includes("post:create");
   return !checkPermission;
 });
@@ -87,6 +86,14 @@ function hideTitleError(event: FormFieldErrorType) {
 }
 
 async function submitPost() {
+  if (!getUserId) {
+    await router.push({
+      path: "/login",
+      query: { redirect: router.currentRoute.value.path },
+    });
+    return;
+  }
+
   if (!title.value) {
     title.error.show = true;
     title.error.message = "You forgot to enter a post title";
