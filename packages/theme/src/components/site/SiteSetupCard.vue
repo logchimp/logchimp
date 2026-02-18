@@ -15,7 +15,7 @@
 
     <div :class="$style.image">
       <img
-        src="https://cdn.logchimp.codecarrot.net/dashboard-loading-skeleton.png"
+        src="/dashboard-loading-skeleton.png"
         alt="Dashboard loading skeleton"
       >
     </div>
