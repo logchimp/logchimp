@@ -30,7 +30,7 @@
       <l-text
         v-model="email.value"
         label="Email address"
-        type="text"
+        type="email"
         name="Email address"
         placeholder="Eg. email@example.com"
         :error="email.error"
