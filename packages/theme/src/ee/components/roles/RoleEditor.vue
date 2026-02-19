@@ -37,7 +37,7 @@
         <ShieldAlert />
       </template>
     </alert>
-      
+
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
@@ -61,17 +61,30 @@
       <p class="form-section-title">Posts permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.post.read" label="Read" />
+          <toggle-item
+            v-model="permissions.post.read"
+            label="Read"
+            @update:model-value="handlePermissionChange('post', 'read')"
+          />
           <toggle-item
             v-model="permissions.post.update"
             label="Update"
             note="Allows users to edit post submitted by other users."
+            @update:model-value="handlePermissionChange('post', 'update')"
           />
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="permissions.post.create" label="Create" />
-          <toggle-item v-model="permissions.post.destroy" label="Delete" />
+          <toggle-item
+            v-model="permissions.post.create"
+            label="Create"
+            @update:model-value="handlePermissionChange('post', 'create')"
+          />
+          <toggle-item
+            v-model="permissions.post.destroy"
+            label="Delete"
+            @update:model-value="handlePermissionChange('post', 'destroy')"
+          />
         </div>
       </div>
     </div>
@@ -80,15 +93,39 @@
       <p class="form-section-title">Boards permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.board.read" label="Read" />
-          <toggle-item v-model="permissions.board.update" label="Update" />
-          <toggle-item v-model="permissions.board.assign" label="Assign" />
+          <toggle-item
+            v-model="permissions.board.read"
+            label="Read"
+            @update:model-value="handlePermissionChange('board', 'read')"
+          />
+          <toggle-item
+            v-model="permissions.board.update"
+            label="Update"
+            @update:model-value="handlePermissionChange('board', 'update')"
+          />
+          <toggle-item
+            v-model="permissions.board.assign"
+            label="Assign"
+            @update:model-value="handlePermissionChange('board', 'assign')"
+          />
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="permissions.board.create" label="Create" />
-          <toggle-item v-model="permissions.board.destroy" label="Delete" />
-          <toggle-item v-model="permissions.board.unassign" label="Unassign" />
+          <toggle-item
+            v-model="permissions.board.create"
+            label="Create"
+            @update:model-value="handlePermissionChange('board', 'create')"
+          />
+          <toggle-item
+            v-model="permissions.board.destroy"
+            label="Delete"
+            @update:model-value="handlePermissionChange('board', 'destroy')"
+          />
+          <toggle-item
+            v-model="permissions.board.unassign"
+            label="Unassign"
+            @update:model-value="handlePermissionChange('board', 'unassign')"
+          />
         </div>
       </div>
     </div>
@@ -97,17 +134,38 @@
       <p class="form-section-title">Roadmaps permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.roadmap.read" label="Read" />
-          <toggle-item v-model="permissions.roadmap.update" label="Update" />
-          <toggle-item v-model="permissions.roadmap.assign" label="Assign" />
+          <toggle-item
+            v-model="permissions.roadmap.read"
+            label="Read"
+            @update:model-value="handlePermissionChange('roadmap', 'read')"
+          />
+          <toggle-item
+            v-model="permissions.roadmap.update"
+            label="Update"
+            @update:model-value="handlePermissionChange('roadmap', 'update')"
+          />
+          <toggle-item
+            v-model="permissions.roadmap.assign"
+            label="Assign"
+            @update:model-value="handlePermissionChange('roadmap', 'assign')"
+          />
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="permissions.roadmap.create" label="Create" />
-          <toggle-item v-model="permissions.roadmap.destroy" label="Delete" />
+          <toggle-item
+            v-model="permissions.roadmap.create"
+            label="Create"
+            @update:model-value="handlePermissionChange('roadmap', 'create')"
+          />
+          <toggle-item
+            v-model="permissions.roadmap.destroy"
+            label="Delete"
+            @update:model-value="handlePermissionChange('roadmap', 'destroy')"
+          />
           <toggle-item
             v-model="permissions.roadmap.unassign"
             label="Unassign"
+            @update:model-value="handlePermissionChange('roadmap', 'unassign')"
           />
         </div>
       </div>
@@ -117,13 +175,29 @@
       <p class="form-section-title">Vote permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.vote.create" label="Create" />
-          <toggle-item v-model="permissions.vote.destroy" label="Delete" />
+          <toggle-item
+            v-model="permissions.vote.create"
+            label="Create"
+            @update:model-value="handlePermissionChange('vote', 'create')"
+          />
+          <toggle-item
+            v-model="permissions.vote.destroy"
+            label="Delete"
+            @update:model-value="handlePermissionChange('vote', 'destroy')"
+          />
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="permissions.vote.assign" label="Assign" />
-          <toggle-item v-model="permissions.vote.unassign" label="Unassign" />
+          <toggle-item
+            v-model="permissions.vote.assign"
+            label="Assign"
+            @update:model-value="handlePermissionChange('vote', 'assign')"
+          />
+          <toggle-item
+            v-model="permissions.vote.unassign"
+            label="Unassign"
+            @update:model-value="handlePermissionChange('vote', 'unassign')"
+          />
         </div>
       </div>
     </div>
@@ -132,7 +206,11 @@
       <p class="form-section-title">Dashboard permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.dashboard.read" label="Read" />
+          <toggle-item
+            v-model="permissions.dashboard.read"
+            label="Read"
+            @update:model-value="handlePermissionChange('dashboard', 'read')"
+          />
         </div>
       </div>
     </div>
@@ -141,15 +219,39 @@
       <p class="form-section-title">Roles permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.role.read" label="Read" />
-          <toggle-item v-model="permissions.role.update" label="Update" />
-          <toggle-item v-model="permissions.role.assign" label="Assign" />
+          <toggle-item
+            v-model="permissions.role.read"
+            label="Read"
+            @update:model-value="handlePermissionChange('role', 'read')"
+          />
+          <toggle-item
+            v-model="permissions.role.update"
+            label="Update"
+            @update:model-value="handlePermissionChange('role', 'update')"
+          />
+          <toggle-item
+            v-model="permissions.role.assign"
+            label="Assign"
+            @update:model-value="handlePermissionChange('role', 'assign')"
+          />
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="permissions.role.create" label="Create" />
-          <toggle-item v-model="permissions.role.destroy" label="Delete" />
-          <toggle-item v-model="permissions.role.unassign" label="Unassign" />
+          <toggle-item
+            v-model="permissions.role.create"
+            label="Create"
+            @update:model-value="handlePermissionChange('role', 'create')"
+          />
+          <toggle-item
+            v-model="permissions.role.destroy"
+            label="Delete"
+            @update:model-value="handlePermissionChange('role', 'destroy')"
+          />
+          <toggle-item
+            v-model="permissions.role.unassign"
+            label="Unassign"
+            @update:model-value="handlePermissionChange('role', 'unassign')"
+          />
         </div>
       </div>
     </div>
@@ -158,11 +260,19 @@
       <p class="form-section-title">Settings permissions</p>
       <div class="form-columns">
         <div class="form-column">
-          <toggle-item v-model="permissions.settings.read" label="Read" />
+          <toggle-item
+            v-model="permissions.settings.read"
+            label="Read"
+            @update:model-value="handlePermissionChange('settings', 'read')"
+          />
         </div>
 
         <div class="form-column">
-          <toggle-item v-model="permissions.settings.update" label="Update" />
+          <toggle-item
+            v-model="permissions.settings.update"
+            label="Update"
+            @update:model-value="handlePermissionChange('settings', 'update')"
+          />
         </div>
       </div>
     </div>
@@ -171,7 +281,12 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import type { IRole, TPermission, IPermissionsState } from "@logchimp/types";
+import type {
+  IRole,
+  TPermission,
+  PermissionAction,
+  IPermissionsState,
+} from "@logchimp/types";
 import { ShieldAlert } from "lucide-vue";
 
 // modules
@@ -209,6 +324,98 @@ const updateRoleButtonDisabled = computed(() => {
   const checkPermission = userPermissions.includes("role:update");
   return !checkPermission;
 });
+
+type PermissionPrerequisiteMap = {
+  [K in keyof IPermissionsState]: Partial<{
+    [action: string]: PermissionAction[];
+  }>;
+};
+
+const permissionPrerequisite: PermissionPrerequisiteMap = {
+  post: {
+    create: ["read"],
+    update: ["read"],
+    destroy: ["read"],
+  },
+  board: {
+    create: ["read"],
+    update: ["read"],
+    destroy: ["read"],
+    assign: ["read"],
+    unassign: ["read"],
+  },
+  roadmap: {
+    create: ["read"],
+    update: ["read"],
+    destroy: ["read"],
+    assign: ["read"],
+    unassign: ["read"],
+  },
+  role: {
+    create: ["read"],
+    update: ["read"],
+    destroy: ["read"],
+    assign: ["read"],
+    unassign: ["read"],
+  },
+  settings: {
+    update: ["read"],
+  },
+  vote: {},
+  dashboard: {},
+};
+const reversePrerequisites = {} as PermissionPrerequisiteMap;
+
+(Object.keys(permissionPrerequisite) as Array<keyof IPermissionsState>).forEach(
+  (permission) => {
+    reversePrerequisites[permission] = {};
+    const permissionConfig = permissionPrerequisite[permission];
+
+    if (permissionConfig) {
+      Object.keys(permissionConfig).forEach((action) => {
+        const actionPrereqs = permissionConfig[action];
+
+        if (actionPrereqs) {
+          actionPrereqs.forEach((required: PermissionAction) => {
+            if (!reversePrerequisites[permission][required]) {
+              reversePrerequisites[permission][required] = [];
+            }
+            reversePrerequisites[permission][required].push(
+              action as PermissionAction,
+            );
+          });
+        }
+      });
+    }
+  },
+);
+
+const handlePermissionChange = (
+  permission: keyof IPermissionsState,
+  action: string,
+): void => {
+  const permissionObj = permissions[permission] as Record<string, boolean>;
+  const isEnabled = permissionObj[action];
+
+  if (isEnabled) {
+    const prerequisites =
+      (
+        permissionPrerequisite[permission] as Record<string, PermissionAction[]>
+      )?.[action] || [];
+    prerequisites.forEach((prerequisite: PermissionAction) => {
+      if (!permissionObj[prerequisite]) {
+        permissionObj[prerequisite] = true;
+      }
+    });
+  } else {
+    const prerequisites = reversePrerequisites[permission]?.[action] || [];
+    prerequisites.forEach((prerequisite: PermissionAction) => {
+      if (permissionObj[prerequisite]) {
+        permissionObj[prerequisite] = false;
+      }
+    });
+  }
+};
 
 async function updateRoleHandler() {
   updateRoleButtonLoading.value = true;
