@@ -65,7 +65,7 @@
           <toggle-item
             v-model="permissions.post.update"
             label="Update"
-            note="Allows users to edit post submitted by other users."
+            note="Authors can edit their own posts by default. This permission allows uses to edit posts created by other users."
           />
         </div>
 
