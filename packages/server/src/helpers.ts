@@ -12,7 +12,7 @@ import { customAlphabet } from "nanoid";
  * @returns boolean
  */
 const validEmail = (email: string): boolean => {
-  if (!email) return false;
+  if (!email || typeof email !== "string") return false;
   return isEmail(email);
 };
 

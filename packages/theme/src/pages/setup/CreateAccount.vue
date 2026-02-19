@@ -30,7 +30,7 @@
       <l-text
         v-model="email.value"
         label="Email address"
-        type="text"
+        type="email"
         name="Email address"
         placeholder="Eg. email@example.com"
         :error="email.error"
@@ -63,6 +63,8 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../../router";
@@ -168,24 +170,26 @@ async function createAccount() {
     setPermissions(permissions.data.permissions);
 
     router.push("/setup/create-board");
-  } catch (error: any) {
-    if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+  } catch (err) {
+    const error = err as AxiosError<IApiErrorResponse>;
+    if (error.response?.data.code === "MAIL_CONFIG_MISSING") {
       serverError.value = true;
     }
 
-    console.error(error);
-
-    if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+    if (error.response?.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
       email.error.show = true;
       email.error.message = "Email domain blacklisted";
     }
 
-    if (error.response.data.code === "EMAIL_INVALID") {
+    if (error.response?.data.code === "EMAIL_INVALID") {
       email.error.message = "Invalid email";
       email.error.show = true;
     }
 
-    console.error(error);
+    if (error.response?.data.code === "INVALID_EMAIL_DOMAIN") {
+      email.error.message = "Invalid email domain";
+      email.error.show = true;
+    }
   } finally {
     buttonLoading.value = false;
   }
