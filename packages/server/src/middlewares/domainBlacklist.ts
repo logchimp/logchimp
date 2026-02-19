@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
+import { validEmail } from "../helpers";
 
 export function isValidDomain(domain: string) {
   if (typeof domain !== "string") return false;
@@ -60,9 +61,11 @@ export function domainBlacklist(
   res: Response,
   next: NextFunction,
 ) {
-  const { email } = req.body;
+  // @ts-expect-error - `req.user` is not typed in Express Request by default
+  const rawEmail = req.body?.email || req.user?.email || "";
+  const email = (typeof rawEmail === "string" ? rawEmail : "").toLowerCase();
 
-  if (!email || typeof email !== "string") {
+  if (!validEmail(email)) {
     return res.status(400).json({
       message: error.api.authentication.invalidEmail,
       code: "EMAIL_INVALID",
@@ -70,14 +73,11 @@ export function domainBlacklist(
   }
 
   const parts = email.trim().split("@");
-  if (parts.length !== 2) {
-    return res.status(400).json({
-      message: error.api.authentication.invalidEmailFormat,
-      code: "INVALID_EMAIL_FORMAT",
-    });
-  }
-
-  const domain = parts[1].trim().toLowerCase();
+  /*
+   * Few cases of valid email (per RFC 5322):
+   * - "a@b"@example.com
+   */
+  const domain = parts[parts.length - 1].trim().toLowerCase();
 
   if (!isValidDomain(domain)) {
     return res.status(400).json({
