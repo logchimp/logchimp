@@ -73,8 +73,11 @@ export function domainBlacklist(
   }
 
   const parts = email.trim().split("@");
-
-  const domain = parts[1].trim().toLowerCase();
+  /*
+   * Few cases of valid email (per RFC 5322):
+   * - "a@b"@example.com
+   */
+  const domain = parts[parts.length - 1].trim().toLowerCase();
 
   if (!isValidDomain(domain)) {
     return res.status(400).json({
