@@ -3,27 +3,27 @@
     <AuthFormHeader />
 
     <!-- Success -->
-    <template v-if="success">
-      <div class="card text-center flex flex-col items-center space-y-4">
-        <success-icon class="w-8 h-8" color="#64B285" />
+    <div v-if="success" class="card text-center flex flex-col items-center space-y-4">
+      <success-icon class="w-8 h-8" color="#64B285" />
 
-        <p>
-          Thank you verifying your account.
-        </p>
-      </div>
-
+      <p>
+        Thank you for verifying your account.
+      </p>
       <AuthFormHelperText>
         You may close this window.
       </AuthFormHelperText>
-    </template>
+    </div>
 
     <!-- Error -->
     <div v-if="error" class="card text-center flex flex-col items-center space-y-4">
       <error-icon class="w-8 h-8" color="#DE544E" />
 
-      <div>
+      <p>
         Invalid or expired link. Please try again.
-      </div>
+      </p>
+      <AuthFormHelperText>
+        Contact the site owner in case this happens again.
+      </AuthFormHelperText>
     </div>
 
     <!-- Loading -->
@@ -36,6 +36,8 @@
 import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
+import { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../router";
@@ -70,8 +72,12 @@ async function verifyEmail() {
       success.value = true;
       loading.value = false;
     }
-  } catch (error: any) {
-    if (error.response.data.code === "USER_ALREADY_VERIFIED") {
+  } catch (err) {
+    if (
+      err instanceof AxiosError &&
+      (err as AxiosError<IApiErrorResponse>).response?.data.code ===
+        "USER_ALREADY_VERIFIED"
+    ) {
       return router.push("/");
     }
 
