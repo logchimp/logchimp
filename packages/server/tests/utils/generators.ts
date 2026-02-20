@@ -44,7 +44,9 @@ async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
   const index = faker.number.int({ min: 1, max: 100000 });
   const color = generateHexColor();
   const display =
-    "display" in roadmap ? roadmap.display : faker.datatype.boolean();
+    typeof roadmap?.display === "boolean"
+      ? roadmap.display
+      : faker.datatype.boolean();
   const created_at = new Date().toJSON();
   const updated_at = new Date().toJSON();
 
