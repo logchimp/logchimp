@@ -4,3 +4,7 @@ extend-exclude = [
   "node_modules",
   "pnpm-lock.yaml"
 ]
+
+[default.extend-words]
+# inject-app-env.sh
+ba = "ba"
