@@ -32,7 +32,7 @@ export async function boardExists(
   }
 
   const board = await database
-    .select("boardId", "url")
+    .select("boardId", "url", "display")
     .from("boards")
     .where((builder) => {
       if (boardId) builder.where("boardId", boardId);
