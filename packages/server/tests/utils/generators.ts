@@ -128,13 +128,17 @@ const board = async (
   insertToDb = false,
 ): Promise<BoardInsertRecord> => {
   const name = board?.name || faker.commerce.productName();
+  const display =
+    typeof board?.display === "boolean"
+      ? board.display
+      : faker.datatype.boolean();
 
   const obj: BoardInsertRecord = {
     boardId: uuid(),
     name,
     url: board?.url || `${sanitiseURL(name)}-${nanoid(10)}`,
     color: board?.color || generateHexColor(),
-    display: board?.display || faker.datatype.boolean(),
+    display,
     view_voters: board?.view_voters || faker.datatype.boolean(),
     createdAt: new Date().toJSON(),
     updatedAt: new Date().toJSON(),
