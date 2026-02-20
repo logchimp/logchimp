@@ -376,6 +376,7 @@ describe("GET /api/v1/roadmaps/:url", () => {
     const roadmap = await generateRoadmap(
       {
         url: roadmapUrl,
+        display: true,
       },
       true,
     );

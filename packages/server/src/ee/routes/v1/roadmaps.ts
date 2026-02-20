@@ -6,10 +6,38 @@ const router = express.Router();
 import * as roadmaps from "../../controllers/v1/roadmaps";
 
 // middleware
-import { authRequired } from "../../../middlewares/auth";
+import { authOptional, authRequired } from "../../../middlewares/auth";
 import { roadmapExists } from "../../../middlewares/roadmapExists";
 import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+import type {
+  IGetRoadmapByUrlRequestParam,
+  ISearchRoadmapRequestParam,
+} from "@logchimp/types";
 
+router.get(
+  "/roadmaps",
+  authOptional,
+  withLicenseGuard(roadmaps.filter, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
+router.get<IGetRoadmapByUrlRequestParam>(
+  "/roadmaps/:url",
+  // @ts-expect-error
+  authOptional,
+  roadmapExists,
+  withLicenseGuard(roadmaps.roadmapByUrl, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
+router.get<ISearchRoadmapRequestParam>(
+  "/roadmaps/search/:name",
+  // @ts-expect-error
+  authRequired,
+  withLicenseGuard(roadmaps.searchRoadmap, {
+    requiredPlan: ["pro", "business", "enterprise"],
+  }),
+);
 router.post(
   "/roadmaps",
   authRequired,
@@ -17,7 +45,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-
 router.patch(
   "/roadmaps",
   authRequired,
@@ -33,7 +60,6 @@ router.patch(
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-
 router.delete(
   "/roadmaps",
   authRequired,

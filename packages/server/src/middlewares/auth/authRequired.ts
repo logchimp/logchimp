@@ -26,11 +26,12 @@ const authenticateWithToken = async (
     jwtTokenPayload = verifyJwtAuthToken(token, secretKey);
   } catch (err) {
     if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
-      return res.status(401).send({
+      res.status(401).send({
         message: error.middleware.auth.invalidToken,
         code: "INVALID_TOKEN",
         // err,
       });
+      return;
     } else {
       res.status(500).send({
         message: error.general.serverError,
@@ -42,10 +43,11 @@ const authenticateWithToken = async (
   try {
     const user = await getUserInfoWithRoles(jwtTokenPayload.userId);
     if (!user) {
-      return res.status(404).send({
+      res.status(404).send({
         message: error.middleware.user.userNotFound,
         code: "USER_NOT_FOUND",
       });
+      return;
     }
 
     const permissions = await computePermissions(user);
@@ -74,20 +76,22 @@ const authRequired = (
 ) => {
   // check for authorization header
   if (!req.headers?.authorization) {
-    return res.status(400).send({
+    res.status(400).send({
       message: error.middleware.auth.invalidAuthHeader,
       code: "INVALID_AUTH_HEADER",
     });
+    return;
   }
 
   // extract token from authorization header
   const token = extractTokenFromHeader(req.headers.authorization);
 
   if (!token) {
-    return res.status(401).send({
+    res.status(401).send({
       message: error.middleware.auth.invalidAuthHeaderFormat,
       code: "INVALID_AUTH_HEADER_FORMAT",
     });
+    return;
   }
 
   authenticateWithToken(req, res, next, token);

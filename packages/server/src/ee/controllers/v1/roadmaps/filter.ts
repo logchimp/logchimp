@@ -11,13 +11,13 @@ import type {
 } from "@logchimp/types";
 
 // database
-import database from "../../database";
+import database from "../../../../database";
 
 // utils
-import logger from "../../utils/logger";
-import error from "../../errorResponse.json";
-import { GET_ROADMAPS_FILTER_COUNT } from "../../constants";
-import { parseAndValidateLimit } from "../../helpers";
+import logger from "../../../../utils/logger";
+import error from "../../../../errorResponse.json";
+import { GET_ROADMAPS_FILTER_COUNT } from "../../../../constants";
+import { parseAndValidateLimit } from "../../../../helpers";
 
 const FilterVisibilitySchema = z.enum<FilterVisibility[]>([
   "public",
@@ -64,11 +64,12 @@ export async function filter(
 ) {
   const query = querySchema.safeParse(req.query);
   if (!query.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.error.issues,
     });
+    return;
   }
   const { first, after, visibility: _visibility } = query.data;
 
