@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <div
+    v-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
+    class="text-center"
+  >
+    <p>
+      No boards available
+    </p>
+  </div>
+  <div v-else>
     <div v-if="boards.length > 0" class="boards-lists">
       <board-item
         v-for="board in boards"
@@ -22,7 +30,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IBoardDetail } from "@logchimp/types";
+import type { IApiErrorResponse, IBoardDetail } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 // modules
 import { getPublicBoards } from "../../ee/modules/boards";
@@ -39,6 +48,7 @@ const { get: siteSettings } = useSettingStore();
 const boards = ref<IBoardDetail[]>([]);
 const page = ref<number>(1);
 const state = ref<InfiniteScrollStateType>();
+const errorCode = ref<string>();
 
 async function getBoards() {
   try {
@@ -59,8 +69,12 @@ async function getBoards() {
       state.value = "COMPLETED";
     }
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<IApiErrorResponse>;
     state.value = "ERROR";
+
+    if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {
+      errorCode.value = err.response.data.code;
+    }
   }
 }
 
