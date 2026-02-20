@@ -43,7 +43,8 @@ async function roadmap(roadmap?: Partial<RoadmapArgs>, insertToDb = false) {
   const url = roadmap?.url || `${sanitiseURL(name)}-${nanoid(10)}`;
   const index = faker.number.int({ min: 1, max: 100000 });
   const color = generateHexColor();
-  const display = faker.datatype.boolean();
+  const display =
+    "display" in roadmap ? roadmap.display : faker.datatype.boolean();
   const created_at = new Date().toJSON();
   const updated_at = new Date().toJSON();
 
