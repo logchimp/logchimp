@@ -7,30 +7,33 @@ const authorize = (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
   const user = req.user as IAuthenticationMiddlewareUser;
   if (!user || !user.userId) {
-    return res.status(401).send({
+    res.status(401).send({
       message: error.middleware.auth.authorizationFailed,
       code: "AUTHORIZATION_FAILED",
     });
+    return;
   }
 
   // user is blocked
   if (user.isBlocked) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.middleware.user.userBlocked,
       code: "USER_BLOCK",
     });
+    return;
   }
 
   const hasPermissions =
     Array.isArray(user.permissions) && user.permissions.length > 0;
   if (!hasPermissions) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.middleware.auth.accessDenied,
       code: "ACCESS_DENIED",
     });
+    return;
   }
 
-  return next();
+  next();
 };
 
 export { authorize };
