@@ -284,6 +284,25 @@ describe("GET /boards/:url", () => {
     expect(response.status).toBe(403);
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
+
+  it("should get private board by url [auth with board:read]", async () => {
+    const board: BoardInsertRecord = await generateBoards(
+      { display: false },
+      true,
+    );
+    const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["board:read"], {
+      roleName: "Board Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/boards/${board.url}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(response.body.board.boardId).toBe(board.boardId);
+  });
 });
 
 // Search board by name
