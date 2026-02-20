@@ -10,7 +10,7 @@ import error from "../../../../errorResponse.json";
 
 type ResponseBody = IGetRoadmapByUrlResponseBody | IApiErrorResponse;
 
-export async function roadmapByUrl(
+export function roadmapByUrl(
   req: Request<IGetRoadmapByUrlRequestParam>,
   res: Response<ResponseBody>,
 ) {
