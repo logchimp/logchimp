@@ -22,7 +22,7 @@
     "user": {
       "userNotFound": "User not found",
       "userBlocked": "User is Blocked",
-      "incorrectPassword": "Incorect password",
+      "incorrectPassword": "Incorrect password",
       "userExists": "User exists"
     }
   },

@@ -2,7 +2,7 @@
 import path from "path";
 import { createLogger, format, transports } from "winston";
 
-const oneLineForamt = format.printf(({ level, code, message, timestamp }) => {
+const oneLineFormat = format.printf(({ level, code, message, timestamp }) => {
   return `${timestamp} ${level.toUpperCase()}: ${code ? `[${code}] ` : ""}${message}`;
 });
 
@@ -11,7 +11,7 @@ const logger = createLogger({
     format.timestamp({
       format: "YYYY-MM-DD HH:mm:ss Z",
     }),
-    oneLineForamt,
+    oneLineFormat,
   ),
   transports: [
     // in beta

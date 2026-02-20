@@ -13,7 +13,7 @@ export async function updateProfile(req: Request, res: Response) {
 
   if (name?.length > 30) {
     res.status(400).send({
-      name: "Name cannot execeed 30 characters",
+      name: "Name cannot exceed 30 characters",
       code: "NAME_LENGTH",
     });
     return;

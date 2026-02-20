@@ -1,3 +1,3 @@
 # Logs
 
-This directroy is the default location for logs.
+This directory is the default location for logs.

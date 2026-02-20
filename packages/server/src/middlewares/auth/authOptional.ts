@@ -29,7 +29,7 @@ export async function authOptional(
     decoded = verifyJwtAuthToken(token, config.secretKey);
   } catch (_err) {
     // ignore error from JWT auth token verification
-    // and move to next middlware
+    // and move to next middleware
   }
   if (!decoded && !decoded?.userId) {
     return next();
