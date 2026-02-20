@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   IGetBoardsRequestQuery,
   IGetBoardsResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../../../database";
 
@@ -28,8 +29,12 @@ export async function get(
   );
   const page = parseAndValidatePage(req.query?.page);
 
+  // @ts-expect-error
+  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const hasPermission = permissions.includes("board:read");
+
   try {
-    const boards = await database
+    const query = database
       .select(
         "boards.boardId",
         "boards.name",
@@ -46,6 +51,14 @@ export async function get(
       .orderBy("boards.createdAt", created)
       .limit(limit)
       .offset(limit * (page - 1));
+
+    if (!hasPermission) {
+      query.where({
+        display: true,
+      });
+    }
+
+    const boards = await query;
 
     res.status(200).send({ boards });
   } catch (err) {

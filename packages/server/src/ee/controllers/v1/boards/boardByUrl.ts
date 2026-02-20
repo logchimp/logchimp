@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   IGetBoardByUrlRequestParams,
   IGetBoardsByUrlResponseBody,
+  TPermission,
 } from "@logchimp/types";
 
 import database from "../../../../database";
@@ -17,11 +18,24 @@ export async function boardByUrl(
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const boardId = validUUID(req.board?.boardId);
+  const board = req.board;
+  const boardId = validUUID(board?.boardId);
   if (!boardId) {
     res.status(403).send({
       message: error.api.boards.boardIdMissing,
       code: "BOARD_ID_MISSING",
+    });
+    return;
+  }
+
+  // @ts-expect-error
+  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const hasPermission = permissions.includes("board:read");
+
+  if (!hasPermission && !board.display) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
     });
     return;
   }
