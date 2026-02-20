@@ -23,6 +23,8 @@ router.get(
 );
 router.get<IGetRoadmapByUrlRequestParam>(
   "/roadmaps/:url",
+  // @ts-expect-error
+  authOptional,
   roadmapExists,
   withLicenseGuard(roadmaps.roadmapByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
