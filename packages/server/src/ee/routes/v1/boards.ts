@@ -11,7 +11,7 @@ const router = express.Router();
 import * as boards from "../../controllers/v1/boards";
 
 // middleware
-import { authRequired } from "../../../middlewares/auth";
+import { authOptional, authRequired } from "../../../middlewares/auth";
 import { boardExists } from "../../middleware/boardExists";
 import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
@@ -23,12 +23,16 @@ router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
 );
 router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
   "/boards/get",
+  // @ts-expect-error
+  authOptional,
   withLicenseGuard(boards.get, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
 router.get<IGetBoardByUrlRequestParams>(
   "/boards/:url",
+  // @ts-expect-error
+  authOptional,
   boardExists,
   withLicenseGuard(boards.boardByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
