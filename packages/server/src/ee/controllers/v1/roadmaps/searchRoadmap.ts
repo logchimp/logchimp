@@ -6,11 +6,11 @@ import type {
   ISearchRoadmapResponseBody,
   TPermission,
 } from "@logchimp/types";
-import database from "../../database";
+import database from "../../../../database";
 
 // utils
-import logger from "../../utils/logger";
-import error from "../../errorResponse.json";
+import logger from "../../../../utils/logger";
+import error from "../../../../errorResponse.json";
 
 type ResponseBody = ISearchRoadmapResponseBody | IApiErrorResponse;
 
@@ -24,10 +24,11 @@ export async function searchRoadmap(
 
   const checkPermission = permissions.includes("roadmap:read");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {
