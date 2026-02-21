@@ -34,6 +34,13 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
     };
 
     const emailVerification = await verifyEmail(tokenPayload);
+    if (!emailVerification) {
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
+    }
 
     /**
      * sending token as response is for
