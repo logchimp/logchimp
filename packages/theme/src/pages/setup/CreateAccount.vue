@@ -172,23 +172,21 @@ async function createAccount() {
     router.push("/setup/create-board");
   } catch (err) {
     const error = err as AxiosError<IApiErrorResponse>;
-    if (error.response?.data.code === "MAIL_CONFIG_MISSING") {
-      serverError.value = true;
-    }
+    const code = error.response?.data.code;
 
-    if (error.response?.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+    if (code === "MAIL_CONFIG_MISSING") {
+      serverError.value = true;
+    } else if (code === "EMAIL_DOMAIN_BLACKLISTED") {
       email.error.show = true;
       email.error.message = "Email domain blacklisted";
-    }
-
-    if (error.response?.data.code === "EMAIL_INVALID") {
+    } else if (code === "EMAIL_INVALID") {
       email.error.message = "Invalid email";
       email.error.show = true;
-    }
-
-    if (error.response?.data.code === "INVALID_EMAIL_DOMAIN") {
+    } else if (code === "INVALID_EMAIL_DOMAIN") {
       email.error.message = "Invalid email domain";
       email.error.show = true;
+    } else {
+      serverError.value = true;
     }
   } finally {
     buttonLoading.value = false;
