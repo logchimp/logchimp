@@ -172,7 +172,7 @@ async function createAccount() {
     router.push("/setup/create-board");
   } catch (err) {
     const error = err as AxiosError<IApiErrorResponse>;
-    const code = error.response?.data.code;
+    const code = error.response?.data?.code;
 
     if (code === "MAIL_CONFIG_MISSING") {
       serverError.value = true;
