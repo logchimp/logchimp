@@ -117,6 +117,7 @@ services:
 
 networks:
   dev-network:
+    name: logchimp-dev-network
     driver: bridge
 
 volumes:
