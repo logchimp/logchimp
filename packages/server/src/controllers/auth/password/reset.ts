@@ -25,7 +25,15 @@ export async function reset(req: Request, res: Response<ResponseBody>) {
       email,
       type: "resetPassword",
     };
+
     const passwordReset = await passwordResetEmail(tokenPayload);
+    if (!passwordReset) {
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
+    }
 
     /**
      * sending token as response for
