@@ -662,61 +662,63 @@ describe("PATCH /api/v1/boards", () => {
       },
     ];
 
-    it.each(testCases)(
-      "should throw error $testName",
-      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
-        const board = await generateBoards({}, true);
-        const newBoard = await generateBoards({}, false);
-        const { user: authUser } = await createUser();
-        await createRoleWithPermissions(authUser.userId, ["board:update"], {
-          roleName: "Board Patcher",
+    it.each(testCases)("should throw error $testName", async ({
+      omitField,
+      overrideFields,
+      expectedError,
+      expectedStatus,
+    }) => {
+      const board = await generateBoards({}, true);
+      const newBoard = await generateBoards({}, false);
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["board:update"], {
+        roleName: "Board Patcher",
+      });
+
+      // Build the request body
+      const requestBody: IBoardUpdateRequestBody = {
+        boardId: board.boardId,
+        name: newBoard.name,
+        url: newBoard.url,
+        color: newBoard.color,
+        view_voters: newBoard.view_voters,
+        display: newBoard.display,
+      };
+
+      // Omit field if specified
+      if (Array.isArray(omitField)) {
+        omitField.forEach((field) => {
+          requestBody[field] = undefined;
         });
+      } else if (omitField) {
+        requestBody[omitField] = undefined;
+      }
 
-        // Build the request body
-        const requestBody: IBoardUpdateRequestBody = {
-          boardId: board.boardId,
-          name: newBoard.name,
-          url: newBoard.url,
-          color: newBoard.color,
-          view_voters: newBoard.view_voters,
-          display: newBoard.display,
-        };
+      // Override fields if specified
+      if (overrideFields) {
+        Object.assign(requestBody, overrideFields);
+      }
 
-        // Omit field if specified
-        if (Array.isArray(omitField)) {
-          omitField.forEach((field) => {
-            requestBody[field] = undefined;
-          });
-        } else if (omitField) {
-          requestBody[omitField] = undefined;
-        }
+      const response = await supertest(app)
+        .patch("/api/v1/boards")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send(requestBody);
 
-        // Override fields if specified
-        if (overrideFields) {
-          Object.assign(requestBody, overrideFields);
-        }
-
-        const response = await supertest(app)
-          .patch("/api/v1/boards")
-          .set("Authorization", `Bearer ${authUser.authToken}`)
-          .send(requestBody);
-
-        expect(response.headers["content-type"]).toContain("application/json");
-        expect(response.status).toBe(expectedStatus);
-        expect(response.body.code).toBe("VALIDATION_ERROR");
-        expect(response.body.message).toBe("Invalid body parameters");
-        expect(response.body.errors).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              ...(expectedError.message && {
-                message: expectedError.message,
-              }),
-              code: expectedError.code,
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(expectedStatus);
+      expect(response.body.code).toBe("VALIDATION_ERROR");
+      expect(response.body.message).toBe("Invalid body parameters");
+      expect(response.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ...(expectedError.message && {
+              message: expectedError.message,
             }),
-          ]),
-        );
-      },
-    );
+            code: expectedError.code,
+          }),
+        ]),
+      );
+    });
   });
 
   it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {

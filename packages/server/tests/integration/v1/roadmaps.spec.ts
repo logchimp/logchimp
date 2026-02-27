@@ -686,61 +686,63 @@ describe("PATCH /api/v1/roadmaps", () => {
       },
     ];
 
-    it.each(testCases)(
-      "should throw error $testName",
-      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
-        const { user } = await createUser({
-          isVerified: true,
+    it.each(testCases)("should throw error $testName", async ({
+      omitField,
+      overrideFields,
+      expectedError,
+      expectedStatus,
+    }) => {
+      const { user } = await createUser({
+        isVerified: true,
+      });
+      await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+        roleName: "Roadmap update",
+      });
+      const r1 = await generateRoadmap({}, true);
+      const roadmap = await generateRoadmap({}, false);
+
+      const requestBody: IUpdateRoadmapRequestBody = {
+        id: r1.id,
+        name: roadmap.name,
+        url: roadmap.url,
+        color: roadmap.color,
+        display: roadmap.display,
+      };
+
+      // Omit field if specified
+      if (Array.isArray(omitField)) {
+        omitField.forEach((field) => {
+          requestBody[field] = undefined;
         });
-        await createRoleWithPermissions(user.userId, ["roadmap:update"], {
-          roleName: "Roadmap update",
-        });
-        const r1 = await generateRoadmap({}, true);
-        const roadmap = await generateRoadmap({}, false);
+      } else if (omitField) {
+        requestBody[omitField] = undefined;
+      }
 
-        const requestBody: IUpdateRoadmapRequestBody = {
-          id: r1.id,
-          name: roadmap.name,
-          url: roadmap.url,
-          color: roadmap.color,
-          display: roadmap.display,
-        };
+      // Override fields if specified
+      if (overrideFields) {
+        Object.assign(requestBody, overrideFields);
+      }
 
-        // Omit field if specified
-        if (Array.isArray(omitField)) {
-          omitField.forEach((field) => {
-            requestBody[field] = undefined;
-          });
-        } else if (omitField) {
-          requestBody[omitField] = undefined;
-        }
+      const response = await supertest(app)
+        .patch("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send(requestBody);
 
-        // Override fields if specified
-        if (overrideFields) {
-          Object.assign(requestBody, overrideFields);
-        }
-
-        const response = await supertest(app)
-          .patch("/api/v1/roadmaps")
-          .set("Authorization", `Bearer ${user.authToken}`)
-          .send(requestBody);
-
-        expect(response.headers["content-type"]).toContain("application/json");
-        expect(response.status).toBe(expectedStatus);
-        expect(response.body.code).toBe("VALIDATION_ERROR");
-        expect(response.body.message).toBe("Invalid body parameters");
-        expect(response.body.errors).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              ...(expectedError.message && {
-                message: expectedError.message,
-              }),
-              code: expectedError.code,
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(expectedStatus);
+      expect(response.body.code).toBe("VALIDATION_ERROR");
+      expect(response.body.message).toBe("Invalid body parameters");
+      expect(response.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ...(expectedError.message && {
+              message: expectedError.message,
             }),
-          ]),
-        );
-      },
-    );
+            code: expectedError.code,
+          }),
+        ]),
+      );
+    });
   });
 
   it("should update roadmap", async () => {
