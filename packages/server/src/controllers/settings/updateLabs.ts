@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  ISiteSettingsLab,
+  TGetSiteSettingsLabResponseBody,
   TPermission,
   TUpdateSiteSettingsLabRequestBody,
   TUpdateSiteSettingsLabResponseBody,
@@ -49,9 +49,11 @@ export async function updateLabs(
         labs: database.raw(`labs::jsonb || '${stringify}'`),
       })
       .from("settings")
-      .returning<Array<Partial<ISiteSettingsLab>>>(database.raw("labs::json"));
+      .returning<Array<TGetSiteSettingsLabResponseBody>>(
+        database.raw("labs::json"),
+      );
 
-    const labs = response[0];
+    const { labs } = response[0];
     if (cache.isActive) {
       try {
         await cache.valkey.set(
