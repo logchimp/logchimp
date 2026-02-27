@@ -34,7 +34,6 @@
 			margin-right: auto;
 			padding: 20px;
 			background-color: white;
-			--site-color: {{siteColor}};
 		}
 
 		.container {
@@ -54,7 +53,6 @@
 			font-weight: 500;
 			cursor: pointer;
 			user-select: none;
-			background-color: var(--site-color, #484d7c);
 			color: #fff;
 			margin-top: 8px;
 			margin-bottom: 8px;
@@ -85,7 +83,7 @@
 						</p>
 
 						<p>
-							<a class="primary_button" href="{{ resetLink }}" target="_blank" rel="noreferrer">
+							<a class="primary_button" href="{{ resetLink }}" target="_blank" rel="noreferrer" style="background-color: {{siteColor}};">
 								Reset password
 							</a>
 						</p>
