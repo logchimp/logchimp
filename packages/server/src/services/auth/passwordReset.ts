@@ -10,6 +10,7 @@ import { createToken } from "../token.service";
 import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IPasswordResetJwtPayload } from "../../types";
+import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
 
 const config = configManager.getConfig();
 
@@ -51,7 +52,7 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
     }
 
     const siteTitle = siteInfo[0].title;
-    let siteColor = siteInfo[0].accentColor;
+    let siteColor = siteInfo[0].accentColor || LOGCHIMP_FALLBACK_BRAND_COLOR;
     const siteLogo =
       siteInfo[0].logo ||
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png";
