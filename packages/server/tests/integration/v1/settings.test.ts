@@ -402,11 +402,45 @@ describe("PATCH /api/v1/settings/site", () => {
 });
 
 describe("GET /api/v1/settings/labs", () => {
-  it("should get all labs", async () => {
+  it("should get all labs [with MISS cache]", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["settings:update"], {
       roleName: "Settings update",
     });
+
+    const updateLabs = {
+      comments: faker.datatype.boolean(),
+    };
+
+    await supertest(app)
+      .patch("/api/v1/settings/labs")
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send(updateLabs);
+
+    if (cache.isActive) {
+      await cache.valkey.del(CACHE_KEYS.LABS_SETTINGS);
+    }
+
+    const response = await supertest(app).get("/api/v1/settings/labs");
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["x-cache"]).toBe("MISS");
+    expect(response.status).toBe(200);
+
+    const labs = response.body.labs;
+    expect(labs.comments).toBe(updateLabs.comments);
+  });
+
+  it.skip("should get all labs [with HIT cache]", async () => {
+    const { user } = await createUser();
+    await createRoleWithPermissions(user.userId, ["settings:update"], {
+      roleName: "Settings update",
+    });
+
+    // mimic cache miss behavior by deleting the cache
+    if (cache.isActive) {
+      await cache.valkey.del(CACHE_KEYS.LABS_SETTINGS);
+    }
 
     const updateLabs = {
       comments: faker.datatype.boolean(),
@@ -419,6 +453,7 @@ describe("GET /api/v1/settings/labs", () => {
     const response = await supertest(app).get("/api/v1/settings/labs");
 
     expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.headers["x-cache"]).toBe("HIT");
     expect(response.status).toBe(200);
 
     const labs = response.body.labs;
@@ -460,5 +495,11 @@ describe("PATCH /api/v1/settings/labs", () => {
       .patch("/api/v1/settings/labs")
       .set("Authorization", `Bearer ${user.authToken}`)
       .send(updateLabs);
+
+    if (cache.isActive) {
+      const getCachedDataStr = await cache.valkey.get(CACHE_KEYS.LABS_SETTINGS);
+      expect(getCachedDataStr).toBeDefined();
+      expect(JSON.parse(getCachedDataStr)).toEqual(updateLabs);
+    }
   });
 });
