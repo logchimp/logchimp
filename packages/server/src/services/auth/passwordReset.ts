@@ -46,6 +46,10 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
       >("title", "accentColor", "logo")
       .from("settings");
 
+    if (siteInfo.length === 0) {
+      throw new Error("Site settings not found");
+    }
+
     const siteTitle = siteInfo[0].title;
     let siteColor = siteInfo[0].accentColor;
     const siteLogo =
