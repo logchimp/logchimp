@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  TGetSiteSettingsLabResponseBody,
   TPermission,
   TUpdateSiteSettingsLabRequestBody,
   TUpdateSiteSettingsLabResponseBody,
@@ -10,6 +11,11 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+
+// cache
+import * as cache from "../../cache";
+import { CACHE_KEYS } from "../../cache/keys";
+import { DAY } from "../../cache/time";
 
 type ResponseBody = TUpdateSiteSettingsLabResponseBody | IApiErrorResponse;
 
@@ -43,9 +49,24 @@ export async function updateLabs(
         labs: database.raw(`labs::jsonb || '${stringify}'`),
       })
       .from("settings")
-      .returning(database.raw("labs::json"));
+      .returning<Array<TGetSiteSettingsLabResponseBody>>(
+        database.raw("labs::json"),
+      );
 
-    const labs = response[0];
+    const { labs } = response[0];
+    if (cache.isActive) {
+      try {
+        await cache.valkey.set(
+          CACHE_KEYS.LABS_SETTINGS,
+          JSON.stringify(labs),
+          "EX",
+          7 * DAY,
+        );
+      } catch (err) {
+        logger.error({ message: err });
+      }
+    }
+
     res.status(200).send({
       labs,
     });
