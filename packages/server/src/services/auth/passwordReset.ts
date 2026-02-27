@@ -37,7 +37,13 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
      * Get site title for using it in email footer
      */
     const siteInfo = await database
-      .select("title", "accentColor", "logo")
+      .select<
+        Array<{
+          title: string;
+          accentColor: string;
+          logo: string;
+        }>
+      >("title", "accentColor", "logo")
       .from("settings");
 
     const siteTitle = siteInfo[0].title;
