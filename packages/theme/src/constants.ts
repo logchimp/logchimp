@@ -14,4 +14,4 @@ export const IS_SELF_HOSTED =
 
 export const MAX_TITLE_LENGTH = 100;
 
-export const DEFAULT_LOGCHIMP_PILOT_URL = "https://app.logchimp.codecarrot.net";
+export const DEFAULT_LOGCHIMP_PILOT_URL = "https://pilot.logchimp.app";

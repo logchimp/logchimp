@@ -4,6 +4,6 @@ import { themes } from "@storybook/theming";
 addons.setConfig({
   theme: themes.light,
   brandTitle: "LogChimp",
-  brandUrl: "https://logchimp.codecarrot.net/",
+  brandUrl: "https://logchimp.app",
   brandImage: "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
 });
