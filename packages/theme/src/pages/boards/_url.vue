@@ -3,7 +3,7 @@
   <template v-else>
     <div v-if="isBoardExist">
       <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
-        <main class="grow-[2] shrink basis-0">
+        <main class="grow-2 shrink basis-0">
           <tab class="mb-5">
             <tab-item
               :active="tab === 'latest'"
@@ -44,7 +44,8 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { getBoardByUrl } from "../../ee/modules/boards";
@@ -80,6 +81,7 @@ const activeTab = computed(() => {
   switch (tab.value) {
     case "oldest":
       return OldestPosts;
+    // biome-ignore lint/complexity/noUselessSwitchCase: need to have 'oldest' and 'latest' value, with default set to 'latest'
     case "latest":
     default:
       return LatestPosts;
@@ -105,8 +107,9 @@ async function getBoard() {
     const response = await getBoardByUrl(url);
     isBoardExist.value = true;
     Object.assign(board, response.data.board);
-  } catch (error: any) {
-    if (error.response.data.code === "BOARD_NOT_FOUND") {
+  } catch (error) {
+    const err = error as AxiosError<IApiErrorResponse>;
+    if (err.response?.data?.code === "BOARD_NOT_FOUND") {
       isBoardExist.value = false;
     }
   } finally {

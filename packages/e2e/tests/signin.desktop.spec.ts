@@ -77,8 +77,8 @@ test.describe("Signin", () => {
       const submitButton = form.getByRole("button", { name: "Login" });
       await submitButton.click();
 
-      const emailInput = form.getByLabel("Email Address");
-      const passwordInput = form.getByLabel("password");
+      const _emailInput = form.getByLabel("Email Address");
+      const _passwordInput = form.getByLabel("password");
     });
 
     test.skip("should display error message when email is invalid", async ({

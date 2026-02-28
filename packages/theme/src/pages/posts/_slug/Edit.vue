@@ -42,7 +42,8 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IDashboardPost } from "@logchimp/types";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse, IDashboardPost } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
@@ -138,8 +139,9 @@ async function getPost() {
     post.author = response.data.post.author;
     post.board = response.data.post.board;
     post.roadmap = response.data.post.roadmap;
-  } catch (error: any) {
-    if (error.response.data.code === "POST_NOT_FOUND") {
+  } catch (error) {
+    const err = error as AxiosError<IApiErrorResponse>;
+    if (err.response?.data?.code === "POST_NOT_FOUND") {
       isPostExist.value = false;
     }
   } finally {

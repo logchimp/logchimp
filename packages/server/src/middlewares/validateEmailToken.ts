@@ -66,7 +66,7 @@ export async function validateEmailToken(
       });
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     req.user = { email: emailToken.email };
 
     if (!req.ctx) {

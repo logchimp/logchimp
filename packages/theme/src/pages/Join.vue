@@ -54,6 +54,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../router";
@@ -130,22 +132,24 @@ async function join() {
     } else {
       router.push("/");
     }
-  } catch (error: any) {
-    if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+  } catch (error) {
+    const err = error as AxiosError<IApiErrorResponse>;
+
+    if (err.response?.data?.code === "MAIL_CONFIG_MISSING") {
       serverError.value = true;
     }
 
-    if (error.response.data.code === "EMAIL_INVALID") {
+    if (err.response?.data?.code === "EMAIL_INVALID") {
       emailError.show = true;
       emailError.message = "Invalid email";
     }
 
-    if (error.response.data.code === "USER_EXISTS") {
+    if (err.response?.data?.code === "USER_EXISTS") {
       emailError.show = true;
       emailError.message = "Exists";
     }
 
-    if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+    if (err.response?.data?.code === "EMAIL_DOMAIN_BLACKLISTED") {
       emailError.show = true;
       emailError.message = "Email domain is blacklisted";
     }

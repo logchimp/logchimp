@@ -47,7 +47,7 @@ function validUUIDs(value: Array<string>): string[] {
  */
 const generateHexColor = () => {
   let random = Math.random();
-  // @ts-ignore
+  // @ts-expect-error
   const exponent = --random.toExponential().split("-")[1];
   // Make sure random number is between 1.0 and 0.1 to assure correct hex values.
   random *= 10 ** exponent;

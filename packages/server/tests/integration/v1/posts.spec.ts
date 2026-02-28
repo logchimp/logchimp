@@ -6,7 +6,6 @@ import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
-import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import { updateSettings } from "../../utils/seed/settings";
 import {
@@ -16,7 +15,6 @@ import {
   vote as assignVote,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import { isActive } from "../../../src/cache";
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {

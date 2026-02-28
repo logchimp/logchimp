@@ -190,7 +190,7 @@ describe("PATCH /api/v1/settings/site", () => {
 
       // 15. Long URLs (Buffer Overflow)
       `https://example.com/${"A".repeat(10000)}.jpg`,
-      `https://example.com/image.jpg${"?param=" + "X".repeat(5000)}`,
+      `https://example.com/image.jpg${`?param=${"X".repeat(5000)}`}`,
 
       // 16. Null Byte Injection
       `https://example.com/image.jpg\x00.txt`,

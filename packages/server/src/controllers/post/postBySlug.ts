@@ -12,7 +12,6 @@ import { getVotes } from "../../services/votes/getVotes";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import { validUUID } from "../../helpers";
 
 type ResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
 
