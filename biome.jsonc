@@ -55,7 +55,7 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.vue"],
+      "includes": ["packages/theme/**/*.vue"],
       "linter": {
         "rules": {
           "correctness": {
