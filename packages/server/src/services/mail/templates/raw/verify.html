@@ -55,7 +55,6 @@
         font-weight: 500;
         cursor: pointer;
         user-select: none;
-        background-color: #484d7c;
         color: white;
         margin-top: 8px;
         margin-bottom: 8px;
@@ -71,11 +70,8 @@
           <td class="container">
             <div>
               <p>
-                <a href="https://logchimp.codecarrot.net/">
-                  <img
-                    class="logo"
-                    src="https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png"
-                  />
+                <a href="{{url}}">
+                  <img class="logo" src="{{siteLogo}}" alt="{{siteTitle}} Logo" />
                 </a>
               </p>
 
@@ -92,8 +88,10 @@
               <p>
                 <a
                   class="primary_button"
-                  href="{{ verificationLink }}"
-                  target="_blank" rel="noreferrer"
+                  href="{{verificationLink}}"
+                  target="_blank"
+                  rel="noreferrer"
+                  style="background-color: {{siteColor}};"
                 >
                   Confirm email
                 </a>
@@ -104,9 +102,9 @@
               </p>
 
               <p class="text">
-                {{ siteTitle }}
+                {{siteTitle}}
                 <br />
-                <a href="{{ url }}" target="_blank" rel="noreferrer"> {{ domain }}</a>
+                <a href="{{url}}" target="_blank" rel="noreferrer"> {{domain}}</a>
               </p>
             </div>
           </td>
