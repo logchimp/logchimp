@@ -31,7 +31,7 @@ jobs:
       - uses: biomejs/setup-biome@v2
 
       - name: Formatter
-        run: biome format --max-diagnostics 200 --colors force .
+        run: biome format --max-diagnostics=none --colors force .
 
   linter:
     name: Linter
@@ -46,4 +46,4 @@ jobs:
       - uses: biomejs/setup-biome@v2
 
       - name: Linter
-        run: biome check --max-diagnostics 200 --colors force .
+        run: biome check --max-diagnostics=none --colors force .
