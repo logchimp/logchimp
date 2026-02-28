@@ -32,7 +32,7 @@ function renderContent() {
       .join(" ");
 
     return h(
-      // @ts-ignore
+      // @ts-expect-error
       vnode.type,
       {
         ...vnode.props,

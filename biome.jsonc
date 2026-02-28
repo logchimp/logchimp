@@ -12,6 +12,18 @@
       "quoteStyle": "double"
     }
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "html": {
+    "parser": {
+      // HTML interpolation is an experimental feature
+      // and, does not support overriding, so enabling it globally.
+      "interpolation": true
+    }
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -20,22 +32,25 @@
     "includes": [
       "**",
       "!.idea",
-      "!packages/theme/dist",
-      "!packages/server/dist",
-      "!packages/types/dist"
+      "!packages/theme/dist/**",
+      "!packages/server/dist/**",
+      "!packages/types/dist/**"
     ]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "useNodejsImportProtocol": "off"
+      }
     },
     "includes": [
       "**",
       "!.idea",
-      "!packages/theme/dist",
-      "!packages/server/dist",
-      "!packages/types/dist"
+      "!packages/theme/dist/**",
+      "!packages/server/dist/**",
+      "!packages/types/dist/**"
     ]
   },
   "overrides": [
@@ -45,7 +60,9 @@
         "rules": {
           "correctness": {
             "noUnusedVariables": "off",
-            "noUnusedImports": "off"
+            "noUnusedImports": "off",
+            // Temporarily disabled due to Biome error
+            "noVueDuplicateKeys": "off"
           }
         }
       }

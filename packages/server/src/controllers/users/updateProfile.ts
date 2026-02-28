@@ -7,7 +7,7 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
 export async function updateProfile(req: Request, res: Response) {
-  // @ts-ignore
+  // @ts-expect-error
   const userId = req.user.userId;
   const name = sanitiseName(req.body.name);
 
