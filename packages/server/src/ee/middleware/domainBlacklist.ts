@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import logger from "../utils/logger";
-import error from "../errorResponse.json";
-import { validEmail } from "../helpers";
+import logger from "../../utils/logger";
+import error from "../../errorResponse.json";
+import { validEmail } from "../../helpers";
 
 export function isValidDomain(domain: string) {
   if (typeof domain !== "string") return false;
