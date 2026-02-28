@@ -20,9 +20,9 @@
     "includes": [
       "**",
       "!.idea",
-      "!packages/theme/dist",
-      "!packages/server/dist",
-      "!packages/types/dist"
+      "!packages/theme/dist/**",
+      "!packages/server/dist/**",
+      "!packages/types/dist/**"
     ]
   },
   "linter": {
@@ -33,9 +33,9 @@
     "includes": [
       "**",
       "!.idea",
-      "!packages/theme/dist",
-      "!packages/server/dist",
-      "!packages/types/dist"
+      "!packages/theme/dist/**",
+      "!packages/server/dist/**",
+      "!packages/types/dist/**"
     ]
   },
   "overrides": [
