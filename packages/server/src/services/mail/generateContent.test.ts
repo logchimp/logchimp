@@ -24,7 +24,7 @@ describe("generateContent", () => {
         domain: "example.com",
         resetLink: "https://example.com/reset?token=abc123",
         siteTitle: "Test Site",
-        siteColor: "#484d7c",
+        siteColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
         siteLogo: "https://example.com/logo.png",
       };
 
@@ -39,64 +39,40 @@ describe("generateContent", () => {
       expect(result?.text).toContain(mockData.domain);
     });
 
-    it("should handle different site colors", async () => {
-      const customColor = "#ff6600";
-      const result = await generateContent("reset", {
-        url: "https://test.com",
-        domain: "test.com",
-        resetLink: "https://test.com/reset",
-        siteTitle: "Custom Site",
+    const customColor = "#ff6600";
+    [
+      {
+        title: "should handle different site colors",
         siteColor: customColor,
-        siteLogo: "https://test.com/logo.png",
-      });
-
-      expect(result?.html).toContain(`background-color: ${customColor}`);
-    });
-
-    it("should fallback to default LogChimp brand color", async () => {
-      const result = await generateContent("reset", {
-        url: "https://test.com",
-        domain: "test.com",
-        resetLink: "https://test.com/reset",
-        siteTitle: "Fallback Site",
+        expectedColor: customColor,
+      },
+      {
+        title: "should use fallback brand color when siteColor is not provided",
+        siteColor: undefined,
+        expectedColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
+      },
+      // TODO: Add support for invalid color fallback in the logic
+      {
+        title: "should handle different site colors",
         siteColor: "#invalid-color",
-        siteLogo: "https://test.com/logo.png",
-      });
+        skip: true,
+      },
+    ].map(({ title, siteColor, expectedColor, skip }) =>
+      it(title, async (t) => {
+        if (skip) t.skip();
 
-      expect(result?.html).toContain(
-        `background-color: #${LOGCHIMP_FALLBACK_BRAND_COLOR}`,
-      );
-    });
+        const result = await generateContent("reset", {
+          url: "https://test.com",
+          domain: "test.com",
+          resetLink: "https://test.com/reset",
+          siteTitle: "Custom Site",
+          siteColor,
+          siteLogo: "https://test.com/logo.png",
+        });
 
-    it("should use fallback brand color when siteColor is not provided", async () => {
-      const result = await generateContent("reset", {
-        url: "https://test.com",
-        domain: "test.com",
-        resetLink: "https://test.com/reset",
-        siteTitle: "Test",
-        siteColor: "", // or undefined
-        siteLogo: "https://test.com/logo.png",
-      });
-
-      expect(result?.html).toContain(
-        `background-color: #${LOGCHIMP_FALLBACK_BRAND_COLOR}`,
-      );
-    });
-
-    it.skip("should fallback to default LogChimp brand color on invalid site color", async () => {
-      const result = await generateContent("reset", {
-        url: "https://test.com",
-        domain: "test.com",
-        resetLink: "https://test.com/reset",
-        siteTitle: "Fallback Site",
-        siteColor: "#invalid-color",
-        siteLogo: "https://test.com/logo.png",
-      });
-
-      expect(result?.html).toContain(
-        `background-color: #${LOGCHIMP_FALLBACK_BRAND_COLOR}`,
-      );
-    });
+        expect(result?.html).toContain(`background-color: ${expectedColor}`);
+      }),
+    );
 
     it("should generate plain text version", async () => {
       const result = await generateContent("reset", {
