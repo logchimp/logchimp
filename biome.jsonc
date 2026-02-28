@@ -45,7 +45,9 @@
         "rules": {
           "correctness": {
             "noUnusedVariables": "off",
-            "noUnusedImports": "off"
+            "noUnusedImports": "off",
+            // Temporarily disabled due to Biome error
+            "noVueDuplicateKeys": "off"
           }
         }
       }
