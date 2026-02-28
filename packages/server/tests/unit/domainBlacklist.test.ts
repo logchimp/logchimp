@@ -12,7 +12,7 @@ function createApp() {
   const app = express();
   app.use(express.json());
 
-  app.post("/test", domainBlacklist, (req, res) => {
+  app.post("/test", domainBlacklist, (_req, res) => {
     res.status(200).json({ success: true });
   });
 

@@ -57,6 +57,8 @@
 // packages
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { IApiErrorResponse } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../router";
@@ -128,25 +130,26 @@ async function login() {
     } else {
       router.push("/");
     }
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as AxiosError<IApiErrorResponse>;
     buttonLoading.value = false;
 
-    if (error.response.data.code === "EMAIL_INVALID") {
+    if (err.response?.data?.code === "EMAIL_INVALID") {
       emailError.show = true;
       emailError.message = "Invalid email";
     }
 
-    if (error.response.data.code === "USER_NOT_FOUND") {
+    if (err.response?.data?.code === "USER_NOT_FOUND") {
       emailError.show = true;
       emailError.message = "User not found";
     }
 
-    if (error.response.data.code === "EMAIL_DOMAIN_BLACKLISTED") {
+    if (err.response?.data?.code === "EMAIL_DOMAIN_BLACKLISTED") {
       emailError.show = true;
       emailError.message = "Email domain is blacklisted";
     }
 
-    if (error.response.data.code === "INCORRECT_PASSWORD") {
+    if (err.response?.data?.code === "INCORRECT_PASSWORD") {
       passwordError.show = true;
       passwordError.message = "Incorrect password";
     }

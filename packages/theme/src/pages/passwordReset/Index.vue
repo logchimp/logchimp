@@ -44,6 +44,8 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { requestPasswordReset } from "../../modules/auth";
@@ -95,12 +97,13 @@ async function forgetPassword() {
     } else {
       requestError.value = true;
     }
-  } catch (error: any) {
-    if (error.response.data.code === "MAIL_CONFIG_MISSING") {
+  } catch (error) {
+    const err = error as AxiosError<IApiErrorResponse>;
+    if (err.response?.data?.code === "MAIL_CONFIG_MISSING") {
       serverError.value = true;
     }
 
-    if (error.response.data.code === "USER_NOT_FOUND") {
+    if (err.response?.data?.code === "USER_NOT_FOUND") {
       emailError.show = true;
       emailError.message = "User not found";
     }

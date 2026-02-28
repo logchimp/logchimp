@@ -135,7 +135,7 @@ describe("GET /api/v1/users", () => {
       .set("Authorization", `Bearer ${ownAuthToken}`)
       .query({ first: 6 });
 
-    const dates = res.body.users.map((u: any) => new Date(u.createdAt));
+    const dates = res.body.users.map((u: IUserInfo) => new Date(u.createdAt));
     for (let i = 0; i < dates.length - 1; i++) {
       expect(dates[i].getTime()).toBeLessThanOrEqual(dates[i + 1].getTime());
     }
