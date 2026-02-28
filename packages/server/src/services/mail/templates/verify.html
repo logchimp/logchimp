@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" style="margin: 0;padding: 0;">
-  <head style="margin: 0;padding: 0;">
+<head style="margin: 0;padding: 0;">
 
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" style="margin: 0;padding: 0;">
-  </head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" style="margin: 0;padding: 0;">
+</head>
 
-  <body style="margin: 0;padding: 0;font-family: &quot;Inter&quot;, sans-serif;font-size: 16px;">
-    <table class="parent" style="margin: 0;padding: 20px;width: 100%;max-width: 600px;margin-left: auto;margin-right: auto;background-color: white;">
-      <tbody style="margin: 0;padding: 0;">
-        <tr style="margin: 0;padding: 0;">
-          <td class="container" style="margin: 0;padding: 0;min-width: 100%;width: 100%;">
-            <div style="margin: 0;padding: 0;">
-              <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
-                <a href="https://logchimp.codecarrot.net/" style="margin: 0;padding: 0;color: #484d7c;text-decoration: none;">
-                  <img class="logo" src="https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png" style="margin: 0;padding: 0;width: 40px;height: 40px;">
-                </a>
-              </p>
+<body style="margin: 0;padding: 0;font-family: &quot;Inter&quot;, sans-serif;font-size: 16px;">
+<table class="parent" style="margin: 0;padding: 20px;width: 100%;max-width: 600px;margin-left: auto;margin-right: auto;background-color: white;">
+  <tbody style="margin: 0;padding: 0;">
+  <tr style="margin: 0;padding: 0;">
+    <td class="container" style="margin: 0;padding: 0;min-width: 100%;width: 100%;">
+      <div style="margin: 0;padding: 0;">
+        <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+          <a href="{{url}}" style="margin: 0;padding: 0;color: #484d7c;text-decoration: none;">
+            <img class="logo" src="{{siteLogo}}" alt="{{siteTitle}} Logo" style="margin: 0;padding: 0;width: 40px;height: 40px;">
+          </a>
+        </p>
 
-              <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
-                Thank you for creating an account.
-              </p>
+        <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+          Thank you for creating an account.
+        </p>
 
-              <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
-                Please confirm your email address by clicking
-                <strong style="margin: 0;padding: 0;">Confirm email</strong>
-                button below:
-              </p>
+        <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+          Please confirm your email address by clicking
+          <strong style="margin: 0;padding: 0;">Confirm email</strong>
+          button below:
+        </p>
 
-              <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
-                <a class="primary_button" href="{{ verificationLink }}" target="_blank" rel="noreferrer" style="margin: 0;padding: 0.875rem 1.5rem;color: white;text-decoration: none;display: inline-block;border-radius: 0.375rem;font-weight: 500;cursor: pointer;user-select: none;background-color: #484d7c;margin-top: 8px;margin-bottom: 8px;">
-                  Confirm email
-                </a>
-              </p>
+        <p style="margin: 0;padding: 0;margin-bottom: 1rem;">
+          <a class="primary_button" href="{{verificationLink}}" target="_blank" rel="noreferrer" style="background-color: {{siteColor}};margin: 0;padding: 0.875rem 1.5rem;color: white;text-decoration: none;display: inline-block;border-radius: 0.375rem;font-weight: 500;cursor: pointer;user-select: none;margin-top: 8px;margin-bottom: 8px;">
+            Confirm email
+          </a>
+        </p>
 
-              <p class="text" style="margin: 0;padding: 0;margin-bottom: 1rem;">
-                Thanks
-              </p>
+        <p class="text" style="margin: 0;padding: 0;margin-bottom: 1rem;">
+          Thanks
+        </p>
 
-              <p class="text" style="margin: 0;padding: 0;margin-bottom: 0;">
-                {{ siteTitle }}
-                <br style="margin: 0;padding: 0;">
-                <a href="{{ url }}" target="_blank" rel="noreferrer" style="margin: 0;padding: 0;color: #484d7c;text-decoration: none;"> {{ domain }}</a>
-              </p>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </body>
+        <p class="text" style="margin: 0;padding: 0;margin-bottom: 0;">
+          {{siteTitle}}
+          <br style="margin: 0;padding: 0;">
+          <a href="{{url}}" target="_blank" rel="noreferrer" style="margin: 0;padding: 0;color: #484d7c;text-decoration: none;"> {{domain}}</a>
+        </p>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
 </html>
