@@ -102,15 +102,13 @@ describe("isValidDomain", () => {
   });
 
   it("should return false for null, undefined, or non-string input", () => {
-    //@ts-ignore
     expect(isValidDomain(null)).toBeFalsy();
-    //@ts-ignore
     expect(isValidDomain(undefined)).toBeFalsy();
-    //@ts-ignore
+    //@ts-expect-error
     expect(isValidDomain(123)).toBeFalsy();
-    //@ts-ignore
+    //@ts-expect-error
     expect(isValidDomain({})).toBeFalsy();
-    //@ts-ignore
+    //@ts-expect-error
     expect(isValidDomain([])).toBeFalsy();
   });
 
@@ -189,9 +187,7 @@ describe("parseBlacklistedDomains", () => {
 
   it("should return an empty set for empty, null, or undefined input", () => {
     expect(parseBlacklistedDomains("")).toEqual(new Set());
-    //@ts-ignore
     expect(parseBlacklistedDomains(null)).toEqual(new Set());
-    //@ts-ignore
     expect(parseBlacklistedDomains(undefined)).toEqual(new Set());
   });
 
@@ -208,11 +204,11 @@ describe("parseBlacklistedDomains", () => {
   });
 
   it("should not crash on non-string input", () => {
-    //@ts-ignore
+    //@ts-expect-error
     expect(parseBlacklistedDomains(123)).toEqual(new Set());
-    //@ts-ignore
+    //@ts-expect-error
     expect(parseBlacklistedDomains({})).toEqual(new Set());
-    //@ts-ignore
+    //@ts-expect-error
     expect(parseBlacklistedDomains([])).toEqual(new Set());
   });
 
