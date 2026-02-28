@@ -4,6 +4,7 @@ import { htmlToText } from "html-to-text";
 
 import logger from "../../utils/logger";
 import { readFile } from "../../helpers";
+import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
 
 interface IGenerateContentBaseOptions {
   readonly url: string;
@@ -11,7 +12,7 @@ interface IGenerateContentBaseOptions {
 }
 
 type IGenerateContentOptions = IGenerateContentBaseOptions &
-  Record<string, string>;
+  Record<string, string | undefined>;
 
 export async function generateContent(
   templateName: string,
@@ -41,9 +42,14 @@ export async function generateContent(
     return;
   }
 
+  const processedOptions = {
+    ...options,
+    siteColor: options.siteColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
+  };
+
   _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
   const compiled = _.template(fileContent);
-  const htmlMail = compiled(options);
+  const htmlMail = compiled(processedOptions);
 
   const textMail = htmlToText(htmlMail);
 
