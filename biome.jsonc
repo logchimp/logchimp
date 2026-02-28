@@ -17,6 +17,13 @@
       "tailwindDirectives": true
     }
   },
+  "html": {
+    "parser": {
+      // HTML interpolation is an experimental feature
+      // and, does not support overriding, so enabling it globally.
+      "interpolation": true
+    }
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
