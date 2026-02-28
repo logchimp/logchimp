@@ -4,6 +4,19 @@ import { generateContent } from "./generateContent";
 import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
 
 describe("generateContent", () => {
+  it("should return undefined for invalid template", async () => {
+    const result = await generateContent("invalid-template", {
+      url: "https://test.com",
+      domain: "test.com",
+      resetLink: "https://test.com/reset",
+      siteTitle: "Test",
+      siteColor: "#000",
+      siteLogo: "https://test.com/logo.png",
+    });
+
+    expect(result).toBeUndefined();
+  });
+
   describe("Password Reset Email", () => {
     it("should generate email with correct dynamic values", async () => {
       const mockData = {
