@@ -5,6 +5,9 @@ import baseConfig from "./vitest.config.base";
 export default defineConfig({
   ...baseConfig,
   test: {
-    dir: "./tests/unit",
+    include: [
+      "./tests/unit/**/*.test.ts",
+      "./src/**/*.test.ts",
+    ],
   },
 });
