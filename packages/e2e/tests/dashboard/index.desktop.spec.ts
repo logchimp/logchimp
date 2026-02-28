@@ -24,7 +24,7 @@ ownerAccount("should display 'Powered by LogChimp' badge", async ({ page }) => {
     name: "Powered by LogChimp",
   });
 
-  const url = "https://logchimp.codecarrot.net";
+  const url = "https://logchimp.app";
   const params = new URLSearchParams({
     utm_medium: "powered",
     utm_source: "Dashboard overview",

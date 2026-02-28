@@ -39,7 +39,7 @@ onMounted(() => {
     v-else
     :icon="KeyIcon"
     title="This is a commercial feature"
-    description="To purchase a commercial license, please reach out to our sales team. If a license key is already in place, please contact logchimp@codecarrot.net for help."
+    description="To purchase a commercial license, please reach out to our sales team. If a license key is already in place, please contact sales@logchimp.app for help."
   >
     <template #button>
       <Button type="primary" :href="DEFAULT_LOGCHIMP_PILOT_URL">
