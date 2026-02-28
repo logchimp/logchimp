@@ -20,7 +20,7 @@ import { useSettingStore } from "../store/settings";
 const route = useRoute();
 const { get: siteSettings } = useSettingStore();
 
-const BASE_URL = "https://logchimp.codecarrot.net";
+const BASE_URL = "https://logchimp.app";
 const href = computed(() => {
   const params = new URLSearchParams({
     utm_medium: "powered",

@@ -33,7 +33,7 @@
       <EmptyScreen
         title="Roles and Permissions"
         description="Want to have more control in your organisation? Upgrade to Enterprise plan to access advanced features and manage your team more efficiently."
-        learnMore="https://docs.logchimp.codecarrot.net/guide/dashboard/role-permission"
+        learnMore="https://docs.logchimp.app/guide/dashboard/role-permission"
         :border="false"
         :icon="ShieldIcon"
         padding-y="pt-0 pb-7 lg:pb-20"

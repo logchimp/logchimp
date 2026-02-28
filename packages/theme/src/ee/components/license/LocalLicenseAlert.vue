@@ -9,7 +9,7 @@ import { Alert } from "../../../components/ui/Alert";
     type="warning"
   >
     <template #description>
-      To purchase a commercial license, please reach out to our sales team. If a license key is already in place, please contact logchimp@codecarrot.net for help.
+      To purchase a commercial license, please reach out to our sales team. If a license key is already in place, please contact sales@logchimp.app for help.
       <a class="underline" :href="DEFAULT_LOGCHIMP_PILOT_URL">
         Contact Sales
       </a>

@@ -1,4 +1,4 @@
-<a href="https://logchimp.codecarrot.net/">
+<a href="https://logchimp.app">
   <img src="./.github/images/readme.png" alt="LogChimp" />
 </a>
 <br /><br />
@@ -6,13 +6,13 @@
   Track your customers feedback to build better products with LogChimp
 </p>
 <h4 align="center">
-  <a href="https://logchimp.codecarrot.net">Website</a>
+  <a href="https://logchimp.app">Website</a>
   <span> • </span>
-  <a href="https://logchimp.codecarrot.net/docs/">Docs</a>
+  <a href="https://docs.logchimp.app">Docs</a>
   <span> • </span>
-  <a href="https://logchimp.codecarrot.net/guide">Guide</a>
+  <a href="https://logchimp.app/guide">Guide</a>
   <span> • </span>
-  <a href="https://logchimp.codecarrot.net/docs/contributing">Contribute</a>
+  <a href="https://docs.logchimp.app/developing/introduction">Contribute</a>
 </h4>
 <br />
 <p align="center">
@@ -56,7 +56,7 @@
 
 ## Getting started
 
-To get started you can read our [deployment docs](https://logchimp.codecarrot.net/docs/install) for self-hosting with
+To get started, you can read our [deployment docs](https://docs.logchimp.app/self-hosting/installation) for self-hosting with
 Ubuntu or cloud hosting with one click deploy button.
 
 ## Let's talk

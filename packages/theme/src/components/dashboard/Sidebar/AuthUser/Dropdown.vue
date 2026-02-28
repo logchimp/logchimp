@@ -60,7 +60,7 @@ import DropdownV2Separator from "../../../ui/DropdownV2/DropdownSeparator.vue";
 const { user, logout } = useUserStore();
 
 function aboutLogChimp() {
-  window.open("https://logchimp.codecarrot.net/");
+  window.open("https://logchimp.app");
 }
 
 function tweetLogChimp() {
