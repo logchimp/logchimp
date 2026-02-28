@@ -1,3 +1,5 @@
+export const LOGCHIMP_FALLBACK_BRAND_COLOR = "#484d7c";
+
 // 8 digits
 export const OFFSET_PAGINATION_UPPER_LIMIT = 99999999;
 

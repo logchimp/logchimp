@@ -53,7 +53,6 @@
 			font-weight: 500;
 			cursor: pointer;
 			user-select: none;
-			background-color: #484d7c;
 			color: #fff;
 			margin-top: 8px;
 			margin-bottom: 8px;
@@ -69,8 +68,8 @@
 				<td class="container">
 					<div>
 						<p>
-							<a href="https://logchimp.codecarrot.net/">
-								<img class="logo" src="https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png" />
+							<a href="{{url}}">
+								<img class="logo" src="{{siteLogo}}" alt="Logo" />
 							</a>
 						</p>
 
@@ -84,7 +83,7 @@
 						</p>
 
 						<p>
-							<a class="primary_button" href="{{ resetLink }}" target="_blank" rel="noreferrer">
+							<a class="primary_button" href="{{ resetLink }}" target="_blank" rel="noreferrer" style="background-color: {{siteColor}};">
 								Reset password
 							</a>
 						</p>
