@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import express from "express";
 import request from "supertest";
 import {
@@ -6,7 +6,7 @@ import {
   parseBlacklistedDomains,
   isValidDomain,
   blacklistManager,
-} from "./../../src/middlewares/domainBlacklist";
+} from "./domainBlacklist";
 
 function createApp() {
   const app = express();
@@ -28,9 +28,15 @@ describe("domainBlacklist", () => {
     blacklistManager.reset();
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("should block blacklisted domains", async () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com, badsite.org";
+    vi.stubEnv(
+      "LOGCHIMP_BLACKLISTED_DOMAINS",
+      "example.com, test.com, spam.com, badsite.org",
+    );
 
     const res = await request(app)
       .post("/test")
@@ -40,8 +46,10 @@ describe("domainBlacklist", () => {
   });
 
   it("should allow non-blacklisted domains", async () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS =
-      "example.com, test.com, spam.com, badsite.org";
+    vi.stubEnv(
+      "LOGCHIMP_BLACKLISTED_DOMAINS",
+      "example.com, test.com, spam.com, badsite.org",
+    );
 
     const res = await request(app)
       .post("/test")
@@ -52,7 +60,7 @@ describe("domainBlacklist", () => {
   });
 
   it("should reject invalid email formats", async () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "example.com, test.com";
+    vi.stubEnv("LOGCHIMP_BLACKLISTED_DOMAINS", "example.com, test.com");
 
     const res = await request(app)
       .post("/test")
@@ -62,7 +70,7 @@ describe("domainBlacklist", () => {
   });
 
   it("should allow subdomains unless explicitly blacklisted", async () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "example.com";
+    vi.stubEnv("LOGCHIMP_BLACKLISTED_DOMAINS", "example.com");
 
     const res = await request(app)
       .post("/test")
@@ -72,7 +80,7 @@ describe("domainBlacklist", () => {
   });
 
   it("should allow if blacklist is empty", async () => {
-    process.env.LOGCHIMP_BLACKLISTED_DOMAINS = "";
+    vi.stubEnv("LOGCHIMP_BLACKLISTED_DOMAINS", "");
 
     const res = await request(app)
       .post("/test")

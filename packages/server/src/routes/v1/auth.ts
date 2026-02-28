@@ -10,7 +10,7 @@ import { userExists } from "../../middlewares/userExists";
 import { mailConfigExists } from "../../middlewares/mailConfigExists";
 import { validateEmailToken } from "../../middlewares/validateEmailToken";
 import { authRequired } from "../../middlewares/auth";
-import { domainBlacklist } from "../../middlewares/domainBlacklist";
+import { domainBlacklist } from "../../ee/middleware/domainBlacklist";
 import { withLicenseGuardWrapper } from "../../middlewares/licenseGuardWrapper";
 
 router.post(

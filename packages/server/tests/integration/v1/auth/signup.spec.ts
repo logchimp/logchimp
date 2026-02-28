@@ -4,7 +4,7 @@ import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import app from "../../../../src/app";
 import database from "../../../../src/database";
-import { blacklistManager } from "../../../../src/middlewares/domainBlacklist";
+import { blacklistManager } from "../../../../src/ee/middleware/domainBlacklist";
 import { updateSettings } from "../../../utils/seed/settings";
 
 describe("POST /api/v1/auth/signup", () => {
