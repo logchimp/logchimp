@@ -6,7 +6,7 @@ import {
   parseBlacklistedDomains,
   isValidDomain,
   blacklistManager,
-} from "./../../src/middlewares/domainBlacklist";
+} from "./domainBlacklist";
 
 function createApp() {
   const app = express();

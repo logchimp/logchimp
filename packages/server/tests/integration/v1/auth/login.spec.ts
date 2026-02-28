@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 import app from "../../../../src/app";
 import { verifyToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
-import { blacklistManager } from "../../../../src/middlewares/domainBlacklist";
+import { blacklistManager } from "../../../../src/ee/middleware/domainBlacklist";
 
 describe("POST /api/v1/auth/login", () => {
   it.skip("should throw EMAIL_DOMAIN_BLACKLISTED", async () => {
