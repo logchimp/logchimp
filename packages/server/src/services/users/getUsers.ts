@@ -15,6 +15,7 @@ interface GetUserQueryOptions {
 
 interface GetUserMetadataOptions {
   after?: string;
+  created: ApiSortType;
 }
 
 export async function getUsers({
@@ -38,20 +39,41 @@ export async function getUsers({
         "createdAt",
       )
       .orderBy("createdAt", created)
+      .orderBy("userId", created)
       .limit(first);
 
     if (page) {
       users = users.offset(first * (page - 1));
     } else if (after) {
-      users = users
-        .where(
-          "createdAt",
-          ">=",
-          database("users").select("createdAt").where("userId", "=", after),
-        )
-        .offset(1);
-    }
+      const afterUser = await database("users")
+        .select("createdAt", "userId")
+        .where("userId", "=", after)
+        .first();
 
+      if (afterUser) {
+        users = users
+          .where((builder) => {
+            if (created === "DESC") {
+              builder
+                .where("createdAt", "<", afterUser.createdAt)
+                .orWhere((build) => {
+                  build
+                    .where("createdAt", "=", afterUser.createdAt)
+                    .andWhere("userId", "<", afterUser.userId);
+                });
+            } else {
+              builder
+                .where("createdAt", ">", afterUser.createdAt)
+                .orWhere((build) => {
+                  build
+                    .where("createdAt", "=", afterUser.createdAt)
+                    .andWhere("userId", ">", afterUser.userId);
+                });
+            }
+          })
+          .offset(1);
+      }
+    }
     return users;
   } catch (err) {
     logger.log({
@@ -63,7 +85,10 @@ export async function getUsers({
   }
 }
 
-export async function getUserMetadata({ after }: GetUserMetadataOptions) {
+export async function getUserMetadata({
+  after,
+  created,
+}: GetUserMetadataOptions) {
   return database.transaction(async (trx) => {
     // Total count
     const totalCountQuery = trx("users");
@@ -74,13 +99,36 @@ export async function getUserMetadata({ after }: GetUserMetadataOptions) {
     // Has next page
     let hasNextPageSubquery = trx("users").as("next");
     if (after) {
-      hasNextPageSubquery = hasNextPageSubquery
-        .where(
-          "createdAt",
-          ">=",
-          trx("users").select("createdAt").where("userId", "=", after),
-        )
-        .offset(1);
+      const afterUser = await trx("users")
+        .select("createdAt", "userId")
+        .where("userId", "=", after)
+        .first();
+
+      if (afterUser) {
+        hasNextPageSubquery = hasNextPageSubquery
+          .where((builder) => {
+            if (created === "DESC") {
+              builder
+                .where("createdAt", "<", afterUser.createdAt)
+                .orWhere((build) => {
+                  build
+                    .where("createdAt", "=", afterUser.createdAt)
+                    .andWhere("userId", "<", afterUser.userId);
+                });
+            } else {
+              builder
+                .where("createdAt", ">", afterUser.createdAt)
+                .orWhere((build) => {
+                  build
+                    .where("createdAt", "=", afterUser.createdAt)
+                    .andWhere("userId", ">", afterUser.userId);
+                });
+            }
+          })
+          .offset(1)
+          .orderBy("createdAt", created)
+          .orderBy("userId", created);
+      }
     }
 
     const hasNextPageResult = await trx

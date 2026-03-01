@@ -88,6 +88,7 @@ export async function filter(
     if (!page) {
       const metadataResults = await getUserMetadata({
         after,
+        created,
       });
       if (metadataResults) {
         totalCount = metadataResults.totalCount;
