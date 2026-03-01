@@ -83,10 +83,7 @@ defineOptions({
 <!--    </div>-->
     </div>
 
-    <post-activity-list
-      :post-id="postId"
-      :data="data"
-    />
+    <post-activity-list :data="data" />
     <infinite-scroll :on-infinite="fetchPostActivity" :state="state" />
   </div>
 </template>
