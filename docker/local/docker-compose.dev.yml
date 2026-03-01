@@ -9,7 +9,7 @@ services:
     volumes:
       - valkey-data:/data
     networks:
-      - dev-network
+      - logchimp-dev-network
 
   db:
     image: postgres:12
@@ -20,7 +20,7 @@ services:
       POSTGRES_USER: lc
       POSTGRES_PASSWORD: password
     networks:
-      - dev-network
+      - logchimp-dev-network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 5s
@@ -46,7 +46,7 @@ services:
       LOGCHIMP_DB_USER: lc
       LOGCHIMP_DB_PASSWORD: password
     networks:
-      - dev-network
+      - logchimp-dev-network
     healthcheck:
       test: ["CMD", "sh", "-c", "pnpm knex migrate:status --knexfile ./src/database/config.ts"]
       interval: 5s
@@ -61,7 +61,7 @@ services:
       - "1025:1025"
       - "8025:8025"
     networks:
-      - dev-network
+      - logchimp-dev-network
 
   logchimp:
     build:
@@ -84,7 +84,7 @@ services:
       migrator:
         condition: service_completed_successfully
     networks:
-      - dev-network
+      - logchimp-dev-network
     environment:
       PORT: 8000
       # Database
@@ -116,7 +116,7 @@ services:
   #     - logchimp
 
 networks:
-  dev-network:
+  logchimp-dev-network:
     name: logchimp-dev-network
     driver: bridge
 
