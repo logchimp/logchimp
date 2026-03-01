@@ -1135,3 +1135,72 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
     expect(responseBody.comment.is_internal).toBe(commentRequest.is_internal);
   });
 });
+
+describe("GET /api/v1/posts/:post_id/activity", () => {
+  it("should throw error 'POST_NOT_FOUND' for invalid post_id", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+
+    const response = await supertest(app)
+      .get("/api/v1/posts/invalid-post-id/activity")
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("POST_NOT_FOUND");
+  });
+
+  it("should return empty activity for a new post", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({ isVerified: true });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const response = await supertest(app)
+      .get(`/api/v1/posts/${post.postId}/activity`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body.activity)).toBe(true);
+    expect(response.body.activity).toHaveLength(0);
+  });
+
+  it("should return paginated activity list", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser({ isVerified: true });
+    const post = await generatePost(
+      {
+        userId: authUser.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    // create a few fake comments (activity entries)
+    await generateComment({ postId: post.postId, userId: authUser.userId });
+    await generateComment({ postId: post.postId, userId: authUser.userId });
+    await generateComment({ postId: post.postId, userId: authUser.userId });
+
+    const response = await supertest(app)
+      .get(`/api/v1/posts/${post.postId}/activity?limit=2&page=1`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    const { activity } = response.body;
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+    expect(activity).toHaveLength(2);
+    expect(activity[0]).toHaveProperty("author");
+    expect(activity[0]).toHaveProperty("created_at");
+  });
+});
+
