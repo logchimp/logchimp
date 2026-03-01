@@ -61,6 +61,11 @@
       "postNotFound": "Post not found",
       "notAnAuthor": "You are not the author of the post"
     },
+    "comments": {
+      "bodyMissing": "Comment body missing",
+      "commentNotFound": "Comment not found",
+      "notAnAuthor": "You are not the author of the comment"
+    },
     "boards": {
       "nameMissing": "Board name missing",
       "urlMissing": "Board url cannot be empty",
