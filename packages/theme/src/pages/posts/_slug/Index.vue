@@ -40,7 +40,9 @@
 
 			<p v-html="postContent" />
 
-      <PostActivityList :post-id="post.postId" />
+      <div class="mt-8" v-if="labs.comments">
+        <post-activity-renderer :post-id="post.postId" />
+      </div>
 		</div>
 		<p v-else>
 			There is no such post.
@@ -49,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -65,11 +67,14 @@ import { getPostBySlug } from "../../../modules/posts";
 import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
 import Vote from "../../../components/vote/Vote.vue";
 import { Avatar } from "../../../components/ui/Avatar";
-import PostActivityList from "../../../ee/components/posts/PostActivityList.vue";
 import PostViewMoreOptions from "../../../components/post/PostViewMoreOptions.vue";
 
+const PostActivityRenderer = defineAsyncComponent(
+  () => import("../../../ee/components/posts/PostActivity/Renderer.vue"),
+);
+
 const { permissions, getUserId } = useUserStore();
-const { get: siteSettings } = useSettingStore();
+const { get: siteSettings, labs } = useSettingStore();
 
 dayjs.extend(relativeTime);
 
