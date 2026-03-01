@@ -23,5 +23,9 @@ interface Props {
 }
 
 defineProps<Props>();
+
+defineOptions({
+  name: "PostActivityList",
+});
 </script>
 
