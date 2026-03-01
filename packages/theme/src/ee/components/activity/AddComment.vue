@@ -39,7 +39,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  (e: "add-comment", comment: IPostActivity): void
+  (e: "add-comment", comment: IPostActivity): void;
 }>();
 
 const comment = ref("");

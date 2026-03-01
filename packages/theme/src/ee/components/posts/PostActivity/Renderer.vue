@@ -6,7 +6,9 @@ import { addComment, postActivity } from "../../../modules/posts.ts";
 import AddComment from "../../activity/AddComment.vue";
 import PostActivityList from "../PostActivityList.vue";
 import { usePostActivityEEStore } from "../../../store/postActivity.ts";
-import InfiniteScroll, { type InfiniteScrollStateType } from "../../../../components/ui/InfiniteScroll.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../../../../components/ui/InfiniteScroll.vue";
 
 const postActivityEEStore = usePostActivityEEStore();
 
