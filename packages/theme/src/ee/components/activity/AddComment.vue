@@ -59,7 +59,7 @@ async function submitComment() {
     comment.value = "";
     loading.value = false;
 
-    emit("add-comment", response?.data?.activity);
+    emit("add-comment", response?.data?.comment);
   } catch (error) {
     tokenError(error);
     loading.value = false;
