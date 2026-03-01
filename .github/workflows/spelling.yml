@@ -20,6 +20,6 @@ jobs:
       - name: Checkout Actions Repository
         uses: actions/checkout@v4
       - name: Spell Check Repo
-        uses: crate-ci/typos@v1.34.0
+        uses: crate-ci/typos@v1.44.0
         with:
           config: ./.config/spell-check.toml
