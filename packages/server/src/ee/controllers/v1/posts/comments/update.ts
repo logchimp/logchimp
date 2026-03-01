@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import type {
-  ISiteSettingsLab,
-  IUpdatePostCommentRequestParam,
-  IUpdatePostCommentRequestBody,
   IApiErrorResponse,
+  ISiteSettingsLab,
+  IUpdatePostCommentRequestBody,
+  IUpdatePostCommentRequestParam,
   IUpdatePostCommentResponseBody,
 } from "@logchimp/types";
 import database from "../../../../../database";
@@ -41,10 +41,11 @@ export async function update(
     }
 
     if (!body) {
-      return res.status(400).send({
+      res.status(400).send({
         message: error.api.comments.bodyMissing,
         code: "COMMENT_BODY_MISSING",
       });
+      return;
     }
 
     // @ts-expect-error
@@ -60,10 +61,11 @@ export async function update(
       .first();
 
     if (!isAuthor) {
-      return res.status(403).send({
+      res.status(403).send({
         message: error.api.comments.notAnAuthor,
         code: "UNAUTHORIZED_NOT_AUTHOR",
       });
+      return;
     }
 
     const comment = await database

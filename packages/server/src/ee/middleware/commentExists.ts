@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IUpdatePostCommentRequestParam,
@@ -22,10 +22,11 @@ export async function commentExists(
   const id = validUUID(req.params.comment_id);
 
   if (!id) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.comments.commentNotFound,
       code: "COMMENT_NOT_FOUND",
     });
+    return;
   }
 
   const comment = await database("posts_comments as pc")
@@ -57,19 +58,21 @@ export async function commentExists(
     .first();
 
   if (!comment) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.comments.commentNotFound,
       code: "COMMENT_NOT_FOUND",
     });
+    return;
   }
 
   // @ts-expect-error
   const post = req.post;
   if (!post || comment.post_id !== post.postId) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.comments.commentNotFound,
       code: "COMMENT_NOT_FOUND",
     });
+    return;
   }
 
   // @ts-expect-error

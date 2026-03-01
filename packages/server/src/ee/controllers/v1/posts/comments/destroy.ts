@@ -43,10 +43,11 @@ export async function destroy(
       .first();
 
     if (!isAuthor) {
-      return res.status(403).send({
+      res.status(403).send({
         message: error.api.comments.notAnAuthor,
         code: "UNAUTHORIZED_NOT_AUTHOR",
       });
+      return;
     }
 
     try {
