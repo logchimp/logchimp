@@ -4,7 +4,7 @@ import type { IPostActivity } from "@logchimp/types";
 
 import { addComment, postActivity } from "../../../modules/posts.ts";
 import AddComment from "../../activity/AddComment.vue";
-import PostActivityList from "../PostActivityList.vue";
+import PostActivityList from "./List.vue";
 import { usePostActivityEEStore } from "../../../store/postActivity.ts";
 import InfiniteScroll, {
   type InfiniteScrollStateType,

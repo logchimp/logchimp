@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import type { IPostActivity } from "@logchimp/types";
-import ActivityItem from "../activity/ActivityItem.vue";
+import ActivityItem from "../../activity/ActivityItem.vue";
 
 interface Props {
   data: IPostActivity[];
