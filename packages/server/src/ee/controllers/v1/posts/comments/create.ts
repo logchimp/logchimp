@@ -55,7 +55,7 @@ export async function create(
         message: error.api.comments.bodyMissing,
         code: "COMMENT_BODY_MISSING",
       });
-      return
+      return;
     }
 
     const parentCommentId = await parentCommentExists({
