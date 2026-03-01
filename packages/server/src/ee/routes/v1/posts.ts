@@ -4,7 +4,7 @@ import type {
   IGetPostActivityRequestQuery,
   IUpdatePostCommentRequestParam,
   TCreatePostCommentRequestParam,
-  TDeletePostCommentRequestParam
+  TDeletePostCommentRequestParam,
 } from "@logchimp/types";
 
 // controller
