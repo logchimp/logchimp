@@ -27,10 +27,11 @@ export async function postExists(
 ) {
   const { id, slug } = getPostIdentifier(req);
   if (!id && !slug) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.posts.postNotFound,
       code: "POST_NOT_FOUND",
     });
+    return;
   }
 
   const post = await database
@@ -49,7 +50,7 @@ export async function postExists(
       message: error.api.posts.postNotFound,
       code: "POST_NOT_FOUND",
     });
-    return
+    return;
   }
 
   // @ts-expect-error
