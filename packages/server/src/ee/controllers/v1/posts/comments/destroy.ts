@@ -14,7 +14,7 @@ export async function destroy(
   req: Request<TDeletePostCommentRequestParam>,
   res: Response<IApiErrorResponse>,
 ) {
-  const { comment_id } = req.params;
+  const { comment_id, post_id } = req.params;
 
   try {
     const labSettings = (await database
@@ -30,9 +30,35 @@ export async function destroy(
       return;
     }
 
-    await database.delete().from("posts_comments").where({ id: comment_id });
+    // @ts-expect-error
+    const userId = req.user.userId;
 
-    res.status(204);
+    const isAuthor = await database
+      .from("posts_activity")
+      .where({
+        type: "comment",
+        posts_comments_id: comment_id,
+        author_id: userId,
+      })
+      .first();
+
+    if (!isAuthor) {
+      return res.status(403).send({
+        message: error.api.comments.notAnAuthor,
+        code: "UNAUTHORIZED_NOT_AUTHOR",
+      });
+    }
+
+    try {
+      await commentDeleteStatement(post_id, comment_id);
+    } catch (err) {
+      logger.error({
+        message: "Error deleting comment",
+        error: err,
+      });
+    }
+
+    res.sendStatus(204);
   } catch (err) {
     logger.log({
       level: "error",
@@ -44,4 +70,14 @@ export async function destroy(
       code: "SERVER_ERROR",
     });
   }
+}
+
+async function commentDeleteStatement(postId: string, commentId: string) {
+  await database.transaction(async (trx) => {
+    await trx.delete().from("posts_activity").where({
+      post_id: postId,
+      posts_comments_id: commentId,
+    });
+    await trx.delete().from("posts_comments").where({ id: commentId });
+  });
 }
