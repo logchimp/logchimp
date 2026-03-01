@@ -10,7 +10,7 @@
 			<p class="mb-0.5 text-sm break-all">{{ activity.comment.body }}</p>
 
 			<time
-				:datetime="activity.created_at.toString()"
+				:datetime="dayjs(activity.created_at).toISOString()"
 				:title="dayjs(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
 				class="text-xs text-neutral-600"
 			>
