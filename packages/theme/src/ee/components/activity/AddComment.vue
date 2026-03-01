@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import type { IPostActivity } from "@logchimp/types";
 
 // modules
 import { addComment } from "../../modules/posts";
@@ -37,7 +38,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(["add-comment"]);
+const emit = defineEmits<{
+  (e: "add-comment", comment: IPostActivity): void;
+}>();
 
 const comment = ref("");
 const loading = ref(false);
@@ -48,7 +51,7 @@ async function submitComment() {
   try {
     loading.value = true;
 
-    await addComment(props.postId, {
+    const response = await addComment(props.postId, {
       body: comment.value,
       is_internal: false,
     });
@@ -56,8 +59,7 @@ async function submitComment() {
     comment.value = "";
     loading.value = false;
 
-    // TODO: store post activity in global store
-    // emit("add-comment", response.data.comment);
+    emit("add-comment", response?.data?.comment);
   } catch (error) {
     tokenError(error);
     loading.value = false;
