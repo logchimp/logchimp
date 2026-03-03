@@ -12,6 +12,7 @@ import database from "../database";
 // utils
 import { toTrimmedString, validUUID } from "../helpers";
 import error from "../errorResponse.json";
+import logger from "../utils/logger";
 
 type RequestBody =
   | IGetPostBySlugRequestBody
@@ -34,16 +35,20 @@ export async function postExists(
     return;
   }
 
-  const post = await database
-    .select()
-    .from("posts")
-    .where({
-      postId: id || null,
-    })
-    .orWhere({
-      slug: slug || null,
-    })
-    .first();
+  let post: GetPostStatement | undefined;
+  try {
+    post = await getPostStatement({ id, slug });
+  } catch (e) {
+    logger.error({
+      message: "failed to get post from db",
+      error: e,
+    });
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+    return;
+  }
 
   if (!post) {
     res.status(404).send({
@@ -84,4 +89,35 @@ function getPostIdentifier(
     id,
     slug,
   };
+}
+
+interface GetPostArgs {
+  id: string | null;
+  slug: string | null;
+}
+
+interface GetPostStatement {
+  postId: string;
+  title: string;
+  slug: string;
+  slugId: string;
+  contentMarkdown: string | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  boardId: string | null;
+  roadmap_id: string | null;
+}
+
+function getPostStatement({ id, slug }: GetPostArgs) {
+  return database
+    .select<GetPostStatement>()
+    .from("posts")
+    .where({
+      postId: id || null,
+    })
+    .orWhere({
+      slug: slug || null,
+    })
+    .first();
 }
