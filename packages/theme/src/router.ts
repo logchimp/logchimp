@@ -5,7 +5,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "./store/user";
 import { isSiteSetup } from "./modules/site";
 import { checkUserDashboardAccess } from "./modules/users";
-import { useLoginRedirectUrl } from "./hooks/useLoginRedirectUrl";
 
 const routes = [
   {
@@ -94,7 +93,7 @@ const routes = [
     path: "/dashboard",
     component: () => import("./layout/Dashboard.vue"),
     beforeEnter: async (
-      _: RouteLocationNormalized,
+      to: RouteLocationNormalized,
       __: RouteLocationNormalized,
       next: NavigationGuardNext,
     ) => {
@@ -108,8 +107,9 @@ const routes = [
         // Is user logged in
         const { getUserId } = useUserStore();
         if (!getUserId) {
-          const loginRedirect = useLoginRedirectUrl();
-          return next(loginRedirect);
+          const params = new URLSearchParams();
+          params.set("redirect", to.fullPath);
+          return next(`/login?${params.toString()}`);
         }
 
         // Check user access to dashboard
