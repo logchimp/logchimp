@@ -9,16 +9,25 @@ import type {
   IComment,
   TPostActivityType,
 } from "@logchimp/types";
+import * as v from "valibot";
 
 import database from "../../../../../database";
-
-// utils
+import {
+  upsertCommentRequestBodySchema,
+  upsertCommentRequestBodyErrorMap as requestBodyErrorMap
+} from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { validUUID } from "../../../../../helpers";
 import { isFeatureEnabled } from "../../../../services/settings/labs";
 
 type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
+
+const { is_spam, ...upsertCommentRequestBodySchemaRest } = upsertCommentRequestBodySchema.entries;
+const requestBodySchema = v.object({
+  ...upsertCommentRequestBodySchemaRest,
+  parent_id: v.optional(v.pipe(v.string(), v.transform(validUUID))),
+})
 
 /**
  * Comment create controller
@@ -36,8 +45,6 @@ export async function create(
   // @ts-expect-error
   const userId = req.user.userId;
   const { post_id } = req.params;
-  const parentId = validUUID(req.body.parent_id);
-  const { is_internal, body } = req.body;
 
   // check auth user has required permission to set comment as internal
   // check the auth user has permission to comment
@@ -51,24 +58,32 @@ export async function create(
     return;
   }
 
-  try {
-    if (!body) {
-      res.status(400).send({
-        message: error.api.comments.bodyMissing,
-        code: "COMMENT_BODY_MISSING",
-      });
-      return;
-    }
+  const reqBody = v.safeParse(requestBodySchema, req.body);
+  if (!reqBody.success) {
+    res.status(400).json({
+      message: "Invalid request body",
+      code: "VALIDATION_ERROR",
+      errors: reqBody.issues.map((issue) => ({
+        ...issue,
+        message: requestBodyErrorMap[issue.message]
+          ? requestBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
 
+  try {
     const parentCommentId = await parentCommentExists({
-      parentId,
+      parentId: reqBody.output.parent_id,
       postId: post_id,
     });
 
     const results = await createCommentStatement({
       parentId: parentCommentId,
-      isInternal: is_internal,
-      body,
+      isInternal: reqBody.output.is_internal,
+      body: reqBody.output.body,
       postId: post_id,
       userId,
     });
@@ -115,7 +130,7 @@ const parentCommentExists = async ({
     return null;
   }
 
-  return parentExists?.id;
+  return parentExists.id;
 };
 
 interface ICreateCommentStmt {
