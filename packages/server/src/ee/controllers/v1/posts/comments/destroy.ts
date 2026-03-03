@@ -57,6 +57,11 @@ export async function destroy(
         message: "Error deleting comment",
         error: err,
       });
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
     }
 
     res.sendStatus(204);
