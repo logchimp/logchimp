@@ -20,7 +20,7 @@ import { isFeatureEnabled } from "../../../../services/settings/labs";
 type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
 
 /**
- * Comment delete endpoint.
+ * Comment update endpoint.
  *
  * `post_id` param and `comment_id` param are validated in their respective middlewares.
  */
