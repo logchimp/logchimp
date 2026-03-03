@@ -155,26 +155,15 @@ const createCommentStatement = ({
     const postActivityId = uuid();
 
     const [comment] = await trx("posts_comments")
-      .insert(
-        {
-          id: uuid(),
-          parent_id: parentId,
-          body,
-          activity_id: postActivityId,
-          is_internal: isInternal,
-          created_at: now,
-          updated_at: now,
-        },
-        [
-          "id",
-          "parent_id",
-          "body",
-          "is_internal",
-          "is_edited",
-          "is_spam",
-          "created_at",
-        ],
-      )
+      .insert({
+        id: uuid(),
+        parent_id: parentId,
+        body,
+        activity_id: postActivityId,
+        is_internal: isInternal,
+        created_at: now,
+        updated_at: now,
+      })
       .returning<IComment[]>([
         "id",
         "parent_id",
