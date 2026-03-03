@@ -86,9 +86,9 @@ function hideTitleError(event: FormFieldErrorType) {
   title.error = event;
 }
 
+const loginRedirect = useLoginRedirectUrl();
 async function submitPost() {
   if (!getUserId) {
-    const loginRedirect = useLoginRedirectUrl();
     await router.push(loginRedirect);
     return;
   }
