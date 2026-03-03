@@ -46,7 +46,7 @@ import type {
 import type { AxiosError } from "axios";
 
 // modules
-import { getAllRoadmaps } from "../modules/roadmaps";
+import { getAllRoadmaps } from "../ee/modules/roadmaps";
 import { useSettingStore } from "../store/settings";
 
 // components
