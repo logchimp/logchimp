@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IUpdatePostCommentRequestParam,
-  TDeletePostCommentRequestParam
+  TDeletePostCommentRequestParam,
 } from "@logchimp/types";
 
 import database from "../../database";
@@ -36,7 +36,7 @@ export async function commentExists(
     logger.error({
       message: "failed to get comment from db",
       error: e,
-    })
+    });
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",

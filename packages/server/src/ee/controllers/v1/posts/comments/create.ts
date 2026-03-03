@@ -14,7 +14,7 @@ import * as v from "valibot";
 import database from "../../../../../database";
 import {
   upsertCommentRequestBodySchema,
-  upsertCommentRequestBodyErrorMap as requestBodyErrorMap
+  upsertCommentRequestBodyErrorMap as requestBodyErrorMap,
 } from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
@@ -23,11 +23,12 @@ import { isFeatureEnabled } from "../../../../services/settings/labs";
 
 type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
 
-const { is_spam, ...upsertCommentRequestBodySchemaRest } = upsertCommentRequestBodySchema.entries;
+const { is_spam, ...upsertCommentRequestBodySchemaRest } =
+  upsertCommentRequestBodySchema.entries;
 const requestBodySchema = v.object({
   ...upsertCommentRequestBodySchemaRest,
   parent_id: v.optional(v.pipe(v.string(), v.transform(validUUID))),
-})
+});
 
 /**
  * Comment create controller

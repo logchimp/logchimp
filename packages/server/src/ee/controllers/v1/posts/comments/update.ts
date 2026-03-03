@@ -11,7 +11,7 @@ import * as v from "valibot";
 import database from "../../../../../database";
 import {
   upsertCommentRequestBodyErrorMap as requestBodyErrorMap,
-  upsertCommentRequestBodySchema as requestBodySchema
+  upsertCommentRequestBodySchema as requestBodySchema,
 } from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
