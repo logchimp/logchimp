@@ -10,6 +10,11 @@ import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 
+/**
+ * Comment delete endpoint.
+ *
+ * `post_id` param and `comment_id` param are validated in their respective middlewares.
+ */
 export async function destroy(
   req: Request<TDeletePostCommentRequestParam>,
   res: Response<IApiErrorResponse>,

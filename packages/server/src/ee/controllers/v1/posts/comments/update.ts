@@ -14,6 +14,11 @@ import error from "../../../../../errorResponse.json";
 
 type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
 
+/**
+ * Comment delete endpoint.
+ *
+ * `post_id` param and `comment_id` param are validated in their respective middlewares.
+ */
 export async function update(
   req: Request<
     IUpdatePostCommentRequestParam,

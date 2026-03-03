@@ -20,6 +20,11 @@ import { validUUID } from "../../../../../helpers";
 
 type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
 
+/**
+ * Comment create controller
+ *
+ * `post_id` param are validated in postExists middleware.
+ */
 export async function create(
   req: Request<
     TCreatePostCommentRequestParam,
