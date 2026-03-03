@@ -5,9 +5,13 @@ import type {
   IUpdatePostCommentRequestParam,
   IUpdatePostCommentResponseBody,
 } from "@logchimp/types";
-import database from "../../../../../database";
+import * as v from "valibot";
 
-// utils
+import database from "../../../../../database";
+import {
+  upsertCommentRequestBodyErrorMap as requestBodyErrorMap,
+  upsertCommentRequestBodySchema as requestBodySchema
+} from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { isFeatureEnabled } from "../../../../services/settings/labs";
@@ -28,8 +32,6 @@ export async function update(
   res: Response<ResponseBody>,
 ) {
   const { comment_id } = req.params;
-  const { is_internal, is_spam } = req.body;
-  const body = req.body.body;
 
   const isCommentsEnabled = await isFeatureEnabled("comments");
   if (!isCommentsEnabled) {
@@ -40,15 +42,23 @@ export async function update(
     return;
   }
 
-  try {
-    if (!body) {
-      res.status(400).send({
-        message: error.api.comments.bodyMissing,
-        code: "COMMENT_BODY_MISSING",
-      });
-      return;
-    }
+  const reqBody = v.safeParse(requestBodySchema, req.body);
+  if (!reqBody.success) {
+    res.status(400).json({
+      message: "Invalid request body",
+      code: "VALIDATION_ERROR",
+      errors: reqBody.issues.map((issue) => ({
+        ...issue,
+        message: requestBodyErrorMap[issue.message]
+          ? requestBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
 
+  try {
     // @ts-expect-error
     const userId = req.user.userId;
 
