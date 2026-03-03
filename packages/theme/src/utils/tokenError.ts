@@ -1,5 +1,6 @@
 import { useUserStore } from "../store/user";
 import { router } from "../router";
+import { useLoginRedirectUrl } from "../hooks/useLoginRedirectUrl";
 
 // TODO: Add TS types
 // biome-ignore lint: Add TS types
@@ -21,12 +22,8 @@ const tokenError = (error: any) => {
 
   // invalid auth header format
   if (error.response.data.code === "INVALID_AUTH_HEADER_FORMAT") {
-    router.push({
-      path: "/login",
-      query: {
-        redirect: router.currentRoute.value.fullPath,
-      },
-    });
+    const loginRedirect = useLoginRedirectUrl();
+    router.push(loginRedirect);
   }
 };
 

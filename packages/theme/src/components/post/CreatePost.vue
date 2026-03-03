@@ -49,6 +49,7 @@ import Button from "../ui/Button.vue";
 
 // utils
 import tokenError from "../../utils/tokenError";
+import { useLoginRedirectUrl } from "../../hooks/useLoginRedirectUrl";
 
 const router = useRouter();
 const { permissions, getUserId } = useUserStore();
@@ -87,10 +88,8 @@ function hideTitleError(event: FormFieldErrorType) {
 
 async function submitPost() {
   if (!getUserId) {
-    await router.push({
-      path: "/login",
-      query: { redirect: router.currentRoute.value.path },
-    });
+    const loginRedirect = useLoginRedirectUrl();
+    await router.push(loginRedirect);
     return;
   }
 
