@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  ISiteSettingsLab,
   TDeletePostCommentRequestParam,
 } from "@logchimp/types";
 import database from "../../../../../database";
@@ -9,6 +8,7 @@ import database from "../../../../../database";
 // utils
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
+import { isFeatureEnabled } from "../../../../services/settings/labs";
 
 /**
  * Comment delete endpoint.
@@ -21,20 +21,16 @@ export async function destroy(
 ) {
   const { comment_id, post_id } = req.params;
 
+  const isCommentsEnabled = await isFeatureEnabled("comments");
+  if (!isCommentsEnabled) {
+    res.status(403).send({
+      message: error.api.labs.disabled,
+      code: "LABS_DISABLED",
+    });
+    return;
+  }
+
   try {
-    const labSettings = (await database
-      .select(database.raw("labs::json"))
-      .from("settings")
-      .first()) as unknown as { labs: ISiteSettingsLab };
-
-    if (!labSettings.labs.comments) {
-      res.status(403).send({
-        message: error.api.labs.disabled,
-        code: "LABS_DISABLED",
-      });
-      return;
-    }
-
     // @ts-expect-error
     const userId = req.user.userId;
 

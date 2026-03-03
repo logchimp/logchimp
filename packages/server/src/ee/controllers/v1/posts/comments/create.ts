@@ -6,7 +6,6 @@ import type {
   TCreatePostCommentRequestParam,
   ICreatePostCommentResponseBody,
   IPublicUserInfo,
-  ISiteSettingsLab,
   IComment,
   TPostActivityType,
 } from "@logchimp/types";
@@ -17,6 +16,7 @@ import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { validUUID } from "../../../../../helpers";
+import { isFeatureEnabled } from "../../../../services/settings/labs";
 
 type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
 
@@ -42,19 +42,16 @@ export async function create(
   // check auth user has required permission to set comment as internal
   // check the auth user has permission to comment
 
+  const isCommentsEnabled = await isFeatureEnabled("comments");
+  if (!isCommentsEnabled) {
+    res.status(403).send({
+      message: error.api.labs.disabled,
+      code: "LABS_DISABLED",
+    });
+    return;
+  }
+
   try {
-    const labSettings = (await database("settings")
-      .select(database.raw("labs::json"))
-      .first()) as unknown as { labs: ISiteSettingsLab };
-
-    if (!labSettings.labs.comments) {
-      res.status(403).send({
-        message: error.api.labs.disabled,
-        code: "LABS_DISABLED",
-      });
-      return;
-    }
-
     if (!body) {
       res.status(400).send({
         message: error.api.comments.bodyMissing,

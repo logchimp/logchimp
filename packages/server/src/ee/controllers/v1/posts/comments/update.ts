@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  ISiteSettingsLab,
   IUpdatePostCommentRequestBody,
   IUpdatePostCommentRequestParam,
   IUpdatePostCommentResponseBody,
@@ -11,6 +10,7 @@ import database from "../../../../../database";
 // utils
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
+import { isFeatureEnabled } from "../../../../services/settings/labs";
 
 type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
 
@@ -31,20 +31,16 @@ export async function update(
   const { is_internal, is_spam } = req.body;
   const body = req.body.body;
 
+  const isCommentsEnabled = await isFeatureEnabled("comments");
+  if (!isCommentsEnabled) {
+    res.status(403).send({
+      message: error.api.labs.disabled,
+      code: "LABS_DISABLED",
+    });
+    return;
+  }
+
   try {
-    const labSettings = (await database
-      .select(database.raw("labs::json"))
-      .from("settings")
-      .first()) as unknown as { labs: ISiteSettingsLab };
-
-    if (!labSettings.labs.comments) {
-      res.status(403).send({
-        message: error.api.labs.disabled,
-        code: "LABS_DISABLED",
-      });
-      return;
-    }
-
     if (!body) {
       res.status(400).send({
         message: error.api.comments.bodyMissing,
