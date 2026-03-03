@@ -10,7 +10,7 @@ import type {
 import database from "../database";
 
 // utils
-import { validUUID } from "../helpers";
+import { toTrimmedString, validUUID } from "../helpers";
 import error from "../errorResponse.json";
 
 type RequestBody =
@@ -64,20 +64,20 @@ function getPostIdentifier(
   let id: string | null = null;
   let slug: string | null = null;
   if ("id" in req.body) {
-    id = (req.body.id || "").trim();
+    id = toTrimmedString(req.body.id);
   }
   if ("postId" in req.body) {
-    id = (req.body.postId || "").trim();
+    id = toTrimmedString(req.body.postId);
   }
   if ("post_id" in req.params) {
-    id = (req.params.post_id || "").trim();
+    id = toTrimmedString(req.params.post_id);
   }
   if (id) {
     id = validUUID(id);
   }
 
   if ("slug" in req.body) {
-    slug = (req.body.slug || "").trim();
+    slug = toTrimmedString(req.body.slug);
   }
 
   return {
