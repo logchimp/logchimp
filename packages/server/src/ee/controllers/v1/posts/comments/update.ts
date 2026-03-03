@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  IComment,
   IUpdatePostCommentRequestBody,
   IUpdatePostCommentRequestParam,
   IUpdatePostCommentResponseBody,
@@ -79,29 +80,15 @@ export async function update(
       return;
     }
 
-    const comment = await database
-      .update({
-        body,
-        is_internal,
-        is_edited: true,
-        is_spam,
-        updated_at: new Date().toJSON(),
-      })
-      .from("posts_comments")
-      .where({ id: comment_id })
-      .returning([
-        "id",
-        "body",
-        "is_internal",
-        "is_edited",
-        "is_spam",
-        "parent_id",
-        "created_at",
-        "updated_at",
-      ]);
+    const comment = await commentUpdateStatement({
+      comment_id,
+      is_internal: reqBody.output.is_internal,
+      is_spam: reqBody.output.is_spam,
+      body: reqBody.output.body,
+    });
 
     res.status(200).send({
-      comment: comment[0],
+      comment: comment,
     });
   } catch (err) {
     logger.log({
@@ -114,4 +101,45 @@ export async function update(
       code: "SERVER_ERROR",
     });
   }
+}
+
+interface IUpdateCommentStmt {
+  comment_id: string;
+  is_internal: boolean;
+  is_spam: boolean;
+  body: string;
+}
+
+async function commentUpdateStatement({
+  comment_id,
+  is_internal,
+  is_spam,
+  body,
+}: IUpdateCommentStmt) {
+  const comment = await database
+    .update({
+      body,
+      is_internal,
+      is_edited: true,
+      is_spam,
+      updated_at: new Date().toJSON(),
+    })
+    .from("posts_comments")
+    .where({ id: comment_id })
+    .returning<Array<IComment>>([
+      "id",
+      "body",
+      "is_internal",
+      "is_edited",
+      "is_spam",
+      "parent_id",
+      "created_at",
+      "updated_at",
+    ]);
+
+  if (comment.length === 0) {
+    throw new Error("Comment failed to update in database");
+  }
+
+  return comment[0];
 }
