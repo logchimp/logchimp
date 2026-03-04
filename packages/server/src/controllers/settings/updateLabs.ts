@@ -5,7 +5,7 @@ import type {
   TGetSiteSettingsLabResponseBody,
   TPermission,
   TUpdateSiteSettingsLabRequestBody,
-  TUpdateSiteSettingsLabResponseBody
+  TUpdateSiteSettingsLabResponseBody,
 } from "@logchimp/types";
 
 import database from "../../database";
