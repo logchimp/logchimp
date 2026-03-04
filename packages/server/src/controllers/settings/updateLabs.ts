@@ -5,7 +5,7 @@ import type {
   TGetSiteSettingsLabResponseBody,
   TPermission,
   TUpdateSiteSettingsLabRequestBody,
-  TUpdateSiteSettingsLabResponseBody,
+  TUpdateSiteSettingsLabResponseBody
 } from "@logchimp/types";
 
 import database from "../../database";
@@ -47,7 +47,7 @@ export async function updateLabs(
   try {
     const response = await database
       .update({
-        labs: database.raw(`labs::jsonb || '${labsStringify}'`),
+        labs: database.raw("labs::jsonb || ?::jsonb", [labsStringify]),
       })
       .from("settings")
       .returning<Array<TGetSiteSettingsLabResponseBody>>(
