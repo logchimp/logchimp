@@ -9,7 +9,7 @@
     <div>
       <router-link
         data-test="post-link"
-        :to="`${dashboardUrl}/posts/${postData.slug}`"
+        :to="`${dashboardUrl}/posts/${encodeURIComponent(postData.slug)}`"
       >
         <div
           data-testid="title"

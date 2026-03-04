@@ -1,7 +1,7 @@
 <template>
   <router-link
     data-test="board-item"
-    :to="`/boards/${url}`"
+    :to="`/boards/${encodeURIComponent(url)}`"
     class="flex items-center gap-2.5 select-none rounded-md bg-(--color-gray-97) hover:bg-(--color-gray-95) px-6 py-4"
   >
     <color-dot :color="color" />
