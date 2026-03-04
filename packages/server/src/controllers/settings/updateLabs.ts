@@ -56,12 +56,11 @@ export async function updateLabs(
     const { labs } = response[0];
     if (cache.isActive) {
       try {
-        await cache.valkey.set(
-          CACHE_KEYS.LABS_SETTINGS,
-          JSON.stringify(labs),
-          "EX",
-          7 * DAY,
-        );
+        await cache.valkey
+          .multi()
+          .set(CACHE_KEYS.LABS_SETTINGS, JSON.stringify(labs), "EX", 7 * DAY)
+          .del(CACHE_KEYS.SITE_SETTINGS)
+          .exec();
       } catch (err) {
         logger.error({ message: err });
       }
