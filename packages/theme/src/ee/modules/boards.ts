@@ -32,6 +32,8 @@ export const getPublicBoards = async ({
 }: TFilterBoardRequestQuery): Promise<
   AxiosResponse<IFilterBoardResponseBody>
 > => {
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards`,
@@ -39,6 +41,9 @@ export const getPublicBoards = async ({
       page,
       limit,
       created,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 };
@@ -55,6 +60,8 @@ export const getAllBoards = async ({
   limit = "10",
   created = "DESC",
 }: IGetBoardsRequestQuery): Promise<AxiosResponse<IGetBoardsResponseBody>> => {
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards/get`,
@@ -62,6 +69,9 @@ export const getAllBoards = async ({
       page,
       limit,
       created,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   });
 };
@@ -74,9 +84,14 @@ export const getAllBoards = async ({
 export const getBoardByUrl = async (
   url: string,
 ): Promise<AxiosResponse<IGetBoardsByUrlResponseBody>> => {
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards/${encodeURIComponent(url)}`,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 

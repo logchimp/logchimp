@@ -58,9 +58,14 @@ export const getAllRoadmaps = async (
 export const getRoadmapByUrl = async (
   url: string,
 ): Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>> => {
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps/${encodeURIComponent(url)}`,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
