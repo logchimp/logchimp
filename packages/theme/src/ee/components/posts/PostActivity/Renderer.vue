@@ -2,7 +2,7 @@
 import { computed, ref, defineAsyncComponent } from "vue";
 import type { IPostActivity } from "@logchimp/types";
 
-import { addComment, postActivity } from "../../../modules/posts";
+import { postActivity } from "../../../modules/posts";
 import { usePostActivityEEStore } from "../../../store/postActivity";
 import { useUserStore } from "../../../../store/user";
 import PostActivityList from "./List.vue";
