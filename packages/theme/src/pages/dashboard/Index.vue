@@ -37,7 +37,7 @@
               {{ post.voters.votesCount }}
             </Td>
             <router-link
-              :to="`/dashboard/posts/${post.slug}`"
+              :to="`/dashboard/posts/${encodeURIComponent(post.slug)}`"
               class="absolute inset-0"
             />
           </div>

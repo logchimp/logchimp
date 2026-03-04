@@ -19,7 +19,9 @@ export class UsersEe extends APIService {
     roleId: string,
     userId: string,
   ): Promise<TUserAssignRoleResponse> {
-    return this.put(`/v1/roles/${roleId}/users/${userId}`)
+    return this.put(
+      `/v1/roles/${encodeURIComponent(roleId)}/users/${encodeURIComponent(userId)}`,
+    )
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
@@ -27,7 +29,9 @@ export class UsersEe extends APIService {
   }
 
   async unassignRole(roleId: string, userId: string): Promise<boolean> {
-    return this.delete(`/v1/roles/${roleId}/users/${userId}`)
+    return this.delete(
+      `/v1/roles/${encodeURIComponent(roleId)}/users/${encodeURIComponent(userId)}`,
+    )
       .then((response) => {
         return response?.status === 204;
       })
