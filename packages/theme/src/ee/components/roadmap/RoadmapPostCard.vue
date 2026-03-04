@@ -10,7 +10,7 @@
       <div class="w-full">
         <div class="flex items-center w-full gap-x-2">
           <div>
-            <router-link data-test="post-link" :to="`/posts/${post.slug}`">
+            <router-link data-test="post-link" :to="`/posts/${encodeURIComponent(post.slug)}`">
               <div class="text-xl font-medium mb-0.5 break-all text-(--color-text-black)">{{ post.title }}</div>
             </router-link>
             <span

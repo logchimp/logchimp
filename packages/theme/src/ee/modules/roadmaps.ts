@@ -60,7 +60,7 @@ export const getRoadmapByUrl = async (
 ): Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>> => {
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/roadmaps/${url}`,
+    url: `${VITE_API_URL}/api/v1/roadmaps/${encodeURIComponent(url)}`,
   });
 };
 
@@ -76,7 +76,7 @@ export const searchRoadmap = async (
 
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/roadmaps/search/${name}`,
+    url: `${VITE_API_URL}/api/v1/roadmaps/search/${encodeURIComponent(name)}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

@@ -3,7 +3,7 @@
     v-if="showBoard"
     data-test="board-badge"
     class="block w-fit select-none truncate"
-    :to="`/boards/${url}`"
+    :to="`/boards/${encodeURIComponent(url)}`"
   >
     <div class="flex items-center px-2.5 py-1 bg-(--color-gray-95) rounded-full">
       <color-dot :color="color" />

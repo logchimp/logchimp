@@ -18,7 +18,7 @@
         v-for="board in boards"
         :key="board.boardId"
         class="hover:bg-neutral-200 rounded-md"
-        :href="`/boards/${board.url}`"
+        :href="`/boards/${encodeURIComponent(board.url)}`"
       >
         <div class="flex items-center justify-between gap-x-4 px-4 py-1.5">
           <div class="flex items-center gap-x-3">

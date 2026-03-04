@@ -102,7 +102,7 @@ async function createPostHandler() {
     dashboardPosts.appendPost(postTemplate);
 
     const url = response.data.post.slug;
-    router.push(`/dashboard/posts/${url}`);
+    router.push(`/dashboard/posts/${encodeURIComponent(url)}`);
   } catch (err) {
     console.error(err);
   } finally {
