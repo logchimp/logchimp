@@ -5,8 +5,8 @@
     :loop="true"
   >
     <dropdown-item
-      @click="router.push(`/dashboard/boards/${encodeURIComponent(board?.url || '')}/settings`)"
-      :disabled="!board"
+      @click="board?.url ? router.push(`/dashboard/boards/${encodeURIComponent(board?.url)}/settings`) : undefined"
+      :disabled="!board?.url"
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
@@ -15,8 +15,8 @@
     </dropdown-item>
     <dropdown-item
       v-if="settings.developer_mode"
-      @click="board ? useCopyText(board?.boardId) : undefined"
-      :disabled="!board"
+      @click="board?.boardId ? useCopyText(board.boardId) : undefined"
+      :disabled="!board?.boardId"
     >
       <template #icon>
         <copy-icon aria-hidden="true" />

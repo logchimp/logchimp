@@ -5,7 +5,8 @@
     :loop="true"
   >
     <DropdownItem
-      @click="router.push(`/dashboard/settings/roles/${encodeURIComponent(roleId || '')}/settings`)"
+      @click="roleId ? router.push(`/dashboard/settings/roles/${encodeURIComponent(roleId)}/settings`) : undefined"
+      :disabled="!roleId"
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
