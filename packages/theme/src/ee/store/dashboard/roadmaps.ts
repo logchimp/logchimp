@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
-import { getAllRoadmaps } from "../../../modules/roadmaps";
+import { getAllRoadmaps } from "../../modules/roadmaps";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
 
 export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
