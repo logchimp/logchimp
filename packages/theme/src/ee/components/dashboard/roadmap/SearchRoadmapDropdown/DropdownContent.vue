@@ -50,7 +50,7 @@ import { DropdownMenuContent } from "reka-ui";
 import { watchDebounced } from "@vueuse/core";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
-import { searchRoadmap as searchRoadmapApi } from "../../../../../modules/roadmaps";
+import { searchRoadmap as searchRoadmapApi } from "../../../../../ee/modules/roadmaps";
 import { type TCurrentRoadmap, useRoadmapSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";

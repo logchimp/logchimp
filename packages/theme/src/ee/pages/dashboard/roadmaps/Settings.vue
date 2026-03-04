@@ -29,7 +29,7 @@ import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import { getRoadmapByUrl } from "../../../../modules/roadmaps";
+import { getRoadmapByUrl } from "../../../modules/roadmaps";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
