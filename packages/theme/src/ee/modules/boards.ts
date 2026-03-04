@@ -76,7 +76,7 @@ export const getBoardByUrl = async (
 ): Promise<AxiosResponse<IGetBoardsByUrlResponseBody>> => {
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/boards/${url}`,
+    url: `${VITE_API_URL}/api/v1/boards/${encodeURIComponent(url)}`,
   });
 };
 
@@ -92,7 +92,7 @@ export const searchBoard = async (
 
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/boards/search/${name}`,
+    url: `${VITE_API_URL}/api/v1/boards/search/${encodeURIComponent(name)}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

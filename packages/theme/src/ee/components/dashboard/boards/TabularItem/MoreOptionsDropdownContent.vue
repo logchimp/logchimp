@@ -5,7 +5,7 @@
     :loop="true"
   >
     <dropdown-item
-      @click="router.push(`/dashboard/boards/${board?.url}/settings`)"
+      @click="router.push(`/dashboard/boards/${encodeURIComponent(board?.url || '')}/settings`)"
       :disabled="!board"
     >
       <template #icon>

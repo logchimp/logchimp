@@ -5,7 +5,7 @@
     :loop="true"
   >
     <DropdownItem
-      @click="router.push(`/dashboard/settings/roles/${roleId}/settings`)"
+      @click="router.push(`/dashboard/settings/roles/${encodeURIComponent(roleId || '')}/settings`)"
     >
       <template #icon>
         <settings-icon aria-hidden="true" />

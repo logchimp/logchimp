@@ -5,7 +5,7 @@
     :loop="true"
   >
     <DropdownItem
-      @click="router.push(`/dashboard/roadmaps/${roadmap?.url}/settings`)"
+      @click="router.push(`/dashboard/roadmaps/${encodeURIComponent(roadmap?.url || '')}/settings`)"
       :disabled="!roadmap"
     >
       <template #icon>

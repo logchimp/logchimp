@@ -109,7 +109,7 @@ async function submitPost() {
 
     // redirect to post
     const slug = response.data.post.slug;
-    router.push(`${dashboardUrl.value}/posts/${slug}`);
+    router.push(`${dashboardUrl.value}/posts/${encodeURIComponent(slug)}`);
   } catch (error) {
     tokenError(error);
   } finally {

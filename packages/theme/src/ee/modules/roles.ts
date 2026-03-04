@@ -26,7 +26,7 @@ export const getRole = async (
 
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/roles/${id}`,
+    url: `${VITE_API_URL}/api/v1/roles/${encodeURIComponent(id)}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
