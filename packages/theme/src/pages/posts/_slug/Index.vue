@@ -41,11 +41,7 @@
 			<p v-html="postContent" />
 
       <div class="mt-8" v-if="labs.comments">
-        <post-activity-renderer
-          v-if="getUserId"
-          :post-id="post.postId"
-        />
-        <signin-to-comment v-else />
+        <post-activity-renderer :post-id="post.postId" />
       </div>
 		</div>
 		<p v-else>
@@ -72,7 +68,6 @@ import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
 import Vote from "../../../components/vote/Vote.vue";
 import { Avatar } from "../../../components/ui/Avatar";
 import PostViewMoreOptions from "../../../components/post/PostViewMoreOptions.vue";
-import SigninToComment from "../../../ee/components/posts/PostActivity/SigninToComment.vue";
 
 const PostActivityRenderer = defineAsyncComponent(
   () => import("../../../ee/components/posts/PostActivity/Renderer.vue"),

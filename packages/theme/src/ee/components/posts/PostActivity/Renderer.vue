@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, defineAsyncComponent } from "vue";
 import type { IPostActivity } from "@logchimp/types";
 
-import { addComment, postActivity } from "../../../modules/posts.ts";
-import AddComment from "../../activity/AddComment.vue";
+import { addComment, postActivity } from "../../../modules/posts";
+import { usePostActivityEEStore } from "../../../store/postActivity";
+import { useUserStore } from "../../../../store/user";
 import PostActivityList from "./List.vue";
-import { usePostActivityEEStore } from "../../../store/postActivity.ts";
 import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../../components/ui/InfiniteScroll.vue";
 
+const AddComment = defineAsyncComponent(() => import("../../activity/AddComment.vue"));
+const SigninToComment = defineAsyncComponent(() => import("./SigninToComment.vue"));
+
+const { getUserId } = useUserStore();
 const postActivityEEStore = usePostActivityEEStore();
 
 interface Props {
@@ -53,7 +57,12 @@ defineOptions({
 </script>
 
 <template>
-  <add-comment @add-comment="addCommentHandler" :post-id="postId" />
+  <add-comment
+    v-if="getUserId"
+    @add-comment="addCommentHandler"
+    :post-id="postId"
+  />
+  <signin-to-comment v-else />
 
   <div class="mt-8">
     <div class="flex items-center mb-5">
