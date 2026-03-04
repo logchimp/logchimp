@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { createPinia } from "pinia";
 import { mount } from "@vue/test-utils";
 
@@ -6,10 +6,16 @@ import PageHeader from "./PageHeader.vue";
 import { useDashboard } from "../../store/dashboard";
 
 describe("dashboard page header", () => {
+  let pinia: ReturnType<typeof createPinia>;
+
+  beforeEach(() => {
+    pinia = createPinia();
+  });
+
   it("renders left/default/right slots", () => {
     const wrapper = mount(PageHeader, {
       global: {
-        plugins: [createPinia()],
+        plugins: [pinia],
       },
       slots: {
         left: '<div data-test="slot-left">left content</div>',
@@ -24,7 +30,6 @@ describe("dashboard page header", () => {
   });
 
   it("toggles sidebar when toggle button is clicked", async () => {
-    const pinia = createPinia();
     const wrapper = mount(PageHeader, {
       global: {
         plugins: [pinia],
@@ -34,10 +39,10 @@ describe("dashboard page header", () => {
 
     expect(dashboard.isSidebarOpen).toBe(false);
 
-    await wrapper.find("button").trigger("click");
+    await wrapper.find('[data-test="sidebar-toggle"]').trigger("click");
     expect(dashboard.isSidebarOpen).toBe(true);
 
-    await wrapper.find("button").trigger("click");
+    await wrapper.find('[data-test="sidebar-toggle"]').trigger("click");
     expect(dashboard.isSidebarOpen).toBe(false);
   });
 });
