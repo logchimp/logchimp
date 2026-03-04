@@ -10,8 +10,12 @@ import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../../components/ui/InfiniteScroll.vue";
 
-const AddComment = defineAsyncComponent(() => import("../../activity/AddComment.vue"));
-const SigninToComment = defineAsyncComponent(() => import("./SigninToComment.vue"));
+const AddComment = defineAsyncComponent(
+  () => import("../../activity/AddComment.vue"),
+);
+const SigninToComment = defineAsyncComponent(
+  () => import("./SigninToComment.vue"),
+);
 
 const { getUserId } = useUserStore();
 const postActivityEEStore = usePostActivityEEStore();
