@@ -145,7 +145,8 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(400);
-    expect(res.body.code).toBe("COMMENT_BODY_MISSING");
+    expect(res.body.code).toBe("VALIDATION_ERROR");
+    expect(res.body.errors[0].code).toBe("COMMENT_BODY_MISSING");
   });
 
   it("should create a comment", async () => {
@@ -336,7 +337,8 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(400);
-    expect(res.body.code).toBe("COMMENT_BODY_MISSING");
+    expect(res.body.code).toBe("VALIDATION_ERROR");
+    expect(res.body.errors[0].code).toBe("COMMENT_BODY_MISSING");
   });
 
   it("should throw 'UNAUTHORIZED_NOT_AUTHOR'", async () => {
