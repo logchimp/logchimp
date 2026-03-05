@@ -1063,7 +1063,50 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw error 'NOT_ENOUGH_PERMISSION' when user lacks 'comment:create' permission", async () => {});
+  it("should throw error 'ACCESS_DENIED' when user lacks 'comment:create' permission", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({
+      isVerified: true,
+    });
+    const post = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    await updateSettings({
+      labs: { comments: true },
+    });
+
+    // Remove '@everyone' role to strip all permissions so authorize middleware blocks
+    await createRoleWithPermissions(user.userId, ["role:unassign"], {
+      roleName: "Role destroyer",
+    });
+    const { id: roleId } = await database
+      .select("id")
+      .from("roles")
+      .where({ name: "@everyone" })
+      .first();
+    await supertest(app)
+      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
+      .set("Authorization", `Bearer ${user.authToken}`);
+
+    const response = await supertest(app)
+      .post(`/api/v1/posts/${post.postId}/comments`)
+      .set("Authorization", `Bearer ${user.authToken}`)
+      .send({
+        is_internal: false,
+        body: "test comment",
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe("ACCESS_DENIED");
+  });
 
   it("should throw error 'LABS_DISABLED' on comments feature disabled", async () => {
     const board = await generateBoard({}, true);
