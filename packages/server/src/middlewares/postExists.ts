@@ -109,15 +109,24 @@ interface GetPostStatement {
   roadmap_id: string | null;
 }
 
-function getPostStatement({ id, slug }: GetPostArgs) {
-  return database
-    .select<GetPostStatement>()
-    .from("posts")
-    .where({
-      postId: id || null,
-    })
-    .orWhere({
-      slug: slug || null,
-    })
-    .first();
+/**
+ * Retrieves a post statement from the database based on the provided arguments.
+ *
+ * @param {Object} args - The arguments to filter the post query.
+ * @param {string} [args.id] - The unique identifier of the post.
+ * @param {string} [args.slug] - The slug of the post.
+ * @return {Promise<GetPostStatement | undefined>} A promise containing the post statement or `undefined` if no match is found.
+ */
+function getPostStatement({ id, slug }: GetPostArgs): Promise<GetPostStatement | undefined> {
+  const query = database.select<GetPostStatement>().from("posts");
+
+  if (id) {
+    return query.where({ postId: id }).first();
+  }
+
+  if (slug) {
+    return query.where({ slug }).first();
+  }
+
+  return Promise.resolve(undefined);
 }
