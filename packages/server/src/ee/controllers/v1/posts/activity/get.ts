@@ -81,7 +81,7 @@ export async function get(
     ;`,
       {
         limit,
-        offset: page,
+        offset: limit * (page - 1),
         post_id,
       },
     );
