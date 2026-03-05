@@ -1,18 +1,7 @@
 <template>
   <roadmap-skeleton v-if="isLoadingSkeleton" />
-
   <!-- Show roadmaps grid only when we have roadmaps -->
   <div
-    v-else-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
-    class="text-center"
-  >
-    <p>
-      No roadmaps available
-    </p>
-  </div>
-  <template v-else>
-    <!-- Show roadmaps grid only when we have roadmaps -->
-    <div
       v-if="roadmaps.length > 0"
       ref="roadmapElement"
       :class="[
@@ -26,6 +15,14 @@
       :roadmap="roadmap"
     />
   </div>
+
+  <div
+    v-if="!isLoadingSkeleton && roadmaps.length === 0"
+    class="text-center"
+  >
+    No roadmaps available
+  </div>
+
   <infinite-scroll
     :on-infinite="getRoadmaps"
     :state="state"
