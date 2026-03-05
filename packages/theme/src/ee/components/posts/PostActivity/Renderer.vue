@@ -30,7 +30,10 @@ const state = ref<InfiniteScrollStateType>();
 const data = computed(() => postActivityEEStore.activity[props.postId] || []);
 
 async function fetchPostActivity() {
+  if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
   try {
+    state.value = "LOADING";
     const response = await postActivity(props.postId, {
       page: page.value.toString(),
     });
