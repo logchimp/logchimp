@@ -11,6 +11,11 @@ import database from "../../../../../database";
 // utils
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
+import { GET_POSTS_ACTIVITY_FILTER_COUNT } from "../../../../../constants";
+import {
+  parseAndValidateLimit,
+  parseAndValidatePage,
+} from "../../../../../helpers";
 
 type ResponseBody = IGetPostActivityResponseBody | IApiErrorResponse;
 
@@ -24,7 +29,11 @@ export async function get(
   res: Response<ResponseBody>,
 ) {
   const { post_id } = req.params;
-  const { limit = 10, page = 1 } = req.query;
+  const limit = parseAndValidateLimit(
+    req.query?.limit,
+    GET_POSTS_ACTIVITY_FILTER_COUNT,
+  );
+  const page = parseAndValidatePage(req.query?.page);
 
   try {
     const activities = await database.raw(
