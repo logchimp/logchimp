@@ -20,7 +20,11 @@ jobs:
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
-          submodules: recursive
+
+      - name: Checkout submodules
+        if: ${{ secrets.LC_SUBMODULES_TOKEN != '' }}
+        run: git submodule update --init --recursive
+        with:
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - name: Setup node

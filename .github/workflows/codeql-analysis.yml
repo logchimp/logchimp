@@ -29,10 +29,12 @@ jobs:
           build-mode: none
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6
+    - uses: actions/checkout@v6
+
+    - name: Checkout submodules
+      if: ${{ secrets.LC_SUBMODULES_TOKEN != '' }}
+      run: git submodule update --init --recursive
       with:
-        submodules: recursive
         token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
     - name: Initialize CodeQL
