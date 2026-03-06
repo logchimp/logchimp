@@ -25,8 +25,24 @@ jobs:
           # Fetch PR to compare
           git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
           
-          if ! git diff --quiet HEAD pr-branch -- .github/workflows/ .gitmodules; then
-            echo "❌ PR modifies protected files (.github/workflows/ or .gitmodules)"
+          # Define protected paths
+          PROTECTED_PATHS=(
+            ".github/workflows/"
+            ".github/actions/"
+            ".gitmodules"
+          )
+          
+          for path in "${PROTECTED_PATHS[@]}"; do
+            if ! git diff --quiet HEAD pr-branch -- "$path"; then
+              echo "❌ PR modifies protected file: $path"
+              CHANGES_DETECTED=true
+            fi
+          done
+          
+          if [ "$CHANGES_DETECTED" = true ]; then
+            echo ""
+            echo "Protected files cannot be modified in PRs that require secrets."
+            echo "Please remove these changes or contact a maintainer for manual review."
             exit 1
           fi
 
