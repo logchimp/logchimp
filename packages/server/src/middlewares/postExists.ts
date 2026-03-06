@@ -117,7 +117,10 @@ interface GetPostStatement {
  * @param {string} [args.slug] - The slug of the post.
  * @return {Promise<GetPostStatement | undefined>} A promise containing the post statement or `undefined` if no match is found.
  */
-function getPostStatement({ id, slug }: GetPostArgs): Promise<GetPostStatement | undefined> {
+function getPostStatement({
+  id,
+  slug,
+}: GetPostArgs): Promise<GetPostStatement | undefined> {
   const query = database.select<GetPostStatement>().from("posts");
 
   if (id) {
