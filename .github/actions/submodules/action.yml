@@ -14,3 +14,4 @@ runs:
       run: |
         git config --global url."https://x-access-token:${{ inputs.token }}@github.com/".insteadOf "git@github.com:"
         git submodule update --init --recursive
+        git config --global --unset url."https://x-access-token:${{ inputs.token }}@github.com/".insteadOf
