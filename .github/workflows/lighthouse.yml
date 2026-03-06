@@ -1,4 +1,5 @@
 name: Lighthouse test
+
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
@@ -9,6 +10,9 @@ on:
 permissions:
   pull-requests: write
   contents: read
+
+env:
+  LC_SUBMODULES_TOKEN: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
 jobs:
   lighthouse:
@@ -22,7 +26,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout submodules
-        if: ${{ secrets.LC_SUBMODULES_TOKEN != '' }}
+        if: ${{ env.LC_SUBMODULES_TOKEN != '' }}
         run: git submodule update --init --recursive
         with:
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}

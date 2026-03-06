@@ -15,6 +15,7 @@ on:
 env:
   node-version: 22
   pnpm-version: 10
+  LC_SUBMODULES_TOKEN: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
 jobs:
   test:
@@ -28,7 +29,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Checkout submodules
-      if: ${{ secrets.LC_SUBMODULES_TOKEN != '' }}
+      if: ${{ env.LC_SUBMODULES_TOKEN != '' }}
       run: git submodule update --init --recursive
       with:
         token: ${{ secrets.LC_SUBMODULES_TOKEN }}
