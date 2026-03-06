@@ -16,6 +16,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check LC_SUBMODULES_TOKEN
+        run: |
+          if [ -z "${{ secrets.LC_SUBMODULES_TOKEN }}" ]; then
+            echo "::error:: You don't have enough permission to run this workflow."
+            exit 1
+          fi
+
       - name: Checkout PR head
         uses: actions/checkout@v6
 
