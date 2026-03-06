@@ -28,11 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Checkout submodules
-        if: ${{ env.LC_SUBMODULES_TOKEN != '' }}
-        run: git submodule update --init --recursive
+      - uses: ./.github/actions/submodules
         with:
-          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
+          token: ${{ env.LC_SUBMODULES_TOKEN }}
 
       - uses: biomejs/setup-biome@v2
 
@@ -46,11 +44,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Checkout submodules
-        if: ${{ env.LC_SUBMODULES_TOKEN != '' }}
-        run: git submodule update --init --recursive
+      - uses: ./.github/actions/submodules
         with:
-          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
+          token: ${{ env.LC_SUBMODULES_TOKEN }}
 
       - uses: biomejs/setup-biome@v2
 
