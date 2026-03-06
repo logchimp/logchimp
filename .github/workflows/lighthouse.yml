@@ -2,7 +2,7 @@ name: Lighthouse test
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -16,11 +16,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout PR head
+      - name: Checkout base
+        uses: actions/checkout@v6
+
+      - name: Verify PR safety
+        if: github.event_name == 'pull_request_target'
+        run: |
+          # Fetch PR to compare
+          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
+          
+          if ! git diff --quiet HEAD pr-branch -- .github/workflows/ .gitmodules; then
+            echo "❌ PR modifies protected files (.github/workflows/ or .gitmodules)"
+            exit 1
+          fi
+
+          echo "✅ PR is safe to run"
+
+      - name: Checkout PR code
+        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v6
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: ./.github/actions/submodules
+        with:
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - name: Setup node
         uses: actions/setup-node@v6
