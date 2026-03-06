@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
 
 import app from "../../../src/app";
 import { createUser } from "../../utils/seed/user";
-import { updateSettings } from "../../utils/seed/settings";
+import * as labsService from "../../../src/ee/services/settings/labs";
 import {
   board as generateBoard,
   post as generatePost,
@@ -14,18 +14,12 @@ import {
 
 //  LABS_DISABLED based test
 describe("LABS_DISABLED", () => {
-  beforeAll(async () => {
-    // Disable commenting from labs
-    await updateSettings({
-      labs: { comments: false },
-    });
+  beforeAll(() => {
+    vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(false);
   });
 
-  afterAll(async () => {
-    // Enable commenting from labs
-    await updateSettings({
-      labs: { comments: true },
-    });
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   it("should throw error 'LABS_DISABLED' on create comment", async () => {
@@ -90,10 +84,12 @@ describe("LABS_DISABLED", () => {
 });
 
 describe("POST /api/v1/posts/:post_id/comments", () => {
-  beforeAll(async () => {
-    await updateSettings({
-      labs: { comments: true },
-    });
+  beforeAll(() => {
+    vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   // ToDo: add tests to check for permission before creating comments
@@ -259,10 +255,12 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
 });
 
 describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
-  beforeAll(async () => {
-    await updateSettings({
-      labs: { comments: true },
-    });
+  beforeAll(() => {
+    vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   // ToDo: add tests to check for permission before updating comments
@@ -401,10 +399,12 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
 });
 
 describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
-  beforeAll(async () => {
-    await updateSettings({
-      labs: { comments: true },
-    });
+  beforeAll(() => {
+    vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   // ToDo: add tests to check for permission before delete comments
@@ -505,10 +505,12 @@ describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
 });
 
 describe("GET /api/v1/posts/:post_id/activity", () => {
-  beforeAll(async () => {
-    await updateSettings({
-      labs: { comments: true },
-    });
+  beforeAll(() => {
+    vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   it("should throw error 'POST_NOT_FOUND'", async () => {
