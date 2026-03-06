@@ -25,10 +25,6 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: ./.github/actions/submodules
-        with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}}
-
       - name: Setup node
         uses: actions/setup-node@v6
         with:
