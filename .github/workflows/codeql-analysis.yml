@@ -9,9 +9,6 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
-env:
-  LC_SUBMODULES_TOKEN: ${{ secrets.LC_SUBMODULES_TOKEN }}
-
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -36,7 +33,7 @@ jobs:
 
     - uses: ./.github/actions/submodules
       with:
-        token: ${{ env.LC_SUBMODULES_TOKEN }}
+        token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4

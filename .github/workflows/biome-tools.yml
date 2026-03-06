@@ -17,9 +17,6 @@ on:
       - "pnpm-lock.yaml"
   workflow_dispatch:
 
-env:
-  LC_SUBMODULES_TOKEN: ${{ secrets.LC_SUBMODULES_TOKEN }}
-
 jobs:
   formatter:
     name: Formatter
@@ -30,7 +27,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: biomejs/setup-biome@v2
 
@@ -46,7 +43,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: biomejs/setup-biome@v2
 
