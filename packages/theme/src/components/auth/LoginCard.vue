@@ -7,27 +7,18 @@
 			Log in to your account to give feedback
 		</template>
 
-		<Button type="primary" @click="loginRedirect" :full-width="true">
+		<Button type="primary" :href="loginRedirect" :full-width="true">
 			Login
 		</Button>
   </card>
 </template>
 
 <script setup lang="ts">
-import { router } from "../../router";
+import { computed } from "vue";
 
-// components
 import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
+import { useLoginRedirectUrl } from "../../hooks/useLoginRedirectUrl";
 
-function loginRedirect() {
-  const route = router.currentRoute.value;
-
-  router.push({
-    path: "/login",
-    query: {
-      redirect: route.fullPath,
-    },
-  });
-}
+const loginRedirect = computed(() => useLoginRedirectUrl());
 </script>

@@ -12,7 +12,7 @@
       side="bottom"
       :loop="true"
     >
-      <dropdown-item @click="router.push(`/posts/${post.slug}/edit`)">
+      <dropdown-item @click="router.push(`/posts/${encodeURIComponent(post.slug)}/edit`)">
         <template #icon>
           <edit-icon aria-hidden="true" />
         </template>

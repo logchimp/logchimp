@@ -171,7 +171,7 @@ async function savePost() {
   try {
     const response = await updatePost(postData);
 
-    router.push(`/posts/${response.data.post.slug}`);
+    router.push(`/posts/${encodeURIComponent(response.data.post.slug)}`);
   } catch (error) {
     console.log(error);
   } finally {

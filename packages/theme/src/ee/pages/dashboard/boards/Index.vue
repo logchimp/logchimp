@@ -69,7 +69,7 @@ async function createBoardHandler() {
     dashboardBoards.appendBoard(response.data.board);
 
     const url = response.data.board.url;
-    router.push(`/dashboard/boards/${url}/settings`);
+    router.push(`/dashboard/boards/${encodeURIComponent(url)}/settings`);
   } catch (err) {
     console.error(err);
   } finally {
