@@ -1,0 +1,16 @@
+name: Checkout Submodules
+
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure Git and Checkout Submodules
+      if: ${{ inputs.token != '' }}
+      shell: bash
+      run: |
+        git config --global url."https://x-access-token:${{ inputs.token }}@github.com/".insteadOf "git@github.com:"
+        git submodule update --init --recursive
