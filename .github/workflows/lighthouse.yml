@@ -1,7 +1,7 @@
 name: Lighthouse test
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
   push:
     tags:
@@ -92,7 +92,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Lighthouse sticky comment
-        if: github.event_name == 'pull_request_target'
+        if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: lighthouse-report
