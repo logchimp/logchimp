@@ -1,7 +1,9 @@
 import express from "express";
 import type {
+  ICreatePostCommentRequestBody,
   IGetPostActivityRequestParam,
   IGetPostActivityRequestQuery,
+  IUpdatePostCommentRequestBody,
   IUpdatePostCommentRequestParam,
   TCreatePostCommentRequestParam,
   TDeletePostCommentRequestParam,
@@ -37,7 +39,11 @@ router.get<
 );
 
 // post comment
-router.post<TCreatePostCommentRequestParam>(
+router.post<
+  TCreatePostCommentRequestParam,
+  unknown,
+  ICreatePostCommentRequestBody
+>(
   "/posts/:post_id/comments",
   // @ts-expect-error
   authRequired,
@@ -48,7 +54,11 @@ router.post<TCreatePostCommentRequestParam>(
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.put<IUpdatePostCommentRequestParam>(
+router.put<
+  IUpdatePostCommentRequestParam,
+  unknown,
+  IUpdatePostCommentRequestBody
+>(
   "/posts/:post_id/comments/:comment_id",
   // @ts-expect-error
   authRequired,
