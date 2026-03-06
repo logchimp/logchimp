@@ -11,9 +11,6 @@ permissions:
   pull-requests: write
   contents: read
 
-env:
-  LC_SUBMODULES_TOKEN: ${{ secrets.LC_SUBMODULES_TOKEN }}
-
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
