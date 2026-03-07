@@ -175,10 +175,17 @@ jobs:
     steps:
       - name: Create Draft Release
         run: |
-          gh release create $VERSION \
-            --title "$VERSION" \
-            --notes "Release notes here..." \
-            --draft
+          # Check if release already exists
+          if gh release view $VERSION >/dev/null 2>&1; then
+            echo "Release $VERSION already exists"
+            echo "Draft release URL: https://github.com/${{ github.repository }}/releases/tag/$VERSION"
+          else
+            echo "Creating new release $VERSION..."
+            gh release create $VERSION \
+              --title "$VERSION" \
+              --notes "Release notes here..." \
+              --draft
+          fi
         env:
           VERSION: v${{ needs.deploy-target.outputs.latest_version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
