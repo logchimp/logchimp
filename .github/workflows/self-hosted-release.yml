@@ -170,6 +170,8 @@ jobs:
     needs: [ deploy-target, build ]
     runs-on: ubuntu-latest
     if: ${{ needs.deploy-target.outputs.is_prerelease == 'false' }}
+    permissions:
+      contents: write
 
     steps:
       - name: Create Draft Release
