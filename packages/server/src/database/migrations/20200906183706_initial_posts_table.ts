@@ -1,9 +1,9 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex.schema
-    .createTable("posts", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.createTable("posts", (table) => {
       table.uuid("postId").notNullable().unique().primary();
       table.string("title", 100).notNullable();
       table.string("slug", 150).notNullable().unique();
@@ -13,43 +13,40 @@ exports.up = (knex) => {
       table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
       table.timestamp("updatedAt").defaultTo(knex.fn.now()).notNullable();
       table.comment("Storing posts data");
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Creating table: posts",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
 
-exports.down = (knex) => {
-  return knex.schema
-    .hasTable("posts")
-    .then((exists) => {
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Creating table: posts",
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.hasTable("posts").then(async (exists) => {
       if (exists) {
-        return knex.schema
+        await knex.schema
           .alterTable("posts", (table) => {
             table.dropForeign("userId");
           })
           .dropTable("posts");
       }
-    })
-    .then(() => {
-      logger.log({
-        level: "info",
-        message: "Dropping table: posts",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
+
+    logger.log({
+      level: "info",
+      message: "Dropping table: posts",
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
+}

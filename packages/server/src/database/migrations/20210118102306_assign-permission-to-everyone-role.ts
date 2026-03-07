@@ -1,29 +1,43 @@
+import type { Knex } from "knex";
 import { v4 as uuidv4 } from "uuid";
+import type { TPermission } from "@logchimp/types";
 
-// utils
 import logger from "../../utils/logger";
 
-const everyoneRole = async (knex) => {
-  return await knex("roles")
-    .select("id")
+const everyoneRole = async (knex: Knex) =>
+  knex("roles")
+    .select<{
+      id: string;
+    }>("id")
     .where({
       name: "@everyone",
     })
     .first();
-};
 
-const getPermId = (list, perm) => {
+interface IPermissionDatabaseTable {
+  id: string;
+  name: string | null;
+  type: string;
+  action: string;
+  created_at: Date;
+}
+
+const getPermId = (
+  list: Array<IPermissionDatabaseTable>,
+  perm: TPermission,
+) => {
   const type = perm.split(":")[0];
   const action = perm.split(":")[1];
   return list.find((item) => item.type === type && item.action === action).id;
 };
 
-exports.up = async (knex) => {
+export async function up(knex: Knex): Promise<void> {
   try {
     const role = await everyoneRole(knex);
     const roleId = role.id;
 
-    const permissions = await knex("permissions").select();
+    const permissions =
+      await knex("permissions").select<Array<IPermissionDatabaseTable>>();
 
     await knex
       .insert([
@@ -54,9 +68,9 @@ exports.up = async (knex) => {
       message: err.message,
     });
   }
-};
+}
 
-exports.down = async (knex) => {
+export async function down(knex: Knex): Promise<void> {
   try {
     const role = await everyoneRole(knex);
     const roleId = role.id;
@@ -74,4 +88,4 @@ exports.down = async (knex) => {
       message: err.message,
     });
   }
-};
+}

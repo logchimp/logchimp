@@ -1,9 +1,9 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex.schema
-    .createTable("settings", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.createTable("settings", (table) => {
       table.string("title");
       table.string("description");
       table.string("logo");
@@ -12,39 +12,36 @@ exports.up = (knex) => {
       table.string("googleAnalyticsId");
       table.boolean("isPoweredBy").defaultTo(true);
       table.boolean("allowSignup").defaultTo(true);
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Creating table: settings",
-      });
-    })
-    .catch((err) => {
-      logger.error({
-        code: "DATABASE_MIGRATIONS",
-        err,
-      });
     });
-};
 
-exports.down = (knex) => {
-  return knex.schema
-    .hasTable("settings")
-    .then((exists) => {
-      if (exists) {
-        return knex.schema.dropTable("settings");
-      }
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Dropping table: settings",
-      });
-    })
-    .catch((err) => {
-      logger.error({
-        code: "DATABASE_MIGRATIONS",
-        err,
-      });
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Creating table: settings",
     });
-};
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.hasTable("settings").then(async (exists) => {
+      if (exists) {
+        await knex.schema.dropTable("settings");
+      }
+    });
+
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Dropping table: settings",
+    });
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
+  }
+}
