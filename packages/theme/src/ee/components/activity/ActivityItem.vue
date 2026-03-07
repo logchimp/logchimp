@@ -9,13 +9,15 @@
 			<div class="font-medium mb-1">{{ activity.author.name }}</div>
 			<p class="mb-0.5 text-sm break-all">{{ activity.comment.body }}</p>
 
-			<time
-				:datetime="dayjs(activity.created_at).toISOString()"
-				:title="dayjs(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
-				class="text-xs text-neutral-600"
-			>
-				{{ dayjs(activity.created_at).fromNow() }}
-			</time>
+			<div class="flex items-center gap-1 text-xs text-neutral-600">
+				<time
+					:datetime="dayjs(activity.created_at).toISOString()"
+					:title="dayjs(activity.created_at).format('dddd, DD MMMM YYYY hh:mm')"
+				>
+					{{ dayjs(activity.created_at).fromNow() }}
+				</time>
+				<span v-if="activity.comment.is_edited" aria-label="edited">• Edited</span>
+			</div>
 		</div>
 	</div>
 </template>
