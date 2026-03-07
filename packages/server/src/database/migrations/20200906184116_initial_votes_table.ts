@@ -1,9 +1,9 @@
 import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex: Knex) => {
-  return knex.schema
-    .createTable("votes", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.createTable("votes", (table) => {
       table.uuid("voteId").notNullable().unique().primary();
       table.uuid("userId").references("userId").inTable("users").notNullable();
       table
@@ -14,44 +14,41 @@ exports.up = (knex: Knex) => {
         .notNullable();
       table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
       table.comment("Storing post votes data");
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Creating table: votes",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
 
-exports.down = (knex: Knex) => {
-  return knex.schema
-    .hasTable("votes")
-    .then((exists) => {
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Creating table: votes",
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.hasTable("votes").then(async (exists) => {
       if (exists) {
-        return knex.schema
+        await knex.schema
           .alterTable("votes", (table) => {
             table.dropForeign("userId");
             table.dropForeign("postId");
           })
           .dropTable("votes");
       }
-    })
-    .then(() => {
-      logger.log({
-        level: "info",
-        message: "Dropping table: votes",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
+
+    logger.log({
+      level: "info",
+      message: "Dropping table: votes",
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+  }
+}

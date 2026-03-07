@@ -17,7 +17,7 @@ const getPermId = (list, perm) => {
   return list.find((item) => item.type === type && item.action === action).id;
 };
 
-exports.up = async (knex: Knex) => {
+export async function up(knex: Knex): Promise<void> {
   try {
     const role = await everyoneRole(knex);
     const roleId = role.id;
@@ -53,9 +53,9 @@ exports.up = async (knex: Knex) => {
       message: err.message,
     });
   }
-};
+}
 
-exports.down = async (knex: Knex) => {
+export async function down(knex: Knex): Promise<void> {
   try {
     const role = await everyoneRole(knex);
     const roleId = role.id;
@@ -73,4 +73,4 @@ exports.down = async (knex: Knex) => {
       message: err.message,
     });
   }
-};
+}
