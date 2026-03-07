@@ -3,7 +3,7 @@ import type { TPermission } from "@logchimp/types";
 
 import { addPermission, removePermission } from "../utils";
 
-const permissions: TPermission[] = [
+const permissions = [
   "post:read",
   "post:create",
   "post:update",
@@ -31,7 +31,7 @@ const permissions: TPermission[] = [
   "role:destroy",
   "role:assign",
   "role:unassign",
-];
+] satisfies TPermission[];
 
 export async function up(knex: Knex): Promise<void> {
   await Promise.all([addPermission(knex, permissions)]);

@@ -1,9 +1,18 @@
+import type { Knex } from "knex";
 import { v4 as uuidv4 } from "uuid";
+import type { TPermission } from "@logchimp/types";
 
-// utils
 import logger from "../utils/logger";
 
-const permissionExists = async (database, permission) =>
+interface IPermissionDatabaseTableWhere {
+  action: string;
+  type: string;
+}
+
+const permissionExists = async (
+  database: Knex,
+  permission: IPermissionDatabaseTableWhere,
+) =>
   database
     .select()
     .from("permissions")
@@ -12,7 +21,7 @@ const permissionExists = async (database, permission) =>
     })
     .first();
 
-function addPermission(database, permissions) {
+function addPermission(database: Knex, permissions: TPermission[]) {
   return permissions.forEach(async (permission) => {
     const type = permission.split(":")[0];
     const action = permission.split(":")[1];
@@ -40,8 +49,8 @@ function addPermission(database, permissions) {
   });
 }
 
-async function removePermission(database, permissions) {
-  return await permissions.forEach(async (permission) => {
+async function removePermission(database: Knex, permissions: TPermission[]) {
+  return permissions.forEach(async (permission) => {
     const type = permission.split(":")[0];
     const action = permission.split(":")[1];
 
