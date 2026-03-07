@@ -1,4 +1,6 @@
+import type { Knex } from "knex";
 import type { TPermission } from "@logchimp/types";
+
 import { addPermission, removePermission } from "../utils";
 
 const permissions: TPermission[] = [
@@ -31,10 +33,10 @@ const permissions: TPermission[] = [
   "role:unassign",
 ];
 
-exports.up = (knex) => {
+exports.up = (knex: Knex) => {
   return Promise.all([addPermission(knex, permissions)]);
 };
 
-exports.down = (knex) => {
+exports.down = (knex: Knex) => {
   return Promise.all([removePermission(knex, permissions)]);
 };

@@ -1,7 +1,7 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
+exports.up = (knex: Knex) => {
   return knex("settings")
     .insert([
       {
@@ -27,7 +27,7 @@ exports.up = (knex) => {
     });
 };
 
-exports.down = (knex) => {
+exports.down = (knex: Knex) => {
   return knex("settings")
     .delete()
     .then(() => {

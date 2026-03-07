@@ -1,7 +1,7 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
+exports.up = (knex: Knex) => {
   return knex.schema
     .table("users", (table) => {
       table.text("notes");
@@ -20,7 +20,7 @@ exports.up = (knex) => {
     });
 };
 
-exports.down = (knex) => {
+exports.down = (knex: Knex) => {
   return knex.schema
     .hasColumn("users", "notes")
     .then((exists) => {

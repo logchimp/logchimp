@@ -1,11 +1,11 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
 /**
  * IF EXISTS used as fail-safe for dropping the CONSTRAINT 'role_id_user_id_unique_index'
  * on ID in roles_users table. The unique index have already been removed from '20201125214155_roles-user-table' migration.
  */
-exports.up = (knex) => {
+exports.up = (knex: Knex) => {
   return knex
     .raw(
       `
@@ -25,7 +25,7 @@ exports.up = (knex) => {
     });
 };
 
-exports.down = (knex) => {
+exports.down = (knex: Knex) => {
   return knex
     .raw("DROP INDEX role_id_user_id_unique_index;")
     .then(() => {

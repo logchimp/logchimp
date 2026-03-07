@@ -1,7 +1,7 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
+exports.up = (knex: Knex) => {
   return knex.schema
     .createTable("users", (table) => {
       table.uuid("userId").notNullable().unique().primary();
@@ -31,7 +31,7 @@ exports.up = (knex) => {
     });
 };
 
-exports.down = (knex) => {
+exports.down = (knex: Knex) => {
   return knex.schema
     .hasTable("users")
     .then((exists) => {

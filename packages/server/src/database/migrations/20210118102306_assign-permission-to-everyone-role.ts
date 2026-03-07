@@ -1,16 +1,15 @@
+import type { Knex } from "knex";
 import { v4 as uuidv4 } from "uuid";
 
-// utils
 import logger from "../../utils/logger";
 
-const everyoneRole = async (knex) => {
-  return await knex("roles")
+const everyoneRole = async (knex: Knex) =>
+  knex("roles")
     .select("id")
     .where({
       name: "@everyone",
     })
     .first();
-};
 
 const getPermId = (list, perm) => {
   const type = perm.split(":")[0];
@@ -18,7 +17,7 @@ const getPermId = (list, perm) => {
   return list.find((item) => item.type === type && item.action === action).id;
 };
 
-exports.up = async (knex) => {
+exports.up = async (knex: Knex) => {
   try {
     const role = await everyoneRole(knex);
     const roleId = role.id;
@@ -56,7 +55,7 @@ exports.up = async (knex) => {
   }
 };
 
-exports.down = async (knex) => {
+exports.down = async (knex: Knex) => {
   try {
     const role = await everyoneRole(knex);
     const roleId = role.id;
