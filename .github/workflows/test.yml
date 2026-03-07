@@ -22,7 +22,6 @@ permissions:
 
 env:
   pnpm-version: 10
-  LC_SUBMODULES_TOKEN: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
 jobs:
   theme-unit:
@@ -39,7 +38,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
@@ -64,7 +63,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
@@ -91,7 +90,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
@@ -119,7 +118,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
@@ -185,7 +184,7 @@ jobs:
 
       - uses: ./.github/actions/submodules
         with:
-          token: ${{ env.LC_SUBMODULES_TOKEN }}
+          token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
