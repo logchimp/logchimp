@@ -11,6 +11,7 @@ export type TPermissionEntities =
   | "board"
   | "roadmap"
   | "vote"
+  | "comment"
   | "dashboard"
   | "role"
   | "settings";
@@ -36,6 +37,11 @@ export type TPermission =
   | "roadmap:destroy"
   | "roadmap:assign"
   | "roadmap:unassign"
+  | "comment:create"
+  | "comment:view_internal"
+  | "comment:create_internal"
+  | "comment:update"
+  | "comment:destroy"
   | "dashboard:read"
   | "role:read"
   | "role:create"
@@ -54,6 +60,12 @@ export interface IPermissionsState {
   post: {
     create: boolean;
     read: boolean;
+    update: boolean;
+    destroy: boolean;
+  };
+  comment: {
+    read: boolean;
+    create: boolean;
     update: boolean;
     destroy: boolean;
   };
