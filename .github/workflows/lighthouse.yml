@@ -79,6 +79,10 @@ jobs:
         run: |
           git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
           
+          # Find the merge-base to avoid false positives from base branch changes
+          MERGE_BASE=$(git merge-base HEAD pr-branch)
+          echo "Using merge-base: $MERGE_BASE"
+          
           PROTECTED_PATHS=(
             ".github/workflows/"
             ".github/actions/"
@@ -89,7 +93,7 @@ jobs:
           MODIFIED_FILES=""
 
           for path in "${PROTECTED_PATHS[@]}"; do
-            if ! git diff --quiet HEAD pr-branch -- "$path"; then
+            if ! git diff --quiet "$MERGE_BASE" pr-branch -- "$path"; then
               echo "❌ Protected file modified: $path"
               CHANGES_DETECTED=true
               MODIFIED_FILES="$MODIFIED_FILES\n- \`$path\`"
