@@ -108,11 +108,11 @@ jobs:
           echo "protected_files_modified=false" >> $GITHUB_OUTPUT
 
       - name: Comment on protected file changes
-        if: failure() && steps.security_check.outputs.protected_files_modified == 'true'
+        if: failure() && steps.protected_files_check.outputs.protected_files_modified == 'true'
         uses: actions/github-script@v7
         with:
           script: |
-            const modifiedFiles = `${{ steps.security_check.outputs.modified_files }}`;
+            const modifiedFiles = `${{ steps.protected_files_check.outputs.modified_files }}`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -155,7 +155,7 @@ jobs:
     needs: trust-check
     if: |
       always() && 
-      (needs.security-check.outputs.should-run == 'true' || github.event_name != 'pull_request_target')
+      (needs.trust-check.outputs.should-run == 'true' || github.event_name != 'pull_request_target')
 
     steps:
       - name: Checkout base
