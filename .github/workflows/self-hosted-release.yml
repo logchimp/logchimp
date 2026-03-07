@@ -165,3 +165,19 @@ jobs:
           else
             echo "Skipping 'latest' tag (IS_LATEST=$IS_LATEST, IS_PRERELEASE=$IS_PRERELEASE)"
           fi
+
+  draft-release:
+    needs: [ deploy-target, build ]
+    runs-on: ubuntu-latest
+    if: ${{ needs.deploy-target.outputs.is_prerelease == 'false' }}
+
+    steps:
+      - name: Create Draft Release
+        run: |
+          gh release create $VERSION \
+            --title "$VERSION" \
+            --notes "Release notes here..." \
+            --draft
+        env:
+          VERSION: v${{ needs.deploy-target.outputs.latest_version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
