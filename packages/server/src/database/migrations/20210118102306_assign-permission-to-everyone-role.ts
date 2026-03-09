@@ -31,6 +31,12 @@ const getPermId = (
   return list.find((item) => item.type === type && item.action === action).id;
 };
 
+const EVERYONE_PERMISSIONS: readonly TPermission[] = [
+  "post:create",
+  "vote:create",
+  "vote:destroy",
+];
+
 export async function up(knex: Knex): Promise<void> {
   try {
     const role = await everyoneRole(knex);
@@ -39,25 +45,13 @@ export async function up(knex: Knex): Promise<void> {
     const permissions =
       await knex("permissions").select<Array<IPermissionDatabaseTable>>();
 
-    await knex
-      .insert([
-        {
-          id: uuidv4(),
-          role_id: roleId,
-          permission_id: getPermId(permissions, "post:create"),
-        },
-        {
-          id: uuidv4(),
-          role_id: roleId,
-          permission_id: getPermId(permissions, "vote:create"),
-        },
-        {
-          id: uuidv4(),
-          role_id: roleId,
-          permission_id: getPermId(permissions, "vote:destroy"),
-        },
-      ])
-      .into("permissions_roles");
+    await knex("permissions_roles").insert(
+      EVERYONE_PERMISSIONS.map((permission) => ({
+        id: uuidv4(),
+        role_id: roleId,
+        permission_id: getPermId(permissions, permission),
+      })),
+    );
 
     logger.info({
       code: "DATABASE_SEEDS",
@@ -80,11 +74,9 @@ export async function down(knex: Knex): Promise<void> {
     const permissions =
       await knex("permissions").select<Array<IPermissionDatabaseTable>>();
 
-    const permissionIds = [
-      getPermId(permissions, "post:create"),
-      getPermId(permissions, "vote:create"),
-      getPermId(permissions, "vote:destroy"),
-    ];
+    const permissionIds = EVERYONE_PERMISSIONS.map((permission) =>
+      getPermId(permissions, permission),
+    );
 
     await knex("permissions_roles")
       .where({ role_id: roleId })
