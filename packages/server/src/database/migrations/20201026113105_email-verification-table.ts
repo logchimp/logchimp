@@ -40,7 +40,7 @@ export async function down(knex: Knex): Promise<void> {
       return;
     }
 
-    await knex.schema.dropTable("emailVerification");
+    await knex.schema.dropTableIfExists("emailVerification");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: emailVerification",

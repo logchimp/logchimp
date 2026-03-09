@@ -34,16 +34,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    const exists = await knex.schema.hasTable("resetPassword");
-    if (!exists) {
-      logger.warn({
-        code: "DATABASE_MIGRATIONS",
-        message: "Skipping drop for missing table: resetPassword",
-      });
-      return;
-    }
-
-    await knex.schema.dropTable("resetPassword");
+    await knex.schema.dropTableIfExists("resetPassword");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: resetPassword",

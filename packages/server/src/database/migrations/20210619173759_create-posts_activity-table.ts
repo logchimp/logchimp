@@ -34,16 +34,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    const exists = await knex.schema.hasTable("posts_activity");
-    if (!exists) {
-      logger.warn({
-        code: "DATABASE_MIGRATIONS",
-        message: "Skipping drop for missing table: posts_activity",
-      });
-      return;
-    }
-
-    await knex.schema.dropTable("posts_activity");
+    await knex.schema.dropTableIfExists("posts_activity");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: posts_activity",

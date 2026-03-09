@@ -34,8 +34,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.dropTable("permissions_roles");
-
+    await knex.schema.dropTableIfExists("permissions_roles");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: permissions_roles",
