@@ -38,7 +38,10 @@ export async function up(knex: Knex): Promise<void> {
   try {
     await Promise.all([addPermission(knex, permissions)]);
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }
@@ -47,7 +50,10 @@ export async function down(knex: Knex): Promise<void> {
   try {
     await Promise.all([removePermission(knex, permissions)]);
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }

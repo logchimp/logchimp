@@ -32,6 +32,7 @@ export async function down(knex: Knex): Promise<void> {
     await knex("settings").delete();
 
     logger.info({
+      code: "DATABASE_SEEDS",
       message: "Drop data: settings",
     });
   } catch (err) {

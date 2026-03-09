@@ -21,7 +21,10 @@ export async function up(knex: Knex): Promise<void> {
       message: "Insert 'comments' into labs column",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }
@@ -33,10 +36,14 @@ export async function down(knex: Knex): Promise<void> {
     });
 
     logger.info({
+      code: "DATABASE_MIGRATIONS",
       message: "Column dropped: 'labs' from settings",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }

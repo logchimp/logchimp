@@ -16,7 +16,10 @@ export async function up(knex: Knex): Promise<void> {
       message: "Table created: roles",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }
@@ -26,10 +29,14 @@ export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTable("roles");
 
     logger.info({
+      code: "DATABASE_MIGRATIONS",
       message: "Table dropped: roles",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }

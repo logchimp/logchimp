@@ -20,7 +20,10 @@ export async function up(knex: Knex): Promise<void> {
       message: "Table created: posts_comments",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }
@@ -38,10 +41,14 @@ export async function down(knex: Knex): Promise<void> {
 
     await knex.schema.dropTable("posts_comments");
     logger.info({
+      code: "DATABASE_MIGRATIONS",
       message: "Table dropped: posts_comments",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }

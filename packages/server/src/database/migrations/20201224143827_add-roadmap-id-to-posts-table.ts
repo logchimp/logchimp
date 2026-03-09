@@ -17,6 +17,7 @@ export async function up(knex: Knex): Promise<void> {
     });
   } catch (err) {
     logger.error({
+      code: "DATABASE_MIGRATIONS",
       message: err,
     });
     throw err;
@@ -30,10 +31,12 @@ export async function down(knex: Knex): Promise<void> {
     });
 
     logger.info({
+      code: "DATABASE_MIGRATIONS",
       message: "Drop column: roadmap_id in posts",
     });
   } catch (err) {
     logger.error({
+      code: "DATABASE_MIGRATIONS",
       message: err,
     });
     throw err;

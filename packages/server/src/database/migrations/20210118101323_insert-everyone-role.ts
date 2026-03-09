@@ -35,6 +35,7 @@ export async function down(knex: Knex): Promise<void> {
     });
 
     logger.info({
+      code: "DATABASE_SEEDS",
       message: "Drop data: '@everyone' role",
     });
   } catch (err) {

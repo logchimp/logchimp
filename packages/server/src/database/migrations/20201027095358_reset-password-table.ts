@@ -24,7 +24,10 @@ export async function up(knex: Knex): Promise<void> {
       message: "Table created: resetPassword",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }
@@ -42,10 +45,14 @@ export async function down(knex: Knex): Promise<void> {
 
     await knex.schema.dropTable("resetPassword");
     logger.info({
+      code: "DATABASE_MIGRATIONS",
       message: "Table dropped: resetPassword",
     });
   } catch (err) {
-    logger.error(err);
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      err,
+    });
     throw err;
   }
 }
