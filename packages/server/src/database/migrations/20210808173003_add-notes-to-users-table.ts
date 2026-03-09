@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
-      message: 'Error adding column: notes in users',
+      message: "Error adding column: notes in users",
       err,
     });
     throw err;
@@ -42,7 +42,7 @@ export async function down(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
-      message: 'Error dropping column: notes in users',
+      message: "Error dropping column: notes in users",
       err,
     });
     throw err;

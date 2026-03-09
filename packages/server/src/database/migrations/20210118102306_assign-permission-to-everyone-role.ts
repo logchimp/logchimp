@@ -60,7 +60,7 @@ export async function up(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_SEEDS",
-      message: 'Error assigning permissions to @everyone role',
+      message: "Error assigning permissions to @everyone role",
       err,
     });
     throw err;
@@ -91,7 +91,7 @@ export async function down(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_SEEDS",
-      message: 'Error dropping permissions for @everyone role',
+      message: "Error dropping permissions for @everyone role",
       err,
     });
     throw err;

@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
-      message: `Error adding permissions: ${permissions.join(',')}`,
+      message: `Error adding permissions: ${permissions.join(",")}`,
       err,
     });
     throw err;
@@ -28,7 +28,7 @@ export async function down(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
-      message: `Error removing permissions: ${permissions.join(',')}`,
+      message: `Error removing permissions: ${permissions.join(",")}`,
       err,
     });
     throw err;
