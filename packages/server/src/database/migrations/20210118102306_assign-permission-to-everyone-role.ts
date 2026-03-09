@@ -77,9 +77,19 @@ export async function down(knex: Knex): Promise<void> {
     const role = await everyoneRole(knex);
     const roleId = role.id;
 
-    await knex("permissions_roles").delete().where({
-      role_id: roleId,
-    });
+    const permissions =
+      await knex("permissions").select<Array<IPermissionDatabaseTable>>();
+
+    const permissionIds = [
+      getPermId(permissions, "post:create"),
+      getPermId(permissions, "vote:create"),
+      getPermId(permissions, "vote:destroy"),
+    ];
+
+    await knex("permissions_roles")
+      .where({ role_id: roleId })
+      .whereIn("permission_id", permissionIds)
+      .delete();
 
     logger.info({
       code: "DATABASE_SEEDS",
