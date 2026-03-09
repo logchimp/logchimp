@@ -22,6 +22,7 @@ export async function up(knex: Knex): Promise<void> {
     });
   } catch (err) {
     logger.error(err);
+    throw err;
   }
 }
 
@@ -36,5 +37,6 @@ export async function down(knex: Knex): Promise<void> {
     });
   } catch (err) {
     logger.error(err);
+    throw err;
   }
 }

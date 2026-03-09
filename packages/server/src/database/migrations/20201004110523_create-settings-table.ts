@@ -23,6 +23,7 @@ export async function up(knex: Knex): Promise<void> {
       code: "DATABASE_MIGRATIONS",
       err,
     });
+    throw err;
   }
 }
 
@@ -43,5 +44,6 @@ export async function down(knex: Knex): Promise<void> {
       code: "DATABASE_MIGRATIONS",
       err,
     });
+    throw err;
   }
 }

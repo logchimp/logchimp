@@ -67,6 +67,7 @@ export async function up(knex: Knex): Promise<void> {
       code: "DATABASE_SEEDS",
       message: err.message,
     });
+    throw err;
   }
 }
 
@@ -87,5 +88,6 @@ export async function down(knex: Knex): Promise<void> {
       code: "DATABASE_SEEDS",
       message: err.message,
     });
+    throw err;
   }
 }

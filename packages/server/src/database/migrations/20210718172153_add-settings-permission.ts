@@ -1,6 +1,8 @@
 import type { Knex } from "knex";
 import type { TPermission } from "@logchimp/types";
+
 import { addPermission, removePermission } from "../utils";
+import logger from "../../utils/logger";
 
 const permissions = [
   "settings:read",
@@ -8,9 +10,19 @@ const permissions = [
 ] satisfies TPermission[];
 
 export async function up(knex: Knex): Promise<void> {
-  await Promise.all([addPermission(knex, permissions)]);
+  try {
+    await Promise.all([addPermission(knex, permissions)]);
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  }
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await Promise.all([removePermission(knex, permissions)]);
+  try {
+    await Promise.all([removePermission(knex, permissions)]);
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  }
 }
