@@ -31,11 +31,10 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasTable("resetPassword").then(async (exists) => {
-      if (exists) {
-        await knex.schema.dropTable("resetPassword");
-      }
-    });
+    const exists = await knex.schema.hasTable("resetPassword");
+    if (exists) {
+      await knex.schema.dropTable("resetPassword");
+    }
 
     logger.info({
       message: "Table dropped: resetPassword",

@@ -27,11 +27,10 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasTable("posts_comments").then(async (exists) => {
-      if (exists) {
-        await knex.schema.dropTable("posts_comments");
-      }
-    });
+    const exists = await knex.schema.hasTable("posts_comments");
+    if (exists) {
+      await knex.schema.dropTable("posts_comments");
+    }
 
     logger.info({
       message: "Table dropped: posts_comments",

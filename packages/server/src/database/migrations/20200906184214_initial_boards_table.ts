@@ -30,11 +30,10 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasTable("boards").then(async (exists) => {
-      if (exists) {
-        await knex.schema.dropTable("boards");
-      }
-    });
+    const exists = await knex.schema.hasTable("boards");
+    if (exists) {
+      await knex.schema.dropTable("boards");
+    }
 
     logger.log({
       level: "info",

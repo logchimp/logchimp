@@ -28,11 +28,10 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasTable("emailVerification").then(async (exists) => {
-      if (exists) {
-        await knex.schema.dropTable("emailVerification");
-      }
-    });
+    const exists = await knex.schema.hasTable("emailVerification");
+    if (exists) {
+      await knex.schema.dropTable("emailVerification");
+    }
 
     logger.info({
       message: "Table dropped: emailVerification",

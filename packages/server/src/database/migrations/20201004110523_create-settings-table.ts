@@ -29,11 +29,10 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasTable("settings").then(async (exists) => {
-      if (exists) {
-        await knex.schema.dropTable("settings");
-      }
-    });
+    const exists = await knex.schema.hasTable("settings");
+    if (exists) {
+      await knex.schema.dropTable("settings");
+    }
 
     logger.info({
       code: "DATABASE_MIGRATIONS",

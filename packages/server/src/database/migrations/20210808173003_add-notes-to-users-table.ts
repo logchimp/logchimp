@@ -22,13 +22,12 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasColumn("users", "notes").then(async (exists) => {
-      if (exists) {
-        await knex.schema.table("users", (table) => {
-          table.dropColumn("notes");
-        });
-      }
-    });
+    const exists = await knex.schema.hasColumn("users", "notes");
+    if (exists) {
+      await knex.schema.table("users", (table) => {
+        table.dropColumn("notes");
+      });
+    }
 
     logger.log({
       level: "info",

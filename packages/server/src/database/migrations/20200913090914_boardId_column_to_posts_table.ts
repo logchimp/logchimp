@@ -26,13 +26,12 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasColumn("posts", "boardId").then(async (exists) => {
-      if (exists) {
-        await knex.schema.table("posts", (table) => {
-          table.dropColumn("boardId");
-        });
-      }
-    });
+    const exists = await knex.schema.hasColumn("posts", "boardId");
+    if (exists) {
+      await knex.schema.table("posts", (table) => {
+        table.dropColumn("boardId");
+      });
+    }
 
     logger.log({
       level: "info",

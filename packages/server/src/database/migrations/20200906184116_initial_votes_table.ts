@@ -31,16 +31,15 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex.schema.hasTable("votes").then(async (exists) => {
-      if (exists) {
-        await knex.schema
-          .alterTable("votes", (table) => {
-            table.dropForeign("userId");
-            table.dropForeign("postId");
-          })
-          .dropTable("votes");
-      }
-    });
+    const exists = await knex.schema.hasTable("votes");
+    if (exists) {
+      await knex.schema
+        .alterTable("votes", (table) => {
+          table.dropForeign("userId");
+          table.dropForeign("postId");
+        })
+        .dropTable("votes");
+    }
 
     logger.log({
       level: "info",
