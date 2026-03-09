@@ -21,8 +21,8 @@ export async function up(knex: Knex): Promise<void> {
       message: "Table created: votes",
     });
   } catch (err) {
-    logger.log({
-      level: "error",
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
       message: err,
     });
     throw err;
@@ -41,13 +41,13 @@ export async function down(knex: Knex): Promise<void> {
         .dropTable("votes");
     }
 
-    logger.log({
-      level: "info",
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
       message: "Table dropped: votes",
     });
   } catch (err) {
-    logger.log({
-      level: "error",
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
       message: err,
     });
     throw err;
