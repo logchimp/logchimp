@@ -31,14 +31,19 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   try {
     const exists = await knex.schema.hasTable("posts");
-    if (exists) {
-      await knex.schema
-        .alterTable("posts", (table) => {
-          table.dropForeign("userId");
-        })
-        .dropTable("posts");
+    if (!exists) {
+      logger.warn({
+        code: "DATABASE_MIGRATIONS",
+        message: "Skipping drop for missing table: posts",
+      });
+      return;
     }
 
+    await knex.schema
+      .alterTable("posts", (table) => {
+        table.dropForeign("userId");
+      })
+      .dropTable("posts");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: posts",

@@ -32,15 +32,20 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   try {
     const exists = await knex.schema.hasTable("votes");
-    if (exists) {
-      await knex.schema
-        .alterTable("votes", (table) => {
-          table.dropForeign("userId");
-          table.dropForeign("postId");
-        })
-        .dropTable("votes");
+    if (!exists) {
+      logger.warn({
+        code: "DATABASE_MIGRATIONS",
+        message: "Skipping drop for missing table: votes",
+      });
+      return;
     }
 
+    await knex.schema
+      .alterTable("votes", (table) => {
+        table.dropForeign("userId");
+        table.dropForeign("postId");
+      })
+      .dropTable("votes");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: votes",

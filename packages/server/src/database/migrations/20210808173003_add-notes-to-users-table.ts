@@ -23,12 +23,17 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   try {
     const exists = await knex.schema.hasColumn("users", "notes");
-    if (exists) {
-      await knex.schema.table("users", (table) => {
-        table.dropColumn("notes");
+    if (!exists) {
+      logger.warn({
+        code: "DATABASE_MIGRATIONS",
+        message: "Skipping drop for missing column: notes",
       });
+      return;
     }
 
+    await knex.schema.table("users", (table) => {
+      table.dropColumn("notes");
+    });
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Column dropped: notes in users",

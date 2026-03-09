@@ -30,10 +30,15 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   try {
     const exists = await knex.schema.hasTable("settings");
-    if (exists) {
-      await knex.schema.dropTable("settings");
+    if (!exists) {
+      logger.warn({
+        code: "DATABASE_MIGRATIONS",
+        message: "Skipping drop for missing table: settings",
+      });
+      return;
     }
 
+    await knex.schema.dropTable("settings");
     logger.info({
       code: "DATABASE_MIGRATIONS",
       message: "Table dropped: settings",
