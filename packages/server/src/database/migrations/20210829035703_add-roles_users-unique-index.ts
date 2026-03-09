@@ -22,6 +22,7 @@ export async function up(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
+      message: "Error creating index role_id_user_id_unique_index",
       err,
     });
     throw err;
@@ -39,6 +40,7 @@ export async function down(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
+      message: "Error dropping index role_id_user_id_unique_index",
       err,
     });
     throw err;

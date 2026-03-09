@@ -22,7 +22,8 @@ export async function up(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_SEEDS",
-      message: err.message,
+      message: "Error inserting '@everyone' role",
+      err,
     });
     throw err;
   }
@@ -41,7 +42,8 @@ export async function down(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_SEEDS",
-      message: err.message,
+      message: "Error dropping '@everyone' role",
+      err,
     });
     throw err;
   }

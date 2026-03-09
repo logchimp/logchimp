@@ -23,7 +23,8 @@ export async function up(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
-      message: err,
+      message: "Error creating table votes",
+      err,
     });
     throw err;
   }
@@ -53,7 +54,8 @@ export async function down(knex: Knex): Promise<void> {
   } catch (err) {
     logger.error({
       code: "DATABASE_MIGRATIONS",
-      message: err,
+      message: "Error dropping table votes",
+      err,
     });
     throw err;
   }
