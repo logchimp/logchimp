@@ -17,7 +17,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Creating table: boards",
+      message: "Table created: boards",
     });
   } catch (err) {
     logger.log({
@@ -38,7 +38,7 @@ export async function down(knex: Knex): Promise<void> {
 
     logger.log({
       level: "info",
-      message: "Dropping table: boards",
+      message: "Table dropped: boards",
     });
   } catch (err) {
     logger.log({

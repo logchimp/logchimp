@@ -17,7 +17,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Creating index: role_id_user_id_unique_index",
+      message: "Index created: role_id_user_id_unique_index",
     });
   } catch (err) {
     logger.error(err);
@@ -30,7 +30,7 @@ export async function down(knex: Knex): Promise<void> {
     await knex.raw("DROP INDEX role_id_user_id_unique_index;");
 
     logger.info({
-      message: "Dropping index: role_id_user_id_unique_index",
+      message: "Index dropped: role_id_user_id_unique_index",
     });
   } catch (err) {
     logger.error(err);

@@ -18,7 +18,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Creating table: emailVerification",
+      message: "Table created: emailVerification",
     });
   } catch (err) {
     logger.error(err);
@@ -35,7 +35,7 @@ export async function down(knex: Knex): Promise<void> {
     });
 
     logger.info({
-      message: "Dropping table: emailVerification",
+      message: "Table dropped: emailVerification",
     });
   } catch (err) {
     logger.error(err);

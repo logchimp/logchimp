@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Adding column: notes in users",
+      message: "Column added: notes in users",
     });
   } catch (err) {
     logger.log({
@@ -32,7 +32,7 @@ export async function down(knex: Knex): Promise<void> {
 
     logger.log({
       level: "info",
-      message: "Dropping column: notes in users",
+      message: "Column dropped: notes in users",
     });
   } catch (err) {
     logger.log({

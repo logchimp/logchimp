@@ -45,7 +45,7 @@ function addPermission(database: Knex, permissions: TPermission[]) {
       })
       .into("permissions");
 
-    logger.info(`Adding permission ${type}:${action}`);
+    logger.info(`Permission added: ${type}:${action}`);
   });
 }
 
@@ -59,7 +59,7 @@ async function removePermission(database: Knex, permissions: TPermission[]) {
       action,
     });
 
-    logger.info(`Removing permission ${type}:${action}`);
+    logger.info(`Permission removed: ${type}:${action}`);
   });
 }
 

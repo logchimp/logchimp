@@ -13,7 +13,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Creating table: permissions",
+      message: "Table created: permissions",
     });
   } catch (err) {
     logger.error(err);
@@ -26,7 +26,7 @@ export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTable("permissions");
 
     logger.info({
-      message: "Dropping table: permissions",
+      message: "Table dropped: permissions",
     });
   } catch (err) {
     logger.error(err);

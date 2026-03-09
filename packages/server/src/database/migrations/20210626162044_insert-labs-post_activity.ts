@@ -33,7 +33,7 @@ export async function down(knex: Knex): Promise<void> {
     });
 
     logger.info({
-      message: "Dropping column 'labs' from settings",
+      message: "Column dropped: 'labs' from settings",
     });
   } catch (err) {
     logger.error(err);

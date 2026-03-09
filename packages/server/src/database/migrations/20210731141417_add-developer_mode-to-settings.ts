@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Adding column: developer_mode in settings",
+      message: "Column added: developer_mode in settings",
     });
   } catch (err) {
     logger.log({
@@ -28,7 +28,7 @@ export async function down(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Dropping column: developer_mode in settings",
+      message: "Column dropped: developer_mode in settings",
     });
   } catch (err) {
     logger.log({

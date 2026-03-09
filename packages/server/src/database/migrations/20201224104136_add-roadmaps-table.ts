@@ -16,7 +16,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Creating table: roadmaps",
+      message: "Table created: roadmaps",
     });
   } catch (err) {
     logger.error({
@@ -31,7 +31,7 @@ export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTable("roadmaps");
 
     logger.info({
-      message: "Dropping table: roadmaps",
+      message: "Table dropped: roadmaps",
     });
   } catch (err) {
     logger.error({

@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
 
     logger.info({
       code: "DATABASE_MIGRATIONS",
-      message: "Creating table: resetPassword",
+      message: "Table created: resetPassword",
     });
   } catch (err) {
     logger.error(err);
@@ -38,7 +38,7 @@ export async function down(knex: Knex): Promise<void> {
     });
 
     logger.info({
-      message: "Dropping table: resetPassword",
+      message: "Table dropped: resetPassword",
     });
   } catch (err) {
     logger.error(err);
