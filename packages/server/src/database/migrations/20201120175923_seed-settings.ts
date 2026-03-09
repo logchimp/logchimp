@@ -1,9 +1,9 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex("settings")
-    .insert([
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex("settings").insert([
       {
         title: "LogChimp",
         description: "Track user feedback to build better products",
@@ -12,33 +12,36 @@ exports.up = (knex) => {
         icon: "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
         isPoweredBy: true,
       },
-    ])
-    .then(() => {
-      logger.info({
-        code: "DATABASE_SEEDS",
-        message: "Insert data: settings",
-      });
-    })
-    .catch((err) => {
-      logger.error({
-        code: "DATABASE_SEEDS",
-        err,
-      });
-    });
-};
+    ]);
 
-exports.down = (knex) => {
-  return knex("settings")
-    .delete()
-    .then(() => {
-      logger.info({
-        message: "Drop data: settings",
-      });
-    })
-    .catch((err) => {
-      logger.error({
-        code: "DATABASE_SEEDS",
-        err,
-      });
+    logger.info({
+      code: "DATABASE_SEEDS",
+      message: "Insert data: settings",
     });
-};
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_SEEDS",
+      message: "Error seeding settings",
+      err,
+    });
+    throw err;
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex("settings").delete();
+
+    logger.info({
+      code: "DATABASE_SEEDS",
+      message: "Drop data: settings",
+    });
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_SEEDS",
+      message: "Error dropping settings seed data",
+      err,
+    });
+    throw err;
+  }
+}

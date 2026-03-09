@@ -8,6 +8,7 @@ const oneLineFormat = format.printf(({ level, code, message, timestamp }) => {
 
 const logger = createLogger({
   format: format.combine(
+    format.errors({ stack: true }),
     format.timestamp({
       format: "YYYY-MM-DD HH:mm:ss Z",
     }),

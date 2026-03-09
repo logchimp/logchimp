@@ -1,9 +1,9 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex.schema
-    .createTable("users", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.createTable("users", (table) => {
       table.uuid("userId").notNullable().unique().primary();
       table.string("name", 30);
       table.string("email", 320).notNullable().unique();
@@ -16,39 +16,35 @@ exports.up = (knex) => {
       table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
       table.timestamp("updatedAt").defaultTo(knex.fn.now()).notNullable();
       table.comment("Storing users data");
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Creating table: users",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
 
-exports.down = (knex) => {
-  return knex.schema
-    .hasTable("users")
-    .then((exists) => {
-      if (exists) {
-        return knex.schema.dropTable("users");
-      }
-    })
-    .then(() => {
-      logger.log({
-        level: "info",
-        message: "Dropping table: users",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Table created: users",
     });
-};
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error creating table users",
+      err,
+    });
+    throw err;
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.dropTableIfExists("users");
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Table dropped: users",
+    });
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error dropping table users",
+      err,
+    });
+    throw err;
+  }
+}

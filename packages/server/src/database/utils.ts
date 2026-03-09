@@ -1,21 +1,40 @@
+import type { Knex } from "knex";
 import { v4 as uuidv4 } from "uuid";
+import type { TPermission } from "@logchimp/types";
 
-// utils
 import logger from "../utils/logger";
 
-const permissionExists = async (database, permission) =>
+interface IPermissionTableColumns {
+  id: string;
+  name: string | null;
+  type: string;
+  action: string;
+  created_at: Date;
+}
+
+interface IPermissionDatabaseTableWhere {
+  action: string;
+  type: string;
+}
+
+const permissionExists = async (
+  database: Knex,
+  permission: IPermissionDatabaseTableWhere,
+) =>
   database
-    .select()
+    .select<IPermissionTableColumns>()
     .from("permissions")
     .where({
       ...permission,
     })
     .first();
 
-function addPermission(database, permissions) {
-  return permissions.forEach(async (permission) => {
-    const type = permission.split(":")[0];
-    const action = permission.split(":")[1];
+async function addPermission(
+  database: Knex,
+  permissions: TPermission[],
+): Promise<void> {
+  for (const permission of permissions) {
+    const [type, action] = permission.split(":");
 
     const exists = await permissionExists(database, {
       type,
@@ -23,9 +42,10 @@ function addPermission(database, permissions) {
     });
 
     if (exists) {
-      return logger.warn({
+      logger.warn({
         message: `Permission ${type}:${action} already added`,
       });
+      continue;
     }
 
     await database
@@ -36,22 +56,24 @@ function addPermission(database, permissions) {
       })
       .into("permissions");
 
-    logger.info(`Adding permission ${type}:${action}`);
-  });
+    logger.info(`Permission added: ${type}:${action}`);
+  }
 }
 
-async function removePermission(database, permissions) {
-  return await permissions.forEach(async (permission) => {
-    const type = permission.split(":")[0];
-    const action = permission.split(":")[1];
+async function removePermission(
+  database: Knex,
+  permissions: TPermission[],
+): Promise<void> {
+  for (const permission of permissions) {
+    const [type, action] = permission.split(":");
 
     await database.delete().from("permissions").where({
       type,
       action,
     });
 
-    logger.info(`Removing permission ${type}:${action}`);
-  });
+    logger.info(`Permission removed: ${type}:${action}`);
+  }
 }
 
 export { addPermission, removePermission };

@@ -1,9 +1,9 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex.schema
-    .createTable("permissions_roles", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.createTable("permissions_roles", (table) => {
       table.uuid("id").notNullable().unique().primary();
       table
         .uuid("permission_id")
@@ -17,27 +17,35 @@ exports.up = (knex) => {
         .references("id")
         .inTable("roles")
         .onDelete("cascade");
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Creating table: permissions_roles",
-      });
-    })
-    .catch((err) => {
-      logger.error(err);
     });
-};
 
-exports.down = (knex) => {
-  return knex.schema
-    .dropTable("permissions_roles")
-    .then(() => {
-      logger.info({
-        message: "Dropping table: permissions_roles",
-      });
-    })
-    .catch((err) => {
-      logger.error(err);
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Table created: permissions_roles",
     });
-};
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error creating table permissions_roles",
+      err,
+    });
+    throw err;
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.dropTableIfExists("permissions_roles");
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Table dropped: permissions_roles",
+    });
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error dropping table permissions_roles",
+      err,
+    });
+    throw err;
+  }
+}
