@@ -4,6 +4,14 @@ import type { TPermission } from "@logchimp/types";
 
 import logger from "../utils/logger";
 
+interface IPermissionTableColumns {
+  id: string;
+  name: string | null;
+  type: string;
+  action: string;
+  created_at: Date;
+}
+
 interface IPermissionDatabaseTableWhere {
   action: string;
   type: string;
@@ -14,17 +22,19 @@ const permissionExists = async (
   permission: IPermissionDatabaseTableWhere,
 ) =>
   database
-    .select()
+    .select<IPermissionTableColumns>()
     .from("permissions")
     .where({
       ...permission,
     })
     .first();
 
-function addPermission(database: Knex, permissions: TPermission[]) {
-  return permissions.forEach(async (permission) => {
-    const type = permission.split(":")[0];
-    const action = permission.split(":")[1];
+async function addPermission(
+  database: Knex,
+  permissions: TPermission[],
+): Promise<void> {
+  for (const permission of permissions) {
+    const [type, action] = permission.split(":");
 
     const exists = await permissionExists(database, {
       type,
@@ -32,9 +42,10 @@ function addPermission(database: Knex, permissions: TPermission[]) {
     });
 
     if (exists) {
-      return logger.warn({
+      logger.warn({
         message: `Permission ${type}:${action} already added`,
       });
+      continue;
     }
 
     await database
@@ -46,13 +57,15 @@ function addPermission(database: Knex, permissions: TPermission[]) {
       .into("permissions");
 
     logger.info(`Permission added: ${type}:${action}`);
-  });
+  }
 }
 
-async function removePermission(database: Knex, permissions: TPermission[]) {
-  return permissions.forEach(async (permission) => {
-    const type = permission.split(":")[0];
-    const action = permission.split(":")[1];
+async function removePermission(
+  database: Knex,
+  permissions: TPermission[],
+): Promise<void> {
+  for (const permission of permissions) {
+    const [type, action] = permission.split(":");
 
     await database.delete().from("permissions").where({
       type,
@@ -60,7 +73,7 @@ async function removePermission(database: Knex, permissions: TPermission[]) {
     });
 
     logger.info(`Permission removed: ${type}:${action}`);
-  });
+  }
 }
 
 export { addPermission, removePermission };
