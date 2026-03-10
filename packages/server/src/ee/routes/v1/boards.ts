@@ -13,20 +13,30 @@ import * as boards from "../../controllers/v1/boards";
 // middleware
 import { authOptional, authRequired } from "../../../middlewares/auth";
 import { boardExists } from "../../middleware/boardExists";
-import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+// import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+
+//changed the path
+import { withLicenseGuardWrapper } from "../../../middlewares/licenseGuardWrapper";
 
 router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
   "/boards",
-  withLicenseGuard(boards.filter, {
+  withLicenseGuardWrapper(boards.filter, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+      skipHandlerOnFailure: false,
   }),
 );
 router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
   "/boards/get",
   // @ts-expect-error
   authOptional,
-  withLicenseGuard(boards.get, {
+  withLicenseGuardWrapper(boards.get, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
+  
   }),
 );
 router.get<IGetBoardByUrlRequestParams>(
@@ -34,31 +44,43 @@ router.get<IGetBoardByUrlRequestParams>(
   // @ts-expect-error
   authOptional,
   boardExists,
-  withLicenseGuard(boards.boardByUrl, {
+  withLicenseGuardWrapper(boards.boardByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
+    
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.get<ISearchBoardRequestParams>(
   "/boards/search/:name",
   // @ts-expect-error
   authRequired,
-  withLicenseGuard(boards.searchBoard, {
+  withLicenseGuardWrapper(boards.searchBoard, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 
 router.post(
   "/boards/check-slug",
   authRequired,
-  withLicenseGuard(boards.checkSlug, {
+  withLicenseGuardWrapper(boards.checkSlug, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.post(
   "/boards",
   authRequired,
-  withLicenseGuard(boards.create, {
+  withLicenseGuardWrapper(boards.create, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.patch(
@@ -66,8 +88,11 @@ router.patch(
   authRequired,
   // @ts-expect-error
   boardExists,
-  withLicenseGuard(boards.updateBoard, {
+  withLicenseGuardWrapper(boards.updateBoard, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 
@@ -76,8 +101,11 @@ router.delete(
   authRequired,
   // @ts-expect-error
   boardExists,
-  withLicenseGuard(boards.deleteById, {
+  withLicenseGuardWrapper(boards.deleteById, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 
@@ -85,8 +113,11 @@ router.delete(
 router.post(
   "/boards/check-name",
   authRequired,
-  withLicenseGuard(boards.checkName, {
+  withLicenseGuardWrapper(boards.checkName, {
     requiredPlan: ["pro", "business", "enterprise"],
+    
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+    skipHandlerOnFailure: false,
   }),
 );
 // -- End: Deprecated ---

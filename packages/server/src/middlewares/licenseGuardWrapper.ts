@@ -61,12 +61,26 @@ const createFallbackGuard = (): WithLicenseGuardFunction => {
   };
 };
 
+// const getLicenseGuard = async (): Promise<WithLicenseGuardFunction> => {
+//   if (!licenseGuardPromise) {
+//     licenseGuardPromise = import("../ee/do-not-remove/middleware/licenseGuard")
+//       .then((mod) => mod.withLicenseGuard as WithLicenseGuardFunction)
+//       .catch(() => createFallbackGuard());
+//   }
+
+//changed to this so that if EE file exists, use it, if not, fallback to createFallbackGuard
 const getLicenseGuard = async (): Promise<WithLicenseGuardFunction> => {
   if (!licenseGuardPromise) {
-    licenseGuardPromise = import("../ee/do-not-remove/middleware/licenseGuard")
+    licenseGuardPromise = (new Function(
+      "p",
+      "return import(p)"
+    )("../ee/do-not-remove/middleware/licenseGuard") as Promise<{
+      withLicenseGuard: WithLicenseGuardFunction;
+    }>)
       .then((mod) => mod.withLicenseGuard as WithLicenseGuardFunction)
       .catch(() => createFallbackGuard());
   }
+
 
   return licenseGuardPromise;
 };

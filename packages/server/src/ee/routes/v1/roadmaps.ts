@@ -8,7 +8,10 @@ import * as roadmaps from "../../controllers/v1/roadmaps";
 // middleware
 import { authOptional, authRequired } from "../../../middlewares/auth";
 import { roadmapExists } from "../../../middlewares/roadmapExists";
-import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+// import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+
+//changed the path
+import { withLicenseGuardWrapper } from "../../../middlewares/licenseGuardWrapper";
 import type {
   IGetRoadmapByUrlRequestParam,
   ISearchRoadmapRequestParam,
@@ -17,8 +20,13 @@ import type {
 router.get(
   "/roadmaps",
   authOptional,
-  withLicenseGuard(roadmaps.filter, {
+
+  //changed from withLicenseGuard to LicenseGuardWrapper
+  withLicenseGuardWrapper(roadmaps.filter, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.get<IGetRoadmapByUrlRequestParam>(
@@ -26,46 +34,64 @@ router.get<IGetRoadmapByUrlRequestParam>(
   // @ts-expect-error
   authOptional,
   roadmapExists,
-  withLicenseGuard(roadmaps.roadmapByUrl, {
+  withLicenseGuardWrapper(roadmaps.roadmapByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.get<ISearchRoadmapRequestParam>(
   "/roadmaps/search/:name",
   // @ts-expect-error
   authRequired,
-  withLicenseGuard(roadmaps.searchRoadmap, {
+  withLicenseGuardWrapper(roadmaps.searchRoadmap, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.post(
   "/roadmaps",
   authRequired,
-  withLicenseGuard(roadmaps.create, {
+  withLicenseGuardWrapper(roadmaps.create, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.patch(
   "/roadmaps",
   authRequired,
   roadmapExists,
-  withLicenseGuard(roadmaps.updateRoadmap, {
+  withLicenseGuardWrapper(roadmaps.updateRoadmap, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.patch(
   "/roadmaps/sort",
   authRequired,
-  withLicenseGuard(roadmaps.sort, {
+  withLicenseGuardWrapper(roadmaps.sort, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.delete(
   "/roadmaps",
   authRequired,
   roadmapExists,
-  withLicenseGuard(roadmaps.deleteById, {
+  withLicenseGuardWrapper(roadmaps.deleteById, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 

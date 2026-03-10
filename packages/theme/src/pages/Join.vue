@@ -8,6 +8,7 @@
 
     <server-error v-if="serverError" @close="serverError = false" />
 
+ <!-- remove @keyup-enter="join"  in both places-->
     <form class="card" data-testid="signup-form" @submit.prevent="join">
       <l-text
         v-model="email"
@@ -16,7 +17,7 @@
         name="email"
         placeholder="Email address"
         :error="emailError"
-        @keyup-enter="join"
+      
         @hide-error="hideEmailError"
       />
       <l-text
@@ -26,16 +27,19 @@
         name="password"
         placeholder="Password"
         :error="passwordError"
-        @keyup-enter="join"
+      
         @hide-error="hidePasswordError"
       />
-
+        
       <div class="flex justify-center">
+       <!-- keep type primary but added html-type and remove @click="join" -->
         <Button
+       
           type="primary"
+          html-type="submit"
           :loading="buttonLoading"
           :disabled="!siteSettings.allowSignup"
-          @click="join"
+       
         >
           Create Account
         </Button>

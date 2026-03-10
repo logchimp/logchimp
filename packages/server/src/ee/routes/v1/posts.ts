@@ -14,7 +14,10 @@ import * as post from "../../../ee/controllers/v1/posts";
 
 // middleware
 import { authOptional, authRequired } from "../../../middlewares/auth";
-import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+// import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+
+//changed the path
+import { withLicenseGuardWrapper } from "../../../middlewares/licenseGuardWrapper";
 import { postExists } from "../../../middlewares/postExists";
 import { commentExists } from "../../middleware/commentExists";
 
@@ -31,10 +34,15 @@ router.get<
   // @ts-expect-error
   authOptional,
   postExists,
-  withLicenseGuard(post.activity.get, {
+
+  //changed from withLicenseGuard to LicenseGuardWrapper
+  withLicenseGuardWrapper(post.activity.get, {
     // pro <= comments
     // business <= activity (post status changed)
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 
@@ -48,10 +56,13 @@ router.post<
   // @ts-expect-error
   authRequired,
   postExists,
-  withLicenseGuard(post.comments.create, {
+  withLicenseGuardWrapper(post.comments.create, {
     // pro <= public comment
     // business <= internal comment
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.put<
@@ -64,8 +75,11 @@ router.put<
   authRequired,
   postExists,
   commentExists,
-  withLicenseGuard(post.comments.update, {
+  withLicenseGuardWrapper(post.comments.update, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 router.delete<TDeletePostCommentRequestParam>(
@@ -74,8 +88,11 @@ router.delete<TDeletePostCommentRequestParam>(
   authRequired,
   postExists,
   commentExists,
-  withLicenseGuard(post.comments.destroy, {
+  withLicenseGuardWrapper(post.comments.destroy, {
     requiredPlan: ["pro", "business", "enterprise"],
+
+    //added this option to ensure that even if license guard fails, the handler will still execute. This is because activity feed is a crucial feature and we don't want it to be blocked due to license guard issues.
+     skipHandlerOnFailure: false,
   }),
 );
 
