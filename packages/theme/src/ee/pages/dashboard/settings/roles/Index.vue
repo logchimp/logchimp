@@ -66,7 +66,9 @@ async function createRoleHandler() {
     const response = await createRole();
 
     const role = response.data.role;
-    router.push(`/dashboard/settings/roles/${role.id}/settings`);
+    router.push(
+      `/dashboard/settings/roles/${encodeURIComponent(role.id)}/settings`,
+    );
     dashboardRoles.appendRole(role);
   } catch (error) {
     console.error(error);

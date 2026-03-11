@@ -40,6 +40,9 @@ function validUUIDs(value: Array<string>): string[] {
   return result;
 }
 
+const toTrimmedString = (value: unknown): string | null =>
+  typeof value === "string" ? value.trim() : null;
+
 /**
  * Create random 6 digital HEX color
  *
@@ -206,4 +209,5 @@ export {
   parseAndValidateLimit,
   generateNanoID,
   generateUniqueUsername,
+  toTrimmedString,
 };

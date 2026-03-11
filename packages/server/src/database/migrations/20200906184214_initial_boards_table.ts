@@ -1,9 +1,9 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex.schema
-    .createTable("boards", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.createTable("boards", (table) => {
       table.uuid("boardId").notNullable().unique().primary();
       table.string("name", 50).notNullable();
       table.string("url", 50).notNullable().unique();
@@ -13,39 +13,35 @@ exports.up = (knex) => {
       table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
       table.timestamp("updatedAt").defaultTo(knex.fn.now()).notNullable();
       table.comment("Storing boards data");
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Creating table: boards",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
 
-exports.down = (knex) => {
-  return knex.schema
-    .hasTable("boards")
-    .then((exists) => {
-      if (exists) {
-        return knex.schema.dropTable("boards");
-      }
-    })
-    .then(() => {
-      logger.log({
-        level: "info",
-        message: "Dropping table: boards",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Table created: boards",
     });
-};
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error creating table boards",
+      err,
+    });
+    throw err;
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.dropTableIfExists("boards");
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Table dropped: boards",
+    });
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error dropping table boards",
+      err,
+    });
+    throw err;
+  }
+}

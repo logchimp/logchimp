@@ -3,6 +3,7 @@
   "extends": ["config:base"],
   "labels": ["dependencies"],
   "timezone": "Asia/Kolkata",
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "description": "MINOR & MAJOR updates — twice a month (1st and 15th)",

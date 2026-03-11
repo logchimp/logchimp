@@ -1,7 +1,8 @@
 name: Lighthouse test
+
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -11,16 +12,176 @@ permissions:
   contents: read
 
 jobs:
+  trust-check:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    outputs:
+      is_trusted: ${{ steps.trust_check.outputs.is_trusted }}
+      should-run: ${{ steps.final_decision.outputs.should_run }}
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@v6
+
+      - name: Check if contributor is trusted
+        id: trust_check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const trustedAssociations = ['OWNER', 'MEMBER', 'COLLABORATOR'];
+            const allowedBots = [
+              'dependabot[bot]',
+              'renovate[bot]',
+            ];
+            
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.payload.pull_request.number;
+            
+            // Fetch fresh PR data (payload may be stale on re-runs)
+            const { data: pr } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: prNumber,
+            });
+            
+            console.log(`PR #${prNumber} by ${pr.user.login} (${pr.author_association})`);
+            
+            // Check 1: Allowed bots
+            if (allowedBots.includes(pr.user.login)) {
+              console.log(`✅ Author is an allowed bot: ${pr.user.login}`);
+              core.setOutput('is_trusted', 'true');
+              return;
+            }
+            
+            // Check 2: Author association (OWNER, MEMBER, COLLABORATOR)
+            if (trustedAssociations.includes(pr.author_association)) {
+              console.log(`✅ Author has trusted association: ${pr.author_association}`);
+              core.setOutput('is_trusted', 'true');
+              return;
+            }
+            
+            // Check 3: Verify write access via API (more reliable than author_association)
+            async function hasWriteAccess(username) {
+              try {
+                const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner,
+                  repo,
+                  username,
+                });
+                return ['admin', 'maintain', 'write'].includes(permission.permission);
+              } catch (e) {
+                console.log(`Permission check failed for ${username}: ${e.message}`);
+                return false;
+              }
+            }
+            
+            if (await hasWriteAccess(pr.user.login)) {
+              console.log(`✅ Author has write access to repository`);
+              core.setOutput('is_trusted', 'true');
+              return;
+            }
+            
+            console.log(`🔍 External contributor`);
+            core.setOutput('is_trusted', 'false');
+
+      - name: Security check for external contributors
+        if: steps.trust_check.outputs.is_trusted == 'false'
+        id: protected_files_check
+        run: |
+          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
+          
+          # Find the merge-base to avoid false positives from base branch changes
+          MERGE_BASE=$(git merge-base HEAD pr-branch)
+          echo "Using merge-base: $MERGE_BASE"
+          
+          PROTECTED_PATHS=(
+            ".github/workflows/"
+            ".github/actions/"
+            ".gitmodules"
+          )
+          
+          CHANGES_DETECTED=false
+          MODIFIED_FILES=""
+
+          for path in "${PROTECTED_PATHS[@]}"; do
+            if ! git diff --quiet "$MERGE_BASE" pr-branch -- "$path"; then
+              echo "❌ Protected file modified: $path"
+              CHANGES_DETECTED=true
+              MODIFIED_FILES="$MODIFIED_FILES\n- \`$path\`"
+            fi
+          done
+          
+          if [ "$CHANGES_DETECTED" = true ]; then
+            echo "protected_files_modified=true" >> $GITHUB_OUTPUT
+            echo "modified_files<<EOF" >> $GITHUB_OUTPUT
+            echo -e "$MODIFIED_FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ No protected files modified"
+          echo "protected_files_modified=false" >> $GITHUB_OUTPUT
+
+      - name: Comment on protected file changes
+        if: failure() && steps.protected_files_check.outputs.protected_files_modified == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const modifiedFiles = `${{ steps.protected_files_check.outputs.modified_files }}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## ⚠️ Protected Files Modified
+            
+              Thank you for your contribution! However, this PR modifies protected files:
+            
+              ${modifiedFiles}
+            
+              **Please open a [GitHub issue](https://github.com/${context.repo.owner}/${context.repo.repo}/issues/new) instead** describing:
+              - What you're trying to achieve
+              - Why these files need to be modified
+              - The specific changes you'd like to make
+            
+              A maintainer will review your request and assist you. Thank you! 🙏`
+            });
+
+      - name: Final decision
+        if: always()
+        id: final_decision
+        run: |
+          # If trusted, always run
+          if [ "${{ steps.trust_check.outputs.is_trusted }}" = "true" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # If external and protected files check passed
+          if [ "${{ steps.protected_files_check.conclusion }}" = "success" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Otherwise don't run
+          echo "should_run=false" >> $GITHUB_OUTPUT
+
   lighthouse:
     runs-on: ubuntu-latest
+    needs: trust-check
+    if: |
+      always() && 
+      (needs.trust-check.outputs.should-run == 'true' || github.event_name != 'pull_request_target')
 
     steps:
-      - name: Checkout PR head
+      - name: Checkout base
         uses: actions/checkout@v6
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.sha }}
-          submodules: recursive
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.ref }}
+          persist-credentials: false
+
+      - uses: ./.github/actions/submodules
+        with:
           token: ${{ secrets.LC_SUBMODULES_TOKEN }}
 
       - name: Setup node

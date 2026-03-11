@@ -5,8 +5,8 @@
     :loop="true"
   >
     <DropdownItem
-      @click="router.push(`/dashboard/roadmaps/${roadmap?.url}/settings`)"
-      :disabled="!roadmap"
+      @click="roadmap?.url ? router.push(`/dashboard/roadmaps/${encodeURIComponent(roadmap.url)}/settings`) : undefined"
+      :disabled="!roadmap?.url"
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
@@ -16,7 +16,7 @@
     <DropdownItem
       v-if="settings.developer_mode"
       @click="roadmap?.id ? useCopyText(roadmap.id) : undefined"
-      :disabled="!roadmap"
+      :disabled="!roadmap?.id"
     >
       <template #icon>
         <copy-icon aria-hidden="true" />

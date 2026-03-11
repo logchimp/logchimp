@@ -1,14 +1,14 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  ISiteSettingsLab,
   TGetSiteSettingsLabResponseBody,
   TPermission,
   TUpdateSiteSettingsLabRequestBody,
   TUpdateSiteSettingsLabResponseBody,
 } from "@logchimp/types";
-import database from "../../database";
 
-// utils
+import database from "../../database";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
@@ -29,10 +29,6 @@ export async function updateLabs(
 ) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
-
-  const labs = req.body;
-  const stringify = JSON.stringify(labs);
-
   const checkPermission = permissions.find(
     (item) => item === "settings:update",
   );
@@ -43,10 +39,15 @@ export async function updateLabs(
     });
   }
 
+  const labsObject = {
+    comments: req.body.comments,
+  } satisfies ISiteSettingsLab;
+  const labsStringify = JSON.stringify(labsObject);
+
   try {
     const response = await database
       .update({
-        labs: database.raw(`labs::jsonb || '${stringify}'`),
+        labs: database.raw("labs::jsonb || ?::jsonb", [labsStringify]),
       })
       .from("settings")
       .returning<Array<TGetSiteSettingsLabResponseBody>>(
@@ -56,12 +57,11 @@ export async function updateLabs(
     const { labs } = response[0];
     if (cache.isActive) {
       try {
-        await cache.valkey.set(
-          CACHE_KEYS.LABS_SETTINGS,
-          JSON.stringify(labs),
-          "EX",
-          7 * DAY,
-        );
+        await cache.valkey
+          .multi()
+          .set(CACHE_KEYS.LABS_SETTINGS, JSON.stringify(labs), "EX", 7 * DAY)
+          .del(CACHE_KEYS.SITE_SETTINGS)
+          .exec();
       } catch (err) {
         logger.error({ message: err });
       }

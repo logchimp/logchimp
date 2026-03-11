@@ -93,7 +93,7 @@ const routes = [
     path: "/dashboard",
     component: () => import("./layout/Dashboard.vue"),
     beforeEnter: async (
-      _: RouteLocationNormalized,
+      to: RouteLocationNormalized,
       __: RouteLocationNormalized,
       next: NavigationGuardNext,
     ) => {
@@ -107,7 +107,9 @@ const routes = [
         // Is user logged in
         const { getUserId } = useUserStore();
         if (!getUserId) {
-          return next({ name: "Login", query: { redirect: "/dashboard" } });
+          const params = new URLSearchParams();
+          params.set("redirect", to.fullPath);
+          return next(`/login?${params.toString()}`);
         }
 
         // Check user access to dashboard

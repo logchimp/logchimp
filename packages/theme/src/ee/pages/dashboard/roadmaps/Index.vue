@@ -70,7 +70,9 @@ async function createRoadmapHandler() {
     const roadmap = response.data.roadmap;
 
     dashboardRoadmaps.appendRoadmap(roadmap);
-    router.push(`/dashboard/roadmaps/${roadmap.url}/settings`);
+    router.push(
+      `/dashboard/roadmaps/${encodeURIComponent(roadmap.url)}/settings`,
+    );
   } catch (err) {
     createRoadmapButtonLoading.value = false;
 

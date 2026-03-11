@@ -23,7 +23,7 @@ export const postActivity = async (
 ): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
   return await axios({
     method: "GET",
-    url: `${VITE_API_URL}/api/v1/posts/${post_id}/activity`,
+    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/activity`,
     params: {
       page,
       limit,
@@ -47,7 +47,7 @@ export const addComment = async (
 
   return await axios({
     method: "POST",
-    url: `${VITE_API_URL}/api/v1/posts/${post_id}/comments`,
+    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments`,
     data: {
       body,
       is_internal,

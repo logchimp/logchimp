@@ -1,0 +1,22 @@
+name: Checkout Submodules
+
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure Git and Checkout Submodules
+      if: ${{ inputs.token != '' }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        cleanup() {
+         git config --global --unset url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf || true
+        }
+        trap cleanup EXIT
+        git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "git@github.com:"
+        git submodule update --init --recursive

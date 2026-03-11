@@ -1,49 +1,54 @@
-// utils
+import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
-exports.up = (knex) => {
-  return knex.schema
-    .table("posts", (table) => {
+export async function up(knex: Knex): Promise<void> {
+  try {
+    await knex.schema.table("posts", (table) => {
       table
         .uuid("boardId")
         .references("boardId")
         .inTable("boards")
         .onDelete("set null");
-    })
-    .then(() => {
-      logger.info({
-        code: "DATABASE_MIGRATIONS",
-        message: "Adding column: boardId in posts",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
     });
-};
 
-exports.down = (knex) => {
-  return knex.schema
-    .hasColumn("posts", "boardId")
-    .then((exists) => {
-      if (exists) {
-        return knex.schema.table("posts", (table) => {
-          table.dropColumn("boardId");
-        });
-      }
-    })
-    .then(() => {
-      logger.log({
-        level: "info",
-        message: "Dropping column: boardId in posts",
-      });
-    })
-    .catch((err) => {
-      logger.log({
-        level: "error",
-        message: err,
-      });
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Column added: boardId in posts",
     });
-};
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error adding column boardId in posts",
+      err,
+    });
+    throw err;
+  }
+}
+
+export async function down(knex: Knex): Promise<void> {
+  try {
+    const exists = await knex.schema.hasColumn("posts", "boardId");
+    if (!exists) {
+      logger.warn({
+        code: "DATABASE_MIGRATIONS",
+        message: "Skipping drop for missing columns: boardId",
+      });
+      return;
+    }
+
+    await knex.schema.table("posts", (table) => {
+      table.dropColumn("boardId");
+    });
+    logger.info({
+      code: "DATABASE_MIGRATIONS",
+      message: "Column dropped: boardId in posts",
+    });
+  } catch (err) {
+    logger.error({
+      code: "DATABASE_MIGRATIONS",
+      message: "Error dropping column boardId in posts",
+      err,
+    });
+    throw err;
+  }
+}
