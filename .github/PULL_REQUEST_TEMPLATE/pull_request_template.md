@@ -26,7 +26,7 @@ Closes #{ISSUE_NUMBER}
 - [ ] Integration tests
 
 ## Checklist
-- [ ] I have read and complied with [AI Policy](AI_POLICY.md).
-- [ ] My code follows the [Contributing Guidelines](CONTRIBUTING.md).
+- [ ] I have read and complied with [AI Policy](https://github.com/logchimp/logchimp/blob/master/AI_POLICY.md).
+- [ ] My code follows the [Contributing Guidelines](https://github.com/logchimp/logchimp/blob/master/CONTRIBUTING.md).
 - [ ] I have performed a self-review of my code.
 - [ ] I have added or updated relevant documentation for the respective change(s) made in this PR.
