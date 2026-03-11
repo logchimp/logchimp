@@ -28,6 +28,10 @@ jobs:
         with:
           script: |
             const trustedAssociations = ['OWNER', 'MEMBER', 'COLLABORATOR'];
+            const allowedBots = [
+              'dependabot[bot]',
+              'renovate[bot]',
+            ];
             
             const owner = context.repo.owner;
             const repo = context.repo.repo;
@@ -42,14 +46,21 @@ jobs:
             
             console.log(`PR #${prNumber} by ${pr.user.login} (${pr.author_association})`);
             
-            // Check 1: Author association (OWNER, MEMBER, COLLABORATOR)
+            // Check 1: Allowed bots
+            if (allowedBots.includes(pr.user.login)) {
+              console.log(`✅ Author is an allowed bot: ${pr.user.login}`);
+              core.setOutput('is_trusted', 'true');
+              return;
+            }
+            
+            // Check 2: Author association (OWNER, MEMBER, COLLABORATOR)
             if (trustedAssociations.includes(pr.author_association)) {
               console.log(`✅ Author has trusted association: ${pr.author_association}`);
               core.setOutput('is_trusted', 'true');
               return;
             }
             
-            // Check 2: Verify write access via API (more reliable than author_association)
+            // Check 3: Verify write access via API (more reliable than author_association)
             async function hasWriteAccess(username) {
               try {
                 const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
