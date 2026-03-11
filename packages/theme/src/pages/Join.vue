@@ -34,8 +34,7 @@
         <Button
           type="primary"
           :loading="buttonLoading"
-          :disabled="!siteSettings.allowSignup"
-          @click="join"
+          :disabled="buttonLoading || !siteSettings.allowSignup"
         >
           Create Account
         </Button>
@@ -98,6 +97,10 @@ function hidePasswordError(event: FormFieldErrorType) {
 }
 
 async function join() {
+  if (buttonLoading.value) {
+    return;
+  }
+
   if (!(email.value && password.value)) {
     if (!email.value) {
       emailError.show = true;
