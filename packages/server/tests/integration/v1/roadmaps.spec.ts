@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
@@ -14,9 +14,10 @@ import database from "../../../src/database";
 
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import { describeEE } from "../../utils/skipEE";
 
 // Get all roadmaps
-describe("GET /api/v1/roadmaps", () => {
+describeEE("GET /api/v1/roadmaps", () => {
   beforeAll(async () => {
     await database.transaction(async (trx) => {
       // Seed 100 roadmaps with ascending indices: 50 public, 50 private
@@ -325,7 +326,7 @@ describe("GET /api/v1/roadmaps", () => {
 });
 
 // Get roadmaps by URL
-describe("GET /api/v1/roadmaps/:url", () => {
+describeEE("GET /api/v1/roadmaps/:url", () => {
   [
     "ROADMAP_NOT_FOUND",
     "undefined",
@@ -402,7 +403,7 @@ describe("GET /api/v1/roadmaps/:url", () => {
 });
 
 // Search roadmaps by name
-describe("GET /api/v1/roadmaps/search/:name", () => {
+describeEE("GET /api/v1/roadmaps/search/:name", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get(
       "/api/v1/roadmaps/search/completed",
@@ -529,7 +530,7 @@ describe("GET /api/v1/roadmaps/search/:name", () => {
 });
 
 // Create new roadmaps
-describe("POST /api/v1/roadmaps", () => {
+describeEE("POST /api/v1/roadmaps", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).post("/api/v1/roadmaps");
 
@@ -580,7 +581,7 @@ describe("POST /api/v1/roadmaps", () => {
 });
 
 // Update roadmaps
-describe("PATCH /api/v1/roadmaps", () => {
+describeEE("PATCH /api/v1/roadmaps", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).patch("/api/v1/roadmaps");
 
@@ -780,7 +781,7 @@ describe("PATCH /api/v1/roadmaps", () => {
 });
 
 // Delete roadmaps
-describe("DELETE /api/v1/roadmaps/", () => {
+describeEE("DELETE /api/v1/roadmaps/", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).delete("/api/v1/roadmaps");
 
@@ -844,7 +845,7 @@ describe("DELETE /api/v1/roadmaps/", () => {
 });
 
 // Sort roadmaps
-describe("PATCH /api/v1/roadmaps/sort", () => {
+describeEE("PATCH /api/v1/roadmaps/sort", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).patch("/api/v1/roadmaps/sort");
 

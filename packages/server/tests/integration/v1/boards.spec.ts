@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { it, describe, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import type { IBoardDetail, IBoardUpdateRequestBody } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
@@ -11,9 +11,10 @@ import {
 } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import { describeEE } from "../../utils/skipEE";
 
 // Get all boards
-describe("GET /api/v1/boards", () => {
+describeEE("GET /api/v1/boards", () => {
   beforeAll(async () => {
     const requiredBoards = 20;
     const existingBoardsCountResult = await database("boards")
@@ -220,7 +221,7 @@ describe("GET /api/v1/boards", () => {
 });
 
 // Get boards by URL
-describe("GET /boards/:url", () => {
+describeEE("GET /boards/:url", () => {
   [
     "BOARD_NOT_FOUND",
     "undefined",
@@ -306,7 +307,7 @@ describe("GET /boards/:url", () => {
 });
 
 // Search board by name
-describe("GET /boards/search/:name", () => {
+describeEE("GET /boards/search/:name", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/boards/search/name");
 
@@ -429,7 +430,7 @@ describe("GET /boards/search/:name", () => {
 });
 
 // Create new boards
-describe("POST /api/v1/boards", () => {
+describeEE("POST /api/v1/boards", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/boards");
 
@@ -508,7 +509,7 @@ describe("POST /api/v1/boards", () => {
   });
 });
 
-describe("PATCH /api/v1/boards", () => {
+describeEE("PATCH /api/v1/boards", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).patch("/api/v1/boards");
 
@@ -782,7 +783,7 @@ describe("PATCH /api/v1/boards", () => {
 });
 
 // Delete boards by id
-describe("DELETE /api/v1/boards", () => {
+describeEE("DELETE /api/v1/boards", () => {
   it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
     const board = await generateBoards({}, true);
     const { user: authUser } = await createUser();
@@ -821,7 +822,7 @@ describe("DELETE /api/v1/boards", () => {
 });
 
 // Check if a boardUrl exists
-describe("POST /api/v1/boards/check-slug", () => {
+describeEE("POST /api/v1/boards/check-slug", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/boards/check-slug");
 

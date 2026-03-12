@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
+import { it, expect, beforeAll, afterAll, vi } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
@@ -11,9 +11,10 @@ import {
   post as generatePost,
   comment as generateComment,
 } from "../../utils/generators";
+import { describeEE } from "../../utils/skipEE";
 
 //  LABS_DISABLED based test
-describe("LABS_DISABLED", () => {
+describeEE("LABS_DISABLED", () => {
   beforeAll(() => {
     vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(false);
   });
@@ -83,7 +84,7 @@ describe("LABS_DISABLED", () => {
   });
 });
 
-describe("POST /api/v1/posts/:post_id/comments", () => {
+describeEE("POST /api/v1/posts/:post_id/comments", () => {
   beforeAll(() => {
     vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
   });
@@ -254,7 +255,7 @@ describe("POST /api/v1/posts/:post_id/comments", () => {
   });
 });
 
-describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
+describeEE("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
   beforeAll(() => {
     vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
   });
@@ -398,7 +399,7 @@ describe("PUT /api/v1/posts/:post_id/comments/:comment_id", () => {
   });
 });
 
-describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
+describeEE("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
   beforeAll(() => {
     vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
   });
@@ -504,7 +505,7 @@ describe("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
   });
 });
 
-describe("GET /api/v1/posts/:post_id/activity", () => {
+describeEE("GET /api/v1/posts/:post_id/activity", () => {
   beforeAll(() => {
     vi.spyOn(labsService, "isFeatureEnabled").mockResolvedValue(true);
   });

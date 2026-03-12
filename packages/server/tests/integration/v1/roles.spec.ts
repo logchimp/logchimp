@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeAll } from "vitest";
+import { expect, it, beforeAll } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
@@ -11,12 +11,13 @@ import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { toSlug } from "../../../src/helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../src/constants";
+import { describeEE } from "../../utils/skipEE";
 
 const roleIdSlug = toSlug(faker.commerce.productName());
 const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
-describe("GET /api/v1/roles", () => {
+describeEE("GET /api/v1/roles", () => {
   let authUser: IAuthUser;
   beforeAll(async () => {
     await database.transaction(async (trx) => {
@@ -236,7 +237,7 @@ describe("GET /api/v1/roles", () => {
   });
 });
 
-describe("POST /api/v1/roles", () => {
+describeEE("POST /api/v1/roles", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/roles");
 
@@ -275,7 +276,7 @@ describe("POST /api/v1/roles", () => {
   });
 });
 
-describe("PATCH /api/v1/roles", () => {
+describeEE("PATCH /api/v1/roles", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).patch("/api/v1/roles");
 
@@ -349,7 +350,7 @@ describe("PATCH /api/v1/roles", () => {
 // TODO: implement this API first
 // describe("DELETE /api/v1/roles", () => {});
 
-describe("GET /api/v1/roles/:id", () => {
+describeEE("GET /api/v1/roles/:id", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get(`/api/v1/roles/${uuid()}`);
 
@@ -462,7 +463,7 @@ describe("GET /api/v1/roles/:id", () => {
   });
 });
 
-describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
+describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).put(
       `/api/v1/roles/${uuid()}/users/${uuid()}`,
@@ -628,7 +629,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
   });
 });
 
-describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
+describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).delete(
       `/api/v1/roles/${uuid()}/users/${uuid()}`,
