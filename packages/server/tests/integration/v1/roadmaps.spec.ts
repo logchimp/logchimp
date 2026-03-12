@@ -14,7 +14,7 @@ import database from "../../../src/database";
 
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import { describeEE } from "../../utils/skipEE";
+import { describeEE, itEE } from "../../utils/skipEE";
 
 // Get all roadmaps
 describeEE("GET /api/v1/roadmaps", () => {
@@ -53,7 +53,7 @@ describeEE("GET /api/v1/roadmaps", () => {
     expect(res.body.total_count).toBe(10);
   });
 
-  describe("'?first=' param", () => {
+  describeEE("'?first=' param", () => {
     it("should return default list when no '?first=' param", async () => {
       const res = await supertest(app).get("/api/v1/roadmaps");
 
@@ -156,7 +156,7 @@ describeEE("GET /api/v1/roadmaps", () => {
     });
   });
 
-  describe("'?after=' param", () => {
+  describeEE("'?after=' param", () => {
     it("should handle cursor pagination correctly", async () => {
       const res1 = await supertest(app)
         .get("/api/v1/roadmaps")
@@ -204,7 +204,7 @@ describeEE("GET /api/v1/roadmaps", () => {
     });
   });
 
-  describe("'?visibility=' param", () => {
+  describeEE("'?visibility=' param", () => {
     it("should set default '?visibility=public' without permission", async () => {
       const resPrivate = await supertest(app).get("/api/v1/roadmaps").query({
         visibility: "private",
@@ -625,7 +625,7 @@ describeEE("PATCH /api/v1/roadmaps", () => {
     expect(response.body.code).toEqual("ROADMAP_ID_OR_URL_MISSING");
   });
 
-  describe("Validation Errors", () => {
+  describeEE("Validation Errors", () => {
     const testCases = [
       {
         testName: "ROADMAP_NAME_MISSING",
@@ -687,63 +687,61 @@ describeEE("PATCH /api/v1/roadmaps", () => {
       },
     ];
 
-    it.each(testCases)("should throw error $testName", async ({
-      omitField,
-      overrideFields,
-      expectedError,
-      expectedStatus,
-    }) => {
-      const { user } = await createUser({
-        isVerified: true,
-      });
-      await createRoleWithPermissions(user.userId, ["roadmap:update"], {
-        roleName: "Roadmap update",
-      });
-      const r1 = await generateRoadmap({}, true);
-      const roadmap = await generateRoadmap({}, false);
-
-      const requestBody: IUpdateRoadmapRequestBody = {
-        id: r1.id,
-        name: roadmap.name,
-        url: roadmap.url,
-        color: roadmap.color,
-        display: roadmap.display,
-      };
-
-      // Omit field if specified
-      if (Array.isArray(omitField)) {
-        omitField.forEach((field) => {
-          requestBody[field] = undefined;
+    itEE.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const { user } = await createUser({
+          isVerified: true,
         });
-      } else if (omitField) {
-        requestBody[omitField] = undefined;
-      }
+        await createRoleWithPermissions(user.userId, ["roadmap:update"], {
+          roleName: "Roadmap update",
+        });
+        const r1 = await generateRoadmap({}, true);
+        const roadmap = await generateRoadmap({}, false);
 
-      // Override fields if specified
-      if (overrideFields) {
-        Object.assign(requestBody, overrideFields);
-      }
+        const requestBody: IUpdateRoadmapRequestBody = {
+          id: r1.id,
+          name: roadmap.name,
+          url: roadmap.url,
+          color: roadmap.color,
+          display: roadmap.display,
+        };
 
-      const response = await supertest(app)
-        .patch("/api/v1/roadmaps")
-        .set("Authorization", `Bearer ${user.authToken}`)
-        .send(requestBody);
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
 
-      expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(expectedStatus);
-      expect(response.body.code).toBe("VALIDATION_ERROR");
-      expect(response.body.message).toBe("Invalid body parameters");
-      expect(response.body.errors).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            ...(expectedError.message && {
-              message: expectedError.message,
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
             }),
-            code: expectedError.code,
-          }),
-        ]),
-      );
-    });
+          ]),
+        );
+      },
+    );
   });
 
   it("should update roadmap", async () => {

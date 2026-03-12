@@ -1,4 +1,4 @@
-import { it, describe, expect, beforeAll } from "vitest";
+import { it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
 import type { IBoardDetail, IBoardUpdateRequestBody } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
@@ -11,7 +11,7 @@ import {
 } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
-import { describeEE } from "../../utils/skipEE";
+import { describeEE, itEE } from "../../utils/skipEE";
 
 // Get all boards
 describeEE("GET /api/v1/boards", () => {
@@ -44,7 +44,7 @@ describeEE("GET /api/v1/boards", () => {
     }
   });
 
-  it("should get an Array of boards", async () => {
+  itEE("should get an Array of boards", async () => {
     const response = await supertest(app).get("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -52,7 +52,7 @@ describeEE("GET /api/v1/boards", () => {
     expect(response.body.boards).toBeInstanceOf(Array);
   });
 
-  it("should get filtered boards in default filter values", async () => {
+  itEE("should get filtered boards in default filter values", async () => {
     const filterQuery = {
       // default page num is 0
       // page: 0,
@@ -83,7 +83,7 @@ describeEE("GET /api/v1/boards", () => {
     }
   });
 
-  it("should get 5 filtered boards, in page 3, 'DESC' order", async () => {
+  itEE("should get 5 filtered boards, in page 3, 'DESC' order", async () => {
     const response = await supertest(app).get("/api/v1/boards").query({
       page: 2,
       limit: 5,
@@ -107,47 +107,55 @@ describeEE("GET /api/v1/boards", () => {
     }
   });
 
-  describe("Offset pagination", () => {
-    describe("'?page=' param", () => {
-      it("should coerce page=0 and page=-1 to page=1 in offset mode", async () => {
-        const page0 = await supertest(app)
-          .get("/api/v1/boards")
-          .query({ first: 5, page: 0, created: "ASC" });
+  describeEE("Offset pagination", () => {
+    describeEE("'?page=' param", () => {
+      itEE(
+        "should coerce page=0 and page=-1 to page=1 in offset mode",
+        async () => {
+          const page0 = await supertest(app)
+            .get("/api/v1/boards")
+            .query({ first: 5, page: 0, created: "ASC" });
 
-        const pageNeg1 = await supertest(app)
-          .get("/api/v1/boards")
-          .query({ first: 5, page: -1, created: "ASC" });
+          const pageNeg1 = await supertest(app)
+            .get("/api/v1/boards")
+            .query({ first: 5, page: -1, created: "ASC" });
 
-        const page1 = await supertest(app)
-          .get("/api/v1/boards")
-          .query({ first: 5, page: 1, created: "ASC" });
+          const page1 = await supertest(app)
+            .get("/api/v1/boards")
+            .query({ first: 5, page: 1, created: "ASC" });
 
-        const ids0 = page0.body.boards.map((b: IBoardDetail) => b.boardId);
-        const idsNeg1 = pageNeg1.body.boards.map(
-          (b: IBoardDetail) => b.boardId,
-        );
-        const ids1 = page1.body.boards.map((b: IBoardDetail) => b.boardId);
+          const ids0 = page0.body.boards.map((b: IBoardDetail) => b.boardId);
+          const idsNeg1 = pageNeg1.body.boards.map(
+            (b: IBoardDetail) => b.boardId,
+          );
+          const ids1 = page1.body.boards.map((b: IBoardDetail) => b.boardId);
 
-        expect(ids0).toEqual(ids1);
-        expect(idsNeg1).toEqual(ids1);
-      });
+          expect(ids0).toEqual(ids1);
+          expect(idsNeg1).toEqual(ids1);
+        },
+      );
 
-      it("should get an empty boards Array for large '?page=1000'", async () => {
-        const response = await supertest(app).get("/api/v1/boards").query({
-          page: 1000,
-          created: "DESC",
-        });
+      itEE(
+        "should get an empty boards Array for large '?page=1000'",
+        async () => {
+          const response = await supertest(app).get("/api/v1/boards").query({
+            page: 1000,
+            created: "DESC",
+          });
 
-        const responseBoards: IBoardDetail[] = response.body.boards;
+          const responseBoards: IBoardDetail[] = response.body.boards;
 
-        expect(response.headers["content-type"]).toContain("application/json");
-        expect(response.status).toBe(200);
-        expect(responseBoards).toHaveLength(0);
-      });
+          expect(response.headers["content-type"]).toContain(
+            "application/json",
+          );
+          expect(response.status).toBe(200);
+          expect(responseBoards).toHaveLength(0);
+        },
+      );
     });
 
-    describe("'?created=' param", () => {
-      it("should get filtered boards in 'DESC' order", async () => {
+    describeEE("'?created=' param", () => {
+      itEE("should get filtered boards in 'DESC' order", async () => {
         const response = await supertest(app).get("/api/v1/boards").query({
           created: "DESC",
         });
@@ -170,8 +178,8 @@ describeEE("GET /api/v1/boards", () => {
       });
     });
 
-    describe("'?limit=' param", () => {
-      it("should get 2 filtered boards in 'DESC' order", async () => {
+    describeEE("'?limit=' param", () => {
+      itEE("should get 2 filtered boards in 'DESC' order", async () => {
         const response = await supertest(app).get("/api/v1/boards").query({
           limit: 2,
           created: "DESC",
@@ -194,28 +202,33 @@ describeEE("GET /api/v1/boards", () => {
         }
       });
 
-      it("should get 15 boards, fallback to cap value of 10 boards in 'ACS' order", async () => {
-        const response = await supertest(app).get("/api/v1/boards").query({
-          limit: 15,
-          created: "ACS",
-        });
+      itEE(
+        "should get 15 boards, fallback to cap value of 10 boards in 'ACS' order",
+        async () => {
+          const response = await supertest(app).get("/api/v1/boards").query({
+            limit: 15,
+            created: "ACS",
+          });
 
-        const responseBoards: IBoardDetail[] = response.body.boards;
+          const responseBoards: IBoardDetail[] = response.body.boards;
 
-        expect(response.headers["content-type"]).toContain("application/json");
-        expect(response.status).toBe(200);
-        expect(responseBoards).toHaveLength(10);
+          expect(response.headers["content-type"]).toContain(
+            "application/json",
+          );
+          expect(response.status).toBe(200);
+          expect(responseBoards).toHaveLength(10);
 
-        const boardCreationDates = responseBoards.map(
-          (board: IBoardDetail) => new Date(board.createdAt),
-        );
+          const boardCreationDates = responseBoards.map(
+            (board: IBoardDetail) => new Date(board.createdAt),
+          );
 
-        for (let i = 0; i < boardCreationDates.length - 1; i++) {
-          const curr = boardCreationDates[i].getTime();
-          const next = boardCreationDates[i + 1].getTime();
-          expect(curr).to.be.at.most(next);
-        }
-      });
+          for (let i = 0; i < boardCreationDates.length - 1; i++) {
+            const curr = boardCreationDates[i].getTime();
+            const next = boardCreationDates[i + 1].getTime();
+            expect(curr).to.be.at.most(next);
+          }
+        },
+      );
     });
   });
 });
@@ -251,7 +264,7 @@ describeEE("GET /boards/:url", () => {
     }),
   );
 
-  it("should get public board by url [unauth]", async () => {
+  itEE("should get public board by url [unauth]", async () => {
     const board: BoardInsertRecord = await generateBoards(
       {
         display: true,
@@ -271,7 +284,7 @@ describeEE("GET /boards/:url", () => {
     });
   });
 
-  it("should not get private board by url [unauth]", async () => {
+  itEE("should not get private board by url [unauth]", async () => {
     const board: BoardInsertRecord = await generateBoards(
       {
         display: false,
@@ -286,7 +299,7 @@ describeEE("GET /boards/:url", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should get private board by url [auth with board:read]", async () => {
+  itEE("should get private board by url [auth with board:read]", async () => {
     const board: BoardInsertRecord = await generateBoards(
       { display: false },
       true,
@@ -316,7 +329,7 @@ describeEE("GET /boards/search/:name", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error not having 'board:read' permission", async () => {
+  itEE("should throw error not having 'board:read' permission", async () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -439,7 +452,7 @@ describeEE("POST /api/v1/boards", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -451,7 +464,7 @@ describeEE("POST /api/v1/boards", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw error not having 'board:create' permission", async () => {
+  itEE("should throw error not having 'board:create' permission", async () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -463,7 +476,7 @@ describeEE("POST /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should create a board", async () => {
+  itEE("should create a board", async () => {
     const board: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
 
@@ -486,7 +499,7 @@ describeEE("POST /api/v1/boards", () => {
     expect(boardResponse.display).toBe(board.display);
   });
 
-  it("should create a board without a name", async () => {
+  itEE("should create a board without a name", async () => {
     const { user: authUser } = await createUser();
     const display = Math.random() >= 0.5;
 
@@ -518,7 +531,7 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -530,7 +543,7 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw error 'BOARD_NOT_FOUND'", async () => {
+  itEE("should throw error 'BOARD_NOT_FOUND'", async () => {
     const { user: authUser } = await createUser();
 
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
@@ -549,7 +562,7 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("BOARD_NOT_FOUND");
   });
 
-  it("should throw error not having 'board:update' permission", async () => {
+  itEE("should throw error not having 'board:update' permission", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
@@ -565,7 +578,7 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should throw error 'BOARD_ID_OR_URL_MISSING'", async () => {
+  itEE("should throw error 'BOARD_ID_OR_URL_MISSING'", async () => {
     const { user: authUser } = await createUser();
     await createRoleWithPermissions(authUser.userId, ["board:update"], {
       roleName: "Board Patcher",
@@ -581,7 +594,7 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(response.body.code).toBe("BOARD_ID_OR_URL_MISSING");
   });
 
-  describe("Validation Errors", () => {
+  describeEE("Validation Errors", () => {
     const testCases = [
       {
         testName: "BOARD_NAME_MISSING",
@@ -663,92 +676,93 @@ describeEE("PATCH /api/v1/boards", () => {
       },
     ];
 
-    it.each(testCases)("should throw error $testName", async ({
-      omitField,
-      overrideFields,
-      expectedError,
-      expectedStatus,
-    }) => {
-      const board = await generateBoards({}, true);
-      const newBoard = await generateBoards({}, false);
+    itEE.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoards({}, true);
+        const newBoard = await generateBoards({}, false);
+        const { user: authUser } = await createUser();
+        await createRoleWithPermissions(authUser.userId, ["board:update"], {
+          roleName: "Board Patcher",
+        });
+
+        // Build the request body
+        const requestBody: IBoardUpdateRequestBody = {
+          boardId: board.boardId,
+          name: newBoard.name,
+          url: newBoard.url,
+          color: newBoard.color,
+          view_voters: newBoard.view_voters,
+          display: newBoard.display,
+        };
+
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
+
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
+
+        const response = await supertest(app)
+          .patch("/api/v1/boards")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send(requestBody);
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
+            }),
+          ]),
+        );
+      },
+    );
+  });
+
+  itEE(
+    "should throw error 'BOARD_URL_EXISTS' for updating same board URL",
+    async () => {
       const { user: authUser } = await createUser();
+      const preExistingBoard = await generateBoards({}, true);
+      const board = await generateBoards({}, true);
+
       await createRoleWithPermissions(authUser.userId, ["board:update"], {
         roleName: "Board Patcher",
       });
 
-      // Build the request body
-      const requestBody: IBoardUpdateRequestBody = {
-        boardId: board.boardId,
-        name: newBoard.name,
-        url: newBoard.url,
-        color: newBoard.color,
-        view_voters: newBoard.view_voters,
-        display: newBoard.display,
-      };
-
-      // Omit field if specified
-      if (Array.isArray(omitField)) {
-        omitField.forEach((field) => {
-          requestBody[field] = undefined;
-        });
-      } else if (omitField) {
-        requestBody[omitField] = undefined;
-      }
-
-      // Override fields if specified
-      if (overrideFields) {
-        Object.assign(requestBody, overrideFields);
-      }
-
       const response = await supertest(app)
         .patch("/api/v1/boards")
         .set("Authorization", `Bearer ${authUser.authToken}`)
-        .send(requestBody);
+        .send({
+          boardId: board.boardId,
+          name: board.name,
+          color: board.color,
+          view_voters: board.view_voters,
+          display: board.display,
+          url: preExistingBoard.url,
+        });
 
       expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(expectedStatus);
-      expect(response.body.code).toBe("VALIDATION_ERROR");
-      expect(response.body.message).toBe("Invalid body parameters");
-      expect(response.body.errors).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            ...(expectedError.message && {
-              message: expectedError.message,
-            }),
-            code: expectedError.code,
-          }),
-        ]),
-      );
-    });
-  });
+      expect(response.status).toBe(409);
+      expect(response.body.code).toBe("BOARD_URL_EXISTS");
+    },
+  );
 
-  it("should throw error 'BOARD_URL_EXISTS' for updating same board URL", async () => {
-    const { user: authUser } = await createUser();
-    const preExistingBoard = await generateBoards({}, true);
-    const board = await generateBoards({}, true);
-
-    await createRoleWithPermissions(authUser.userId, ["board:update"], {
-      roleName: "Board Patcher",
-    });
-
-    const response = await supertest(app)
-      .patch("/api/v1/boards")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        boardId: board.boardId,
-        name: board.name,
-        color: board.color,
-        view_voters: board.view_voters,
-        display: board.display,
-        url: preExistingBoard.url,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(409);
-    expect(response.body.code).toBe("BOARD_URL_EXISTS");
-  });
-
-  it("should UPDATE board", async () => {
+  itEE("should UPDATE board", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const newBoard: BoardInsertRecord = await generateBoards({}, false);
     const { user: authUser } = await createUser();
@@ -784,7 +798,7 @@ describeEE("PATCH /api/v1/boards", () => {
 
 // Delete boards by id
 describeEE("DELETE /api/v1/boards", () => {
-  it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
+  itEE("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
     const board = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
@@ -800,7 +814,7 @@ describeEE("DELETE /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should delete the board", async () => {
+  itEE("should delete the board", async () => {
     const board = await generateBoards({}, true);
     const { user: authUser } = await createUser();
 
@@ -831,7 +845,7 @@ describeEE("POST /api/v1/boards/check-slug", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
+  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT'", async () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -843,7 +857,7 @@ describeEE("POST /api/v1/boards/check-slug", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
   });
 
-  it("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
+  itEE("should throw error 'NOT_ENOUGH_PERMISSION'", async () => {
     const { user: authUser } = await createUser();
 
     const response = await supertest(app)
@@ -855,7 +869,7 @@ describeEE("POST /api/v1/boards/check-slug", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should throw error 'BOARD_URL_MISSING'", async () => {
+  itEE("should throw error 'BOARD_URL_MISSING'", async () => {
     const { user: authUser } = await createUser();
 
     await createRoleWithPermissions(
@@ -875,29 +889,32 @@ describeEE("POST /api/v1/boards/check-slug", () => {
     expect(response.body.code).toBe("BOARD_URL_MISSING");
   });
 
-  it("should return '{ available: false}' for board url that already exists", async () => {
-    const { user: authUser } = await createUser();
+  itEE(
+    "should return '{ available: false}' for board url that already exists",
+    async () => {
+      const { user: authUser } = await createUser();
 
-    await createRoleWithPermissions(
-      authUser.userId,
-      ["board:create", "board:update"],
-      {
-        roleName: "Board contributor",
-      },
-    );
+      await createRoleWithPermissions(
+        authUser.userId,
+        ["board:create", "board:update"],
+        {
+          roleName: "Board contributor",
+        },
+      );
 
-    const board = await generateBoards({}, true);
-    const response = await supertest(app)
-      .post("/api/v1/boards/check-slug")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        url: board.url,
-      });
+      const board = await generateBoards({}, true);
+      const response = await supertest(app)
+        .post("/api/v1/boards/check-slug")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          url: board.url,
+        });
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-    expect(response.body.available).toBeFalsy();
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+      expect(response.body.available).toBeFalsy();
+    },
+  );
 
   it.skip("should return '{ available: true}' for board url that doesn't exists", async () => {
     const { user: authUser } = await createUser();

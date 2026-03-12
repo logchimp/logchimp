@@ -11,7 +11,7 @@ import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { toSlug } from "../../../src/helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../src/constants";
-import { describeEE } from "../../utils/skipEE";
+import { describeEE, itEE } from "../../utils/skipEE";
 
 const roleIdSlug = toSlug(faker.commerce.productName());
 const userIdSlug = toSlug(faker.commerce.productName());
@@ -55,7 +55,7 @@ describeEE("GET /api/v1/roles", () => {
     expect(response.body.roles).toHaveLength(0);
   });
 
-  it("should not have permission 'role:read'", async () => {
+  itEE("should not have permission 'role:read'", async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -67,8 +67,8 @@ describeEE("GET /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  describe("'?first=' param", () => {
-    it("should return default list when no '?first=' param", async () => {
+  describeEE("'?first=' param", () => {
+    itEE("should return default list when no '?first=' param", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .set("Authorization", `Bearer ${authUser.authToken}`);
@@ -98,7 +98,7 @@ describeEE("GET /api/v1/roles", () => {
       // expect(res.body.total_count).toBe(15);
     });
 
-    it("should return 5 items per page with '?first=5'", async () => {
+    itEE("should return 5 items per page with '?first=5'", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 5 })
@@ -129,7 +129,7 @@ describeEE("GET /api/v1/roles", () => {
       // expect(res.body.total_count).toBe(10);
     });
 
-    it("should cap the '?first=' param value with 10 max items", async () => {
+    itEE("should cap the '?first=' param value with 10 max items", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 25 })
@@ -156,7 +156,7 @@ describeEE("GET /api/v1/roles", () => {
       );
     });
 
-    it("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
+    itEE("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
       const response = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 0 })
@@ -172,8 +172,8 @@ describeEE("GET /api/v1/roles", () => {
     });
   });
 
-  describe("'?after=' param", () => {
-    it("should handle cursor pagination correctly", async () => {
+  describeEE("'?after=' param", () => {
+    itEE("should handle cursor pagination correctly", async () => {
       const res1 = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 3 })
@@ -203,7 +203,7 @@ describeEE("GET /api/v1/roles", () => {
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
-    it("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
+    itEE("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({
@@ -218,7 +218,7 @@ describeEE("GET /api/v1/roles", () => {
       expect(res.body.errors).toBeDefined();
     });
 
-    it("should handle empty '?after=' param gracefully", async () => {
+    itEE("should handle empty '?after=' param gracefully", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({
@@ -246,7 +246,7 @@ describeEE("POST /api/v1/roles", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should not have permission 'role:create'", async () => {
+  itEE("should not have permission 'role:create'", async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -258,7 +258,7 @@ describeEE("POST /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should create a role with default values", async () => {
+  itEE("should create a role with default values", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:create"], {
       roleName: "Role creator",
@@ -285,7 +285,7 @@ describeEE("PATCH /api/v1/roles", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should not have permission 'role:update'", async () => {
+  itEE("should not have permission 'role:update'", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -316,7 +316,7 @@ describeEE("PATCH /api/v1/roles", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
-  it("should update role", async () => {
+  itEE("should update role", async () => {
     const { user } = await createUser();
     const role = await createRoleWithPermissions(user.userId, ["role:update"], {
       roleName: "Role update",
@@ -348,7 +348,7 @@ describeEE("PATCH /api/v1/roles", () => {
 });
 
 // TODO: implement this API first
-// describe("DELETE /api/v1/roles", () => {});
+// describeEE("DELETE /api/v1/roles", () => {});
 
 describeEE("GET /api/v1/roles/:id", () => {
   it('should throw error "INVALID_AUTH_HEADER"', async () => {
@@ -359,7 +359,7 @@ describeEE("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
     const { user: authUser } = await createUser({ isVerified: true });
 
     const response = await supertest(app)
@@ -394,7 +394,7 @@ describeEE("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
-  it("should not have permission 'role:read'", async () => {
+  itEE("should not have permission 'role:read'", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -407,7 +407,7 @@ describeEE("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should get role by ID and empty permissions list", async () => {
+  itEE("should get role by ID and empty permissions list", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:read"], {
       roleName: "Role reader",
@@ -428,7 +428,7 @@ describeEE("GET /api/v1/roles/:id", () => {
     expect(response.body.role.permissions).toStrictEqual([]);
   });
 
-  it("should get role by ID with permissions", async () => {
+  itEE("should get role by ID with permissions", async () => {
     const { user } = await createUser();
     const permissions: TPermission[] = [
       "post:read",
@@ -474,7 +474,7 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
     const { user: authUser } = await createUser({ isVerified: true });
 
     const response = await supertest(app)
@@ -576,7 +576,7 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("DECODE_URI_ERROR");
   });
 
-  it("should not have 'role:assign' permission", async () => {
+  itEE("should not have 'role:assign' permission", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -589,7 +589,7 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should assign role to new user", async () => {
+  itEE("should assign role to new user", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:assign"], {
       roleName: "Role assigner",
@@ -608,7 +608,7 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.name).toBe(generatedRole.name);
   });
 
-  it("should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user", async () => {
+  itEE("should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:assign"], {
       roleName: "Role assigner",
@@ -640,7 +640,7 @@ describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
+  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
     const { user: authUser } = await createUser({ isVerified: true });
 
     const response = await supertest(app)
@@ -743,7 +743,7 @@ describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("DECODE_URI_ERROR");
   });
 
-  it("should not have 'role:unassign' permission", async () => {
+  itEE("should not have 'role:unassign' permission", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -756,7 +756,7 @@ describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should unassign role to new user", async () => {
+  itEE("should unassign role to new user", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
       roleName: "Role assigner",
