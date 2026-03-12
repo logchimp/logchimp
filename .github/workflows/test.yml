@@ -205,6 +205,8 @@ jobs:
           pnpm knex --knexfile ./src/database/config.ts seed:run;
 
       - name: Testing
+        env:
+          SKIP_EE_TESTS: ${{ secrets.LC_SUBMODULES_TOKEN == '' && 'true' || 'false' }}
         run: pnpm --filter @logchimp/api test:integration --retry 1
 
       - name: Output logs
