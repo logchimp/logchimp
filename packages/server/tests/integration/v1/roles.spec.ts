@@ -203,20 +203,23 @@ describeEE("GET /api/v1/roles", () => {
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
-    itEE("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
-      const res = await supertest(app)
-        .get("/api/v1/roles")
-        .query({
-          first: 3,
-          after: "invalid-uuid",
-        })
-        .set("Authorization", `Bearer ${authUser.authToken}`);
+    itEE(
+      "should throw 'VALIDATION_ERROR' error for invalid '?after=' param",
+      async () => {
+        const res = await supertest(app)
+          .get("/api/v1/roles")
+          .query({
+            first: 3,
+            after: "invalid-uuid",
+          })
+          .set("Authorization", `Bearer ${authUser.authToken}`);
 
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(400);
-      expect(res.body.code).toBe("VALIDATION_ERROR");
-      expect(res.body.errors).toBeDefined();
-    });
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe("VALIDATION_ERROR");
+        expect(res.body.errors).toBeDefined();
+      },
+    );
 
     itEE("should handle empty '?after=' param gracefully", async () => {
       const res = await supertest(app)
@@ -359,17 +362,20 @@ describeEE("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
+  itEE(
+    "should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
 
-    const response = await supertest(app)
-      .get(`/api/v1/roles/${uuid()}`)
-      .set("Authorization", `Beare${authUser.authToken}`);
+      const response = await supertest(app)
+        .get(`/api/v1/roles/${uuid()}`)
+        .set("Authorization", `Beare${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+    },
+  );
 
   it(`should throw error "DECODE_URI_ERROR" with :id as "*&^(*&$%&*^&%&^%*"`, async () => {
     const response = await supertest(app).delete(
@@ -474,17 +480,20 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
+  itEE(
+    "should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
 
-    const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
-      .set("Authorization", `Beare${authUser.authToken}`);
+      const response = await supertest(app)
+        .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+        .set("Authorization", `Beare${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+    },
+  );
 
   [
     undefined,
@@ -608,25 +617,28 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.name).toBe(generatedRole.name);
   });
 
-  itEE("should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user", async () => {
-    const { user } = await createUser();
-    await createRoleWithPermissions(user.userId, ["role:assign"], {
-      roleName: "Role assigner",
-    });
-    const generatedRole = await generateRole();
+  itEE(
+    "should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user",
+    async () => {
+      const { user } = await createUser();
+      await createRoleWithPermissions(user.userId, ["role:assign"], {
+        roleName: "Role assigner",
+      });
+      const generatedRole = await generateRole();
 
-    await supertest(app)
-      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
-    const response = await supertest(app)
-      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
+      await supertest(app)
+        .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+      const response = await supertest(app)
+        .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(409);
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(409);
 
-    expect(response.body.success).toBe(0);
-  });
+      expect(response.body.success).toBe(0);
+    },
+  );
 });
 
 describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
@@ -640,17 +652,20 @@ describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  itEE("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
+  itEE(
+    "should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
 
-    const response = await supertest(app)
-      .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
-      .set("Authorization", `Beare${authUser.authToken}`);
+      const response = await supertest(app)
+        .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+        .set("Authorization", `Beare${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+    },
+  );
 
   [
     undefined,
