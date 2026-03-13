@@ -20,7 +20,7 @@
 				<span
 					v-if="activity.comment.is_edited"
 					class="text-xs text-neutral-500"
-					:title="dayjs(activity.comment.updated_at).format('dddd, DD MMMM YYYY hh:mm')"
+					:title="activity.comment.updated_at ? dayjs(activity.comment.updated_at).format('dddd, DD MMMM YYYY hh:mm') : undefined"
 				>
 					(edited)
 				</span>
