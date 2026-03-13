@@ -38,7 +38,7 @@ describeEE("GET /api/v1/roadmaps", () => {
     expect(response.body.roadmaps).toHaveLength(0);
   });
 
-  it.skip("should return correct data for last page", async () => {
+  itEE.skip("should return correct data for last page", async () => {
     const res = await supertest(app)
       .get("/api/v1/roadmaps")
       .query({ first: 20 });
@@ -54,7 +54,7 @@ describeEE("GET /api/v1/roadmaps", () => {
   });
 
   describeEE("'?first=' param", () => {
-    it("should return default list when no '?first=' param", async () => {
+    itEE("should return default list when no '?first=' param", async () => {
       const res = await supertest(app).get("/api/v1/roadmaps");
 
       const firstItem: IRoadmapPrivate = res.body.results[0];
@@ -83,7 +83,7 @@ describeEE("GET /api/v1/roadmaps", () => {
       // expect(res.body.total_count).toBe(15);
     });
 
-    it("should return 5 items per page with '?first=5'", async () => {
+    itEE("should return 5 items per page with '?first=5'", async () => {
       const res = await supertest(app)
         .get("/api/v1/roadmaps")
         .query({ first: 5 });
@@ -114,7 +114,7 @@ describeEE("GET /api/v1/roadmaps", () => {
       // expect(res.body.total_count).toBe(10);
     });
 
-    it("should cap the '?first=' param value with 20 max items", async () => {
+    itEE("should cap the '?first=' param value with 20 max items", async () => {
       const res = await supertest(app)
         .get("/api/v1/roadmaps")
         .query({ first: 25 });
@@ -141,7 +141,7 @@ describeEE("GET /api/v1/roadmaps", () => {
       );
     });
 
-    it("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
+    itEE("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
       const response = await supertest(app)
         .get("/api/v1/roadmaps")
         .query({ first: 0 });
@@ -157,7 +157,7 @@ describeEE("GET /api/v1/roadmaps", () => {
   });
 
   describeEE("'?after=' param", () => {
-    it("should handle cursor pagination correctly", async () => {
+    itEE("should handle cursor pagination correctly", async () => {
       const res1 = await supertest(app)
         .get("/api/v1/roadmaps")
         .query({ first: 3 });
@@ -179,18 +179,21 @@ describeEE("GET /api/v1/roadmaps", () => {
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
-    it("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
-      const res = await supertest(app).get("/api/v1/roadmaps").query({
-        after: "invalid-uuid",
-      });
+    itEE(
+      "should throw 'VALIDATION_ERROR' error for invalid '?after=' param",
+      async () => {
+        const res = await supertest(app).get("/api/v1/roadmaps").query({
+          after: "invalid-uuid",
+        });
 
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(400);
-      expect(res.body.code).toBe("VALIDATION_ERROR");
-      expect(res.body.errors).toBeDefined();
-    });
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe("VALIDATION_ERROR");
+        expect(res.body.errors).toBeDefined();
+      },
+    );
 
-    it("should handle empty '?after=' param gracefully", async () => {
+    itEE("should handle empty '?after=' param gracefully", async () => {
       const res = await supertest(app).get("/api/v1/roadmaps").query({
         after: "",
       });
@@ -205,123 +208,141 @@ describeEE("GET /api/v1/roadmaps", () => {
   });
 
   describeEE("'?visibility=' param", () => {
-    it("should set default '?visibility=public' without permission", async () => {
-      const resPrivate = await supertest(app).get("/api/v1/roadmaps").query({
-        visibility: "private",
-        first: 10,
-      });
+    itEE(
+      "should set default '?visibility=public' without permission",
+      async () => {
+        const resPrivate = await supertest(app).get("/api/v1/roadmaps").query({
+          visibility: "private",
+          first: 10,
+        });
 
-      expect(resPrivate.headers["content-type"]).toContain("application/json");
-      expect(resPrivate.status).toBe(200);
+        expect(resPrivate.headers["content-type"]).toContain(
+          "application/json",
+        );
+        expect(resPrivate.status).toBe(200);
 
-      expect(Array.isArray(resPrivate.body.results)).toBeTruthy();
-      expect(resPrivate.body.total_count).toBeGreaterThanOrEqual(
-        resPrivate.body.results.length,
-      );
+        expect(Array.isArray(resPrivate.body.results)).toBeTruthy();
+        expect(resPrivate.body.total_count).toBeGreaterThanOrEqual(
+          resPrivate.body.results.length,
+        );
 
-      expect(
-        resPrivate.body.results.every(
-          (r: IRoadmapPrivate) => r.display === true,
-        ),
-      ).toBeTruthy();
+        expect(
+          resPrivate.body.results.every(
+            (r: IRoadmapPrivate) => r.display === true,
+          ),
+        ).toBeTruthy();
 
-      // expect(resPrivate.body.total_count).toBe(10);
-      // expect(resPrivate.body.page_info.has_next_page).toBe(false);
+        // expect(resPrivate.body.total_count).toBe(10);
+        // expect(resPrivate.body.page_info.has_next_page).toBe(false);
 
-      const resBoth = await supertest(app).get("/api/v1/roadmaps").query({
-        visibility: "public",
-        first: 10,
-      });
-      expect(resBoth.headers["content-type"]).toContain("application/json");
-      expect(resBoth.status).toBe(200);
+        const resBoth = await supertest(app).get("/api/v1/roadmaps").query({
+          visibility: "public",
+          first: 10,
+        });
+        expect(resBoth.headers["content-type"]).toContain("application/json");
+        expect(resBoth.status).toBe(200);
 
-      expect(
-        resBoth.body.results.every((r: IRoadmapPrivate) => r.display === true),
-      ).toBeTruthy();
+        expect(
+          resBoth.body.results.every(
+            (r: IRoadmapPrivate) => r.display === true,
+          ),
+        ).toBeTruthy();
 
-      // expect(resBoth.body.total_count).toBe(10);
-    });
+        // expect(resBoth.body.total_count).toBe(10);
+      },
+    );
 
-    it("should get roadmaps '?visibility=public' without permission", async () => {
-      const res = await supertest(app)
-        .get("/api/v1/roadmaps")
-        .query({ visibility: "public" });
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(200);
-      // expect(res.body.total_count).toBe(10);
-      expect(
-        res.body.results.every((r: IRoadmapPrivate) => r.display === true),
-      ).toBeTruthy();
-    });
+    itEE(
+      "should get roadmaps '?visibility=public' without permission",
+      async () => {
+        const res = await supertest(app)
+          .get("/api/v1/roadmaps")
+          .query({ visibility: "public" });
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(200);
+        // expect(res.body.total_count).toBe(10);
+        expect(
+          res.body.results.every((r: IRoadmapPrivate) => r.display === true),
+        ).toBeTruthy();
+      },
+    );
 
-    it("should apply '?visibility=private' filter with permission", async () => {
-      const { user } = await createUser({ isVerified: true });
-      await createRoleWithPermissions(user.userId, ["roadmap:read"], {
-        roleName: "Roadmap Reader",
-      });
+    itEE(
+      "should apply '?visibility=private' filter with permission",
+      async () => {
+        const { user } = await createUser({ isVerified: true });
+        await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+          roleName: "Roadmap Reader",
+        });
 
-      const resPrivate = await supertest(app)
-        .get("/api/v1/roadmaps")
-        .set("Authorization", `Bearer ${user.authToken}`)
-        .query({ visibility: "private" });
+        const resPrivate = await supertest(app)
+          .get("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .query({ visibility: "private" });
 
-      expect(resPrivate.headers["content-type"]).toContain("application/json");
-      expect(resPrivate.status).toBe(200);
-      // expect(resPrivate.body.total_count).toBe(5);
-      expect(
-        resPrivate.body.results.every(
-          (r: IRoadmapPrivate) => r.display === false,
-        ),
-      ).toBeTruthy();
+        expect(resPrivate.headers["content-type"]).toContain(
+          "application/json",
+        );
+        expect(resPrivate.status).toBe(200);
+        // expect(resPrivate.body.total_count).toBe(5);
+        expect(
+          resPrivate.body.results.every(
+            (r: IRoadmapPrivate) => r.display === false,
+          ),
+        ).toBeTruthy();
 
-      const resPublic = await supertest(app)
-        .get("/api/v1/roadmaps")
-        .set("Authorization", `Bearer ${user.authToken}`)
-        .query({ visibility: "public" });
+        const resPublic = await supertest(app)
+          .get("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .query({ visibility: "public" });
 
-      expect(resPublic.headers["content-type"]).toContain("application/json");
-      expect(resPublic.status).toBe(200);
-      // expect(resPublic.body.total_count).toBe(10);
-      expect(
-        resPublic.body.results.every(
-          (r: IRoadmapPrivate) => r.display === true,
-        ),
-      ).toBeTruthy();
+        expect(resPublic.headers["content-type"]).toContain("application/json");
+        expect(resPublic.status).toBe(200);
+        // expect(resPublic.body.total_count).toBe(10);
+        expect(
+          resPublic.body.results.every(
+            (r: IRoadmapPrivate) => r.display === true,
+          ),
+        ).toBeTruthy();
 
-      const resBoth = await supertest(app)
-        .get("/api/v1/roadmaps")
-        .set("Authorization", `Bearer ${user.authToken}`)
-        .query({ visibility: "public,private" });
+        const resBoth = await supertest(app)
+          .get("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .query({ visibility: "public,private" });
 
-      expect(resBoth.headers["content-type"]).toContain("application/json");
-      expect(resBoth.status).toBe(200);
-      // expect(resBoth.body.total_count).toBe(15);
-    });
+        expect(resBoth.headers["content-type"]).toContain("application/json");
+        expect(resBoth.status).toBe(200);
+        // expect(resBoth.body.total_count).toBe(15);
+      },
+    );
 
-    it("should calculate 'has_next_page' correctly with '?visibility=' filters", async () => {
-      // Page 1
-      const page1 = await supertest(app).get("/api/v1/roadmaps").query({
-        first: 6,
-      });
+    itEE(
+      "should calculate 'has_next_page' correctly with '?visibility=' filters",
+      async () => {
+        // Page 1
+        const page1 = await supertest(app).get("/api/v1/roadmaps").query({
+          first: 6,
+        });
 
-      expect(page1.headers["content-type"]).toContain("application/json");
-      expect(page1.status).toBe(200);
-      expect(page1.body.page_info.count).toBe(6);
-      expect(page1.body.page_info.has_next_page).toBe(true);
+        expect(page1.headers["content-type"]).toContain("application/json");
+        expect(page1.status).toBe(200);
+        expect(page1.body.page_info.count).toBe(6);
+        expect(page1.body.page_info.has_next_page).toBe(true);
 
-      // Page 2
-      const after = page1.body.page_info.end_cursor;
-      const page2 = await supertest(app).get("/api/v1/roadmaps").query({
-        first: 6,
-        after,
-      });
+        // Page 2
+        const after = page1.body.page_info.end_cursor;
+        const page2 = await supertest(app).get("/api/v1/roadmaps").query({
+          first: 6,
+          after,
+        });
 
-      expect(page2.headers["content-type"]).toContain("application/json");
-      expect(page2.status).toBe(200);
-      // remaining 4 public
-      // expect(page2.body.page_info.count).toBe(4);
-      // expect(page2.body.page_info.has_next_page).toBe(false);
-    });
+        expect(page2.headers["content-type"]).toContain("application/json");
+        expect(page2.status).toBe(200);
+        // remaining 4 public
+        // expect(page2.body.page_info.count).toBe(4);
+        // expect(page2.body.page_info.has_next_page).toBe(false);
+      },
+    );
   });
 });
 
@@ -338,7 +359,7 @@ describeEE("GET /api/v1/roadmaps/:url", () => {
     "roadmap#with#hash",
     "456575634",
   ].map((name) =>
-    it(`should throw error "ROADMAP_NOT_FOUND" for '${name}'`, async () => {
+    itEE(`should throw error "ROADMAP_NOT_FOUND" for '${name}'`, async () => {
       const res = await supertest(app).get(`/api/v1/roadmaps/${name}`);
 
       expect(res.headers["content-type"]).toContain("application/json");
@@ -348,26 +369,29 @@ describeEE("GET /api/v1/roadmaps/:url", () => {
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
-    it(`should throw error "DECODE_URI_ERROR" for '${name}' roadmap`, async () => {
-      const { user } = await createUser({
-        isVerified: true,
-      });
-      await createRoleWithPermissions(user.userId, ["roadmap:read"], {
-        roleName: "Roadmap Reader",
-      });
+    itEE(
+      `should throw error "DECODE_URI_ERROR" for '${name}' roadmap`,
+      async () => {
+        const { user } = await createUser({
+          isVerified: true,
+        });
+        await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+          roleName: "Roadmap Reader",
+        });
 
-      const response = await supertest(app)
-        .get(`/api/v1/roadmaps/search/${name}`)
-        .set("Authorization", `Bearer ${user.authToken}`);
+        const response = await supertest(app)
+          .get(`/api/v1/roadmaps/search/${name}`)
+          .set("Authorization", `Bearer ${user.authToken}`);
 
-      expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.headers["content-type"]).toContain("application/json");
 
-      expect(response.status).toBe(400);
-      expect(response.body.code).toBe("DECODE_URI_ERROR");
-    }),
+        expect(response.status).toBe(400);
+        expect(response.body.code).toBe("DECODE_URI_ERROR");
+      },
+    ),
   );
 
-  it("should get roadmap by url", async () => {
+  itEE("should get roadmap by url", async () => {
     const roadmapUrl = faker.commerce
       .productName()
       .toLowerCase()
@@ -404,7 +428,7 @@ describeEE("GET /api/v1/roadmaps/:url", () => {
 
 // Search roadmaps by name
 describeEE("GET /api/v1/roadmaps/search/:name", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get(
       "/api/v1/roadmaps/search/completed",
     );
@@ -414,7 +438,7 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error not having 'roadmap:read' permission", async () => {
+  itEE("should throw error not having 'roadmap:read' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -430,7 +454,7 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
 
   ["ROADMAP_NOT_FOUND", "undefined", "null", null, undefined, "456575634"].map(
     (name) =>
-      it(`should get 0 search results for "${name}" roadmaps`, async () => {
+      itEE(`should get 0 search results for "${name}" roadmaps`, async () => {
         const { user } = await createUser({
           isVerified: true,
         });
@@ -451,7 +475,7 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
-    it(`should get 0 search results for "${name}" roadmaps`, async () => {
+    itEE(`should get 0 search results for "${name}" roadmaps`, async () => {
       const { user } = await createUser({
         isVerified: true,
       });
@@ -475,7 +499,7 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     .replace(/[^a-z0-9]+/g, "-")
     .substring(0, 50)
     .replace(/^-+|-+$/g, "");
-  it(`should show 2 "${roadmapName}" matching roadmaps`, async () => {
+  itEE(`should show 2 "${roadmapName}" matching roadmaps`, async () => {
     const r1 = await generateRoadmap(
       {
         name: `${roadmapName}_first`,
@@ -531,28 +555,31 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
 
 // Create new roadmaps
 describeEE("POST /api/v1/roadmaps", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).post("/api/v1/roadmaps");
 
     expect(res.status).toBe(400);
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error not having 'roadmap:create' permission", async () => {
-    const { user: authUser } = await createUser({
-      isVerified: true,
-    });
+  itEE(
+    "should throw error not having 'roadmap:create' permission",
+    async () => {
+      const { user: authUser } = await createUser({
+        isVerified: true,
+      });
 
-    const response = await supertest(app)
-      .post("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`);
+      const response = await supertest(app)
+        .post("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(403);
-    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
+    },
+  );
 
-  it("should create private roadmap with default values", async () => {
+  itEE("should create private roadmap with default values", async () => {
     const { user } = await createUser({
       isVerified: true,
     });
@@ -582,32 +609,35 @@ describeEE("POST /api/v1/roadmaps", () => {
 
 // Update roadmaps
 describeEE("PATCH /api/v1/roadmaps", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).patch("/api/v1/roadmaps");
 
     expect(res.status).toBe(400);
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error not having 'roadmap:update' permission", async () => {
-    const { user: authUser } = await createUser({
-      isVerified: true,
-    });
-    const r1 = await generateRoadmap({}, true);
-
-    const response = await supertest(app)
-      .patch("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        id: r1.id,
+  itEE(
+    "should throw error not having 'roadmap:update' permission",
+    async () => {
+      const { user: authUser } = await createUser({
+        isVerified: true,
       });
+      const r1 = await generateRoadmap({}, true);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(403);
-    expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
-  });
+      const response = await supertest(app)
+        .patch("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          id: r1.id,
+        });
 
-  it("should throw error 'ROADMAP_ID_OR_URL_MISSING'", async () => {
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(403);
+      expect(response.body.code).toEqual("NOT_ENOUGH_PERMISSION");
+    },
+  );
+
+  itEE("should throw error 'ROADMAP_ID_OR_URL_MISSING'", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -744,7 +774,7 @@ describeEE("PATCH /api/v1/roadmaps", () => {
     );
   });
 
-  it("should update roadmap", async () => {
+  itEE("should update roadmap", async () => {
     const { user } = await createUser({
       isVerified: true,
     });
@@ -780,32 +810,35 @@ describeEE("PATCH /api/v1/roadmaps", () => {
 
 // Delete roadmaps
 describeEE("DELETE /api/v1/roadmaps/", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).delete("/api/v1/roadmaps");
 
     expect(res.status).toBe(400);
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error not having 'roadmap:destroy' permission", async () => {
-    const { user: authUser } = await createUser({
-      isVerified: true,
-    });
-    const r1 = await generateRoadmap({}, true);
-
-    const response = await supertest(app)
-      .delete("/api/v1/roadmaps")
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        id: r1.id,
+  itEE(
+    "should throw error not having 'roadmap:destroy' permission",
+    async () => {
+      const { user: authUser } = await createUser({
+        isVerified: true,
       });
+      const r1 = await generateRoadmap({}, true);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(403);
-    expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
-  });
+      const response = await supertest(app)
+        .delete("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          id: r1.id,
+        });
 
-  it('should throw error "ROADMAP_NOT_FOUND"', async () => {
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
+    },
+  );
+
+  itEE('should throw error "ROADMAP_NOT_FOUND"', async () => {
     const { user } = await createUser({
       isVerified: true,
     });
@@ -822,7 +855,7 @@ describeEE("DELETE /api/v1/roadmaps/", () => {
     expect(response.body.code).toBe("ROADMAP_NOT_FOUND");
   });
 
-  it("should delete roadmap", async () => {
+  itEE("should delete roadmap", async () => {
     const { user } = await createUser({
       isVerified: true,
     });
@@ -844,28 +877,31 @@ describeEE("DELETE /api/v1/roadmaps/", () => {
 
 // Sort roadmaps
 describeEE("PATCH /api/v1/roadmaps/sort", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const res = await supertest(app).patch("/api/v1/roadmaps/sort");
 
     expect(res.status).toBe(400);
     expect(res.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error for missing 'roadmap:update' permission", async () => {
-    const { user } = await createUser({ isVerified: true });
-    const from = await generateRoadmap({}, true);
-    const to = await generateRoadmap({}, true);
+  itEE(
+    "should throw error for missing 'roadmap:update' permission",
+    async () => {
+      const { user } = await createUser({ isVerified: true });
+      const from = await generateRoadmap({}, true);
+      const to = await generateRoadmap({}, true);
 
-    const res = await supertest(app)
-      .patch("/api/v1/roadmaps/sort")
-      .set("Authorization", `Bearer ${user.authToken}`)
-      .send({ from, to });
+      const res = await supertest(app)
+        .patch("/api/v1/roadmaps/sort")
+        .set("Authorization", `Bearer ${user.authToken}`)
+        .send({ from, to });
 
-    expect(res.status).toBe(403);
-    expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
-  });
+      expect(res.status).toBe(403);
+      expect(res.body.code).toBe("NOT_ENOUGH_PERMISSION");
+    },
+  );
 
-  it("should return 204 if from.id === to.id", async () => {
+  itEE("should return 204 if from.id === to.id", async () => {
     const { user } = await createUser({ isVerified: true });
     await createRoleWithPermissions(user.userId, ["roadmap:update"], {
       roleName: "roadmap-sort",
@@ -880,7 +916,7 @@ describeEE("PATCH /api/v1/roadmaps/sort", () => {
     expect(res.status).toBe(204);
   });
 
-  it("should successfully swap roadmap indexes", async () => {
+  itEE("should successfully swap roadmap indexes", async () => {
     const { user } = await createUser({ isVerified: true });
     await createRoleWithPermissions(user.userId, ["roadmap:update"], {
       roleName: "roadmap-sort",

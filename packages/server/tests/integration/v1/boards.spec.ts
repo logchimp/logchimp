@@ -247,7 +247,7 @@ describeEE("GET /boards/:url", () => {
     "board#with#hash",
     "a@@@@@@@@",
   ].map((name) =>
-    it(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
+    itEE(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
       const res = await supertest(app).get(`/api/v1/boards/${name}`);
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(404);
@@ -256,12 +256,15 @@ describeEE("GET /boards/:url", () => {
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
-    it(`should throw error "DECODE_URI_ERROR" for '${name}' board`, async () => {
-      const res = await supertest(app).get(`/api/v1/boards/${name}`);
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(400);
-      expect(res.body.code).toBe("DECODE_URI_ERROR");
-    }),
+    itEE(
+      `should throw error "DECODE_URI_ERROR" for '${name}' board`,
+      async () => {
+        const res = await supertest(app).get(`/api/v1/boards/${name}`);
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe("DECODE_URI_ERROR");
+      },
+    ),
   );
 
   itEE("should get public board by url [unauth]", async () => {
@@ -321,7 +324,7 @@ describeEE("GET /boards/:url", () => {
 
 // Search board by name
 describeEE("GET /boards/search/:name", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/boards/search/name");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -353,7 +356,7 @@ describeEE("GET /boards/search/:name", () => {
     "board#with#hash",
     "a@@@@@@@@",
   ].map((name) =>
-    it(`should return 0 search results for '${name}' boards`, async () => {
+    itEE(`should return 0 search results for '${name}' boards`, async () => {
       const { user: authUser } = await createUser();
       await createRoleWithPermissions(authUser.userId, ["board:read"], {
         roleName: "Board Reader",
@@ -370,7 +373,7 @@ describeEE("GET /boards/search/:name", () => {
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
-    it(`should return 0 search results for '${name}' boards`, async () => {
+    itEE(`should return 0 search results for '${name}' boards`, async () => {
       const { user: authUser } = await createUser();
       await createRoleWithPermissions(authUser.userId, ["board:read"], {
         roleName: "Board Reader",
@@ -392,7 +395,7 @@ describeEE("GET /boards/search/:name", () => {
     .replace(/[^a-z0-9]+/g, "-")
     .substring(0, 50)
     .replace(/^-+|-+$/g, "");
-  it(`should show 2 "${boardName}" matching boards`, async () => {
+  itEE(`should show 2 "${boardName}" matching boards`, async () => {
     const board1 = await generateBoards(
       {
         name: `${boardName}_one`,
@@ -444,7 +447,7 @@ describeEE("GET /boards/search/:name", () => {
 
 // Create new boards
 describeEE("POST /api/v1/boards", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -523,7 +526,7 @@ describeEE("POST /api/v1/boards", () => {
 });
 
 describeEE("PATCH /api/v1/boards", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).patch("/api/v1/boards");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -837,7 +840,7 @@ describeEE("DELETE /api/v1/boards", () => {
 
 // Check if a boardUrl exists
 describeEE("POST /api/v1/boards/check-slug", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/boards/check-slug");
 
     expect(response.headers["content-type"]).toContain("application/json");
