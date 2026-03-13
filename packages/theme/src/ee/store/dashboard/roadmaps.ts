@@ -54,7 +54,12 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   function appendRoadmap(roadmap: IRoadmapPrivate) {
-    roadmaps.value.push(roadmap);
+    const existingIdx = roadmaps.value.findIndex((item) => item.id === roadmap.id);
+    if (existingIdx !== -1) {
+      Object.assign(roadmaps.value[existingIdx], roadmap);
+    } else {
+      roadmaps.value.push(roadmap);
+    }
   }
 
   function updateRoadmap(roadmap: IRoadmapPrivate) {
