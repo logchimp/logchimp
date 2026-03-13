@@ -380,7 +380,7 @@ describeEE("GET /api/v1/roles/:id", () => {
   itEE(
     `should throw error "DECODE_URI_ERROR" with :id as "*&^(*&$%&*^&%&^%*"`,
     async () => {
-      const response = await supertest(app).delete(
+      const response = await supertest(app).get(
         `/api/v1/roles/*&^(*&$%&*^&%&^%*`,
       );
 
