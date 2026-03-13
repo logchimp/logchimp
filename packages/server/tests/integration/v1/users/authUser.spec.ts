@@ -36,7 +36,7 @@ describe("GET /api/v1/users/profile", () => {
     expect(response.body.code).toBe("INVALID_TOKEN");
   });
 
-  it("should throw 'SERVER_ERROR' for passing empty JWT token", async () => {
+  it("should throw 'INVALID_TOKEN' for passing empty JWT token", async () => {
     const fakeToken = createToken({}, {});
 
     const response = await supertest(app)
@@ -44,8 +44,8 @@ describe("GET /api/v1/users/profile", () => {
       .set("Authorization", `Bearer ${fakeToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.statusCode).toBe(500);
-    expect(response.body.code).toBe("SERVER_ERROR");
+    expect(response.statusCode).toBe(401);
+    expect(response.body.code).toBe("INVALID_TOKEN");
   });
 
   it("should throw 'USER_NOT_FOUND' error with fake user ID", async () => {
