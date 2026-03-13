@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeAll } from "vitest";
+import { expect, it, beforeAll } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
@@ -11,12 +11,13 @@ import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { toSlug } from "../../../src/helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../src/constants";
+import { describeEE, itEE } from "../../utils/skipEE";
 
 const roleIdSlug = toSlug(faker.commerce.productName());
 const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
-describe("GET /api/v1/roles", () => {
+describeEE("GET /api/v1/roles", () => {
   let authUser: IAuthUser;
   beforeAll(async () => {
     await database.transaction(async (trx) => {
@@ -37,7 +38,7 @@ describe("GET /api/v1/roles", () => {
     });
   });
 
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get("/api/v1/roles");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -54,7 +55,7 @@ describe("GET /api/v1/roles", () => {
     expect(response.body.roles).toHaveLength(0);
   });
 
-  it("should not have permission 'role:read'", async () => {
+  itEE("should not have permission 'role:read'", async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -66,8 +67,8 @@ describe("GET /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  describe("'?first=' param", () => {
-    it("should return default list when no '?first=' param", async () => {
+  describeEE("'?first=' param", () => {
+    itEE("should return default list when no '?first=' param", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .set("Authorization", `Bearer ${authUser.authToken}`);
@@ -97,7 +98,7 @@ describe("GET /api/v1/roles", () => {
       // expect(res.body.total_count).toBe(15);
     });
 
-    it("should return 5 items per page with '?first=5'", async () => {
+    itEE("should return 5 items per page with '?first=5'", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 5 })
@@ -128,7 +129,7 @@ describe("GET /api/v1/roles", () => {
       // expect(res.body.total_count).toBe(10);
     });
 
-    it("should cap the '?first=' param value with 10 max items", async () => {
+    itEE("should cap the '?first=' param value with 10 max items", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 25 })
@@ -155,7 +156,7 @@ describe("GET /api/v1/roles", () => {
       );
     });
 
-    it("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
+    itEE("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
       const response = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 0 })
@@ -171,8 +172,8 @@ describe("GET /api/v1/roles", () => {
     });
   });
 
-  describe("'?after=' param", () => {
-    it("should handle cursor pagination correctly", async () => {
+  describeEE("'?after=' param", () => {
+    itEE("should handle cursor pagination correctly", async () => {
       const res1 = await supertest(app)
         .get("/api/v1/roles")
         .query({ first: 3 })
@@ -202,22 +203,25 @@ describe("GET /api/v1/roles", () => {
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
-    it("should throw 'VALIDATION_ERROR' error for invalid '?after=' param", async () => {
-      const res = await supertest(app)
-        .get("/api/v1/roles")
-        .query({
-          first: 3,
-          after: "invalid-uuid",
-        })
-        .set("Authorization", `Bearer ${authUser.authToken}`);
+    itEE(
+      "should throw 'VALIDATION_ERROR' error for invalid '?after=' param",
+      async () => {
+        const res = await supertest(app)
+          .get("/api/v1/roles")
+          .query({
+            first: 3,
+            after: "invalid-uuid",
+          })
+          .set("Authorization", `Bearer ${authUser.authToken}`);
 
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(400);
-      expect(res.body.code).toBe("VALIDATION_ERROR");
-      expect(res.body.errors).toBeDefined();
-    });
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe("VALIDATION_ERROR");
+        expect(res.body.errors).toBeDefined();
+      },
+    );
 
-    it("should handle empty '?after=' param gracefully", async () => {
+    itEE("should handle empty '?after=' param gracefully", async () => {
       const res = await supertest(app)
         .get("/api/v1/roles")
         .query({
@@ -236,8 +240,8 @@ describe("GET /api/v1/roles", () => {
   });
 });
 
-describe("POST /api/v1/roles", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+describeEE("POST /api/v1/roles", () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).post("/api/v1/roles");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -245,7 +249,7 @@ describe("POST /api/v1/roles", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should not have permission 'role:create'", async () => {
+  itEE("should not have permission 'role:create'", async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -257,7 +261,7 @@ describe("POST /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should create a role with default values", async () => {
+  itEE("should create a role with default values", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:create"], {
       roleName: "Role creator",
@@ -275,8 +279,8 @@ describe("POST /api/v1/roles", () => {
   });
 });
 
-describe("PATCH /api/v1/roles", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+describeEE("PATCH /api/v1/roles", () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).patch("/api/v1/roles");
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -284,7 +288,7 @@ describe("PATCH /api/v1/roles", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should not have permission 'role:update'", async () => {
+  itEE("should not have permission 'role:update'", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -300,7 +304,7 @@ describe("PATCH /api/v1/roles", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it('should throw error "ROLE_NOT_FOUND"', async () => {
+  itEE('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -315,7 +319,7 @@ describe("PATCH /api/v1/roles", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
-  it("should update role", async () => {
+  itEE("should update role", async () => {
     const { user } = await createUser();
     const role = await createRoleWithPermissions(user.userId, ["role:update"], {
       roleName: "Role update",
@@ -347,10 +351,10 @@ describe("PATCH /api/v1/roles", () => {
 });
 
 // TODO: implement this API first
-// describe("DELETE /api/v1/roles", () => {});
+// describeEE("DELETE /api/v1/roles", () => {});
 
-describe("GET /api/v1/roles/:id", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+describeEE("GET /api/v1/roles/:id", () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).get(`/api/v1/roles/${uuid()}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
@@ -358,30 +362,36 @@ describe("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
+  itEE(
+    "should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
 
-    const response = await supertest(app)
-      .get(`/api/v1/roles/${uuid()}`)
-      .set("Authorization", `Beare${authUser.authToken}`);
+      const response = await supertest(app)
+        .get(`/api/v1/roles/${uuid()}`)
+        .set("Authorization", `Beare${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+    },
+  );
 
-  it(`should throw error "DECODE_URI_ERROR" with :id as "*&^(*&$%&*^&%&^%*"`, async () => {
-    const response = await supertest(app).delete(
-      `/api/v1/roles/*&^(*&$%&*^&%&^%*`,
-    );
+  itEE(
+    `should throw error "DECODE_URI_ERROR" with :id as "*&^(*&$%&*^&%&^%*"`,
+    async () => {
+      const response = await supertest(app).get(
+        `/api/v1/roles/*&^(*&$%&*^&%&^%*`,
+      );
 
-    expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.headers["content-type"]).toContain("application/json");
 
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("DECODE_URI_ERROR");
-  });
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("DECODE_URI_ERROR");
+    },
+  );
 
-  it('should throw error "ROLE_NOT_FOUND"', async () => {
+  itEE('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -393,7 +403,7 @@ describe("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("ROLE_NOT_FOUND");
   });
 
-  it("should not have permission 'role:read'", async () => {
+  itEE("should not have permission 'role:read'", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -406,7 +416,7 @@ describe("GET /api/v1/roles/:id", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should get role by ID and empty permissions list", async () => {
+  itEE("should get role by ID and empty permissions list", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:read"], {
       roleName: "Role reader",
@@ -427,7 +437,7 @@ describe("GET /api/v1/roles/:id", () => {
     expect(response.body.role.permissions).toStrictEqual([]);
   });
 
-  it("should get role by ID with permissions", async () => {
+  itEE("should get role by ID with permissions", async () => {
     const { user } = await createUser();
     const permissions: TPermission[] = [
       "post:read",
@@ -462,8 +472,8 @@ describe("GET /api/v1/roles/:id", () => {
   });
 });
 
-describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).put(
       `/api/v1/roles/${uuid()}/users/${uuid()}`,
     );
@@ -473,17 +483,20 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
+  itEE(
+    "should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
 
-    const response = await supertest(app)
-      .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
-      .set("Authorization", `Beare${authUser.authToken}`);
+      const response = await supertest(app)
+        .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+        .set("Authorization", `Beare${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+    },
+  );
 
   [
     undefined,
@@ -499,20 +512,23 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
 
     "%20", // Just whitespace
   ].map((value) =>
-    it(`should throw error "INVALID_ROLE_ID" for role_id value "${value}"`, async () => {
-      const { user } = await createUser();
+    itEE(
+      `should throw error "INVALID_ROLE_ID" for role_id value "${value}"`,
+      async () => {
+        const { user } = await createUser();
 
-      const response = await supertest(app)
-        .put(`/api/v1/roles/${value}/users/${uuid()}`)
-        .set("Authorization", `Bearer ${user.authToken}`);
+        const response = await supertest(app)
+          .put(`/api/v1/roles/${value}/users/${uuid()}`)
+          .set("Authorization", `Bearer ${user.authToken}`);
 
-      expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(400);
-      expect(response.body.code).toBe("INVALID_ROLE_ID");
-    }),
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(400);
+        expect(response.body.code).toBe("INVALID_ROLE_ID");
+      },
+    ),
   );
 
-  it('should throw error "ROLE_NOT_FOUND"', async () => {
+  itEE('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -538,21 +554,24 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
 
     "%20", // Just whitespace
   ].map((value) =>
-    it(`should throw error "INVALID_USER_ID" for user_id value "${value}"`, async () => {
-      const { user } = await createUser();
-      const generatedRole = await generateRole();
+    itEE(
+      `should throw error "INVALID_USER_ID" for user_id value "${value}"`,
+      async () => {
+        const { user } = await createUser();
+        const generatedRole = await generateRole();
 
-      const response = await supertest(app)
-        .put(`/api/v1/roles/${generatedRole.id}/users/${value}`)
-        .set("Authorization", `Bearer ${user.authToken}`);
+        const response = await supertest(app)
+          .put(`/api/v1/roles/${generatedRole.id}/users/${value}`)
+          .set("Authorization", `Bearer ${user.authToken}`);
 
-      expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(400);
-      expect(response.body.code).toBe("INVALID_USER_ID");
-    }),
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(400);
+        expect(response.body.code).toBe("INVALID_USER_ID");
+      },
+    ),
   );
 
-  it('should throw error "USER_NOT_FOUND"', async () => {
+  itEE('should throw error "USER_NOT_FOUND"', async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -565,17 +584,20 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
 
-  it(`should throw error "DECODE_URI_ERROR" with :userId & :roleId as "*&^(*&$%&*^&%&^%*"`, async () => {
-    const response = await supertest(app).put(
-      `/api/v1/roles/*&^(*&$%&*^&%&^%*/users/*&^(*&$%&*^&%&^%*`,
-    );
+  itEE(
+    `should throw error "DECODE_URI_ERROR" with :userId & :roleId as "*&^(*&$%&*^&%&^%*"`,
+    async () => {
+      const response = await supertest(app).put(
+        `/api/v1/roles/*&^(*&$%&*^&%&^%*/users/*&^(*&$%&*^&%&^%*`,
+      );
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("DECODE_URI_ERROR");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("DECODE_URI_ERROR");
+    },
+  );
 
-  it("should not have 'role:assign' permission", async () => {
+  itEE("should not have 'role:assign' permission", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -588,7 +610,7 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should assign role to new user", async () => {
+  itEE("should assign role to new user", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:assign"], {
       roleName: "Role assigner",
@@ -607,29 +629,32 @@ describe("PUT /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.name).toBe(generatedRole.name);
   });
 
-  it("should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user", async () => {
-    const { user } = await createUser();
-    await createRoleWithPermissions(user.userId, ["role:assign"], {
-      roleName: "Role assigner",
-    });
-    const generatedRole = await generateRole();
+  itEE(
+    "should throw error 'ROLE_USER_CONFLICT' on assigning role twice to same user",
+    async () => {
+      const { user } = await createUser();
+      await createRoleWithPermissions(user.userId, ["role:assign"], {
+        roleName: "Role assigner",
+      });
+      const generatedRole = await generateRole();
 
-    await supertest(app)
-      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
-    const response = await supertest(app)
-      .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
+      await supertest(app)
+        .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
+      const response = await supertest(app)
+        .put(`/api/v1/roles/${generatedRole.id}/users/${user.userId}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(409);
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(409);
 
-    expect(response.body.success).toBe(0);
-  });
+      expect(response.body.success).toBe(0);
+    },
+  );
 });
 
-describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
-  it('should throw error "INVALID_AUTH_HEADER"', async () => {
+describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
+  itEE('should throw error "INVALID_AUTH_HEADER"', async () => {
     const response = await supertest(app).delete(
       `/api/v1/roles/${uuid()}/users/${uuid()}`,
     );
@@ -639,17 +664,20 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("INVALID_AUTH_HEADER");
   });
 
-  it("should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
+  itEE(
+    "should throw error 'INVALID_AUTH_HEADER_FORMAT' when auth header is malformed",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
 
-    const response = await supertest(app)
-      .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
-      .set("Authorization", `Beare${authUser.authToken}`);
+      const response = await supertest(app)
+        .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
+        .set("Authorization", `Beare${authUser.authToken}`);
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
-  });
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_AUTH_HEADER_FORMAT");
+    },
+  );
 
   [
     undefined,
@@ -665,20 +693,23 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
 
     "%20", // Just whitespace
   ].map((value) =>
-    it(`should throw error "INVALID_ROLE_ID" for role_id value "${value}"`, async () => {
-      const { user } = await createUser();
+    itEE(
+      `should throw error "INVALID_ROLE_ID" for role_id value "${value}"`,
+      async () => {
+        const { user } = await createUser();
 
-      const response = await supertest(app)
-        .delete(`/api/v1/roles/${value}/users/${uuid()}`)
-        .set("Authorization", `Bearer ${user.authToken}`);
+        const response = await supertest(app)
+          .delete(`/api/v1/roles/${value}/users/${uuid()}`)
+          .set("Authorization", `Bearer ${user.authToken}`);
 
-      expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(400);
-      expect(response.body.code).toBe("INVALID_ROLE_ID");
-    }),
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(400);
+        expect(response.body.code).toBe("INVALID_ROLE_ID");
+      },
+    ),
   );
 
-  it('should throw error "ROLE_NOT_FOUND"', async () => {
+  itEE('should throw error "ROLE_NOT_FOUND"', async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
@@ -704,21 +735,24 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
 
     "%20", // Just whitespace
   ].map((value) =>
-    it(`should throw error "INVALID_USER_ID" for user_id value "${value}"`, async () => {
-      const { user } = await createUser();
-      const generatedRole = await generateRole();
+    itEE(
+      `should throw error "INVALID_USER_ID" for user_id value "${value}"`,
+      async () => {
+        const { user } = await createUser();
+        const generatedRole = await generateRole();
 
-      const response = await supertest(app)
-        .delete(`/api/v1/roles/${generatedRole.id}/users/${value}`)
-        .set("Authorization", `Bearer ${user.authToken}`);
+        const response = await supertest(app)
+          .delete(`/api/v1/roles/${generatedRole.id}/users/${value}`)
+          .set("Authorization", `Bearer ${user.authToken}`);
 
-      expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(400);
-      expect(response.body.code).toBe("INVALID_USER_ID");
-    }),
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(400);
+        expect(response.body.code).toBe("INVALID_USER_ID");
+      },
+    ),
   );
 
-  it('should throw error "USER_NOT_FOUND"', async () => {
+  itEE('should throw error "USER_NOT_FOUND"', async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -731,18 +765,21 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
 
-  it(`should throw error "DECODE_URI_ERROR" with :userId & :roleId as "*&^(*&$%&*^&%&^%*"`, async () => {
-    const response = await supertest(app).delete(
-      `/api/v1/roles/*&^(*&$%&*^&%&^%*/users/*&^(*&$%&*^&%&^%*`,
-    );
+  itEE(
+    `should throw error "DECODE_URI_ERROR" with :userId & :roleId as "*&^(*&$%&*^&%&^%*"`,
+    async () => {
+      const response = await supertest(app).delete(
+        `/api/v1/roles/*&^(*&$%&*^&%&^%*/users/*&^(*&$%&*^&%&^%*`,
+      );
 
-    expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.headers["content-type"]).toContain("application/json");
 
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("DECODE_URI_ERROR");
-  });
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe("DECODE_URI_ERROR");
+    },
+  );
 
-  it("should not have 'role:unassign' permission", async () => {
+  itEE("should not have 'role:unassign' permission", async () => {
     const { user } = await createUser();
     const generatedRole = await generateRole();
 
@@ -755,7 +792,7 @@ describe("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  it("should unassign role to new user", async () => {
+  itEE("should unassign role to new user", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
       roleName: "Role assigner",

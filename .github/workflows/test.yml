@@ -19,6 +19,7 @@ on:
 
 permissions:
   actions: read
+  pull-requests: write
 
 env:
   pnpm-version: 10
@@ -147,6 +148,7 @@ jobs:
       LOGCHIMP_MAIL_USER: test
       LOGCHIMP_MAIL_PASSWORD: test
       LOGCHIMP_MAIL_PORT: 1025
+      SKIP_EE_TESTS: ${{ secrets.LC_SUBMODULES_TOKEN == '' && 'true' || 'false' }}
 
     strategy:
       fail-fast: false
@@ -206,6 +208,18 @@ jobs:
 
       - name: Testing
         run: pnpm --filter @logchimp/api test:integration --retry 1
+
+      - name: Label PR if EE tests are skipped
+        if: env.SKIP_EE_TESTS == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['ee-integration-tests-skipped']
+            })
 
       - name: Output logs
         if: always()
