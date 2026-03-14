@@ -1,15 +1,15 @@
 import type { Request, Response } from "express";
+import type { Knex } from "knex";
 import type {
   IApiErrorResponse,
   IGetPostActivityRequestParam,
   IGetPostActivityRequestQuery,
   IGetPostActivityResponseBody,
   IPostActivity,
+  TFilterPostActivityVisibility,
 } from "@logchimp/types";
 
 import database from "../../../../../database";
-
-// utils
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import {
@@ -35,9 +35,22 @@ export async function get(
     GET_COMMENTS_FILTER_COUNT,
   );
   const page = parseAndValidatePage(req.query.page);
+  const _visibility = parseVisibility(req.query.visibility);
+
+  // @ts-expect-error
+  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const hasPermission = permissions.includes("comment:view_internal");
 
   try {
-    const activities = await getActivityQuery({ postId: post_id, limit, page });
+    const activities = await getActivityQuery({
+      postId: post_id,
+      limit,
+      page,
+      visibility: _visibility,
+      hasPermission,
+      // @ts-expect-error
+      subscription: req?.subscription,
+    });
 
     res.status(200).send({
       activity: activities,
@@ -55,14 +68,31 @@ export async function get(
   }
 }
 
-interface IGetActivityQuery {
+interface Sub {
+  hierarchy?: number;
+}
+
+interface IPostCommentVisibilityOptions {
+  visibility: Array<TFilterPostActivityVisibility>;
+  hasPermission?: boolean;
+  subscription?: Sub;
+}
+
+interface IGetActivityQuery extends IPostCommentVisibilityOptions {
   postId: string;
   limit: number;
   page: number;
 }
 
-function getActivityQuery({ postId, limit, page }: IGetActivityQuery) {
-  return database
+function getActivityQuery({
+  postId,
+  limit,
+  page,
+  visibility,
+  subscription,
+  hasPermission,
+}: IGetActivityQuery) {
+  let query = database
     .leftJoin(
       "posts_comments",
       "posts_comments.activity_id",
@@ -94,10 +124,63 @@ function getActivityQuery({ postId, limit, page }: IGetActivityQuery) {
       `),
     )
     .from("posts_activity")
-    .where({
-      post_id: postId,
-    })
+    .where("posts_activity.post_id", postId)
     .orderBy("posts_activity.created_at", "desc")
     .limit(limit)
     .offset(limit * (page - 1));
+
+  if (subscription?.hierarchy === 1) {
+    query = query.where("posts_activity.type", "comment");
+  }
+
+  query = postCommentVisibility(query, {
+    visibility,
+    hasPermission,
+    subscription,
+  });
+
+  return query;
+}
+
+function parseVisibility(
+  visibility?: string,
+): Array<TFilterPostActivityVisibility> {
+  if (typeof visibility !== "string") return [];
+  return visibility
+    .split(",")
+    .map((v) => v.trim() as TFilterPostActivityVisibility);
+}
+
+function postCommentVisibility<T>(
+  query: Knex.QueryBuilder<T>,
+  {
+    visibility,
+    hasPermission = false,
+    subscription,
+  }: IPostCommentVisibilityOptions,
+): Knex.QueryBuilder<T> {
+  const showInternal = query.where("posts_comments.is_internal", true);
+  const showPublic = query.where("posts_comments.is_internal", false);
+
+  if (visibility.length === 0) {
+    return showPublic;
+  }
+
+  if (subscription?.hierarchy >= 2) {
+    if (!hasPermission) {
+      return showPublic;
+    }
+
+    if (visibility.includes("internal")) {
+      return showInternal;
+    }
+
+    if (visibility.includes("public")) {
+      return showPublic;
+    }
+
+    return query;
+  }
+
+  return showPublic;
 }
