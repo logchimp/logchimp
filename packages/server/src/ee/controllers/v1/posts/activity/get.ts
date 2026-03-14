@@ -186,28 +186,28 @@ function postCommentVisibility<T>(
     subscription,
   }: IPostCommentVisibilityOptions,
 ): Knex.QueryBuilder<T> {
-  const showInternal = query.where("posts_comments.is_internal", true);
-  const showPublic = query.where("posts_comments.is_internal", false);
+  const showInternal = () => query.where("posts_comments.is_internal", true);
+  const showPublic = () => query.where("posts_comments.is_internal", false);
 
   if (visibility.length === 0) {
-    return showPublic;
+    return showPublic();
   }
 
   if (subscription?.hierarchy >= 2) {
     if (!hasPermission) {
-      return showPublic;
+      return showPublic();
     }
 
     if (visibility.includes("internal")) {
-      return showInternal;
+      return showInternal();
     }
 
     if (visibility.includes("public")) {
-      return showPublic;
+      return showPublic();
     }
 
     return query;
   }
 
-  return showPublic;
+  return showPublic();
 }
