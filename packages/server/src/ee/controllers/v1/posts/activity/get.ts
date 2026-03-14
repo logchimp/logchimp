@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import type { Knex } from "knex";
+import * as v from "valibot";
 import type {
   IApiErrorResponse,
   IGetPostActivityRequestParam,
@@ -20,6 +21,31 @@ import { GET_COMMENTS_FILTER_COUNT } from "../../../../../constants";
 
 type ResponseBody = IGetPostActivityResponseBody | IApiErrorResponse;
 
+const FilterVisibilitySchema = v.picklist(["public", "internal"]);
+const querySchema = v.object({
+  limit: v.optional(
+    v.pipe(
+      v.string(),
+      v.transform((value) =>
+        parseAndValidateLimit(value, GET_COMMENTS_FILTER_COUNT),
+      ),
+    ),
+  ),
+  page: v.optional(
+    v.pipe(
+      v.string(),
+      v.transform((value) => parseAndValidatePage(value)),
+    ),
+  ),
+  visibility: v.optional(
+    v.pipe(
+      v.string(),
+      v.transform((value) => (value ? value.split(",") : [])),
+      v.array(FilterVisibilitySchema),
+    ),
+  ),
+});
+
 export async function get(
   req: Request<
     IGetPostActivityRequestParam,
@@ -30,11 +56,23 @@ export async function get(
   res: Response<ResponseBody>,
 ) {
   const { post_id } = req.params;
-  const limit = parseAndValidateLimit(
-    req.query.limit,
-    GET_COMMENTS_FILTER_COUNT,
-  );
-  const page = parseAndValidatePage(req.query.page);
+
+  const query = v.safeParse(querySchema, req.query);
+  if (!query.success) {
+    res.status(400).send({
+      code: "VALIDATION_ERROR",
+      message: "Invalid query parameters",
+      errors: query.issues.map((issue) => ({
+        ...issue,
+        message: issue.message,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
+
+  const limit = query.output.limit ?? GET_COMMENTS_FILTER_COUNT;
+
   const _visibility = parseVisibility(req.query.visibility);
 
   // @ts-expect-error
@@ -45,7 +83,7 @@ export async function get(
     const activities = await getActivityQuery({
       postId: post_id,
       limit,
-      page,
+      page: query.output.page,
       visibility: _visibility,
       hasPermission,
       // @ts-expect-error
