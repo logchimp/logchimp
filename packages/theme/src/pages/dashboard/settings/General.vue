@@ -202,6 +202,12 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 }
 
 async function updateSettingsHandler() {
+  // Reset stale validation errors before running new validation
+  siteName.error.show = false;
+  siteName.error.message = "";
+  accentColor.error.show = false;
+  accentColor.error.message = "";
+
   // At least one of site name or logo must be provided
   const hasSiteName = !!siteName.value?.trim();
   const hasLogo = !!logo.value?.trim();
