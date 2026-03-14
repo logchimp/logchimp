@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from "vue";
-import { useInfiniteScroll } from "@vueuse/core";
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
+import { useInfiniteScroll, useOnline } from "@vueuse/core";
 
 // components
 import ClientError from "./ClientError.vue";
@@ -63,6 +63,10 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const isFirstLoad = ref(true);
+const isOnline = useOnline();
+
+// Track whether a load was deferred while offline so we can retry on reconnect
+const pendingRetry = ref(false);
 
 const noMoreResults = computed<boolean>(
   () => props.state === "COMPLETED" && !isFirstLoad.value,
@@ -80,8 +84,23 @@ watch(
   },
 );
 
+// When the network comes back online, retry any deferred load
+watch(isOnline, (online) => {
+  if (online && pendingRetry.value) {
+    pendingRetry.value = false;
+    executeInfiniteScroll();
+  }
+});
+
 function executeInfiniteScroll() {
   if (props.state === "COMPLETED" || props.state === "ERROR") return;
+
+  // Skip API call when offline; mark as pending so we retry on reconnect
+  if (!isOnline.value) {
+    pendingRetry.value = true;
+    return;
+  }
+
   props.onInfinite();
 }
 
@@ -95,5 +114,9 @@ onMounted(() => {
   if (props.immediateCheck) {
     executeInfiniteScroll();
   }
+});
+
+onUnmounted(() => {
+  pendingRetry.value = false;
 });
 </script>
