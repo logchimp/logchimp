@@ -25,9 +25,12 @@ export interface IGetPostActivityRequestParam {
   post_id: string;
 }
 
+export type TFilterPostActivityVisibility = "public" | "internal";
+
 export interface IGetPostActivityRequestQuery {
   page: string;
   limit?: string;
+  visibility: TFilterPostActivityVisibility;
 }
 
 export interface IGetPostActivityResponseBody {
