@@ -73,8 +73,6 @@ export async function get(
 
   const limit = query.output.limit ?? GET_COMMENTS_FILTER_COUNT;
 
-  const _visibility = parseVisibility(req.query.visibility);
-
   // @ts-expect-error
   const permissions = (req?.user?.permissions || []) as TPermission[];
   const hasPermission = permissions.includes("comment:view_internal");
@@ -84,7 +82,7 @@ export async function get(
       postId: post_id,
       limit,
       page: query.output.page,
-      visibility: _visibility,
+      visibility: query.output.visibility,
       hasPermission,
       // @ts-expect-error
       subscription: req?.subscription,
@@ -180,19 +178,10 @@ function getActivityQuery({
   return query;
 }
 
-function parseVisibility(
-  visibility?: string,
-): Array<TFilterPostActivityVisibility> {
-  if (typeof visibility !== "string") return [];
-  return visibility
-    .split(",")
-    .map((v) => v.trim() as TFilterPostActivityVisibility);
-}
-
 function postCommentVisibility<T>(
   query: Knex.QueryBuilder<T>,
   {
-    visibility,
+    visibility = [],
     hasPermission = false,
     subscription,
   }: IPostCommentVisibilityOptions,
