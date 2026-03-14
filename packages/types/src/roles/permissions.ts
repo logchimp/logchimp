@@ -2,18 +2,24 @@ export type PermissionAction =
   | "create"
   | "read"
   | "update"
+  | "delete"
   | "destroy"
   | "assign"
-  | "unassign";
+  | "unassign"
+  | "view_internal"
+  | "create_internal";
 
 export type TPermissionEntities =
   | "post"
   | "board"
   | "roadmap"
   | "vote"
+  | "comment"
   | "dashboard"
   | "role"
   | "settings";
+
+export type TPermissionScope = "own" | "any";
 
 export type TPermission =
   | "post:read"
@@ -36,6 +42,13 @@ export type TPermission =
   | "roadmap:destroy"
   | "roadmap:assign"
   | "roadmap:unassign"
+  | "comment:create"
+  | "comment:create_internal"
+  | "comment:update:own"
+  | "comment:update:any"
+  | "comment:delete:own"
+  | "comment:delete:any"
+  | "comment:view_internal"
   | "dashboard:read"
   | "role:read"
   | "role:create"
@@ -56,6 +69,19 @@ export interface IPermissionsState {
     read: boolean;
     update: boolean;
     destroy: boolean;
+  };
+  comment: {
+    create: boolean;
+    view_internal: boolean;
+    create_internal: boolean;
+    update: {
+      own: boolean;
+      any: boolean;
+    };
+    delete: {
+      own: boolean;
+      any: boolean;
+    };
   };
   board: {
     create: boolean;
