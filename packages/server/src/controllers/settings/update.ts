@@ -88,6 +88,18 @@ export async function update(
     }
   }
 
+  // Validate: at least one of site name or logo must be provided when both are sent
+  if ("title" in req.body && "logo" in req.body) {
+    const effectiveTitle = (title ?? "").trim();
+    const effectiveLogo = logo === null ? "" : (logo ?? "").trim();
+    if (!effectiveTitle && !effectiveLogo) {
+      return res.status(400).send({
+        message: "Either a site name or logo URL is required",
+        code: "SITE_NAME_OR_LOGO_REQUIRED",
+      });
+    }
+  }
+
   try {
     const updateSettings = await database
       .update({
