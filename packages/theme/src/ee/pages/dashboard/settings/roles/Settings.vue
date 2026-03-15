@@ -31,6 +31,7 @@ import type {
   PermissionAction,
   TPermissionEntities,
   IPermissionsState,
+  TPermissionScope,
 } from "@logchimp/types";
 
 // modules
@@ -85,6 +86,13 @@ const permissions = reactive<IPermissionsState>({
   },
   dashboard: {
     read: false,
+  },
+  comment: {
+    create: false,
+    view_internal: false,
+    create_internal: false,
+    update: "none",
+    delete: "none",
   },
   role: {
     create: false,
