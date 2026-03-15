@@ -4,7 +4,7 @@ import { useId, computed } from "vue";
 // const permission = ref<TPermission>()
 
 interface Props {
-  disabled: boolean;
+  disabled?: boolean;
   label: string;
   id?: string;
   note?: string;
