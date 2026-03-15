@@ -63,7 +63,8 @@ const createFallbackGuard = (): WithLicenseGuardFunction => {
 
 const getLicenseGuard = async (): Promise<WithLicenseGuardFunction> => {
   if (!licenseGuardPromise) {
-    licenseGuardPromise = import("../ee/do-not-remove/middleware/licenseGuard")
+    const modulePath = "../ee/do-not-remove/middleware/licenseGuard";
+    licenseGuardPromise = import(modulePath)
       .then((mod) => mod.withLicenseGuard as WithLicenseGuardFunction)
       .catch(() => createFallbackGuard());
   }
