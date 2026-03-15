@@ -4,22 +4,22 @@ import { useId, computed } from "vue";
 // const permission = ref<TPermission>()
 
 interface Props {
-  disabled: boolean
-  label: string
-  id?: string
-  note?: string
+  disabled: boolean;
+  label: string;
+  id?: string;
+  note?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
-})
+});
 
-defineEmits<(e: "selected", value: string) => void>()
+defineEmits<(e: "selected", value: string) => void>();
 
-const id = computed(() => props.id ?? useId())
+const id = computed(() => props.id ?? useId());
 
 defineOptions({
-  name: "RoleModifyPermissionScope"
-})
+  name: "RoleModifyPermissionScope",
+});
 </script>
 
 <template>
