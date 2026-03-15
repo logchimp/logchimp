@@ -24,6 +24,7 @@ defineOptions({
 
 <template>
   <div
+    class="flex items-center justify-between"
     :class="{
       'opacity-60': disabled,
     }"
