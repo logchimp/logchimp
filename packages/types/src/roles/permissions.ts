@@ -19,7 +19,14 @@ export type TPermissionEntities =
   | "role"
   | "settings";
 
-export type TPermissionScope = "own" | "any";
+export type TPermissionScope =
+  // None is not a permission scope
+  // Solely used as a fallback/default value in the type system
+  | "none"
+  // User with 'own' scope can interact with their own data of the same entity (TPermissionEntities)
+  | "own"
+  // User with 'any' scope can interact with any data of the same entity (TPermissionEntities)
+  | "any";
 
 export type TPermission =
   | "post:read"
@@ -74,14 +81,8 @@ export interface IPermissionsState {
     create: boolean;
     view_internal: boolean;
     create_internal: boolean;
-    update: {
-      own: boolean;
-      any: boolean;
-    };
-    delete: {
-      own: boolean;
-      any: boolean;
-    };
+    update: TPermissionScope;
+    delete: TPermissionScope;
   };
   board: {
     create: boolean;
