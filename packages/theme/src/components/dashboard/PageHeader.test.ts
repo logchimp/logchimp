@@ -25,8 +25,12 @@ describe("dashboard page header", () => {
     });
 
     expect(wrapper.find('[data-test="slot-left"]').text()).toBe("left content");
-    expect(wrapper.find('[data-test="slot-default"]').text()).toBe("center content");
-    expect(wrapper.find('[data-test="slot-right"]').text()).toBe("right content");
+    expect(wrapper.find('[data-test="slot-default"]').text()).toBe(
+      "center content",
+    );
+    expect(wrapper.find('[data-test="slot-right"]').text()).toBe(
+      "right content",
+    );
   });
 
   it("toggles sidebar when toggle button is clicked", async () => {
