@@ -48,6 +48,7 @@ defineOptions({
     <div>
       <!-- dropdown -->
       <select>
+        <option value="none">None</option>
         <option value="own">Own</option>
         <option value="any">Any</option>
       </select>
