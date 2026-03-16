@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { useId, computed } from "vue";
 
-// const permission = ref<TPermission>()
-
 interface Props {
   disabled?: boolean;
   label: string;
   id?: string;
   note?: string;
+  modelValue: string;
 }
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 });
-
-defineEmits<(e: "selected", value: string) => void>();
+const emit = defineEmits<(e: "update:modelValue", value: string) => void>();
 
 const id = computed(() => props.id ?? useId());
+
+function onSelectUpdate(e: Event) {
+  const target = e.target as HTMLSelectElement;
+  emit('update:modelValue', target.value);
+}
 
 defineOptions({
   name: "RoleModifyPermissionScope",
@@ -47,7 +50,10 @@ defineOptions({
 
     <div>
       <!-- dropdown -->
-      <select>
+      <select
+        :modelValue="modelValue"
+        @change="onSelectUpdate"
+      >
         <option value="none">None</option>
         <option value="own">Own</option>
         <option value="any">Any</option>
