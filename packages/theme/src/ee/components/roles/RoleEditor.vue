@@ -367,8 +367,10 @@ async function updateRoleHandler() {
 
     for (const action in permissionGroup) {
       const typedAction = action as keyof typeof permissionGroup;
-      if (permissionGroup[typedAction]) {
+      if (typeof permissionGroup[typedAction] === 'boolean' && permissionGroup[typedAction] === true) {
         activePermissions.push(`${permissionType}:${action}` as TPermission);
+      } else if (typeof permissionGroup[typedAction] === 'string') {
+       activePermissions.push(`${permissionType}:${action}:${permissionGroup[typedAction]}` as TPermission);
       }
     }
   }

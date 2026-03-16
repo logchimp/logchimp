@@ -28,6 +28,10 @@ export type TPermissionScope =
   // User with 'any' scope can interact with any data of the same entity (TPermissionEntities)
   | "any";
 
+/**
+ * V1 follows a simple "resource:action" format.
+ * V2 follows a granular "resource:action:scope" format (work in progress).
+ */
 export type TPermission =
   | "post:read"
   | "post:create"

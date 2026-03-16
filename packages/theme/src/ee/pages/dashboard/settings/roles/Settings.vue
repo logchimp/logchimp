@@ -121,15 +121,24 @@ async function getRoleHandler(id: string) {
     const permissionsList = response.data.role.permissions;
     permissionsList.forEach((permission) => {
       const parts = permission.split(":");
-      if (parts.length !== 2) {
+      if (parts.length < 2 || parts.length > 3) {
         console.warn("Invalid permission format:", permission);
         return;
       }
-      const [type, action] = parts as [TPermissionEntities, PermissionAction];
+      const [type, action, scope] = parts as [
+        TPermissionEntities,
+        PermissionAction,
+        TPermissionScope,
+      ];
       const permissionGroup = permissions[type];
       if (!permissionGroup) return;
       if (action in permissionGroup) {
-        (permissionGroup as Record<string, boolean>)[action] = true;
+        if (scope) {
+          // @ts-expect-error
+          (permissionGroup as Record<PermissionAction, TPermissionScope>)[action] = scope;
+        } else {
+          (permissionGroup as Record<PermissionAction, boolean>)[action] = true;
+        }
       }
     });
   } catch (err) {
