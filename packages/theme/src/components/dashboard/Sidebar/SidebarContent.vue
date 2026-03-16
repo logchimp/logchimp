@@ -86,6 +86,12 @@
 
     <div class="mt-auto relative">
       <dashboard-sidebar-auth-user-dropdown />
+      <p
+        v-if="logchimpVersion"
+        class="text-center text-xs text-neutral-400 py-1"
+      >
+        v{{ logchimpVersion }}
+      </p>
     </div>
   </div>
 </template>
@@ -104,6 +110,7 @@ import {
 } from "lucide-vue";
 
 import { useSettingStore } from "../../../store/settings";
+import { VITE_LOGCHIMP_VERSION } from "../../../constants";
 
 // components
 import SiteBranding from "../../site/SiteBranding.vue";
@@ -114,4 +121,6 @@ import SidebarListHeading from "./SidebarListHeading.vue";
 import DashboardSidebarAuthUserDropdown from "./AuthUser/Dropdown.vue";
 
 const { get: siteSettings } = useSettingStore();
+
+const logchimpVersion = VITE_LOGCHIMP_VERSION;
 </script>
