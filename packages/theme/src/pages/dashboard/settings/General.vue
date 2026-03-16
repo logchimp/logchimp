@@ -202,17 +202,31 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 }
 
 async function updateSettingsHandler() {
-  if (!(siteName.value && accentColor.value)) {
-    if (!siteName.value) {
-      siteName.error.show = true;
-      siteName.error.message = "Required";
-    }
+  // Reset stale validation errors before running new validation
+  siteName.error.show = false;
+  siteName.error.message = "";
+  accentColor.error.show = false;
+  accentColor.error.message = "";
 
-    if (!accentColor.value) {
-      accentColor.error.show = true;
-      accentColor.error.message = "Required";
-    }
+  // At least one of site name or logo must be provided
+  const hasSiteName = !!siteName.value?.trim();
+  const hasLogo = !!logo.value?.trim();
+
+  let hasValidationError = false;
+
+  if (!hasSiteName && !hasLogo) {
+    siteName.error.show = true;
+    siteName.error.message = "Either a site name or logo URL is required";
+    hasValidationError = true;
   }
+
+  if (!accentColor.value) {
+    accentColor.error.show = true;
+    accentColor.error.message = "Required";
+    hasValidationError = true;
+  }
+
+  if (hasValidationError) return;
 
   updateSettingsButtonLoading.value = true;
 

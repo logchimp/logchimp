@@ -88,6 +88,39 @@ export async function update(
     }
   }
 
+  // Validate: at least one of site name or logo must remain non-empty after the update.
+  // We need to fetch the current state from DB and merge with incoming fields so that
+  // a single-field update (e.g. only "logo") cannot bypass the check.
+  if ("title" in req.body || "logo" in req.body) {
+    try {
+      const current = await database("settings")
+        .select<{ title: string | null; logo: string | null }>("title", "logo")
+        .first();
+
+      const effectiveTitle = (
+        "title" in req.body ? (title ?? "") : (current?.title ?? "")
+      ).trim();
+      const effectiveLogo = (
+        "logo" in req.body
+          ? (logo === null ? "" : (logo ?? ""))
+          : (current?.logo ?? "")
+      ).trim();
+
+      if (!effectiveTitle && !effectiveLogo) {
+        return res.status(400).send({
+          message: "Either a site name or logo URL is required",
+          code: "SITE_NAME_OR_LOGO_REQUIRED",
+        });
+      }
+    } catch (err) {
+      logger.log({ level: "error", message: err });
+      return res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+    }
+  }
+
   try {
     const updateSettings = await database
       .update({
