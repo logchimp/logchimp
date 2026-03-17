@@ -51,7 +51,10 @@ import { ref } from "vue";
 import type { ISortRoadmapRequestBody } from "@logchimp/types";
 
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
-import type { VueDraggableEvent } from "../../../lib/vuedraggable/types";
+import type {
+  VueDraggableEndEvent,
+  VueDraggableEvent,
+} from "../../../lib/vuedraggable/types";
 import { sortRoadmap } from "../../../modules/roadmaps";
 
 import Table from "../../../../components/ui/Table/Table.vue";
@@ -93,18 +96,22 @@ function moveItem(
   };
 }
 
-async function initialiseSort() {
+async function initialiseSort(event: VueDraggableEndEvent) {
+  drag.value = false;
+
+  // Skip API call when item is dropped at its original position or drag is canceled
+  if (event.oldIndex === event.newIndex) {
+    return;
+  }
+
   try {
     const response = await sortRoadmap(sort.value);
 
     if (response.status === 200) {
-      drag.value = false;
       dashboardRoadmaps.sortRoadmap(sort.value.from.index, sort.value.to.index);
     }
   } catch (err) {
     console.error(err);
-  } finally {
-    drag.value = false;
   }
 }
 
