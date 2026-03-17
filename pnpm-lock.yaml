@@ -39,7 +39,7 @@ importers:
   packages/server:
     dependencies:
       bcryptjs:
-        specifier: ^3.0.2
+        specifier: ^3.0.3
         version: 3.0.3
       cors:
         specifier: ^2.8.5
