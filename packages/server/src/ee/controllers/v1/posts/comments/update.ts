@@ -5,6 +5,7 @@ import type {
   IUpdatePostCommentRequestBody,
   IUpdatePostCommentRequestParam,
   IUpdatePostCommentResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import * as v from "valibot";
 
@@ -59,27 +60,66 @@ export async function update(
     return;
   }
 
-  try {
-    // @ts-expect-error
-    const userId = req.user.userId;
+  // @ts-expect-error
+  const userId = req.user.userId;
 
-    const isAuthor = await database
-      .from("posts_activity")
-      .where({
-        type: "comment",
-        posts_comments_id: comment_id,
-        author_id: userId,
-      })
-      .first();
+  // @ts-expect-error
+  const permissions = (req.user?.permissions || []) as TPermission[];
+  const requiredPermission = [
+    "comment:update:one",
+    "comment:update:any",
+  ] as TPermission[];
+  const hasPermission = requiredPermission.some((permission) =>
+    permissions.includes(permission),
+  );
+  if (!hasPermission) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
 
-    if (!isAuthor) {
+  const ownComment = permissions.includes("comment:update:one" as TPermission);
+  if (ownComment) {
+    let isAuthor: {
+      id: string;
+    };
+    try {
+      isAuthor = await database
+        .select<{
+          id: string;
+        }>("id")
+        .from("posts_activity")
+        .where({
+          type: "comment",
+          posts_comments_id: comment_id,
+          author_id: userId,
+        })
+        .first();
+    } catch (err) {
+      logger.log({
+        level: "error",
+        message: "failed to check if user is author of comment",
+        err,
+      });
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
+    }
+
+    if (!isAuthor?.id) {
       res.status(403).send({
         message: error.api.comments.notAnAuthor,
         code: "UNAUTHORIZED_NOT_AUTHOR",
       });
       return;
     }
+  }
 
+  try {
     const comment = await commentUpdateStatement({
       comment_id,
       is_internal: reqBody.output.is_internal,
