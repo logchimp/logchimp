@@ -17,7 +17,7 @@ const id = computed(() => props.id ?? useId());
 
 function onSelectUpdate(e: Event) {
   const target = e.target as HTMLSelectElement;
-  emit('update:modelValue', target.value);
+  emit("update:modelValue", target.value);
 }
 
 defineOptions({
