@@ -135,7 +135,9 @@ async function getRoleHandler(id: string) {
       if (action in permissionGroup) {
         if (scope) {
           // @ts-expect-error
-          (permissionGroup as Record<PermissionAction, TPermissionScope>)[action] = scope;
+          (permissionGroup as Record<PermissionAction, TPermissionScope>)[
+            action
+          ] = scope;
         } else {
           (permissionGroup as Record<PermissionAction, boolean>)[action] = true;
         }
