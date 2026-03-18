@@ -12,7 +12,7 @@ export async function getUserPublicInfo(
   return database
     .select<IPublicUserInfo>("userId", "name", "avatar", "username")
     .from("users")
-    .where("userId", userId);
+    .where("userId", userId).first();
 }
 
 interface GetUserQueryOptions {
