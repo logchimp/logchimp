@@ -76,6 +76,7 @@ export async function filterPost(
 
         response[i].boardId = undefined;
         response[i].roadmap_id = undefined;
+        response[i].userId = undefined;
 
         posts.push({
           ...response[i],
