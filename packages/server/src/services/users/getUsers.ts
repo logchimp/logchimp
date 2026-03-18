@@ -1,10 +1,20 @@
-import type { ApiSortType, IUserInfo } from "@logchimp/types";
+import type { ApiSortType, IPublicUserInfo, IUserInfo } from "@logchimp/types";
 
 // database
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
+
+export async function getUserPublicInfo(
+  userId: string,
+): Promise<IPublicUserInfo> {
+  return database
+    .select<IPublicUserInfo>("userId", "name", "avatar", "username")
+    .from("users")
+    .where("userId", userId)
+    .first();
+}
 
 interface GetUserQueryOptions {
   first: number;
