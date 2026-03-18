@@ -5,6 +5,8 @@ import { addPermission, removePermission } from "../utils";
 import logger from "../../utils/logger";
 
 const permissions: TPermission[] = [
+  "comment:create",
+  "comment:create_internal",
   "comment:update:own",
   "comment:update:any",
   "comment:delete:own",
