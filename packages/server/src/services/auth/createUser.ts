@@ -231,6 +231,14 @@ async function _assignEveryoneRoleQuery(userId: string) {
     })
     .first();
 
+  if (!getRole) {
+    logger.error({
+      message:
+        "Cannot assign '@everyone' role: role not found in database. Ensure the '@everyone' role exists.",
+    });
+    return;
+  }
+
   await database
     .insert({
       id: uuidv4(),
