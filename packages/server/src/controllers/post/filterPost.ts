@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   IFilterPostRequestBody,
   IFilterPostResponseBody,
+  IPost,
 } from "@logchimp/types";
 import database from "../../database";
 
@@ -41,40 +42,15 @@ export async function filterPost(
   const userId: string | undefined = req.user?.userId;
 
   try {
-    const { rows: response } = await database.raw(
-      `
-        SELECT
-          "postId",
-          "title",
-          "slug",
-          "userId",
-          "boardId",
-          "roadmap_id",
-          "contentMarkdown",
-          "createdAt",
-          "updatedAt"
-        FROM
-          posts
-        ${
-          boardId.length > 0
-            ? `WHERE "boardId" IN (${boardId.map((item) => {
-                return `'${item}'`;
-              })})`
-            : ""
-        }
-        ${roadmapId ? "WHERE roadmap_id = :roadmapId" : ""}
-        ORDER BY "createdAt" ${created}
-        LIMIT :limit
-        OFFSET :offset;
-    `,
-      {
-        limit,
-        offset: limit * (page - 1),
-        roadmapId,
-      },
-    );
+    const response = await getPostsQuery({
+      boardId,
+      roadmapId,
+      created,
+      limit,
+      offset: (page - 1) * limit,
+    });
 
-    const posts = [];
+    const posts: IPost[] = [];
 
     for (let i = 0; i < response.length; i++) {
       const postId = response[i].postId;
@@ -85,7 +61,12 @@ export async function filterPost(
         const board = await getBoardById(boardId);
         const voters = await getVotes(postId, userId);
         const roadmap = await database
-          .select("id", "name", "url", "color")
+          .select<{
+            id: string;
+            name: string;
+            url: string;
+            color: string;
+          }>("id", "name", "url", "color")
           .from("roadmaps")
           .where({
             id: roadmapId,
@@ -123,4 +104,58 @@ export async function filterPost(
       code: "SERVER_ERROR",
     });
   }
+}
+
+interface IGetPostDatabaseResponse {
+  postId: string;
+  title: string;
+  slug: string;
+  userId: string;
+  boardId: string | null;
+  roadmap_id: string | null;
+  contentMarkdown: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface IGetPostArguments {
+  boardId: string[];
+  roadmapId?: string;
+  created?: "ASC" | "DESC";
+  limit: number;
+  offset: number;
+}
+
+function getPostsQuery({
+  boardId,
+  roadmapId,
+  created,
+  limit,
+  offset,
+}: IGetPostArguments) {
+  const query = database
+    .select<Array<IGetPostDatabaseResponse>>(
+      "postId",
+      "title",
+      "slug",
+      "userId",
+      "boardId",
+      "roadmap_id",
+      "contentMarkdown",
+      "createdAt",
+      "updatedAt",
+    )
+    .from("posts")
+    .orderBy("createdAt", created)
+    .limit(limit)
+    .offset(offset);
+
+  if (boardId.length > 0) {
+    query.whereIn("boardId", boardId);
+  }
+  if (roadmapId) {
+    query.where("roadmap_id", roadmapId);
+  }
+
+  return query;
 }
