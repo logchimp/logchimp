@@ -14,6 +14,7 @@ import database from "../../../../database";
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
+import { rawPermissionArrayQuery } from "../../../../middlewares/auth/helpers";
 
 type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
 
@@ -74,16 +75,16 @@ export async function update(
         .into("permissions_roles");
     }
 
-    const updatedPermissions = (await database
-      .select(
-        database.raw("ARRAY_AGG(CONCAT(p.type, ':', p.action)) AS permissions"),
-      )
+    const updatedPermissions = await database
+      .select<{
+        permissions: TPermission[] | null;
+      }>(rawPermissionArrayQuery)
       .from("permissions_roles AS pr")
       .leftJoin("permissions AS p", "pr.permission_id", "p.id")
       .where({
         "pr.role_id": role.id,
       })
-      .first()) as unknown as { permissions: TPermission[] | null };
+      .first();
 
     res.status(200).send({
       role: updateRole,

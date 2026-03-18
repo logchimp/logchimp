@@ -63,13 +63,11 @@ export const computePermissions = async (
 ): Promise<TPermission[]> => {
   // return all permission for owner
   if (user.isOwner) {
-    const perms = (await database("permissions AS p")
-      .select(
-        database.raw(
-          "COALESCE( ARRAY_AGG(CONCAT(p.type, ':', p.action)), '{}') AS permissions",
-        ),
-      )
-      .first()) as unknown as { permissions: TPermission[] };
+    const perms = await database("permissions AS p")
+      .select<{
+        permissions: TPermission[];
+      }>(rawPermissionArrayQuery)
+      .first();
 
     return perms.permissions;
   }
@@ -91,3 +89,18 @@ export const computePermissions = async (
 
   return perms.permissions;
 };
+
+/**
+ * `p` is a table alias for permissions
+ */
+export const rawPermissionArrayQuery = database.raw<TPermission[]>(`
+  COALESCE(
+    ARRAY_AGG(
+      CASE WHEN p.scope IS NOT NULL THEN
+        CONCAT(p.type, ':', p.action, ':', p.scope)
+      ELSE
+        CONCAT(p.type, ':', p.action)
+      END
+    ), '{}'
+  ) AS permissions
+`);
