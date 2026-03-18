@@ -20,6 +20,7 @@ import {
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_POSTS_FILTER_COUNT } from "../../constants";
+import { getUserPublicInfo } from "../../services/users/getUsers";
 
 type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
 
@@ -46,6 +47,7 @@ export async function filterPost(
           "postId",
           "title",
           "slug",
+          "userId",
           "boardId",
           "roadmap_id",
           "contentMarkdown",
@@ -89,12 +91,14 @@ export async function filterPost(
             id: roadmapId,
           })
           .first();
+        const author = await getUserPublicInfo(response[i].userId);
 
         response[i].boardId = undefined;
         response[i].roadmap_id = undefined;
 
         posts.push({
           ...response[i],
+          author,
           board,
           roadmap,
           voters,
