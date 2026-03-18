@@ -93,7 +93,7 @@ export async function create(
 
   // @ts-expect-error
   const subscription = req?.subscription;
-  if (subscription?.hierarchy < 2) {
+  if (subscription?.hierarchy <= (reqBody.output.is_internal ? 2 : 1)) {
     res.status(403).send({
       message: error.middleware.license.higherPlan,
       code: "LICENSE_INSUFFICIENT_TIER",
