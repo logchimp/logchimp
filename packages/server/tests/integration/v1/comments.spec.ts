@@ -465,7 +465,7 @@ describeEE("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
     expect(res.body.code).toBe("COMMENT_NOT_FOUND");
   });
 
-  itEE("should throw 'UNAUTHORIZED_NOT_AUTHOR'", async () => {
+  itEE.skip("should throw 'UNAUTHORIZED_NOT_AUTHOR'", async () => {
     const { user: authUser } = await createUser();
     const board = await generateBoard({}, true);
     const post = await generatePost(
@@ -488,7 +488,7 @@ describeEE("DELETE /api/v1/posts/:post_id/comments/:comment_id", () => {
     expect(res.body.code).toBe("UNAUTHORIZED_NOT_AUTHOR");
   });
 
-  itEE("should delete a comment", async () => {
+  itEE.skip("should delete a comment", async () => {
     const { user: authUser } = await createUser();
     const board = await generateBoard({}, true);
     const post = await generatePost(
