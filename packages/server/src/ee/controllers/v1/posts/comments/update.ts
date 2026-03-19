@@ -61,6 +61,19 @@ export async function update(
   }
 
   // @ts-expect-error
+  const comment = req?.comment as GetCommentStatement | undefined;
+
+  // @ts-expect-error
+  const subscription = req?.subscription;
+  if (subscription?.hierarchy <= (comment.is_internal ? 2 : 1)) {
+    res.status(403).send({
+      message: error.middleware.license.higherPlan,
+      code: "LICENSE_INSUFFICIENT_TIER",
+    });
+    return;
+  }
+
+  // @ts-expect-error
   const userId = req.user.userId;
 
   // @ts-expect-error

@@ -67,7 +67,7 @@ export async function commentExists(
   next();
 }
 
-interface GetCommentStatement {
+export interface GetCommentStatement {
   id: string;
   parent_id: string | null;
   activity_id: string;
