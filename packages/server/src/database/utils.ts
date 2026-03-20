@@ -50,7 +50,7 @@ async function addPermission(
 
     if (exists) {
       logger.warn({
-        message: `Permission ${type}:${action}:${scope ? `:${scope}` : ""} already added`,
+        message: `Permission ${type}:${action}${scope ? `:${scope}` : ""} already added`,
       });
       continue;
     }
@@ -82,7 +82,7 @@ async function removePermission(
     });
 
     logger.info(
-      `Permission removed: ${type}:${action}:${scope ? `:${scope}` : ""}`,
+      `Permission removed: ${type}:${action}${scope ? `:${scope}` : ""}`,
     );
   }
 }
