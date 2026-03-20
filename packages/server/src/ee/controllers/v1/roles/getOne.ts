@@ -10,6 +10,7 @@ import database from "../../../../database";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { rawPermissionArrayQuery } from "../../../../middlewares/auth/helpers";
 
 type ResponseBody = IGetRoleByIdResponseBody | IApiErrorResponse;
 
@@ -39,16 +40,16 @@ export async function getOne(
       })
       .first();
 
-    const permissions = (await database
-      .select(
-        database.raw("ARRAY_AGG(CONCAT(p.type, ':', p.action)) AS permissions"),
-      )
+    const permissions = await database
+      .select<{
+        permissions: TPermission[] | null;
+      }>(rawPermissionArrayQuery)
       .from("permissions_roles AS pr")
       .leftJoin("permissions AS p", "pr.permission_id", "p.id")
       .where({
         "pr.role_id": role.id,
       })
-      .first()) as unknown as { permissions: string[] | null };
+      .first();
 
     if (!role) {
       res.status(404).send({
