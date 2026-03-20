@@ -87,7 +87,7 @@ export async function update(
   // @ts-expect-error
   const permissions = (req.user?.permissions || []) as TPermission[];
   const requiredPermission = [
-    "comment:update:one",
+    "comment:update:own",
     "comment:update:any",
   ] as TPermission[];
   const hasPermission = requiredPermission.some((permission) =>
