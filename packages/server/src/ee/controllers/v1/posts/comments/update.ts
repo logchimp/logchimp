@@ -63,6 +63,13 @@ export async function update(
 
   // @ts-expect-error
   const comment = req?.comment as GetCommentStatement | undefined;
+  if (!comment) {
+    res.status(404).send({
+      message: error.api.comments.commentNotFound,
+      code: "COMMENT_NOT_FOUND",
+    });
+    return;
+  }
 
   // @ts-expect-error
   const subscription = req?.subscription;
