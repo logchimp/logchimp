@@ -9,12 +9,14 @@ interface IPermissionTableColumns {
   name: string | null;
   type: string;
   action: string;
+  scope: string | null;
   created_at: Date;
 }
 
 interface IPermissionDatabaseTableWhere {
   action: string;
   type: string;
+  scope?: string;
 }
 
 const permissionExists = async (
@@ -25,7 +27,11 @@ const permissionExists = async (
     .select<IPermissionTableColumns>()
     .from("permissions")
     .where({
-      ...permission,
+      action: permission.action,
+      type: permission.type,
+      ...(permission.scope && {
+        scope: permission.scope,
+      }),
     })
     .first();
 
@@ -34,16 +40,17 @@ async function addPermission(
   permissions: TPermission[],
 ): Promise<void> {
   for (const permission of permissions) {
-    const [type, action] = permission.split(":");
+    const [type, action, scope] = permission.split(":");
 
     const exists = await permissionExists(database, {
       type,
       action,
+      scope,
     });
 
     if (exists) {
       logger.warn({
-        message: `Permission ${type}:${action} already added`,
+        message: `Permission ${type}:${action}${scope ? `:${scope}` : ""} already added`,
       });
       continue;
     }
@@ -53,6 +60,9 @@ async function addPermission(
         id: uuidv4(),
         type,
         action,
+        ...(scope && {
+          scope,
+        }),
       })
       .into("permissions");
 
@@ -65,14 +75,22 @@ async function removePermission(
   permissions: TPermission[],
 ): Promise<void> {
   for (const permission of permissions) {
-    const [type, action] = permission.split(":");
+    const [type, action, scope] = permission.split(":");
 
-    await database.delete().from("permissions").where({
-      type,
-      action,
-    });
+    await database
+      .delete()
+      .from("permissions")
+      .where({
+        type,
+        action,
+        ...(scope && {
+          scope,
+        }),
+      });
 
-    logger.info(`Permission removed: ${type}:${action}`);
+    logger.info(
+      `Permission removed: ${type}:${action}${scope ? `:${scope}` : ""}`,
+    );
   }
 }
 

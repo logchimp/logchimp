@@ -2,18 +2,31 @@ export type PermissionAction =
   | "create"
   | "read"
   | "update"
+  | "delete"
   | "destroy"
   | "assign"
-  | "unassign";
+  | "unassign"
+  | "view_internal"
+  | "create_internal";
 
 export type TPermissionEntities =
   | "post"
   | "board"
   | "roadmap"
   | "vote"
+  | "comment"
   | "dashboard"
   | "role"
   | "settings";
+
+export type TPermissionScope =
+  // None is not a permission scope
+  // Solely used as a fallback/default value in the type system
+  | "none"
+  // User with 'own' scope can interact with their own data of the same entity (TPermissionEntities)
+  | "own"
+  // User with 'any' scope can interact with any data of the same entity (TPermissionEntities)
+  | "any";
 
 export type TPermission =
   | "post:read"
@@ -36,6 +49,13 @@ export type TPermission =
   | "roadmap:destroy"
   | "roadmap:assign"
   | "roadmap:unassign"
+  | "comment:create"
+  | "comment:create_internal"
+  | "comment:update:own"
+  | "comment:update:any"
+  | "comment:delete:own"
+  | "comment:delete:any"
+  | "comment:view_internal"
   | "dashboard:read"
   | "role:read"
   | "role:create"
@@ -56,6 +76,13 @@ export interface IPermissionsState {
     read: boolean;
     update: boolean;
     destroy: boolean;
+  };
+  comment: {
+    create: boolean;
+    view_internal: boolean;
+    create_internal: boolean;
+    update: TPermissionScope;
+    delete: TPermissionScope;
   };
   board: {
     create: boolean;
