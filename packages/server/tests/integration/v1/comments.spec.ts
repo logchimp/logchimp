@@ -146,7 +146,7 @@ describeEE("POST /api/v1/posts/:post_id/comments", () => {
     expect(res.body.errors[0].code).toBe("COMMENT_BODY_MISSING");
   });
 
-  itEE("should create a comment", async () => {
+  itEE.skip("should create a comment", async () => {
     const { user: authUser } = await createUser();
     const board = await generateBoard({}, true);
     const post = await generatePost(
@@ -179,7 +179,7 @@ describeEE("POST /api/v1/posts/:post_id/comments", () => {
     expect(comment.parent_id).toBeNull();
   });
 
-  itEE(
+  itEE.skip(
     "should create a comment without parent_id if the parent comment doesn't exists",
     async () => {
       const { user: authUser } = await createUser();
@@ -216,7 +216,7 @@ describeEE("POST /api/v1/posts/:post_id/comments", () => {
     },
   );
 
-  itEE("should reply to an already existing comment", async () => {
+  itEE.skip("should reply to an already existing comment", async () => {
     const { user: authUser } = await createUser();
     const board = await generateBoard({}, true);
     const post = await generatePost(

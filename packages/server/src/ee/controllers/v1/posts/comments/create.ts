@@ -8,6 +8,7 @@ import type {
   IPublicUserInfo,
   IComment,
   TPostActivityType,
+  TPermission,
 } from "@logchimp/types";
 import * as v from "valibot";
 
@@ -71,6 +72,31 @@ export async function create(
           : undefined,
         code: issue.message,
       })),
+    });
+    return;
+  }
+
+  // @ts-expect-error
+  const permissions = (req?.user?.permissions || []) as TPermission[];
+
+  const permission = reqBody.output.is_internal
+    ? "comment:create_internal"
+    : "comment:create";
+  const hasPermission = permissions.includes(permission);
+  if (!hasPermission) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
+  // @ts-expect-error
+  const subscription = req?.subscription;
+  if (subscription?.hierarchy <= (reqBody.output.is_internal ? 2 : 1)) {
+    res.status(403).send({
+      message: error.middleware.license.higherPlan,
+      code: "LICENSE_INSUFFICIENT_TIER",
     });
     return;
   }
