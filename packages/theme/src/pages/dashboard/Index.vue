@@ -107,8 +107,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useRoute, useRouter } from "vue-router";
+import confetti from "canvas-confetti";
 import type { IBoardPrivate, IPost } from "@logchimp/types";
 
 // modules
@@ -164,6 +166,23 @@ async function getBoards() {
     boardState.value = "ERROR";
   }
 }
+
+const route = useRoute();
+const routerInstance = useRouter();
+
+onMounted(() => {
+  if (route.query.onboarding === "complete") {
+    // Remove the query param so confetti only shows once
+    routerInstance.replace({ query: {} });
+
+    // Fire confetti burst
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { y: 0.6 },
+    });
+  }
+});
 
 useHead({
   title: "Dashboard",

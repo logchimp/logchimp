@@ -33,7 +33,7 @@
     </div>
 
     <AuthFormHelperText>
-      You can <router-link to="/dashboard">skip</router-link> and create one later.
+      You can <router-link to="/dashboard?onboarding=complete">skip</router-link> and create one later.
     </AuthFormHelperText>
   </auth-form>
 </template>
@@ -91,7 +91,7 @@ async function create() {
       display: true,
     });
 
-    router.push("/dashboard");
+    router.push("/dashboard?onboarding=complete");
   } catch (error) {
     console.error(error);
     buttonLoading.value = false;
