@@ -57,11 +57,12 @@ export async function filter(
 
   const query = querySchema.safeParse(req.query);
   if (!query.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.error.issues,
     });
+    return;
   }
 
   const { first: _first, page, after, created, limit } = query.data;
