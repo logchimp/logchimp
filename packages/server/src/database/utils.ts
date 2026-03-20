@@ -60,7 +60,9 @@ async function addPermission(
         id: uuidv4(),
         type,
         action,
-        scope,
+        ...(scope && {
+          scope,
+        }),
       })
       .into("permissions");
 
@@ -81,13 +83,9 @@ async function removePermission(
       .where({
         type,
         action,
-        ...(scope
-          ? {
-              scope,
-            }
-          : {
-              scope: null,
-            }),
+        ...(scope && {
+          scope,
+        }),
       });
 
     logger.info(
