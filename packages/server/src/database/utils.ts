@@ -75,11 +75,20 @@ async function removePermission(
   for (const permission of permissions) {
     const [type, action, scope] = permission.split(":");
 
-    await database.delete().from("permissions").where({
-      type,
-      action,
-      scope,
-    });
+    await database
+      .delete()
+      .from("permissions")
+      .where({
+        type,
+        action,
+        ...(scope
+          ? {
+              scope,
+            }
+          : {
+              scope: null,
+            }),
+      });
 
     logger.info(
       `Permission removed: ${type}:${action}${scope ? `:${scope}` : ""}`,
