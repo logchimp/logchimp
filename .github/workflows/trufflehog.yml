@@ -5,6 +5,8 @@ on:
     branches: [ master ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+    branches-ignore:
+      - "**/graphite-base/**"
   schedule:
     # Run weekly scan on Monday at 12:00 AM
     - cron: '0 0 * * 1'
