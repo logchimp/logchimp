@@ -17,6 +17,7 @@ import {
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { isFeatureEnabled } from "../../../../services/settings/labs";
+import type { GetCommentStatement } from "../../../../middleware/commentExists";
 
 type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
 
