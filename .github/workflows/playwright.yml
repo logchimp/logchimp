@@ -3,6 +3,8 @@ name: Playwright Tests
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches-ignore:
+      - "**/graphite-base/**"
   push:
     paths:
       - ".github/workflows/playwright.yml"

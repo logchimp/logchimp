@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - '**'
+    branches-ignore:
+      - "**/graphite-base/**"
 
 permissions:
   contents: read
