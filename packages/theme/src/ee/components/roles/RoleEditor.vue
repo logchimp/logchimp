@@ -202,6 +202,42 @@
     </div>
 
     <div class="form-section">
+      <p class="form-section-title">Comment permissions</p>
+      <div class="grid grid-cols-2 gap-x-8">
+        <div class="flex flex-col gap-y-4 w-full">
+          <toggle-item
+            v-model="permissions.comment.create"
+            label="Create"
+            note="This permission allows you to create comments on posts."
+          />
+          <role-modify-permission-scope
+            v-model="permissions.comment.update"
+            label="Update"
+            note="This permission allows you to update comments."
+          />
+          <toggle-item
+            v-model="permissions.comment.view_internal"
+            label="View internal"
+            note="This permission allows you to view internal comments on posts."
+          />
+        </div>
+
+        <div class="flex flex-col gap-y-4 w-full">
+          <toggle-item
+            v-model="permissions.comment.create_internal"
+            label="Create internal"
+            note="This permission allows you to create internal comments on posts."
+          />
+          <role-modify-permission-scope
+            v-model="permissions.comment.delete"
+            label="Delete"
+            note="This permission allows you to delete comments."
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
       <p class="form-section-title">Dashboard permissions</p>
       <div class="form-columns">
         <div class="form-column">
@@ -300,6 +336,7 @@ import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivi
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import Alert from "../../../components/ui/Alert/Alert.vue";
+import RoleModifyPermissionScope from "./ModifyPermissionScope.vue";
 
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
@@ -330,8 +367,15 @@ async function updateRoleHandler() {
 
     for (const action in permissionGroup) {
       const typedAction = action as keyof typeof permissionGroup;
-      if (permissionGroup[typedAction]) {
+      if (
+        typeof permissionGroup[typedAction] === "boolean" &&
+        permissionGroup[typedAction] === true
+      ) {
         activePermissions.push(`${permissionType}:${action}` as TPermission);
+      } else if (typeof permissionGroup[typedAction] === "string") {
+        activePermissions.push(
+          `${permissionType}:${action}:${permissionGroup[typedAction]}` as TPermission,
+        );
       }
     }
   }
