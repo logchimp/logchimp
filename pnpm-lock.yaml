@@ -154,7 +154,7 @@ importers:
         specifier: ^13.15.2
         version: 13.15.9
       nodemon:
-        specifier: ^3.1.7
+        specifier: ^3.1.14
         version: 3.1.14
       supertest:
         specifier: ^7.1.4
@@ -6170,7 +6170,7 @@ snapshots:
   vite-node@3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.1
+      debug: 4.4.3(supports-color@5.5.0)
       es-module-lexer: 1.7.0
       pathe: 2.0.3
       vite: 6.4.1(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
