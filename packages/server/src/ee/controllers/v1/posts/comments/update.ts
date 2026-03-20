@@ -5,6 +5,7 @@ import type {
   IUpdatePostCommentRequestBody,
   IUpdatePostCommentRequestParam,
   IUpdatePostCommentResponseBody,
+  TPermission,
 } from "@logchimp/types";
 import * as v from "valibot";
 
@@ -16,6 +17,7 @@ import {
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { isFeatureEnabled } from "../../../../services/settings/labs";
+import type { GetCommentStatement } from "../../../../middleware/commentExists";
 
 type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
 
@@ -59,27 +61,86 @@ export async function update(
     return;
   }
 
-  try {
-    // @ts-expect-error
-    const userId = req.user.userId;
+  // @ts-expect-error
+  const comment = req?.comment as GetCommentStatement | undefined;
+  if (!comment) {
+    res.status(404).send({
+      message: error.api.comments.commentNotFound,
+      code: "COMMENT_NOT_FOUND",
+    });
+    return;
+  }
 
-    const isAuthor = await database
-      .from("posts_activity")
-      .where({
-        type: "comment",
-        posts_comments_id: comment_id,
-        author_id: userId,
-      })
-      .first();
+  // @ts-expect-error
+  const subscription = req?.subscription;
+  if (subscription?.hierarchy <= (comment.is_internal ? 2 : 1)) {
+    res.status(403).send({
+      message: error.middleware.license.higherPlan,
+      code: "LICENSE_INSUFFICIENT_TIER",
+    });
+    return;
+  }
 
-    if (!isAuthor) {
+  // @ts-expect-error
+  const userId = req.user.userId;
+
+  // @ts-expect-error
+  const permissions = (req.user?.permissions || []) as TPermission[];
+  const requiredPermission = [
+    "comment:update:own",
+    "comment:update:any",
+  ] as TPermission[];
+  const hasPermission = requiredPermission.some((permission) =>
+    permissions.includes(permission),
+  );
+  if (!hasPermission) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
+  const ownComment = permissions.includes("comment:update:one" as TPermission);
+  if (ownComment) {
+    let isAuthor: {
+      id: string;
+    };
+    try {
+      isAuthor = await database
+        .select<{
+          id: string;
+        }>("id")
+        .from("posts_activity")
+        .where({
+          type: "comment",
+          posts_comments_id: comment_id,
+          author_id: userId,
+        })
+        .first();
+    } catch (err) {
+      logger.log({
+        level: "error",
+        message: "failed to check if user is author of comment",
+        err,
+      });
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
+    }
+
+    if (!isAuthor?.id) {
       res.status(403).send({
         message: error.api.comments.notAnAuthor,
         code: "UNAUTHORIZED_NOT_AUTHOR",
       });
       return;
     }
+  }
 
+  try {
     const comment = await commentUpdateStatement({
       comment_id,
       is_internal: reqBody.output.is_internal,
