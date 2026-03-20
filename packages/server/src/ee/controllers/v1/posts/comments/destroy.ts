@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   TDeletePostCommentRequestParam,
+  TPermission,
 } from "@logchimp/types";
 import database from "../../../../../database";
 
@@ -9,6 +10,7 @@ import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { isFeatureEnabled } from "../../../../services/settings/labs";
+import type { GetCommentStatement } from "../../../../middleware/commentExists";
 
 /**
  * Comment delete endpoint.
@@ -30,46 +32,60 @@ export async function destroy(
     return;
   }
 
+  // @ts-expect-error
+  const comment = req?.comment as GetCommentStatement | undefined;
+  if (!comment) {
+    res.status(404).send({
+      message: error.api.comments.commentNotFound,
+      code: "COMMENT_NOT_FOUND",
+    });
+    return;
+  }
+
+  // @ts-expect-error
+  const subscription = req?.subscription;
+  if (subscription?.hierarchy <= (comment.is_internal ? 2 : 1)) {
+    res.status(403).send({
+      message: error.middleware.license.higherPlan,
+      code: "LICENSE_INSUFFICIENT_TIER",
+    });
+    return;
+  }
+
+  // @ts-expect-error
+  const permissions = (req.user?.permissions || []) as TPermission[];
+  const hasPermission = permissions.includes("comment:delete:any");
+  if (!hasPermission) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
+  if (
+    comment.is_internal &&
+    !(
+      permissions.includes("comment:view_internal") &&
+      permissions.includes("comment:delete:any")
+    )
+  ) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
   try {
-    // @ts-expect-error
-    const userId = req.user.userId;
-
-    const isAuthor = await database
-      .from("posts_activity")
-      .where({
-        type: "comment",
-        posts_comments_id: comment_id,
-        author_id: userId,
-      })
-      .first();
-
-    if (!isAuthor) {
-      res.status(403).send({
-        message: error.api.comments.notAnAuthor,
-        code: "UNAUTHORIZED_NOT_AUTHOR",
-      });
-      return;
-    }
-
-    try {
-      await commentDeleteStatement(post_id, comment_id);
-    } catch (err) {
-      logger.error({
-        message: "Error deleting comment",
-        error: err,
-      });
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
-      return;
-    }
+    await commentDeleteStatement(post_id, comment_id);
 
     res.sendStatus(204);
   } catch (err) {
-    logger.log({
+    logger.error({
       level: "error",
-      message: err,
+      message: "Error deleting comment",
+      err,
     });
 
     res.status(500).send({
