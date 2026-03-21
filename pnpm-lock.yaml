@@ -98,9 +98,6 @@ importers:
       winston:
         specifier: ^3.3.3
         version: 3.18.3
-      zod:
-        specifier: ^4.0.14
-        version: 4.1.12
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.3.0
@@ -3473,9 +3470,6 @@ packages:
   zhead@2.2.4:
     resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
 
-  zod@4.1.12:
-    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
-
 snapshots:
 
   '@babel/helper-string-parser@7.27.1': {}
@@ -6371,5 +6365,3 @@ snapshots:
   yn@3.1.1: {}
 
   zhead@2.2.4: {}
-
-  zod@4.1.12: {}
