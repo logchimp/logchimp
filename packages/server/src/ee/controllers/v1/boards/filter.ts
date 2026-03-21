@@ -145,8 +145,8 @@ export async function getBoards({
   page,
 }: IGetBoardQueryOptions) {
   try {
-    let boardsQuery = database<IBoardPrivate>("boards")
-      .select(
+    let boardsQuery = database("boards")
+      .select<Array<IBoardPrivate>>(
         "boards.boardId",
         "boards.name",
         "boards.color",
@@ -205,7 +205,7 @@ export async function getBoards({
       }
     }
 
-    const boardsData = await boardsQuery;
+    const boardsData = (await boardsQuery) as unknown as IBoardPrivate[];
     return boardsData;
   } catch (error) {
     logger.log({
