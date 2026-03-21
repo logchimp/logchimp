@@ -19,7 +19,7 @@ import { useUserStore } from "../../store/user";
  */
 export const postActivity = async (
   post_id: string,
-  { page, limit }: IGetPostActivityRequestQuery,
+  { page, limit, visibility }: IGetPostActivityRequestQuery,
 ): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
   return await axios({
     method: "GET",
@@ -27,6 +27,7 @@ export const postActivity = async (
     params: {
       page,
       limit,
+      visibility,
     },
   });
 };
