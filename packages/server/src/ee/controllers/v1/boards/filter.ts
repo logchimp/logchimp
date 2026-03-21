@@ -87,7 +87,7 @@ export async function filter(
     let hasNextPage = false;
 
     if (!page) {
-      const boardsMetaData = await getBoardMetaData({ after });
+      const boardsMetaData = await getBoardMetaData({ after, created });
 
       if (boardsMetaData) {
         totalCount = boardsMetaData.totalBoardsCount;
@@ -173,7 +173,10 @@ export async function getBoards({
           boardId: string;
           createdAt: string;
         }>("boardId", "createdAt")
-        .where("boardId", after)
+        .where({
+          boardId: after,
+          display: true,
+        })
         .first();
 
       if (!afterBoard) return [];
@@ -217,7 +220,13 @@ export async function getBoards({
   }
 }
 
-export async function getBoardMetaData({ after }: { after?: string }) {
+export async function getBoardMetaData({
+  after,
+  created,
+}: {
+  after?: string;
+  created: ApiSortType;
+}) {
   return database.transaction(async (trx) => {
     const totalCountResult = await trx("boards")
       .where("display", true)
@@ -230,8 +239,9 @@ export async function getBoardMetaData({ after }: { after?: string }) {
     if (after) {
       const afterBoard = await trx("boards")
         .select<{
+          boardId: string;
           createdAt: string;
-        }>("createdAt")
+        }>("boardId", "createdAt")
         .where({
           boardId: after,
           display: true,
@@ -241,7 +251,11 @@ export async function getBoardMetaData({ after }: { after?: string }) {
       if (afterBoard) {
         const subQuery = trx("boards")
           .where("display", true)
-          .andWhere("createdAt", ">=", afterBoard.createdAt)
+          .andWhere(
+            "createdAt",
+            created === "ASC" ? ">=" : "<=",
+            afterBoard.createdAt,
+          )
           .offset(1);
 
         const remaining = await trx
