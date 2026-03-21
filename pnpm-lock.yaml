@@ -57,7 +57,7 @@ importers:
         specifier: ^11.0.0
         version: 11.3.4
       html-to-text:
-        specifier: ^8.1.0
+        specifier: ^8.2.1
         version: 8.2.1
       iovalkey:
         specifier: ^0.3.3
