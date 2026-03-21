@@ -1,49 +1,40 @@
 <template>
-  <roadmap-skeleton v-if="loading" />
+  <roadmap-skeleton v-if="isLoadingSkeleton" />
+  <!-- Show roadmaps grid only when we have roadmaps -->
   <div
-    v-else-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
-    class="text-center"
-  >
-    <p>
-      No roadmaps available
-    </p>
-  </div>
-  <template v-else>
-    <!-- Show roadmaps grid only when we have roadmaps -->
-    <div
       v-if="roadmaps.length > 0"
       ref="roadmapElement"
       :class="[
       'overflow-x-auto h-[500px] overflow-y-hidden',
       'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]',
     ]"
-    >
-      <roadmap-column
-        v-for="roadmap in roadmaps"
-        :key="roadmap.id"
-        :roadmap="roadmap"
-      />
+  >
+    <roadmap-column
+      v-for="roadmap in roadmaps"
+      :key="roadmap.id"
+      :roadmap="roadmap"
+    />
+  </div>
 
-      <div
-        v-if="scrollLoading"
-        class="flex items-center justify-center"
-      >
-        <LoaderContainer />
-      </div>
-    </div>
-  </template>
+  <div
+    v-if="!isLoadingSkeleton && roadmaps.length === 0"
+    class="text-center"
+  >
+    No roadmaps available
+  </div>
+
+  <infinite-scroll
+    :on-infinite="getRoadmaps"
+    :state="state"
+    direction="right"
+    :target="roadmapElement"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, onMounted } from "vue";
+import { ref, useTemplateRef } from "vue";
 import { useHead } from "@vueuse/head";
-import { useInfiniteScroll } from "@vueuse/core";
-import type {
-  IApiErrorResponse,
-  IPaginatedRoadmapsResponse,
-  IRoadmap,
-} from "@logchimp/types";
-import type { AxiosError } from "axios";
+import type { IPaginatedRoadmapsResponse, IRoadmap } from "@logchimp/types";
 
 // modules
 import { getAllRoadmaps } from "../ee/modules/roadmaps";
@@ -52,7 +43,9 @@ import { useSettingStore } from "../store/settings";
 // components
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";
 import RoadmapSkeleton from "../ee/components/roadmap/RoadmapSkeleton.vue";
-import LoaderContainer from "../components/ui/LoaderContainer.vue";
+import InfiniteScroll, {
+  type InfiniteScrollStateType,
+} from "../components/ui/InfiniteScroll.vue";
 
 const { get: siteSettings } = useSettingStore();
 
@@ -60,50 +53,41 @@ const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
 const roadmaps = ref<IRoadmap[]>([]);
 const endCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
-const errorCode = ref<string>();
-const loading = ref(true);
-const scrollLoading = ref(false);
 
-async function getRoadmaps(after: string | undefined, isScroll = false) {
-  if (isScroll) scrollLoading.value = true;
-  else loading.value = true;
+const state = ref<InfiniteScrollStateType>();
+const isLoadingSkeleton = ref(true);
+
+async function getRoadmaps() {
+  if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
+  state.value = "LOADING";
+  const first = 4;
 
   try {
     const response = await getAllRoadmaps({
-      first: "4",
-      after: after == null ? undefined : after,
+      first: first.toString(),
+      after: endCursor.value,
       visibility: ["public"],
     });
 
     const paginatedData: IPaginatedRoadmapsResponse = response.data;
     const roadmapList = paginatedData.results;
-
-    if (roadmapList.length > 0) {
-      roadmaps.value.push(...roadmapList);
-    }
     endCursor.value = paginatedData.page_info.end_cursor || undefined;
     hasNextPage.value = paginatedData.page_info.has_next_page;
-  } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
-    if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {
-      errorCode.value = err.response.data.code;
+    if (roadmapList.length) {
+      roadmaps.value.push(...roadmapList);
+      state.value = "LOADED";
     }
+    if (!hasNextPage.value) {
+      state.value = "COMPLETED";
+    }
+  } catch (err) {
+    console.error("Error fetching roadmaps:", err);
+    state.value = "ERROR";
   } finally {
-    loading.value = false;
-    scrollLoading.value = false;
+    isLoadingSkeleton.value = false;
   }
 }
-
-useInfiniteScroll(
-  roadmapElement,
-  async () => {
-    getRoadmaps(endCursor.value, true);
-  },
-  {
-    direction: "right",
-    canLoadMore: () => hasNextPage.value && !scrollLoading.value,
-  },
-);
 
 useHead({
   title: "Roadmaps",
@@ -113,10 +97,6 @@ useHead({
       content: () => `Roadmaps • ${siteSettings.title}`,
     },
   ],
-});
-
-onMounted(() => {
-  getRoadmaps(undefined);
 });
 
 defineOptions({
