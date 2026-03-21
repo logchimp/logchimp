@@ -35,8 +35,8 @@ export type TFilterBoardRequestQuery = IGetBoardsRequestQuery &
   CursorPaginationParams;
 
 export interface IFilterBoardResponseBody
-  extends Partial<CursorPaginatedResponse<IBoardDetail>> {
-  boards: IBoardDetail[];
+  extends Partial<CursorPaginatedResponse<IBoardPrivate>> {
+  boards: IBoardPrivate[];
 }
 
 export interface IGetBoardByUrlRequestParams {
