@@ -254,12 +254,29 @@ export async function getBoardMetaData({
       if (afterBoard) {
         const subQuery = trx("boards")
           .where("display", true)
-          .andWhere(
-            "createdAt",
-            created === "ASC" ? ">=" : "<=",
-            afterBoard.createdAt,
-          )
-          .offset(1);
+          .andWhere(function () {
+            if (created === "ASC") {
+              this.where("createdAt", ">", afterBoard.createdAt).orWhere(
+                function () {
+                  this.where("createdAt", "=", afterBoard.createdAt).andWhere(
+                    "boardId",
+                    ">",
+                    after,
+                  );
+                },
+              );
+            } else {
+              this.where("createdAt", "<", afterBoard.createdAt).orWhere(
+                function () {
+                  this.where("createdAt", "=", afterBoard.createdAt).andWhere(
+                    "boardId",
+                    "<",
+                    after,
+                  );
+                },
+              );
+            }
+          });
 
         const remaining = await trx
           .count<{ count: string }>("* as count")
