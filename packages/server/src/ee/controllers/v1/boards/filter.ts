@@ -233,7 +233,10 @@ export async function getBoardMetaData({
       .count<{ count: string }>("* as count")
       .first();
 
-    const totalBoardsCount = Number.parseInt(totalCountResult.count, 10);
+    const totalBoardsCount = Number.parseInt(
+      totalCountResult?.count || "0",
+      10,
+    );
 
     let remainingBoardsCount = totalBoardsCount;
     if (after) {
@@ -263,7 +266,7 @@ export async function getBoardMetaData({
           .from(subQuery.as("next"))
           .first();
 
-        remainingBoardsCount = Number.parseInt(remaining.count, 10);
+        remainingBoardsCount = Number.parseInt(remaining?.count || "0", 10);
       }
     }
 
