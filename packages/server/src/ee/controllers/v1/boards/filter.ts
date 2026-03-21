@@ -212,9 +212,9 @@ export async function getBoards({
       level: "error",
       message: error,
     });
-  }
 
-  return [];
+    throw error;
+  }
 }
 
 export async function getBoardMetaData({ after }: { after?: string }) {
