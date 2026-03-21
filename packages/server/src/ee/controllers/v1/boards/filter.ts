@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
+import type { Knex } from "knex";
 import type {
   IApiErrorResponse,
   TFilterBoardRequestQuery,
@@ -181,31 +182,11 @@ export async function getBoards({
 
       if (!afterBoard) return [];
 
-      if (created === "ASC") {
-        boardsQuery = boardsQuery.where(function () {
-          this.where("boards.createdAt", ">", afterBoard.createdAt).orWhere(
-            function () {
-              this.where(
-                "boards.createdAt",
-                "=",
-                afterBoard.createdAt,
-              ).andWhere("boards.boardId", ">", after);
-            },
-          );
-        });
-      } else {
-        boardsQuery = boardsQuery.where(function () {
-          this.where("boards.createdAt", "<", afterBoard.createdAt).orWhere(
-            function () {
-              this.where(
-                "boards.createdAt",
-                "=",
-                afterBoard.createdAt,
-              ).andWhere("boards.boardId", "<", after);
-            },
-          );
-        });
-      }
+      boardsQuery = applyCursorFilter(boardsQuery, {
+        created,
+        after,
+        createdAt: afterBoard.createdAt,
+      });
     }
 
     const boardsData = (await boardsQuery) as unknown as IBoardPrivate[];
@@ -255,27 +236,11 @@ export async function getBoardMetaData({
         const subQuery = trx("boards")
           .where("display", true)
           .andWhere(function () {
-            if (created === "ASC") {
-              this.where("createdAt", ">", afterBoard.createdAt).orWhere(
-                function () {
-                  this.where("createdAt", "=", afterBoard.createdAt).andWhere(
-                    "boardId",
-                    ">",
-                    after,
-                  );
-                },
-              );
-            } else {
-              this.where("createdAt", "<", afterBoard.createdAt).orWhere(
-                function () {
-                  this.where("createdAt", "=", afterBoard.createdAt).andWhere(
-                    "boardId",
-                    "<",
-                    after,
-                  );
-                },
-              );
-            }
+            applyCursorFilter(this, {
+              created,
+              after,
+              createdAt: afterBoard.createdAt,
+            });
           });
 
         const remaining = await trx
@@ -291,5 +256,30 @@ export async function getBoardMetaData({
       totalBoardsCount,
       remainingBoardsCount,
     };
+  });
+}
+
+function applyCursorFilter(
+  query: Knex.QueryBuilder,
+  {
+    created,
+    after,
+    createdAt,
+  }: {
+    created: ApiSortType;
+    after: string;
+    createdAt: string;
+  },
+) {
+  const op = created === "ASC" ? ">" : "<";
+
+  return query.where(function () {
+    this.where("boards.createdAt", op, createdAt).orWhere(function () {
+      this.where("boards.createdAt", "=", createdAt).andWhere(
+        "boards.boardId",
+        op,
+        after,
+      );
+    });
   });
 }
