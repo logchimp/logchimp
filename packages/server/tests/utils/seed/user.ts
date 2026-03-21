@@ -17,11 +17,12 @@ interface CreateUserArgs {
   isVerified: boolean;
   isOwner: boolean;
   isBlocked: boolean;
+  addEveryoneRole?: boolean;
 }
 
 /**
  * NOTE: this function by-passes 'allowSignup' settings
- * Should have `@everyone` role assigned.
+ * Should have `@everyone` role assigned based on `addEveryoneRole` argument.
  * @param {object} [user=undefined]
  * @returns {Promise<IAuthLoginResponseBody>}
  */
@@ -40,6 +41,7 @@ export async function createUser(
   const isVerified = user?.isVerified || false;
   const isOwner = user?.isOwner || false;
   const isBlocked = user?.isBlocked || false;
+  const addEveryoneRole = user?.addEveryoneRole ?? true;
 
   // manually seeding data due to 'allowSignup' possibly be disabled
   await database
@@ -55,19 +57,21 @@ export async function createUser(
     })
     .into("users");
 
-  // assign '@everyone' role to user
-  await database.raw(
-    `
-        INSERT INTO roles_users (id, role_id, user_id)
-        VALUES (:uuid, (SELECT id
-                        FROM roles
-                        WHERE name = '@everyone'), :userId)
-    `,
-    {
-      uuid: uuid(),
-      userId,
-    },
-  );
+  if (addEveryoneRole) {
+    // assign '@everyone' role to user
+    await database.raw(
+      `
+          INSERT INTO roles_users (id, role_id, user_id)
+          VALUES (:uuid, (SELECT id
+                          FROM roles
+                          WHERE name = '@everyone'), :userId)
+      `,
+      {
+        uuid: uuid(),
+        userId,
+      },
+    );
+  }
 
   const response = await supertest(app).post("/api/v1/auth/login").send({
     email,

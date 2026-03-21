@@ -7,7 +7,6 @@ import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
 import { createUser } from "../../utils/seed/user";
-import { updateSettings } from "../../utils/seed/settings";
 import {
   board as generateBoard,
   roadmap as generateRoadmap,
@@ -423,10 +422,16 @@ describe("POST /api/v1/posts", () => {
   it("should throw error not having 'post:create' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
+      addEveryoneRole: false,
+    });
+
+    // added `post:read` permission because permission array can't be empty.
+    await createRoleWithPermissions(authUser.userId, ["post:read"], {
+      roleName: "Post Reader",
     });
 
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .post("/api/v1/posts")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
