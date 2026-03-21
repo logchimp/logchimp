@@ -178,14 +178,31 @@ export async function getBoards({
 
       if (!afterBoard) return [];
 
-      const operator = created === "ASC" ? ">" : "<";
-
-      boardsQuery = boardsQuery
-        .whereRaw(
-          '("boards"."createdAt", "boards"."boardId")' + operator + "(?, ?)",
-          [afterBoard.createdAt, after],
-        )
-        .offset(1);
+      if (created === "ASC") {
+        boardsQuery = boardsQuery.where(function () {
+          this.where("boards.createdAt", ">", afterBoard.createdAt).orWhere(
+            function () {
+              this.where(
+                "boards.createdAt",
+                "=",
+                afterBoard.createdAt,
+              ).andWhere("boards.boardId", ">", after);
+            },
+          );
+        });
+      } else {
+        boardsQuery = boardsQuery.where(function () {
+          this.where("boards.createdAt", "<", afterBoard.createdAt).orWhere(
+            function () {
+              this.where(
+                "boards.createdAt",
+                "=",
+                afterBoard.createdAt,
+              ).andWhere("boards.boardId", "<", after);
+            },
+          );
+        });
+      }
     }
 
     const boardsData = await boardsQuery;
