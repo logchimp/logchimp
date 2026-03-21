@@ -19,15 +19,15 @@ import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
 
 /**
- *	Get public boards
- * @param {string} page page number default to 1
- * @param {string} limit number of items per page
+ *  Get public boards
+ * @param {string} first number of items to fetch
+ * @param {string} after cursor to fetch next page
  * @param {ApiSortType} created sort type asc or desc
  * @returns {Promise<AxiosResponse<IFilterBoardResponseBody>>} response
  */
 export const getPublicBoards = async ({
-  page = "1",
-  limit = "10",
+  first,
+  after,
   created = "DESC",
 }: TFilterBoardRequestQuery): Promise<
   AxiosResponse<IFilterBoardResponseBody>
@@ -38,8 +38,8 @@ export const getPublicBoards = async ({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards`,
     params: {
-      page,
-      limit,
+      after,
+      first,
       created,
     },
     headers: {
