@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { z } from "zod";
+import v from "valibot";
 import type { Knex } from "knex";
 import type {
   IApiErrorResponse,
@@ -20,28 +20,29 @@ import {
   parseAndValidatePage,
 } from "../../../../helpers";
 
-const querySchema = z.object({
-  first: z.coerce
-    .string()
-    .transform((value) =>
+const querySchema = v.object({
+  first: v.pipe(
+    v.optional(v.string()),
+    v.transform((value) =>
       parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
     ),
+  ),
   /**
    * For backward compatibility to support offset pagination,
    * will be removed in the next major release.
    */
-  page: z.coerce
-    .string()
-    .optional()
-    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
-  limit: z.coerce
-    .string()
-    .optional()
-    .transform((value) =>
+  page: v.pipe(
+    v.optional(v.string()),
+    v.transform((value) => (value ? parseAndValidatePage(value) : undefined)),
+  ),
+  limit: v.pipe(
+    v.optional(v.string()),
+    v.transform((value) =>
       parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
     ),
-  after: z.uuid().optional(),
-  created: z.enum(["ASC", "DESC"]).default("ASC"),
+  ),
+  after: v.pipe(v.optional(v.string())),
+  created: v.fallback(v.optional(v.picklist(["ASC", "DESC"])), "ASC"),
 });
 
 type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
@@ -56,17 +57,21 @@ export async function filter(
     );
   }
 
-  const query = querySchema.safeParse(req.query);
+  const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
     res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
-      errors: query.error.issues,
+      errors: query.issues.map((issue) => ({
+        ...issue,
+        message: issue.message,
+        code: issue.message,
+      })),
     });
     return;
   }
 
-  const { first: _first, page, after, created, limit } = query.data;
+  const { first: _first, page, after, created, limit } = query.output;
   const first = req.query?.limit ? limit : _first;
 
   try {
