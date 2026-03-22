@@ -26,6 +26,8 @@ const querySchema = v.object({
     v.transform((value) =>
       parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
     ),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
   ),
   /**
    * For backward compatibility to support offset pagination,
@@ -41,9 +43,14 @@ const querySchema = v.object({
       parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
     ),
   ),
-  after: v.pipe(v.optional(v.string())),
+  after: v.pipe(v.optional(v.string()), v.uuid("INVALID_CURSOR")),
   created: v.optional(v.picklist(["ASC", "DESC"]), "ASC"),
 });
+
+const schemaQueryErrorMap = {
+  INVALID_CURSOR: error.general.invalidCursor,
+  MIN_VALUE_1: error.general.minValue1,
+};
 
 type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
 
@@ -64,7 +71,9 @@ export async function filter(
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
         ...issue,
-        message: issue.message,
+        message: schemaQueryErrorMap[issue.message]
+          ? schemaQueryErrorMap[issue.message]
+          : undefined,
         code: issue.message,
       })),
     });
