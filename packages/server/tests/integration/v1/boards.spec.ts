@@ -162,10 +162,12 @@ describeEE("GET /api/v1/boards", () => {
     describeEE("'?created=' param", () => {
       itEE("should get filtered boards in 'DESC' order", async () => {
         const response = await supertest(app).get("/api/v1/boards").query({
+          page: 1,
           created: "DESC",
         });
 
-        const responseBoards: IBoardDetail[] = response.body.boards;
+        const responseBoards = response.body
+          .boards as IFilterBoardResponseBody["boards"];
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
@@ -186,11 +188,13 @@ describeEE("GET /api/v1/boards", () => {
     describeEE("'?limit=' param", () => {
       itEE("should get 2 filtered boards in 'DESC' order", async () => {
         const response = await supertest(app).get("/api/v1/boards").query({
+          page: 1,
           limit: 2,
           created: "DESC",
         });
 
-        const responseBoards: IBoardDetail[] = response.body.boards;
+        const responseBoards = response.body
+          .boards as IFilterBoardResponseBody["boards"];
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
@@ -208,14 +212,16 @@ describeEE("GET /api/v1/boards", () => {
       });
 
       itEE(
-        "should get 15 boards, fallback to cap value of 10 boards in 'ACS' order",
+        "should get 15 boards, fallback to cap value of 10 boards in 'ASC' order",
         async () => {
           const response = await supertest(app).get("/api/v1/boards").query({
+            page: 1,
             limit: 15,
-            created: "ACS",
+            created: "ASC",
           });
 
-          const responseBoards: IBoardDetail[] = response.body.boards;
+          const responseBoards = response.body
+            .boards as IFilterBoardResponseBody["boards"];
 
           expect(response.headers["content-type"]).toContain(
             "application/json",
