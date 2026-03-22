@@ -22,7 +22,7 @@ import {
 
 const querySchema = v.object({
   first: v.pipe(
-    v.optional(v.string()),
+    v.optional(v.string(), GET_BOARDS_FILTER_COUNT.toString()),
     v.transform((value) =>
       parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
     ),
@@ -32,17 +32,17 @@ const querySchema = v.object({
    * will be removed in the next major release.
    */
   page: v.pipe(
-    v.optional(v.string()),
+    v.optional(v.string(), "1"),
     v.transform((value) => (value ? parseAndValidatePage(value) : undefined)),
   ),
   limit: v.pipe(
-    v.optional(v.string()),
+    v.optional(v.string(), GET_BOARDS_FILTER_COUNT.toString()),
     v.transform((value) =>
       parseAndValidateLimit(value, GET_BOARDS_FILTER_COUNT),
     ),
   ),
   after: v.pipe(v.optional(v.string())),
-  created: v.fallback(v.optional(v.picklist(["ASC", "DESC"])), "ASC"),
+  created: v.optional(v.picklist(["ASC", "DESC"]), "ASC"),
 });
 
 type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
