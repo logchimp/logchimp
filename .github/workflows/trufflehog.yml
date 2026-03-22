@@ -21,7 +21,7 @@ permissions:
   actions: read
 
 env:
-  TRUFFLEHOG_VERSION: 3.90.8
+  TRUFFLEHOG_VERSION: 3.94.0
 
 jobs:
   trufflehog-cli:
