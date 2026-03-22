@@ -32,7 +32,7 @@ const querySchema = v.object({
    * will be removed in the next major release.
    */
   page: v.pipe(
-    v.optional(v.string(), "1"),
+    v.optional(v.string()),
     v.transform((value) => (value ? parseAndValidatePage(value) : undefined)),
   ),
   limit: v.pipe(
