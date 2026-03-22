@@ -99,11 +99,11 @@ export async function filter(
         totalCount = boardsMetaData.totalBoardsCount;
         totalPages = Math.ceil(boardsMetaData.totalBoardsCount / first);
         hasNextPage = boardsMetaData.remainingBoardsCount - first > 0;
-      }
 
-      if (after) {
-        const seenBoards = totalCount - boardsMetaData.remainingBoardsCount;
-        currentPage = Math.floor(seenBoards / first) + 1;
+        if (after) {
+          const seenBoards = totalCount - boardsMetaData.remainingBoardsCount;
+          currentPage = Math.floor(seenBoards / first) + 1;
+        }
       }
     }
 
