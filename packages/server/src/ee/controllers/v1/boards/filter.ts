@@ -286,14 +286,17 @@ function applyCursorFilter(
   },
 ) {
   const op = created === "ASC" ? ">" : "<";
+  const eqOp = created === "ASC" ? ">=" : "<=";
 
-  return query.where(function () {
-    this.where("boards.createdAt", op, createdAt).orWhere(function () {
-      this.where("boards.createdAt", "=", createdAt).andWhere(
-        "boards.boardId",
-        op,
-        after,
-      );
-    });
-  });
+  return query
+    .where(function () {
+      this.where("boards.createdAt", op, createdAt).orWhere(function () {
+        this.where("boards.createdAt", "=", createdAt).andWhere(
+          "boards.boardId",
+          eqOp,
+          after,
+        );
+      });
+    })
+    .offset(1);
 }
