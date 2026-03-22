@@ -39,6 +39,8 @@ const querySchema = v.object({
     v.transform((value) =>
       parseAndValidateLimit(value, GET_USERS_FILTER_COUNT),
     ),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
   ),
   after: v.pipe(v.optional(v.string()), v.uuid("INVALID_CURSOR")),
   created: v.optional(v.picklist(["ASC", "DESC"]), "ASC"),
