@@ -43,8 +43,7 @@ const boards = ref<IBoardDetail[]>([]);
 
 onMounted(async () => {
   const response = await getPublicBoards({
-    page: "1",
-    limit: "5",
+    first: "5",
     created: "DESC",
   });
   boards.value = response.data.boards;

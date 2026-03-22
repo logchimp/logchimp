@@ -46,24 +46,28 @@ import BoardItem from "../../components/board/BoardItem.vue";
 const { get: siteSettings } = useSettingStore();
 
 const boards = ref<IBoardDetail[]>([]);
-const page = ref<number>(1);
+const endCursor = ref<string | undefined>();
 const state = ref<InfiniteScrollStateType>();
 const errorCode = ref<string>();
 
 async function getBoards() {
+  if (state.value === "LOADING" || state.value === "COMPLETED") return;
+  state.value = "LOADING";
+
   try {
-    if (state.value === "LOADING" || state.value === "COMPLETED") return;
-
-    state.value = "LOADING";
-
     const response = await getPublicBoards({
-      page: page.value.toString(),
+      first: "8",
+      after: endCursor.value,
       created: "DESC",
     });
 
     if (response.data.boards.length) {
       boards.value.push(...response.data.boards);
-      page.value += 1;
+    }
+    endCursor.value = response.data.page_info?.end_cursor || undefined;
+
+    const nextPage = response.data.page_info?.has_next_page;
+    if (nextPage) {
       state.value = "LOADED";
     } else {
       state.value = "COMPLETED";

@@ -1,6 +1,11 @@
 import { it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
-import type { IBoardDetail, IBoardUpdateRequestBody } from "@logchimp/types";
+import type {
+  IBoardDetail,
+  IBoardPrivate,
+  IBoardUpdateRequestBody,
+  IFilterBoardResponseBody,
+} from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -157,10 +162,12 @@ describeEE("GET /api/v1/boards", () => {
     describeEE("'?created=' param", () => {
       itEE("should get filtered boards in 'DESC' order", async () => {
         const response = await supertest(app).get("/api/v1/boards").query({
+          page: 1,
           created: "DESC",
         });
 
-        const responseBoards: IBoardDetail[] = response.body.boards;
+        const responseBoards = response.body
+          .boards as IFilterBoardResponseBody["boards"];
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
@@ -181,11 +188,13 @@ describeEE("GET /api/v1/boards", () => {
     describeEE("'?limit=' param", () => {
       itEE("should get 2 filtered boards in 'DESC' order", async () => {
         const response = await supertest(app).get("/api/v1/boards").query({
+          page: 1,
           limit: 2,
           created: "DESC",
         });
 
-        const responseBoards: IBoardDetail[] = response.body.boards;
+        const responseBoards = response.body
+          .boards as IFilterBoardResponseBody["boards"];
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
@@ -203,14 +212,16 @@ describeEE("GET /api/v1/boards", () => {
       });
 
       itEE(
-        "should get 15 boards, fallback to cap value of 10 boards in 'ACS' order",
+        "should get 15 boards, fallback to cap value of 10 boards in 'ASC' order",
         async () => {
           const response = await supertest(app).get("/api/v1/boards").query({
+            page: 1,
             limit: 15,
-            created: "ACS",
+            created: "ASC",
           });
 
-          const responseBoards: IBoardDetail[] = response.body.boards;
+          const responseBoards = response.body
+            .boards as IFilterBoardResponseBody["boards"];
 
           expect(response.headers["content-type"]).toContain(
             "application/json",
@@ -229,6 +240,167 @@ describeEE("GET /api/v1/boards", () => {
           }
         },
       );
+    });
+  });
+
+  describeEE("Cursor pagination", () => {
+    describeEE("'?first=' param", () => {
+      itEE("should return default list when no '?first=' param", async () => {
+        const res = await supertest(app).get("/api/v1/boards");
+
+        const firstItem: IBoardPrivate = res.body.results[0];
+        const lastItem: IBoardPrivate =
+          res.body.results[res.body.results.length - 1];
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(200);
+
+        expect(res.body.results).toHaveLength(10);
+        expect(res.body.boards).toHaveLength(10);
+        expect(Array.isArray(res.body.results)).toBeTruthy();
+        expect(Array.isArray(res.body.boards)).toBeTruthy();
+
+        expect(res.body.page_info).toBeDefined();
+        expect(typeof res.body.page_info.count).toBe("number");
+        expect(typeof res.body.page_info.current_page).toBe("number");
+        expect(typeof res.body.page_info.has_next_page).toBe("boolean");
+
+        expect(res.body.page_info.start_cursor).toBe(firstItem.boardId);
+        expect(res.body.page_info.end_cursor).toBe(lastItem.boardId);
+        expect(res.body.page_info.start_cursor).toBeTypeOf("string");
+        expect(res.body.page_info.end_cursor).toBeTypeOf("string");
+        expect(res.body.page_info.has_next_page).toBe(true);
+
+        // expect(res.body.total_count).toBe(15);
+      });
+
+      itEE("should return 5 items per page with '?first=5'", async () => {
+        const res = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 5 });
+
+        const firstItem: IBoardPrivate = res.body.results[0];
+        const lastItem: IBoardPrivate =
+          res.body.results[res.body.results.length - 1];
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(200);
+
+        expect(res.body.results).toHaveLength(5);
+        expect(res.body.boards).toHaveLength(5);
+        expect(Array.isArray(res.body.results)).toBeTruthy();
+        expect(Array.isArray(res.body.boards)).toBeTruthy();
+
+        expect(res.body.page_info.start_cursor).toBe(firstItem.boardId);
+        expect(res.body.page_info.end_cursor).toBe(lastItem.boardId);
+        expect(res.body.page_info.start_cursor).toBeTypeOf("string");
+        expect(res.body.page_info.end_cursor).toBeTypeOf("string");
+        expect(res.body.page_info.has_next_page).toBe(true);
+        expect(res.body.page_info.end_cursor).not.toBe(
+          res.body.page_info.start_cursor,
+        );
+        expect(res.body.page_info.count).toBe(5);
+
+        // expect(res.body.total_pages).toBe(2); // 10 public / 5 per page
+        // expect(res.body.total_count).toBe(10);
+      });
+
+      itEE(
+        "should cap the '?first=' param value with 20 max items",
+        async () => {
+          const res = await supertest(app)
+            .get("/api/v1/boards")
+            .query({ first: 25 });
+
+          const firstItem: IBoardPrivate = res.body.results[0];
+          const lastItem: IBoardPrivate =
+            res.body.results[res.body.results.length - 1];
+
+          expect(res.headers["content-type"]).toContain("application/json");
+          expect(res.status).toBe(200);
+
+          expect(res.body.results).toHaveLength(10);
+          expect(res.body.boards).toHaveLength(10);
+          expect(Array.isArray(res.body.results)).toBeTruthy();
+          expect(Array.isArray(res.body.boards)).toBeTruthy();
+
+          expect(res.body.page_info.start_cursor).toBe(firstItem.boardId);
+          expect(res.body.page_info.end_cursor).toBe(lastItem.boardId);
+          expect(res.body.page_info.start_cursor).toBeTypeOf("string");
+          expect(res.body.page_info.end_cursor).toBeTypeOf("string");
+          expect(res.body.page_info.has_next_page).toBe(true);
+          expect(res.body.page_info.end_cursor).not.toBe(
+            res.body.page_info.start_cursor,
+          );
+        },
+      );
+
+      itEE("should throw 'VALIDATION_ERROR' error on '?first=0'", async () => {
+        const response = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 0 });
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(400);
+
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.errors[0]?.message).toBe(
+          "Too small: expected number to be >=1",
+        );
+      });
+    });
+
+    describeEE("'?after=' param", () => {
+      itEE("should handle cursor pagination correctly", async () => {
+        const res1 = await supertest(app)
+          .get("/api/v1/boards")
+          .query({ first: 3 });
+        expect(res1.headers["content-type"]).toContain("application/json");
+        const res1Body = res1.body as IFilterBoardResponseBody;
+        const lastId = res1Body.results[2].boardId;
+
+        const res2 = await supertest(app).get("/api/v1/boards").query({
+          first: 3,
+          after: lastId,
+        });
+        const res2Body = res2.body as IFilterBoardResponseBody;
+        expect(res2.headers["content-type"]).toContain("application/json");
+        expect(res2.status).toBe(200);
+        expect(res2Body.results).toHaveLength(3);
+        expect(res2Body.page_info.end_cursor).toBeTypeOf("string");
+        expect(res2Body.page_info.start_cursor).toBeTypeOf("string");
+
+        const ids1 = res1Body.results.map((r: IBoardPrivate) => r.boardId);
+        const ids2 = res2Body.results.map((r: IBoardPrivate) => r.boardId);
+        expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
+      });
+
+      itEE(
+        "should throw 'VALIDATION_ERROR' error for invalid '?after=' param",
+        async () => {
+          const res = await supertest(app).get("/api/v1/boards").query({
+            after: "invalid-uuid",
+          });
+
+          expect(res.headers["content-type"]).toContain("application/json");
+          expect(res.status).toBe(400);
+          expect(res.body.code).toBe("VALIDATION_ERROR");
+          expect(res.body.errors).toBeDefined();
+        },
+      );
+
+      itEE("should handle empty '?after=' param gracefully", async () => {
+        const res = await supertest(app).get("/api/v1/boards").query({
+          after: "",
+        });
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+
+        expect(res.body.code).toBe("VALIDATION_ERROR");
+        expect(res.body.message).toBe("Invalid query parameters");
+        expect(res.body.errors?.[0]?.message).toBe("Invalid cursor value");
+      });
     });
   });
 });
