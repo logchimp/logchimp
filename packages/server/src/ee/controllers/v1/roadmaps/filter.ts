@@ -211,8 +211,7 @@ function applyVisibilityFilter<T>(
 ): Knex.QueryBuilder<T> {
   if (!visibility || visibility.length === 0) {
     // Default: show only public roadmaps
-    // @ts-expect-error
-    return query.where({ display: true });
+    return query.where("display", true);
   }
 
   const hasPublic = visibility.includes("public");
@@ -223,17 +222,14 @@ function applyVisibilityFilter<T>(
     return query;
   } else if (hasPublic) {
     // Show only public
-    // @ts-expect-error
-    return query.where({ display: true });
+    return query.where("display", true);
   } else if (hasPrivate) {
     // Show only private
-    // @ts-expect-error
-    return query.where({ display: false });
+    return query.where("display", false);
   }
   // If neither public nor private is specified (edge case), show nothing
   else {
-    // @ts-expect-error
-    return query.where({ display: null });
+    return query.where("display", null);
   }
 }
 
