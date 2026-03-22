@@ -22,18 +22,25 @@ import { parseAndValidateLimit } from "../../../../helpers";
 const FilterVisibilitySchema = v.picklist(["public", "private"]);
 const querySchema = v.object({
   first: v.pipe(
-    v.optional(v.string()),
+    v.optional(v.string(), GET_ROADMAPS_FILTER_COUNT.toString()),
     v.transform((value) =>
       parseAndValidateLimit(value, GET_ROADMAPS_FILTER_COUNT),
     ),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
   ),
-  after: v.pipe(v.optional(v.string())),
+  after: v.pipe(v.optional(v.string()), v.uuid("INVALID_CURSOR")),
   visibility: v.pipe(
     v.optional(v.string()),
     v.transform((value) => (value ? value.split(",") : [])),
     v.array(FilterVisibilitySchema),
   ),
 });
+
+const schemaQueryErrorMap = {
+  INVALID_CURSOR: error.general.invalidCursor,
+  MIN_VALUE_1: error.general.minValue1,
+};
 
 type ResponseBody = IPaginatedRoadmapsResponse | IApiErrorResponse;
 
@@ -59,7 +66,9 @@ export async function filter(
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
         ...issue,
-        message: issue.message,
+        message: schemaQueryErrorMap[issue.message]
+          ? schemaQueryErrorMap[issue.message]
+          : undefined,
         code: issue.message,
       })),
     });
