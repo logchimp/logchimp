@@ -369,7 +369,7 @@ describeEE("GET /api/v1/roles/:id", () => {
 
       const response = await supertest(app)
         .get(`/api/v1/roles/${uuid()}`)
-        .set("Authorization", `Beare${authUser.authToken}`);
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(401);
@@ -490,7 +490,7 @@ describeEE("PUT /api/v1/roles/:role_id/users/:user_id", () => {
 
       const response = await supertest(app)
         .put(`/api/v1/roles/${uuid()}/users/${uuid()}`)
-        .set("Authorization", `Beare${authUser.authToken}`);
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(401);
@@ -671,7 +671,7 @@ describeEE("DELETE /api/v1/roles/:role_id/users/:user_id", () => {
 
       const response = await supertest(app)
         .delete(`/api/v1/roles/${uuid()}/users/${uuid()}`)
-        .set("Authorization", `Beare${authUser.authToken}`);
+        .set("Authorization", `Bearer ${authUser.authToken}`);
 
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(401);

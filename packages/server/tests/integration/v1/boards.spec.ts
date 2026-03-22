@@ -460,7 +460,7 @@ describeEE("POST /api/v1/boards", () => {
 
     const response = await supertest(app)
       .post("/api/v1/boards")
-      .set("Authorization", `Beare${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(401);
@@ -539,7 +539,7 @@ describeEE("PATCH /api/v1/boards", () => {
 
     const response = await supertest(app)
       .patch("/api/v1/boards")
-      .set("Authorization", `Beare${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(401);
@@ -853,7 +853,7 @@ describeEE("POST /api/v1/boards/check-slug", () => {
 
     const response = await supertest(app)
       .post("/api/v1/boards/check-slug")
-      .set("Authorization", `Beare${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(401);

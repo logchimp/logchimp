@@ -413,7 +413,7 @@ describe("POST /api/v1/posts", () => {
 
     const res = await supertest(app)
       .post("/api/v1/posts")
-      .set("Authorization", `Beare${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(401);
@@ -820,7 +820,7 @@ describe("DELETE /api/v1/posts", () => {
 
     const res = await supertest(app)
       .delete("/api/v1/posts")
-      .set("Authorization", `Beare${authUser.authToken}`);
+      .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(401);
