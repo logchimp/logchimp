@@ -66,7 +66,7 @@ async function addPermission(
       })
       .into("permissions");
 
-    logger.info(`Permission added: ${type}:${action}`);
+    logger.info(`Permission added: ${type}:${action}${scope ? `:${scope}` : ""}`);
   }
 }
 
