@@ -361,7 +361,7 @@ describe("GET /api/v1/users", () => {
         expect(res.body.errors).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-             message: "Invalid cursor value",
+              message: "Invalid cursor value",
             }),
           ]),
         );
