@@ -33,7 +33,7 @@ importers:
         specifier: ^24.3.1
         version: 24.11.0
       dotenv:
-        specifier: ^17.0.0
+        specifier: ^17.3.1
         version: 17.3.1
 
   packages/server:
@@ -48,7 +48,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       dotenv:
-        specifier: ^17.0.0
+        specifier: ^17.3.1
         version: 17.3.1
       express:
         specifier: ^4.17.1
