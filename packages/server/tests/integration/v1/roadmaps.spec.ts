@@ -150,8 +150,13 @@ describeEE("GET /api/v1/roadmaps", () => {
       expect(response.status).toBe(400);
 
       expect(response.body.code).toBe("VALIDATION_ERROR");
-      expect(response.body.errors[0]?.message).toBe(
-        "Too small: expected number to be >=1",
+      expect(response.body.message).toBe("Invalid query parameters");
+      expect(response.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "Too small: expected number to be >=1",
+          }),
+        ]),
       );
     });
   });
@@ -203,7 +208,13 @@ describeEE("GET /api/v1/roadmaps", () => {
 
       expect(res.body.code).toBe("VALIDATION_ERROR");
       expect(res.body.message).toBe("Invalid query parameters");
-      expect(res.body.errors?.[0]?.message).toBe("Invalid cursor value");
+      expect(res.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "Invalid cursor value",
+          }),
+        ]),
+      );
     });
   });
 

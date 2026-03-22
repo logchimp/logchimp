@@ -25,11 +25,12 @@ const querySchema = v.object({
     ),
     v.minValue(1, "MIN_VALUE_1"),
   ),
-  after: v.optional(v.pipe(v.string(), v.trim(), v.uuid("INVALID_UUID"))),
+  after: v.optional(v.pipe(v.string(), v.trim(), v.uuid("INVALID_CURSOR"))),
 });
 
 const querySchemaErrorMap = {
   MIN_VALUE_1: error.general.minValue1,
+  INVALID_CURSOR: error.general.invalidCursor,
 };
 
 export async function get(
