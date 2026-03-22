@@ -1,4 +1,4 @@
-import v from "valibot";
+import * as v from "valibot";
 import type { Request, Response } from "express";
 import type { Knex } from "knex";
 import type {
