@@ -203,7 +203,7 @@ describeEE("GET /api/v1/roadmaps", () => {
 
       expect(res.body.code).toBe("VALIDATION_ERROR");
       expect(res.body.message).toBe("Invalid query parameters");
-      expect(res.body.errors?.[0]?.message).toMatch(/invalid uuid/gi);
+      expect(res.body.errors?.[0]?.message).toBe("Invalid cursor value");
     });
   });
 
