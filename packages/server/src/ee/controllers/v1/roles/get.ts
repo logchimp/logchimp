@@ -25,7 +25,7 @@ const querySchema = v.object({
     ),
     v.minValue(1, "MIN_VALUE_1"),
   ),
-  after: v.optional(v.pipe(v.string(), v.trim(), v.uuid("INVALID_CURSOR"))),
+  after: v.optional(v.pipe(v.string(), v.uuid("INVALID_CURSOR"))),
 });
 
 const querySchemaErrorMap = {
