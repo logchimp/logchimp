@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as v from "valibot";
 import type { Request, Response } from "express";
 import type { Knex } from "knex";
 import type {
@@ -19,31 +19,28 @@ import error from "../../../../errorResponse.json";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../../../constants";
 import { parseAndValidateLimit } from "../../../../helpers";
 
-const FilterVisibilitySchema = z.enum<FilterVisibility[]>([
-  "public",
-  "private",
-]);
-const querySchema = z.object({
-  first: z.coerce
-    .string()
-    .transform((value) =>
+const FilterVisibilitySchema = v.picklist(["public", "private"]);
+const querySchema = v.object({
+  first: v.pipe(
+    v.optional(v.string(), GET_ROADMAPS_FILTER_COUNT.toString()),
+    v.transform((value) =>
       parseAndValidateLimit(value, GET_ROADMAPS_FILTER_COUNT),
-    )
-    .pipe(
-      z
-        .number()
-        .int()
-        .min(1)
-        .max(GET_ROADMAPS_FILTER_COUNT)
-        .default(GET_ROADMAPS_FILTER_COUNT),
     ),
-  after: z.string().uuid().optional(),
-  visibility: z
-    .string()
-    .optional()
-    .transform((value) => (value ? value.split(",") : []))
-    .pipe(z.array(FilterVisibilitySchema)),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
+  ),
+  after: v.optional(v.pipe(v.string(), v.uuid("INVALID_CURSOR"))),
+  visibility: v.pipe(
+    v.optional(v.string()),
+    v.transform((value) => (value ? value.split(",") : [])),
+    v.array(FilterVisibilitySchema),
+  ),
 });
+
+const schemaQueryErrorMap = {
+  INVALID_CURSOR: error.general.invalidCursor,
+  MIN_VALUE_1: error.general.minValue1,
+};
 
 type ResponseBody = IPaginatedRoadmapsResponse | IApiErrorResponse;
 
@@ -62,16 +59,22 @@ export async function filter(
   req: Request<IGetRoadmapsParams>,
   res: Response<ResponseBody>,
 ) {
-  const query = querySchema.safeParse(req.query);
+  const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
     res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
-      errors: query.error.issues,
+      errors: query.issues.map((issue) => ({
+        ...issue,
+        message: schemaQueryErrorMap[issue.message]
+          ? schemaQueryErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
     return;
   }
-  const { first, after, visibility: _visibility } = query.data;
+  const { first, after, visibility: _visibility } = query.output;
 
   // @ts-expect-error
   const permissions = (req?.user?.permissions || []) as TPermission[];

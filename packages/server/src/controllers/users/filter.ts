@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { z } from "zod";
+import * as v from "valibot";
 import type {
   IApiErrorResponse,
   IGetUsersRequestQuery,
@@ -17,25 +17,39 @@ import { GET_USERS_FILTER_COUNT } from "../../constants";
 import { parseAndValidateLimit, parseAndValidatePage } from "../../helpers";
 import type { IAuthenticationMiddlewareUser } from "../../types";
 
-const querySchema = z.object({
-  first: z.coerce
-    .string()
-    .transform((value) => parseAndValidateLimit(value, GET_USERS_FILTER_COUNT)),
+const querySchema = v.object({
+  first: v.pipe(
+    v.optional(v.string(), GET_USERS_FILTER_COUNT.toString()),
+    v.transform((value) =>
+      parseAndValidateLimit(value, GET_USERS_FILTER_COUNT),
+    ),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
+  ),
   /**
    * For backward compatibility to support offset pagination,
    * will be removed in the next major release.
    */
-  page: z.coerce
-    .string()
-    .optional()
-    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
-  limit: z.coerce
-    .string()
-    .optional()
-    .transform((value) => parseAndValidateLimit(value, GET_USERS_FILTER_COUNT)),
-  after: z.uuid().optional(),
-  created: z.enum(["ASC", "DESC"]).default("ASC"),
+  page: v.pipe(
+    v.optional(v.string()),
+    v.transform((value) => (value ? parseAndValidatePage(value) : undefined)),
+  ),
+  limit: v.pipe(
+    v.optional(v.string(), GET_USERS_FILTER_COUNT.toString()),
+    v.transform((value) =>
+      parseAndValidateLimit(value, GET_USERS_FILTER_COUNT),
+    ),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
+  ),
+  after: v.optional(v.pipe(v.string(), v.uuid("INVALID_CURSOR"))),
+  created: v.optional(v.picklist(["ASC", "DESC"]), "ASC"),
 });
+
+const schemaQueryErrorMap = {
+  INVALID_CURSOR: error.general.invalidCursor,
+  MIN_VALUE_1: error.general.minValue1,
+};
 
 type ResponseBody = IGetUsersResponseBody | IApiErrorResponse;
 
@@ -49,15 +63,21 @@ export async function filter(
     );
   }
 
-  const query = querySchema.safeParse(req.query);
+  const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
-      errors: query.error.issues,
+      errors: query.issues.map((issue) => ({
+        ...issue,
+        message: schemaQueryErrorMap[issue.message]
+          ? schemaQueryErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
   }
-  const { first: _first, page, after, created, limit } = query.data;
+  const { first: _first, page, after, created, limit } = query.output;
   const first = req.query?.limit ? limit : _first;
 
   // @ts-expect-error

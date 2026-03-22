@@ -231,7 +231,7 @@ describe("GET /api/v1/users", () => {
         expect(overlap.length).toBe(0);
       });
 
-      it("should get 0 users with '?after=0' param", async () => {
+      it("should throw 'VALIDATION_ERROR' for '?first=0' param", async () => {
         const response = await supertest(app)
           .get("/api/v1/users")
           .set("Authorization", `Bearer ${ownAuthToken}`)
@@ -240,10 +240,17 @@ describe("GET /api/v1/users", () => {
           });
 
         expect(response.headers["content-type"]).toContain("application/json");
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(400);
 
-        const users: IUserInfo[] = response.body.users;
-        expect(users).toHaveLength(0);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid query parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: "Too small: expected number to be >=1",
+            }),
+          ]),
+        );
       });
 
       it("should compute has_next_page correctly for small page size", async () => {
@@ -351,7 +358,13 @@ describe("GET /api/v1/users", () => {
 
         expect(res.body.code).toBe("VALIDATION_ERROR");
         expect(res.body.message).toBe("Invalid query parameters");
-        expect(res.body.errors?.[0]?.message).toMatch(/invalid uuid/gi);
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: "Invalid cursor value",
+            }),
+          ]),
+        );
       });
     });
   });
