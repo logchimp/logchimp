@@ -46,8 +46,8 @@ import type {
 import type { AxiosError } from "axios";
 
 // modules
-import { getAllRoadmaps } from "../ee/modules/roadmaps";
-import { useSettingStore } from "../store/settings";
+import { getAllRoadmaps } from "../modules/roadmaps";
+import { useSettingStore } from "../../store/settings";
 
 // components
 import RoadmapColumn from "../ee/components/roadmap/RoadmapColumn.vue";

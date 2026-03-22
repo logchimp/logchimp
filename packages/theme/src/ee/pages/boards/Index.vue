@@ -34,14 +34,14 @@ import type { IApiErrorResponse, IBoardDetail } from "@logchimp/types";
 import type { AxiosError } from "axios";
 
 // modules
-import { getPublicBoards } from "../../ee/modules/boards";
-import { useSettingStore } from "../../store/settings";
+import { getPublicBoards } from "../../modules/boards";
+import { useSettingStore } from "../../../store/settings";
 
 // components
 import InfiniteScroll, {
   type InfiniteScrollStateType,
-} from "../../components/ui/InfiniteScroll.vue";
-import BoardItem from "../../components/board/BoardItem.vue";
+} from "../../../components/ui/InfiniteScroll.vue";
+import BoardItem from "../../../components/board/BoardItem.vue";
 
 const { get: siteSettings } = useSettingStore();
 
