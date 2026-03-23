@@ -323,8 +323,8 @@ import { ShieldAlert } from "lucide-vue";
 // modules
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
-import { updateRole } from "../../../ee/modules/roles";
-import { useDashboardRoles } from "../../../ee/store/dashboard/roles";
+import { updateRole } from "../../modules/roles";
+import { useDashboardRoles } from "../../store/dashboard/roles";
 
 // components
 import Button from "../../../components/ui/Button.vue";
