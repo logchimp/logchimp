@@ -1,18 +1,14 @@
 import type { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
 import type {
-  IRole,
   IApiErrorResponse,
   ICreateRoleResponseBody,
   TPermission,
 } from "@logchimp/types";
 
-// database
-import database from "../../../../database";
-
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { RolesService } from "../../../services/roles.service";
 
 type ResponseBody = ICreateRoleResponseBody | IApiErrorResponse;
 
@@ -28,23 +24,18 @@ export async function create(req: Request, res: Response<ResponseBody>) {
     return;
   }
 
-  try {
-    const createRole = await database
-      .insert({
-        id: uuidv4(),
-        name: "new role",
-      })
-      .into("roles")
-      .returning<IRole[]>("*");
+  const rolesService = new RolesService();
 
-    const role = createRole[0];
+  try {
+    const role = await rolesService.create();
 
     res.status(201).send({
       role,
     });
   } catch (err) {
     logger.error({
-      message: err,
+      message: "failed to create role in DB",
+      err,
     });
 
     res.status(500).send({
