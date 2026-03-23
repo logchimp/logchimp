@@ -48,17 +48,17 @@ import type { AxiosError } from "axios";
 import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
 
 // modules
-import { getBoardByUrl } from "../../ee/modules/boards";
+import { getBoardByUrl } from "../../modules/boards";
 
 // components
-import LoaderContainer from "../../components/ui/LoaderContainer.vue";
-import Tab from "../../components/ui/tab/Tab.vue";
-import TabItem from "../../components/ui/tab/TabItem.vue";
-import LatestPosts from "../../components/post/LatestPosts.vue";
-import OldestPosts from "../../components/post/OldestPosts.vue";
-import CreatePost from "../../components/post/CreatePost.vue";
+import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
+import Tab from "../../../components/ui/tab/Tab.vue";
+import TabItem from "../../../components/ui/tab/TabItem.vue";
+import LatestPosts from "../../../components/post/LatestPosts.vue";
+import OldestPosts from "../../../components/post/OldestPosts.vue";
+import CreatePost from "../../../components/post/CreatePost.vue";
 
-import { useSettingStore } from "../../store/settings";
+import { useSettingStore } from "../../../store/settings";
 
 const route = useRoute();
 const tab = ref("latest");

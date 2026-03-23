@@ -86,7 +86,7 @@ import { useTrim } from "../../../hooks";
 
 // components
 import Vote from "../../../components/vote/Vote.vue";
-import BoardBadge from "../../../components/board/BoardBadge.vue";
+import BoardBadge from "../boards/BoardBadge.vue";
 import { AvatarStack } from "../../../components/ui/Avatar";
 
 dayjs.extend(relativeTime);

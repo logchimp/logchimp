@@ -19,17 +19,17 @@ const routes = [
       {
         path: "boards",
         name: "Boards",
-        component: () => import("./pages/boards/Index.vue"),
+        component: () => import("./ee/pages/boards/Index.vue"),
       },
       {
         path: "boards/:url",
         name: "Board view",
-        component: () => import("./pages/boards/_url.vue"),
+        component: () => import("./ee/pages/boards/_url.vue"),
       },
       {
         path: "roadmaps",
         name: "Roadmaps",
-        component: () => import("./pages/Roadmaps.vue"),
+        component: () => import("./ee/pages/Roadmaps.vue"),
       },
       {
         path: "settings",
