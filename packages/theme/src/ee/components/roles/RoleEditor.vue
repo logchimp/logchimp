@@ -372,7 +372,11 @@ async function updateRoleHandler() {
         permissionGroup[typedAction] === true
       ) {
         activePermissions.push(`${permissionType}:${action}` as TPermission);
-      } else if (typeof permissionGroup[typedAction] === "string") {
+      } else if (
+        typeof permissionGroup[typedAction] === "string" &&
+        permissionGroup[typedAction] !== "none" &&
+        permissionGroup[typedAction] !== ""
+      ) {
         activePermissions.push(
           `${permissionType}:${action}:${permissionGroup[typedAction]}` as TPermission,
         );
