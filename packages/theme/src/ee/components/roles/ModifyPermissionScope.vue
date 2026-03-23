@@ -51,7 +51,7 @@ defineOptions({
     <div>
       <!-- dropdown -->
       <select
-        :modelValue="modelValue"
+        :value="modelValue"
         @change="onSelectUpdate"
       >
         <option value="none">None</option>
