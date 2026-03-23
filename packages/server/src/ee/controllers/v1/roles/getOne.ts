@@ -5,12 +5,11 @@ import type {
   IGetRoleByIdResponseBody,
   TPermission,
 } from "@logchimp/types";
-import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { rawPermissionArrayQuery } from "../../../../middlewares/auth/helpers";
+import { RoleIdService } from "../../../services/roles.service";
 
 type ResponseBody = IGetRoleByIdResponseBody | IApiErrorResponse;
 
@@ -31,25 +30,10 @@ export async function getOne(
     return;
   }
 
-  try {
-    const role = await database
-      .select()
-      .from("roles")
-      .where({
-        id,
-      })
-      .first();
+  const roleIdService = new RoleIdService(id);
 
-    const permissions = await database
-      .select<{
-        permissions: TPermission[] | null;
-      }>(rawPermissionArrayQuery)
-      .from("permissions_roles AS pr")
-      .leftJoin("permissions AS p", "pr.permission_id", "p.id")
-      .where({
-        "pr.role_id": role.id,
-      })
-      .first();
+  try {
+    const role = await roleIdService.getRole();
 
     if (!role) {
       res.status(404).send({
@@ -59,15 +43,18 @@ export async function getOne(
       return;
     }
 
+    const rolePermissions = await roleIdService.getRolePermissions();
+
     res.status(200).send({
       role: {
         ...role,
-        permissions: permissions.permissions || [],
+        permissions: rolePermissions?.permissions || [],
       },
     });
   } catch (err) {
     logger.error({
-      message: err,
+      message: "failed to get role in DB",
+      err,
     });
 
     res.status(500).send({

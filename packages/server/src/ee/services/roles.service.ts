@@ -34,6 +34,16 @@ export class RoleIdService {
     return this.roleId;
   }
 
+  async getRole() {
+    return database
+      .select<IRole>("id", "name", "description", "created_at", "updated_at")
+      .from("roles")
+      .where({
+        id: this.roleId,
+      })
+      .first();
+  }
+
   async updateRole(role: Omit<IUpdateRoleRequestBody, "id" | "permissions">) {
     const res = await database
       .update({

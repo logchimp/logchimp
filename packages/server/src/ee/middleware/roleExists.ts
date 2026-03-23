@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
-import database from "../../database";
 
 // utils
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
+import { RoleIdService } from "../services/roles.service";
 
 export async function roleExists(
   req: Request,
@@ -19,13 +19,8 @@ export async function roleExists(
     });
   }
 
-  const role = await database
-    .select()
-    .from("roles")
-    .where({
-      id: id || null,
-    })
-    .first();
+  const roleIdService = new RoleIdService(id);
+  const role = await roleIdService.getRole();
 
   if (!role) {
     return res.status(404).send({
