@@ -53,7 +53,7 @@ import { useTrim } from "../../hooks";
 
 // components
 import Vote from "../vote/Vote.vue";
-import BoardBadge from "../board/BoardBadge.vue";
+import BoardBadge from "../../ee/components/boards/BoardBadge.vue";
 
 interface Props {
   post: IPost;
