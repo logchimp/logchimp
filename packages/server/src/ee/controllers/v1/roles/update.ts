@@ -41,7 +41,8 @@ export async function update(
     });
   } catch (err) {
     logger.error({
-      message: err,
+      message: "failed to update role in DB",
+      err,
     });
 
     res.status(500).send({
@@ -69,7 +70,8 @@ export async function update(
     });
   } catch (err) {
     logger.error({
-      message: err,
+      message: "failed to update role permissions in DB",
+      err,
     });
 
     res.status(500).send({
