@@ -17,7 +17,7 @@ interface IPermissionTableColumns {
   created_at: Date;
 }
 
-interface _IRolePermissionsTableColumns {
+interface IRolePermissionsTableColumns {
   id: string;
   permission_id: string;
   role_id: string;
@@ -60,32 +60,31 @@ export class RoleIdService {
         role_id: this.roleId,
       });
 
-      if (!permissions.length) {
-        trx.commit();
+      if (permissions.length === 0) {
         return;
       }
 
-      const permissionToUpdate = [];
-      permissions.forEach((permission) => {
+      const permissionMap = new Map<string, string>(
+        systemPermissions.map((p) => [
+          `${p.type}:${p.action}${p?.scope ? `:${p.scope}` : ""}`,
+          p.id,
+        ]),
+      );
+
+      const rows: IRolePermissionsTableColumns[] = [];
+      for (const permission of permissions) {
         const permissionStr = (permission || "").trim();
-        if (!permissionStr) return;
-        const [type, action, scope] = permissionStr.split(":");
+        if (!permissionStr) continue;
 
-        const findPermission = systemPermissions.find(
-          (perm) =>
-            perm.type === type &&
-            perm.action === action &&
-            perm.scope === scope,
-        );
-
-        permissionToUpdate.push({
+        const permissionId = permissionMap.get(permissionStr);
+        rows.push({
           id: uuidv4(),
-          permission_id: findPermission.id,
+          permission_id: permissionId,
           role_id: this.roleId,
         });
-      });
+      }
 
-      await trx.insert(permissionToUpdate).into("permissions_roles");
+      await trx("permissions_roles").insert(rows);
     });
   }
 
