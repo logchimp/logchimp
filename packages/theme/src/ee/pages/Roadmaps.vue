@@ -52,7 +52,7 @@ import { useSettingStore } from "../../store/settings";
 // components
 import RoadmapColumn from "../components/roadmap/RoadmapColumn.vue";
 import RoadmapSkeleton from "../components/roadmap/RoadmapSkeleton.vue";
-import LoaderContainer from "../components/ui/LoaderContainer.vue";
+import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 
 const { get: siteSettings } = useSettingStore();
 

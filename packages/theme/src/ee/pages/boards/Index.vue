@@ -41,7 +41,7 @@ import { useSettingStore } from "../../../store/settings";
 import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../components/ui/InfiniteScroll.vue";
-import BoardItem from "../../../components/board/BoardItem.vue";
+import BoardItem from "../../components/boards/BoardItem.vue";
 
 const { get: siteSettings } = useSettingStore();
 
