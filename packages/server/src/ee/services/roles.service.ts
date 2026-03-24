@@ -77,6 +77,10 @@ export class RoleIdService {
         if (!permissionStr) continue;
 
         const permissionId = permissionMap.get(permissionStr);
+        if (!permissionId) {
+          throw new Error(`Unknown permission: ${permissionStr}`);
+        }
+
         rows.push({
           id: uuidv4(),
           permission_id: permissionId,
