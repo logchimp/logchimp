@@ -16,6 +16,7 @@ export interface IPermissionTableColumns {
 export class PermissionService {
   permissionKey = new Set<string>();
   permissionEntity = new Set<IPermissionTableColumns>();
+  permissionRef = new Map<string, string>();
 
   /**
    * Get all permissions from the database
@@ -28,10 +29,10 @@ export class PermissionService {
     if (!perms || perms.length === 0) return [];
 
     for (const permission of perms) {
-      this.permissionKey.add(
-        `${permission.type}:${permission.action}${permission?.scope ? `:${permission.scope}` : ""}`,
-      );
+      const key = `${permission.type}:${permission.action}${permission?.scope ? `:${permission.scope}` : ""}`;
+      this.permissionKey.add(key);
       this.permissionEntity.add(permission);
+      this.permissionRef.set(key, permission.id);
     }
   }
 
@@ -41,6 +42,10 @@ export class PermissionService {
 
   get permissionKeys() {
     return this.permissionKey;
+  }
+
+  get permissionRefs() {
+    return this.permissionRef;
   }
 
   /**

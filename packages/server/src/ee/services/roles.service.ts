@@ -7,15 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import database from "../../database";
 import { rawPermissionArrayQuery } from "../../middlewares/auth/helpers";
-
-interface IPermissionTableColumns {
-  id: string;
-  name: string | null;
-  type: string | null;
-  action: string | null;
-  scope: string | null;
-  created_at: Date;
-}
+import { PermissionService } from "./roles/permission.service";
 
 interface IRolePermissionsTableColumns {
   id: string;
@@ -46,9 +38,11 @@ export class RolesService {
 
 export class RoleIdService {
   private readonly roleId: string;
+  private permissionService: PermissionService;
 
   constructor(roleId: string) {
     this.roleId = roleId;
+    this.permissionService = new PermissionService();
   }
 
   get getRoleId() {
@@ -89,7 +83,7 @@ export class RoleIdService {
   }
 
   async updatePermission(permissions: TPermission[]) {
-    const systemPermissions = await this.getSystemPermissions();
+    await this.permissionService.load();
 
     await database.transaction(async (trx) => {
       // delete all existing permissions for a role
@@ -101,19 +95,13 @@ export class RoleIdService {
         return;
       }
 
-      const permissionMap = new Map<string, string>(
-        systemPermissions.map((p) => [
-          `${p.type}:${p.action}${p?.scope ? `:${p.scope}` : ""}`,
-          p.id,
-        ]),
-      );
-
       const rows: IRolePermissionsTableColumns[] = [];
       for (const permission of permissions) {
         const permissionStr = (permission || "").trim();
         if (!permissionStr) continue;
 
-        const permissionId = permissionMap.get(permissionStr);
+        const permissionId =
+          this.permissionService.permissionRefs.get(permissionStr);
         if (!permissionId) {
           throw new Error(`Unknown permission: ${permissionStr}`);
         }
@@ -140,9 +128,5 @@ export class RoleIdService {
         "pr.role_id": this.roleId,
       })
       .first();
-  }
-
-  private async getSystemPermissions() {
-    return database.select<IPermissionTableColumns[]>().from("permissions");
   }
 }
