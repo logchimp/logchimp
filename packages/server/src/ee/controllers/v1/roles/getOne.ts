@@ -3,6 +3,7 @@ import type {
   IApiErrorResponse,
   IGetRoleByIdRequestParams,
   IGetRoleByIdResponseBody,
+  IRole,
   TPermission,
 } from "@logchimp/types";
 
@@ -33,16 +34,8 @@ export async function getOne(
   const roleIdService = new RoleIdService(id);
 
   try {
-    const role = await roleIdService.getRole();
-
-    if (!role) {
-      res.status(404).send({
-        message: error.api.roles.roleNotFound,
-        code: "ROLE_NOT_FOUND",
-      });
-      return;
-    }
-
+    // @ts-expect-error
+    const role = req?.role as IRole;
     const rolePermissions = await roleIdService.getRolePermissions();
 
     res.status(200).send({
