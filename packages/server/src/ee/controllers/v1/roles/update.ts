@@ -62,7 +62,7 @@ export async function update(
 
   try {
     await roleIdService.updatePermission(role?.permissions || []);
-    const updatedPermissions = await roleIdService.getPermissions();
+    const updatedPermissions = await roleIdService.getRolePermissions();
 
     res.status(200).send({
       role: updatedRole,

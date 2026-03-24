@@ -92,7 +92,7 @@ export class RoleIdService {
     });
   }
 
-  async getPermissions() {
+  async getRolePermissions() {
     return database
       .select<{
         permissions: TPermission[] | null;
