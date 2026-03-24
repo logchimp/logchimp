@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
   IRole,
@@ -8,13 +7,10 @@ import type {
   TPermission,
 } from "@logchimp/types";
 
-// database
-import database from "../../../../database";
-
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
-import { rawPermissionArrayQuery } from "../../../../middlewares/auth/helpers";
+import { RoleIdService } from "../../../services/roles.service";
 
 type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
 
@@ -35,64 +31,47 @@ export async function update(
     return;
   }
 
-  try {
-    const existingPermissions = await database.select().from("permissions");
+  const roleIdService = new RoleIdService(role.id);
 
-    // delete all existing permissions for a role
-    await database.delete().from("permissions_roles").where({
-      role_id: role.id,
+  let updatedRole: IRole | null;
+  try {
+    updatedRole = await roleIdService.updateRole({
+      name: req.body.name,
+      description: req.body.description,
+    });
+  } catch (err) {
+    logger.error({
+      message: "failed to update role in DB",
+      err,
     });
 
-    const updateRoles = (await database
-      .update({
-        name: role.name,
-        description: role.description,
-        updated_at: new Date().toJSON(),
-      })
-      .from("roles")
-      .where({
-        id: role.id,
-      })
-      .returning("*")) as IRole[];
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+    return;
+  }
 
-    const updateRole = updateRoles?.[0];
+  if (!updatedRole) {
+    res.status(404).send({
+      message: error.api.roles.roleNotFound,
+      code: "ROLE_NOT_FOUND",
+    });
+    return;
+  }
 
-    // add new permissions to the role
-    for (const perm of (role?.permissions || []) as TPermission[]) {
-      const type = perm.split(":")[0];
-      const action = perm.split(":")[1];
-
-      const findPermission = existingPermissions.find(
-        (item) => item.type === type && item.action === action,
-      );
-
-      await database
-        .insert({
-          id: uuidv4(),
-          permission_id: findPermission.id,
-          role_id: role.id,
-        })
-        .into("permissions_roles");
-    }
-
-    const updatedPermissions = await database
-      .select<{
-        permissions: TPermission[] | null;
-      }>(rawPermissionArrayQuery)
-      .from("permissions_roles AS pr")
-      .leftJoin("permissions AS p", "pr.permission_id", "p.id")
-      .where({
-        "pr.role_id": role.id,
-      })
-      .first();
+  try {
+    await roleIdService.updatePermission(role?.permissions || []);
+    const updatedPermissions = await roleIdService.getRolePermissions();
 
     res.status(200).send({
-      role: updateRole,
+      role: updatedRole,
       permissions: updatedPermissions?.permissions || [],
     });
   } catch (err) {
     logger.error({
-      message: err,
+      message: "failed to update role permissions in DB",
+      err,
     });
 
     res.status(500).send({
