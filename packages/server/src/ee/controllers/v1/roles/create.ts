@@ -28,6 +28,9 @@ export async function create(req: Request, res: Response<ResponseBody>) {
 
   try {
     const role = await rolesService.create();
+    if (!role) {
+      throw new Error("failed to create role in DB");
+    }
 
     res.status(201).send({
       role,
