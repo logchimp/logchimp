@@ -23,6 +23,27 @@ interface IRolePermissionsTableColumns {
   role_id: string;
 }
 
+export class RolesService {
+  async create() {
+    const res = await database
+      .insert({
+        id: uuidv4(),
+        name: "new role",
+      })
+      .into("roles")
+      .returning<IRole[]>([
+        "id",
+        "name",
+        "description",
+        "created_at",
+        "updated_at",
+      ]);
+
+    if (!res.length) return null;
+    return res[0];
+  }
+}
+
 export class RoleIdService {
   private readonly roleId: string;
 
