@@ -67,7 +67,7 @@ export class PermissionService {
       }),
     });
 
-    if (options?.silent)  {
+    if (options?.silent) {
       logger.info(`Permission added: ${permission}`);
     }
   }

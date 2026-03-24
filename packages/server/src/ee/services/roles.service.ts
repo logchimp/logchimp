@@ -9,6 +9,12 @@ import database from "../../database";
 import { rawPermissionArrayQuery } from "../../middlewares/auth/helpers";
 import { PermissionService } from "./roles/permission.service";
 
+interface CreateRoleArgs {
+  id?: string;
+  name: string;
+  description?: string;
+}
+
 interface IRolePermissionsTableColumns {
   id: string;
   permission_id: string;
@@ -16,6 +22,12 @@ interface IRolePermissionsTableColumns {
 }
 
 export class RolesService {
+  private permissionService: PermissionService;
+
+  constructor() {
+    this.permissionService = new PermissionService();
+  }
+
   async create() {
     const res = await database
       .insert({
@@ -33,6 +45,43 @@ export class RolesService {
 
     if (!res.length) return null;
     return res[0];
+  }
+
+  async createRoleWithPermissions(
+    role: CreateRoleArgs,
+    permissions: TPermission[],
+  ) {
+    await this.permissionService.load();
+
+    const roleId = role?.id ?? uuidv4();
+
+    const rows: IRolePermissionsTableColumns[] = [];
+    for (const permission of permissions) {
+      const permissionStr = (permission || "").trim();
+      if (!permissionStr) continue;
+
+      const permissionId =
+        this.permissionService.permissionRefs.get(permissionStr);
+      if (!permissionId) {
+        throw new Error(`Unknown permission: ${permissionStr}`);
+      }
+
+      rows.push({
+        id: uuidv4(),
+        permission_id: permissionId,
+        role_id: roleId,
+      });
+    }
+
+    await database.transaction(async (trx) => {
+      await trx("roles").insert({
+        id: roleId,
+        name: role.name,
+        description: role.description,
+      });
+
+      await trx("permissions_roles").insert(rows);
+    });
   }
 }
 
