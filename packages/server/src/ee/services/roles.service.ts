@@ -45,7 +45,13 @@ export class RoleIdService {
       .where({
         id: this.roleId,
       })
-      .returning<IRole[]>("*");
+      .returning<IRole[]>([
+        "id",
+        "name",
+        "description",
+        "created_at",
+        "updated_at",
+      ]);
 
     if (!res.length) return null;
     return res[0];
