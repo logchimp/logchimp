@@ -1,0 +1,69 @@
+import type { TPermission } from "@logchimp/types";
+import { v4 as uuidv4 } from "uuid";
+
+import database from "../../../database";
+import logger from "../../../utils/logger";
+
+export interface IPermissionTableColumns {
+  id: string;
+  name: string | null;
+  type: string | null;
+  action: string | null;
+  scope: string | null;
+  created_at: Date;
+}
+
+export class PermissionService {
+  permissionKey = new Set<string>();
+  permissionEntity = new Set<IPermissionTableColumns>();
+
+  /**
+   * Get all permissions from the database
+   */
+  async load() {
+    const perms = await database
+      .select<IPermissionTableColumns[]>()
+      .from("permissions");
+
+    if (!perms || perms.length === 0) return [];
+
+    for (const permission of perms) {
+      this.permissionKey.add(
+        `${permission.type}:${permission.action}${permission?.scope ? `:${permission.scope}` : ""}`,
+      );
+      this.permissionEntity.add(permission);
+    }
+  }
+
+  get permissionEntities() {
+    return this.permissionEntity;
+  }
+
+  get permissionKeys() {
+    return this.permissionKey;
+  }
+
+  /**
+   * Add a permission to the database
+   * @param {TPermission} permission
+   * @param options
+   */
+  async addPermission(permission: TPermission, options?: { silent?: boolean }) {
+    const [type, action, scope] = permission.split(":");
+
+    if (this.permissionKeys.has(permission)) return;
+
+    await database.insert({
+      id: uuidv4(),
+      type,
+      action,
+      ...(scope && {
+        scope,
+      }),
+    });
+
+    if (options?.silent)  {
+      logger.info(`Permission added: ${permission}`);
+    }
+  }
+}
