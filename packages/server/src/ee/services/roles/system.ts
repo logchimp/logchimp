@@ -89,6 +89,7 @@ export async function seedSystemPermissions() {
     if (roleExists) continue;
 
     const _role = {
+      id: role.id,
       name: role.name,
       description: role.description,
     };
