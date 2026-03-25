@@ -154,6 +154,7 @@ const board = async (
 interface RoleArgs {
   name: string;
   description: string;
+  isSystem: 0 | 1;
 }
 
 async function role(role?: Partial<RoleArgs>) {
@@ -163,6 +164,7 @@ async function role(role?: Partial<RoleArgs>) {
     id: uuid(),
     name,
     description: role?.description,
+    isSystem: role?.isSystem,
     created_at: new Date().toJSON(),
     updated_at: new Date().toJSON(),
   };
