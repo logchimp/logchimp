@@ -84,6 +84,9 @@ export class RolesService {
         is_system: options?.isSystem ?? 0,
       });
 
+      if (rows.length === 0) {
+        return;
+      }
       await trx("permissions_roles").insert(rows);
     });
   }
