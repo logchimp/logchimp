@@ -8,7 +8,7 @@ import type {
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { RolesService } from "../../../services/roles.service";
+import { RolesService } from "../../../services/roles/roles.service";
 
 type ResponseBody = ICreateRoleResponseBody | IApiErrorResponse;
 

@@ -4,7 +4,7 @@
 
 import type { TPermission } from "@logchimp/types";
 
-import { RoleIdService, RolesService } from "../roles.service";
+import { RoleIdService, RolesService } from "./roles.service";
 import { PermissionService } from "./permission.service";
 import logger from "../../../utils/logger";
 

@@ -10,7 +10,7 @@ import type {
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
-import { RoleIdService } from "../../../services/roles.service";
+import { RoleIdService } from "../../../services/roles/roles.service";
 
 type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
 

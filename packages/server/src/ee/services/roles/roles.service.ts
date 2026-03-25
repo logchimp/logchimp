@@ -5,10 +5,10 @@ import type {
 } from "@logchimp/types";
 import { v4 as uuidv4 } from "uuid";
 
-import database from "../../database";
-import { rawPermissionArrayQuery } from "../../middlewares/auth/helpers";
-import { PermissionService } from "./roles/permission.service";
-import logger from "../../utils/logger";
+import database from "../../../database";
+import { rawPermissionArrayQuery } from "../../../middlewares/auth/helpers";
+import { PermissionService } from "./permission.service";
+import logger from "../../../utils/logger";
 
 interface CreateRoleArgs {
   id?: string;
