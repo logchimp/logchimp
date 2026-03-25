@@ -53,7 +53,12 @@ export class PermissionService {
    * @param {TPermission} permission
    * @param options
    */
-  async addPermission(permission: TPermission, options?: { silent?: boolean }) {
+  async addPermission(
+    permission: TPermission,
+    options?: {
+      silent?: boolean;
+    },
+  ) {
     const [type, action, scope] = permission.split(":");
 
     if (this.permissionKeys.has(permission)) return;

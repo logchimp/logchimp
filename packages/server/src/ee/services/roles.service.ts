@@ -50,6 +50,9 @@ export class RolesService {
   async createRoleWithPermissions(
     role: CreateRoleArgs,
     permissions: TPermission[],
+    options?: {
+      isSystem?: number;
+    },
   ) {
     await this.permissionService.load();
 
@@ -78,6 +81,7 @@ export class RolesService {
         id: roleId,
         name: role.name,
         description: role.description,
+        is_system: options?.isSystem ?? 0,
       });
 
       await trx("permissions_roles").insert(rows);

@@ -57,7 +57,7 @@ const ROLES = [
     id: "c2d058ec-1913-4ec9-afe8-d6cf11e9d324",
     name: "Manager",
     description: "Managers can manage users, boards, and posts",
-    permissions: []
+    permissions: [],
   },
 ] as Array<{
   id: string; // uuid v4
@@ -84,7 +84,9 @@ export async function seedSystemPermissions() {
       name: role.name,
       description: role.description,
     };
-    await roleService.createRoleWithPermissions(_role, role.permissions);
+    await roleService.createRoleWithPermissions(_role, role.permissions, {
+      isSystem: 1,
+    });
   }
 
   process.exit(0);
