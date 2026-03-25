@@ -58,7 +58,7 @@ export class PermissionService {
 
     if (this.permissionKeys.has(permission)) return;
 
-    await database.insert({
+    await database("permissions").insert({
       id: uuidv4(),
       type,
       action,
