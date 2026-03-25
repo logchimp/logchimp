@@ -67,14 +67,28 @@ export class PermissionService {
 
     if (this.permissionKeys.has(permission)) return;
 
-    await database("permissions").insert({
-      id: uuidv4(),
-      type,
-      action,
-      ...(scope && {
-        scope,
-      }),
-    });
+    const id = uuidv4();
+    const response = await database("permissions")
+      .insert({
+        id,
+        type,
+        action,
+        ...(scope && {
+          scope,
+        }),
+      })
+      .returning<IPermissionTableColumns>([
+        "id",
+        "name",
+        "type",
+        "action",
+        "scope",
+        "created_at",
+      ]);
+
+    this.permissionKey.add(permission);
+    this.permissionRef.set(permission, id);
+    this.permissionEntity.add(response);
 
     if (options && options?.enableLogging) {
       logger.info(`Permission added: ${permission}`);
