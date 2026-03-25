@@ -56,7 +56,7 @@ export class PermissionService {
   async addPermission(
     permission: TPermission,
     options?: {
-      silent?: boolean;
+      enableLogging?: boolean;
     },
   ) {
     const [type, action, scope] = permission.split(":");
@@ -72,7 +72,7 @@ export class PermissionService {
       }),
     });
 
-    if (options?.silent) {
+    if (options && options?.enableLogging) {
       logger.info(`Permission added: ${permission}`);
     }
   }

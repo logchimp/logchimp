@@ -6,6 +6,7 @@ import type { TPermission } from "@logchimp/types";
 
 import { RoleIdService, RolesService } from "../roles.service";
 import { PermissionService } from "./permission.service";
+import logger from "../../../utils/logger";
 
 const PERMISSIONS = [
   "post:read",
@@ -71,12 +72,17 @@ export async function seedSystemPermissions() {
   await permissionService.load();
 
   // Permissions
+  logger.info("Seeding system permissions...");
   for (const permission of PERMISSIONS) {
-    await permissionService.addPermission(permission);
+    await permissionService.addPermission(permission, {
+      enableLogging: true,
+    });
   }
+  logger.info("System permissions seeded successfully");
 
   // Roles
   const roleService = new RolesService();
+  logger.info("Seeding system roles...");
   for (const role of ROLES) {
     const roleIdService = new RoleIdService(role.id);
     const roleExists = await roleIdService.getRole();
@@ -88,9 +94,12 @@ export async function seedSystemPermissions() {
     };
     await roleService.createRoleWithPermissions(_role, role.permissions, {
       isSystem: 1,
+      enableLogging: true,
     });
   }
+  logger.info("System roles seeded successfully");
 
+  logger.info("System roles & permissions seeded successfully");
   process.exit(0);
 }
 

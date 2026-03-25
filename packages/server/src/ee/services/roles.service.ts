@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import database from "../../database";
 import { rawPermissionArrayQuery } from "../../middlewares/auth/helpers";
 import { PermissionService } from "./roles/permission.service";
+import logger from "../../utils/logger";
 
 interface CreateRoleArgs {
   id?: string;
@@ -52,6 +53,7 @@ export class RolesService {
     permissions: TPermission[],
     options?: {
       isSystem?: number;
+      enableLogging?: boolean;
     },
   ) {
     await this.permissionService.load();
@@ -89,6 +91,12 @@ export class RolesService {
       }
       await trx("permissions_roles").insert(rows);
     });
+
+    if (options && options?.enableLogging) {
+      logger.info(
+        `Role created: ${role.name} with permissions: ${permissions.join(", ")}`,
+      );
+    }
   }
 }
 
