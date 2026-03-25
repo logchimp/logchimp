@@ -67,8 +67,10 @@ const ROLES = [
 }>;
 
 export async function seedSystemPermissions() {
-  // Permissions
   const permissionService = new PermissionService();
+  await permissionService.load();
+
+  // Permissions
   for (const permission of PERMISSIONS) {
     await permissionService.addPermission(permission);
   }
