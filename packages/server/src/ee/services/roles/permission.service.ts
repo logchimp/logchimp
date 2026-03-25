@@ -22,6 +22,10 @@ export class PermissionService {
    * Get all permissions from the database
    */
   async load() {
+    this.permissionKey.clear();
+    this.permissionEntity.clear();
+    this.permissionRef.clear();
+
     const perms = await database
       .select<IPermissionTableColumns[]>()
       .from("permissions");
