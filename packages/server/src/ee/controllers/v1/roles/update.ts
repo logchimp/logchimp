@@ -32,6 +32,16 @@ export async function update(
     return;
   }
 
+  // @ts-expect-error
+  const reqRole = req?.role as IRole;
+  if (reqRole.isSystem) {
+    res.status(403).send({
+      message: error.api.roles.cannotUpdateSystemRole,
+      code: "CANNOT_UPDATE_SYSTEM_ROLE",
+    });
+    return;
+  }
+
   const roleIdService = new RoleIdService(role.id);
 
   let updatedRole: IRole | null;

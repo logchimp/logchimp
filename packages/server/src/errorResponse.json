@@ -40,7 +40,8 @@
     "roles": {
       "invalidRoleId": "Invalid role ID",
       "roleNotFound": "Role not found",
-      "notEnoughPermission": "You do not have permission to perform this action."
+      "notEnoughPermission": "You do not have permission to perform this action.",
+      "cannotUpdateSystemRole": "Cannot update system role"
     },
     "user": {
       "invalidUserId": "Invalid user ID",
