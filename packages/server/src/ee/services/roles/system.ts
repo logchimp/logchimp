@@ -101,7 +101,15 @@ export async function seedSystemPermissions() {
   logger.info("System roles seeded successfully");
 
   logger.info("System roles & permissions seeded successfully");
-  process.exit(0);
 }
 
-seedSystemPermissions();
+if (require.main === module) {
+  seedSystemPermissions()
+    .then(() => {
+      process.exit(0);
+    })
+    .catch((err) => {
+      logger.error("Failed to seed system permissions", { err });
+      process.exit(1);
+    });
+}
