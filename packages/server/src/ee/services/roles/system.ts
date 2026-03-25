@@ -54,12 +54,12 @@ const ROLES = [
     description: "All users",
     permissions: ["post:create", "vote:create", "vote:destroy"],
   },
-  {
-    id: "c2d058ec-1913-4ec9-afe8-d6cf11e9d324",
-    name: "Manager",
-    description: "Managers can manage users, boards, and posts",
-    permissions: [],
-  },
+  // {
+  //   id: "c2d058ec-1913-4ec9-afe8-d6cf11e9d324",
+  //   name: "Manager",
+  //   description: "Managers can manage users, boards, and posts",
+  //   permissions: [],
+  // },
 ] as Array<{
   id: string; // uuid v4
   name: string;
