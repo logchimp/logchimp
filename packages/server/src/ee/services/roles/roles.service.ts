@@ -9,6 +9,7 @@ import database from "../../../database";
 import { rawPermissionArrayQuery } from "../../../middlewares/auth/helpers";
 import { PermissionService } from "./permission.service";
 import logger from "../../../utils/logger";
+import { ValidationError } from "../../../utils/error";
 
 interface CreateRoleArgs {
   id?: string;
@@ -68,7 +69,10 @@ export class RolesService {
       const permissionId =
         this.permissionService.permissionRefs.get(permissionStr);
       if (!permissionId) {
-        throw new Error(`Unknown permission: ${permissionStr}`);
+        throw new ValidationError(
+          `Unknown permission: ${permissionStr}`,
+          "INVALID_PERMISSION",
+        );
       }
 
       rows.push({
@@ -167,7 +171,10 @@ export class RoleIdService {
         const permissionId =
           this.permissionService.permissionRefs.get(permissionStr);
         if (!permissionId) {
-          throw new Error(`Unknown permission: ${permissionStr}`);
+          throw new ValidationError(
+            `Unknown permission: ${permissionStr}`,
+            "INVALID_PERMISSION",
+          );
         }
 
         rows.push({
