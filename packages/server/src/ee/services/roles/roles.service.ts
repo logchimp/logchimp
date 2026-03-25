@@ -17,6 +17,15 @@ interface CreateRoleArgs {
   description?: string;
 }
 
+export interface IRoleTableColumns {
+  id: string;
+  name: string;
+  description: string | null;
+  is_system: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
 interface IRolePermissionsTableColumns {
   id: string;
   permission_id: string;
@@ -37,16 +46,26 @@ export class RolesService {
         name: "new role",
       })
       .into("roles")
-      .returning<IRole[]>([
+      .returning<IRoleTableColumns[]>([
         "id",
         "name",
         "description",
+        "is_system",
         "created_at",
         "updated_at",
       ]);
 
     if (!res.length) return null;
-    return res[0];
+
+    const role = res[0];
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      isSystem: !!role.is_system,
+      created_at: role.created_at,
+      updated_at: role.updated_at,
+    };
   }
 
   async createRoleWithPermissions(
@@ -117,37 +136,65 @@ export class RoleIdService {
     return this.roleId;
   }
 
-  async getRole() {
-    return database
-      .select<IRole>("id", "name", "description", "created_at", "updated_at")
+  async getRole(): Promise<IRole | null> {
+    const role = await database
+      .select<IRoleTableColumns>(
+        "id",
+        "name",
+        "description",
+        "is_system",
+        "created_at",
+        "updated_at",
+      )
       .from("roles")
       .where({
         id: this.roleId,
       })
       .first();
+
+    if (!role) return null;
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      isSystem: !!role.is_system,
+      created_at: role.created_at,
+      updated_at: role.updated_at,
+    };
   }
 
-  async updateRole(role: Omit<IUpdateRoleRequestBody, "id" | "permissions">) {
+  async updateRole(
+    _role: Omit<IUpdateRoleRequestBody, "id" | "permissions">,
+  ): Promise<IRole | null> {
     const res = await database
       .update({
-        name: role.name,
-        description: role.description,
+        name: _role.name,
+        description: _role.description,
         updated_at: new Date().toJSON(),
       })
       .from("roles")
       .where({
         id: this.roleId,
       })
-      .returning<IRole[]>([
+      .returning<IRoleTableColumns[]>([
         "id",
         "name",
         "description",
+        "is_system",
         "created_at",
         "updated_at",
       ]);
 
     if (!res.length) return null;
-    return res[0];
+    const role = res[0];
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      isSystem: !!role.is_system,
+      created_at: role.created_at,
+      updated_at: role.updated_at,
+    };
   }
 
   /**

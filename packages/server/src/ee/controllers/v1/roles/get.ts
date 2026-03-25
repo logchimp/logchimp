@@ -14,6 +14,7 @@ import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 import { parseAndValidateLimit } from "../../../../helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../../constants";
+import type { IRoleTableColumns } from "../../../services/roles/roles.service";
 
 type ResponseBody = IPaginatedRolesResponse | IApiErrorResponse;
 
@@ -97,9 +98,21 @@ export async function get(
           : currentPage;
     }
 
+    const roles = [] as IRole[];
+    for (const role of data) {
+      roles.push({
+        id: role.id,
+        name: role.name,
+        description: role.description,
+        isSystem: !!role.is_system,
+        created_at: role.created_at,
+        updated_at: role.updated_at,
+      } satisfies IRole);
+    }
+
     res.status(200).send({
-      results: data,
-      roles: data,
+      results: roles,
+      roles: roles,
       page_info: {
         count: dataLength,
         current_page: currentPage,
@@ -129,7 +142,14 @@ interface GetRolesQueryOptions {
 
 async function getRolesQuery({ first, after }: GetRolesQueryOptions) {
   let query = database
-    .select<IRole[]>("id", "name", "description", "created_at", "updated_at")
+    .select<IRoleTableColumns[]>(
+      "id",
+      "name",
+      "description",
+      "is_system",
+      "created_at",
+      "updated_at",
+    )
     .from("roles")
     .orderBy([
       { column: "created_at", order: "desc" },

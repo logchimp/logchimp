@@ -9,6 +9,7 @@ export interface IRole {
   id: string;
   name: string;
   description: string | null;
+  isSystem: boolean;
   created_at: Date;
   updated_at: Date;
 }
