@@ -4,7 +4,7 @@ import logger from "../../utils/logger";
 exports.up = (knex) => {
   return knex.schema
     .createTable("permissions", (table) => {
-      table.uuid("id").notNullable().unique().primary();
+      table.uuid("id").notNullable().primary();
       table.string("name", 30);
       table.string("type", 20).notNullable();
       table.string("action", 10).notNullable();

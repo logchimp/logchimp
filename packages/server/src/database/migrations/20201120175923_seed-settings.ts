@@ -30,6 +30,7 @@ exports.up = (knex) => {
 exports.down = (knex) => {
   return knex("settings")
     .delete()
+    .where({ title: "LogChimp" })
     .then(() => {
       logger.info({
         message: "Drop data: settings",

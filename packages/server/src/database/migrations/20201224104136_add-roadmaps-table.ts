@@ -4,7 +4,7 @@ import logger from "../../utils/logger";
 exports.up = (knex) => {
   return knex.schema
     .createTable("roadmaps", (table) => {
-      table.uuid("id").notNullable().unique().primary();
+      table.uuid("id").notNullable().primary();
       table.string("name", 50).notNullable();
       table.string("url", 50).notNullable().unique();
       table.integer("index").notNullable();
