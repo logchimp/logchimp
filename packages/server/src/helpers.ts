@@ -194,6 +194,15 @@ function generateUniqueUsername(baseUsername: string): string {
   return `${trimmedBase}_${generateNanoID(8)}`;
 }
 
+function normalize(perms: string[]) {
+  return [...new Set(perms)].sort();
+}
+
+function arraysEqual(a: string[], b: string[]) {
+  if (a.length !== b.length) return false;
+  return a.every((val, i) => val === b[i]);
+}
+
 export {
   validEmail,
   validUUID,
@@ -210,4 +219,6 @@ export {
   generateNanoID,
   generateUniqueUsername,
   toTrimmedString,
+  normalize,
+  arraysEqual,
 };

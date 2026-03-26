@@ -7,6 +7,14 @@ import type { TPermission } from "@logchimp/types";
 import { RoleIdService, RolesService } from "./roles.service";
 import { PermissionService } from "./permission.service";
 import logger from "../../../utils/logger";
+import { arraysEqual, normalize } from "../../../helpers";
+
+interface ISystemRole {
+  id: string; // uuid v4
+  name: string;
+  description: string;
+  permissions: TPermission[];
+}
 
 const PERMISSIONS = [
   "post:read",
@@ -60,12 +68,7 @@ const ROLES = [
   //   description: "Managers can manage users, boards, and posts",
   //   permissions: [],
   // },
-] as Array<{
-  id: string; // uuid v4
-  name: string;
-  description: string;
-  permissions: TPermission[];
-}>;
+] as Array<ISystemRole>;
 
 export async function seedSystemPermissions() {
   const permissionService = new PermissionService();
@@ -86,21 +89,53 @@ export async function seedSystemPermissions() {
   for (const role of ROLES) {
     const roleIdService = new RoleIdService(role.id);
     const roleExists = await roleIdService.getRole();
-    if (roleExists) continue;
 
     const _role = {
       id: role.id,
       name: role.name,
       description: role.description,
     };
-    await roleService.createRoleWithPermissions(_role, role.permissions, {
-      isSystem: 1,
-      enableLogging: true,
-    });
+    if (!roleExists) {
+      await roleService.createRoleWithPermissions(_role, role.permissions, {
+        isSystem: 1,
+        enableLogging: true,
+      });
+    } else {
+      const permissions = await roleIdService.getRolePermissions();
+
+      const roleChanged = hasRoleChanged(
+        {
+          ...roleExists,
+          permissions: permissions.permissions ?? [],
+        },
+        {
+          ..._role,
+          permissions: role.permissions,
+        },
+      );
+      if (roleChanged) {
+        delete _role.id;
+        await Promise.all([
+          roleIdService.updateRole(_role),
+          roleIdService.updatePermission(role.permissions),
+        ]);
+        logger.info(`Role '${role.name}' updated successfully`);
+      }
+    }
   }
   logger.info("System roles seeded successfully");
 
   logger.info("System roles & permissions seeded successfully");
+}
+
+function hasRoleChanged(existing: ISystemRole, incoming: ISystemRole) {
+  if (existing.name !== incoming.name) return true;
+  if (existing.description !== incoming.description) return true;
+
+  const existingPerms = normalize(existing.permissions);
+  const incomingPerms = normalize(incoming.permissions);
+
+  return !arraysEqual(existingPerms, incomingPerms);
 }
 
 if (require.main === module) {

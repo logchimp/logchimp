@@ -150,6 +150,10 @@ export class RoleIdService {
     return res[0];
   }
 
+  /**
+   * Update permissions for a role
+   * @param permissions
+   */
   async updatePermission(permissions: TPermission[]) {
     await this.permissionService.load();
 
