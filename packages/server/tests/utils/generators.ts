@@ -164,7 +164,7 @@ async function role(role?: Partial<RoleArgs>) {
     id: uuid(),
     name,
     description: role?.description,
-    isSystem: role?.isSystem,
+    is_system: role?.isSystem,
     created_at: new Date().toJSON(),
     updated_at: new Date().toJSON(),
   };
