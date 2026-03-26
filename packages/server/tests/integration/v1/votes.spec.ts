@@ -3,7 +3,6 @@ import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 
 import app from "../../../src/app";
-import database from "../../../src/database";
 import { createUser } from "../../utils/seed/user";
 import {
   post as generatePost,
@@ -24,26 +23,13 @@ describe("POST /api/v1/votes", () => {
   it('should throw error "NOT_ENOUGH_PERMISSION" for user without "vote:create" permission', async () => {
     const { user } = await createUser({
       isVerified: true,
+      addEveryoneRole: false,
     });
 
     // set "role:unassign" permission to user
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
       roleName: "Role destroyer",
     });
-
-    // get roleId for "@everyone" role
-    const { id: roleId } = await database
-      .select("id")
-      .from("roles")
-      .where({
-        name: "@everyone",
-      })
-      .first();
-
-    // remove @everyone role from user
-    await supertest(app)
-      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
 
     const post = await generatePost(
       {
@@ -148,26 +134,13 @@ describe("DELETE /api/v1/votes", () => {
   it('should throw error "NOT_ENOUGH_PERMISSION" for user without "vote:destroy" permission', async () => {
     const { user } = await createUser({
       isVerified: true,
+      addEveryoneRole: false,
     });
 
     // set "role:unassign" permission to user
     await createRoleWithPermissions(user.userId, ["role:unassign"], {
       roleName: "Role destroyer",
     });
-
-    // get roleId for @everyone
-    const { id: roleId } = await database
-      .select("id")
-      .from("roles")
-      .where({
-        name: "@everyone",
-      })
-      .first();
-
-    // remove @everyone role from user
-    await supertest(app)
-      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
 
     const post = await generatePost(
       {
