@@ -61,7 +61,7 @@ export async function createUser(
         INSERT INTO roles_users (id, role_id, user_id)
         VALUES (:uuid, (SELECT id
                         FROM roles
-                        WHERE name = '@everyone'), :userId)
+                        WHERE name = '@everyone' AND is_system = 1), :userId)
     `,
     {
       uuid: uuid(),
