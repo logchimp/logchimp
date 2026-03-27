@@ -12,6 +12,7 @@ interface RemoveRoleFromUserIdArgs {
   role: {
     id?: string;
     name?: string;
+    isSystem?: boolean;
   };
 }
 
@@ -25,7 +26,7 @@ export async function removeRoleFromUserId(
     const getId = await database
       .select("id")
       .from("roles")
-      .where({ name: role.name })
+      .where({ name: role.name, is_system: role?.isSystem ? 1 : 0 })
       .first();
     roleId = getId.id;
   }
