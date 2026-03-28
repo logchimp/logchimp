@@ -80,7 +80,6 @@ import type { IDashboardPost } from "@logchimp/types";
 import { storeToRefs } from "pinia";
 
 // modules
-import { router } from "../../../../router";
 import { updatePost } from "../../../../modules/posts";
 import { useDashboardPosts } from "../../../../store/dashboard/posts";
 import { useSettingsEEStore } from "../../../../ee/store/settings";
@@ -150,7 +149,6 @@ async function updatePostHandler() {
 
     Object.assign(post, response.data.post);
     dashboardPosts.updatePost(post);
-    router.push("/dashboard/posts");
   } catch (err) {
     console.error(err);
   } finally {
