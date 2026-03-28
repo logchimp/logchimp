@@ -256,13 +256,18 @@ describe("[GET] /api/v1/users/permissions", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
-    expect(response.body.permissions).toEqual([
+
+    const assertedPermsArr = [
       "post:create",
       "vote:create",
       "vote:destroy",
       "comment:create",
       "comment:update:own",
-    ] satisfies TPermission[]);
+    ] satisfies TPermission[];
+
+    expect((response.body.permissions || []).sort()).toEqual(
+      assertedPermsArr.sort(),
+    );
   });
 });
 
