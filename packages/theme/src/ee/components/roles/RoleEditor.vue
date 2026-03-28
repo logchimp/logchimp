@@ -11,6 +11,9 @@
           <BreadcrumbItem>
             {{ title }}
           </BreadcrumbItem>
+          <div v-if="role.isSystem" class="ml-2" aria-hidden="true">
+            <ComputerIcon class="size-5 text-neutral-400" />
+          </div>
         </template>
       </Breadcrumbs>
     </template>
@@ -318,7 +321,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import type { IRole, TPermission, IPermissionsState } from "@logchimp/types";
-import { ShieldAlert } from "lucide-vue";
+import { ShieldAlert, ComputerIcon } from "lucide-vue";
 
 // modules
 import { router } from "../../../router";

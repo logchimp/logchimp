@@ -38,6 +38,7 @@ export interface IUserInfo extends IPublicUserInfo {
 export interface IUserRole {
   id: string;
   name: string;
+  isSystem: boolean;
   user_role_id: string;
 }
 

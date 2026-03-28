@@ -10,13 +10,20 @@
       @update:model-value="(checked) => updateRoleHandler(role.id, checked)"
       :key="role.id"
     >
-      {{role.name}}
+      <span>
+        {{role.name}}
+      </span>
+      <ComputerIcon
+        v-if="role.isSystem"
+        class="size-4 stroke-neutral-400 shrink-0"
+      />
     </DropdownV2CheckboxItem>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, inject, computed } from "vue";
+import { ComputerIcon } from "lucide-vue";
 
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useDashboardUsers } from "../../../../../store/dashboard/users";
@@ -55,6 +62,7 @@ async function assignRoleHandler(roleId: string) {
       dashboardUsers.appendUserRole(userId, {
         id: response.id,
         name: response.name,
+        isSystem: response.isSystem,
         user_role_id: response.user_role_id,
       });
     }

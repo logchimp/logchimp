@@ -140,6 +140,7 @@ export async function filter(
           .select({
             id: "roles.id",
             name: "roles.name",
+            isSystem: "roles.is_system",
             // user role ID
             user_role_id: "roles_users.role_id",
           })

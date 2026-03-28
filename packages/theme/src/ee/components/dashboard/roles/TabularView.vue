@@ -11,6 +11,7 @@
       >
         Name
       </Td>
+      <Td :head="true" />
       <Td
         :head="true"
         :style="{

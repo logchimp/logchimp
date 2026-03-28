@@ -1,7 +1,7 @@
 <template>
   <DropdownMenuContent
     :class="[
-      'p-1 w-40 overflow-y-auto',
+      'p-1 w-44 overflow-y-auto',
       'shadow-sm border border-neutral-300 bg-white rounded-lg'
     ]"
     :style="{
