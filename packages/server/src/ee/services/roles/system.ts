@@ -60,7 +60,13 @@ const ROLES = [
     id: "f6027b68-6c4f-4331-8354-41836f654980",
     name: "@everyone",
     description: "All users",
-    permissions: ["post:create", "vote:create", "vote:destroy"],
+    permissions: [
+      "post:create",
+      "vote:create",
+      "vote:destroy",
+      "comment:create",
+      "comment:update:own",
+    ],
   },
   // {
   //   id: "c2d058ec-1913-4ec9-afe8-d6cf11e9d324",
