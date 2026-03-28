@@ -10,8 +10,8 @@
       {{ role.name }}
     </Td>
 
-    <Td v-if="role.isSystem">
-      <TooltipProvider>
+    <Td>
+      <TooltipProvider v-if="role.isSystem">
         <TooltipRoot>
           <TooltipTrigger>
             <ComputerIcon class="size-5 stroke-neutral-400" />
