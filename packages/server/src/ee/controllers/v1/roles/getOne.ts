@@ -10,7 +10,7 @@ import type {
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { RoleIdService } from "../../../services/roles.service";
+import { RoleIdService } from "../../../services/roles/roles.service";
 
 type ResponseBody = IGetRoleByIdResponseBody | IApiErrorResponse;
 

@@ -5,16 +5,16 @@ import type {
 } from "@logchimp/types";
 import { v4 as uuidv4 } from "uuid";
 
-import database from "../../database";
-import { rawPermissionArrayQuery } from "../../middlewares/auth/helpers";
+import database from "../../../database";
+import { rawPermissionArrayQuery } from "../../../middlewares/auth/helpers";
+import { PermissionService } from "./permission.service";
+import logger from "../../../utils/logger";
+import { ValidationError } from "../../../utils/error";
 
-interface IPermissionTableColumns {
-  id: string;
-  name: string | null;
-  type: string | null;
-  action: string | null;
-  scope: string | null;
-  created_at: Date;
+interface CreateRoleArgs {
+  id?: string;
+  name: string;
+  description?: string;
 }
 
 interface IRolePermissionsTableColumns {
@@ -24,6 +24,12 @@ interface IRolePermissionsTableColumns {
 }
 
 export class RolesService {
+  private permissionService: PermissionService;
+
+  constructor() {
+    this.permissionService = new PermissionService();
+  }
+
   async create() {
     const res = await database
       .insert({
@@ -42,13 +48,69 @@ export class RolesService {
     if (!res.length) return null;
     return res[0];
   }
+
+  async createRoleWithPermissions(
+    role: CreateRoleArgs,
+    permissions: TPermission[],
+    options?: {
+      isSystem?: number;
+      enableLogging?: boolean;
+    },
+  ) {
+    await this.permissionService.load();
+
+    const roleId = role?.id ?? uuidv4();
+
+    const rows: IRolePermissionsTableColumns[] = [];
+    for (const permission of permissions) {
+      const permissionStr = (permission || "").trim();
+      if (!permissionStr) continue;
+
+      const permissionId =
+        this.permissionService.permissionRefs.get(permissionStr);
+      if (!permissionId) {
+        throw new ValidationError(
+          `Unknown permission: ${permissionStr}`,
+          "INVALID_PERMISSION",
+        );
+      }
+
+      rows.push({
+        id: uuidv4(),
+        permission_id: permissionId,
+        role_id: roleId,
+      });
+    }
+
+    await database.transaction(async (trx) => {
+      await trx("roles").insert({
+        id: roleId,
+        name: role.name,
+        description: role.description,
+        is_system: options?.isSystem ?? 0,
+      });
+
+      if (rows.length === 0) {
+        return;
+      }
+      await trx("permissions_roles").insert(rows);
+    });
+
+    if (options && options?.enableLogging) {
+      logger.info(
+        `Role created: ${role.name} with permissions: ${permissions.join(", ")}`,
+      );
+    }
+  }
 }
 
 export class RoleIdService {
   private readonly roleId: string;
+  private permissionService: PermissionService;
 
   constructor(roleId: string) {
     this.roleId = roleId;
+    this.permissionService = new PermissionService();
   }
 
   get getRoleId() {
@@ -88,8 +150,12 @@ export class RoleIdService {
     return res[0];
   }
 
+  /**
+   * Update permissions for a role
+   * @param permissions
+   */
   async updatePermission(permissions: TPermission[]) {
-    const systemPermissions = await this.getSystemPermissions();
+    await this.permissionService.load();
 
     await database.transaction(async (trx) => {
       // delete all existing permissions for a role
@@ -101,21 +167,18 @@ export class RoleIdService {
         return;
       }
 
-      const permissionMap = new Map<string, string>(
-        systemPermissions.map((p) => [
-          `${p.type}:${p.action}${p?.scope ? `:${p.scope}` : ""}`,
-          p.id,
-        ]),
-      );
-
       const rows: IRolePermissionsTableColumns[] = [];
       for (const permission of permissions) {
         const permissionStr = (permission || "").trim();
         if (!permissionStr) continue;
 
-        const permissionId = permissionMap.get(permissionStr);
+        const permissionId =
+          this.permissionService.permissionRefs.get(permissionStr);
         if (!permissionId) {
-          throw new Error(`Unknown permission: ${permissionStr}`);
+          throw new ValidationError(
+            `Unknown permission: ${permissionStr}`,
+            "INVALID_PERMISSION",
+          );
         }
 
         rows.push({
@@ -140,9 +203,5 @@ export class RoleIdService {
         "pr.role_id": this.roleId,
       })
       .first();
-  }
-
-  private async getSystemPermissions() {
-    return database.select<IPermissionTableColumns[]>().from("permissions");
   }
 }

@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 // utils
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
-import { RoleIdService } from "../services/roles.service";
+import { RoleIdService } from "../services/roles/roles.service";
 
 export async function roleExists(
   req: Request,

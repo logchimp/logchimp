@@ -10,7 +10,8 @@ import type {
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
-import { RoleIdService } from "../../../services/roles.service";
+import { RoleIdService } from "../../../services/roles/roles.service";
+import { ValidationError } from "../../../../utils/error";
 
 type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
 
@@ -73,6 +74,14 @@ export async function update(
       message: "failed to update role permissions in DB",
       err,
     });
+
+    if (err instanceof ValidationError) {
+      res.status(400).send({
+        message: err.message,
+        code: err.code,
+      });
+      return;
+    }
 
     res.status(500).send({
       message: error.general.serverError,
