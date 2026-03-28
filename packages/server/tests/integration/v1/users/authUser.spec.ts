@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
+import type { TPermission } from "@logchimp/types";
 
 import app from "../../../../src/app";
 import { createUser } from "../../../utils/seed/user";
@@ -259,7 +260,9 @@ describe("[GET] /api/v1/users/permissions", () => {
       "post:create",
       "vote:create",
       "vote:destroy",
-    ]);
+      "comment:create",
+      "comment:update:own",
+    ] satisfies TPermission[]);
   });
 });
 
