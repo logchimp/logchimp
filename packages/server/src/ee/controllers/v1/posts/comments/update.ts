@@ -89,7 +89,7 @@ export async function update(
   const requiredPermission = [
     "comment:update:own",
     "comment:update:any",
-  ] as TPermission[];
+  ] satisfies TPermission[];
   const hasPermission = requiredPermission.some((permission) =>
     permissions.includes(permission),
   );
@@ -101,7 +101,9 @@ export async function update(
     return;
   }
 
-  const ownComment = permissions.includes("comment:update:one" as TPermission);
+  const ownComment = permissions.includes(
+    "comment:update:own" satisfies TPermission,
+  );
   if (ownComment) {
     let isAuthor: {
       id: string;
