@@ -88,21 +88,37 @@ export async function seedSystemPermissions() {
   logger.info("Seeding system roles...");
   for (const role of ROLES) {
     const roleIdService = new RoleIdService(role.id);
-    const roleExists = await roleIdService.getRole();
+    let roleExists = await roleIdService.getRole();
 
     const _role = {
       id: role.id,
       name: role.name,
       description: role.description,
     };
-    if (!roleExists) {
-      await roleService.createRoleWithPermissions(_role, role.permissions, {
-        isSystem: 1,
-        enableLogging: true,
-      });
-    } else {
-      const permissions = await roleIdService.getRolePermissions();
 
+    if (!roleExists) {
+      try {
+        await roleService.createRoleWithPermissions(_role, role.permissions, {
+          isSystem: 1,
+          enableLogging: true,
+        });
+        continue;
+      } catch (err: any) {
+        // Handle race condition: if another process already inserted the role
+        if (err?.code === "23505" || err?.constraint === "roles_pkey") {
+          logger.info(
+            `Role '${role.name}' already exists (inserted by another process)`,
+          );
+          // Re-fetch the role to check if it needs updating
+          roleExists = await roleIdService.getRole();
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    if (roleExists) {
+      const permissions = await roleIdService.getRolePermissions();
       const roleChanged = hasRoleChanged(
         {
           ...roleExists,

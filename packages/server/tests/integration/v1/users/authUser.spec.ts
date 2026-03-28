@@ -86,6 +86,7 @@ describe("GET /api/v1/users/profile", () => {
     const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
     await removeRoleFromUserId(user.userId, {
       name: "@everyone",
+      isSystem: true,
     });
 
     const response = await supertest(app)
@@ -185,6 +186,7 @@ describe("PATCH /api/v1/users/profile", () => {
       const token = createToken({ userId: user.userId }, { expiresIn: "1h" });
       await removeRoleFromUserId(user.userId, {
         name: "@everyone",
+        isSystem: true,
       });
 
       const response = await supertest(app)

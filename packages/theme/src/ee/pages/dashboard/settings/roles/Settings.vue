@@ -52,6 +52,7 @@ const role = ref<IRole>({
   id: "",
   name: "",
   description: "",
+  isSystem: false,
   created_at: new Date(),
   updated_at: new Date(),
 });

@@ -10,6 +10,7 @@ import {
   vote as assignVote,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import { removeRoleFromUserId } from "../../utils/roles";
 
 // Add vote to post
 describe("POST /api/v1/votes", () => {
@@ -31,19 +32,11 @@ describe("POST /api/v1/votes", () => {
       roleName: "Role destroyer",
     });
 
-    // get roleId for "@everyone" role
-    const { id: roleId } = await database
-      .select("id")
-      .from("roles")
-      .where({
-        name: "@everyone",
-      })
-      .first();
-
-    // remove @everyone role from user
-    await supertest(app)
-      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
+    // remove '@everyone' role from user
+    await removeRoleFromUserId(user.userId, {
+      name: "@everyone",
+      isSystem: true,
+    });
 
     const post = await generatePost(
       {
@@ -155,19 +148,11 @@ describe("DELETE /api/v1/votes", () => {
       roleName: "Role destroyer",
     });
 
-    // get roleId for @everyone
-    const { id: roleId } = await database
-      .select("id")
-      .from("roles")
-      .where({
-        name: "@everyone",
-      })
-      .first();
-
-    // remove @everyone role from user
-    await supertest(app)
-      .delete(`/api/v1/roles/${roleId}/users/${user.userId}`)
-      .set("Authorization", `Bearer ${user.authToken}`);
+    // remove '@everyone' role from user
+    await removeRoleFromUserId(user.userId, {
+      name: "@everyone",
+      isSystem: true,
+    });
 
     const post = await generatePost(
       {
