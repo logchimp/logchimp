@@ -7,14 +7,14 @@
       }
     ]"
   >
-    <LoaderContainer v-if="loading" />
-    <DashboardPostEditor
-      v-else-if="post.postId && !errorCode"
-      :post="post"
-    />
-    <Dashboard404 v-else-if="errorCode === 'POST_NOT_FOUND'">
+    <Dashboard404 v-if="errorCode === 'POST_NOT_FOUND'">
       Post not found
     </Dashboard404>
+    <LoaderContainer v-else-if="loading" />
+    <DashboardPostViewer
+      v-else-if="post.postId"
+      :post="post"
+    />
     <Dashboard500 v-else>
       Something went wrong.
     </Dashboard500>
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, defineAsyncComponent } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IDashboardPost } from "@logchimp/types";
 
@@ -33,8 +33,10 @@ import { getPostBySlug } from "../../../../modules/posts";
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
 import Dashboard500 from "../../../../components/dashboard/500.vue";
-import DashboardPostEditor from "../../../../components/dashboard/posts/PostEditor/index.vue";
 import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
+const DashboardPostViewer = defineAsyncComponent(
+  () => import("../../../../components/dashboard/posts/PostViewer.vue"),
+);
 
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
