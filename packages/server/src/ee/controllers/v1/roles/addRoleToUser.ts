@@ -34,8 +34,7 @@ export async function addRoleToUser(
   }
 
   try {
-    const response = await insertRoleUserWithTrx(user_id, role_id);
-    const data = response[0];
+    const data = await insertRoleUserWithTrx(user_id, role_id);
 
     res.status(200).send({
       success: 1,
@@ -71,10 +70,10 @@ interface IInsertedRoleUser {
  * retrieves the associated role details.
  * @param {string} user_id
  * @param {string} role_id
- * @returns {Promise<IUserRole[]>}
+ * @returns {Promise<IUserRole>}
  */
 const insertRoleUserWithTrx = async (user_id: string, role_id: string) =>
-  database.transaction(async (trx): Promise<IUserRole[]> => {
+  await database.transaction(async (trx): Promise<IUserRole> => {
     const insertResponse = await trx<IInsertedRoleUser>("roles_users")
       .insert({
         id: uuid(),
@@ -91,14 +90,28 @@ const insertRoleUserWithTrx = async (user_id: string, role_id: string) =>
 
     const insertedData = insertResponse[0];
 
-    return trx<IUserRole>("roles_users")
-      .select(
+    const response = await trx("roles_users")
+      .select<{
+        id: string;
+        is_system: number;
+        name: string;
+        user_role_id: string;
+      }>(
         "roles.id as id",
+        "roles.is_system as is_system",
         "roles.name as name",
         "roles_users.id as user_role_id",
       )
       .innerJoin("roles", "roles.id", "roles_users.role_id")
       .where({
         "roles_users.id": insertedData.id,
-      });
+      })
+      .first();
+
+    return {
+      id: response.id,
+      isSystem: !!response.is_system,
+      name: response.name,
+      user_role_id: response.user_role_id,
+    };
   });
