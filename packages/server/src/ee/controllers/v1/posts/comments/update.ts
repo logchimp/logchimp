@@ -89,7 +89,7 @@ export async function update(
   const requiredPermission = [
     "comment:update:own",
     "comment:update:any",
-  ] as TPermission[];
+  ] satisfies TPermission[];
   const hasPermission = requiredPermission.some((permission) =>
     permissions.includes(permission),
   );
