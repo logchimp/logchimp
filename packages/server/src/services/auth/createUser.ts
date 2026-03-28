@@ -228,6 +228,7 @@ async function _assignEveryoneRoleQuery(userId: string) {
     .from("roles")
     .where({
       name: "@everyone",
+      is_system: 1,
     })
     .first();
 
