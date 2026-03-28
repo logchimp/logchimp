@@ -42,7 +42,8 @@
     </alert>
 
     <alert
-      title="You cannot edit system generated role."
+      v-if="role.isSystem"
+      title="You cannot edit system role."
       type="warning"
     >
       <template #icon>
