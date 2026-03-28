@@ -21,7 +21,7 @@
     <Button
       type="primary"
       :loading="updateRoleButtonLoading"
-      :disabled="updateRoleButtonDisabled"
+      :disabled="disableRoleEditorForm"
       @click="updateRoleHandler"
     >
       Save
@@ -40,17 +40,33 @@
         <ShieldAlert />
       </template>
     </alert>
-      
+
+    <alert
+      v-if="role.isSystem"
+      title="You cannot edit system role."
+      type="warning"
+    >
+      <template #icon>
+        <TriangleAlert />
+      </template>
+    </alert>
+
     <div class="form-section">
       <div class="form-columns">
         <div class="form-column">
-          <l-text v-model="role.name" label="Name" placeholder="Role name" />
+          <l-text
+            v-model="role.name"
+            label="Name"
+            placeholder="Role name"
+            :disabled="disableRoleEditorForm"
+          />
         </div>
 
         <div class="form-column">
           <l-textarea
             :model-value="role.description ?? undefined"
             @update:model-value="(value: string) => role.description = value ?? null"
+            :disabled="disableRoleEditorForm"
             label="Description"
             rows="4"
             name="Role description"
@@ -66,11 +82,13 @@
         <div class="form-column">
 <!--          <toggle-item-->
 <!--            v-model="permissions.post.read"-->
+<!--            :disabled="disableRoleEditorForm"-->
 <!--            label="Read"-->
 <!--            :disabled="true"-->
 <!--          />-->
           <toggle-item
             v-model="permissions.post.update"
+            :disabled="disableRoleEditorForm"
             label="Update"
             note="Authors can edit their own posts by default. This permission allows you to edit posts created by other users."
           />
@@ -79,11 +97,13 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.post.create"
+            :disabled="disableRoleEditorForm"
             label="Create"
             note="This permission allows you to create new posts."
           />
           <toggle-item
             v-model="permissions.post.destroy"
+            :disabled="disableRoleEditorForm"
             label="Delete"
             note="Users cannot delete posts by default. This permission allows you to delete posts."
           />
@@ -97,16 +117,19 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.board.read"
+            :disabled="disableRoleEditorForm"
             label="Read"
             note="Anyone can view public boards by default. This permission allows you to view private boards."
           />
           <toggle-item
             v-model="permissions.board.update"
+            :disabled="disableRoleEditorForm"
             label="Update"
             note="This permission allows you to update board details."
           />
           <toggle-item
             v-model="permissions.board.assign"
+            :disabled="disableRoleEditorForm"
             label="Assign"
             note="This permission allows you to assign posts to boards."
           />
@@ -115,16 +138,19 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.board.create"
+            :disabled="disableRoleEditorForm"
             label="Create"
             note="This permission allows you to create new boards."
           />
           <toggle-item
             v-model="permissions.board.destroy"
+            :disabled="disableRoleEditorForm"
             label="Delete"
             note="This permission allows you to delete board."
           />
           <toggle-item
             v-model="permissions.board.unassign"
+            :disabled="disableRoleEditorForm"
             label="Unassign"
             note="This permission allows you to unassign posts from boards."
           />
@@ -138,16 +164,19 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.roadmap.read"
+            :disabled="disableRoleEditorForm"
             label="Read"
             note="Anyone can view public boards by default. This permission allows you to view private roadmaps."
           />
           <toggle-item
             v-model="permissions.roadmap.update"
+            :disabled="disableRoleEditorForm"
             label="Update"
             note="This permission allows you to update roadmap details."
           />
           <toggle-item
             v-model="permissions.roadmap.assign"
+            :disabled="disableRoleEditorForm"
             label="Assign"
             note="This permission allows you to assign posts to roadmaps."
           />
@@ -156,16 +185,19 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.roadmap.create"
+            :disabled="disableRoleEditorForm"
             label="Create"
             note="This permission allows you to create new roadmaps."
           />
           <toggle-item
             v-model="permissions.roadmap.destroy"
+            :disabled="disableRoleEditorForm"
             label="Delete"
             note="This permission allows you to delete roadmap."
           />
           <toggle-item
             v-model="permissions.roadmap.unassign"
+            :disabled="disableRoleEditorForm"
             label="Unassign"
             note="This permission allows you to unassign posts from roadmaps."
           />
@@ -179,11 +211,13 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.vote.create"
+            :disabled="disableRoleEditorForm"
             label="Create"
             note="This permission allows you to upvote on a post."
           />
           <toggle-item
             v-model="permissions.vote.destroy"
+            :disabled="disableRoleEditorForm"
             label="Delete"
             note="This permission allows you to downvote on a post."
           />
@@ -192,11 +226,13 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.vote.assign"
+            :disabled="disableRoleEditorForm"
             label="Assign"
             note="This permission allows you to upvote as another user."
           />
           <toggle-item
             v-model="permissions.vote.unassign"
+            :disabled="disableRoleEditorForm"
             label="Unassign"
             note="This permission allows you to downvote as another user."
           />
@@ -210,16 +246,19 @@
         <div class="flex flex-col gap-y-4 w-full">
           <toggle-item
             v-model="permissions.comment.create"
+            :disabled="disableRoleEditorForm"
             label="Create"
             note="This permission allows you to create comments on posts."
           />
           <role-modify-permission-scope
             v-model="permissions.comment.update"
+            :disabled="disableRoleEditorForm"
             label="Update"
             note="This permission allows you to update comments."
           />
           <toggle-item
             v-model="permissions.comment.view_internal"
+            :disabled="disableRoleEditorForm"
             label="View internal"
             note="This permission allows you to view internal comments on posts."
           />
@@ -228,11 +267,13 @@
         <div class="flex flex-col gap-y-4 w-full">
           <toggle-item
             v-model="permissions.comment.create_internal"
+            :disabled="disableRoleEditorForm"
             label="Create internal"
             note="This permission allows you to create internal comments on posts."
           />
           <role-modify-permission-scope
             v-model="permissions.comment.delete"
+            :disabled="disableRoleEditorForm"
             label="Delete"
             note="This permission allows you to delete comments."
           />
@@ -246,6 +287,7 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.dashboard.read"
+            :disabled="disableRoleEditorForm"
             label="Read"
             note="This permission allows you to view LogChimp dashboard."
           />
@@ -259,16 +301,19 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.role.read"
+            :disabled="disableRoleEditorForm"
             label="Read"
             note="This permission allows you to read roles."
           />
           <toggle-item
             v-model="permissions.role.update"
+            :disabled="disableRoleEditorForm"
             label="Update"
             note="This permission allows you to update role details and its permissions."
           />
           <toggle-item
             v-model="permissions.role.assign"
+            :disabled="disableRoleEditorForm"
             label="Assign"
             note="This permission allows you to assign roles to users."
           />
@@ -277,16 +322,19 @@
         <div class="form-column">
           <toggle-item
             v-model="permissions.role.create"
+            :disabled="disableRoleEditorForm"
             label="Create"
             note="This permission allows you to create new roles."
           />
           <toggle-item
             v-model="permissions.role.destroy"
+            :disabled="disableRoleEditorForm"
             label="Delete"
             note="This permission allows you to delete roles."
           />
           <toggle-item
             v-model="permissions.role.unassign"
+            :disabled="disableRoleEditorForm"
             label="Unassign"
             note="This permission allows you to unassign roles from users."
           />
@@ -300,12 +348,14 @@
         <div class="form-column">
 <!--          <toggle-item-->
 <!--            v-model="permissions.settings.read"-->
+<!--            :disabled="disableRoleEditorForm"-->
 <!--            label="Read"-->
 <!--            note="This permission allows you to read LogChimp settings."-->
 <!--            :disabled="true"-->
 <!--          />-->
           <toggle-item
             v-model="permissions.settings.update"
+            :disabled="disableRoleEditorForm"
             label="Update"
             note="This permission allows you to update LogChimp settings."
           />
@@ -321,7 +371,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import type { IRole, TPermission, IPermissionsState } from "@logchimp/types";
-import { ShieldAlert, ComputerIcon } from "lucide-vue";
+import { ShieldAlert, ComputerIcon, TriangleAlert } from "lucide-vue";
 
 // modules
 import { router } from "../../../router";
@@ -355,7 +405,8 @@ const role = ref<IRole>(props.role);
 const permissions = reactive<IPermissionsState>(props.permissions);
 const updateRoleButtonLoading = ref(false);
 
-const updateRoleButtonDisabled = computed(() => {
+const disableRoleEditorForm = computed(() => {
+  if (role.value.isSystem) return true;
   const checkPermission = userPermissions.includes("role:update");
   return !checkPermission;
 });
