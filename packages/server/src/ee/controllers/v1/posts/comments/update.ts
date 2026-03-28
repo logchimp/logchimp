@@ -101,7 +101,9 @@ export async function update(
     return;
   }
 
-  const ownComment = permissions.includes("comment:update:one" as TPermission);
+  const ownComment = permissions.includes(
+    "comment:update:own" satisfies TPermission,
+  );
   if (ownComment) {
     let isAuthor: {
       id: string;
