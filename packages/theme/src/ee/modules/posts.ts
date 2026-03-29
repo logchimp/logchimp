@@ -4,6 +4,7 @@ import type {
   ICreatePostCommentResponseBody,
   IGetPostActivityRequestQuery,
   IGetPostActivityResponseBody,
+  TFilterPostActivityVisibility,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
@@ -15,11 +16,18 @@ import { useUserStore } from "../../store/user";
  * @param {object} activity
  * @param {string} activity.page page number
  * @param {string} activity.limit number of items in a page
+ * @param {string[]} activity.visibility visibility of the activity
  * @returns {Promise<AxiosResponse<IGetPostActivityResponseBody>>}
  */
 export const postActivity = async (
   post_id: string,
-  { page, limit, visibility }: IGetPostActivityRequestQuery,
+  {
+    page,
+    limit,
+    visibility,
+  }: Omit<IGetPostActivityRequestQuery, "visibility"> & {
+    visibility: Array<TFilterPostActivityVisibility>;
+  },
 ): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
   return await axios({
     method: "GET",
@@ -27,7 +35,7 @@ export const postActivity = async (
     params: {
       page,
       limit,
-      visibility,
+      visibility: visibility.join(","),
     },
   });
 };

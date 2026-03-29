@@ -33,7 +33,7 @@ async function fetchPostActivity() {
   try {
     const response = await postActivity(props.postId, {
       page: page.value.toString(),
-      visibility: "public",
+      visibility: ["public"],
     });
 
     if (response.data.activity.length) {
