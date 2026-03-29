@@ -12,12 +12,16 @@
 			name="comment"
 			placeholder="Leave a comment"
 			@keyup-enter="submitComment"
+      :disabled="!canCreateComment"
 		/>
 
 		<div class="flex items-center justify-end space-x-8">
       <Tooltip v-if="allowInternal">
         <template #trigger>
-          <toggle v-model="isInternal" />
+          <toggle
+            v-model="isInternal"
+            :disabled="!canMarkCommentInternal"
+          />
         </template>
 
         Comment will only be visible to team members.
@@ -26,7 +30,7 @@
 			<Button
 				type="primary"
 				:loading="loading"
-				:disabled="!comment"
+				:disabled="!canSubmitComment"
 				@click="submitComment"
 			>
 				Submit
@@ -36,12 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, withDefaults } from "vue";
+import { computed, ref, withDefaults } from "vue";
 import type { IPostActivity } from "@logchimp/types";
 
 // modules
 import { addComment } from "../../modules/posts";
 import tokenError from "../../../utils/tokenError";
+import { useUserStore } from "../../../store/user";
 
 // components
 import LText from "../../../components/ui/input/LText.vue";
@@ -53,14 +58,22 @@ interface Props {
   postId: string;
   allowInternal?: boolean;
 }
-
 const props = withDefaults(defineProps<Props>(), {
   allowInternal: false,
 });
+const { permissions } = useUserStore();
 
 const emit = defineEmits<{
   (e: "add-comment", comment: IPostActivity): void;
 }>();
+
+const canCreateComment = computed(() => permissions.includes("comment:create"));
+const canMarkCommentInternal = computed(() =>
+  permissions.includes("comment:create_internal"),
+);
+const canSubmitComment = computed(
+  () => canCreateComment.value && comment.value.trim(),
+);
 
 const comment = ref("");
 const isInternal = ref(false);
