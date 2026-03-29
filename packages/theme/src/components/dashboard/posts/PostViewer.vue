@@ -34,6 +34,9 @@
     />
 
     <div class="mt-10">
+      <h6 class="form-section-title">
+        Comments
+      </h6>
       <dashboard-post-activity-renderer :post="post" />
     </div>
   </div>
