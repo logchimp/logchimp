@@ -1,26 +1,38 @@
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
+import { useRouter } from "vue-router";
+
 import { useUserStore } from "../store/user";
-import { router } from "../router";
 
-// TODO: Add TS types
-// biome-ignore lint: Add TS types
-const tokenError = (error: any) => {
+export const tokenError = (error: AxiosError<IApiErrorResponse>) => {
   const { logout } = useUserStore();
+  const router = useRouter();
 
-  logout();
+  const errorCode = error.response?.data?.code as unknown as string;
+  if (!errorCode) return;
 
-  if (error.response.data.code === "USER_NOT_FOUND") {
+  if (
+    ["USER_NOT_FOUND", "INVALID_TOKEN", "INVALID_AUTH_HEADER_FORMAT"].includes(
+      errorCode,
+    )
+  ) {
+    logout();
+  }
+
+  // user not found
+  if (errorCode === "USER_NOT_FOUND") {
     if (router.currentRoute.value.fullPath !== "/") {
       router.push("/");
     }
   }
 
   // invalid token or invalid JWT
-  if (error.response.data.code === "INVALID_TOKEN") {
+  if (errorCode === "INVALID_TOKEN") {
     router.push("/login");
   }
 
   // invalid auth header format
-  if (error.response.data.code === "INVALID_AUTH_HEADER_FORMAT") {
+  if (errorCode === "INVALID_AUTH_HEADER_FORMAT") {
     router.push({
       path: "/login",
       query: {

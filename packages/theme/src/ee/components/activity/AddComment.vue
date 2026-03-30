@@ -41,7 +41,8 @@
 
 <script setup lang="ts">
 import { computed, ref, withDefaults } from "vue";
-import type { IPostActivity } from "@logchimp/types";
+import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 // modules
 import { addComment } from "../../modules/posts";
@@ -95,7 +96,8 @@ async function submitComment() {
 
     emit("add-comment", response?.data?.activity);
   } catch (error) {
-    tokenError(error);
+    const err = error as AxiosError<IApiErrorResponse>;
+    tokenError(err);
     loading.value = false;
   }
 }
