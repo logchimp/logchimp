@@ -1,5 +1,6 @@
 import express from "express";
 
+import auth from "./auth";
 import posts from "./posts";
 import roadmaps from "./roadmaps";
 import boards from "./boards";
@@ -8,6 +9,7 @@ import license from "./license";
 
 const router = express.Router();
 
+router.use(auth);
 router.use(posts);
 router.use(roadmaps);
 router.use(boards);
