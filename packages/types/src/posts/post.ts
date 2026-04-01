@@ -2,7 +2,7 @@ import type { IPublicUserInfo } from "../user";
 import type { IPostVote } from "../vote";
 import type { IRoadmap } from "../roadmap";
 import type { IBoard } from "../board";
-import type { ApiSortType } from "../common";
+import type { ApiSortType, CursorPaginatedResponse } from "../common";
 
 export interface IPost extends IPostInfo {
   board: IBoard | null;
@@ -80,4 +80,21 @@ export type TUpdatePostResponseBody = ICreatePostResponseBody;
 
 export interface IDeletePostByIdRequestBody {
   id: string;
+}
+
+export interface IUserVoteV2 {
+  voteId: string;
+  user: IPublicUserInfo;
+}
+
+export interface IPostVotes<T> extends CursorPaginatedResponse<T> {
+  viewerVote?: IUserVoteV2;
+}
+
+export interface IGetPostVotesRequestParams {
+  post_id: string;
+}
+
+export interface IPaginatedPostVotesResponse {
+  votes: IPostVotes<IUserVoteV2>;
 }
