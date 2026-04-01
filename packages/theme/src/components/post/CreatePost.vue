@@ -36,6 +36,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { createPost } from "../../modules/posts";
@@ -111,7 +113,8 @@ async function submitPost() {
     const slug = response.data.post.slug;
     router.push(`${dashboardUrl.value}/posts/${encodeURIComponent(slug)}`);
   } catch (error) {
-    tokenError(error);
+    const err = error as AxiosError<IApiErrorResponse>;
+    tokenError(err);
   } finally {
     loading.value = false;
   }

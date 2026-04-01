@@ -63,6 +63,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../router";
@@ -111,7 +113,8 @@ async function getUser() {
     user.email = response.data.user.email;
     isVerified.value = response.data.user.isVerified;
   } catch (error) {
-    tokenError(error);
+    const err = error as AxiosError<IApiErrorResponse>;
+    tokenError(err);
   } finally {
     loading.value = false;
   }
