@@ -69,7 +69,7 @@ importers:
         specifier: ^9.0.0
         version: 9.0.3
       knex:
-        specifier: ^2.0.0
+        specifier: ^2.5.1
         version: 2.5.1(pg@8.19.0)
       lodash:
         specifier: ^4.17.21
