@@ -32,11 +32,18 @@
       :post="post"
       @loading="loading = $event"
     />
+
+    <div class="mt-10">
+      <h6 class="form-section-title">
+        Comments
+      </h6>
+      <dashboard-post-activity-renderer :post="post" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, defineAsyncComponent, ref } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
 
 import DashboardPostEditor from "./PostEditor/index.vue";
@@ -46,6 +53,10 @@ import BreadcrumbDivider from "../../ui/breadcrumbs/BreadcrumbDivider.vue";
 import BreadcrumbItem from "../../ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../PageHeader.vue";
 import { useUserStore } from "../../../store/user";
+const DashboardPostActivityRenderer = defineAsyncComponent(
+  () =>
+    import("../../../ee/components/dashboard/posts/PostActivity/Renderer.vue"),
+);
 
 const { permissions } = useUserStore();
 
