@@ -17,7 +17,7 @@
     "cors": "^2.8.5",
     "dompurify": "^3.3.3",
     "dotenv": "^17.3.1",
-    "express": "^4.17.1",
+    "express": "^4.22.1",
     "fs-extra": "^11.3.4",
     "html-to-text": "^8.2.1",
     "iovalkey": "^0.3.3",
