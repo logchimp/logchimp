@@ -2,6 +2,7 @@
 
 :root {
   /* fallback brand color */
+  --color-logchimp-brand-color: #484d7c;
   --color-brand-color: #484d7c;
 
   --color-white-light: rgba(255, 255, 255, 0.5);

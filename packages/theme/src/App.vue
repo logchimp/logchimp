@@ -15,8 +15,9 @@
 
 <script setup lang="ts">
 // packages
-import axios from "axios";
+import axios, { type AxiosError } from "axios";
 import { computed, onMounted, watch } from "vue";
+import type { IApiErrorResponse } from "@logchimp/types";
 // import gtag, { setOptions, bootstrap } from "vue-gtag";
 import { useHead } from "@vueuse/head";
 
@@ -92,7 +93,8 @@ onMounted(async () => {
       const permissions = await getPermissions();
       userStore.setPermissions(permissions.data.permissions);
     } catch (error) {
-      tokenError(error);
+      const err = error as AxiosError<IApiErrorResponse>;
+      tokenError(err);
     }
   }
 });

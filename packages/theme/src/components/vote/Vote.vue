@@ -30,7 +30,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { IPostVote } from "@logchimp/types";
+import type { IApiErrorResponse, IPostVote } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 // modules
 import { addVote, deleteVote } from "../../modules/votes";
@@ -83,7 +84,8 @@ async function changeVote() {
       emit("update-voters", response.data.voters);
       loading.value = false;
     } catch (error) {
-      tokenError(error);
+      const err = error as AxiosError<IApiErrorResponse>;
+      tokenError(err);
       loading.value = false;
     }
   } else {
@@ -93,7 +95,8 @@ async function changeVote() {
       emit("update-voters", response.data.voters);
       loading.value = false;
     } catch (error) {
-      tokenError(error);
+      const err = error as AxiosError<IApiErrorResponse>;
+      tokenError(err);
       loading.value = false;
     }
   }
