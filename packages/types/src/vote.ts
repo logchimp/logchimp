@@ -17,6 +17,11 @@ export interface IPostVote {
   viewerVote?: ICurrentUserVote;
 }
 
+export interface IAddVoteRequestParams {
+  post_id: string;
+  user_id?: string;
+}
+
 export interface IAddVoteRequestBody {
   postId: string;
 }
@@ -24,6 +29,8 @@ export interface IAddVoteRequestBody {
 export interface IAddVoteResponseBody {
   voters: IPostVote;
 }
+
+export type TRemoveVoteRequestParams = IAddVoteRequestParams;
 
 export interface IRemoveVoteRequestBody {
   postId: string;
