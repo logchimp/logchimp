@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, ref } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
 
 import DashboardPostEditor from "./PostEditor/index.vue";
@@ -84,6 +84,10 @@ const hasPermission = computed(() => {
 function updatePostHandler() {
   dashboardPostEditorRef.value.updatePostHandler();
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 defineOptions({
   name: "DashboardPostViewer",
