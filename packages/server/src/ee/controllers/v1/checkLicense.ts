@@ -30,7 +30,8 @@ export async function checkLicenseController(
     });
   } catch (e) {
     logger.error({
-      message: e,
+      message: "License check failed",
+      err: e,
     });
 
     res.status(500).send({
