@@ -21,10 +21,10 @@ export const useSettingsEEStore = defineStore("settingsEE", () => {
       const response = await settingsEEStore.checkLicense();
 
       if ("status" in response) {
-        hasValidLicense.value = response.status === "active" || false;
+        hasValidLicense.value = response.status === "active";
         Object.assign(license, {
           status: response.status,
-          hierarchy: response.hierarchy,
+          hierarchy: response.hierarchy ?? 0,
         });
       }
     } catch (e) {
