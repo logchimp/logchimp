@@ -77,7 +77,6 @@ const PostActivityRenderer = defineAsyncComponent(
 const { permissions, getUserId } = useUserStore();
 const { get: siteSettings, labs } = useSettingStore();
 const settingsEEStore = useSettingsEEStore();
-settingsEEStore.getLicenseInfo();
 
 dayjs.extend(relativeTime);
 
@@ -157,7 +156,10 @@ function updateVoters(voters: IPostVote) {
   post.voters.viewerVote = voters.viewerVote;
 }
 
-onMounted(() => postBySlug());
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+  postBySlug();
+});
 
 useHead({
   title: () => `${post.title ? `${post.title} • ` : ""}Post`,
