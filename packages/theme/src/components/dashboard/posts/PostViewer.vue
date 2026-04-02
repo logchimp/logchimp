@@ -37,13 +37,19 @@
       <h6 class="form-section-title">
         Comments
       </h6>
-      <dashboard-post-activity-renderer :post="post" />
+      <dashboard-post-activity-renderer
+        v-if="settingsEEStore.license.hierarchy >= 1"
+        :post="post"
+      />
+      <div v-else class="text-sm">
+        Please upgrade to <a href="/dashboard/settings/billing">higher plan</a> to view comments.
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, ref } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
 
 import DashboardPostEditor from "./PostEditor/index.vue";
@@ -53,11 +59,13 @@ import BreadcrumbDivider from "../../ui/breadcrumbs/BreadcrumbDivider.vue";
 import BreadcrumbItem from "../../ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../PageHeader.vue";
 import { useUserStore } from "../../../store/user";
+import { useSettingsEEStore } from "../../../ee/store/settings";
 const DashboardPostActivityRenderer = defineAsyncComponent(
   () =>
     import("../../../ee/components/dashboard/posts/PostActivity/Renderer.vue"),
 );
 
+const settingsEEStore = useSettingsEEStore();
 const { permissions } = useUserStore();
 
 interface Props {
@@ -76,6 +84,10 @@ const hasPermission = computed(() => {
 function updatePostHandler() {
   dashboardPostEditorRef.value.updatePostHandler();
 }
+
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+});
 
 defineOptions({
   name: "DashboardPostViewer",

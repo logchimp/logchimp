@@ -39,3 +39,8 @@ export interface ICheckLicenseDecryptedPayload {
 export interface ILicenseServiceResponse extends ICheckLicenseDecryptedPayload {
   hierarchy: number;
 }
+
+export interface ICheckLicenseControllerResponseBody {
+  status: string;
+  hierarchy: number;
+}

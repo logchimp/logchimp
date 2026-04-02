@@ -1,17 +1,18 @@
-import type { ICheckLicenseDecryptedPayload } from "@logchimp/types";
+import type { AxiosError } from "axios";
+import type { ICheckLicenseControllerResponseBody } from "@logchimp/types";
 
-import { APIService } from "../../modules/api.ts";
-import { VITE_API_URL } from "../../constants.ts";
+import { APIService } from "../../modules/api";
+import { VITE_API_URL } from "../../constants";
 
 export class SettingsEE extends APIService {
   constructor(baseURL?: string) {
     super(baseURL || `${VITE_API_URL}/api`);
   }
 
-  async checkLicense(): Promise<ICheckLicenseDecryptedPayload> {
+  async checkLicense(): Promise<ICheckLicenseControllerResponseBody> {
     return this.get(`/v1/license`)
       .then((response) => response?.data)
-      .catch((error) => {
+      .catch((error: AxiosError) => {
         throw error;
       });
   }

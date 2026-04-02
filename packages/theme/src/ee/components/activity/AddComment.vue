@@ -24,7 +24,12 @@
           />
         </template>
 
-        Comment will only be visible to team members.
+        <template v-if="settingsEEStore.license.hierarchy >= 2">
+          Comment will only be visible to team members.
+        </template>
+        <template v-else>
+          Upgrade to Business plan to mark comment as internal.
+        </template>
       </Tooltip>
 
 			<Button
@@ -48,6 +53,7 @@ import type { AxiosError } from "axios";
 import { addComment } from "../../modules/posts";
 import tokenError from "../../../utils/tokenError";
 import { useUserStore } from "../../../store/user";
+import { useSettingsEEStore } from "../../store/settings";
 
 // components
 import LText from "../../../components/ui/input/LText.vue";
@@ -63,14 +69,17 @@ const props = withDefaults(defineProps<Props>(), {
   allowInternal: false,
 });
 const { permissions } = useUserStore();
+const settingsEEStore = useSettingsEEStore();
 
 const emit = defineEmits<{
   (e: "add-comment", comment: IPostActivity): void;
 }>();
 
 const canCreateComment = computed(() => permissions.includes("comment:create"));
-const canMarkCommentInternal = computed(() =>
-  permissions.includes("comment:create_internal"),
+const canMarkCommentInternal = computed(
+  () =>
+    settingsEEStore.license.hierarchy >= 2 &&
+    permissions.includes("comment:create_internal"),
 );
 const canSubmitComment = computed(
   () => canCreateComment.value && comment.value.trim(),

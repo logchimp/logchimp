@@ -40,7 +40,7 @@
 
 			<p v-html="postContent" />
 
-      <div class="mt-8" v-if="labs.comments">
+      <div class="mt-8" v-if="labs.comments && settingsEEStore.license.hierarchy >= 1">
         <post-activity-renderer :post-id="post.postId" />
       </div>
 		</div>
@@ -62,6 +62,7 @@ import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
 import { getPostBySlug } from "../../../modules/posts";
+import { useSettingsEEStore } from "../../../ee/store/settings";
 
 // components
 import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
@@ -75,6 +76,7 @@ const PostActivityRenderer = defineAsyncComponent(
 
 const { permissions, getUserId } = useUserStore();
 const { get: siteSettings, labs } = useSettingStore();
+const settingsEEStore = useSettingsEEStore();
 
 dayjs.extend(relativeTime);
 
@@ -154,7 +156,10 @@ function updateVoters(voters: IPostVote) {
   post.voters.viewerVote = voters.viewerVote;
 }
 
-onMounted(() => postBySlug());
+onMounted(() => {
+  settingsEEStore.getLicenseInfo();
+  postBySlug();
+});
 
 useHead({
   title: () => `${post.title ? `${post.title} • ` : ""}Post`,
