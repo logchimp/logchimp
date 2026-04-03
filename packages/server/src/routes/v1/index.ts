@@ -28,10 +28,12 @@ export async function initialiseEERoutes() {
   }
 }
 
-initialiseEERoutes();
+(async () => {
+  await initialiseEERoutes();
 
-if (!eeRoutesLoaded) {
-  router.use("/api/v1", auth);
-}
+  if (!eeRoutesLoaded) {
+    router.use("/api/v1", auth);
+  }
+})();
 
 export default router;
