@@ -9,7 +9,7 @@ import votes from "./votes";
 import users from "./users";
 import settings from "./settings";
 
-router.use("/api/v1", auth, posts, votes, users, settings);
+router.use("/api/v1", posts, votes, users, settings);
 
 let eeRoutesLoaded = false;
 export async function initialiseEERoutes() {
@@ -28,6 +28,12 @@ export async function initialiseEERoutes() {
   }
 }
 
-initialiseEERoutes();
+export const ready = (async () => {
+  await initialiseEERoutes();
+
+  if (!eeRoutesLoaded) {
+    router.use("/api/v1", auth);
+  }
+})();
 
 export default router;
