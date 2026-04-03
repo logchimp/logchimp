@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
 import type {
   IAddVoteRequestBody,
   IAddVoteResponseBody,
@@ -7,10 +6,8 @@ import type {
   TPermission,
 } from "@logchimp/types";
 
-// database
-import database from "../../database";
-
 // services
+import { VoteService } from "../../services/votes/vote.service";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
@@ -38,30 +35,10 @@ export async function add(
 
   const postId = validUUID(req.body.postId);
 
+  const voteService = new VoteService();
+
   try {
-    const vote = await database
-      .select()
-      .from("votes")
-      .where({
-        postId,
-        userId,
-      })
-      .first();
-
-    if (vote) {
-      return res.status(409).send({
-        message: error.api.votes.exists,
-        code: "VOTE_EXISTS",
-      });
-    }
-
-    await database
-      .insert({
-        voteId: uuidv4(),
-        userId,
-        postId,
-      })
-      .into("votes");
+    await voteService.castVote(postId, userId);
 
     const voters = await getVotes(postId, userId);
 
