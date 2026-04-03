@@ -28,7 +28,7 @@ export async function initialiseEERoutes() {
   }
 }
 
-(async () => {
+export const ready = (async () => {
   await initialiseEERoutes();
 
   if (!eeRoutesLoaded) {
