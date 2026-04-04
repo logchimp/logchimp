@@ -8,7 +8,7 @@ export interface IVoteTableColumns {
   voteId: string;
   userId: string;
   postId: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export class VoteService {
