@@ -15,7 +15,8 @@ export interface IGetUserInfoWithRoles {
   roles: string[];
 }
 
-export interface IAuthenticationMiddlewareUser extends IGetUserInfoWithRoles {
+export interface IAuthenticationMiddlewareUser
+  extends Omit<IGetUserInfoWithRoles, "roles"> {
   permissions: TPermission[];
 }
 

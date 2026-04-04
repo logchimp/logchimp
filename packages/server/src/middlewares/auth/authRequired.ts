@@ -51,6 +51,7 @@ const authenticateWithToken = async (
     }
 
     const permissions = await computePermissions(user);
+    delete user.roles;
 
     // @ts-expect-error
     req.user = {

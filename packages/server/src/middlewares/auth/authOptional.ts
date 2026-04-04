@@ -53,6 +53,8 @@ export async function authOptional(
     logger.error(err);
   }
 
+  delete user.roles;
+
   // @ts-expect-error
   req.user = {
     ...user,
