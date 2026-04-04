@@ -10,6 +10,7 @@ import {
 import type {
   IGetUserInfoWithRoles,
   IAuthenticationTokenPayload,
+  IAuthenticationMiddlewareUser,
 } from "../../types";
 import logger from "../../utils/logger";
 import { configManager } from "../../utils/logchimpConfig";
@@ -53,10 +54,12 @@ export async function authOptional(
     logger.error(err);
   }
 
+  delete user.roles;
+
   // @ts-expect-error
   req.user = {
     ...user,
     permissions,
-  };
+  } satisfies IAuthenticationMiddlewareUser;
   next();
 }
