@@ -1,12 +1,11 @@
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
-import { useRouter } from "vue-router";
 
 import { useUserStore } from "../store/user";
+import { router } from "../router";
 
 export const tokenError = (error: AxiosError<IApiErrorResponse>) => {
   const { logout } = useUserStore();
-  const router = useRouter();
 
   const errorCode = error.response?.data?.code as unknown as string;
   if (!errorCode) return;
