@@ -10,6 +10,7 @@ import {
 import type {
   IGetUserInfoWithRoles,
   IAuthenticationTokenPayload,
+  IAuthenticationMiddlewareUser,
 } from "../../types";
 import logger from "../../utils/logger";
 import { configManager } from "../../utils/logchimpConfig";
@@ -59,6 +60,6 @@ export async function authOptional(
   req.user = {
     ...user,
     permissions,
-  };
+  } satisfies IAuthenticationMiddlewareUser;
   next();
 }

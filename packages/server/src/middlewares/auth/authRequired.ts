@@ -1,7 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 import type { IApiErrorResponse } from "@logchimp/types";
 
-import type { IAuthenticationTokenPayload } from "../../types";
+import type {
+  IAuthenticationMiddlewareUser,
+  IAuthenticationTokenPayload,
+} from "../../types";
 import error from "../../errorResponse.json";
 import {
   computePermissions,
@@ -57,7 +60,7 @@ const authenticateWithToken = async (
     req.user = {
       ...user,
       permissions,
-    };
+    } satisfies IAuthenticationMiddlewareUser;
     next();
   } catch (err) {
     logger.error(err);
