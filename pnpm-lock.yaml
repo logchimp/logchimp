@@ -184,8 +184,8 @@ importers:
         specifier: 10.11.1
         version: 10.11.1(vue@3.5.24(typescript@5.9.3))
       '@vueuse/head':
-        specifier: 1.3.1
-        version: 1.3.1(vue@3.5.24(typescript@5.9.3))
+        specifier: 2.0.0
+        version: 2.0.0(vue@3.5.24(typescript@5.9.3))
       axios:
         specifier: 1.13.6
         version: 1.13.6
@@ -1492,8 +1492,8 @@ packages:
     peerDependencies:
       vue: ^3.5.0
 
-  '@vueuse/head@1.3.1':
-    resolution: {integrity: sha512-XCcHGfDzkGlHS7KIPJVYN//L7jpfASLsN7MUE19ndHVQLnPIDxqFLDl7IROsY81PKzawVAUe4OYVWcGixseWxA==}
+  '@vueuse/head@2.0.0':
+    resolution: {integrity: sha512-ykdOxTGs95xjD4WXE4na/umxZea2Itl0GWBILas+O4oqS7eXIods38INvk3XkJKjqMdWPcpCyLX/DioLQxU1KA==}
     peerDependencies:
       vue: '>=2.7 || >=3'
 
@@ -4398,7 +4398,7 @@ snapshots:
       '@vueuse/shared': 14.2.1(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
 
-  '@vueuse/head@1.3.1(vue@3.5.24(typescript@5.9.3))':
+  '@vueuse/head@2.0.0(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       '@unhead/dom': 1.11.20
       '@unhead/schema': 1.11.20
