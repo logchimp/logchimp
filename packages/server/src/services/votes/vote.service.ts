@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import type { IPublicUserInfo } from "@logchimp/types";
+import type { IPublicUserInfo, IUserVoteV2 } from "@logchimp/types";
 import type { Knex } from "knex";
 
 import database from "../../database";
@@ -125,6 +125,37 @@ export class VoteService {
       });
       throw error;
     }
+  }
+
+  async getUserVote(postId: string, userId: string): Promise<IUserVoteV2> {
+    const query = await database("votes")
+      .select<
+        {
+          voteId: string;
+        } & IPublicUserInfo
+      >(
+        "votes.voteId",
+        "users.userId",
+        "users.name",
+        "users.username",
+        "users.avatar",
+      )
+      .innerJoin("users", "votes.userId", "users.userId")
+      .where({
+        postId,
+        userId,
+      })
+      .limit(1);
+
+    return {
+      voteId: query.voteId,
+      user: {
+        userId: query.userId,
+        name: query.name,
+        username: query.username,
+        avatar: query.avatar,
+      },
+    };
   }
 
   private getVote<T extends Knex | Knex.Transaction>(

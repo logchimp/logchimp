@@ -21,7 +21,7 @@ router.patch("/posts", authRequired, postExists, post.updatePost);
 router.get<IGetPostVotesRequestParams>(
   "/posts/:post_id/votes",
   // @ts-expect-error
-  authRequired,
+  authOptional,
   postExists,
   post.getPostVotes,
 );

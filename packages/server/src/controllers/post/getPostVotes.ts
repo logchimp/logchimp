@@ -4,11 +4,13 @@ import type {
   IApiErrorResponse,
   IGetPostVotesRequestParams,
   IPaginatedPostVotesResponse,
+  IUserVoteV2,
 } from "@logchimp/types";
 import { GET_POST_VOTES_COUNT } from "../../constants";
 import { parseAndValidateLimit } from "../../helpers";
 import error from "../../errorResponse.json";
 import { VoteService } from "../../services/votes/vote.service";
+import type { IAuthenticationMiddlewareUser } from "../../types";
 
 type ResponseBody = IPaginatedPostVotesResponse | IApiErrorResponse;
 
@@ -50,6 +52,8 @@ export async function getPostVotes(
   const { first, after } = query.output;
   // @ts-expect-error
   const postId = req.post.postId as string;
+  // @ts-expect-error
+  const userId = (req.user as IAuthenticationMiddlewareUser)?.userId;
 
   const voteService = new VoteService();
 
@@ -62,9 +66,15 @@ export async function getPostVotes(
       },
     });
 
+    let viewerVote: IUserVoteV2 | undefined;
+    if (userId) {
+      viewerVote = await voteService.getUserVote(postId, userId);
+    }
+
     res.status(200).send({
       votes: {
         ...data,
+        viewerVote,
       },
     });
   } catch (err) {
