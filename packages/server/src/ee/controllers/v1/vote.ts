@@ -15,6 +15,7 @@ import { VoteService } from "../../../services/votes/vote.service";
 import type { IAuthenticationMiddlewareUser } from "../../../types";
 import { ConflictError, NotFoundError } from "../../../utils/error";
 import database from "../../../database";
+import { isFeatureEnabled } from "../../services/settings/labs";
 
 type AddVoteResponseBody = IAddVoteV2ResponseBody | IApiErrorResponse;
 
@@ -22,6 +23,15 @@ export async function addVote(
   req: Request<IAddVoteRequestParams>,
   res: Response<AddVoteResponseBody>,
 ) {
+  const featureEnabled = await isFeatureEnabled("voteOnBehalf");
+  if (!featureEnabled) {
+    res.status(403).send({
+      message: error.api.labs.disabled,
+      code: "LABS_DISABLED",
+    });
+    return;
+  }
+
   const onBehalfOfUserId = (req.params.user_id ?? "").trim();
   if (!onBehalfOfUserId) {
     res.status(400).send({
@@ -103,6 +113,15 @@ export async function removeVote(
   req: Request<TRemoveVoteRequestParams>,
   res: Response<RemoveVoteResponseBody>,
 ) {
+  const featureEnabled = await isFeatureEnabled("voteOnBehalf");
+  if (!featureEnabled) {
+    res.status(403).send({
+      message: error.api.labs.disabled,
+      code: "LABS_DISABLED",
+    });
+    return;
+  }
+
   const onBehalfOfUserId = (req.params.user_id ?? "").trim();
   if (!onBehalfOfUserId) {
     res.status(400).send({
