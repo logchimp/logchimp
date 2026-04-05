@@ -14,6 +14,7 @@ export interface ISiteSettings {
 
 export interface ISiteSettingsLab {
   comments: boolean;
+  voteOnBehalf: boolean;
 }
 
 export interface IGetSiteSettingsResponseBody {
