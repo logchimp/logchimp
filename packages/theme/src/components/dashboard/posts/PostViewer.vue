@@ -26,7 +26,12 @@
     </Button>
   </DashboardPageHeader>
 
-  <div class="grid grid-cols-[1fr_300px] gap-x-6">
+  <div
+    :class="[
+      'grid gap-x-6',
+      labs.voteOnBehalf ? 'grid-cols-[1fr_300px]' : 'grid-cols-1',
+    ]"
+  >
     <div class="pt-6 px-3 lg:px-6">
       <DashboardPostEditor
         ref="dashboardPostEditorRef"
@@ -48,7 +53,7 @@
       </div>
     </div>
 
-    <PostSidebar />
+    <PostSidebar v-if="labs.voteOnBehalf" />
   </div>
 </template>
 
@@ -64,6 +69,7 @@ import BreadcrumbItem from "../../ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../PageHeader.vue";
 import { useUserStore } from "../../../store/user";
 import { useSettingsEEStore } from "../../../ee/store/settings";
+import { useSettingStore } from "../../../store/settings";
 const PostSidebar = defineAsyncComponent(
   () => import("./PostSidebar/PostSidebar.vue"),
 );
@@ -73,6 +79,7 @@ const DashboardPostActivityRenderer = defineAsyncComponent(
 );
 
 const settingsEEStore = useSettingsEEStore();
+const { labs } = useSettingStore();
 const { permissions } = useUserStore();
 
 interface Props {
