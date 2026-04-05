@@ -1,5 +1,5 @@
 <template>
-  <DashboardPageHeader>
+  <DashboardPageHeader :mb="false">
     <template v-slot:left>
       <Breadcrumbs>
         <BreadcrumbItem to="/dashboard/posts">
@@ -26,25 +26,29 @@
     </Button>
   </DashboardPageHeader>
 
-  <div class="px-3 lg:px-6">
-    <DashboardPostEditor
-      ref="dashboardPostEditorRef"
-      :post="post"
-      @loading="loading = $event"
-    />
-
-    <div class="mt-10">
-      <h6 class="form-section-title">
-        Comments
-      </h6>
-      <dashboard-post-activity-renderer
-        v-if="settingsEEStore.license.hierarchy >= 1"
+  <div class="grid grid-cols-[1fr_300px] gap-x-6">
+    <div class="pt-6 px-3 lg:px-6">
+      <DashboardPostEditor
+        ref="dashboardPostEditorRef"
         :post="post"
+        @loading="loading = $event"
       />
-      <div v-else class="text-sm">
-        Please upgrade to <a href="/dashboard/settings/billing">higher plan</a> to view comments.
+
+      <div class="mt-10">
+        <h6 class="form-section-title">
+          Comments
+        </h6>
+        <dashboard-post-activity-renderer
+          v-if="settingsEEStore.license.hierarchy >= 1"
+          :post="post"
+        />
+        <div v-else class="text-sm">
+          Please upgrade to <a href="/dashboard/settings/billing">higher plan</a> to view comments.
+        </div>
       </div>
     </div>
+
+    <PostSidebar />
   </div>
 </template>
 
@@ -60,6 +64,9 @@ import BreadcrumbItem from "../../ui/breadcrumbs/BreadcrumbItem.vue";
 import DashboardPageHeader from "../PageHeader.vue";
 import { useUserStore } from "../../../store/user";
 import { useSettingsEEStore } from "../../../ee/store/settings";
+const PostSidebar = defineAsyncComponent(
+  () => import("./PostSidebar/PostSidebar.vue"),
+);
 const DashboardPostActivityRenderer = defineAsyncComponent(
   () =>
     import("../../../ee/components/dashboard/posts/PostActivity/Renderer.vue"),
