@@ -41,6 +41,7 @@ export async function updateLabs(
 
   const labsObject = {
     comments: req.body.comments,
+    voteOnBehalf: req.body.voteOnBehalf,
   } satisfies ISiteSettingsLab;
   const labsStringify = JSON.stringify(labsObject);
 

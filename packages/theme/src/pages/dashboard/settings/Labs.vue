@@ -35,6 +35,11 @@
             label="Comments"
             note="Allow users to comment on posts"
           />
+          <toggle-item
+            v-model="labs.voteOnBehalf"
+            label="Vote on Behalf"
+            note="Allow users to vote on behalf of others"
+          />
         </div>
 
         <div class="form-column" />
@@ -66,6 +71,7 @@ const { permissions } = useUserStore();
 
 const labs = ref<Partial<ISiteSettingsLab>>({
   comments: false,
+  voteOnBehalf: false,
 });
 const updateSettingsButtonLoading = ref(false);
 
