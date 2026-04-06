@@ -24,6 +24,21 @@ interface GetVotesParams {
 
 export class VoteService {
   async getVotes({ postId, options }: GetVotesParams) {
+    if (!postId)
+      return {
+        results: [],
+        viewerVote: null,
+        page_info: {
+          count: 0,
+          current_page: 0,
+          has_next_page: false,
+          start_cursor: null,
+          end_cursor: null,
+        },
+        total_count: 0,
+        total_pages: 0,
+      };
+
     try {
       const votes = await this.getVotesQuery({ postId, options });
       const votesLength = votes.length;
@@ -177,6 +192,8 @@ export class VoteService {
     postId,
     options,
   }: GetVotesParams): Promise<Array<IUserVoteV2>> {
+    if (!postId) return [];
+
     let query = database("votes")
       .select<
         Array<
