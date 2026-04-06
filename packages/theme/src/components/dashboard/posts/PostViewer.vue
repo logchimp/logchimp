@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <PostSidebar v-if="labs.voteOnBehalf" />
+    <PostSidebar v-if="labs.voteOnBehalf" :post-id="post.postId" />
   </div>
 </template>
 
