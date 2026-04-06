@@ -142,8 +142,8 @@ export class VoteService {
       )
       .innerJoin("users", "votes.userId", "users.userId")
       .where({
-        postId,
-        userId,
+        "votes.postId": postId,
+        "votes.userId": userId,
       })
       .limit(1);
 
@@ -192,9 +192,9 @@ export class VoteService {
         "users.avatar",
       )
       .innerJoin("users", "votes.userId", "users.userId")
-      .orderBy("createdAt", "desc")
-      .orderBy("voteId", "desc")
-      .where("postId", "=", postId)
+      .orderBy("votes.createdAt", "desc")
+      .orderBy("votes.voteId", "desc")
+      .where("votes.postId", "=", postId)
       .limit(options.first);
 
     if (options.after) {
