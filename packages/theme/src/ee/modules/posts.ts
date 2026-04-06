@@ -1,14 +1,45 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
+  IAddVoteResponseBody,
   ICreatePostCommentRequestBody,
   ICreatePostCommentResponseBody,
   IGetPostActivityRequestQuery,
   IGetPostActivityResponseBody,
   TFilterPostActivityVisibility,
+  TRemoveVoteResponseBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
+import { APIService } from "../../modules/api.ts";
+
+export class PostsEE extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  async castVoteOnBehalf(
+    postId: string,
+    userId: string,
+  ): Promise<IAddVoteResponseBody> {
+    return this.post(`/v1/posts/${postId}/votes/${userId}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  async retactVoteOnBehalf(
+    postId: string,
+    userId: string,
+  ): Promise<TRemoveVoteResponseBody> {
+    return this.delete(`/v1/posts/${postId}/votes/${userId}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+}
 
 /**
  * Get post activity
