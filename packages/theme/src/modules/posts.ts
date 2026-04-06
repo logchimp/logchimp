@@ -6,12 +6,45 @@ import type {
   IFilterPostRequestBody,
   IFilterPostResponseBody,
   IGetPostBySlugResponseBody,
+  IGetPostVotesRequestQuery,
+  IPaginatedPostVotesResponse,
   IUpdatePostRequestBody,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
+import { APIService } from "./api.ts";
+
+export class Posts extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  async getPostVotes(
+    postId: string,
+    params: IGetPostVotesRequestQuery = {},
+  ): Promise<IPaginatedPostVotesResponse> {
+    const searchParams = new URLSearchParams();
+
+    for (const paramsKey in params) {
+      const value = params[paramsKey as keyof IGetPostVotesRequestQuery];
+      if (value) {
+        searchParams.append(paramsKey, value.toString());
+      }
+    }
+
+    const url = `/v1/posts/${postId}/votes${
+      searchParams.toString() ? `?${searchParams.toString()}` : ""
+    }`;
+
+    return this.get(url)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+}
 
 /**
  * Create post
