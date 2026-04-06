@@ -15,20 +15,14 @@
     </template>
     <template v-else-if="votes.length > 0">
       <div class="flex items-center -space-x-3.5 mb-2">
-        <div
+        <Avatar
           v-for="vote in votes"
           :key="vote.voteId"
-        >
-          <img
-            :src="vote.user.avatar || ''"
-            :alt="vote.user.name || vote.user.username || undefined"
-            class="size-8 rounded-full"
-          />
-        </div>
+          :name="vote.user.name || vote.user.username || ''"
+          :src="vote.user.avatar || ''"
+        />
       </div>
     </template>
-
-    <div />
   </div>
 </template>
 
@@ -37,6 +31,7 @@ import { onMounted, ref } from "vue";
 import type { IUserVoteV2 } from "@logchimp/types";
 
 import { Posts } from "../../../../../modules/posts";
+import { Avatar } from "../../../../ui/Avatar";
 
 const votes = ref<Array<IUserVoteV2>>([]);
 const loading = ref(false);
