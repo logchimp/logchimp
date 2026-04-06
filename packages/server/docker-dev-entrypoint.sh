@@ -1,5 +1,7 @@
 #!/bin/zsh bash
 
+set -e
+
 # Build @logchimp/types
 pnpm --filter="@logchimp/types" build
 
