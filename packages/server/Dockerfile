@@ -37,4 +37,4 @@ RUN \
 
 WORKDIR /app/packages/server
 
-CMD ["node", "./dist/index.js"]
+CMD ["./scripts/docker-entrypoint.sh"]
