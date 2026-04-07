@@ -39,6 +39,7 @@ export class VoteService {
         message: "Error casting vote",
         err: error,
       });
+      throw error;
     }
   }
 
@@ -63,6 +64,7 @@ export class VoteService {
         message: "Error retracting vote",
         err: error,
       });
+      throw error;
     }
   }
 
