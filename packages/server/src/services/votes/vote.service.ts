@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import database from "../../database";
 import logger from "../../utils/logger";
-import { NotFoundError } from "../../utils/error";
+import { ConflictError, ErrorCode, NotFoundError } from "../../utils/error";
+import error from "../../errorResponse.json";
 
 export interface IVoteTableColumns {
   voteId: string;
@@ -19,7 +20,10 @@ export class VoteService {
       await database.transaction(async (trx) => {
         const vote = await this.getVote(postId, userId);
         if (vote) {
-          throw new Error("User has already voted on this post");
+          throw new ConflictError(
+            "User has already voted on this post",
+            ErrorCode.VOTE_EXISTS,
+          );
         }
 
         await trx
@@ -45,8 +49,8 @@ export class VoteService {
       const vote = await this.getVote(postId, userId);
       if (!vote) {
         throw new NotFoundError(
-          "User has not voted on this post",
-          "VOTE_NOT_FOUND",
+          error.api.votes.voteNotFound,
+          ErrorCode.VOTE_NOT_FOUND,
         );
       }
 
