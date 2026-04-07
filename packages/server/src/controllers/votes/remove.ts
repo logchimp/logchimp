@@ -14,6 +14,7 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
 import { VoteService } from "../../services/votes/vote.service";
+import { NotFoundError } from "../../utils/error";
 
 type ResponseBody = TRemoveVoteResponseBody | IApiErrorResponse;
 
@@ -44,6 +45,14 @@ export async function remove(
 
     res.status(200).send({ voters });
   } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send({
+        message: err.message,
+        code: err.code,
+      });
+      return;
+    }
+
     logger.log({
       level: "error",
       message: err,

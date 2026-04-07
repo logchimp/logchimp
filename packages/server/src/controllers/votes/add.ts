@@ -14,6 +14,7 @@ import { getVotes } from "../../services/votes/getVotes";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
+import { ConflictError } from "../../utils/error";
 
 type ResponseBody = IAddVoteResponseBody | IApiErrorResponse;
 
@@ -44,6 +45,14 @@ export async function add(
 
     res.status(201).send({ voters });
   } catch (err) {
+    if (err instanceof ConflictError) {
+      res.status(409).send({
+        message: err.message,
+        code: err.code,
+      });
+      return;
+    }
+
     logger.log({
       level: "error",
       message: err,
