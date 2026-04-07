@@ -289,7 +289,6 @@ export class VoteService {
 
       let remainingVotesCount = totalVotesCount;
       if (after) {
-        // const afte
         const afterVote = await this.getNextItemVote(after);
 
         if (afterVote) {
