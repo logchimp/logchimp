@@ -47,18 +47,17 @@ export class VoteService {
     if (!userId || !postId) return;
 
     try {
-      const vote = await this.getVote(postId, userId);
-      if (!vote) {
+      const response = await database.delete().from("votes").where({
+        postId,
+        userId,
+      });
+
+      if (response === 0) {
         throw new NotFoundError(
           error.api.votes.voteNotFound,
           ErrorCode.VOTE_NOT_FOUND,
         );
       }
-
-      await database.delete().from("votes").where({
-        postId,
-        userId,
-      });
     } catch (error) {
       logger.error({
         message: "Error retracting vote",
