@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import type { Knex } from "knex";
 
 import database from "../../database";
 import logger from "../../utils/logger";
@@ -18,7 +19,7 @@ export class VoteService {
 
     try {
       await database.transaction(async (trx) => {
-        const vote = await this.getVote(postId, userId);
+        const vote = await this.getVote(trx, postId, userId);
         if (vote) {
           throw new ConflictError(
             "User has already voted on this post",
@@ -67,8 +68,12 @@ export class VoteService {
     }
   }
 
-  private getVote(postId: string, userId: string) {
-    return database
+  private getVote<T extends Knex | Knex.Transaction>(
+    db: T,
+    postId: string,
+    userId: string,
+  ) {
+    return db
       .select<IVoteTableColumns>("voteId", "userId", "postId", "createdAt")
       .from("votes")
       .where({
