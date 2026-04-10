@@ -4,7 +4,6 @@ reviews:
   poem: false
   collapse_walkthrough: true
   abort_on_close: false
-
-path_filters:
-  - "**/*"
-  - "!.idea"
+  path_filters:
+    - "**/*"
+    - "!.idea"
