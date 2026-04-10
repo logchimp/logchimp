@@ -15,8 +15,6 @@ export interface IVoteTableColumns {
 
 export class VoteService {
   async castVote(postId: string, userId: string) {
-    if (!userId || !postId) return;
-
     try {
       await database.transaction(async (trx) => {
         const vote = await this.getVote(trx, postId, userId);
@@ -45,8 +43,6 @@ export class VoteService {
   }
 
   async retractVote(postId: string, userId: string) {
-    if (!userId || !postId) return;
-
     try {
       const response = await database.delete().from("votes").where({
         postId,
