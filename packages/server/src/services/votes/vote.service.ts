@@ -142,12 +142,16 @@ export class VoteService {
     }
   }
 
-  async getUserVote(postId: string, userId: string): Promise<IUserVoteV2> {
+  async getUserVote(
+    postId: string,
+    userId: string,
+  ): Promise<IUserVoteV2 | undefined> {
     const query = await database("votes")
       .select<
-        {
-          voteId: string;
-        } & IPublicUserInfo
+        | ({
+            voteId: string;
+          } & IPublicUserInfo)
+        | undefined
       >(
         "votes.voteId",
         "users.userId",
@@ -160,7 +164,9 @@ export class VoteService {
         "votes.postId": postId,
         "votes.userId": userId,
       })
-      .limit(1);
+      .first();
+
+    if (!query) return undefined;
 
     return {
       voteId: query.voteId,
