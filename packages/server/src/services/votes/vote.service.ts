@@ -263,13 +263,12 @@ export class VoteService {
         this.where("votes.createdAt", "<", createdAt).orWhere(function () {
           this.where("votes.createdAt", "=", createdAt).andWhere(
             "votes.voteId",
-            "<=",
+            "<",
             after,
           );
         });
       })
-      .andWhere("votes.postId", postId)
-      .offset(1);
+      .andWhere("votes.postId", postId);
   }
 
   /**
