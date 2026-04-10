@@ -39,10 +39,14 @@ export async function updateLabs(
     });
   }
 
-  const labsObject = {
-    comments: req.body.comments,
-    voteOnBehalf: req.body.voteOnBehalf,
-  } satisfies ISiteSettingsLab;
+  const labsObject: Partial<ISiteSettingsLab> = {};
+  if (typeof req.body.comments === "boolean") {
+    labsObject.comments = req.body.comments;
+  }
+  if (typeof req.body.voteOnBehalf === "boolean") {
+    labsObject.voteOnBehalf = req.body.voteOnBehalf;
+  }
+
   const labsStringify = JSON.stringify(labsObject);
 
   try {
