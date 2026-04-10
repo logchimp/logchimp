@@ -53,6 +53,7 @@ export class VoteService {
 
       const votesMetadata = await this.getVotesMetadata({
         after: options.after,
+        postId,
       });
 
       if (votesMetadata) {
@@ -221,9 +222,13 @@ export class VoteService {
       .limit(options.first);
 
     if (options.after) {
-      const afterVote = await this.getNextItemVote(options.after);
+      const afterVote = await this.getNextItemVote({
+        postId,
+        voteId: options.after,
+      });
 
       query = this.applyCursorFilter(query, {
+        postId,
         after: afterVote.voteId,
         createdAt: afterVote.createdAt,
       });
@@ -244,9 +249,11 @@ export class VoteService {
   private applyCursorFilter(
     query: Knex.QueryBuilder,
     {
+      postId,
       after,
       createdAt,
     }: {
+      postId: string;
       after: string;
       createdAt: string;
     },
@@ -261,31 +268,50 @@ export class VoteService {
           );
         });
       })
+      .andWhere("votes.postId", postId)
       .offset(1);
   }
 
   /**
    * Get the next item using 'voteId' for the cursor pagination.
    *
-   * @param voteId
+   * @param {object} arg0 - The object containing voteId and postId
+   * @param {string} arg0.voteId - The vote ID to find the next item
+   * @param {string} arg0.postId - The post ID to filter votes
    * @private
    */
-  private getNextItemVote(voteId?: string) {
+  private getNextItemVote({
+    voteId,
+    postId,
+  }: {
+    voteId: string;
+    postId: string;
+  }) {
     return database("votes")
       .select<{
         voteId: string;
         createdAt: string;
       }>("voteId", "createdAt")
       .where({
+        postId,
         voteId,
       })
       .first();
   }
 
-  private getVotesMetadata({ after }: { after?: string }) {
+  private getVotesMetadata({
+    after,
+    postId,
+  }: {
+    after?: string;
+    postId: string;
+  }) {
     return database.transaction(async (trx) => {
-      const totalCountQuery = trx("votes")
+      const totalCountQuery = await trx("votes")
         .count<{ count: string }>("* as count")
+        .where({
+          postId,
+        })
         .first();
 
       const totalVotesCount = Number.parseInt(
@@ -295,13 +321,17 @@ export class VoteService {
 
       let remainingVotesCount = totalVotesCount;
       if (after) {
-        const afterVote = await this.getNextItemVote(after);
+        const afterVote = await this.getNextItemVote({
+          voteId: after,
+          postId,
+        });
 
         if (afterVote) {
           const remainingVotesCountQuery = await trx
             .count<{ count: string }>("* as count")
             .from(
               this.applyCursorFilter(trx("votes"), {
+                postId,
                 after: afterVote.voteId,
                 createdAt: afterVote.createdAt,
               }).as("next"),
