@@ -14,6 +14,7 @@ import logger from "../../../utils/logger";
 import { VoteService } from "../../../services/votes/vote.service";
 import { getVotes } from "../../../services/votes/getVotes";
 import type { IAuthenticationMiddlewareUser } from "../../../types";
+import { ConflictError, NotFoundError } from "../../../utils/error";
 
 type AddVoteResponseBody = IAddVoteResponseBody | IApiErrorResponse;
 
@@ -56,10 +57,18 @@ export async function addVote(
     res.status(200).send({
       voters,
     });
-  } catch (e) {
+  } catch (err) {
+    if (err instanceof ConflictError) {
+      res.status(409).send({
+        message: err.message,
+        code: err.code,
+      });
+      return;
+    }
+
     logger.error({
       message: "failed to assign user's vote to post in DB",
-      error: e,
+      error: err,
     });
 
     res.status(500).send({
@@ -110,10 +119,18 @@ export async function removeVote(
     res.status(200).send({
       voters,
     });
-  } catch (e) {
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send({
+        message: err.message,
+        code: err.code,
+      });
+      return;
+    }
+
     logger.error({
       message: "failed to assign user's vote to post in DB",
-      error: e,
+      error: err,
     });
     res.status(500).send({
       message: error.general.serverError,
