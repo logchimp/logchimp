@@ -15,6 +15,7 @@ import { VoteService } from "../../../services/votes/vote.service";
 import { getVotes } from "../../../services/votes/getVotes";
 import type { IAuthenticationMiddlewareUser } from "../../../types";
 import { ConflictError, NotFoundError } from "../../../utils/error";
+import database from "../../../database";
 
 type AddVoteResponseBody = IAddVoteResponseBody | IApiErrorResponse;
 
@@ -50,6 +51,24 @@ export async function addVote(
   const voteService = new VoteService();
 
   try {
+    const getUser = await database
+      .select<{
+        userId: string;
+      }>("userId")
+      .from("users")
+      .where({
+        userId: onBehalfOfUserId,
+      })
+      .first();
+
+    if (!getUser?.userId) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
     await voteService.castVote(postId, onBehalfOfUserId);
 
     const voters = await getVotes(postId, authUserId);
@@ -112,6 +131,24 @@ export async function removeVote(
   const voteService = new VoteService();
 
   try {
+    const getUser = await database
+      .select<{
+        userId: string;
+      }>("userId")
+      .from("users")
+      .where({
+        userId: onBehalfOfUserId,
+      })
+      .first();
+
+    if (!getUser?.userId) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
     await voteService.retractVote(postId, onBehalfOfUserId);
 
     const voters = await getVotes(postId, authUserId);
