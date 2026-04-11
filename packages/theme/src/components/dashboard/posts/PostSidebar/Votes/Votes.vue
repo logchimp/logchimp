@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-2">
       <span class="text-sm text-neutral-700 font-medium">
-        {{votes.length}} Voter{{votes.length > 1 ? 's' : ''}}
+        {{votes.length}} Voter{{votes.length === 1 ? '' : 's'}}
       </span>
 
       <button
