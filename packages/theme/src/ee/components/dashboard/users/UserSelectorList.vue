@@ -53,7 +53,10 @@ async function getVotes() {
 }
 
 async function addVote(userId: string) {
-  await postEEService.castVoteOnBehalf(props.postId, userId);
+  try {
+    await postEEService.castVoteOnBehalf(props.postId, userId);
+    // TODO: emit event
+  } catch (e) {}
 }
 
 onMounted(() => {
