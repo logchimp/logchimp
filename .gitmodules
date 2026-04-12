@@ -1,3 +1,6 @@
 [submodule "packages/server/src/ee/do-not-remove"]
 	path = packages/server/src/ee/do-not-remove
 	url = git@github.com:logchimp/logchimp-ee.git
+[submodule ".agent"]
+	path = .agent
+	url = git@github.com:logchimp/logchimp-agent.git
