@@ -47,7 +47,7 @@
     "@types/md5": "^2.3.6",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.1.0",
-    "@types/nodemailer": "^7.0.2",
+    "@types/nodemailer": "^7.0.11",
     "@types/pg": "^8.15.6",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "10.0.0",
