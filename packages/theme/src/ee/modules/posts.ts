@@ -6,7 +6,6 @@ import type {
   IGetPostActivityRequestQuery,
   IGetPostActivityResponseBody,
   TFilterPostActivityVisibility,
-  TRemoveVoteResponseBody,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
@@ -29,10 +28,7 @@ export class PostsEE extends APIService {
       });
   }
 
-  async retactVoteOnBehalf(
-    postId: string,
-    userId: string,
-  ): Promise<TRemoveVoteResponseBody> {
+  async retactVoteOnBehalf(postId: string, userId: string) {
     return this.delete(`/v1/posts/${postId}/votes/${userId}`)
       .then((response) => response?.data)
       .catch((error) => {
