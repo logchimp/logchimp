@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { IUser } from "@logchimp/types";
+import type { IAddVoteV2ResponseBody, IUser } from "@logchimp/types";
 
 import { Users as UserService } from "../../../../modules/users";
 import { PostsEE as PostEEService } from "../../../../ee/modules/posts";
@@ -35,6 +35,8 @@ interface Props {
   postId: string;
 }
 const props = defineProps<Props>();
+const emit =
+  defineEmits<(e: "add-vote", vote: IAddVoteV2ResponseBody["vote"]) => void>();
 
 async function getVotes() {
   if (loading.value) return;
@@ -54,8 +56,8 @@ async function getVotes() {
 
 async function addVote(userId: string) {
   try {
-    await postEEService.castVoteOnBehalf(props.postId, userId);
-    // TODO: emit event
+    const r = await postEEService.castVoteOnBehalf(props.postId, userId);
+    emit("add-vote", r.vote);
   } catch (e) {}
 }
 

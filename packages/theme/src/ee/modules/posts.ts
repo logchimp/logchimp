@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
-  IAddVoteResponseBody,
+  IAddVoteV2ResponseBody,
   ICreatePostCommentRequestBody,
   ICreatePostCommentResponseBody,
   IGetPostActivityRequestQuery,
@@ -20,7 +20,7 @@ export class PostsEE extends APIService {
   async castVoteOnBehalf(
     postId: string,
     userId: string,
-  ): Promise<IAddVoteResponseBody> {
+  ): Promise<IAddVoteV2ResponseBody> {
     return this.post(`/v1/posts/${postId}/votes/${userId}`)
       .then((response) => response?.data)
       .catch((error) => {
