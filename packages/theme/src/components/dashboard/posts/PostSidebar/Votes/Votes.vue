@@ -30,6 +30,7 @@
     <UserSelectorList
       v-if="isUserDropdownOpened"
       :post-id="postId"
+      @add-vote="onVoteAdded"
     />
   </div>
 </template>
@@ -66,9 +67,15 @@ async function getVotes() {
     });
     votes.value = data.votes.results;
   } catch (e) {
+    console.error("Failed to fetch votes:", e);
   } finally {
     loading.value = false;
   }
+}
+
+function onVoteAdded(vote: IUserVoteV2) {
+  if (votes.value.length >= 10) return;
+  votes.value.push(vote);
 }
 
 onMounted(() => {
