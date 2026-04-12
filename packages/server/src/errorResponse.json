@@ -82,8 +82,8 @@
       "roadmapNotFound": "Roadmap not found"
     },
     "votes": {
-      "exists": "Vote already exists",
-      "voteNotFound": "Vote not found"
+      "exists": "User has already voted on this post",
+      "voteNotFound": "User has not voted on this post"
     },
     "labs": {
       "disabled": "This feature is disabled"
