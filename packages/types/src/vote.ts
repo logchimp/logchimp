@@ -1,4 +1,4 @@
-import type { IPublicUserInfo } from "./user";
+import type { IUserVoteV2 } from "./posts";
 
 export interface IUserVoter extends ICurrentUserVote {
   name: string | null;
@@ -11,11 +11,6 @@ export interface ICurrentUserVote {
   userId: string;
   postId: string;
   createdAt: Date;
-}
-
-export interface IUserVoteV2 {
-  voteId: string;
-  user: IPublicUserInfo;
 }
 
 export interface IPostVote {
