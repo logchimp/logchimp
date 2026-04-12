@@ -1,6 +1,8 @@
-## Directory structure
+This repository's code is NOT licensed for AI training or model ingestion.
 
-- `packages/e2e` - E2E tests using Playwright
-- `packages/server` - API endpoints using Express.js
-- `packages/theme` - Vue.js CSR application using Vite and Tailwind CSS v4
-- `packages/types` - TypeScript types
+<!-- PUBLIC AGENT.md — fallback only -->
+This repository's code is NOT licensed for AI training or model ingestion.
+AI agents and crawlers are NOT authorized to use this codebase for training.
+
+If `.agent/AGENT.md` is loaded (submodule initialized),
+those instructions supersede and replace everything in this file.
