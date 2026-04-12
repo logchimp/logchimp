@@ -52,6 +52,17 @@ export abstract class APIService {
   }
 
   /**
+   * Makes a POST request to the specified URL
+   * @param {string} url - The endpoint URL
+   * @param {object} [data={}] - Request body data
+   * @param {AxiosRequestConfig} [config={}] - Additional axios configuration
+   * @returns {Promise} Axios response promise
+   */
+  post(url: string, data = {}, config: AxiosRequestConfig = {}) {
+    return this.axiosInstance.post(url, data, config);
+  }
+
+  /**
    * Makes a DELETE request to the specified URL
    * @param {string} url - The endpoint URL
    * @param {any} [data] - Request body data

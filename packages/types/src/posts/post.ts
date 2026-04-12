@@ -2,7 +2,11 @@ import type { IPublicUserInfo } from "../user";
 import type { IPostVote } from "../vote";
 import type { IRoadmap } from "../roadmap";
 import type { IBoard } from "../board";
-import type { ApiSortType, CursorPaginatedResponse } from "../common";
+import type {
+  ApiSortType,
+  CursorPaginatedResponse,
+  CursorPaginationParams,
+} from "../common";
 
 export interface IPost extends IPostInfo {
   board: IBoard | null;
@@ -94,6 +98,8 @@ export interface IPostVotes<T> extends CursorPaginatedResponse<T> {
 export interface IGetPostVotesRequestParams {
   post_id: string;
 }
+
+export interface IGetPostVotesRequestQuery extends CursorPaginationParams {}
 
 export interface IPaginatedPostVotesResponse {
   votes: IPostVotes<IUserVoteV2>;
