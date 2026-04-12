@@ -10,7 +10,7 @@ import type {
 
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
-import { APIService } from "../../modules/api.ts";
+import { APIService } from "../../modules/api";
 
 export class PostsEE extends APIService {
   constructor(baseURL?: string) {
