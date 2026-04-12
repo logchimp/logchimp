@@ -24,9 +24,12 @@ export const useSettingStore = defineStore("settings", () => {
   const get = computed(() => settings);
   const labs = computed(() => settings.labs);
 
-  // TODO: Add TS types
-  function update(payload: unknown) {
+  function updateSettings(payload: ISiteSettings) {
     Object.assign(settings, payload);
+  }
+
+  function updateLabs(payload: Partial<ISiteSettings["labs"]>) {
+    Object.assign(settings.labs, payload);
   }
 
   function updateLogo({ logo }: { logo: string }) {
@@ -42,7 +45,8 @@ export const useSettingStore = defineStore("settings", () => {
     labs,
 
     // actions
-    update,
+    updateSettings,
+    updateLabs,
     updateLogo,
   };
 });

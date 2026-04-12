@@ -136,7 +136,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
-const { update } = useSettingStore();
+const { updateSettings: update } = useSettingStore();
 const { permissions } = useUserStore();
 
 type TextInputField = {
