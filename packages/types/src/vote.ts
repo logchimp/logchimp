@@ -1,3 +1,5 @@
+import type { IPublicUserInfo } from "./user";
+
 export interface IUserVoter extends ICurrentUserVote {
   name: string | null;
   username: string;
@@ -9,6 +11,11 @@ export interface ICurrentUserVote {
   userId: string;
   postId: string;
   createdAt: Date;
+}
+
+export interface IUserVoteV2 {
+  voteId: string;
+  user: IPublicUserInfo;
 }
 
 export interface IPostVote {
@@ -28,6 +35,10 @@ export interface IAddVoteRequestBody {
 
 export interface IAddVoteResponseBody {
   voters: IPostVote;
+}
+
+export interface IAddVoteV2ResponseBody {
+  vote: IUserVoteV2;
 }
 
 export type TRemoveVoteRequestParams = IAddVoteRequestParams;

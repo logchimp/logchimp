@@ -1,8 +1,9 @@
 import type { Request, Response } from "express";
 import type {
   IAddVoteRequestParams,
-  IAddVoteResponseBody,
+  IAddVoteV2ResponseBody,
   IApiErrorResponse,
+  IPublicUserInfo,
   TPermission,
   TRemoveVoteRequestParams,
   TRemoveVoteResponseBody,
@@ -17,15 +18,12 @@ import type { IAuthenticationMiddlewareUser } from "../../../types";
 import { ConflictError, NotFoundError } from "../../../utils/error";
 import database from "../../../database";
 
-type AddVoteResponseBody = IAddVoteResponseBody | IApiErrorResponse;
+type AddVoteResponseBody = IAddVoteV2ResponseBody | IApiErrorResponse;
 
 export async function addVote(
   req: Request<IAddVoteRequestParams>,
   res: Response<AddVoteResponseBody>,
 ) {
-  // @ts-expect-error
-  const authUserId = (req.user as IAuthenticationMiddlewareUser).userId;
-
   const onBehalfOfUserId = (req.params.user_id ?? "").trim();
   if (!onBehalfOfUserId) {
     res.status(400).send({
@@ -52,9 +50,7 @@ export async function addVote(
 
   try {
     const getUser = await database
-      .select<{
-        userId: string;
-      }>("userId")
+      .select<IPublicUserInfo>("userId", "name", "avatar", "username")
       .from("users")
       .where({
         userId: onBehalfOfUserId,
@@ -69,12 +65,18 @@ export async function addVote(
       return;
     }
 
-    await voteService.castVote(postId, onBehalfOfUserId);
-
-    const voters = await getVotes(postId, authUserId);
+    const voteId = await voteService.castVote(postId, onBehalfOfUserId);
 
     res.status(200).send({
-      voters,
+      vote: {
+        voteId,
+        user: {
+          userId: getUser.userId,
+          name: getUser.name,
+          avatar: getUser.avatar,
+          username: getUser.username,
+        },
+      },
     });
   } catch (err) {
     if (err instanceof ConflictError) {
