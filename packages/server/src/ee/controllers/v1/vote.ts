@@ -6,14 +6,12 @@ import type {
   IPublicUserInfo,
   TPermission,
   TRemoveVoteRequestParams,
-  TRemoveVoteResponseBody,
 } from "@logchimp/types";
 
 import error from "../../../errorResponse.json";
 import { validUUID } from "../../../helpers";
 import logger from "../../../utils/logger";
 import { VoteService } from "../../../services/votes/vote.service";
-import { getVotes } from "../../../services/votes/getVotes";
 import type { IAuthenticationMiddlewareUser } from "../../../types";
 import { ConflictError, NotFoundError } from "../../../utils/error";
 import database from "../../../database";
@@ -99,15 +97,12 @@ export async function addVote(
   }
 }
 
-type RemoveVoteResponseBody = TRemoveVoteResponseBody | IApiErrorResponse;
+type RemoveVoteResponseBody = IApiErrorResponse;
 
 export async function removeVote(
   req: Request<TRemoveVoteRequestParams>,
   res: Response<RemoveVoteResponseBody>,
 ) {
-  // @ts-expect-error
-  const authUserId = (req.user as IAuthenticationMiddlewareUser).userId;
-
   const onBehalfOfUserId = (req.params.user_id ?? "").trim();
   if (!onBehalfOfUserId) {
     res.status(400).send({
@@ -153,11 +148,7 @@ export async function removeVote(
 
     await voteService.retractVote(postId, onBehalfOfUserId);
 
-    const voters = await getVotes(postId, authUserId);
-
-    res.status(200).send({
-      voters,
-    });
+    res.status(202);
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send({
