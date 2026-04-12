@@ -45,7 +45,7 @@ function getSiteSettings() {
     url: `${VITE_API_URL}/api/v1/settings/site`,
   })
     .then((response) => {
-      settingsStore.update(response.data.settings);
+      settingsStore.updateSettings(response.data.settings);
     })
     .catch((error) => {
       console.error(error);
