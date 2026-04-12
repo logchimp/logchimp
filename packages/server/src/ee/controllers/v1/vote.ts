@@ -148,7 +148,7 @@ export async function removeVote(
 
     await voteService.retractVote(postId, onBehalfOfUserId);
 
-    res.status(202);
+    res.status(202).send();
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send({
