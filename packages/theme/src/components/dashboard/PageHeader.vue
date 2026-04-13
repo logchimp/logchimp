@@ -4,6 +4,13 @@ import { PanelLeftIcon } from "lucide-vue";
 import { useDashboard } from "../../store/dashboard";
 const dashboard = useDashboard();
 
+interface Props {
+  mb?: boolean;
+}
+withDefaults(defineProps<Props>(), {
+  mb: true,
+});
+
 defineOptions({
   name: "DashboardPageHeader",
 });
@@ -12,8 +19,9 @@ defineOptions({
 <template>
   <header
     :class="[
-      'flex items-center justify-between mb-6 px-3 lg:px-6 py-3.5',
-      'border-b border-b-neutral-300/70'
+      'flex items-center justify-between px-3 lg:px-6 py-3.5',
+      'border-b border-b-neutral-300/70',
+      mb ? 'mb-6' : ''
     ]"
   >
     <div class="flex items-center gap-x-3">

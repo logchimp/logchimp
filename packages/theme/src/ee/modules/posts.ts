@@ -1,5 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import type {
+  IAddVoteV2ResponseBody,
   ICreatePostCommentRequestBody,
   ICreatePostCommentResponseBody,
   IGetPostActivityRequestQuery,
@@ -9,6 +10,32 @@ import type {
 
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
+import { APIService } from "../../modules/api";
+
+export class PostsEE extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  async castVoteOnBehalf(
+    postId: string,
+    userId: string,
+  ): Promise<IAddVoteV2ResponseBody> {
+    return this.post(`/v1/posts/${postId}/votes/${userId}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  async retactVoteOnBehalf(postId: string, userId: string) {
+    return this.delete(`/v1/posts/${postId}/votes/${userId}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+}
 
 /**
  * Get post activity
