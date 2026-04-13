@@ -20,7 +20,6 @@ import {
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { validUUID } from "../../../../../helpers";
-import { isFeatureEnabled } from "../../../../services/settings/labs";
 
 type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
 
@@ -50,15 +49,6 @@ export async function create(
 
   // check auth user has required permission to set comment as internal
   // check the auth user has permission to comment
-
-  const isCommentsEnabled = await isFeatureEnabled("comments");
-  if (!isCommentsEnabled) {
-    res.status(403).send({
-      message: error.api.labs.disabled,
-      code: "LABS_DISABLED",
-    });
-    return;
-  }
 
   const reqBody = v.safeParse(requestBodySchema, req.body);
   if (!reqBody.success) {
