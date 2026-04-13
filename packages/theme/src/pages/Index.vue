@@ -16,7 +16,7 @@
       <infinite-scroll :on-infinite="loadMorePosts" :state="state" />
     </main>
     <aside class="flex-1 h-full mb-6 lg:mb-0 grid grid-cols-1 gap-y-4 lg:sticky lg:top-20">
-      <div ref="createPostSection">
+      <div ref="createPostSection" tabindex="-1">
         <site-setup-card v-if="showSiteSetupCard" />
         <create-post v-else />
       </div>
@@ -90,10 +90,14 @@ async function loadMorePosts() {
 }
 
 function scrollToCreatePost() {
+  const prefersReducedMotion =
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
   createPostSection.value?.scrollIntoView({
-    behavior: "smooth",
+    behavior: prefersReducedMotion ? "auto" : "smooth",
     block: "start",
   });
+  createPostSection.value?.focus({ preventScroll: true });
 }
 
 onMounted(() => isSetup());
