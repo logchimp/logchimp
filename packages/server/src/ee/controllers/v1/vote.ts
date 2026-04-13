@@ -115,7 +115,7 @@ export async function removeVote(
   // @ts-expect-error
   const permissions = (req.user as IAuthenticationMiddlewareUser)
     .permissions as TPermission[];
-  const checkPermission = permissions.includes("vote:assign");
+  const checkPermission = permissions.includes("vote:unassign");
   if (!checkPermission) {
     res.status(403).send({
       message: error.api.roles.notEnoughPermission,
