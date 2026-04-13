@@ -1,20 +1,26 @@
-import database from "../../database";
+import type { ICurrentUserVote, IUserVoter } from "@logchimp/types";
 
-// utils
+import database from "../../database";
 import logger from "../../utils/logger";
+import type { IVoteTableColumns } from "./vote.service";
 
 export async function getVotes(postId: string, userId?: string) {
   try {
-    const votesCount = (await database
-      .count("voteId")
+    const votesCount = await database
+      .count<{ count: string }>("voteId")
       .from("votes")
       .where({
         postId,
       })
-      .first()) as { count: string };
+      .first();
 
     const votes = await database
-      .select("votes.*", "users.name", "users.username", "users.avatar")
+      .select<Array<IUserVoter>>(
+        "votes.*",
+        "users.name",
+        "users.username",
+        "users.avatar",
+      )
       .from("votes")
       .innerJoin("users", "votes.userId", "users.userId")
       .where({
@@ -22,19 +28,22 @@ export async function getVotes(postId: string, userId?: string) {
       })
       .limit(6);
 
-    const viewerVote = await database
-      .select()
-      .from("votes")
-      .where({
-        postId,
-        userId: userId || null,
-      })
-      .first();
+    let viewerVote: ICurrentUserVote | undefined;
+    if (userId) {
+      viewerVote = (await database
+        .select<IVoteTableColumns>()
+        .from("votes")
+        .where({
+          postId,
+          userId,
+        })
+        .first()) satisfies ICurrentUserVote;
+    }
 
     return {
       votes,
-      votesCount: Number.parseInt(votesCount.count, 10),
-      viewerVote: viewerVote,
+      votesCount: votesCount?.count ? Number.parseInt(votesCount.count, 10) : 0,
+      viewerVote,
     };
   } catch (err) {
     logger.log({

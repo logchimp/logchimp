@@ -5,7 +5,6 @@ import type {
   TPermission,
   TRemoveVoteResponseBody,
 } from "@logchimp/types";
-import database from "../../database";
 
 // services
 import { getVotes } from "../../services/votes/getVotes";
@@ -14,6 +13,8 @@ import { getVotes } from "../../services/votes/getVotes";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
+import { VoteService } from "../../services/votes/vote.service";
+import { NotFoundError } from "../../utils/error";
 
 type ResponseBody = TRemoveVoteResponseBody | IApiErrorResponse;
 
@@ -35,32 +36,23 @@ export async function remove(
 
   const postId = validUUID(req.body.postId);
 
+  const voteService = new VoteService();
+
   try {
-    const vote = await database
-      .select()
-      .from("votes")
-      .where({
-        postId: postId || null,
-        userId,
-      })
-      .first();
-
-    if (!vote) {
-      return res.status(404).send({
-        message: error.api.votes.voteNotFound,
-        code: "VOTE_NOT_FOUND",
-      });
-    }
-
-    await database.delete().from("votes").where({
-      postId,
-      userId,
-    });
+    await voteService.retractVote(postId, userId);
 
     const voters = await getVotes(postId, userId);
 
     res.status(200).send({ voters });
   } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send({
+        message: err.message,
+        code: err.code,
+      });
+      return;
+    }
+
     logger.log({
       level: "error",
       message: err,
