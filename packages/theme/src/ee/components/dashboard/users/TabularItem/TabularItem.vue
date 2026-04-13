@@ -7,10 +7,12 @@
         minWidth: '150px',
       }"
     >
-      <avatar
-        :src="user.avatar" :name="user.name || user.username"
-        class="shrink-0"
-      />
+      <div class="shrink-0 rounded-full bg-white p-[1px] ring-1 ring-neutral-300 shadow-sm">
+        <avatar
+          :src="user.avatar" :name="user.name || user.username"
+          class="shrink-0"
+        />
+      </div>
       <span
         class="text-black line-clamp-1 truncate"
       >
