@@ -1,3 +1,44 @@
+<template>
+  <add-comment
+    v-if="getUserId"
+    @add-comment="addCommentHandler"
+    :post-id="postId"
+  />
+  <signin-to-comment v-else />
+
+  <div class="mt-8">
+    <div class="flex items-center mb-5">
+      <div class="font-semibold uppercase text-sm">
+        Activity
+      </div>
+
+<!--      <div class="flex items-center ml-auto gap-x-3">-->
+<!--      <div-->
+<!--        class="cursor-pointer"-->
+<!--        :class="{-->
+<!--          'underline': activity.sort === 'desc'-->
+<!--        }"-->
+<!--        @click="activity.sort = 'desc'"-->
+<!--      >-->
+<!--        Newest-->
+<!--      </div>-->
+<!--      <div-->
+<!--        class="cursor-pointer"-->
+<!--        :class="{-->
+<!--          'underline': activity.sort === 'asc'-->
+<!--        }"-->
+<!--        @click="activity.sort = 'asc'"-->
+<!--      >-->
+<!--        Oldest-->
+<!--      </div>-->
+<!--    </div>-->
+    </div>
+
+    <post-activity-list :data="data" />
+    <infinite-scroll :on-infinite="fetchPostActivity" :state="state" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent } from "vue";
 import type { IPostActivity } from "@logchimp/types";
@@ -60,44 +101,3 @@ defineOptions({
   name: "PostActivityRenderer",
 });
 </script>
-
-<template>
-  <add-comment
-    v-if="getUserId"
-    @add-comment="addCommentHandler"
-    :post-id="postId"
-  />
-  <signin-to-comment v-else />
-
-  <div class="mt-8">
-    <div class="flex items-center mb-5">
-      <div class="font-semibold uppercase text-sm">
-        Activity
-      </div>
-
-<!--      <div class="flex items-center ml-auto gap-x-3">-->
-<!--      <div-->
-<!--        class="cursor-pointer"-->
-<!--        :class="{-->
-<!--          'underline': activity.sort === 'desc'-->
-<!--        }"-->
-<!--        @click="activity.sort = 'desc'"-->
-<!--      >-->
-<!--        Newest-->
-<!--      </div>-->
-<!--      <div-->
-<!--        class="cursor-pointer"-->
-<!--        :class="{-->
-<!--          'underline': activity.sort === 'asc'-->
-<!--        }"-->
-<!--        @click="activity.sort = 'asc'"-->
-<!--      >-->
-<!--        Oldest-->
-<!--      </div>-->
-<!--    </div>-->
-    </div>
-
-    <post-activity-list :data="data" />
-    <infinite-scroll :on-infinite="fetchPostActivity" :state="state" />
-  </div>
-</template>
