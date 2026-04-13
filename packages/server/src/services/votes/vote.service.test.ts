@@ -39,6 +39,7 @@ function createQB(resolveValue: unknown = undefined) {
   qb.into = vi.fn().mockResolvedValue(undefined);
   qb.first = vi.fn().mockResolvedValue(resolveValue);
   // Make the builder thenable so `await qb` resolves to `resolveValue`
+  // biome-ignore lint/suspicious/noThenProperty: <explanation>
   qb.then = (resolve: any, reject: any) =>
     Promise.resolve(resolveValue).then(resolve, reject);
 
