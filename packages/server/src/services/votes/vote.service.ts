@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import type { IPublicUserInfo, IUserVoteV2 } from "@logchimp/types";
 import type { Knex } from "knex";
 
 import database from "../../database";
@@ -13,7 +14,81 @@ export interface IVoteTableColumns {
   createdAt: Date;
 }
 
+interface GetVotesParams {
+  postId: string;
+  options: {
+    first: number;
+    after: string | null;
+  };
+}
+
 export class VoteService {
+  async getVotes({ postId, options }: GetVotesParams) {
+    if (!postId)
+      return {
+        results: [],
+        viewerVote: null,
+        page_info: {
+          count: 0,
+          current_page: 0,
+          has_next_page: false,
+          start_cursor: null,
+          end_cursor: null,
+        },
+        total_count: 0,
+        total_pages: 0,
+      };
+
+    try {
+      const votes = await this.getVotesQuery({ postId, options });
+      const votesLength = votes.length;
+
+      const startCursor = votesLength > 0 ? votes[0].voteId : null;
+      const endCursor = votesLength > 0 ? votes[votesLength - 1].voteId : null;
+
+      let totalCount: number | null = null;
+      let totalPages: number | null = null;
+      let currentPage: number | null = null;
+      let hasNextPage: boolean | null = null;
+
+      const votesMetadata = await this.getVotesMetadata({
+        after: options.after,
+        postId,
+      });
+
+      if (votesMetadata) {
+        totalCount = votesMetadata.totalVotesCount;
+        totalPages = Math.ceil(totalCount / options.first);
+        hasNextPage = votesMetadata.remainingVotesCount - options.first > 0;
+
+        if (options.after) {
+          const seenVotes = totalCount - votesMetadata.remainingVotesCount;
+          currentPage = Math.floor(seenVotes / options.first) + 1;
+        }
+      }
+
+      return {
+        results: votes,
+        page_info: {
+          count: votesLength,
+          current_page: currentPage,
+          has_next_page: hasNextPage,
+          start_cursor: startCursor,
+          end_cursor: endCursor,
+        },
+        total_count: totalCount,
+        total_pages: totalPages,
+      };
+    } catch (error) {
+      logger.error({
+        message: "Error getting votes",
+        err: error,
+      });
+
+      throw error;
+    }
+  }
+
   async castVote(postId: string, userId: string) {
     try {
       const voteId = uuidv4();
@@ -68,6 +143,43 @@ export class VoteService {
     }
   }
 
+  async getUserVote(
+    postId: string,
+    userId: string,
+  ): Promise<IUserVoteV2 | undefined> {
+    const query = await database("votes")
+      .select<
+        | ({
+            voteId: string;
+          } & IPublicUserInfo)
+        | undefined
+      >(
+        "votes.voteId",
+        "users.userId",
+        "users.name",
+        "users.username",
+        "users.avatar",
+      )
+      .innerJoin("users", "votes.userId", "users.userId")
+      .where({
+        "votes.postId": postId,
+        "votes.userId": userId,
+      })
+      .first();
+
+    if (!query) return undefined;
+
+    return {
+      voteId: query.voteId,
+      user: {
+        userId: query.userId,
+        name: query.name,
+        username: query.username,
+        avatar: query.avatar,
+      },
+    };
+  }
+
   private getVote<T extends Knex | Knex.Transaction>(
     db: T,
     postId: string,
@@ -81,5 +193,161 @@ export class VoteService {
         userId,
       })
       .first();
+  }
+
+  private async getVotesQuery({
+    postId,
+    options,
+  }: GetVotesParams): Promise<Array<IUserVoteV2>> {
+    if (!postId) return [];
+
+    let query = database("votes")
+      .select<
+        Array<
+          {
+            voteId: string;
+          } & IPublicUserInfo
+        >
+      >(
+        "votes.voteId",
+        "users.userId",
+        "users.name",
+        "users.username",
+        "users.avatar",
+      )
+      .innerJoin("users", "votes.userId", "users.userId")
+      .orderBy("votes.createdAt", "desc")
+      .orderBy("votes.voteId", "desc")
+      .where("votes.postId", "=", postId)
+      .limit(options.first);
+
+    if (options.after) {
+      const afterVote = await this.getNextItemVote({
+        postId,
+        voteId: options.after,
+      });
+
+      query = this.applyCursorFilter(query, {
+        postId,
+        after: afterVote.voteId,
+        createdAt: afterVote.createdAt,
+      });
+    }
+
+    const data = await query;
+    return data.map((row) => ({
+      voteId: row.voteId,
+      user: {
+        userId: row.userId,
+        name: row.name,
+        username: row.username,
+        avatar: row.avatar,
+      },
+    }));
+  }
+
+  private applyCursorFilter(
+    query: Knex.QueryBuilder,
+    {
+      postId,
+      after,
+      createdAt,
+    }: {
+      postId: string;
+      after: string;
+      createdAt: string;
+    },
+  ) {
+    return query
+      .where(function () {
+        this.where("votes.createdAt", "<", createdAt).orWhere(function () {
+          this.where("votes.createdAt", "=", createdAt).andWhere(
+            "votes.voteId",
+            "<",
+            after,
+          );
+        });
+      })
+      .andWhere("votes.postId", postId);
+  }
+
+  /**
+   * Get the next item using 'voteId' for the cursor pagination.
+   *
+   * @param {object} arg0 - The object containing voteId and postId
+   * @param {string} arg0.voteId - The vote ID to find the next item
+   * @param {string} arg0.postId - The post ID to filter votes
+   * @private
+   */
+  private getNextItemVote({
+    voteId,
+    postId,
+  }: {
+    voteId: string;
+    postId: string;
+  }) {
+    return database("votes")
+      .select<{
+        voteId: string;
+        createdAt: string;
+      }>("voteId", "createdAt")
+      .where({
+        postId,
+        voteId,
+      })
+      .first();
+  }
+
+  private getVotesMetadata({
+    after,
+    postId,
+  }: {
+    after?: string;
+    postId: string;
+  }) {
+    return database.transaction(async (trx) => {
+      const totalCountQuery = await trx("votes")
+        .count<{ count: string }>("* as count")
+        .where({
+          postId,
+        })
+        .first();
+
+      const totalVotesCount = Number.parseInt(
+        String(totalCountQuery?.count ?? "0"),
+        10,
+      );
+
+      let remainingVotesCount = totalVotesCount;
+      if (after) {
+        const afterVote = await this.getNextItemVote({
+          voteId: after,
+          postId,
+        });
+
+        if (afterVote) {
+          const remainingVotesCountQuery = await trx
+            .count<{ count: string }>("* as count")
+            .from(
+              this.applyCursorFilter(trx("votes"), {
+                postId,
+                after: afterVote.voteId,
+                createdAt: afterVote.createdAt,
+              }).as("next"),
+            )
+            .first();
+
+          remainingVotesCount = Number.parseInt(
+            remainingVotesCountQuery?.count ?? "0",
+            10,
+          );
+        }
+      }
+
+      return {
+        totalVotesCount,
+        remainingVotesCount,
+      };
+    });
   }
 }
