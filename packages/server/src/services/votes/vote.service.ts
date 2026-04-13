@@ -16,6 +16,8 @@ export interface IVoteTableColumns {
 export class VoteService {
   async castVote(postId: string, userId: string) {
     try {
+      const voteId = uuidv4();
+
       await database.transaction(async (trx) => {
         const vote = await this.getVote(trx, postId, userId);
         if (vote) {
@@ -27,12 +29,14 @@ export class VoteService {
 
         await trx
           .insert({
-            voteId: uuidv4(),
+            voteId,
             userId,
             postId,
           })
           .into("votes");
       });
+
+      return voteId;
     } catch (error) {
       logger.error({
         message: "Error casting vote",
