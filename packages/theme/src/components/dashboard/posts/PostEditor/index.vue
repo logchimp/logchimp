@@ -108,9 +108,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{
-  (e: "loading", value: boolean): void;
-}>();
+const emit = defineEmits<(e: "loading", value: boolean) => void>();
 
 const saveBtnLoading = ref(false);
 const post = reactive<IDashboardPost>({
