@@ -71,9 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
 const { permissions } = useUserStore();
 const settingsEEStore = useSettingsEEStore();
 
-const emit = defineEmits<{
-  (e: "add-comment", comment: IPostActivity): void;
-}>();
+const emit = defineEmits<(e: "add-comment", comment: IPostActivity) => void>();
 
 const canCreateComment = computed(() => permissions.includes("comment:create"));
 const canMarkCommentInternal = computed(
