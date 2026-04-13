@@ -8,6 +8,7 @@
       v-for="role in dashboardRoles.roles"
       :model-value="userHasRole(role.id)"
       @update:model-value="(checked) => updateRoleHandler(role.id, checked)"
+      :keep-open-on-shift="true"
       :key="role.id"
     >
       <span>
