@@ -3,6 +3,8 @@
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
     @pointerdown="onPointerDown"
+    @pointerup="onPointerUp"
+    @pointercancel="onPointerCancel"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
     @select="onSelect"
@@ -57,6 +59,14 @@ defineEmits<(e: "update:modelValue", event: boolean) => void>();
 const shiftPressed = ref(false);
 
 function onPointerDown(event: PointerEvent) {
+  shiftPressed.value = event.shiftKey;
+}
+
+function onPointerUp(event: PointerEvent) {
+  shiftPressed.value = event.shiftKey;
+}
+
+function onPointerCancel(event: PointerEvent) {
   shiftPressed.value = event.shiftKey;
 }
 
