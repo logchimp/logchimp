@@ -1,6 +1,12 @@
 <template>
   <div class="flex flex-col-reverse lg:flex-row mb-16 lg:gap-x-8">
     <main class="grow-[2] shrink basis-0">
+      <div v-if="!showSiteSetupCard" class="mb-4 flex justify-end">
+        <Button type="primary" size="small" @click="scrollToCreatePost">
+          Create post
+        </Button>
+      </div>
+
       <post-item
         v-for="post in posts"
         :key="post.postId"
@@ -10,8 +16,10 @@
       <infinite-scroll :on-infinite="loadMorePosts" :state="state" />
     </main>
     <aside class="flex-1 h-full mb-6 lg:mb-0 grid grid-cols-1 gap-y-4 lg:sticky lg:top-20">
-      <site-setup-card v-if="showSiteSetupCard" />
-      <create-post v-else />
+      <div ref="createPostSection">
+        <site-setup-card v-if="showSiteSetupCard" />
+        <create-post v-else />
+      </div>
       <top-public-boards-list />
     </aside>
   </div>
@@ -33,6 +41,7 @@ import InfiniteScroll, {
 } from "../components/ui/InfiniteScroll.vue";
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
+import Button from "../components/ui/Button.vue";
 import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
 const CreatePost = defineAsyncComponent(
   () => import("../components/post/CreatePost.vue"),
@@ -44,6 +53,7 @@ const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
 const showSiteSetupCard = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
+const createPostSection = ref<HTMLElement | null>(null);
 
 async function isSetup() {
   try {
@@ -77,6 +87,13 @@ async function loadMorePosts() {
     console.error(error);
     state.value = "ERROR";
   }
+}
+
+function scrollToCreatePost() {
+  createPostSection.value?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
 }
 
 onMounted(() => isSetup());
