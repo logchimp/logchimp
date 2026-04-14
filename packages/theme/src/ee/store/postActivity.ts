@@ -39,7 +39,6 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
       activityIds.add(_activity.id);
     }
 
-    console.log("dashboardActivityArr:", dashboardActivityArr);
     Object.assign(activity, {
       [postId]: [...(activity[postId] || []), ...activityArr],
     });
