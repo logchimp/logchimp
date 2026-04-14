@@ -56,9 +56,14 @@ export const postActivity = async (
     visibility: Array<TFilterPostActivityVisibility>;
   },
 ): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
+  const { authToken } = useUserStore();
+
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/activity`,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
     params: {
       page,
       limit,
