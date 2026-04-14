@@ -27,7 +27,7 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     const dashboardActivityArr: Array<IPostActivity> = [];
 
     for (let i = 0; i < activities.length; i++) {
-      if (activityIds.has(activities[i].id)) return;
+      if (activityIds.has(activities[i].id)) continue;
 
       const _activity = activities[i];
       if (!_activity.comment.is_internal) {
