@@ -193,16 +193,23 @@ function postCommentVisibility<T>(
     return showPublic();
   }
 
+  const hasInternal = visibility.includes("internal");
+  const hasPublic = visibility.includes("public");
+
   if (subscription?.hierarchy >= 2) {
     if (!hasPermission) {
       return showPublic();
     }
 
-    if (visibility.includes("internal")) {
+    if (hasInternal && hasPublic) {
+      return query;
+    }
+
+    if (hasInternal) {
       return showInternal();
     }
 
-    if (visibility.includes("public")) {
+    if (hasPublic) {
       return showPublic();
     }
 
