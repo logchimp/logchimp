@@ -17,7 +17,6 @@ export const useSettingStore = defineStore("settings", () => {
 
     // experimental features
     labs: {
-      comments: false,
       voteOnBehalf: false,
     },
   });

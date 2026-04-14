@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import supertest from "supertest";
-import type { IAuthUser } from "@logchimp/types";
+import type { IAuthUser, ISiteSettingsLab } from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -28,8 +28,8 @@ describe("GET /api/v1/settings/site", () => {
       prefix: "",
     });
     const updateLabs = {
-      comments: faker.datatype.boolean(),
-    };
+      voteOnBehalf: faker.datatype.boolean(),
+    } satisfies ISiteSettingsLab;
     await updateSettings({
       title,
       description,
@@ -60,7 +60,7 @@ describe("GET /api/v1/settings/site", () => {
     // expect(settings.googleAnalyticsId).toBeNull();
 
     // labs
-    expect(settings.labs.comments).toBe(updateLabs.comments);
+    expect(settings.labs.voteOnBehalf).toBe(updateLabs.voteOnBehalf);
   });
 });
 
@@ -409,8 +409,8 @@ describe("GET /api/v1/settings/labs", () => {
     });
 
     const updateLabs = {
-      comments: faker.datatype.boolean(),
-    };
+      voteOnBehalf: faker.datatype.boolean(),
+    } satisfies ISiteSettingsLab;
 
     await supertest(app)
       .patch("/api/v1/settings/labs")
@@ -428,7 +428,7 @@ describe("GET /api/v1/settings/labs", () => {
     expect(response.status).toBe(200);
 
     const labs = response.body.labs;
-    expect(labs.comments).toBe(updateLabs.comments);
+    expect(labs.voteOnBehalf).toBe(updateLabs.voteOnBehalf);
   });
 
   it.skip("should get all labs [with HIT cache]", async () => {
@@ -443,8 +443,8 @@ describe("GET /api/v1/settings/labs", () => {
     }
 
     const updateLabs = {
-      comments: faker.datatype.boolean(),
-    };
+      voteOnBehalf: faker.datatype.boolean(),
+    } satisfies ISiteSettingsLab;
     await supertest(app)
       .patch("/api/v1/settings/labs")
       .set("Authorization", `Bearer ${user.authToken}`)
@@ -457,7 +457,7 @@ describe("GET /api/v1/settings/labs", () => {
     expect(response.status).toBe(200);
 
     const labs = response.body.labs;
-    expect(labs.comments).toBe(updateLabs.comments);
+    expect(labs.voteOnBehalf).toBe(updateLabs.voteOnBehalf);
   });
 });
 
@@ -489,8 +489,8 @@ describe("PATCH /api/v1/settings/labs", () => {
     });
 
     const updateLabs = {
-      comments: faker.datatype.boolean(),
-    };
+      voteOnBehalf: faker.datatype.boolean(),
+    } as ISiteSettingsLab;
     await supertest(app)
       .patch("/api/v1/settings/labs")
       .set("Authorization", `Bearer ${user.authToken}`)

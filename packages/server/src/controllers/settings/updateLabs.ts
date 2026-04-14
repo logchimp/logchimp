@@ -40,9 +40,6 @@ export async function updateLabs(
   }
 
   const labsObject: Partial<ISiteSettingsLab> = {};
-  if (typeof req.body.comments === "boolean") {
-    labsObject.comments = req.body.comments;
-  }
   if (typeof req.body.voteOnBehalf === "boolean") {
     labsObject.voteOnBehalf = req.body.voteOnBehalf;
   }

@@ -16,7 +16,6 @@ import {
 } from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
-import { isFeatureEnabled } from "../../../../services/settings/labs";
 import type { GetCommentStatement } from "../../../../middleware/commentExists";
 
 type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
@@ -35,15 +34,6 @@ export async function update(
   res: Response<ResponseBody>,
 ) {
   const { comment_id } = req.params;
-
-  const isCommentsEnabled = await isFeatureEnabled("comments");
-  if (!isCommentsEnabled) {
-    res.status(403).send({
-      message: error.api.labs.disabled,
-      code: "LABS_DISABLED",
-    });
-    return;
-  }
 
   const reqBody = v.safeParse(requestBodySchema, req.body);
   if (!reqBody.success) {

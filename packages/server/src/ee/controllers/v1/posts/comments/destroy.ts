@@ -9,7 +9,6 @@ import database from "../../../../../database";
 // utils
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
-import { isFeatureEnabled } from "../../../../services/settings/labs";
 import type { GetCommentStatement } from "../../../../middleware/commentExists";
 
 /**
@@ -22,15 +21,6 @@ export async function destroy(
   res: Response<IApiErrorResponse>,
 ) {
   const { comment_id, post_id } = req.params;
-
-  const isCommentsEnabled = await isFeatureEnabled("comments");
-  if (!isCommentsEnabled) {
-    res.status(403).send({
-      message: error.api.labs.disabled,
-      code: "LABS_DISABLED",
-    });
-    return;
-  }
 
   // @ts-expect-error
   const comment = req?.comment as GetCommentStatement | undefined;

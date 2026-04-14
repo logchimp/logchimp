@@ -40,7 +40,7 @@
 
 			<p v-html="postContent" />
 
-      <div class="mt-8" v-if="labs.comments && settingsEEStore.license.hierarchy >= 1">
+      <div class="mt-8" v-if="settingsEEStore.license.hierarchy >= 1">
         <post-activity-renderer :post-id="post.postId" />
       </div>
 		</div>
@@ -75,7 +75,7 @@ const PostActivityRenderer = defineAsyncComponent(
 );
 
 const { permissions, getUserId } = useUserStore();
-const { get: siteSettings, labs } = useSettingStore();
+const { get: siteSettings } = useSettingStore();
 const settingsEEStore = useSettingsEEStore();
 
 dayjs.extend(relativeTime);
