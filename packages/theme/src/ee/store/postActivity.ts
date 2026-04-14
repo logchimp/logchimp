@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import type { IPostActivity } from "@logchimp/types";
 
 export const usePostActivityEEStore = defineStore("postActivityEE", () => {
+  const activityIds = new Set<string>();
+
   const activity = reactive<Record<string, IPostActivity[]>>({});
   const activityDashboard = reactive<Record<string, IPostActivity[]>>({});
 
@@ -16,6 +18,8 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     Object.assign(activityDashboard, {
       [postId]: [_activity, ...(activityDashboard[postId] || [])],
     });
+
+    activityIds.add(_activity.id);
   }
 
   function loadPostActivity(postId: string, activities: IPostActivity[]) {
@@ -23,12 +27,16 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     const dashboardActivityArr: Array<IPostActivity> = [];
 
     for (let i = 0; i < activities.length; i++) {
+      if (activityIds.has(activities[i].id)) return;
+
       const _activity = activities[i];
       if (!_activity.comment.is_internal) {
         activityArr.push(_activity);
       }
 
       dashboardActivityArr.push(_activity);
+
+      activityIds.add(_activity.id);
     }
 
     console.log("dashboardActivityArr:", dashboardActivityArr);
