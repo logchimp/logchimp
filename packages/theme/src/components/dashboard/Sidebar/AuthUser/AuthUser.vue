@@ -4,6 +4,7 @@
 			<avatar
 				:src="avatar"
 				:name="name || username"
+        bgColor="light"
 			/>
 			<div class="select-none grid grid-cols-1 gap-0.5 text-left">
 				<p class="truncate font-semibold text-neutral-700 text-sm">
