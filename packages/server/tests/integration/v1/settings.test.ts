@@ -489,8 +489,8 @@ describe("PATCH /api/v1/settings/labs", () => {
     });
 
     const updateLabs = {
-      comments: faker.datatype.boolean(),
-    };
+      voteOnBehalf: faker.datatype.boolean(),
+    } as ISiteSettingsLab;
     await supertest(app)
       .patch("/api/v1/settings/labs")
       .set("Authorization", `Bearer ${user.authToken}`)
