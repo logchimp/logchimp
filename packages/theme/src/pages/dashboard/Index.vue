@@ -81,8 +81,8 @@
               :style="{
                 minWidth: '350px',
               }"
-                class="flex-1 flex items-center gap-x-3"
-              >
+              class="flex-1 flex items-center gap-x-3"
+            >
               <ColorDot :color="board.color" />
               <span>
                 {{ board.name }}
@@ -107,8 +107,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useRoute, useRouter } from "vue-router";
 import type { IBoardPrivate, IPost } from "@logchimp/types";
 
 // modules
@@ -164,6 +165,29 @@ async function getBoards() {
     boardState.value = "ERROR";
   }
 }
+
+const route = useRoute();
+const routerInstance = useRouter();
+
+onMounted(() => {
+  if (route.query.onboarding === "complete") {
+    // Remove the query param so confetti only shows once
+    routerInstance.replace({ query: {} });
+
+    import("canvas-confetti")
+      .then((confetti) => {
+        // Fire confetti burst
+        confetti.default({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+});
 
 useHead({
   title: "Dashboard",
