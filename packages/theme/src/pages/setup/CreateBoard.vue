@@ -33,7 +33,7 @@
     </div>
 
     <AuthFormHelperText>
-      You can <router-link to="/dashboard">skip</router-link> and create one later.
+      You can <router-link :to="DASHBOARD_ONBOARDING_COMPLETE_URL">skip</router-link> and create one later.
     </AuthFormHelperText>
   </auth-form>
 </template>
@@ -54,6 +54,8 @@ import AuthFormHelperText from "../../components/auth/AuthFormHelperText.vue";
 import type { FormFieldErrorType } from "../../components/ui/input/formBaseProps";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
+
+const DASHBOARD_ONBOARDING_COMPLETE_URL = "/dashboard?onboarding=complete";
 
 const boardName = reactive({
   value: "",
@@ -91,7 +93,7 @@ async function create() {
       display: true,
     });
 
-    router.push("/dashboard");
+    router.push(DASHBOARD_ONBOARDING_COMPLETE_URL);
   } catch (error) {
     console.error(error);
     buttonLoading.value = false;
