@@ -172,7 +172,8 @@ const routerInstance = useRouter();
 onMounted(() => {
   if (route.query.onboarding === "complete") {
     // Remove the query param so confetti only shows once
-    routerInstance.replace({ query: {} });
+    const { onboarding, ...restQuery } = route.query;
+    routerInstance.replace({ query: restQuery });
 
     import("canvas-confetti")
       .then((confetti) => {
