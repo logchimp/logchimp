@@ -248,14 +248,14 @@ jobs:
         shell: bash
         run: |
           # Always push the version tag
-          docker tag logchimp-$SERVICE_COMMON_NAME ${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ needs.deploy-target.outputs.latest_version }}
-          docker push ${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:${{ needs.deploy-target.outputs.latest_version }}
+          docker tag logchimp-$SERVICE_COMMON_NAME ${{ env.REGISTRY_OWNER }}/${{ env.REGISTRY_OWNER }}-${{ env.SERVICE_NAME }}:${{ needs.deploy-target.outputs.latest_version }}
+          docker push ${{ env.REGISTRY_OWNER }}/${{ env.REGISTRY_OWNER }}-${{ env.SERVICE_NAME }}:${{ needs.deploy-target.outputs.latest_version }}
 
           # Only tag as 'latest' if this is the latest stable release
           if [ "$IS_LATEST" == "true" ]; then
             echo "Tagging as latest..."
-            docker tag logchimp-$SERVICE_COMMON_NAME ${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
-            docker push ${{ env.REGISTRY_OWNER }}/${{ matrix.name }}:latest
+            docker tag logchimp-$SERVICE_COMMON_NAME ${{ env.REGISTRY_OWNER }}/${{ env.REGISTRY_OWNER }}-${{ env.SERVICE_NAME }}:latest
+            docker push ${{ env.REGISTRY_OWNER }}/${{ env.REGISTRY_OWNER }}-${{ env.SERVICE_NAME }}:latest
           else
             echo "Skipping 'latest' tag (IS_LATEST=$IS_LATEST, IS_PRERELEASE=$IS_PRERELEASE)"
           fi
