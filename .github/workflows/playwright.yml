@@ -53,9 +53,8 @@ jobs:
       run: npx wait-on http://localhost:3000
 
     - name: Seed system roles & permissions
-      run: pnpm --filter @logchimp/api exec ts-node src/ee/services/roles/system.ts
-      env:
-        LOGCHIMP_DB_URL: postgres://lc:password@localhost:5432/db
+      run: |
+        docker compose -f ./docker/local/docker-compose.ci.yml exec server sh -c 'node dist/ee/services/roles/system.js'
 
     - name: Install Playwright Browsers
       run: pnpm --filter @logchimp/e2e exec playwright install --with-deps
