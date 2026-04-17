@@ -55,7 +55,7 @@ jobs:
     - name: Seed system roles & permissions
       run: pnpm --filter @logchimp/api exec ts-node -r tsconfig-paths/register src/ee/services/roles/system.ts
       env:
-        DATABASE_URL: postgres://lc:password@localhost:5432/db
+        LOGCHIMP_DB_URL: postgres://lc:password@localhost:5432/db
 
     - name: Install Playwright Browsers
       run: pnpm --filter @logchimp/e2e exec playwright install --with-deps
