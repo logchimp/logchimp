@@ -53,7 +53,7 @@ jobs:
       run: npx wait-on http://localhost:3000
 
     - name: Seed system roles & permissions
-      run: pnpm --filter @logchimp/server exec ts-node -r tsconfig-paths/register src/ee/services/roles/system.ts
+      run: pnpm --filter @logchimp/api exec ts-node -r tsconfig-paths/register src/ee/services/roles/system.ts
       env:
         DATABASE_URL: postgres://lc:password@localhost:5432/db
 
