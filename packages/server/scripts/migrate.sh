@@ -31,10 +31,10 @@ echo '=> Starting: Seeding system roles and permissions'
 if [ "$NODE_ENV" = "development" ]
 then
   echo "Seeding in development env"
-  pnpm ts-node src/$SYSTEM_ROLE_FILE_BASE_PATH.ts
+  pnpm ts-node "src/$SYSTEM_ROLE_FILE_BASE_PATH.ts"
 else
   echo "Seeding in production env"
-  node dist/$SYSTEM_ROLE_FILE_BASE_PATH.js
+  node "dist/$SYSTEM_ROLE_FILE_BASE_PATH.js"
 fi
 
 echo '=> Completed: Seeding system roles and permissions'
