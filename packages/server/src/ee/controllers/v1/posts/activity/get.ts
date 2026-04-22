@@ -152,7 +152,7 @@ function getActivityQuery({
       `),
       database.raw(`
         json_build_object(
-          'user_id', users."userId",
+          'userId', users."userId",
           'name', users.name,
           'username', users.username,
           'avatar', users.avatar
