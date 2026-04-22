@@ -34,7 +34,7 @@
 <!--    </div>-->
     </div>
 
-    <post-activity-list :data="data" />
+    <post-activity-list :post-id="postId" :data="data" />
     <infinite-scroll :on-infinite="fetchPostActivity" :state="state" />
   </div>
 </template>

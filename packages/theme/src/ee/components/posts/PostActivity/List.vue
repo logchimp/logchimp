@@ -9,6 +9,7 @@
     <activity-item
       v-for="item in data"
       :key="item.id"
+      :post-id="postId"
       :activity="item"
     />
   </div>
@@ -19,9 +20,9 @@ import type { IPostActivity } from "@logchimp/types";
 import ActivityItem from "../../activity/ActivityItem.vue";
 
 interface Props {
+  postId: string;
   data: IPostActivity[];
 }
-
 defineProps<Props>();
 
 defineOptions({

@@ -4,6 +4,7 @@
       v-for="item in data"
       :key="item.id"
       :activity="item"
+      :post-id="postId"
     />
   </div>
 

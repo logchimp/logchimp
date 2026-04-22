@@ -5,6 +5,8 @@ import type {
   ICreatePostCommentResponseBody,
   IGetPostActivityRequestQuery,
   IGetPostActivityResponseBody,
+  IUpdatePostCommentRequestBody,
+  IUpdatePostCommentResponseBody,
   TFilterPostActivityVisibility,
 } from "@logchimp/types";
 
@@ -98,3 +100,23 @@ export const addComment = async (
     },
   });
 };
+
+export async function updateComment(
+  post_id: string,
+  comment_id: string,
+  { body, is_internal = false }: Partial<IUpdatePostCommentRequestBody>,
+): Promise<AxiosResponse<IUpdatePostCommentResponseBody>> {
+  const { authToken } = useUserStore();
+
+  return await axios({
+    method: "PUT",
+    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
+    data: {
+      body,
+      is_internal,
+    },
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+}
