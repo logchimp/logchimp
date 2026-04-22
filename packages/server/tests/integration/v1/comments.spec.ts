@@ -478,7 +478,7 @@ describeEE("GET /api/v1/posts/:post_id/activity", () => {
     expect(res.body.activity.length).toEqual(5);
     for (let i = 0; i < 5; i++) {
       const { author } = res.body.activity[i];
-      expect(author.user_id).toBe(authUser.userId);
+      expect(author.userId).toBe(authUser.userId);
     }
   });
 
@@ -504,7 +504,7 @@ describeEE("GET /api/v1/posts/:post_id/activity", () => {
     expect(res.body.activity.length).toEqual(5);
     for (let i = 0; i < 5; i++) {
       const { author } = res.body.activity[i];
-      expect(author.user_id).toBe(authUser.userId);
+      expect(author.userId).toBe(authUser.userId);
     }
   });
 });
