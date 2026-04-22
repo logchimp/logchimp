@@ -142,6 +142,7 @@ async function updateCommentHandler() {
   try {
     const res = await updateComment(props.postId, props.activity.comment.id, {
       body: comment.value,
+      is_internal: props.activity.comment.is_internal,
     });
 
     if (res.status === 200) {
