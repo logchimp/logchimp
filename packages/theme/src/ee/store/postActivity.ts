@@ -47,6 +47,22 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     });
   }
 
+  function removePostActivity(postId: string, activityId: string) {
+    const activityIdx = activity[postId]?.findIndex(
+      (activity) => activity.id === activityId,
+    );
+    if (activityIdx !== undefined && activityIdx !== -1) {
+      activity[postId].splice(activityIdx, 1);
+    }
+
+    const dashboardIdx = activityDashboard[postId]?.findIndex(
+      (a) => a.id === activityId,
+    );
+    if (dashboardIdx !== undefined && dashboardIdx !== -1) {
+      activityDashboard[postId].splice(dashboardIdx, 1);
+    }
+  }
+
   function resetPostActivity(postId: string) {
     Object.assign(activity, {
       [postId]: [],
@@ -62,6 +78,7 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
 
     addPostActivity,
     loadPostActivity,
+    removePostActivity,
     resetPostActivity,
   };
 });

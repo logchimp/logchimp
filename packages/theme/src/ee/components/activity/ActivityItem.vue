@@ -45,7 +45,7 @@
 				</time>
         <span v-if="activity.comment.is_edited">&middot; Edited</span>
         <div
-          v-if="commentAuthor && !isEditing"
+          v-if="commentUpdateAuthor && !isEditing"
           class="hidden group-hover:flex items-center gap-1.5"
           @click="isEditing = !isEditing"
         >
@@ -54,26 +54,50 @@
             Edit comment
           </button>
         </div>
+        <div
+          v-if="allowDelete && commentDeleteAuthor"
+          class="hidden group-hover:flex items-center gap-1.5"
+        >
+          &middot;
+          <button
+            type="button"
+            class="cursor-pointer flex items-center gap-1.5 text-red-600"
+            @click="openConfirmDialog = true"
+          >
+            <trash2-icon class="size-3" />
+            Delete comment
+          </button>
+
+         <delete-comment-dialog
+           :open="openConfirmDialog"
+           @close="e => openConfirmDialog = e"
+           :post-id="postId"
+           :activity="activity"
+         />
+        </div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, defineAsyncComponent } from "vue";
 import dayjs from "dayjs";
 import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
-import { LockKeyhole } from "lucide-vue";
+import { LockKeyhole, Trash2Icon } from "lucide-vue";
 import relativeTime from "dayjs/plugin/relativeTime";
+import type { AxiosError } from "axios";
 
 import { useUserStore } from "../../../store/user";
 import { updateComment } from "../../modules/posts";
+import tokenError from "../../../utils/tokenError";
 
 import { Avatar } from "../../../components/ui/Avatar";
 import LTextarea from "../../../components/ui/input/LTextarea.vue";
 import LButton from "../../../components/ui/Button.vue";
-import type { AxiosError } from "axios";
-import tokenError from "../../../utils/tokenError.ts";
+const DeleteCommentDialog = defineAsyncComponent(
+  () => import("./DeleteCommentDialog.vue"),
+);
 
 dayjs.extend(relativeTime);
 const { permissions, getUserId } = useUserStore();
@@ -81,19 +105,30 @@ const { permissions, getUserId } = useUserStore();
 interface Props {
   postId: string;
   activity: IPostActivity;
+  allowDelete?: boolean;
 }
 const props = defineProps<Props>();
 
 const isLoading = ref(false);
 const isEditing = ref(false);
 const comment = ref(props.activity.comment.body);
+const openConfirmDialog = ref(false);
 
-const commentAuthor = computed(() => {
+const commentUpdateAuthor = computed(() => {
   const commentUpdateAny = permissions.includes("comment:update:any");
   const commentUpdateOwn = permissions.includes("comment:update:own");
 
   if (commentUpdateAny) return true;
   if (commentUpdateOwn) return props.activity.author.userId === getUserId;
+  return false;
+});
+
+const commentDeleteAuthor = computed(() => {
+  const commentDeleteAny = permissions.includes("comment:delete:any");
+  const commentDeleteOwn = permissions.includes("comment:delete:own");
+
+  if (commentDeleteAny) return true;
+  if (commentDeleteOwn) return props.activity.author.userId === getUserId;
   return false;
 });
 

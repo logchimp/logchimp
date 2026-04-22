@@ -5,6 +5,7 @@
       :key="item.id"
       :activity="item"
       :post-id="postId"
+      :allow-delete="true"
     />
   </div>
 

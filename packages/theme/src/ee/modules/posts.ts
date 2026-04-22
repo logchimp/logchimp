@@ -120,3 +120,18 @@ export async function updateComment(
     },
   });
 }
+
+export async function deleteComment(
+  post_id: string,
+  comment_id: string,
+): Promise<AxiosResponse> {
+  const { authToken } = useUserStore();
+
+  return await axios({
+    method: "DELETE",
+    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+}
