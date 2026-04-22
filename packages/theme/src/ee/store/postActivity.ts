@@ -47,6 +47,22 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     });
   }
 
+  function updatePostActivity(postId: string, _activity: IPostActivity) {
+    const activityIdx = activity[postId]?.findIndex(
+      (activity) => _activity.id === activity.id,
+    );
+    if (activityIdx !== undefined && activityIdx !== -1) {
+      activity[postId][activityIdx] = _activity;
+    }
+
+    const dashboardIdx = activityDashboard[postId]?.findIndex(
+      (a) => _activity.id === a.id,
+    );
+    if (dashboardIdx !== undefined && dashboardIdx !== -1) {
+      activityDashboard[postId][dashboardIdx] = _activity;
+    }
+  }
+
   function removePostActivity(postId: string, activityId: string) {
     const activityIdx = activity[postId]?.findIndex(
       (activity) => activity.id === activityId,
@@ -78,6 +94,7 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
 
     addPostActivity,
     loadPostActivity,
+    updatePostActivity,
     removePostActivity,
     resetPostActivity,
   };

@@ -95,12 +95,14 @@ import tokenError from "../../../utils/tokenError";
 import { Avatar } from "../../../components/ui/Avatar";
 import LTextarea from "../../../components/ui/input/LTextarea.vue";
 import LButton from "../../../components/ui/Button.vue";
+import { usePostActivityEEStore } from "../../store/postActivity";
 const DeleteCommentDialog = defineAsyncComponent(
   () => import("./DeleteCommentDialog.vue"),
 );
 
 dayjs.extend(relativeTime);
 const { permissions, getUserId } = useUserStore();
+const postActivityEEStore = usePostActivityEEStore();
 
 interface Props {
   postId: string;
@@ -143,6 +145,10 @@ async function updateCommentHandler() {
     });
 
     if (res.status === 200) {
+      postActivityEEStore.updatePostActivity(props.postId, {
+        ...props.activity,
+        comment: res.data.comment,
+      });
       isEditing.value = false;
     }
   } catch (error) {
