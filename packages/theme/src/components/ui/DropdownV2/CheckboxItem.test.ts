@@ -1,10 +1,19 @@
 import { describe, expect, it } from "vitest";
+import { DropdownMenuCheckboxItem } from "reka-ui";
 import { shallowMount } from "@vue/test-utils";
 
 import CheckboxItem from "./CheckboxItem.vue";
 
 function createCancelableSelectEvent() {
   return new Event("select", { cancelable: true });
+}
+
+function triggerSelectOnStub(
+  wrapper: ReturnType<typeof shallowMount>,
+  event: Event,
+) {
+  const stub = wrapper.findComponent(DropdownMenuCheckboxItem);
+  stub.vm.$emit("select", event);
 }
 
 describe("DropdownV2CheckboxItem", () => {
@@ -17,7 +26,7 @@ describe("DropdownV2CheckboxItem", () => {
 
     await wrapper.trigger("keydown", { shiftKey: true });
     const event = createCancelableSelectEvent();
-    wrapper.element.dispatchEvent(event);
+    triggerSelectOnStub(wrapper, event);
 
     expect(event.defaultPrevented).toBe(true);
   });
@@ -31,7 +40,7 @@ describe("DropdownV2CheckboxItem", () => {
 
     await wrapper.trigger("keydown", { shiftKey: true });
     const event = createCancelableSelectEvent();
-    wrapper.element.dispatchEvent(event);
+    triggerSelectOnStub(wrapper, event);
 
     expect(event.defaultPrevented).toBe(false);
   });
@@ -46,7 +55,7 @@ describe("DropdownV2CheckboxItem", () => {
     await wrapper.trigger("pointerdown", { shiftKey: true });
     await wrapper.trigger("pointerup", { shiftKey: false });
     const event = createCancelableSelectEvent();
-    wrapper.element.dispatchEvent(event);
+    triggerSelectOnStub(wrapper, event);
 
     expect(event.defaultPrevented).toBe(false);
   });
