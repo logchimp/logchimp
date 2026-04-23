@@ -2,6 +2,12 @@
   <DropdownMenuCheckboxItem
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
+    @pointerdown="onPointerDown"
+    @pointerup="onPointerUp"
+    @pointercancel="onPointerCancel"
+    @keydown="onKeyDown"
+    @keyup="onKeyUp"
+    @select="onSelect"
     :disabled="disabled"
     :class="[
       // styled copied from DropdownV2Item.vue
@@ -37,12 +43,45 @@ import {
 } from "reka-ui";
 import { CheckIcon } from "lucide-vue";
 
-withDefaults(defineProps<DropdownMenuCheckboxItemProps>(), {
+interface Props extends DropdownMenuCheckboxItemProps {
+  keepOpenOnShift?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
   disabled: false,
+  keepOpenOnShift: false,
 });
 
 defineEmits<(e: "update:modelValue", event: boolean) => void>();
+
+let shiftPressed = false;
+
+function onPointerDown(event: PointerEvent) {
+  shiftPressed = event.shiftKey;
+}
+
+function onPointerUp(event: PointerEvent) {
+  shiftPressed = event.shiftKey;
+}
+
+function onPointerCancel(event: PointerEvent) {
+  shiftPressed = event.shiftKey;
+}
+
+function onKeyDown(event: KeyboardEvent) {
+  shiftPressed = event.shiftKey;
+}
+
+function onKeyUp(event: KeyboardEvent) {
+  shiftPressed = event.shiftKey;
+}
+
+function onSelect(event: Event) {
+  if (props.keepOpenOnShift && shiftPressed) {
+    event.preventDefault();
+  }
+}
 
 defineOptions({
   name: "DropdownV2CheckboxItem",
