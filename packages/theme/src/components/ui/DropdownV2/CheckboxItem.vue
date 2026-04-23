@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import {
   DropdownMenuCheckboxItem,
   DropdownMenuItemIndicator,
@@ -56,30 +55,30 @@ const props = withDefaults(defineProps<Props>(), {
 
 defineEmits<(e: "update:modelValue", event: boolean) => void>();
 
-const shiftPressed = ref(false);
+let shiftPressed = false;
 
 function onPointerDown(event: PointerEvent) {
-  shiftPressed.value = event.shiftKey;
+  shiftPressed = event.shiftKey;
 }
 
 function onPointerUp(event: PointerEvent) {
-  shiftPressed.value = event.shiftKey;
+  shiftPressed = event.shiftKey;
 }
 
 function onPointerCancel(event: PointerEvent) {
-  shiftPressed.value = event.shiftKey;
+  shiftPressed = event.shiftKey;
 }
 
 function onKeyDown(event: KeyboardEvent) {
-  shiftPressed.value = event.shiftKey;
+  shiftPressed = event.shiftKey;
 }
 
 function onKeyUp(event: KeyboardEvent) {
-  shiftPressed.value = event.shiftKey;
+  shiftPressed = event.shiftKey;
 }
 
 function onSelect(event: Event) {
-  if (props.keepOpenOnShift && shiftPressed.value) {
+  if (props.keepOpenOnShift && shiftPressed) {
     event.preventDefault();
   }
 }
