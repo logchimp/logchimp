@@ -17,7 +17,7 @@ function triggerSelectOnStub(
 }
 
 describe("DropdownV2CheckboxItem", () => {
-  it("prevents dropdown close when keepOpenOnShift is enabled and shift is held (keyboard)", async () => {
+  it("should prevent dropdown close [keepOpenOnShift=true, shift=pressed]", async () => {
     const wrapper = shallowMount(CheckboxItem, {
       props: {
         keepOpenOnShift: true,
@@ -31,7 +31,7 @@ describe("DropdownV2CheckboxItem", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
-  it("does not prevent dropdown close when keepOpenOnShift is disabled", async () => {
+  it("should not prevent dropdown close [keepOpenOnShift=false, shift=pressed]", async () => {
     const wrapper = shallowMount(CheckboxItem, {
       props: {
         keepOpenOnShift: false,
@@ -45,7 +45,21 @@ describe("DropdownV2CheckboxItem", () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
-  it("uses latest pointer modifier state at selection time", async () => {
+  it("should prevent dropdown close on Enter key selection when [keepOpenOnShift=true, shift=pressed]", async () => {
+    const wrapper = shallowMount(CheckboxItem, {
+      props: {
+        keepOpenOnShift: true,
+      },
+    });
+
+    await wrapper.trigger("keydown", { key: "Enter", shiftKey: true });
+    const event = createCancelableSelectEvent();
+    triggerSelectOnStub(wrapper, event);
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("should use latest pointer modifier state at selection time", async () => {
     const wrapper = shallowMount(CheckboxItem, {
       props: {
         keepOpenOnShift: true,
