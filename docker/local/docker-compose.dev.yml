@@ -1,5 +1,15 @@
 name: "LogChimp-Dev"
 
+x-postgres-environment: &postgres-environment
+  "LOGCHIMP_DB_HOST": db
+  "LOGCHIMP_DB_DATABASE": ${POSTGRES_DB:-db}
+  "LOGCHIMP_DB_PORT": ${POSTGRES_PORT:-5432}
+  "LOGCHIMP_DB_USER": ${POSTGRES_USER:-lc}
+  "LOGCHIMP_DB_PASSWORD": ${POSTGRES_PASSWORD:-password}
+  "LOGCHIMP_DB_SSL": ${LOGCHIMP_DB_SSL:-false}
+  # Enter postgres db url below if connecting via full db url
+  # LOGCHIMP_DB_URL: postgresql://lc:password@db:5432/db
+
 services:
   cache:
     image: valkey/valkey:8
@@ -14,11 +24,11 @@ services:
   db:
     image: postgres:12
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: db
-      POSTGRES_USER: lc
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${POSTGRES_DB:-db}
+      POSTGRES_USER: ${POSTGRES_USER:-lc}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     networks:
       - logchimp-dev-network
     healthcheck:
@@ -35,20 +45,17 @@ services:
       context: ../..
       args:
         DOCKER_BUILDKIT: 1
-    command: [ "./scripts/migrate.sh"]
+    command: [ "./scripts/migrate.sh" ]
     depends_on:
       db:
         condition: service_healthy
     environment:
-      LOGCHIMP_DB_HOST: db
-      LOGCHIMP_DB_DATABASE: db
-      LOGCHIMP_DB_PORT: 5432
-      LOGCHIMP_DB_USER: lc
-      LOGCHIMP_DB_PASSWORD: password
+      # Database
+      <<: *postgres-environment
     networks:
       - logchimp-dev-network
     healthcheck:
-      test: ["CMD", "sh", "-c", "pnpm knex migrate:status --knexfile ./src/database/config.ts"]
+      test: [ "CMD", "sh", "-c", "pnpm knex migrate:status --knexfile ./src/database/config.ts" ]
       interval: 5s
       timeout: 1s
       retries: 1
@@ -88,13 +95,7 @@ services:
     environment:
       PORT: 8000
       # Database
-      # Enter postgres db url below if connecting via full db url
-      # LOGCHIMP_DB_URL: postgresql://lc:password@db:5432/db
-      LOGCHIMP_DB_HOST: db
-      LOGCHIMP_DB_DATABASE: db
-      LOGCHIMP_DB_PORT: 5432
-      LOGCHIMP_DB_USER: lc
-      LOGCHIMP_DB_PASSWORD: password
+      <<: *postgres-environment
       # Cache
       LOGCHIMP_VALKEY_URL: cache:6379
       # Mail
