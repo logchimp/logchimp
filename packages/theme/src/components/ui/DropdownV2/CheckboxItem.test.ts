@@ -59,6 +59,21 @@ describe("DropdownV2CheckboxItem", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
+  it("should prevent dropdown close on pointer selection when [keepOpenOnShift=true, shift=pressed]", async () => {
+    const wrapper = shallowMount(CheckboxItem, {
+      props: {
+        keepOpenOnShift: true,
+      },
+    });
+
+    await wrapper.trigger("pointerdown", { shiftKey: true });
+    await wrapper.trigger("pointerup", { shiftKey: true });
+    const event = createCancelableSelectEvent();
+    triggerSelectOnStub(wrapper, event);
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
   it("should use latest pointer modifier state at selection time", async () => {
     const wrapper = shallowMount(CheckboxItem, {
       props: {
