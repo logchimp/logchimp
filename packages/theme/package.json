@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
-    "@types/uuid": "10.0.0",
+    "@types/uuid": "11.0.0",
     "@vitejs/plugin-vue": "6.0.6",
     "@vue/test-utils": "2.4.10",
     "@vue/tsconfig": "^0.9.1",
