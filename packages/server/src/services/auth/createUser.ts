@@ -224,13 +224,19 @@ async function _insertUserQuery({
 // assign '@everyone' role
 async function _assignEveryoneRoleQuery(userId: string) {
   const getRole = await database
-    .select<{ id: string }>("id")
+    .select<{ id: string } | null>("id")
     .from("roles")
     .where({
       name: "@everyone",
       is_system: 1,
     })
     .first();
+
+  if (!getRole) {
+    throw new Error(
+      "Cannot assign '@everyone' role: role not found in database. Ensure the '@everyone' role exists."
+    );
+  }
 
   await database
     .insert({
