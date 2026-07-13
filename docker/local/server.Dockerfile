@@ -25,5 +25,3 @@ RUN \
     chmod +x ./packages/server/scripts/*.sh
 
 WORKDIR /app/packages/server
-
-CMD ["sh", "docker-dev-entrypoint.sh"]

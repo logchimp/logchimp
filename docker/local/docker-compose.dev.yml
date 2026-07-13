@@ -69,6 +69,7 @@ services:
       context: ../..
       args:
         DOCKER_BUILDKIT: 1
+    command: [ "sh", "docker-dev-entrypoint.sh" ]
     volumes:
       - ../..:/app
       - /app/node_modules
