@@ -49,6 +49,11 @@ jobs:
         # Theme
         LOGCHIMP_API_URL: ${{ env.API_URL }}
 
+    - name: log migrator container
+      if: always()
+      run: |
+        docker compose -f ./docker/local/docker-compose.ci.yml logs migrator
+
     - name: Wait for frontend
       run: npx wait-on http://localhost:3000
 
