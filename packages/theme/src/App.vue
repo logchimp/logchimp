@@ -54,7 +54,7 @@ watch(
 );
 
 onMounted(async () => {
-  settingsStore.getSiteSettings();
+  await settingsStore.getSiteSettings();
 
   // set google analytics
   if (settingsStore.get.googleAnalyticsId) {

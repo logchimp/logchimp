@@ -26,17 +26,16 @@ export const useSettingStore = defineStore("settings", () => {
   const get = computed(() => settings);
   const labs = computed(() => settings.labs);
 
-  function getSiteSettings() {
-    axios({
-      method: "get",
-      url: `${VITE_API_URL}/api/v1/settings/site`,
-    })
-      .then((response) => {
-        updateSettings(response.data.settings);
-      })
-      .catch((error) => {
-        console.error(error);
+  async function getSiteSettings() {
+    try {
+      const response = await axios({
+        method: "get",
+        url: `${VITE_API_URL}/api/v1/settings/site`,
       });
+      updateSettings(response.data.settings);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function updateSettings(payload: ISiteSettings) {
