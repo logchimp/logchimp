@@ -15,14 +15,13 @@
 
 <script setup lang="ts">
 // packages
-import axios, { type AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { computed, onMounted, watch } from "vue";
 import type { IApiErrorResponse } from "@logchimp/types";
 // import gtag, { setOptions, bootstrap } from "vue-gtag";
 import { useHead } from "@vueuse/head";
 
 import packageJson from "../package.json";
-import { VITE_API_URL } from "./constants";
 
 import { useSettingStore } from "./store/settings";
 import { useUserStore } from "./store/user";
@@ -38,19 +37,6 @@ const { getAlerts, remove: removeAlert } = useAlertStore();
 const userStore = useUserStore();
 
 const logchimpVersion = computed(() => packageJson.version);
-
-function getSiteSettings() {
-  axios({
-    method: "get",
-    url: `${VITE_API_URL}/api/v1/settings/site`,
-  })
-    .then((response) => {
-      settingsStore.updateSettings(response.data.settings);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
 
 watch(
   () => settingsStore.get.accentColor,
@@ -68,7 +54,7 @@ watch(
 );
 
 onMounted(async () => {
-  getSiteSettings();
+  settingsStore.getSiteSettings();
 
   // set google analytics
   if (settingsStore.get.googleAnalyticsId) {

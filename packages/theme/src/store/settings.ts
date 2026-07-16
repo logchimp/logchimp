@@ -1,6 +1,8 @@
 import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 import type { ISiteSettings } from "@logchimp/types";
+import axios from "axios";
+import { VITE_API_URL } from "../constants";
 
 export const useSettingStore = defineStore("settings", () => {
   const settings = reactive<ISiteSettings>({
@@ -24,6 +26,19 @@ export const useSettingStore = defineStore("settings", () => {
   const get = computed(() => settings);
   const labs = computed(() => settings.labs);
 
+  function getSiteSettings() {
+    axios({
+      method: "get",
+      url: `${VITE_API_URL}/api/v1/settings/site`,
+    })
+      .then((response) => {
+        updateSettings(response.data.settings);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   function updateSettings(payload: ISiteSettings) {
     Object.assign(settings, payload);
   }
@@ -45,6 +60,7 @@ export const useSettingStore = defineStore("settings", () => {
     labs,
 
     // actions
+    getSiteSettings,
     updateSettings,
     updateLabs,
     updateLogo,
