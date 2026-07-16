@@ -1,2 +1,7 @@
 packages:
   - 'packages/*'
+
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  vue-demi: true
