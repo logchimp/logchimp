@@ -26,7 +26,7 @@ export async function setup(
   next: NextFunction,
 ) {
   const { name, email, password } = req.body;
-  let siteTitle = (req.body?.siteTitle || "").trim();
+  const siteTitle = String(req.body?.siteTitle || "").trim();
 
   if (!validEmail(email)) {
     return res.status(400).send({
