@@ -115,6 +115,7 @@ import type { IBoardPrivate, IPost } from "@logchimp/types";
 // modules
 import { getPosts } from "../../modules/posts";
 import { getAllBoards } from "../../ee/modules/boards";
+import { useSettingStore } from "../../store/settings";
 
 // components
 import InfiniteScroll, {
@@ -130,6 +131,7 @@ const posts = ref<IPost[]>([]);
 const postState = ref<InfiniteScrollStateType>();
 const boards = ref<IBoardPrivate[]>([]);
 const boardState = ref<InfiniteScrollStateType>();
+const settingsStore = useSettingStore();
 
 async function getRecentPosts() {
   postState.value = "LOADING";
@@ -174,6 +176,8 @@ onMounted(() => {
     // Remove the query param so confetti only shows once
     const { onboarding, ...restQuery } = route.query;
     routerInstance.replace({ query: restQuery });
+
+    settingsStore.getSiteSettings();
 
     import("canvas-confetti")
       .then((confetti) => {
