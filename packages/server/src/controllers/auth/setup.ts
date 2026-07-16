@@ -7,6 +7,8 @@ import type {
 
 // database
 import database from "../../database";
+import * as cache from "../../cache";
+import { CACHE_KEYS } from "../../cache/keys";
 
 // services
 import { createUser } from "../../services/auth/createUser";
@@ -23,7 +25,8 @@ export async function setup(
   res: Response<ResponseBody>,
   next: NextFunction,
 ) {
-  const { siteTitle, name, email, password } = req.body;
+  const { name, email, password } = req.body;
+  let siteTitle = (req.body?.siteTitle || "").trim();
 
   if (!validEmail(email)) {
     return res.status(400).send({
@@ -74,11 +77,21 @@ export async function setup(
         userId: user.userId,
       });
 
-    await database
-      .update({
-        title: siteTitle,
-      })
-      .from("settings");
+    if (siteTitle) {
+      await database
+        .update({
+          title: siteTitle,
+        })
+        .from("settings");
+
+      if (cache.isActive) {
+        try {
+          await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
+        } catch (err) {
+          logger.error({ message: err });
+        }
+      }
+    }
 
     res.status(201).send({ user });
   } catch (err) {
