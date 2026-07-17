@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/.agent" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/packages/server/src/ee/do-not-remove" vcs="Git" />
   </component>
 </project>
