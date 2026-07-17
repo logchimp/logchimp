@@ -1,0 +1,5 @@
+.maizzle
+node_modules
+Thumbs.db
+.DS_Store
+dist
