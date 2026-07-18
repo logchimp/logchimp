@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { preview } from "../../helpers/preview.ts";
+import { defaultData } from "../../helpers/data";
 
 const data = {
-  siteTitle: "LogChimp",
-  siteLogo: "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
-  url: "https://logchimp.app",
-  domain: "logchimp.app",
+  ...defaultData,
   resetLink: "https://logchimp.app/reset-password",
-  brandColor: "#484d7c",
 };
 </script>
 
