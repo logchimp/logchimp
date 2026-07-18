@@ -44,7 +44,7 @@ export async function generateContent(
 
   const processedOptions = {
     ...options,
-    siteColor: options.siteColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
+    brandColor: options.brandColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
   };
 
   _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
