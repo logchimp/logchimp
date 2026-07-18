@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "maizzle serve",
     "build": "NODE_ENV=production maizzle build",
+    "copy": "cp -r ./dist/** ../server/src/services/mail/templates",
     "postinstall": "maizzle prepare"
   },
   "dependencies": {
