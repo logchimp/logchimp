@@ -51,13 +51,13 @@ export async function verifyEmail(
     }
 
     const siteTitle = siteInfo[0].title;
-    let siteColor = siteInfo[0].accentColor;
+    let brandColor = siteInfo[0].accentColor;
     const siteLogo =
       siteInfo[0].logo ||
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png";
 
-    if (siteColor && !siteColor.startsWith("#")) {
-      siteColor = `#${siteColor}`;
+    if (brandColor && !brandColor.startsWith("#")) {
+      brandColor = `#${brandColor}`;
     }
 
     const urlObject = new URL(config.webUrl);
@@ -68,7 +68,7 @@ export async function verifyEmail(
         domain: urlObject.hostname,
         verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
         siteTitle,
-        siteColor,
+        brandColor,
         siteLogo,
       },
     );
