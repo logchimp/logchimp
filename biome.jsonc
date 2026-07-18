@@ -55,7 +55,10 @@
   },
   "overrides": [
     {
-      "includes": ["packages/theme/**/*.vue"],
+      "includes": [
+        "packages/theme/**/*.vue",
+        "packages/email-templates/templates/**/*.vue"
+      ],
       "linter": {
         "rules": {
           "correctness": {
