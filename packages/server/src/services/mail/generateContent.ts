@@ -48,7 +48,7 @@ export async function generateContent<T extends object>(
     brandColor: options.brandColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
   } as T;
 
-  _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+  _.templateSettings.interpolate = /\[\[([\s\S]+?)\]\]/g;
   const compiled = _.template(fileContent);
   const htmlMail = compiled(processedOptions);
 
