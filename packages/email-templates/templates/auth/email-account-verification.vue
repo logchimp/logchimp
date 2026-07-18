@@ -4,7 +4,7 @@ import { defaultData } from "../../helpers/data";
 
 const data = {
   ...defaultData,
-  resetLink: "https://logchimp.app/reset-password",
+  verificationLink: "https://logchimp.app/verify-account",
 };
 </script>
 
