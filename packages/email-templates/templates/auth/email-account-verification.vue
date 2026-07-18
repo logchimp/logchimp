@@ -33,9 +33,7 @@ const data = {
       </Text>
 
       <Text>
-        Please confirm your email address by clicking
-        <strong>Confirm email</strong>
-        button below:
+        Please confirm your email address by clicking the <strong>Confirm email</strong> button below:
       </Text>
 
       <Text>
