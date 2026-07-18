@@ -8,6 +8,9 @@ logchimp.config.json
 # content
 content/logs/*.log
 
+# Server
+packages/server/src/services/mail/templates/**
+
 # Theme
 packages/theme/dist
 
