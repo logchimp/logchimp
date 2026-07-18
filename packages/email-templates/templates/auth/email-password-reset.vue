@@ -30,8 +30,8 @@ const data = {
       </Text>
 
       <Text>
-        You can change your account page by clicking "Reset password" button, this link will
-        <strong>expire in 1 hours</strong>.
+        You can change your account password by clicking the "Reset password" button. This link will
+        <strong>expire in 1 hour</strong>.
       </Text>
 
       <Text>
