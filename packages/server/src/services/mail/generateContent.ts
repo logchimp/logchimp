@@ -36,11 +36,7 @@ export async function generateContent<T extends object>(
   }
 
   if (typeof fileContent !== "string") {
-    logger.warn({
-      message: `file content empty [file path: ${mailTemplateFilePath}]`,
-      error: fileContent,
-    });
-    return;
+    throw new Error(`file content empty [file path: ${mailTemplateFilePath}]`);
   }
 
   const processedOptions = {
