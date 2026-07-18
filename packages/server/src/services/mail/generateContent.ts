@@ -6,17 +6,18 @@ import logger from "../../utils/logger";
 import { readFile } from "../../helpers";
 import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
 
-interface IGenerateContentBaseOptions {
+export interface BaseEmailData {
+  readonly siteTitle: string;
+  readonly siteLogo: string;
+  readonly recipientEmail: string;
   readonly url: string;
   readonly domain: string;
+  readonly brandColor: string;
 }
 
-type IGenerateContentOptions = IGenerateContentBaseOptions &
-  Record<string, string | undefined>;
-
-export async function generateContent(
+export async function generateContent<T extends object>(
   templateName: string,
-  options: IGenerateContentOptions,
+  options: T & BaseEmailData,
 ) {
   const mailTemplateFilePath = path.resolve(
     __dirname,
@@ -45,7 +46,7 @@ export async function generateContent(
   const processedOptions = {
     ...options,
     brandColor: options.brandColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
-  };
+  } as T;
 
   _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
   const compiled = _.template(fileContent);

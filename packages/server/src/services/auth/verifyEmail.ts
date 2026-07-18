@@ -9,6 +9,7 @@ import { createToken } from "../token.service";
 import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IVerifyEmailJwtPayload } from "../../types";
+import type { EmailAccountVerification } from "../mail/types";
 
 const config = configManager.getConfig();
 
@@ -61,17 +62,19 @@ export async function verifyEmail(
     }
 
     const urlObject = new URL(config.webUrl);
-    const onboardingMailContent = await generateContent(
-      "auth/email-account-verification",
-      {
-        url: urlObject.origin,
-        domain: urlObject.hostname,
-        verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
-        siteTitle,
-        brandColor,
-        siteLogo,
-      },
-    );
+    const onboardingMailContent =
+      await generateContent<EmailAccountVerification>(
+        "auth/email-account-verification",
+        {
+          recipientEmail: tokenPayload.email,
+          url: urlObject.origin,
+          domain: urlObject.hostname,
+          verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
+          siteTitle,
+          brandColor,
+          siteLogo,
+        },
+      );
 
     const noReplyEmail = `noreply@${urlObject.hostname}`;
 
@@ -85,6 +88,8 @@ export async function verifyEmail(
 
     return userEmailVerificationToken[0];
   } catch (err) {
+    console.log("failed to send email verification ===============");
+    console.log(err);
     logger.error("failed to send email verification", err.message);
   }
 }
