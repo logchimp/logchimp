@@ -10,6 +10,7 @@ import { createToken } from "../token.service";
 import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IPasswordResetJwtPayload } from "../../types";
+import type { EmailPasswordReset } from "../mail/types";
 
 const config = configManager.getConfig();
 
@@ -51,24 +52,28 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
     }
 
     const siteTitle = siteInfo[0].title;
-    let siteColor = siteInfo[0].accentColor;
+    let brandColor = siteInfo[0].accentColor;
     const siteLogo =
       siteInfo[0].logo ||
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png";
 
-    if (siteColor && !siteColor.startsWith("#")) {
-      siteColor = `#${siteColor}`;
+    if (brandColor && !brandColor.startsWith("#")) {
+      brandColor = `#${brandColor}`;
     }
 
     const urlObject = new URL(config.webUrl);
-    const passwordResetMailContent = await generateContent("reset", {
-      url: urlObject.origin,
-      domain: urlObject.host,
-      resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`,
-      siteTitle,
-      siteColor,
-      siteLogo,
-    });
+    const passwordResetMailContent = await generateContent<EmailPasswordReset>(
+      "auth/email-password-reset",
+      {
+        recipientEmail: tokenPayload.email,
+        url: urlObject.origin,
+        domain: urlObject.host,
+        resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`,
+        siteTitle,
+        brandColor,
+        siteLogo,
+      },
+    );
 
     const noReplyEmail = `noreply@${urlObject.hostname}`;
 
