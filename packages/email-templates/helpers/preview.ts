@@ -3,5 +3,5 @@ export function preview(name: string, fallback: string) {
     return fallback;
   }
 
-  return `[${name}]`;
+  return `[[${name}]]`;
 }
