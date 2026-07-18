@@ -34,7 +34,7 @@ COPY --from=builder /app/packages/server/dist ./packages/server/dist
 COPY --from=builder /app/packages/server/scripts ./packages/server/scripts
 
 # Copy raw email templates
-COPY --from=builder /app/packages/email-templates/dist/** ./packages/server/dist/services/mail/templates
+COPY --from=builder /app/packages/email-templates/dist/ ./packages/server/dist/services/mail/templates
 
 RUN \
     npm i -g pnpm && \
