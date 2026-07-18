@@ -61,14 +61,17 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
     }
 
     const urlObject = new URL(config.webUrl);
-    const passwordResetMailContent = await generateContent("reset", {
-      url: urlObject.origin,
-      domain: urlObject.host,
-      resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`,
-      siteTitle,
-      siteColor,
-      siteLogo,
-    });
+    const passwordResetMailContent = await generateContent(
+      "auth/email-password-reset",
+      {
+        url: urlObject.origin,
+        domain: urlObject.host,
+        resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`,
+        siteTitle,
+        siteColor,
+        siteLogo,
+      },
+    );
 
     const noReplyEmail = `noreply@${urlObject.hostname}`;
 

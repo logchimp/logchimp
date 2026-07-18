@@ -61,14 +61,17 @@ export async function verifyEmail(
     }
 
     const urlObject = new URL(config.webUrl);
-    const onboardingMailContent = await generateContent("verify", {
-      url: urlObject.origin,
-      domain: urlObject.hostname,
-      verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
-      siteTitle,
-      siteColor,
-      siteLogo,
-    });
+    const onboardingMailContent = await generateContent(
+      "auth/email-account-verification",
+      {
+        url: urlObject.origin,
+        domain: urlObject.hostname,
+        verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
+        siteTitle,
+        siteColor,
+        siteLogo,
+      },
+    );
 
     const noReplyEmail = `noreply@${urlObject.hostname}`;
 
