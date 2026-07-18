@@ -10,6 +10,7 @@ import { createToken } from "../token.service";
 import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IPasswordResetJwtPayload } from "../../types";
+import type { EmailPasswordReset } from "../mail/types";
 
 const config = configManager.getConfig();
 
@@ -61,9 +62,10 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
     }
 
     const urlObject = new URL(config.webUrl);
-    const passwordResetMailContent = await generateContent(
+    const passwordResetMailContent = await generateContent<EmailPasswordReset>(
       "auth/email-password-reset",
       {
+        recipientEmail: tokenPayload.email,
         url: urlObject.origin,
         domain: urlObject.host,
         resetLink: `${urlObject.origin}/password-reset/confirm/?token=${token}`,
