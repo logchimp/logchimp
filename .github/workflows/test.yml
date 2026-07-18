@@ -213,6 +213,11 @@ jobs:
           # Seeding database
           pnpm knex --knexfile ./src/database/config.ts seed:run;
 
+      - name: Generate email templates
+        run: |
+          pnpm --filter @logchimp/email-templates build; \
+            pnpm --filter @logchimp/email-templates copy;
+
       - name: Testing
         run: pnpm --filter @logchimp/api test:integration --retry 1
 
