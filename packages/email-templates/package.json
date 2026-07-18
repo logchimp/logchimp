@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "maizzle serve",
-    "build": "maizzle build",
+    "build": "NODE_ENV=production maizzle build",
     "postinstall": "maizzle prepare"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
     "@maizzle/tailwindcss": "^1.5.5"
   },
   "devDependencies": {
+    "@types/node": "^24.11.0",
     "typescript": "^6.0.3"
   }
 }

@@ -9,7 +9,8 @@
     "noEmit": true,
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
   "include": ["**/*.vue", ".maizzle/*.d.ts"],
   "exclude": ["node_modules", "dist"]
