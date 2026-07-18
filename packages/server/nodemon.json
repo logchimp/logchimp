@@ -1,4 +1,5 @@
 {
-  "watch": ["./**/*.ts", "./**/*.js", ".env"],
+  "watch": ["src"],
+  "ext": "ts,js,json",
   "exec": "ts-node ./src/index.ts"
 }
