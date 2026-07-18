@@ -41,7 +41,7 @@ describe("generateContent", () => {
     it(title, async (t) => {
       if (skip) t.skip();
 
-      const result = await generateContent("reset", {
+      const result = await generateContent("auth/email-password-reset", {
         recipientEmail: faker.internet.email(),
         url: "https://test.com",
         domain: "test.com",
@@ -56,7 +56,7 @@ describe("generateContent", () => {
   );
 
   it("should generate plain text version", async () => {
-    const result = await generateContent("reset", {
+    const result = await generateContent("auth/email-password-reset", {
       recipientEmail: faker.internet.email(),
       url: "https://test.com",
       domain: "test.com",
@@ -84,7 +84,10 @@ describe("generateContent", () => {
         siteLogo: `https://${DOMAIN}/logo.png`,
       };
 
-      const result = await generateContent("reset", mockData);
+      const result = await generateContent(
+        "auth/email-password-reset",
+        mockData,
+      );
 
       expect(result).toBeDefined();
       expect(result?.html).toContain(mockData.resetLink);
@@ -112,7 +115,10 @@ describe("generateContent", () => {
         siteLogo: `https://${DOMAIN}/logo.png`,
       };
 
-      const result = await generateContent("verify", mockData);
+      const result = await generateContent(
+        "auth/email-account-verification",
+        mockData,
+      );
 
       expect(result).toBeDefined();
       expect(result?.html).toContain(mockData.verificationLink);
