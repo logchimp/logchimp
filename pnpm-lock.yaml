@@ -161,7 +161,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 3.2.6
-        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3)(lightningcss@1.30.2)(sass@1.69.5)
+        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0)
 
   packages/theme:
     dependencies:
@@ -190,8 +190,8 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.21
+        version: 1.11.21
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.34(typescript@5.9.3))
@@ -249,7 +249,7 @@ importers:
         version: 6.4.3(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
       vitest:
         specifier: 3.2.6
-        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3)(lightningcss@1.30.2)(sass@1.69.5)
+        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0)
       vue-tsc:
         specifier: 3.1.5
         version: 3.1.5(typescript@5.9.3)
@@ -1685,8 +1685,8 @@ packages:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
     engines: {node: '>=12'}
 
-  dayjs@1.11.20:
-    resolution: {integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==}
+  dayjs@1.11.21:
+    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -4497,7 +4497,7 @@ snapshots:
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
 
-  dayjs@1.11.20: {}
+  dayjs@1.11.21: {}
 
   debug@2.6.9:
     dependencies:
@@ -5974,7 +5974,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-node@3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5):
+  vite-node@3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3(supports-color@5.5.0)
@@ -6010,7 +6010,7 @@ snapshots:
       lightningcss: 1.30.2
       sass: 1.69.5
 
-  vitest@3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3)(lightningcss@1.30.2)(sass@1.69.5):
+  vitest@3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.6
@@ -6033,7 +6033,7 @@ snapshots:
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
       vite: 6.4.3(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
-      vite-node: 3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
+      vite-node: 3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.11.0
