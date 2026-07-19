@@ -34,7 +34,8 @@ export async function create(
 
   const rawTitle = String(req.body.title || "").trim();
   let title = xss(rawTitle) || "new post";
-  let contentMarkdown = xss(String(req.body.contentMarkdown || "").trim());
+  let contentMarkdown =
+    xss(String(req.body.contentMarkdown || "").trim()) || null;
   const boardId = validUUID(req.body.boardId);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
