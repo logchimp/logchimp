@@ -7,12 +7,13 @@ import type {
   ICreatePostResponseBody,
   TPermission,
 } from "@logchimp/types";
+import xss from "xss";
 import { POST_TITLE_MAX_LENGTH } from "../../constants";
 
 import database from "../../database";
 
 // utils
-import { validUUID, generateNanoID as nanoid } from "../../helpers";
+import { generateNanoID as nanoid, validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
@@ -31,8 +32,10 @@ export async function create(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  let title = req.body.title || "new post";
-  let contentMarkdown = req.body.contentMarkdown || "";
+  const rawTitle = String(req.body.title || "").trim();
+  let title = xss(rawTitle) || "new post";
+  let contentMarkdown =
+    xss(String(req.body.contentMarkdown || "").trim()) || null;
   const boardId = validUUID(req.body.boardId);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
