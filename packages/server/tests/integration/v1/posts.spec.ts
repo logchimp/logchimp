@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
@@ -8,11 +8,10 @@ import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
 import { createUser } from "../../utils/seed/user";
-import { updateSettings } from "../../utils/seed/settings";
 import {
   board as generateBoard,
-  roadmap as generateRoadmap,
   post as generatePost,
+  roadmap as generateRoadmap,
   vote as assignVote,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
@@ -661,8 +660,10 @@ describe("POST /api/v1/posts", () => {
 
       const post = response.body.post as IPost;
       expect(post.title).toBe("Safe title");
-      expect(post.contentMarkdown).toBe(xss(payload.trim()));
-      expect(post.contentMarkdown).not.toMatch(/<script/i);
+      expect(post.contentMarkdown).toBe(xss(payload.trim()) || null);
+      if (post.contentMarkdown) {
+        expect(post.contentMarkdown).not.toMatch(/<script/i);
+      }
     }),
   );
 });
