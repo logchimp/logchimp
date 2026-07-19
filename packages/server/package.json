@@ -32,7 +32,8 @@
     "uuid": "^12.0.1",
     "valibot": "^1.2.0",
     "validator": "^13.15.35",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.3.0",
