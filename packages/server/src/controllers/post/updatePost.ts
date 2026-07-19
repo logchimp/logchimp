@@ -70,8 +70,7 @@ export async function updatePost(
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
   const title = xss((String(rawTitle) || "").trim());
-  const contentMarkdown =
-    xss((String(rawContentMarkdown) || "").trim()) || null;
+  const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
 
   const slug = `${title
     .replace(/[^\w\s]/gi, "")
