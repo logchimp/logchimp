@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
+import xss from "xss";
 import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
 
 import app from "../../../src/app";
@@ -15,6 +16,55 @@ import {
   vote as assignVote,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+
+/**
+ * Malicious/HTML-injection payloads used to verify that the post `title` and
+ * `contentMarkdown` are sanitised via `xss()` before being persisted.
+ *
+ * Every one of these stays <= POST_TITLE_MAX_LENGTH once sanitised, so they can
+ * be used for the `title` field without triggering the truncation logic.
+ */
+const htmlPayloads = [
+  // Script tags
+  `<script>alert('XSS')</script>`,
+  `"><script>alert('XSS')</script>`,
+  `'><img src=x onerror=alert('XSS')>`,
+  `<!--<script>alert('XSS')</script>-->`,
+
+  // Event handler attributes
+  `<img src=x onerror=alert('XSS')>`,
+  `<svg onload=alert('XSS')>`,
+  `<body onload=alert('XSS')>`,
+  `<input onfocus=alert('XSS') autofocus>`,
+  `<marquee onstart=alert('XSS')>x</marquee>`,
+  `<details open ontoggle=alert('XSS')>`,
+  `<video><source onerror=alert('XSS')>`,
+
+  // javascript: protocol in attributes
+  `<a href="javascript:alert('XSS')">click</a>`,
+  `<iframe src="javascript:alert('XSS')"></iframe>`,
+  `<object data="javascript:alert('XSS')"></object>`,
+  `<embed src="javascript:alert('XSS')">`,
+  `<form action="javascript:alert('XSS')"><input type=submit>`,
+  `<table background="javascript:alert('XSS')">`,
+
+  // CSS based injection
+  `<div style="background:url(javascript:alert('XSS'))">x</div>`,
+  `<style>@import 'javascript:alert(1)';</style>`,
+
+  // Bare javascript: string (kept as plain text, but must never execute)
+  `javascript:alert('XSS')`,
+];
+
+/**
+ * Longer polyglot payloads that have no upper bound issue for `contentMarkdown`
+ * (which is not length limited).
+ */
+const contentPayloads = [
+  ...htmlPayloads,
+  `javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/"/+/onmouseover=1/+/[*/[]/+alert(1)//'>`,
+  `'"--></style></script><script>alert(String.fromCharCode(88,83,83))</script>`,
+];
 
 // Get posts with filters
 describe("POST /api/v1/posts/get", () => {
@@ -569,6 +619,52 @@ describe("POST /api/v1/posts", () => {
       `...${chunks[1]}\n\n${contentMarkdown}`,
     );
   });
+
+  htmlPayloads.map((payload, index) =>
+    it(`should sanitise post title #${index + 1}: '${payload}'`, async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+
+      const response = await supertest(app)
+        .post("/api/v1/posts")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          title: payload,
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(201);
+
+      const post = response.body.post as IPost;
+      // controller runs: xss(rawTitle) || "new post"
+      expect(post.title).toBe(xss(payload.trim()) || "new post");
+      // sanitised output must never contain an executable script tag
+      expect(post.title).not.toMatch(/<script/i);
+      // slug is derived from the sanitised title, so it must stay clean too
+      expect(post.slug).not.toMatch(/<|>/);
+    }),
+  );
+
+  contentPayloads.map((payload, index) =>
+    it(`should sanitise post content #${index + 1}: '${payload.substring(0, 60)}${payload.length > 60 ? "..." : ""}'`, async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+
+      const response = await supertest(app)
+        .post("/api/v1/posts")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          title: "Safe title",
+          contentMarkdown: payload,
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(201);
+
+      const post = response.body.post as IPost;
+      expect(post.title).toBe("Safe title");
+      expect(post.contentMarkdown).toBe(xss(payload.trim()));
+      expect(post.contentMarkdown).not.toMatch(/<script/i);
+    }),
+  );
 });
 
 describe("PATCH /api/v1/posts", () => {
@@ -804,6 +900,74 @@ describe("PATCH /api/v1/posts", () => {
     const slugSuffix = oldSlug.split("-").slice(-1)[0];
     expect(updated.slug.endsWith(`-${slugSuffix}`)).toBe(true);
   });
+
+  htmlPayloads.map((payload, index) =>
+    it(`should sanitise post title #${index + 1}: '${payload}'`, async () => {
+      const board = await generateBoard({}, true);
+      const roadmap = await generateRoadmap({}, true);
+      const { user: author } = await createUser({ isVerified: true });
+      const post = await generatePost(
+        {
+          userId: author.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+
+      const response = await supertest(app)
+        .patch("/api/v1/posts")
+        .set("Authorization", `Bearer ${author.authToken}`)
+        .send({
+          id: post.postId,
+          title: payload,
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const updated = response.body.post as IPost;
+      expect(updated.title).toBe(xss(payload.trim()));
+      expect(updated.title).not.toMatch(/<script/i);
+      expect(updated.slug).not.toMatch(/<|>/);
+    }),
+  );
+
+  contentPayloads.map((payload, index) =>
+    it(`should sanitise post content #${index + 1}: '${payload.substring(0, 60)}${payload.length > 60 ? "..." : ""}'`, async () => {
+      const board = await generateBoard({}, true);
+      const roadmap = await generateRoadmap({}, true);
+      const { user: author } = await createUser({ isVerified: true });
+      const post = await generatePost(
+        {
+          userId: author.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+
+      const response = await supertest(app)
+        .patch("/api/v1/posts")
+        .set("Authorization", `Bearer ${author.authToken}`)
+        .send({
+          id: post.postId,
+          title: "Safe title",
+          contentMarkdown: payload,
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const updated = response.body.post as IPost;
+      expect(updated.title).toBe("Safe title");
+      // controller runs: xss(rawContentMarkdown) || null
+      expect(updated.contentMarkdown).toBe(xss(payload.trim()) || null);
+      if (updated.contentMarkdown) {
+        expect(updated.contentMarkdown).not.toMatch(/<script/i);
+      }
+    }),
+  );
 });
 
 describe("DELETE /api/v1/posts", () => {
