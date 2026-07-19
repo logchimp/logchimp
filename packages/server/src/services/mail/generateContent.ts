@@ -13,6 +13,7 @@ export interface BaseEmailData {
   readonly url: string;
   readonly domain: string;
   readonly brandColor: string;
+  readonly fullYear?: number;
 }
 
 export async function generateContent<T extends object>(
@@ -42,6 +43,7 @@ export async function generateContent<T extends object>(
   const processedOptions = {
     ...options,
     brandColor: options.brandColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
+    fullYear: options.fullYear || new Date().getFullYear(),
   } as T;
 
   _.templateSettings.interpolate = /\[\[([\s\S]+?)\]\]/g;

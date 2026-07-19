@@ -5,4 +5,5 @@ export const defaultData = {
   url: "https://logchimp.app",
   domain: "logchimp.app",
   brandColor: "#484d7c",
+  fullYear: new Date().getFullYear(),
 };
