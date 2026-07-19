@@ -38,7 +38,7 @@ const routes = [
       },
       {
         path: "posts/:slug",
-        name: "Posts view",
+        name: "PostPublicViewer",
         component: () => import("./pages/posts/_slug/Index.vue"),
       },
       {

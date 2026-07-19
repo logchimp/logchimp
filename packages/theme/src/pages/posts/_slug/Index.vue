@@ -54,6 +54,7 @@ import { useHead } from "@vueuse/head";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { IPost, IPostVote } from "@logchimp/types";
+import DOMPurify from "dompurify";
 
 // modules
 import { router } from "../../../router";
@@ -129,9 +130,8 @@ async function postBySlug() {
       isPostExist.value = true;
 
       if (response.data.post?.contentMarkdown) {
-        postContent.value = response.data.post.contentMarkdown.replace(
-          /\n/g,
-          "<br>",
+        postContent.value = DOMPurify.sanitize(
+          response.data.post.contentMarkdown.replace(/\n/g, "<br>"),
         );
       }
     } catch (error: unknown) {

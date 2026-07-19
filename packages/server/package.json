@@ -33,6 +33,7 @@
     "valibot": "^1.2.0",
     "validator": "^13.15.20",
     "winston": "^3.3.3",
+    "xss": "^1.0.15",
     "zod": "^4.0.14"
   },
   "devDependencies": {

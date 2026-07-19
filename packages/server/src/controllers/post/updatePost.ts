@@ -6,6 +6,7 @@ import type {
   TUpdatePostResponseBody,
 } from "@logchimp/types";
 import * as v from "valibot";
+import xss from "xss";
 import database from "../../database";
 
 // utils
@@ -66,7 +67,10 @@ export async function updatePost(
   const id = validUUID(req.body.id);
   const boardId = validUUID(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
-  const { title, contentMarkdown } = body.output;
+
+  const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
+  const title = xss((String(rawTitle) || "").trim());
+  const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
 
   const slug = `${title
     .replace(/[^\w\s]/gi, "")
