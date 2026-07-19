@@ -195,6 +195,9 @@ importers:
       dayjs:
         specifier: 1.11.21
         version: 1.11.21
+      dompurify:
+        specifier: ^3.4.11
+        version: 3.4.11
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.34(typescript@5.9.3))
