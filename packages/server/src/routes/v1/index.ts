@@ -9,7 +9,7 @@ import votes from "./votes";
 import users from "./users";
 import settings from "./settings";
 
-router.use("/api/v1", posts, votes, users, settings);
+router.use("/api/v1", votes, users, settings);
 
 let eeRoutesLoaded = false;
 export async function initialiseEERoutes() {
@@ -32,7 +32,7 @@ export const ready = (async () => {
   await initialiseEERoutes();
 
   if (!eeRoutesLoaded) {
-    router.use("/api/v1", auth);
+    router.use("/api/v1", auth, posts);
   }
 })();
 

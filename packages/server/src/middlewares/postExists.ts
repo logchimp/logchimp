@@ -96,7 +96,7 @@ interface GetPostArgs {
   slug: string | null;
 }
 
-interface GetPostStatement {
+export interface GetPostStatement {
   postId: string;
   title: string;
   slug: string;
