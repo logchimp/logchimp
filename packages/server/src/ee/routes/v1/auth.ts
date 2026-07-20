@@ -75,7 +75,6 @@ router.post(
 router.post(
   "/auth/password/validateToken",
   validateEmailToken,
-  userExists,
   auth.password.validateToken,
 );
 router.post(
@@ -85,7 +84,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.password.set,
 );
 

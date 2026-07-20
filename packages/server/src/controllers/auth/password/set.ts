@@ -11,6 +11,7 @@ import database from "../../../database";
 import { hashPassword } from "../../../utils/password";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { getUserByEmail } from "../../../repository/user";
 
 type ResponseBody =
   | ISetPasswordResponseBody
@@ -21,9 +22,9 @@ export async function set(
   req: Request<unknown, unknown, ISetPasswordRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-expect-error
-  const { userId, email } = req.user;
   const { password } = req.body;
+  // @ts-expect-error
+  const email = req.email as string;
 
   if (!password) {
     return res.status(400).send({
@@ -39,6 +40,8 @@ export async function set(
   }
 
   try {
+    const user = await getUserByEmail(database, email);
+
     const hashedPassword = hashPassword(password);
 
     await database
@@ -48,7 +51,7 @@ export async function set(
       })
       .from("users")
       .where({
-        userId,
+        userId: user.userId,
       });
 
     await database.delete().from("resetPassword").where({

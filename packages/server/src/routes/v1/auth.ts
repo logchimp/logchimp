@@ -37,14 +37,8 @@ router.post("/auth/password/reset", mailConfigExists, auth.password.reset);
 router.post(
   "/auth/password/validateToken",
   validateEmailToken,
-  userExists,
   auth.password.validateToken,
 );
-router.post(
-  "/auth/password/set",
-  validateEmailToken,
-  userExists,
-  auth.password.set,
-);
+router.post("/auth/password/set", validateEmailToken, auth.password.set);
 
 export default router;

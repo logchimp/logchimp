@@ -76,7 +76,7 @@ export async function validateEmailToken(
     }
 
     // @ts-expect-error
-    req.user = { email: emailToken.email };
+    req.email = emailToken.email;
     // @ts-expect-error
     req.token = emailToken;
     next();
