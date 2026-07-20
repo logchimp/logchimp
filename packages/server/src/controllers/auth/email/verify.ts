@@ -26,6 +26,14 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
 
   try {
     const user = await getUserById(database, reqUser.userId);
+    if (!user) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
     if (user.isVerified) {
       res.status(409).send({
         message: error.api.emailVerify.emailAlreadyVerified,

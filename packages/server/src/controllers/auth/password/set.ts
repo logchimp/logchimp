@@ -41,6 +41,13 @@ export async function set(
 
   try {
     const user = await getUserByEmail(database, email);
+    if (!user) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
 
     const hashedPassword = hashPassword(password);
 
