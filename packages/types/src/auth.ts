@@ -38,6 +38,10 @@ export interface IAuthEmailVerifyResponseBody {
   };
 }
 
+export interface IAuthPasswordResetRequestBody {
+  email: string;
+}
+
 export interface IAuthPasswordResetResponseBody {
   reset: {
     success: boolean;

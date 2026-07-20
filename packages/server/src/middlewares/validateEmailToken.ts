@@ -1,5 +1,5 @@
 import jwt, { type JwtPayload } from "jsonwebtoken";
-import type { Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
@@ -14,7 +14,6 @@ import database from "../database";
 // utils
 import logger from "../utils/logger";
 import { configManager } from "../utils/logchimpConfig";
-import type { ExpressRequestContext } from "../express";
 import error from "../errorResponse.json";
 import type {
   IPasswordResetJwtPayload,
@@ -28,8 +27,10 @@ type RequestBody =
   | ISetPasswordRequestBody;
 type ResponseBody = IApiValidationErrorResponse | IApiErrorResponse;
 
+const TOKEN_TYPES = ["emailVerification", "resetPassword"];
+
 export async function validateEmailToken(
-  req: ExpressRequestContext<unknown, unknown, RequestBody>,
+  req: Request<unknown, unknown, RequestBody>,
   res: Response<ResponseBody>,
   next: NextFunction,
 ) {
@@ -54,6 +55,14 @@ export async function validateEmailToken(
       (IVerifyEmailJwtPayload | IPasswordResetJwtPayload);
 
     const tokenType = decoded.type;
+    if (!TOKEN_TYPES.includes(tokenType)) {
+      res.status(400).send({
+        message: error.api.emailVerify.invalidToken,
+        code: "INVALID_TOKEN",
+      });
+      return;
+    }
+
     const emailToken = await database<TEmailVerification>(tokenType)
       .select()
       .where({ token })
@@ -67,12 +76,9 @@ export async function validateEmailToken(
     }
 
     // @ts-expect-error
-    req.user = { email: emailToken.email };
-
-    if (!req.ctx) {
-      req.ctx = {};
-    }
-    req.ctx.token = emailToken;
+    req.email = emailToken.email;
+    // @ts-expect-error
+    req.token = emailToken;
     next();
   } catch (err) {
     logger.error({

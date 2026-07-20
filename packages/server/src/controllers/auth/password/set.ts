@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
@@ -11,7 +11,7 @@ import database from "../../../database";
 import { hashPassword } from "../../../utils/password";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import type { ExpressRequestContext } from "../../../express";
+import { getUserByEmail } from "../../../repository/user";
 
 type ResponseBody =
   | ISetPasswordResponseBody
@@ -19,12 +19,12 @@ type ResponseBody =
   | IApiErrorResponse;
 
 export async function set(
-  req: ExpressRequestContext<unknown, unknown, ISetPasswordRequestBody>,
+  req: Request<unknown, unknown, ISetPasswordRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  // @ts-expect-error
-  const { userId, email } = req.user;
   const { password } = req.body;
+  // @ts-expect-error
+  const email = req.email as string;
 
   if (!password) {
     return res.status(400).send({
@@ -40,6 +40,15 @@ export async function set(
   }
 
   try {
+    const user = await getUserByEmail(database, email);
+    if (!user) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
     const hashedPassword = hashPassword(password);
 
     await database
@@ -49,7 +58,7 @@ export async function set(
       })
       .from("users")
       .where({
-        userId,
+        userId: user.userId,
       });
 
     await database.delete().from("resetPassword").where({

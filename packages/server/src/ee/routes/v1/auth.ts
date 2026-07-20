@@ -48,7 +48,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.email.verify,
 );
 router.post(
@@ -58,7 +57,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.email.validate,
 );
 
@@ -70,13 +68,11 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.password.reset,
 );
 router.post(
   "/auth/password/validateToken",
   validateEmailToken,
-  userExists,
   auth.password.validateToken,
 );
 router.post(
@@ -86,7 +82,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.password.set,
 );
 

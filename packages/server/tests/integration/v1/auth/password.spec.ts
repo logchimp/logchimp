@@ -5,7 +5,24 @@ import { faker } from "@faker-js/faker";
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
-import { resetPassword } from "../../../utils/resetPassword";
+import database from "../../../../src/database";
+
+async function resetPassword() {
+  const { user } = await createUser();
+
+  const tokenPayload = { email: user.email, type: "resetPassword" };
+  const token = createToken(tokenPayload, {
+    expiresIn: "2h",
+  });
+
+  await database("resetPassword").insert({
+    email: user.email,
+    token,
+    createdAt: new Date(),
+  });
+
+  return { user, token };
+}
 
 describe("POST /api/v1/auth/password/reset", () => {
   it('should throw error "EMAIL_INVALID" when invalid email is sent', async () => {
@@ -175,5 +192,47 @@ describe("POST /api/v1/password/set", () => {
 
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.headers["content-type"]).toContain("application/json");
+  });
+
+  it("should only reset password from the request originating email", async () => {
+    const { user: user2 } = await createUser();
+    const { user: user1, token } = await resetPassword();
+    const newPassword = "newPassword";
+
+    const response = await supertest(app)
+      .post("/api/v1/auth/password/set")
+      .send({
+        token,
+        email: user2.email,
+        password: newPassword,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.body).toEqual({
+      reset: { success: true },
+    });
+
+    const user1LoginResponse = await supertest(app)
+      .post("/api/v1/auth/login")
+      .send({
+        email: user1.email,
+        password: newPassword,
+      });
+    expect(user1LoginResponse.status).toBe(200);
+    expect(user1LoginResponse.headers["content-type"]).toContain(
+      "application/json",
+    );
+
+    const user2LoginResponse = await supertest(app)
+      .post("/api/v1/auth/login")
+      .send({
+        email: user2.email,
+        password: "password",
+      });
+    expect(user2LoginResponse.status).toBe(200);
+    expect(user2LoginResponse.headers["content-type"]).toContain(
+      "application/json",
+    );
   });
 });
