@@ -22,15 +22,9 @@ router.post(
   "/auth/email/verify",
   mailConfigExists,
   authRequired,
-  userExists,
   auth.email.verify,
 );
-router.post(
-  "/auth/email/validate",
-  validateEmailToken,
-  userExists,
-  auth.email.validate,
-);
+router.post("/auth/email/validate", validateEmailToken, auth.email.validate);
 
 // password
 router.post("/auth/password/reset", mailConfigExists, auth.password.reset);

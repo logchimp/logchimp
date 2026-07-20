@@ -48,7 +48,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.email.verify,
 );
 router.post(
@@ -58,7 +57,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.email.validate,
 );
 

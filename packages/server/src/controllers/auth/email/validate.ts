@@ -11,6 +11,7 @@ import database from "../../../database";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { getUserByEmail } from "../../../repository/user";
 
 type ResponseBody =
   | IValidateEmailVerificationTokenResponseBody
@@ -21,18 +22,18 @@ export async function validate(
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const { isVerified } = req.user;
-  // @ts-expect-error
   const { email } = req.token;
 
-  if (isVerified) {
-    return res.status(409).send({
-      message: error.api.emailVerify.emailAlreadyVerified,
-      code: "EMAIL_VERIFIED",
-    });
-  }
-
   try {
+    const user = await getUserByEmail(database, email);
+    if (user.isVerified) {
+      res.status(409).send({
+        message: error.api.emailVerify.emailAlreadyVerified,
+        code: "EMAIL_VERIFIED",
+      });
+      return;
+    }
+
     const verifyUser = await database("users")
       .update({
         isVerified: true,
