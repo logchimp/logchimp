@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IValidateEmailVerificationTokenRequestBody,
@@ -9,7 +9,6 @@ import type {
 import database from "../../../database";
 
 // utils
-import type { ExpressRequestContext } from "../../../express";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 
@@ -18,16 +17,13 @@ type ResponseBody =
   | IApiErrorResponse;
 
 export async function validate(
-  req: ExpressRequestContext<
-    unknown,
-    unknown,
-    IValidateEmailVerificationTokenRequestBody
-  >,
+  req: Request<unknown, unknown, IValidateEmailVerificationTokenRequestBody>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
   const { isVerified } = req.user;
-  const { email } = req.ctx.token;
+  // @ts-expect-error
+  const { email } = req.token;
 
   if (isVerified) {
     return res.status(409).send({

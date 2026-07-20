@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
@@ -11,7 +11,6 @@ import database from "../../../database";
 import { hashPassword } from "../../../utils/password";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import type { ExpressRequestContext } from "../../../express";
 
 type ResponseBody =
   | ISetPasswordResponseBody
@@ -19,7 +18,7 @@ type ResponseBody =
   | IApiErrorResponse;
 
 export async function set(
-  req: ExpressRequestContext<unknown, unknown, ISetPasswordRequestBody>,
+  req: Request<unknown, unknown, ISetPasswordRequestBody>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
