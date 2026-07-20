@@ -33,12 +33,7 @@ router.post(
 );
 
 // password
-router.post(
-  "/auth/password/reset",
-  mailConfigExists,
-  userExists,
-  auth.password.reset,
-);
+router.post("/auth/password/reset", mailConfigExists, auth.password.reset);
 router.post(
   "/auth/password/validateToken",
   validateEmailToken,

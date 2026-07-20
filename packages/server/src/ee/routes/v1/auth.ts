@@ -70,7 +70,6 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
   auth.password.reset,
 );
 router.post(

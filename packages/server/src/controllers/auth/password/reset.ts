@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
 import type {
-  IAuthPasswordResetResponseBody,
   IApiErrorResponse,
+  IAuthPasswordResetRequestBody,
+  IAuthPasswordResetResponseBody,
 } from "@logchimp/types";
 
 // services
@@ -12,17 +13,20 @@ import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 import { isDevTestEnv } from "../../../helpers";
 import type { IPasswordResetJwtPayload } from "../../../types";
+import { getUserByEmail } from "../../../repository/user";
+import database from "../../../database";
 
 type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
 
 export async function reset(req: Request, res: Response<ResponseBody>) {
-  // @ts-expect-error
-  const { userId, email } = req.user;
+  const email = (req.body satisfies IAuthPasswordResetRequestBody).email;
 
   try {
+    const user = await getUserByEmail(database, email);
+
     const tokenPayload: IPasswordResetJwtPayload = {
-      userId,
-      email,
+      userId: user.userId,
+      email: user.email,
       type: "resetPassword",
     };
 
