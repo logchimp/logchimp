@@ -11,25 +11,40 @@ import { verifyEmail } from "../../../services/auth/verifyEmail";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
 import { isDevTestEnv } from "../../../helpers";
-import type { IVerifyEmailJwtPayload } from "../../../types";
+import type {
+  IAuthenticationMiddlewareUser,
+  IVerifyEmailJwtPayload,
+} from "../../../types";
+import { getUserById } from "../../../repository/user";
+import database from "../../../database";
 
 type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
 
 export async function verify(req: Request, res: Response<ResponseBody>) {
   // @ts-expect-error
-  const { userId, email, isVerified } = req.user;
-
-  if (isVerified) {
-    return res.status(409).send({
-      message: error.api.emailVerify.emailAlreadyVerified,
-      code: "EMAIL_VERIFIED",
-    });
-  }
+  const reqUser = req.user as IAuthenticationMiddlewareUser;
 
   try {
+    const user = await getUserById(database, reqUser.userId);
+    if (!user) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
+    if (user.isVerified) {
+      res.status(409).send({
+        message: error.api.emailVerify.emailAlreadyVerified,
+        code: "EMAIL_VERIFIED",
+      });
+      return;
+    }
+
     const tokenPayload: IVerifyEmailJwtPayload = {
-      userId,
-      email,
+      userId: user.userId,
+      email: user.email,
       type: "emailVerification",
     };
 

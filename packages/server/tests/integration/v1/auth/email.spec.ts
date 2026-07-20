@@ -38,30 +38,12 @@ describe("POST /api/v1/auth/email/verify", () => {
     expect(response.body.code).toBe("EMAIL_VERIFIED");
   });
 
-  it("should throw error 'EMAIL_INVALID'", async () => {
+  it("should send email account verification email", async () => {
     const { user } = await createUser();
 
     const response = await supertest(app)
       .post("/api/v1/auth/email/verify")
-      .set("Authorization", `Bearer ${user.authToken}`)
-      .send({
-        email: "invalid-email",
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe("EMAIL_INVALID");
-  });
-
-  it("should verify the email", async () => {
-    const { user } = await createUser();
-
-    const response = await supertest(app)
-      .post("/api/v1/auth/email/verify")
-      .set("Authorization", `Bearer ${user.authToken}`)
-      .send({
-        email: user.email,
-      });
+      .set("Authorization", `Bearer ${user.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);

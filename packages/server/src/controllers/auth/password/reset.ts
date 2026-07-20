@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
 import type {
-  IAuthPasswordResetResponseBody,
   IApiErrorResponse,
+  IAuthPasswordResetRequestBody,
+  IAuthPasswordResetResponseBody,
 } from "@logchimp/types";
 
 // services
@@ -10,19 +11,37 @@ import { passwordReset as passwordResetEmail } from "../../../services/auth/pass
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import { isDevTestEnv } from "../../../helpers";
+import { isDevTestEnv, validEmail } from "../../../helpers";
 import type { IPasswordResetJwtPayload } from "../../../types";
+import { getUserByEmail } from "../../../repository/user";
+import database from "../../../database";
 
 type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
 
 export async function reset(req: Request, res: Response<ResponseBody>) {
-  // @ts-expect-error
-  const { userId, email } = req.user;
+  const email = (req.body satisfies IAuthPasswordResetRequestBody).email;
+
+  if (!validEmail(email)) {
+    res.status(400).send({
+      message: error.api.authentication.invalidEmail,
+      code: "EMAIL_INVALID",
+    });
+    return;
+  }
 
   try {
+    const user = await getUserByEmail(database, email);
+    if (!user) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
     const tokenPayload: IPasswordResetJwtPayload = {
-      userId,
-      email,
+      userId: user.userId,
+      email: user.email,
       type: "resetPassword",
     };
 

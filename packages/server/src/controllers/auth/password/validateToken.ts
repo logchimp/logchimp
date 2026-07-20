@@ -1,13 +1,13 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type { IPasswordResetValidationTokenResponseBody } from "@logchimp/types";
 import { isDevTestEnv } from "../../../helpers";
-import type { ExpressRequestContext } from "../../../express";
 
 export async function validateToken(
-  req: ExpressRequestContext,
+  req: Request,
   res: Response<IPasswordResetValidationTokenResponseBody>,
 ) {
-  const emailToken = req.ctx.token;
+  // @ts-expect-error
+  const emailToken = req.token;
 
   /**
    * sending token as response for
