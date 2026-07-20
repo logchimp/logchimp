@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IValidateEmailVerificationTokenRequestBody,
@@ -9,34 +9,39 @@ import type {
 import database from "../../../database";
 
 // utils
-import type { ExpressRequestContext } from "../../../express";
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
+import { getUserByEmail } from "../../../repository/user";
 
 type ResponseBody =
   | IValidateEmailVerificationTokenResponseBody
   | IApiErrorResponse;
 
 export async function validate(
-  req: ExpressRequestContext<
-    unknown,
-    unknown,
-    IValidateEmailVerificationTokenRequestBody
-  >,
+  req: Request<unknown, unknown, IValidateEmailVerificationTokenRequestBody>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const { isVerified } = req.user;
-  const { email } = req.ctx.token;
-
-  if (isVerified) {
-    return res.status(409).send({
-      message: error.api.emailVerify.emailAlreadyVerified,
-      code: "EMAIL_VERIFIED",
-    });
-  }
+  const { email } = req.token;
 
   try {
+    const user = await getUserByEmail(database, email);
+    if (!user) {
+      res.status(404).send({
+        message: error.middleware.user.userNotFound,
+        code: "USER_NOT_FOUND",
+      });
+      return;
+    }
+
+    if (user.isVerified) {
+      res.status(409).send({
+        message: error.api.emailVerify.emailAlreadyVerified,
+        code: "EMAIL_VERIFIED",
+      });
+      return;
+    }
+
     const verifyUser = await database("users")
       .update({
         isVerified: true,
