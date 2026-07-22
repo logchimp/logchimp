@@ -1,6 +1,7 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 
 import { useUserStore } from "../store/user";
+import getAuthHeaders from "../utils/getAuthHeaders";
 
 /**
  * Abstract base class for making HTTP requests using axios
@@ -20,9 +21,7 @@ export abstract class APIService {
     this.baseURL = baseURL;
     this.axiosInstance = axios.create({
       baseURL,
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: getAuthHeaders(authToken),
     });
   }
 
