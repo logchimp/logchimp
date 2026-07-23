@@ -5,6 +5,7 @@ import type { Request, Response, NextFunction } from "express";
 import express from "express";
 import cors from "cors";
 
+import config from "./config";
 import routes from "./routes";
 
 const app = express();
@@ -13,8 +14,10 @@ app.disable("x-powered-by");
 // contains key-value pairs of data submitted in the request body
 app.use(express.json());
 
-// enable all CORS requests
-app.use(cors());
+app.use(cors({
+  origin: config.get("cors:allowedOrigins"),
+  credentials: true,
+}));
 
 // import all routes
 app.use(routes);
