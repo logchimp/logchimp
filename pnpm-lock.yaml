@@ -45,14 +45,14 @@ importers:
         specifier: ^2.8.6
         version: 2.8.6
       dompurify:
-        specifier: ^3.4.2
-        version: 3.4.11
+        specifier: ^3.4.12
+        version: 3.4.12
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
       express:
         specifier: ^4.22.2
-        version: 4.22.2(supports-color@5.5.0)
+        version: 4.22.2
       fs-extra:
         specifier: ^11.3.6
         version: 11.3.6
@@ -61,16 +61,16 @@ importers:
         version: 8.2.1
       iovalkey:
         specifier: ^0.3.3
-        version: 0.3.3(supports-color@5.5.0)
+        version: 0.3.3
       jsdom:
         specifier: ^20.0.3
-        version: 20.0.3(supports-color@5.5.0)
+        version: 20.0.3
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
       knex:
         specifier: ^2.5.1
-        version: 2.5.1(pg@8.19.0)(supports-color@5.5.0)
+        version: 2.5.1(pg@8.19.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -155,7 +155,7 @@ importers:
         version: 3.1.14
       supertest:
         specifier: ^7.1.4
-        version: 7.1.4(supports-color@5.5.0)
+        version: 7.1.4
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@24.11.0)(typescript@5.9.3)
@@ -164,7 +164,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 3.2.6
-        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0)
+        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3)(lightningcss@1.30.2)(sass@1.69.5)
 
   packages/theme:
     dependencies:
@@ -188,7 +188,7 @@ importers:
         version: 1.3.1(vue@3.5.34(typescript@5.9.3))
       axios:
         specifier: 1.18.0
-        version: 1.18.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
+        version: 1.18.0
       canvas-confetti:
         specifier: ^1.9.4
         version: 1.9.4
@@ -196,8 +196,8 @@ importers:
         specifier: 1.11.21
         version: 1.11.21
       dompurify:
-        specifier: ^3.4.11
-        version: 3.4.11
+        specifier: ^3.4.12
+        version: 3.4.12
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.34(typescript@5.9.3))
@@ -243,7 +243,7 @@ importers:
         version: 0.9.1(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3))
       jsdom:
         specifier: ^20.0.3
-        version: 20.0.3(supports-color@5.5.0)
+        version: 20.0.3
       sass:
         specifier: 1.69.5
         version: 1.69.5
@@ -255,7 +255,7 @@ importers:
         version: 6.4.3(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
       vitest:
         specifier: 3.2.6
-        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0)
+        version: 3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3)(lightningcss@1.30.2)(sass@1.69.5)
       vue-tsc:
         specifier: 3.1.5
         version: 3.1.5(typescript@5.9.3)
@@ -264,7 +264,7 @@ importers:
     devDependencies:
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.14)(supports-color@5.5.0)(typescript@5.9.3)
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.14)(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -1791,8 +1791,8 @@ packages:
     resolution: {integrity: sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==}
     engines: {node: '>= 4'}
 
-  dompurify@3.4.11:
-    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+  dompurify@3.4.12:
+    resolution: {integrity: sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg==}
 
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
@@ -3943,7 +3943,7 @@ snapshots:
 
   '@types/dompurify@3.2.0':
     dependencies:
-      dompurify: 3.4.11
+      dompurify: 3.4.12
 
   '@types/estree@1.0.8': {}
 
@@ -4285,7 +4285,7 @@ snapshots:
 
   acorn@8.15.0: {}
 
-  agent-base@6.0.2(supports-color@5.5.0):
+  agent-base@6.0.2:
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
@@ -4326,11 +4326,11 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.18.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0):
+  axios@1.18.0:
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@5.5.0))
+      follow-redirects: 1.16.0
       form-data: 4.0.5
-      https-proxy-agent: 5.0.1(supports-color@5.5.0)
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -4344,11 +4344,11 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  body-parser@1.20.6(supports-color@5.5.0):
+  body-parser@1.20.6:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       http-errors: 2.0.1
@@ -4517,23 +4517,17 @@ snapshots:
 
   dayjs@1.11.21: {}
 
-  debug@2.6.9(supports-color@5.5.0):
+  debug@2.6.9:
     dependencies:
       ms: 2.0.0
-    optionalDependencies:
-      supports-color: 5.5.0
 
-  debug@4.3.4(supports-color@5.5.0):
+  debug@4.3.4:
     dependencies:
       ms: 2.1.2
-    optionalDependencies:
-      supports-color: 5.5.0
 
-  debug@4.4.1(supports-color@5.5.0):
+  debug@4.4.1:
     dependencies:
       ms: 2.1.3
-    optionalDependencies:
-      supports-color: 5.5.0
 
   debug@4.4.3(supports-color@5.5.0):
     dependencies:
@@ -4584,7 +4578,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.4.11:
+  dompurify@3.4.12:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -4741,21 +4735,21 @@ snapshots:
 
   expect-type@1.2.2: {}
 
-  express@4.22.2(supports-color@5.5.0):
+  express@4.22.2:
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.6(supports-color@5.5.0)
+      body-parser: 1.20.6
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.0.7
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 1.3.2(supports-color@5.5.0)
+      finalhandler: 1.3.2
       fresh: 0.5.2
       http-errors: 2.0.1
       merge-descriptors: 1.0.3
@@ -4767,8 +4761,8 @@ snapshots:
       qs: 6.15.3
       range-parser: 1.2.1
       safe-buffer: 5.2.1
-      send: 0.19.2(supports-color@5.5.0)
-      serve-static: 1.16.3(supports-color@5.5.0)
+      send: 0.19.2
+      serve-static: 1.16.3
       setprototypeof: 1.2.0
       statuses: 2.0.2
       type-is: 1.6.18
@@ -4789,9 +4783,9 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
-  finalhandler@1.3.2(supports-color@5.5.0):
+  finalhandler@1.3.2:
     dependencies:
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -4809,9 +4803,7 @@ snapshots:
 
   fn.name@1.1.0: {}
 
-  follow-redirects@1.16.0(debug@4.4.3(supports-color@5.5.0)):
-    optionalDependencies:
-      debug: 4.4.3(supports-color@5.5.0)
+  follow-redirects@1.16.0: {}
 
   foreground-child@3.3.1:
     dependencies:
@@ -4933,17 +4925,17 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  http-proxy-agent@5.0.0(supports-color@5.5.0):
+  http-proxy-agent@5.0.0:
     dependencies:
       '@tootallnate/once': 2.0.0
-      agent-base: 6.0.2(supports-color@5.5.0)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1(supports-color@5.5.0):
+  https-proxy-agent@5.0.1:
     dependencies:
-      agent-base: 6.0.2(supports-color@5.5.0)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
@@ -4966,11 +4958,11 @@ snapshots:
 
   interpret@2.2.0: {}
 
-  iovalkey@0.3.3(supports-color@5.5.0):
+  iovalkey@0.3.3:
     dependencies:
       '@iovalkey/commands': 0.1.0
       cluster-key-slot: 1.1.2
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -5030,7 +5022,7 @@ snapshots:
 
   js-tokens@9.0.1: {}
 
-  jsdom@20.0.3(supports-color@5.5.0):
+  jsdom@20.0.3:
     dependencies:
       abab: 2.0.6
       acorn: 8.15.0
@@ -5043,8 +5035,8 @@ snapshots:
       escodegen: 2.1.0
       form-data: 4.0.5
       html-encoding-sniffer: 3.0.0
-      http-proxy-agent: 5.0.0(supports-color@5.5.0)
-      https-proxy-agent: 5.0.1(supports-color@5.5.0)
+      http-proxy-agent: 5.0.0
+      https-proxy-agent: 5.0.1
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.20
       parse5: 7.3.0
@@ -5093,11 +5085,11 @@ snapshots:
       jwa: 2.0.1
       safe-buffer: 5.2.1
 
-  knex@2.5.1(pg@8.19.0)(supports-color@5.5.0):
+  knex@2.5.1(pg@8.19.0):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       escalade: 3.2.0
       esm: 3.2.25
       get-package-type: 0.1.0
@@ -5673,9 +5665,9 @@ snapshots:
 
   semver@7.7.4: {}
 
-  send@0.19.2(supports-color@5.5.0):
+  send@0.19.2:
     dependencies:
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 2.0.0
@@ -5691,12 +5683,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serve-static@1.16.3(supports-color@5.5.0):
+  serve-static@1.16.3:
     dependencies:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 0.19.2(supports-color@5.5.0)
+      send: 0.19.2
     transitivePeerDependencies:
       - supports-color
 
@@ -5816,7 +5808,7 @@ snapshots:
       pirates: 4.0.7
       ts-interface-checker: 0.1.13
 
-  superagent@10.2.3(supports-color@5.5.0):
+  superagent@10.2.3:
     dependencies:
       component-emitter: 1.3.1
       cookiejar: 2.1.4
@@ -5830,10 +5822,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  supertest@7.1.4(supports-color@5.5.0):
+  supertest@7.1.4:
     dependencies:
       methods: 1.1.2
-      superagent: 10.2.3(supports-color@5.5.0)
+      superagent: 10.2.3
     transitivePeerDependencies:
       - supports-color
 
@@ -5923,7 +5915,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.5.1(jiti@2.6.1)(postcss@8.5.14)(supports-color@5.5.0)(typescript@5.9.3):
+  tsup@8.5.1(jiti@2.6.1)(postcss@8.5.14)(typescript@5.9.3):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.27.3)
       cac: 6.7.14
@@ -6000,7 +5992,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-node@3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0):
+  vite-node@3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3(supports-color@5.5.0)
@@ -6036,7 +6028,7 @@ snapshots:
       lightningcss: 1.30.2
       sass: 1.69.5
 
-  vitest@3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0):
+  vitest@3.2.6(@types/node@24.11.0)(jiti@2.6.1)(jsdom@20.0.3)(lightningcss@1.30.2)(sass@1.69.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.6
@@ -6059,11 +6051,11 @@ snapshots:
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
       vite: 6.4.3(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
-      vite-node: 3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)(supports-color@5.5.0)
+      vite-node: 3.2.4(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.69.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.11.0
-      jsdom: 20.0.3(supports-color@5.5.0)
+      jsdom: 20.0.3
     transitivePeerDependencies:
       - jiti
       - less
