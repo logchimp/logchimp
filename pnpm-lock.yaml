@@ -46,7 +46,7 @@ importers:
         version: 2.8.6
       dompurify:
         specifier: ^3.4.2
-        version: 3.4.11
+        version: 3.4.12
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -197,7 +197,7 @@ importers:
         version: 1.11.21
       dompurify:
         specifier: ^3.4.11
-        version: 3.4.11
+        version: 3.4.12
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.34(typescript@5.9.3))
@@ -1791,8 +1791,8 @@ packages:
     resolution: {integrity: sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==}
     engines: {node: '>= 4'}
 
-  dompurify@3.4.11:
-    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+  dompurify@3.4.12:
+    resolution: {integrity: sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg==}
 
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
@@ -3943,7 +3943,7 @@ snapshots:
 
   '@types/dompurify@3.2.0':
     dependencies:
-      dompurify: 3.4.11
+      dompurify: 3.4.12
 
   '@types/estree@1.0.8': {}
 
@@ -4584,7 +4584,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.4.11:
+  dompurify@3.4.12:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
