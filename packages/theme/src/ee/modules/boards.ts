@@ -17,6 +17,7 @@ import type {
 
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
+import getAuthHeaders from "../../utils/getAuthHeaders";
 
 /**
  *  Get public boards
@@ -42,9 +43,7 @@ export const getPublicBoards = async ({
       first,
       created,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -70,9 +69,7 @@ export const getAllBoards = async ({
       limit,
       created,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -89,9 +86,7 @@ export const getBoardByUrl = async (
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards/${encodeURIComponent(url)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -108,9 +103,7 @@ export const searchBoard = async (
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/boards/search/${encodeURIComponent(name)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -136,9 +129,7 @@ export const createBoard = async ({
       name,
       display,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -164,9 +155,7 @@ export const updateBoard = async (
     data: {
       ...board,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -186,9 +175,7 @@ export const deleteBoard = async (
     data: {
       boardId,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -207,9 +194,7 @@ export const checkBoardName = async (
     data: {
       name,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -227,8 +212,6 @@ export const checkBoardSlug = async (
     data: {
       url,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };

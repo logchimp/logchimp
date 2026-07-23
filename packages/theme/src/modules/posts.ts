@@ -14,6 +14,7 @@ import type {
 
 import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
+import getAuthHeaders from "../utils/getAuthHeaders";
 import { APIService } from "./api.ts";
 
 export class Posts extends APIService {
@@ -68,9 +69,7 @@ export const createPost = async (
       userId: getUserId,
       boardId: post.boardId,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -103,9 +102,7 @@ export const getPosts = async ({
       boardId,
       roadmapId,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -125,9 +122,7 @@ export const getPostBySlug = async (
     data: {
       slug,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -154,8 +149,6 @@ export const updatePost = async (
     data: {
       ...post,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
