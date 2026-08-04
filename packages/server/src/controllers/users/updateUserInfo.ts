@@ -8,6 +8,15 @@ import error from "../../errorResponse.json";
 export async function updateUserInfo(req: Request, res: Response) {
   const { user_id } = req.params;
   const { username, name, notes } = req.body;
+  const authenticatedUserId = req.user?.userId;
+
+  if (authenticatedUserId !== user_id) {
+    res.status(403).send({
+      message: error.general.accessDenied,
+      code: "ACCESS_DENIED",
+    });
+    return;
+  }
 
   try {
     const user = await database
