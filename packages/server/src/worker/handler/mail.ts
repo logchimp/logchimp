@@ -1,8 +1,18 @@
-import { type Job, Worker, type ConnectionOptions } from "bullmq";
+import { type ConnectionOptions, type Job, Worker } from "bullmq";
 
 class MailWorker {
-  constructor(name: string, connection: ConnectionOptions) {
-    new Worker(name, this.handler, {
+  private workerInstance: Worker;
+
+  private readonly workerName: string;
+
+  constructor(name: string) {
+    this.workerName = name;
+  }
+
+  async run(connection: ConnectionOptions) {
+    if (!connection) return;
+
+    this.workerInstance = new Worker(this.workerName, this.handler, {
       autorun: false,
       connection,
       removeOnComplete: {
@@ -13,6 +23,12 @@ class MailWorker {
         duration: 2000,
       },
     });
+
+    try {
+      await this.workerInstance.run();
+    } catch (error) {
+      throw new Error(`failed to run mail worker with error: ${error}`);
+    }
   }
 
   handler(job: Job) {
@@ -20,5 +36,4 @@ class MailWorker {
   }
 }
 
-export const mailWorker = (connection: ConnectionOptions) =>
-  new MailWorker("mail", connection);
+export const mailWorker = new MailWorker("mail");

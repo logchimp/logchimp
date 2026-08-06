@@ -28,5 +28,5 @@ const host = config.serverHost || "0.0.0.0";
 
   // Run background worker
   const connection = await createWorkerClient();
-  mailWorker(connection);
+  await mailWorker.run(connection);
 })();
