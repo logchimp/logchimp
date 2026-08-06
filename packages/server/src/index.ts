@@ -3,6 +3,9 @@ const startTime = Date.now();
 import app from "./app";
 import { ready as routesReady } from "./routes/v1";
 
+import { createWorkerClient } from "./worker/client";
+import { mailWorker } from "./worker/handler/mail";
+
 // utils
 import logger from "./utils/logger";
 import { configManager } from "./utils/logchimpConfig";
@@ -22,4 +25,8 @@ const host = config.serverHost || "0.0.0.0";
     logger.info("Ctrl+C to shut down");
     logger.info(`LogChimp boot ${(Date.now() - startTime) / 1000}s`);
   });
+
+  // Run background worker
+  const connection = await createWorkerClient();
+  mailWorker(connection);
 })();

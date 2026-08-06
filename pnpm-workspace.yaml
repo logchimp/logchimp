@@ -5,4 +5,5 @@ allowBuilds:
   esbuild: true
   lefthook: true
   msgpackr-extract: true
+  protobufjs: true
   vue-demi: true
