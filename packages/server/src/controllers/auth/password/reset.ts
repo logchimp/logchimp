@@ -6,15 +6,16 @@ import type {
 } from "@logchimp/types";
 
 // services
-import { passwordReset as passwordResetEmail } from "../../../services/auth/passwordReset";
+import { sendPasswordResetTokenMail } from "../../../services/mail/mail.service";
 
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import { isDevTestEnv, validEmail } from "../../../helpers";
+import { validEmail } from "../../../helpers";
 import type { IPasswordResetJwtPayload } from "../../../types";
 import { getUserByEmail } from "../../../repository/user";
 import database from "../../../database";
+import { mailQueue } from "../../../worker/tasks/mail";
 
 type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
 
@@ -45,29 +46,19 @@ export async function reset(req: Request, res: Response<ResponseBody>) {
       type: "resetPassword",
     };
 
-    const passwordReset = await passwordResetEmail(tokenPayload);
-    if (!passwordReset) {
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
-      return;
-    }
-
-    /**
-     * sending token as response for
-     * development/testing/staging environment
-     */
-    const __token = isDevTestEnv
-      ? {
-          ...passwordReset,
-        }
-      : undefined;
+    await mailQueue.sendPasswordResetTokenMail(tokenPayload);
+    // const passwordReset = await sendPasswordResetTokenMail(tokenPayload);
+    // if (!passwordReset) {
+    //   res.status(500).send({
+    //     message: error.general.serverError,
+    //     code: "SERVER_ERROR",
+    //   });
+    //   return;
+    // }
 
     res.status(200).send({
       reset: {
-        success: Boolean(passwordReset.createdAt),
-        __token,
+        success: true,
       },
     });
   } catch (err) {

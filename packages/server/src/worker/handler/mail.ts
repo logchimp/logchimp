@@ -1,6 +1,9 @@
 import { type ConnectionOptions, type Job, Worker } from "bullmq";
 import logger from "../../utils/logger";
 
+import { mailQueueName } from "../tasks/mail";
+import * as mailService from "../../services/mail/mail.service";
+
 class MailWorker {
   private workerInstance: Worker;
 
@@ -34,9 +37,20 @@ class MailWorker {
     });
   }
 
-  handler(job: Job) {
+  private async handler(job: Job) {
+    const name = job.name;
+    const data = job.data;
+
+    if (name in mailService) {
+      await mailService[name](data);
+    } else {
+      await job.moveToFailed(Error(`job name '${name}' not found`), job.token);
+    }
+
     return null;
   }
+
+  private sendMail() {}
 }
 
-export const mailWorker = new MailWorker("mail");
+export const mailWorker = new MailWorker(mailQueueName);

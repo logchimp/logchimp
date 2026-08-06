@@ -1,20 +1,18 @@
 import type { TResetPassword } from "@logchimp/types";
 
-import database from "../../database";
-
-// services
-import { mail, generateContent } from "../mail";
-import { createToken } from "../token.service";
-
-// utils
-import { configManager } from "../../utils/logchimpConfig";
-import logger from "../../utils/logger";
 import type { IPasswordResetJwtPayload } from "../../types";
-import type { EmailPasswordReset } from "../mail/types";
+import { createToken } from "../token.service";
+import database from "../../database";
+import { generateContent } from "./generateContent";
+import type { EmailPasswordReset } from "./types";
+import { mail } from "./mail";
+import { configManager } from "../../utils/logchimpConfig";
 
 const config = configManager.getConfig();
 
-export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
+export async function sendPasswordResetTokenMail(
+  tokenPayload: IPasswordResetJwtPayload,
+) {
   const token = createToken(tokenPayload, {
     expiresIn: "2h",
   });
@@ -87,6 +85,6 @@ export async function passwordReset(tokenPayload: IPasswordResetJwtPayload) {
 
     return insertPasswordResetToken[0];
   } catch (err) {
-    logger.error(err);
+    throw new Error(err);
   }
 }

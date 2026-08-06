@@ -45,7 +45,6 @@ export interface IAuthPasswordResetRequestBody {
 export interface IAuthPasswordResetResponseBody {
   reset: {
     success: boolean;
-    __token?: TResetPassword;
   };
 }
 
