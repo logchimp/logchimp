@@ -16,6 +16,7 @@ import type { IPasswordResetJwtPayload } from "../../../types";
 import { getUserByEmail } from "../../../repository/user";
 import database from "../../../database";
 import { mailQueue } from "../../../worker/tasks/mail";
+import { mailWorker } from "../../../worker/handler/mail";
 
 type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
 
@@ -46,15 +47,11 @@ export async function reset(req: Request, res: Response<ResponseBody>) {
       type: "resetPassword",
     };
 
-    await mailQueue.sendPasswordResetTokenMail(tokenPayload);
-    // const passwordReset = await sendPasswordResetTokenMail(tokenPayload);
-    // if (!passwordReset) {
-    //   res.status(500).send({
-    //     message: error.general.serverError,
-    //     code: "SERVER_ERROR",
-    //   });
-    //   return;
-    // }
+    if (mailWorker.isRunning) {
+      await mailQueue.sendPasswordResetTokenMail(tokenPayload);
+    } else {
+      await sendPasswordResetTokenMail(tokenPayload);
+    }
 
     res.status(200).send({
       reset: {

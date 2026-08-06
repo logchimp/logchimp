@@ -8,6 +8,7 @@ class MailWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
+  isRunning: boolean = false;
 
   constructor(name: string) {
     this.workerName = name;
@@ -30,10 +31,19 @@ class MailWorker {
 
     this.workerInstance.run().catch((err) => {
       logger.error("Worker stopped unexpectedly:", err);
+      this.isRunning = true;
+    });
+
+    this.workerInstance.on("ready", () => {
+      this.isRunning = true;
     });
 
     this.workerInstance.on("error", (err) => {
       logger.error("Mail worker error:", err);
+    });
+
+    this.workerInstance.on("closed", () => {
+      this.isRunning = false;
     });
   }
 
