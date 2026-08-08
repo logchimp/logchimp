@@ -4,8 +4,8 @@ import app from "./app";
 import { ready as routesReady } from "./routes/v1";
 
 import { createWorkerClient } from "./worker/client";
-import { mailQueue } from "./worker/tasks/mail";
-import { mailWorker } from "./worker/handler/mail";
+import Queues from "./worker/tasks";
+import Workers from "./worker/handler";
 
 // utils
 import logger from "./utils/logger";
@@ -22,8 +22,8 @@ const host = config.serverHost || "0.0.0.0";
 
   // Run background worker
   const connection = await createWorkerClient();
-  mailQueue.init(connection);
-  await mailWorker.run(connection);
+  Queues.map((worker) => worker.init(connection));
+  await Promise.all(Workers.map((worker) => worker.run(connection)));
 
   app.listen(port, host, async () => {
     logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
