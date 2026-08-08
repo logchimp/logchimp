@@ -42,9 +42,9 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
         }>
       >("u.name", "u.email", "u.username")
       .from("votes as v")
-      .innerJoin("users as u", "v.user_id", "u.id")
+      .innerJoin("users as u", "v.userId", "u.userId")
       .where({
-        "v.post_id": payload.postId,
+        "v.postId": payload.postId,
         "u.isBlocked": false,
       });
 
