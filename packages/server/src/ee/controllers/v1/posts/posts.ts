@@ -15,6 +15,7 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import type { GetPostStatement } from "../../../../middlewares/postExists";
 import * as roadmapRepo from "../../../repository/roadmap";
+import { postsQueue } from "../../../../worker/tasks/posts";
 import xss from "xss";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
@@ -80,6 +81,10 @@ export async function updatePost(
   let newRoadmap: IRoadmapPrivate = null;
   if (currentRoadmapId !== newRoadmapId) {
     newRoadmap = await roadmapRepo.getById(database, newRoadmapId);
+
+    await postsQueue.postRoadmapChangeEvent({
+      postId: id,
+    });
   }
 
   const slug = `${title
