@@ -80,11 +80,18 @@ export async function updatePost(
 
   let newRoadmap: IRoadmapPrivate = null;
   if (currentRoadmapId !== newRoadmapId) {
-    newRoadmap = await roadmapRepo.getById(database, newRoadmapId);
+    try {
+      newRoadmap = await roadmapRepo.getById(database, newRoadmapId);
 
-    await postsQueue.postRoadmapChangeEvent({
-      postId: id,
-    });
+      await postsQueue.postRoadmapChangeEvent({
+        postId: id,
+      });
+    } catch (err) {
+      logger.log({
+        level: "error",
+        message: err,
+      });
+    }
   }
 
   const slug = `${title
