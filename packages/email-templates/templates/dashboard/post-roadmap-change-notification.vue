@@ -20,7 +20,7 @@ const data = {
       media="screen"
     >
     <Preheader>
-      Your post has an update - {{ preview('siteTitle', data.siteTitle) }}
+      Post you upvoted has an update - {{ preview('siteTitle', data.siteTitle) }}
     </Preheader>
 
     <Container class="max-w-xl">
