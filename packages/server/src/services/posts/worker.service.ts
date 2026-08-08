@@ -2,11 +2,20 @@ import type { IRoadmapPrivate } from "@logchimp/types";
 
 import type { IPostRoadmapChangeEvent } from "./types";
 import database from "../../database";
+import { mailQueue } from "../../worker/tasks/mail";
+import type { ISendPostRoadmapChangeMailPayload } from "../mail/types";
 
 export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
   try {
-    const getRoadmap = await database
-      .select<IRoadmapPrivate>(
+    const getPostRoadmap = await database
+      .select<
+        {
+          title: string;
+          contentMarkdown: string | null;
+        } & IRoadmapPrivate
+      >(
+        "p.title",
+        "p.contentMarkdown",
         "r.id",
         "r.name",
         "r.display",
@@ -20,12 +29,18 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
       .where("p.id", payload.postId)
       .first();
 
-    if (!getRoadmap) {
+    if (!getPostRoadmap) {
       return;
     }
 
     const getVoters = await database
-      .select<Array<{ userId: string }>>("u.name", "u.email", "u.username")
+      .select<
+        Array<{
+          name: string | null;
+          email: string;
+          username: string;
+        }>
+      >("u.name", "u.email", "u.username")
       .from("votes as v")
       .innerJoin("users as u", "v.user_id", "u.id")
       .where({
@@ -41,7 +56,19 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
       `Post (ID: ${payload.postId}) has ${getVoters.length} upvoters`,
     );
 
-    // TODO: queue send post roadmap change mail
+    const sendPostRoadmapChangeMailPayload: Array<ISendPostRoadmapChangeMailPayload> =
+      [];
+    for (let i = 0; i < getVoters.length; i++) {
+      sendPostRoadmapChangeMailPayload.push({
+        displayName: getVoters[i].name || getVoters[i].username,
+        recipientEmail: getVoters[i].email,
+        postTitle: getPostRoadmap.title,
+        postDescription: getPostRoadmap.contentMarkdown,
+        roadmapTitle: getPostRoadmap.name,
+        roadmapColor: getPostRoadmap.color,
+      });
+    }
+    await mailQueue.sendPostRoadmapChangeMail(sendPostRoadmapChangeMailPayload);
   } catch (error) {
     throw new Error(error);
   }
