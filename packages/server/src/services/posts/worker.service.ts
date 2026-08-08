@@ -26,7 +26,7 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
       )
       .from("posts as p")
       .innerJoin("roadmaps as r", "p.roadmap_id", "r.id")
-      .where("p.id", payload.postId)
+      .where("p.postId", payload.postId)
       .first();
 
     if (!getPostRoadmap) {
