@@ -2,14 +2,15 @@ import { type ConnectionOptions, type Job, Worker } from "bullmq";
 import logger from "../../utils/logger";
 
 import { mailQueueName } from "../tasks/mail";
-import * as mailService from "../../services/mail/mail.service";
+import * as mailWorkerService from "../../services/mail/worker.service";
 
 type MailJobHandler = (data: unknown) => Promise<unknown>;
 
-class MailWorker {
+export class MailWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
+  private eeServices: any;
   isRunning: boolean = false;
 
   constructor(name: string) {
@@ -38,6 +39,7 @@ class MailWorker {
 
     this.workerInstance.on("ready", () => {
       this.isRunning = true;
+      this.getEEService();
     });
 
     this.workerInstance.on("error", (err) => {
@@ -49,8 +51,20 @@ class MailWorker {
     });
   }
 
+  private async getEEService() {
+    try {
+      this.eeServices = (
+        await (await import("../../ee/worker/handler/mail")).getMailWorker()
+      ).mail;
+    } catch (_e) {}
+  }
+
   private getHandlers(): Record<string, MailJobHandler> {
-    return Object.assign(Object.create(null), mailService);
+    return Object.assign(
+      Object.create(null),
+      mailWorkerService,
+      this.eeServices,
+    );
   }
 
   private async handler(job: Job) {

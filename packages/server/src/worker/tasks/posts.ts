@@ -1,12 +1,10 @@
 import { type ConnectionOptions, Queue, type QueueOptions } from "bullmq";
 
-import type { IPostRoadmapChangeEvent } from "../../services/posts/types";
-
 type BaseQueueOptions = Omit<QueueOptions, "connection">;
 
 export const postsQueueName = "posts";
-class PostsQueue {
-  private queueInstance: Queue;
+export class PostsQueue {
+  queueInstance: Queue;
 
   private readonly queueName: string;
   private readonly queueOptions: BaseQueueOptions;
@@ -25,10 +23,6 @@ class PostsQueue {
       ...this.queueOptions,
       connection: connection as ConnectionOptions,
     });
-  }
-
-  postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
-    return this.queueInstance.add("postRoadmapChangeEvent", payload);
   }
 }
 

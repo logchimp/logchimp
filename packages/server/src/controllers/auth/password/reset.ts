@@ -6,7 +6,7 @@ import type {
 } from "@logchimp/types";
 
 // services
-import { sendPasswordResetTokenMail } from "../../../services/mail/mail.service";
+import { sendPasswordResetTokenMail } from "../../../services/mail/worker.service";
 
 // utils
 import logger from "../../../utils/logger";

@@ -6,10 +6,11 @@ import * as postsWorkerService from "../../services/posts/worker.service";
 
 type MailJobHandler = (data: unknown) => Promise<unknown>;
 
-class PostsWorker {
+export class PostsWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
+  private eeServices: any;
   isRunning: boolean = false;
 
   constructor(name: string) {
@@ -38,6 +39,7 @@ class PostsWorker {
 
     this.workerInstance.on("ready", () => {
       this.isRunning = true;
+      this.getEEService();
     });
 
     this.workerInstance.on("error", (err) => {
@@ -49,8 +51,20 @@ class PostsWorker {
     });
   }
 
+  private async getEEService() {
+    try {
+      this.eeServices = (
+        await (await import("../../ee/worker/handler/posts")).getPostsWorker()
+      ).posts;
+    } catch (_e) {}
+  }
+
   private getHandlers(): Record<string, MailJobHandler> {
-    return Object.assign(Object.create(null), postsWorkerService);
+    return Object.assign(
+      Object.create(null),
+      postsWorkerService,
+      this.eeServices,
+    );
   }
 
   private async handler(job: Job) {
