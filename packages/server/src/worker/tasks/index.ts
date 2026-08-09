@@ -1,12 +1,13 @@
 import { mailQueue } from "./mail";
 import { postsQueue } from "./posts";
 
-let queues = [mailQueue, postsQueue];
-
-(async () => {
+async function loadQueues() {
   try {
-    queues = await (await import("../../ee/worker/tasks")).getEEQueues();
-  } catch (_) {}
-})();
+    const { getEEQueues } = await import("../../ee/worker/tasks");
+    return await getEEQueues();
+  } catch (_) {
+    return [mailQueue, postsQueue];
+  }
+}
 
-export default queues;
+export default loadQueues();
