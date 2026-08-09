@@ -7,11 +7,11 @@ export async function getPostsWorker() {
 
   if ("code" in result || result.status !== "active") {
     return {
-      posts: postsWorkerService,
+      posts: {},
     };
   }
 
   return {
-    posts: {},
+    posts: postsWorkerService,
   };
 }

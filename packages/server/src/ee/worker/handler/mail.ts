@@ -7,11 +7,11 @@ export async function getMailWorker() {
 
   if ("code" in result || result.status !== "active") {
     return {
-      mail: mailWorkerService,
+      mail: {},
     };
   }
 
   return {
-    mail: {},
+    mail: mailWorkerService,
   };
 }
