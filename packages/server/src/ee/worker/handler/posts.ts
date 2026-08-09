@@ -1,4 +1,4 @@
-import * as postsWorkerService from "../tasks/posts";
+import * as postsWorkerService from "../../services/posts/worker.service";
 
 import { checkLicense as checkLicenseService } from "../../do-not-remove/services/checkLicense";
 

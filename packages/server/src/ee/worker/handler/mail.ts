@@ -1,4 +1,4 @@
-import * as mailWorkerService from "../tasks/mail";
+import * as mailWorkerService from "../../services/mail/worker.service";
 
 import { checkLicense as checkLicenseService } from "../../do-not-remove/services/checkLicense";
 
