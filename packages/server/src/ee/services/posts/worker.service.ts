@@ -71,7 +71,7 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
         recipientEmail: getVoters[i].email,
         postUrl: `${urlObject.origin}/posts/${getPostRoadmap.slug}`,
         postTitle: getPostRoadmap.title,
-        postDescription: getPostRoadmap.contentMarkdown,
+        postDescription: getPostRoadmap.contentMarkdown || "",
         roadmapTitle: getPostRoadmap.name,
         roadmapColor: getPostRoadmap.color,
       });
