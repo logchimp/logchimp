@@ -6,7 +6,7 @@ import * as postsWorkerService from "../../services/posts/worker.service";
 
 type MailJobHandler = (data: unknown) => Promise<unknown>;
 
-export class PostsWorker {
+class PostsWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
