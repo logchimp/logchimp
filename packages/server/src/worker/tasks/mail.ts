@@ -6,7 +6,7 @@ type BaseQueueOptions = Omit<QueueOptions, "connection">;
 
 export const mailQueueName = "trx-mails";
 export class MailQueue {
-  queueInstance: Queue;
+  protected queueInstance: Queue | null = null;
 
   private readonly queueName: string;
   private readonly queueOptions: BaseQueueOptions;

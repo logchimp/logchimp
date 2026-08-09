@@ -4,7 +4,7 @@ type BaseQueueOptions = Omit<QueueOptions, "connection">;
 
 export const postsQueueName = "posts";
 export class PostsQueue {
-  queueInstance: Queue;
+  protected queueInstance: Queue | null = null;
 
   private readonly queueName: string;
   private readonly queueOptions: BaseQueueOptions;
