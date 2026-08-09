@@ -38,9 +38,9 @@ export class MailWorker {
       this.isRunning = false;
     });
 
-    this.workerInstance.on("ready", () => {
+    this.workerInstance.on("ready", async () => {
       this.isRunning = true;
-      this.getEEService();
+      await this.getEEService();
     });
 
     this.workerInstance.on("error", (err) => {
