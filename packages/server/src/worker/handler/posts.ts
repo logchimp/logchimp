@@ -10,7 +10,8 @@ export class PostsWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
-  private eeServices: any;
+  private eeServices: Record<string, any> = {};
+  private eeLoaded = false;
   isRunning: boolean = false;
 
   constructor(name: string) {
@@ -52,11 +53,16 @@ export class PostsWorker {
   }
 
   private async getEEService() {
+    if (this.eeLoaded) return;
     try {
-      this.eeServices = (
-        await (await import("../../ee/worker/handler/posts")).getPostsWorker()
-      ).posts;
-    } catch (_e) {}
+      const eeServiceImport = await import("../../ee/worker/handler/posts");
+      const eePostsService = await eeServiceImport.getPostsWorker();
+      this.eeServices = eePostsService.posts ?? {};
+    } catch (_) {
+      this.eeServices = {};
+    } finally {
+      this.eeLoaded = true;
+    }
   }
 
   private getHandlers(): Record<string, MailJobHandler> {
@@ -67,7 +73,7 @@ export class PostsWorker {
     );
   }
 
-  private async handler(job: Job) {
+  private handler = async (job: Job) => {
     const name = job.name;
     const data = job.data;
 
