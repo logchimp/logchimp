@@ -83,4 +83,4 @@ This helps us align efforts and prevents duplicated or conflicting work.
 
 ## Stargazers over time
 
-[![Star History Chart](https://api.star-history.com/svg?repos=logchimp/logchimp&type=timeline&legend=top-left)](https://www.star-history.com/#logchimp/logchimp&type=timeline&legend=top-left)
+[![Star History Chart](https://star-history.dera.page/svg?repos=logchimp/logchimp&type=timeline&legend=top-left)](https://star-history.dera.page/#logchimp/logchimp&type=timeline&legend=top-left)
