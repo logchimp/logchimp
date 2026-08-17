@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  IRoadmapPrivate,
   IUpdatePostRequestBody,
   TPermission,
   TUpdatePostResponseBody,
@@ -25,6 +24,13 @@ const bodySchema = v.object({
     "POST_TITLE_MISSING",
   ),
   contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+  boardId: v.optional(v.nullable(v.string())),
+  roadmapId: v.optional(v.nullable(v.string())),
+  roadmap: v.optional(
+    v.object({
+      notifyVoters: v.boolean(),
+    }),
+  ),
 });
 
 const schemaBodyErrorMap = {
@@ -105,7 +111,10 @@ export async function updatePost(
       })
       .returning("*");
 
-    if (currentRoadmapId !== newRoadmapId) {
+    if (
+      body.output.roadmap?.notifyVoters &&
+      currentRoadmapId !== newRoadmapId
+    ) {
       try {
         await postsQueue.postRoadmapChangeEvent({
           postId: id,
