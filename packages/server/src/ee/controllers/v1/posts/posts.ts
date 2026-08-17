@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  IRoadmapPrivate,
   IUpdatePostRequestBody,
   TPermission,
   TUpdatePostResponseBody,
@@ -14,7 +13,6 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import type { GetPostStatement } from "../../../../middlewares/postExists";
-import * as roadmapRepo from "../../../repository/roadmap";
 import { postsQueue } from "../../../../worker/tasks/posts";
 import xss from "xss";
 
@@ -78,22 +76,6 @@ export async function updatePost(
   const title = xss((String(rawTitle) || "").trim());
   const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
 
-  let newRoadmap: IRoadmapPrivate = null;
-  if (currentRoadmapId !== newRoadmapId) {
-    try {
-      newRoadmap = await roadmapRepo.getById(database, newRoadmapId);
-
-      await postsQueue.postRoadmapChangeEvent({
-        postId: id,
-      });
-    } catch (err) {
-      logger.log({
-        level: "error",
-        message: err,
-      });
-    }
-  }
-
   const slug = `${title
     .replace(/[^\w\s]/gi, "")
     .replace(/\s\s+/gi, " ")
@@ -108,7 +90,7 @@ export async function updatePost(
         slug,
         contentMarkdown,
         boardId,
-        roadmap_id: newRoadmap?.id ?? undefined,
+        roadmap_id: newRoadmapId ?? undefined,
         updatedAt: new Date().toJSON(),
       })
       .from("posts")
@@ -117,8 +99,20 @@ export async function updatePost(
       })
       .returning("*");
 
-    const post = posts[0];
+    if (currentRoadmapId !== newRoadmapId) {
+      try {
+        await postsQueue.postRoadmapChangeEvent({
+          postId: id,
+        });
+      } catch (err) {
+        logger.log({
+          level: "error",
+          message: err,
+        });
+      }
+    }
 
+    const post = posts[0];
     res.status(200).send({ post });
   } catch (err) {
     logger.log({
