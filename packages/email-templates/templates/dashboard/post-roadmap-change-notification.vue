@@ -40,7 +40,7 @@ const data = {
         </a>, has been moved to <span
           class="font-bold"
           :style="{
-            color: preview('roadmapColor', data.roadmapColor)
+            color: `#${preview('roadmapColor', data.roadmapColor)}`
           }"
         >
           {{ preview('roadmapTitle', data.roadmapTitle) }}
