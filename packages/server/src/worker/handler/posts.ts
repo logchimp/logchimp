@@ -51,13 +51,19 @@ class PostsWorker {
     const name = job.name;
     const data = job.data;
 
-    if (name in postsWorkerService) {
-      await postsWorkerService[name](data);
-    } else {
+    if (!(name in postsWorkerService)) {
       await job.moveToFailed(Error(`job name '${name}' not found`), job.token);
+      return;
     }
 
-    return null;
+    try {
+      await postsWorkerService[name](data);
+    } catch (err) {
+      console.log("error processing job", err);
+      await job.log("error processing job");
+      await job.log(err);
+      await job.moveToFailed(err, job.token);
+    }
   }
 }
 
