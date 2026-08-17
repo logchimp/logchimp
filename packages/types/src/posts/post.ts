@@ -78,6 +78,9 @@ export interface IUpdatePostRequestBody {
   userId: string;
   boardId?: string | null;
   roadmapId?: string | null;
+  roadmap?: {
+    notifyVoters: boolean;
+  };
 }
 
 export type TUpdatePostResponseBody = ICreatePostResponseBody;

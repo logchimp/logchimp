@@ -68,14 +68,31 @@
         </div>
         <SearchRoadmapDropdown
           :roadmap="post.roadmap"
-          @selected="selectRoadmap" />
+          @selected="selectRoadmap"
+        />
+        <div
+          :class="[
+            isRoadmapModified ? 'text-neutral-800' : 'text-neutral-400',
+            'flex items-center justify-between mt-2'
+          ]"
+        >
+          <div class="text-sm">
+            Notify voters about this change?
+          </div>
+
+          <Checkbox
+            :modelValue="notifyVoters.roadmap"
+            @update:modelValue="notifyVoters.roadmap = $event"
+            :disabled="!isRoadmapModified"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
 import { storeToRefs } from "pinia";
 
@@ -98,6 +115,7 @@ import { MAX_TITLE_LENGTH } from "../../../../constants";
 import InputLabel from "../../../ui/input/InputLabel.vue";
 import LicenseCrown from "../../../../ee/components/icons/LicenseCrown.vue";
 import UpgradeTooltip from "../../../../ee/components/UpgradeTooltip.vue";
+import Checkbox from "../../../ui/Checkbox.vue";
 
 const dashboardPosts = useDashboardPosts();
 const settingsEEStore = useSettingsEEStore();
@@ -114,11 +132,16 @@ const saveBtnLoading = ref(false);
 const post = reactive<IDashboardPost>({
   ...props.post,
 });
-
+const notifyVoters = reactive({
+  roadmap: false,
+});
 const postFieldError = reactive({
   show: false,
   message: "",
 });
+const isRoadmapModified = computed(
+  () => post.roadmap?.id !== props.post.roadmap?.id,
+);
 
 function hideTitleError(event: FormFieldErrorType) {
   postFieldError.show = event.show;
@@ -143,6 +166,9 @@ async function updatePostHandler() {
       userId: post.author.userId,
       boardId: post.board ? post.board.boardId : null,
       roadmapId: post.roadmap ? post.roadmap.id : null,
+      roadmap: {
+        notifyVoters: notifyVoters.roadmap,
+      },
     });
 
     Object.assign(post, response.data.post);
