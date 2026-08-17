@@ -2,13 +2,16 @@ import type { IRoadmapPrivate } from "@logchimp/types";
 
 import type { IPostRoadmapChangeEvent } from "./types";
 import database from "../../../database";
-import { mailQueue } from "../../worker/tasks/mail";
+import { decodeCursor, encodeCursor } from "../../../utils/cursor";
 import type { ISendPostRoadmapChangeMailPayload } from "../mail/types";
+import { mailQueue } from "../../worker/tasks/mail";
 import { configManager } from "../../../utils/logchimpConfig";
 
 const config = configManager.getConfig();
 
 export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
+  const votersPaginationLimit = 60;
+
   try {
     const getPostRoadmap = await database
       .select<
@@ -38,45 +41,95 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
       return;
     }
 
-    const getVoters = await database
-      .select<
-        Array<{
-          name: string | null;
-          email: string;
-          username: string;
-        }>
-      >("u.name", "u.email", "u.username")
-      .from("votes as v")
-      .innerJoin("users as u", "v.userId", "u.userId")
-      .where({
-        "v.postId": payload.postId,
-        "u.isBlocked": false,
-      });
+    const totalCountQuery = await database
+      .count()
+      .from("votes")
+      .where("postId", payload.postId)
+      .first();
 
-    if (getVoters.length === 0) {
+    const totalVotersCount =
+      typeof totalCountQuery.count === "string"
+        ? Number.parseInt(totalCountQuery?.count, 10)
+        : totalCountQuery?.count;
+
+    if (totalVotersCount === 0) {
       return;
     }
 
     console.log(
-      `Post (ID: ${payload.postId}) has ${getVoters.length} upvoters`,
+      `Post (ID: ${payload.postId}) has total ${totalVotersCount} upvoters.`,
     );
 
-    const urlObject = new URL(config.webUrl);
+    let endCursor: string | null = null;
+    let hasNextPage = true;
+    while (hasNextPage) {
+      type GetVotersResponse = {
+        name: string | null;
+        email: string;
+        username: string;
+        voteId: string;
+        createdAt: string;
+      };
 
-    const sendPostRoadmapChangeMailPayload: Array<ISendPostRoadmapChangeMailPayload> =
-      [];
-    for (let i = 0; i < getVoters.length; i++) {
-      sendPostRoadmapChangeMailPayload.push({
-        displayName: getVoters[i].name || getVoters[i].username,
-        recipientEmail: getVoters[i].email,
-        postUrl: `${urlObject.origin}/posts/${getPostRoadmap.slug}`,
-        postTitle: getPostRoadmap.title,
-        postDescription: getPostRoadmap.contentMarkdown || "",
-        roadmapTitle: getPostRoadmap.name,
-        roadmapColor: getPostRoadmap.color,
-      });
+      let getVoters: Array<GetVotersResponse> = [];
+
+      let getVotersQuery = database
+        .select("u.name", "u.email", "u.username", "v.voteId", "v.createdAt")
+        .from("votes as v")
+        .innerJoin("users as u", "v.userId", "u.userId")
+        .where({
+          "v.postId": payload.postId,
+          "u.isBlocked": false,
+        })
+        .orderBy("v.createdAt", "desc")
+        .orderBy("v.voteId", "desc")
+        .limit(votersPaginationLimit + 1);
+
+      if (endCursor) {
+        const { id, createdAt } = decodeCursor(endCursor);
+        getVotersQuery = getVotersQuery.where(function () {
+          this.where("v.createdAt", "<", createdAt).orWhere(function () {
+            this.where("v.createdAt", "=", createdAt).andWhere(
+              "v.voteId",
+              "<=",
+              id,
+            );
+          });
+        });
+      }
+
+      getVoters = await getVotersQuery;
+      const items = getVoters.slice(0, votersPaginationLimit);
+
+      const urlObject = new URL(config.webUrl);
+      const sendPostRoadmapChangeMailPayload: Array<ISendPostRoadmapChangeMailPayload> =
+        [];
+      for (let i = 0; i < items.length; i++) {
+        if (!items[i]) continue;
+
+        sendPostRoadmapChangeMailPayload.push({
+          displayName: items[i].name || items[i].username,
+          recipientEmail: items[i].email,
+          postUrl: `${urlObject.origin}/posts/${getPostRoadmap.slug}`,
+          postTitle: getPostRoadmap.title,
+          postDescription: getPostRoadmap.contentMarkdown || "",
+          roadmapTitle: getPostRoadmap.name,
+          roadmapColor: getPostRoadmap.color,
+        });
+      }
+
+      await mailQueue.sendPostRoadmapChangeMail(
+        sendPostRoadmapChangeMailPayload,
+      );
+
+      hasNextPage = getVoters.length > votersPaginationLimit;
+      if (hasNextPage) {
+        const lastItem = items[items.length - 1];
+        endCursor = encodeCursor(lastItem.createdAt, lastItem.voteId);
+      } else {
+        endCursor = null;
+      }
     }
-    await mailQueue.sendPostRoadmapChangeMail(sendPostRoadmapChangeMailPayload);
   } catch (error) {
     throw new Error(error);
   }
