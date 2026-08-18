@@ -35,7 +35,7 @@ const data = {
 
       <Text>
         An update on a post you upvoted: <a
-          class="font-bold underline decoration-dotted"
+          class="font-bold underline decoration-dotted text-black"
           :href="preview('postUrl', data.postUrl)"
         >
           {{ preview('postTitle', data.postTitle)}}
@@ -52,7 +52,7 @@ const data = {
 
       <Section class="bg-neutral-50 px-5 py-1 rounded-xl">
         <Text class="text-sm font-bold underline decoration-dotted">
-          <a :href="preview('postUrl', data.postUrl)">
+          <a :href="preview('postUrl', data.postUrl)" class="text-black">
             {{ preview('postTitle', data.postTitle)}}
           </a>
         </Text>
