@@ -126,6 +126,7 @@ export async function sendPostRoadmapChangeMail(
     >("dashboard/post-roadmap-change-notification", {
       displayName: payload.displayName,
       recipientEmail: payload.recipientEmail,
+      postUrl: payload.postUrl,
       postTitle: payload.postTitle,
       postDescription: payload.postDescription,
       roadmapTitle: payload.roadmapTitle,

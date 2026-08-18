@@ -4,6 +4,9 @@ import type { IPostRoadmapChangeEvent } from "./types";
 import database from "../../database";
 import { mailQueue } from "../../worker/tasks/mail";
 import type { ISendPostRoadmapChangeMailPayload } from "../mail/types";
+import { configManager } from "../../utils/logchimpConfig";
+
+const config = configManager.getConfig();
 
 export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
   try {
@@ -12,10 +15,12 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
         {
           title: string;
           contentMarkdown: string | null;
+          slug: string;
         } & IRoadmapPrivate
       >(
         "p.title",
         "p.contentMarkdown",
+        "p.slug",
         "r.id",
         "r.name",
         "r.display",
@@ -56,12 +61,15 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
       `Post (ID: ${payload.postId}) has ${getVoters.length} upvoters`,
     );
 
+    const urlObject = new URL(config.webUrl);
+
     const sendPostRoadmapChangeMailPayload: Array<ISendPostRoadmapChangeMailPayload> =
       [];
     for (let i = 0; i < getVoters.length; i++) {
       sendPostRoadmapChangeMailPayload.push({
         displayName: getVoters[i].name || getVoters[i].username,
         recipientEmail: getVoters[i].email,
+        postUrl: `${urlObject.origin}/posts/${getPostRoadmap.slug}`,
         postTitle: getPostRoadmap.title,
         postDescription: getPostRoadmap.contentMarkdown,
         roadmapTitle: getPostRoadmap.name,
