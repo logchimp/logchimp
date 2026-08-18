@@ -4,6 +4,7 @@ import { defaultData } from "../../helpers/data";
 
 const data = {
   ...defaultData,
+  postUrl: `${defaultData.url}/posts/add-dark-mode`,
   postTitle: "Add dark mode",
   postDescription: "Add dark mode to the website",
   roadmapTitle: "Completed",
@@ -35,9 +36,11 @@ const data = {
       <Text>
         An update on a post you upvoted: <a
           class="font-bold underline decoration-dotted"
+          :href="preview('postUrl', data.postUrl)"
         >
           {{ preview('postTitle', data.postTitle)}}
-        </a>, has been moved to <span
+        </a>,
+        has been moved to <span
           class="font-bold"
           :style="{
             color: `#${preview('roadmapColor', data.roadmapColor)}`
@@ -49,7 +52,7 @@ const data = {
 
       <Section class="bg-neutral-50 px-5 py-1 rounded-xl">
         <Text class="text-sm font-bold underline decoration-dotted">
-          <a>
+          <a :href="preview('postUrl', data.postUrl)">
             {{ preview('postTitle', data.postTitle)}}
           </a>
         </Text>

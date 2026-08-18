@@ -9,6 +9,7 @@ export interface EmailPasswordReset extends BaseEmailData {
 }
 
 export interface PostRoadmapChangeNotification extends BaseEmailData {
+  readonly postUrl: string;
   readonly postTitle: string;
   readonly postDescription: string;
   readonly roadmapTitle: string;
