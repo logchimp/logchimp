@@ -65,8 +65,6 @@ export async function updatePost(
   }
 
   const id = validUUID(req.body.id);
-  const boardId = validUUID(req.body.boardId);
-  const roadmapId = validUUID(req.body.roadmapId);
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
   const title = xss((String(rawTitle) || "").trim());
@@ -85,8 +83,6 @@ export async function updatePost(
         title,
         slug,
         contentMarkdown,
-        boardId,
-        roadmap_id: roadmapId,
         updatedAt: new Date().toJSON(),
       })
       .from("posts")
