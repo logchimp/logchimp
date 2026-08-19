@@ -126,7 +126,10 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<(e: "loading", value: boolean) => void>();
+const emit = defineEmits<{
+  loading: [value: boolean];
+  updated: [post: IDashboardPost];
+}>();
 
 const saveBtnLoading = ref(false);
 const post = reactive<IDashboardPost>({
@@ -173,6 +176,8 @@ async function updatePostHandler() {
 
     Object.assign(post, response.data.post);
     dashboardPosts.updatePost(post);
+    emit("updated", post);
+    notifyVoters.roadmap = false;
   } catch (err) {
     console.error(err);
   } finally {

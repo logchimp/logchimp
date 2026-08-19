@@ -14,6 +14,7 @@
     <DashboardPostViewer
       v-else-if="post.postId"
       :post="post"
+      @updated="handlePostUpdated"
     />
     <Dashboard500 v-else>
       Something went wrong.
@@ -101,6 +102,10 @@ onMounted(() => {
     router.push("/dashboard/posts");
   }
 });
+
+function handlePostUpdated(updatedPost: IDashboardPost) {
+  Object.assign(post, updatedPost);
+}
 
 useHead({
   title: () => `${post.title ? `${post.title} • ` : ""}Post • Dashboard`,
