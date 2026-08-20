@@ -4,6 +4,8 @@ import logger from "../../utils/logger";
 import { postsQueueName } from "../tasks/posts";
 import * as postsWorkerService from "../../services/posts/worker.service";
 
+type MailJobHandler = (data: unknown) => Promise<unknown>;
+
 class PostsWorker {
   private workerInstance: Worker;
 
@@ -47,23 +49,22 @@ class PostsWorker {
     });
   }
 
+  private getHandlers(): Record<string, MailJobHandler> {
+    return Object.assign(Object.create(null), postsWorkerService);
+  }
+
   private async handler(job: Job) {
     const name = job.name;
     const data = job.data;
 
-    if (!(name in postsWorkerService)) {
-      await job.moveToFailed(Error(`job name '${name}' not found`), job.token);
-      return;
+    const handlers = this.getHandlers();
+    const handler = handlers[name];
+
+    if (!handler) {
+      throw new Error(`Unsupported posts job name: '${job.name}'`);
     }
 
-    try {
-      await postsWorkerService[name](data);
-    } catch (err) {
-      console.log("error processing job", err);
-      await job.log("error processing job");
-      await job.log(err);
-      await job.moveToFailed(err, job.token);
-    }
+    await handler(data);
   }
 }
 
