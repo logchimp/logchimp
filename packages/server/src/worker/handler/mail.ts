@@ -31,7 +31,7 @@ class MailWorker {
 
     this.workerInstance.run().catch((err) => {
       logger.error("Worker stopped unexpectedly:", err);
-      this.isRunning = true;
+      this.isRunning = false;
     });
 
     this.workerInstance.on("ready", () => {
