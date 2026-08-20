@@ -4,6 +4,8 @@ import logger from "../../utils/logger";
 import { mailQueueName } from "../tasks/mail";
 import * as mailService from "../../services/mail/mail.service";
 
+type MailJobHandler = (data: unknown) => Promise<unknown>;
+
 class MailWorker {
   private workerInstance: Worker;
 
@@ -47,17 +49,22 @@ class MailWorker {
     });
   }
 
+  private getHandlers(): Record<string, MailJobHandler> {
+    return Object.assign(Object.create(null), mailService);
+  }
+
   private async handler(job: Job) {
     const name = job.name;
     const data = job.data;
 
-    if (name in mailService) {
-      await mailService[name](data);
-    } else {
-      await job.moveToFailed(Error(`job name '${name}' not found`), job.token);
+    const handlers = this.getHandlers();
+    const handler = handlers[name];
+
+    if (!handler) {
+      throw new Error(`Unsupported mail job name: '${job.name}'`);
     }
 
-    return null;
+    await handler(data);
   }
 
   private sendMail() {}
