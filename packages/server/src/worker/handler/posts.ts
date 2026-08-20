@@ -85,7 +85,7 @@ class PostsWorker {
     }
 
     await handler(data);
-  }
+  };
 }
 
 export const postsWorker = new PostsWorker(postsQueueName);

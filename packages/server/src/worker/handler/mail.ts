@@ -85,7 +85,7 @@ class MailWorker {
     }
 
     await handler(data);
-  }
+  };
 
   private sendMail() {}
 }
