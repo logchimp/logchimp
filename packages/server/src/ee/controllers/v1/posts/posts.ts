@@ -70,7 +70,12 @@ export async function updatePost(
 
   const id = validUUID(req.body.id);
   const boardId = validUUID(req.body.boardId);
-  const newRoadmapId = validUUID(req.body.roadmapId);
+
+  const hasRoadmapId = Object.prototype.hasOwnProperty.call(
+    body.output,
+    "roadmapId",
+  );
+  const newRoadmapId = hasRoadmapId ? validUUID(req.body.roadmapId) : undefined;
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
   const title = xss((String(rawTitle) || "").trim());
@@ -90,7 +95,7 @@ export async function updatePost(
         slug,
         contentMarkdown,
         boardId,
-        roadmap_id: newRoadmapId ?? undefined,
+        ...(hasRoadmapId ? { roadmap_id: newRoadmapId } : {}),
         updatedAt: new Date().toJSON(),
       })
       .from("posts")
