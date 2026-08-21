@@ -112,6 +112,8 @@ export async function updatePost(
       .returning("*");
 
     if (
+      // NOTE: Skip notifying users if roadmap is removed/empty
+      newRoadmapId &&
       body.output.roadmap?.notifyVoters &&
       currentRoadmapId !== newRoadmapId
     ) {
