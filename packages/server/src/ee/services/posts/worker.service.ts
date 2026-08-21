@@ -10,7 +10,7 @@ import { configManager } from "../../../utils/logchimpConfig";
 const config = configManager.getConfig();
 
 export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
-  const votersPaginationLimit = 60;
+  const votersPaginationLimit = 100;
 
   try {
     const getPostRoadmap = await database
