@@ -76,11 +76,12 @@
             'flex items-center justify-between mt-2'
           ]"
         >
-          <div class="text-sm">
+          <label class="text-sm" :for="notifyVotersRoadmap">
             Notify voters about this change?
-          </div>
+          </label>
 
           <Checkbox
+            :aria-labelledby="notifyVotersRoadmap"
             :modelValue="notifyVoters.roadmap"
             @update:modelValue="notifyVoters.roadmap = $event"
             :disabled="!isRoadmapModified"
@@ -92,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, useId } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
 import { storeToRefs } from "pinia";
 
@@ -130,6 +131,7 @@ const emit = defineEmits<{
   loading: [value: boolean];
   updated: [post: IDashboardPost];
 }>();
+const notifyVotersRoadmap = useId();
 
 const saveBtnLoading = ref(false);
 const post = reactive<IDashboardPost>({
