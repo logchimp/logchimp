@@ -57,7 +57,7 @@ describe("POST /api/v1/auth/password/reset", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     const body = response.body satisfies IAuthPasswordResetResponseBody;
     expect(body).toHaveProperty("reset.success");
-    expect(typeof body.reset.success).toBeTruthy();
+    expect(body.reset.success).toBe(true);
   });
 });
 
