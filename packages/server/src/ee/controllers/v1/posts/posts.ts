@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
-  IRoadmapPrivate,
   IUpdatePostRequestBody,
   TPermission,
   TUpdatePostResponseBody,
@@ -14,7 +13,7 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import type { GetPostStatement } from "../../../../middlewares/postExists";
-import * as roadmapRepo from "../../../repository/roadmap";
+import { postsQueue } from "../../../../worker/tasks/posts";
 import xss from "xss";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
@@ -71,16 +70,16 @@ export async function updatePost(
 
   const id = validUUID(req.body.id);
   const boardId = validUUID(req.body.boardId);
-  const newRoadmapId = validUUID(req.body.roadmapId);
+
+  const hasRoadmapId = Object.prototype.hasOwnProperty.call(
+    body.output,
+    "roadmapId",
+  );
+  const newRoadmapId = hasRoadmapId ? validUUID(req.body.roadmapId) : undefined;
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
   const title = xss((String(rawTitle) || "").trim());
   const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
-
-  let newRoadmap: IRoadmapPrivate = null;
-  if (currentRoadmapId !== newRoadmapId) {
-    newRoadmap = await roadmapRepo.getById(database, newRoadmapId);
-  }
 
   const slug = `${title
     .replace(/[^\w\s]/gi, "")
@@ -96,7 +95,7 @@ export async function updatePost(
         slug,
         contentMarkdown,
         boardId,
-        roadmap_id: newRoadmap?.id ?? undefined,
+        ...(hasRoadmapId ? { roadmap_id: newRoadmapId } : {}),
         updatedAt: new Date().toJSON(),
       })
       .from("posts")
@@ -105,8 +104,20 @@ export async function updatePost(
       })
       .returning("*");
 
-    const post = posts[0];
+    if (currentRoadmapId !== newRoadmapId) {
+      try {
+        await postsQueue.postRoadmapChangeEvent({
+          postId: id,
+        });
+      } catch (err) {
+        logger.log({
+          level: "error",
+          message: err,
+        });
+      }
+    }
 
+    const post = posts[0];
     res.status(200).send({ post });
   } catch (err) {
     logger.log({
