@@ -40,7 +40,7 @@ importers:
     dependencies:
       '@maizzle/framework':
         specifier: latest
-        version: 6.0.13(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)
+        version: 6.1.0(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)
       '@maizzle/tailwindcss':
         specifier: ^1.5.5
         version: 1.5.5
@@ -68,7 +68,7 @@ importers:
         version: 2.8.6
       dompurify:
         specifier: ^3.4.2
-        version: 3.4.11
+        version: 3.4.13
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -222,7 +222,7 @@ importers:
         version: 1.11.21
       dompurify:
         specifier: ^3.4.11
-        version: 3.4.11
+        version: 3.4.13
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.34(typescript@5.9.3))
@@ -817,8 +817,8 @@ packages:
     peerDependencies:
       vue: '>=3.0.1'
 
-  '@maizzle/framework@6.0.13':
-    resolution: {integrity: sha512-cWoRA98Ur4JulzzYEhYMvMkOshniIh/hRCm/UE4VslzgCoVOiPhvEi5G9oZqVN3M3EmTpKWZx8B2aAyPK0mNew==}
+  '@maizzle/framework@6.1.0':
+    resolution: {integrity: sha512-DrwSD3CuTQHGy7cClLtyi+W0d3v9j3KOUatdfDjzJQa13WMMsQupaxEhT2WN1lQRTgh0R7ViojeQteaUGeTxMA==}
     hasBin: true
     peerDependencies:
       shiki: ^1 || ^2 || ^3 || ^4
@@ -2923,8 +2923,8 @@ packages:
     resolution: {integrity: sha512-gYzvtM72ZtxQO0T048kd6HWSbbGCNOUwcnfQ01cqIJ4X2IYKFFHZ5mKvrQETcFXxsRObZulDaKmy//R7TPtsBg==}
     engines: {node: '>=20.19.0'}
 
-  dompurify@3.4.11:
-    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+  dompurify@3.4.13:
+    resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
 
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
@@ -5765,7 +5765,7 @@ snapshots:
     dependencies:
       vue: 3.5.34(typescript@6.0.3)
 
-  '@maizzle/framework@6.0.13(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)':
+  '@maizzle/framework@6.1.0(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)':
     dependencies:
       '@lucide/vue': 1.25.0(vue@3.5.34(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
@@ -6570,7 +6570,7 @@ snapshots:
 
   '@types/dompurify@3.2.0':
     dependencies:
-      dompurify: 3.4.11
+      dompurify: 3.4.13
 
   '@types/estree@1.0.8': {}
 
@@ -7612,7 +7612,7 @@ snapshots:
     dependencies:
       domelementtype: 3.0.0
 
-  dompurify@3.4.11:
+  dompurify@3.4.13:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
