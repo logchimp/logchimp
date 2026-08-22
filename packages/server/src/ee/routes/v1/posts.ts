@@ -3,6 +3,7 @@ import type {
   ICreatePostCommentRequestBody,
   IGetPostActivityRequestParam,
   IGetPostActivityRequestQuery,
+  IGetPostVotesRequestParams,
   IUpdatePostCommentRequestBody,
   IUpdatePostCommentRequestParam,
   TCreatePostCommentRequestParam,
@@ -10,7 +11,8 @@ import type {
 } from "@logchimp/types";
 
 // controller
-import * as post from "../../../ee/controllers/v1/posts";
+import * as post from "../../../controllers/post";
+import * as eePost from "../../../ee/controllers/v1/posts";
 
 // middleware
 import { authOptional, authRequired } from "../../../middlewares/auth";
@@ -19,6 +21,23 @@ import { postExists } from "../../../middlewares/postExists";
 import { commentExists } from "../../middleware/commentExists";
 
 const router = express.Router();
+
+router.post("/posts/get", authOptional, post.filterPost);
+router.post("/posts/slug", authOptional, postExists, post.postBySlug);
+
+router.post("/posts", authRequired, post.create);
+router.patch("/posts", authRequired, postExists, eePost.posts.updatePost);
+
+// votes
+router.get<IGetPostVotesRequestParams>(
+  "/posts/:post_id/votes",
+  // @ts-expect-error
+  authOptional,
+  postExists,
+  post.getPostVotes,
+);
+
+router.delete("/posts", authRequired, postExists, post.deleteById);
 
 // post activity
 router.get<
@@ -31,7 +50,7 @@ router.get<
   // @ts-expect-error
   authOptional,
   postExists,
-  withLicenseGuard(post.activity.get, {
+  withLicenseGuard(eePost.activity.get, {
     // pro <= comments
     // business <= activity (post status changed)
     requiredPlan: ["pro", "business", "enterprise"],
@@ -48,7 +67,7 @@ router.post<
   // @ts-expect-error
   authRequired,
   postExists,
-  withLicenseGuard(post.comments.create, {
+  withLicenseGuard(eePost.comments.create, {
     // pro <= public comment
     // business <= internal comment
     requiredPlan: ["pro", "business", "enterprise"],
@@ -64,7 +83,7 @@ router.put<
   authRequired,
   postExists,
   commentExists,
-  withLicenseGuard(post.comments.update, {
+  withLicenseGuard(eePost.comments.update, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
@@ -74,7 +93,7 @@ router.delete<TDeletePostCommentRequestParam>(
   authRequired,
   postExists,
   commentExists,
-  withLicenseGuard(post.comments.destroy, {
+  withLicenseGuard(eePost.comments.destroy, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );

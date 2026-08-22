@@ -1,18 +1,21 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  IRoadmapPrivate,
   IUpdatePostRequestBody,
   TPermission,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
 import * as v from "valibot";
-import xss from "xss";
-import database from "../../database";
+import database from "../../../../database";
 
 // utils
-import { validUUID } from "../../helpers";
-import logger from "../../utils/logger";
-import error from "../../errorResponse.json";
+import { validUUID } from "../../../../helpers";
+import logger from "../../../../utils/logger";
+import error from "../../../../errorResponse.json";
+import type { GetPostStatement } from "../../../../middlewares/postExists";
+import * as roadmapRepo from "../../../repository/roadmap";
+import xss from "xss";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
 
@@ -37,9 +40,11 @@ export async function updatePost(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   // @ts-expect-error
-  const authorId = req.post.userId;
+  const authorId = (req.post as GetPostStatement).userId;
   // @ts-expect-error
-  const slugId = req.post.slugId;
+  const slugId = (req.post as GetPostStatement).slugId;
+  // @ts-expect-error
+  const currentRoadmapId = (req.post as GetPostStatement).roadmap_id;
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
@@ -65,10 +70,17 @@ export async function updatePost(
   }
 
   const id = validUUID(req.body.id);
+  const boardId = validUUID(req.body.boardId);
+  const newRoadmapId = validUUID(req.body.roadmapId);
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
   const title = xss((String(rawTitle) || "").trim());
   const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
+
+  let newRoadmap: IRoadmapPrivate = null;
+  if (currentRoadmapId !== newRoadmapId) {
+    newRoadmap = await roadmapRepo.getById(database, newRoadmapId);
+  }
 
   const slug = `${title
     .replace(/[^\w\s]/gi, "")
@@ -83,6 +95,8 @@ export async function updatePost(
         title,
         slug,
         contentMarkdown,
+        boardId,
+        roadmap_id: newRoadmap?.id ?? undefined,
         updatedAt: new Date().toJSON(),
       })
       .from("posts")
