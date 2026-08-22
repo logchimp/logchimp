@@ -91,7 +91,7 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
           this.where("v.createdAt", "<", createdAt).orWhere(function () {
             this.where("v.createdAt", "=", createdAt).andWhere(
               "v.voteId",
-              "<=",
+              "<",
               id,
             );
           });
