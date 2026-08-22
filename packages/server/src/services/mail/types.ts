@@ -7,3 +7,11 @@ export interface EmailAccountVerification extends BaseEmailData {
 export interface EmailPasswordReset extends BaseEmailData {
   resetLink: string;
 }
+
+export interface PostRoadmapChangeNotification {
+  readonly postUrl: string;
+  readonly postTitle: string;
+  readonly postDescription: string;
+  readonly roadmapTitle: string;
+  readonly roadmapColor: string;
+}
