@@ -4,6 +4,7 @@ import app from "./app";
 import { ready as routesReady } from "./routes/v1";
 
 import { createWorkerClient } from "./worker/client";
+import { mailQueue } from "./worker/tasks/mail";
 import { mailWorker } from "./worker/handler/mail";
 
 // utils
@@ -21,6 +22,7 @@ const host = config.serverHost || "0.0.0.0";
 
   // Run background worker
   const connection = await createWorkerClient();
+  mailQueue.init(connection);
   await mailWorker.run(connection);
 
   app.listen(port, host, async () => {
