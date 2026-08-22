@@ -10,6 +10,8 @@ class PostsWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
+  private eeServices: Record<string, any> = {};
+  private eeLoaded = false;
   isRunning: boolean = false;
 
   constructor(name: string) {
@@ -36,8 +38,9 @@ class PostsWorker {
       this.isRunning = true;
     });
 
-    this.workerInstance.on("ready", () => {
+    this.workerInstance.on("ready", async () => {
       this.isRunning = true;
+      await this.getEEService();
     });
 
     this.workerInstance.on("error", (err) => {
@@ -49,11 +52,28 @@ class PostsWorker {
     });
   }
 
-  private getHandlers(): Record<string, MailJobHandler> {
-    return Object.assign(Object.create(null), postsWorkerService);
+  private async getEEService() {
+    if (this.eeLoaded) return;
+    try {
+      const eeServiceImport = await import("../../ee/worker/handler/posts");
+      const eePostsService = await eeServiceImport.getPostsWorker();
+      this.eeServices = eePostsService.posts ?? {};
+    } catch (_) {
+      this.eeServices = {};
+    } finally {
+      this.eeLoaded = true;
+    }
   }
 
-  private async handler(job: Job) {
+  private getHandlers(): Record<string, MailJobHandler> {
+    return Object.assign(
+      Object.create(null),
+      postsWorkerService,
+      this.eeServices,
+    );
+  }
+
+  private handler = async (job: Job) => {
     const name = job.name;
     const data = job.data;
 
@@ -65,7 +85,7 @@ class PostsWorker {
     }
 
     await handler(data);
-  }
+  };
 }
 
 export const postsWorker = new PostsWorker(postsQueueName);

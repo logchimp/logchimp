@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  IRoadmapPrivate,
   IUpdatePostRequestBody,
   TPermission,
   TUpdatePostResponseBody,
@@ -13,7 +14,7 @@ import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import type { GetPostStatement } from "../../../../middlewares/postExists";
-import { postsQueue } from "../../../../worker/tasks/posts";
+import { postsQueue } from "../../../worker/tasks/posts";
 import xss from "xss";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;

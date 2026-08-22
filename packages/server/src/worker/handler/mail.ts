@@ -2,7 +2,7 @@ import { type ConnectionOptions, type Job, Worker } from "bullmq";
 import logger from "../../utils/logger";
 
 import { mailQueueName } from "../tasks/mail";
-import * as mailService from "../../services/mail/mail.service";
+import * as mailWorkerService from "../../services/mail/worker.service";
 
 type MailJobHandler = (data: unknown) => Promise<unknown>;
 
@@ -10,6 +10,8 @@ class MailWorker {
   private workerInstance: Worker;
 
   private readonly workerName: string;
+  private eeServices: Record<string, any> = {};
+  private eeLoaded = false;
   isRunning: boolean = false;
 
   constructor(name: string) {
@@ -36,8 +38,9 @@ class MailWorker {
       this.isRunning = false;
     });
 
-    this.workerInstance.on("ready", () => {
+    this.workerInstance.on("ready", async () => {
       this.isRunning = true;
+      await this.getEEService();
     });
 
     this.workerInstance.on("error", (err) => {
@@ -49,11 +52,28 @@ class MailWorker {
     });
   }
 
-  private getHandlers(): Record<string, MailJobHandler> {
-    return Object.assign(Object.create(null), mailService);
+  private async getEEService() {
+    if (this.eeLoaded) return;
+    try {
+      const eeServicesImport = await import("../../ee/worker/handler/mail");
+      const eeMailServices = await eeServicesImport.getMailWorker();
+      this.eeServices = eeMailServices.mail ?? {};
+    } catch (_) {
+      this.eeServices = {};
+    } finally {
+      this.eeLoaded = true;
+    }
   }
 
-  private async handler(job: Job) {
+  private getHandlers(): Record<string, MailJobHandler> {
+    return Object.assign(
+      Object.create(null),
+      mailWorkerService,
+      this.eeServices,
+    );
+  }
+
+  private handler = async (job: Job) => {
     const name = job.name;
     const data = job.data;
 
@@ -65,7 +85,7 @@ class MailWorker {
     }
 
     await handler(data);
-  }
+  };
 
   private sendMail() {}
 }

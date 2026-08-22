@@ -22,7 +22,8 @@ const host = config.serverHost || "0.0.0.0";
 
   // Run background worker
   const connection = await createWorkerClient();
-  Queues.map((worker) => worker.init(connection));
+  const queues = await Queues;
+  queues.map((queue) => queue.init(connection));
   await Promise.all(Workers.map((worker) => worker.run(connection)));
 
   app.listen(port, host, async () => {
