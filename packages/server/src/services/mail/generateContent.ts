@@ -6,17 +6,18 @@ import logger from "../../utils/logger";
 import { readFile } from "../../helpers";
 import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
 
-interface IGenerateContentBaseOptions {
+export interface BaseEmailData {
+  readonly siteTitle: string;
+  readonly siteLogo: string;
+  readonly recipientEmail: string;
   readonly url: string;
   readonly domain: string;
+  readonly brandColor: string;
 }
 
-type IGenerateContentOptions = IGenerateContentBaseOptions &
-  Record<string, string | undefined>;
-
-export async function generateContent(
+export async function generateContent<T extends object>(
   templateName: string,
-  options: IGenerateContentOptions,
+  options: T & BaseEmailData,
 ) {
   const mailTemplateFilePath = path.resolve(
     __dirname,
@@ -35,19 +36,15 @@ export async function generateContent(
   }
 
   if (typeof fileContent !== "string") {
-    logger.warn({
-      message: `file content empty [file path: ${mailTemplateFilePath}]`,
-      error: fileContent,
-    });
-    return;
+    throw new Error(`file content empty [file path: ${mailTemplateFilePath}]`);
   }
 
   const processedOptions = {
     ...options,
-    siteColor: options.siteColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
-  };
+    brandColor: options.brandColor || LOGCHIMP_FALLBACK_BRAND_COLOR,
+  } as T;
 
-  _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+  _.templateSettings.interpolate = /\[\[([\s\S]+?)\]\]/g;
   const compiled = _.template(fileContent);
   const htmlMail = compiled(processedOptions);
 

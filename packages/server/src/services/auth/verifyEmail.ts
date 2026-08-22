@@ -9,6 +9,7 @@ import { createToken } from "../token.service";
 import { configManager } from "../../utils/logchimpConfig";
 import logger from "../../utils/logger";
 import type { IVerifyEmailJwtPayload } from "../../types";
+import type { EmailAccountVerification } from "../mail/types";
 
 const config = configManager.getConfig();
 
@@ -51,24 +52,29 @@ export async function verifyEmail(
     }
 
     const siteTitle = siteInfo[0].title;
-    let siteColor = siteInfo[0].accentColor;
+    let brandColor = siteInfo[0].accentColor;
     const siteLogo =
       siteInfo[0].logo ||
       "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png";
 
-    if (siteColor && !siteColor.startsWith("#")) {
-      siteColor = `#${siteColor}`;
+    if (brandColor && !brandColor.startsWith("#")) {
+      brandColor = `#${brandColor}`;
     }
 
     const urlObject = new URL(config.webUrl);
-    const onboardingMailContent = await generateContent("verify", {
-      url: urlObject.origin,
-      domain: urlObject.hostname,
-      verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
-      siteTitle,
-      siteColor,
-      siteLogo,
-    });
+    const onboardingMailContent =
+      await generateContent<EmailAccountVerification>(
+        "auth/email-account-verification",
+        {
+          recipientEmail: tokenPayload.email,
+          url: urlObject.origin,
+          domain: urlObject.hostname,
+          verificationLink: `${urlObject.origin}/email-verify/?token=${token}`,
+          siteTitle,
+          brandColor,
+          siteLogo,
+        },
+      );
 
     const noReplyEmail = `noreply@${urlObject.hostname}`;
 

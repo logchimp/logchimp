@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { faker } from "@faker-js/faker";
 
 import { generateContent } from "./generateContent";
 import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
@@ -6,11 +7,12 @@ import { LOGCHIMP_FALLBACK_BRAND_COLOR } from "../../constants";
 describe("generateContent", () => {
   it("should return undefined for invalid template", async () => {
     const result = await generateContent("invalid-template", {
+      recipientEmail: faker.internet.email(),
       url: "https://test.com",
       domain: "test.com",
       resetLink: "https://test.com/reset",
       siteTitle: "Test",
-      siteColor: "#000",
+      brandColor: "#000",
       siteLogo: "https://test.com/logo.png",
     });
 
@@ -21,30 +23,31 @@ describe("generateContent", () => {
   [
     {
       title: "should handle different site colors",
-      siteColor: customColor,
+      brandColor: customColor,
       expectedColor: customColor,
     },
     {
-      title: "should use fallback brand color when siteColor is not provided",
-      siteColor: undefined,
+      title: "should use fallback brand color when brandColor is not provided",
+      brandColor: undefined,
       expectedColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
     },
     // TODO: Add support for invalid color fallback in the logic
     {
       title: "should handle different site colors",
-      siteColor: "#invalid-color",
+      brandColor: "#invalid-color",
       skip: true,
     },
-  ].map(({ title, siteColor, expectedColor, skip }) =>
+  ].map(({ title, brandColor, expectedColor, skip }) =>
     it(title, async (t) => {
       if (skip) t.skip();
 
-      const result = await generateContent("reset", {
+      const result = await generateContent("auth/email-password-reset", {
+        recipientEmail: faker.internet.email(),
         url: "https://test.com",
         domain: "test.com",
         resetLink: "https://test.com/reset",
         siteTitle: "Custom Site",
-        siteColor,
+        brandColor,
         siteLogo: "https://test.com/logo.png",
       });
 
@@ -53,12 +56,13 @@ describe("generateContent", () => {
   );
 
   it("should generate plain text version", async () => {
-    const result = await generateContent("reset", {
+    const result = await generateContent("auth/email-password-reset", {
+      recipientEmail: faker.internet.email(),
       url: "https://test.com",
       domain: "test.com",
       resetLink: "https://test.com/reset",
       siteTitle: "Test",
-      siteColor: "#000",
+      brandColor: "#000",
       siteLogo: "https://test.com/logo.png",
     });
 
@@ -71,20 +75,26 @@ describe("generateContent", () => {
     it("should generate email with correct dynamic values", async () => {
       const DOMAIN = "example.com";
       const mockData = {
+        recipientEmail: faker.internet.email(),
         url: `https://${DOMAIN}`,
         domain: DOMAIN,
         resetLink: `https://${DOMAIN}/reset?token=abc123`,
         siteTitle: "Test Site",
-        siteColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
+        brandColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
         siteLogo: `https://${DOMAIN}/logo.png`,
       };
 
-      const result = await generateContent("reset", mockData);
+      const result = await generateContent(
+        "auth/email-password-reset",
+        mockData,
+      );
 
       expect(result).toBeDefined();
       expect(result?.html).toContain(mockData.resetLink);
       expect(result?.html).toContain(mockData.siteTitle);
-      expect(result?.html).toContain(`background-color: ${mockData.siteColor}`);
+      expect(result?.html).toContain(
+        `background-color: ${mockData.brandColor}`,
+      );
       expect(result?.html).toContain(`src="${mockData.siteLogo}"`);
       expect(result?.html).toContain(`href="${mockData.url}"`);
       expect(result?.text).toContain(mockData.domain);
@@ -96,20 +106,26 @@ describe("generateContent", () => {
 
     it("should generate email with correct dynamic values", async () => {
       const mockData = {
+        recipientEmail: faker.internet.email(),
         url: `https://${DOMAIN}`,
         domain: DOMAIN,
         verificationLink: `https://${DOMAIN}/email-verify?token=abc123`,
         siteTitle: "Test Site",
-        siteColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
+        brandColor: LOGCHIMP_FALLBACK_BRAND_COLOR,
         siteLogo: `https://${DOMAIN}/logo.png`,
       };
 
-      const result = await generateContent("verify", mockData);
+      const result = await generateContent(
+        "auth/email-account-verification",
+        mockData,
+      );
 
       expect(result).toBeDefined();
       expect(result?.html).toContain(mockData.verificationLink);
       expect(result?.html).toContain(mockData.siteTitle);
-      expect(result?.html).toContain(`background-color: ${mockData.siteColor}`);
+      expect(result?.html).toContain(
+        `background-color: ${mockData.brandColor}`,
+      );
       expect(result?.html).toContain(`src="${mockData.siteLogo}"`);
       expect(result?.html).toContain(`href="${mockData.url}"`);
       expect(result?.text).toContain(mockData.domain);

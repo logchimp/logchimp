@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@logchimp/email-templates",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "maizzle serve",
+    "build": "NODE_ENV=production maizzle build",
+    "copy": "cp -r ./dist/** ../server/src/services/mail/templates",
+    "postinstall": "maizzle prepare"
+  },
+  "dependencies": {
+    "@maizzle/framework": "latest",
+    "@maizzle/tailwindcss": "^1.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.11.0",
+    "typescript": "^6.0.3"
+  }
+}
