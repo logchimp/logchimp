@@ -110,6 +110,17 @@ services:
     ports:
       - "8000:8000"
 
+  bullboard:
+    image: venatum/bull-board:latest
+    ports:
+      - "8081:3000"
+    environment:
+      REDIS_HOST: "cache"
+    networks:
+      - logchimp-dev-network
+    depends_on:
+      - cache
+
   # theme:
   #   image: logchimp-theme:0.2.0
   #   environment:

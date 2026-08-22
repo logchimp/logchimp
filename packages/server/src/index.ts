@@ -3,6 +3,9 @@ const startTime = Date.now();
 import app from "./app";
 import { ready as routesReady } from "./routes/v1";
 
+import { createWorkerClient } from "./worker/client";
+import { mailWorker } from "./worker/handler/mail";
+
 // utils
 import logger from "./utils/logger";
 import { configManager } from "./utils/logchimpConfig";
@@ -15,6 +18,10 @@ const host = config.serverHost || "0.0.0.0";
 
 (async () => {
   await routesReady;
+
+  // Run background worker
+  const connection = await createWorkerClient();
+  await mailWorker.run(connection);
 
   app.listen(port, host, async () => {
     logger.info(`LogChimp is running in ${process.env.NODE_ENV}...`);
