@@ -40,7 +40,7 @@ importers:
     dependencies:
       '@maizzle/framework':
         specifier: latest
-        version: 6.0.13(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)
+        version: 6.1.0(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)
       '@maizzle/tailwindcss':
         specifier: ^1.5.5
         version: 1.5.5
@@ -62,19 +62,19 @@ importers:
         version: 3.0.3
       bullmq:
         specifier: ^6.0.7
-        version: 6.0.7(ioredis@6.0.0(supports-color@5.5.0))(pg@8.19.0)
+        version: 6.0.7(ioredis@6.0.0)(pg@8.19.0)
       cors:
         specifier: ^2.8.6
         version: 2.8.6
       dompurify:
-        specifier: ^3.4.2
-        version: 3.4.11
+        specifier: ^3.4.13
+        version: 3.4.13
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
       express:
         specifier: ^4.22.2
-        version: 4.22.2(supports-color@5.5.0)
+        version: 4.22.2
       fs-extra:
         specifier: ^11.3.6
         version: 11.3.6
@@ -83,19 +83,19 @@ importers:
         version: 8.2.1
       ioredis:
         specifier: ^6.0.0
-        version: 6.0.0(supports-color@5.5.0)
+        version: 6.0.0
       iovalkey:
         specifier: ^0.3.3
-        version: 0.3.3(supports-color@5.5.0)
+        version: 0.3.3
       jsdom:
         specifier: ^20.0.3
-        version: 20.0.3(supports-color@5.5.0)
+        version: 20.0.3
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
       knex:
         specifier: ^2.5.1
-        version: 2.5.1(pg@8.19.0)(supports-color@5.5.0)
+        version: 2.5.1(pg@8.19.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -180,7 +180,7 @@ importers:
         version: 3.1.14
       supertest:
         specifier: ^7.1.4
-        version: 7.1.4(supports-color@5.5.0)
+        version: 7.1.4
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@24.11.0)(typescript@5.9.3)
@@ -189,7 +189,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 3.2.6
-        version: 3.2.6(@types/node@24.11.0)(jiti@2.7.0)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.32.0)(sass@1.69.5)(supports-color@5.5.0)(yaml@2.9.0)
+        version: 3.2.6(@types/node@24.11.0)(jiti@2.7.0)(jsdom@20.0.3)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
 
   packages/theme:
     dependencies:
@@ -201,7 +201,7 @@ importers:
         version: 2.2.1(vue@3.5.34(typescript@5.9.3))
       '@tailwindcss/vite':
         specifier: ^4.1.11
-        version: 4.1.17(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0))
+        version: 4.1.17(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))
       '@vueuse/components':
         specifier: 14.3.0
         version: 14.3.0(vue@3.5.34(typescript@5.9.3))
@@ -213,7 +213,7 @@ importers:
         version: 1.3.1(vue@3.5.34(typescript@5.9.3))
       axios:
         specifier: 1.19.0
-        version: 1.19.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
+        version: 1.19.0
       canvas-confetti:
         specifier: ^1.9.4
         version: 1.9.4
@@ -221,8 +221,8 @@ importers:
         specifier: 1.11.21
         version: 1.11.21
       dompurify:
-        specifier: ^3.4.11
-        version: 3.4.11
+        specifier: ^3.4.13
+        version: 3.4.13
       lucide-vue:
         specifier: npm:lucide-vue-next@0.546.0
         version: lucide-vue-next@0.546.0(vue@3.5.34(typescript@5.9.3))
@@ -259,7 +259,7 @@ importers:
         version: 10.0.0
       '@vitejs/plugin-vue':
         specifier: 6.0.8
-        version: 6.0.8(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.34(typescript@5.9.3))
+        version: 6.0.8(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.34(typescript@5.9.3))
       '@vue/test-utils':
         specifier: 2.4.11
         version: 2.4.11(@vue/compiler-dom@3.5.34)(@vue/server-renderer@3.5.34(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -268,7 +268,7 @@ importers:
         version: 0.9.1(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3))
       jsdom:
         specifier: ^20.0.3
-        version: 20.0.3(supports-color@5.5.0)
+        version: 20.0.3
       sass:
         specifier: 1.69.5
         version: 1.69.5
@@ -277,10 +277,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: 6.4.3
-        version: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0)
+        version: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
       vitest:
         specifier: 3.2.6
-        version: 3.2.6(@types/node@24.11.0)(jiti@2.7.0)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.32.0)(sass@1.69.5)(supports-color@5.5.0)(yaml@2.9.0)
+        version: 3.2.6(@types/node@24.11.0)(jiti@2.7.0)(jsdom@20.0.3)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
       vue-tsc:
         specifier: 3.1.5
         version: 3.1.5(typescript@5.9.3)
@@ -289,7 +289,7 @@ importers:
     devDependencies:
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.19)(supports-color@5.5.0)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.19)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -817,8 +817,8 @@ packages:
     peerDependencies:
       vue: '>=3.0.1'
 
-  '@maizzle/framework@6.0.13':
-    resolution: {integrity: sha512-cWoRA98Ur4JulzzYEhYMvMkOshniIh/hRCm/UE4VslzgCoVOiPhvEi5G9oZqVN3M3EmTpKWZx8B2aAyPK0mNew==}
+  '@maizzle/framework@6.1.0':
+    resolution: {integrity: sha512-DrwSD3CuTQHGy7cClLtyi+W0d3v9j3KOUatdfDjzJQa13WMMsQupaxEhT2WN1lQRTgh0R7ViojeQteaUGeTxMA==}
     hasBin: true
     peerDependencies:
       shiki: ^1 || ^2 || ^3 || ^4
@@ -2227,11 +2227,6 @@ packages:
 
   '@volar/typescript@2.4.23':
     resolution: {integrity: sha512-lAB5zJghWxVPqfcStmAP1ZqQacMpe90UrP5RJ3arDyrhy4aCUQqmxPPLB2PWDKugvylmO41ljK7vZ+t6INMTag==}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@vue-macros/common@3.1.3':
     resolution: {integrity: sha512-pphnexn8CDKugcA4TYSKlg1XanBYPbILST+eZK9ZGqG8sVbNR5L0kXEpRqs8+iSznosHt/Jo2k1FGl0tnWIpyg==}
@@ -2923,8 +2918,8 @@ packages:
     resolution: {integrity: sha512-gYzvtM72ZtxQO0T048kd6HWSbbGCNOUwcnfQ01cqIJ4X2IYKFFHZ5mKvrQETcFXxsRObZulDaKmy//R7TPtsBg==}
     engines: {node: '>=20.19.0'}
 
-  dompurify@3.4.11:
-    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+  dompurify@3.4.13:
+    resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
 
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
@@ -5765,7 +5760,7 @@ snapshots:
     dependencies:
       vue: 3.5.34(typescript@6.0.3)
 
-  '@maizzle/framework@6.0.13(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)':
+  '@maizzle/framework@6.1.0(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)':
     dependencies:
       '@lucide/vue': 1.25.0(vue@3.5.34(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
@@ -6504,12 +6499,12 @@ snapshots:
       postcss: 8.5.19
       tailwindcss: 4.3.3
 
-  '@tailwindcss/vite@4.1.17(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0))':
+  '@tailwindcss/vite@4.1.17(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))':
     dependencies:
       '@tailwindcss/node': 4.1.17
       '@tailwindcss/oxide': 4.1.17
       tailwindcss: 4.1.17
-      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0)
+      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
 
   '@tailwindcss/vite@4.3.3(vite@8.1.5(@types/node@24.11.0)(esbuild@0.27.3)(jiti@2.6.1)(yaml@2.9.0))':
     dependencies:
@@ -6570,7 +6565,7 @@ snapshots:
 
   '@types/dompurify@3.2.0':
     dependencies:
-      dompurify: 3.4.11
+      dompurify: 3.4.13
 
   '@types/estree@1.0.8': {}
 
@@ -6844,10 +6839,10 @@ snapshots:
       vite: 8.1.5(@types/node@24.11.0)(esbuild@0.27.3)(jiti@2.6.1)(yaml@2.9.0)
       vue: 3.5.34(typescript@6.0.3)
 
-  '@vitejs/plugin-vue@6.0.8(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.34(typescript@5.9.3))':
+  '@vitejs/plugin-vue@6.0.8(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.34(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0)
+      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
       vue: 3.5.34(typescript@5.9.3)
 
   '@vitest/expect@3.2.6':
@@ -6902,13 +6897,11 @@ snapshots:
 
   '@volar/source-map@2.4.23': {}
 
-  '@volar/typescript@2.4.23(typescript@5.9.3)':
+  '@volar/typescript@2.4.23':
     dependencies:
       '@volar/language-core': 2.4.23
       path-browserify: 1.0.1
       vscode-uri: 3.1.0
-    optionalDependencies:
-      typescript: 5.9.3
 
   '@vue-macros/common@3.1.3(vue@3.5.34(typescript@6.0.3))':
     dependencies:
@@ -7104,7 +7097,7 @@ snapshots:
 
   acorn@8.17.0: {}
 
-  agent-base@6.0.2(supports-color@5.5.0):
+  agent-base@6.0.2:
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
@@ -7172,11 +7165,11 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.19.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0):
+  axios@1.19.0:
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@5.5.0))
+      follow-redirects: 1.16.0
       form-data: 4.0.6
-      https-proxy-agent: 5.0.1(supports-color@5.5.0)
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -7196,11 +7189,11 @@ snapshots:
 
   birpc@4.0.0: {}
 
-  body-parser@1.20.6(supports-color@5.5.0):
+  body-parser@1.20.6:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       http-errors: 2.0.1
@@ -7239,7 +7232,7 @@ snapshots:
 
   buffer-equal-constant-time@1.0.1: {}
 
-  bullmq@6.0.7(ioredis@6.0.0(supports-color@5.5.0))(pg@8.19.0):
+  bullmq@6.0.7(ioredis@6.0.0)(pg@8.19.0):
     dependencies:
       cron-parser: 5.7.0
       msgpackr: 2.0.5
@@ -7247,7 +7240,7 @@ snapshots:
       semver: 7.8.5
       tslib: 2.8.1
     optionalDependencies:
-      ioredis: 6.0.0(supports-color@5.5.0)
+      ioredis: 6.0.0
       pg: 8.19.0
 
   bundle-require@5.1.0(esbuild@0.27.3):
@@ -7489,23 +7482,17 @@ snapshots:
 
   dayjs@1.11.21: {}
 
-  debug@2.6.9(supports-color@5.5.0):
+  debug@2.6.9:
     dependencies:
       ms: 2.0.0
-    optionalDependencies:
-      supports-color: 5.5.0
 
-  debug@4.3.4(supports-color@5.5.0):
+  debug@4.3.4:
     dependencies:
       ms: 2.1.2
-    optionalDependencies:
-      supports-color: 5.5.0
 
-  debug@4.4.1(supports-color@5.5.0):
+  debug@4.4.1:
     dependencies:
       ms: 2.1.3
-    optionalDependencies:
-      supports-color: 5.5.0
 
   debug@4.4.3(supports-color@5.5.0):
     dependencies:
@@ -7612,7 +7599,7 @@ snapshots:
     dependencies:
       domelementtype: 3.0.0
 
-  dompurify@3.4.11:
+  dompurify@3.4.13:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -7816,21 +7803,21 @@ snapshots:
 
   expect-type@1.2.2: {}
 
-  express@4.22.2(supports-color@5.5.0):
+  express@4.22.2:
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.6(supports-color@5.5.0)
+      body-parser: 1.20.6
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.0.7
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 1.3.2(supports-color@5.5.0)
+      finalhandler: 1.3.2
       fresh: 0.5.2
       http-errors: 2.0.1
       merge-descriptors: 1.0.3
@@ -7842,8 +7829,8 @@ snapshots:
       qs: 6.15.3
       range-parser: 1.2.1
       safe-buffer: 5.2.1
-      send: 0.19.2(supports-color@5.5.0)
-      serve-static: 1.16.3(supports-color@5.5.0)
+      send: 0.19.2
+      serve-static: 1.16.3
       setprototypeof: 1.2.0
       statuses: 2.0.2
       type-is: 1.6.18
@@ -7872,9 +7859,9 @@ snapshots:
 
   filter-obj@5.1.0: {}
 
-  finalhandler@1.3.2(supports-color@5.5.0):
+  finalhandler@1.3.2:
     dependencies:
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -7892,9 +7879,7 @@ snapshots:
 
   fn.name@1.1.0: {}
 
-  follow-redirects@1.16.0(debug@4.4.3(supports-color@5.5.0)):
-    optionalDependencies:
-      debug: 4.4.3(supports-color@5.5.0)
+  follow-redirects@1.16.0: {}
 
   foreground-child@3.3.1:
     dependencies:
@@ -8099,17 +8084,17 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  http-proxy-agent@5.0.0(supports-color@5.5.0):
+  http-proxy-agent@5.0.0:
     dependencies:
       '@tootallnate/once': 2.0.0
-      agent-base: 6.0.2(supports-color@5.5.0)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1(supports-color@5.5.0):
+  https-proxy-agent@5.0.1:
     dependencies:
-      agent-base: 6.0.2(supports-color@5.5.0)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
@@ -8132,7 +8117,7 @@ snapshots:
 
   interpret@2.2.0: {}
 
-  ioredis@6.0.0(supports-color@5.5.0):
+  ioredis@6.0.0:
     dependencies:
       '@ioredis/commands': 2.0.0
       cluster-key-slot: 1.1.1
@@ -8143,11 +8128,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  iovalkey@0.3.3(supports-color@5.5.0):
+  iovalkey@0.3.3:
     dependencies:
       '@iovalkey/commands': 0.1.0
       cluster-key-slot: 1.1.2
-      debug: 4.4.1(supports-color@5.5.0)
+      debug: 4.4.1
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -8222,7 +8207,7 @@ snapshots:
       argparse: 1.0.10
       esprima: 4.0.1
 
-  jsdom@20.0.3(supports-color@5.5.0):
+  jsdom@20.0.3:
     dependencies:
       abab: 2.0.6
       acorn: 8.15.0
@@ -8235,8 +8220,8 @@ snapshots:
       escodegen: 2.1.0
       form-data: 4.0.5
       html-encoding-sniffer: 3.0.0
-      http-proxy-agent: 5.0.0(supports-color@5.5.0)
-      https-proxy-agent: 5.0.1(supports-color@5.5.0)
+      http-proxy-agent: 5.0.0
+      https-proxy-agent: 5.0.1
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.20
       parse5: 7.3.0
@@ -8302,11 +8287,11 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  knex@2.5.1(pg@8.19.0)(supports-color@5.5.0):
+  knex@2.5.1(pg@8.19.0):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       escalade: 3.2.0
       esm: 3.2.25
       get-package-type: 0.1.0
@@ -9396,9 +9381,9 @@ snapshots:
 
   semver@7.8.5: {}
 
-  send@0.19.2(supports-color@5.5.0):
+  send@0.19.2:
     dependencies:
-      debug: 2.6.9(supports-color@5.5.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 2.0.0
@@ -9414,12 +9399,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serve-static@1.16.3(supports-color@5.5.0):
+  serve-static@1.16.3:
     dependencies:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 0.19.2(supports-color@5.5.0)
+      send: 0.19.2
     transitivePeerDependencies:
       - supports-color
 
@@ -9625,7 +9610,7 @@ snapshots:
       pirates: 4.0.7
       ts-interface-checker: 0.1.13
 
-  superagent@10.2.3(supports-color@5.5.0):
+  superagent@10.2.3:
     dependencies:
       component-emitter: 1.3.1
       cookiejar: 2.1.4
@@ -9639,10 +9624,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  supertest@7.1.4(supports-color@5.5.0):
+  supertest@7.1.4:
     dependencies:
       methods: 1.1.2
-      superagent: 10.2.3(supports-color@5.5.0)
+      superagent: 10.2.3
     transitivePeerDependencies:
       - supports-color
 
@@ -9756,7 +9741,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.5.1(jiti@2.7.0)(postcss@8.5.19)(supports-color@5.5.0)(typescript@5.9.3)(yaml@2.9.0):
+  tsup@8.5.1(jiti@2.7.0)(postcss@8.5.19)(typescript@5.9.3)(yaml@2.9.0):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.27.3)
       cac: 6.7.14
@@ -10001,7 +9986,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite-node@3.2.4(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(supports-color@5.5.0)(yaml@2.9.0):
+  vite-node@3.2.4(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3(supports-color@5.5.0)
@@ -10021,22 +10006,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-
-  vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0):
-    dependencies:
-      esbuild: 0.25.12
-      fdir: 6.5.0(picomatch@4.0.4)
-      picomatch: 4.0.4
-      postcss: 8.5.14
-      rollup: 4.60.1
-      tinyglobby: 0.2.15
-    optionalDependencies:
-      '@types/node': 24.11.0
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      lightningcss: 1.30.2
-      sass: 1.69.5
-      yaml: 2.9.0
 
   vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0):
     dependencies:
@@ -10068,7 +10037,7 @@ snapshots:
       jiti: 2.6.1
       yaml: 2.9.0
 
-  vitest@3.2.6(@types/node@24.11.0)(jiti@2.7.0)(jsdom@20.0.3(supports-color@5.5.0))(lightningcss@1.32.0)(sass@1.69.5)(supports-color@5.5.0)(yaml@2.9.0):
+  vitest@3.2.6(@types/node@24.11.0)(jiti@2.7.0)(jsdom@20.0.3)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.6
@@ -10091,11 +10060,11 @@ snapshots:
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
       vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
-      vite-node: 3.2.4(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(supports-color@5.5.0)(yaml@2.9.0)
+      vite-node: 3.2.4(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.11.0
-      jsdom: 20.0.3(supports-color@5.5.0)
+      jsdom: 20.0.3
     transitivePeerDependencies:
       - jiti
       - less
@@ -10169,7 +10138,7 @@ snapshots:
 
   vue-tsc@3.1.5(typescript@5.9.3):
     dependencies:
-      '@volar/typescript': 2.4.23(typescript@5.9.3)
+      '@volar/typescript': 2.4.23
       '@vue/language-core': 3.1.5(typescript@5.9.3)
       typescript: 5.9.3
 
