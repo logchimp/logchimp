@@ -36,6 +36,7 @@
       <DashboardPostEditor
         ref="dashboardPostEditorRef"
         :post="post"
+        @updated="handlePostUpdated"
         @loading="loading = $event"
       />
 
@@ -86,6 +87,9 @@ interface Props {
   post: IDashboardPost;
 }
 defineProps<Props>();
+const emit = defineEmits<{
+  updated: [post: IDashboardPost];
+}>();
 
 const loading = ref(false);
 const dashboardPostEditorRef = ref();
@@ -97,6 +101,10 @@ const hasPermission = computed(() => {
 
 function updatePostHandler() {
   dashboardPostEditorRef.value.updatePostHandler();
+}
+
+function handlePostUpdated(updatedPost: IDashboardPost) {
+  emit("updated", updatedPost);
 }
 
 onMounted(() => {
