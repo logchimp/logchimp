@@ -102,7 +102,7 @@ watchDebounced(
 );
 
 function selectHandler(e: TCurrentRoadmap) {
-  if (!e) return;
+  if (e === undefined) return;
   searchRoadmap.select(e);
 }
 

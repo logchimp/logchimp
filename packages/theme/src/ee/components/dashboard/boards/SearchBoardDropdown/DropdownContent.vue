@@ -102,7 +102,7 @@ watchDebounced(
 );
 
 function selectHandler(e: TCurrentBoard) {
-  if (!e) return;
+  if (e === undefined) return;
   searchBoard.select(e);
 }
 
