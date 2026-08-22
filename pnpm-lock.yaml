@@ -40,7 +40,7 @@ importers:
     dependencies:
       '@maizzle/framework':
         specifier: latest
-        version: 6.0.13(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)
+        version: 6.1.0(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)
       '@maizzle/tailwindcss':
         specifier: ^1.5.5
         version: 1.5.5
@@ -115,8 +115,8 @@ importers:
         specifier: ^12.0.1
         version: 12.0.1
       valibot:
-        specifier: ^1.2.0
-        version: 1.2.0(typescript@5.9.3)
+        specifier: ^1.4.2
+        version: 1.4.2(typescript@5.9.3)
       validator:
         specifier: ^13.15.35
         version: 13.15.35
@@ -817,8 +817,8 @@ packages:
     peerDependencies:
       vue: '>=3.0.1'
 
-  '@maizzle/framework@6.0.13':
-    resolution: {integrity: sha512-cWoRA98Ur4JulzzYEhYMvMkOshniIh/hRCm/UE4VslzgCoVOiPhvEi5G9oZqVN3M3EmTpKWZx8B2aAyPK0mNew==}
+  '@maizzle/framework@6.1.0':
+    resolution: {integrity: sha512-DrwSD3CuTQHGy7cClLtyi+W0d3v9j3KOUatdfDjzJQa13WMMsQupaxEhT2WN1lQRTgh0R7ViojeQteaUGeTxMA==}
     hasBin: true
     peerDependencies:
       shiki: ^1 || ^2 || ^3 || ^4
@@ -5035,14 +5035,6 @@ packages:
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
-  valibot@1.2.0:
-    resolution: {integrity: sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg==}
-    peerDependencies:
-      typescript: '>=5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   valibot@1.4.2:
     resolution: {integrity: sha512-gjdCvJ6d3RyHAneqxMYMW9QMCwYMb3jpOO0IyHZV1bnRHFBHrX3VkIILt5XYR0WhwHiH7Mty8ovuPZ/O3gamrg==}
     peerDependencies:
@@ -5765,7 +5757,7 @@ snapshots:
     dependencies:
       vue: 3.5.34(typescript@6.0.3)
 
-  '@maizzle/framework@6.0.13(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)':
+  '@maizzle/framework@6.1.0(@types/node@24.11.0)(@vue/compiler-sfc@3.5.34)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.34(typescript@6.0.3))(yaml@2.9.0)':
     dependencies:
       '@lucide/vue': 1.25.0(vue@3.5.34(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
@@ -9977,7 +9969,7 @@ snapshots:
 
   v8-compile-cache-lib@3.0.1: {}
 
-  valibot@1.2.0(typescript@5.9.3):
+  valibot@1.4.2(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
 
