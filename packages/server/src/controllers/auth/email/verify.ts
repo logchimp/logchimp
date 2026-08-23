@@ -4,9 +4,6 @@ import type {
   IAuthEmailVerifyResponseBody,
 } from "@logchimp/types";
 
-// services
-import { verifyEmail } from "../../../services/auth/verifyEmail";
-
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
@@ -17,6 +14,7 @@ import type {
 import { getUserById } from "../../../repository/user";
 import database from "../../../database";
 import { mailWorker } from "../../../worker/handler/mail";
+import { sendAccountVerificationEmail } from "../../../services/mail/worker.service";
 
 type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
 
@@ -51,7 +49,7 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
     if (mailWorker.isRunning) {
       // TODO: send account email verification using worker
     } else {
-      await verifyEmail(tokenPayload);
+      await sendAccountVerificationEmail(tokenPayload);
     }
 
     res.status(200).send({
