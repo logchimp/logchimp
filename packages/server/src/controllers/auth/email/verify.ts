@@ -48,18 +48,11 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
       type: "emailVerification",
     };
 
-    const emailVerification = await verifyEmail(tokenPayload);
-    if (!emailVerification) {
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
-      return;
-    }
+    await verifyEmail(tokenPayload);
 
     res.status(200).send({
       verify: {
-        success: Boolean(emailVerification.createdAt),
+        success: true,
       },
     });
   } catch (err) {

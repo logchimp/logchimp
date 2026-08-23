@@ -49,7 +49,7 @@ describe("POST /api/v1/auth/email/verify", () => {
     expect(response.status).toBe(200);
 
     const verify = response.body.verify;
-    expect(verify.success).toBeTruthy();
+    expect(verify.success).toBe(true);
   });
 });
 
