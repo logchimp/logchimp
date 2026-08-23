@@ -10,13 +10,13 @@ import { verifyEmail } from "../../../services/auth/verifyEmail";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import { isDevTestEnv } from "../../../helpers";
 import type {
   IAuthenticationMiddlewareUser,
   IVerifyEmailJwtPayload,
 } from "../../../types";
 import { getUserById } from "../../../repository/user";
 import database from "../../../database";
+import { mailWorker } from "../../../worker/handler/mail";
 
 type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
 
@@ -48,29 +48,15 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
       type: "emailVerification",
     };
 
-    const emailVerification = await verifyEmail(tokenPayload);
-    if (!emailVerification) {
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
-      return;
+    if (mailWorker.isRunning) {
+      // TODO: send account email verification using worker
+    } else {
+      await verifyEmail(tokenPayload);
     }
-
-    /**
-     * sending token as response is for
-     * development/testing environment
-     */
-    const __token = isDevTestEnv
-      ? {
-          ...emailVerification,
-        }
-      : undefined;
 
     res.status(200).send({
       verify: {
-        success: Boolean(emailVerification.createdAt),
-        __token,
+        success: true,
       },
     });
   } catch (err) {

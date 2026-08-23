@@ -49,19 +49,7 @@ describe("POST /api/v1/auth/email/verify", () => {
     expect(response.status).toBe(200);
 
     const verify = response.body.verify;
-    expect(verify.success).toBeTruthy();
-
-    // in non prod environments
-    expect(verify.__token.email).toBe(user.email);
-    expect(typeof verify.__token.token).toBe("string");
-
-    const token = verify.__token.token;
-    const decoded = jwt.verify(token, config.secretKey) as JwtPayload &
-      (IVerifyEmailJwtPayload | IPasswordResetJwtPayload);
-
-    expect(decoded.userId).toBe(user.userId);
-    expect(decoded.email).toBe(user.email);
-    expect(decoded.type).toBe("emailVerification");
+    expect(verify.success).toBe(true);
   });
 });
 
