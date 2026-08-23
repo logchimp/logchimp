@@ -3,8 +3,6 @@ import type { IAuthUser, TAuthSignupRequestBody } from "@logchimp/types";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 import { DatabaseError } from "pg";
-
-import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 import database from "../../database";
 import {
@@ -18,6 +16,8 @@ import error from "../../errorResponse.json";
 import type { IVerifyEmailJwtPayload } from "../../types";
 import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
 import { mailWorker } from "../../worker/handler/mail";
+import { mailQueue } from "../../worker/tasks/mail";
+import { sendAccountVerificationEmail } from "../mail/worker.service";
 
 interface UserData {
   email: string;
@@ -144,9 +144,9 @@ const createUser = async (
     };
 
     if (mailWorker.isRunning) {
-      // TODO: send account email verification using worker
+      await mailQueue.sendAccountVerificationEmail(tokenPayload);
     } else {
-      await verifyEmail(tokenPayload);
+      await sendAccountVerificationEmail(tokenPayload);
     }
 
     // create auth token
