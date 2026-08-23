@@ -16,6 +16,7 @@ import error from "../../errorResponse.json";
 import type { IVerifyEmailJwtPayload } from "../../types";
 import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
 import { mailWorker } from "../../worker/handler/mail";
+import { mailQueue } from "../../worker/tasks/mail";
 import { sendAccountVerificationEmail } from "../mail/worker.service";
 
 interface UserData {
@@ -143,7 +144,7 @@ const createUser = async (
     };
 
     if (mailWorker.isRunning) {
-      // TODO: send account email verification using worker
+      await mailQueue.sendAccountVerificationEmail(tokenPayload);
     } else {
       await sendAccountVerificationEmail(tokenPayload);
     }

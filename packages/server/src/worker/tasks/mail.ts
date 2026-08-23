@@ -1,6 +1,9 @@
 import { type ConnectionOptions, Queue, type QueueOptions } from "bullmq";
 
-import type { IPasswordResetJwtPayload } from "../../types";
+import type {
+  IPasswordResetJwtPayload,
+  IVerifyEmailJwtPayload,
+} from "../../types";
 
 type BaseQueueOptions = Omit<QueueOptions, "connection">;
 
@@ -29,6 +32,10 @@ export class MailQueue {
 
   sendPasswordResetTokenMail(payload: IPasswordResetJwtPayload) {
     return this.queueInstance.add("sendPasswordResetTokenMail", payload);
+  }
+
+  sendAccountVerificationEmail(payload: IVerifyEmailJwtPayload) {
+    return this.queueInstance.add("sendAccountVerificationEmail", payload);
   }
 }
 
