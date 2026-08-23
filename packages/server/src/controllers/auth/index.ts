@@ -5,3 +5,4 @@ export { isSiteSetup } from "./isSiteSetup";
 
 export * as email from "./email";
 export * as password from "./password";
+export * as sso from "./sso";

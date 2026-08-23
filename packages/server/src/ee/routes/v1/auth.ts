@@ -85,4 +85,8 @@ router.post(
   auth.password.set,
 );
 
+// SSO
+
+router.get("/auth/sso/logchimp", auth.sso.logchimpIdentityCallback);
+
 export default router;
