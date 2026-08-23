@@ -57,20 +57,9 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
       return;
     }
 
-    /**
-     * sending token as response is for
-     * development/testing environment
-     */
-    const __token = isDevTestEnv
-      ? {
-          ...emailVerification,
-        }
-      : undefined;
-
     res.status(200).send({
       verify: {
         success: Boolean(emailVerification.createdAt),
-        __token,
       },
     });
   } catch (err) {
