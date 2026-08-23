@@ -8,15 +8,16 @@ import { verifyEmail } from "./verifyEmail";
 import { createToken } from "../token.service";
 import database from "../../database";
 import {
+  generateUniqueUsername as _generateUniqueUsername,
   sanitiseName,
   sanitiseUsername,
-  generateUniqueUsername as _generateUniqueUsername,
 } from "../../helpers";
 import { hashPassword } from "../../utils/password";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import type { IVerifyEmailJwtPayload } from "../../types";
 import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
+import { mailWorker } from "../../worker/handler/mail";
 
 interface UserData {
   email: string;
@@ -141,8 +142,12 @@ const createUser = async (
       email: newUser.email,
       type: "emailVerification",
     };
-    // send email verification
-    await verifyEmail(tokenPayload);
+
+    if (mailWorker.isRunning) {
+      // TODO: send account email verification using worker
+    } else {
+      await verifyEmail(tokenPayload);
+    }
 
     // create auth token
     const authToken = createToken(tokenPayload, {

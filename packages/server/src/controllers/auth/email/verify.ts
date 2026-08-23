@@ -10,13 +10,13 @@ import { verifyEmail } from "../../../services/auth/verifyEmail";
 // utils
 import logger from "../../../utils/logger";
 import error from "../../../errorResponse.json";
-import { isDevTestEnv } from "../../../helpers";
 import type {
   IAuthenticationMiddlewareUser,
   IVerifyEmailJwtPayload,
 } from "../../../types";
 import { getUserById } from "../../../repository/user";
 import database from "../../../database";
+import { mailWorker } from "../../../worker/handler/mail";
 
 type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
 
@@ -48,7 +48,11 @@ export async function verify(req: Request, res: Response<ResponseBody>) {
       type: "emailVerification",
     };
 
-    await verifyEmail(tokenPayload);
+    if (mailWorker.isRunning) {
+      // TODO: send account email verification using worker
+    } else {
+      await verifyEmail(tokenPayload);
+    }
 
     res.status(200).send({
       verify: {
