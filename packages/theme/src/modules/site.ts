@@ -13,6 +13,7 @@ import type {
 
 import { useUserStore } from "../store/user";
 import { VITE_API_URL } from "../constants";
+import getAuthHeaders from "../utils/getAuthHeaders";
 
 /**
  * Create owner account while setting up LogChimp site.
@@ -94,9 +95,7 @@ export const updateSettings = async (
     data: {
       ...site,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -109,7 +108,7 @@ export const uploadSiteLogo = async (logo: FormData) => {
     url: `${VITE_API_URL}/api/v1/settings/update-logo`,
     data: logo,
     headers: {
-      Authorization: `Bearer ${authToken}`,
+      ...getAuthHeaders(authToken),
       "Content-Type": "multipart/form-data",
     },
   });
@@ -142,8 +141,6 @@ export const updateLabsSettings = async (
     method: "PATCH",
     url: `${VITE_API_URL}/api/v1/settings/labs`,
     data: labs,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };

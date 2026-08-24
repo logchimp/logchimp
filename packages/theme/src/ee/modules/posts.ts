@@ -13,6 +13,7 @@ import type {
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
 import { APIService } from "../../modules/api";
+import getAuthHeaders from "../../utils/getAuthHeaders";
 
 export class PostsEE extends APIService {
   constructor(baseURL?: string) {
@@ -63,9 +64,7 @@ export const postActivity = async (
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/activity`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
     params: {
       page,
       limit,
@@ -95,9 +94,7 @@ export const addComment = async (
       body,
       is_internal,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -115,9 +112,7 @@ export async function updateComment(
       body,
       is_internal,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 }
 
@@ -130,8 +125,6 @@ export async function deleteComment(
   return await axios({
     method: "DELETE",
     url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 }

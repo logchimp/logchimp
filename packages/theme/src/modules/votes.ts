@@ -6,6 +6,7 @@ import type {
 
 import { useUserStore } from "../store/user";
 import { VITE_API_URL } from "../constants";
+import getAuthHeaders from "../utils/getAuthHeaders";
 
 /**
  * Add vote to a post
@@ -24,9 +25,7 @@ export const addVote = async (
       userId: getUserId,
       postId,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -47,8 +46,6 @@ export const deleteVote = async (
       userId: getUserId,
       postId,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };

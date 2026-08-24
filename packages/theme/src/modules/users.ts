@@ -14,6 +14,7 @@ import { useUserStore } from "../store/user";
 
 import { APIService } from "./api";
 import { VITE_API_URL } from "../constants";
+import getAuthHeaders from "../utils/getAuthHeaders";
 
 /**
  * Get user settings
@@ -27,9 +28,7 @@ export const getUserSettings = async (): Promise<
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/users/profile`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -52,9 +51,7 @@ export const updateUserSettings = async ({
     data: {
       name,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -69,9 +66,7 @@ export const getPermissions = async (): Promise<
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/users/permissions`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -86,9 +81,7 @@ export const checkUserDashboardAccess = async () => {
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/users/dashboard`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -106,9 +99,7 @@ export class Users extends APIService {
   ): Promise<IGetUsersResponseBody> {
     const { authToken } = useUserStore();
     const config: AxiosRequestConfig = {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: getAuthHeaders(authToken),
     };
 
     return this.get("/v1/users", params, config)

@@ -16,6 +16,7 @@ import type {
 
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
+import getAuthHeaders from "../../utils/getAuthHeaders";
 
 /**
  * Get all roadmaps with cursor-based pagination
@@ -44,9 +45,7 @@ export const getAllRoadmaps = async (
   return await axios({
     method: "GET",
     url,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -63,9 +62,7 @@ export const getRoadmapByUrl = async (
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps/${encodeURIComponent(url)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -82,9 +79,7 @@ export const searchRoadmap = async (
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roadmaps/search/${encodeURIComponent(name)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -105,9 +100,7 @@ export const createRoadmap = async (
     data: {
       name: roadmap?.name,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -132,9 +125,7 @@ export const updateRoadmap = async (
     data: {
       ...roadmap,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -156,9 +147,7 @@ export const sortRoadmap = async ({
       from,
       to,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -182,8 +171,6 @@ export const deleteRoadmap = async ({
     data: {
       id,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };

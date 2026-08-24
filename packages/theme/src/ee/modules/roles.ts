@@ -13,6 +13,7 @@ import { VITE_API_URL } from "../../constants";
 // store
 import { useUserStore } from "../../store/user";
 import { APIService } from "../../modules/api";
+import getAuthHeaders from "../../utils/getAuthHeaders";
 
 /**
  * Get role by UUID
@@ -27,9 +28,7 @@ export const getRole = async (
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/roles/${encodeURIComponent(id)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -45,9 +44,7 @@ export const createRole = async (): Promise<
   return await axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/roles`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 
@@ -71,9 +68,7 @@ export const updateRole = async (
     data: {
       ...role,
     },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 };
 

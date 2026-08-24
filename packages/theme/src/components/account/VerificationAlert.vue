@@ -46,6 +46,7 @@ import { Alert } from "../ui/Alert";
 import Button from "../ui/Button.vue";
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
+import getAuthHeaders from "../../utils/getAuthHeaders";
 
 const { authToken } = useUserStore();
 const loading = ref<boolean>(false);
@@ -92,9 +93,7 @@ async function sendEmailVerification(): Promise<
   return axios({
     method: "POST",
     url: `${VITE_API_URL}/api/v1/auth/email/verify`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: getAuthHeaders(authToken),
   });
 }
 
