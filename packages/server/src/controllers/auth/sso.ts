@@ -10,6 +10,8 @@ import type {
 } from "@logchimp/types";
 import { config } from "../../utils/logchimpConfig";
 import { getSafeURI } from "../../helpers";
+import { AuthenticationFailedError } from "../../services/auth/errors";
+import logger from "../../utils/logger";
 
 export async function logchimpIdentityCodeExchange(
   req: Request<unknown, unknown, unknown, ILogChimpIdentityCodeExchangeQuery>,
@@ -71,15 +73,38 @@ export async function logchimpIdentityAuthentication(
     return;
   }
 
-  const authService = new AuthService();
-  const user = await authService.LogChimpIdentityAuthentication(code);
+  try {
+    const authService = new AuthService();
+    const user = await authService.LogChimpIdentityAuthentication(code);
 
-  const authToken = authService.generateUserAuthToken(user.userId, user.email);
+    const authToken = authService.generateUserAuthToken(
+      user.userId,
+      user.email,
+    );
 
-  res.status(200).send({
-    user: {
-      ...user,
-      authToken,
-    },
-  });
+    res.status(200).send({
+      user: {
+        ...user,
+        authToken,
+      },
+    });
+  } catch (err) {
+    if (err instanceof AuthenticationFailedError) {
+      res.status(403).send({
+        message: "Invalid code provided",
+        code: "INVALID_CODE",
+      });
+      return;
+    }
+
+    logger.error({
+      message: "Failed to authenticate LogChimp identity",
+      err,
+    });
+
+    res.status(500).send({
+      message: "Internal Server Error",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  }
 }

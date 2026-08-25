@@ -160,6 +160,8 @@ export class AuthService {
     };
     if (userIdentityCache) {
       userIdentity = JSON.parse(userIdentityCache);
+    } else {
+      throw new AuthenticationFailedError();
     }
 
     await cache.valkey.del(`sso:logchimp:${code}`);
