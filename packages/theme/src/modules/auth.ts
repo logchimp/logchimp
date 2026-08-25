@@ -4,6 +4,8 @@ import type {
   IAuthLoginResponseBody,
   IAuthPasswordResetResponseBody,
   IAuthSignupResponseBody,
+  ILogChimpIdentityAuthenticationQuery,
+  ILogChimpIdentityAuthenticationResponseBody,
   IPasswordResetValidationTokenResponseBody,
   ISetPasswordRequestBody,
   ISetPasswordResponseBody,
@@ -126,5 +128,21 @@ export const setNewPassword = async ({
       token,
       password,
     },
+  });
+};
+
+export const ssoLogChimpAuthenticate = async ({
+  code,
+}: ILogChimpIdentityAuthenticationQuery): Promise<
+  AxiosResponse<ILogChimpIdentityAuthenticationResponseBody>
+> => {
+  const url = new URL(`${VITE_API_URL}/api/v1/auth/sso/logchimp`);
+  if (code) {
+    url.searchParams.append("code", code);
+  }
+
+  return await axios({
+    method: "POST",
+    url: url.toString(),
   });
 };
