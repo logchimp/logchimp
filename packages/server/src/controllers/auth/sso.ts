@@ -1,6 +1,12 @@
 import type { Request, Response } from "express";
+import { AuthService } from "../../services/auth/auth.service";
+import * as cache from "../../cache";
+import crypto from "node:crypto";
 
-export function logchimpIdentityCallback(req: Request, res: Response) {
+export async function logchimpIdentityCodeExchange(
+  req: Request,
+  res: Response,
+) {
   // ?redirect_uri=
   const redirectUri = req.query.redirect_uri.toString();
 
@@ -10,11 +16,20 @@ export function logchimpIdentityCallback(req: Request, res: Response) {
     res.redirect(`${redirectUri}?code=INVALID_TOKEN`);
   }
 
-  //   verify signature
-  //         ↓
-  // find/create LogChimp user
-  //         ↓
-  // Set-Cookie: logchimp_session=...
-  // ↓
-  // LogChimp
+  const authService = new AuthService();
+  const user = await authService.GenerateLogChimpIdentityExchangeCode(token);
+
+  const onetimeCode = crypto.randomUUID();
+
+  await cache.valkey.set(
+    `sso:logchimp:${onetimeCode}`,
+    JSON.stringify({
+      userId: user.userId,
+      email: user.email,
+    }),
+    "EX",
+    60,
+  );
+
+  res.redirect(`${redirectUri}?code=${onetimeCode}`);
 }

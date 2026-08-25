@@ -1,15 +1,24 @@
-import type { CreateUserOptions, TCreatedUser } from "./types";
+import type {
+  CreateUserOptions,
+  SsoLogChimpIdentityPayload,
+  TCreatedUser,
+} from "./types";
 import {
   generateUniqueUsername as _generateUniqueUsername,
   sanitiseName,
   sanitiseUsername,
 } from "../../helpers";
+import * as jwt from "jsonwebtoken";
 import md5 from "md5";
 import { v4 as uuidv4 } from "uuid";
 import { hashPassword } from "../../utils/password";
 import database from "../../database";
 import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
-import { type IInsertUserQuery, insertUser } from "../../repository/user";
+import {
+  getUserByEmail,
+  type IInsertUserQuery,
+  insertUser,
+} from "../../repository/user";
 import { DatabaseError } from "pg";
 import { assignEveryoneRoleQuery } from "../../repository/roles";
 import type {
@@ -21,11 +30,14 @@ import { mailQueue } from "../../worker/tasks/mail";
 import { sendAccountVerificationEmail } from "../mail/worker.service";
 import { createToken } from "../token.service";
 import {
+  AuthenticationFailedError,
   FailedToCreateUser,
+  InvalidLogChimpIdentityTokenError,
   UserExistsError,
   UsernameExistsError,
 } from "./errors";
 import logger from "../../utils/logger";
+import { config } from "../../utils/logchimpConfig";
 
 export class AuthService {
   async CreateUser(email: string, options: CreateUserOptions) {
@@ -91,6 +103,37 @@ export class AuthService {
       .where(database.raw("LOWER(email) = LOWER(?)", [email]))
       .first<{ userId: string }>("userId");
     return !!result?.userId;
+  }
+
+  async GenerateLogChimpIdentityExchangeCode(token: string) {
+    const decode = jwt.verify(
+      token,
+      config.ssoLogChimpIdentityPublicKey,
+    ) as jwt.JwtPayload & SsoLogChimpIdentityPayload;
+
+    const now = Math.floor(Date.now() / 1000);
+    if (!("exp" in decode)) {
+      throw new InvalidLogChimpIdentityTokenError();
+    }
+    if (decode.exp < now) {
+      throw new InvalidLogChimpIdentityTokenError();
+    }
+
+    const userId = (decode.sub || "").trim();
+    if (!userId) {
+      throw new AuthenticationFailedError();
+    }
+
+    const email = (decode.email || "").trim().toLocaleLowerCase();
+
+    let getUser = await getUserByEmail(database, email);
+
+    if (!getUser) {
+      await this.CreateUser(email, {});
+      getUser = await getUserByEmail(database, email);
+    }
+
+    return getUser;
   }
 
   /**

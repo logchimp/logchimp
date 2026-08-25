@@ -11,3 +11,8 @@ export type CreateUserOptions = {
     sendAccountVerificationEmail?: boolean;
   };
 };
+
+export type SsoLogChimpIdentityPayload = {
+  email: string;
+  avatar?: string;
+};
