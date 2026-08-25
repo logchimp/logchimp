@@ -49,7 +49,12 @@ export async function signup(
 
     const authService = new AuthService();
     const user = await authService.CreateUser(email, {
-      password,
+      user: {
+        password,
+      },
+      options: {
+        sendAccountVerificationEmail: true,
+      },
     });
 
     const authToken = authService.generateUserAuthToken(

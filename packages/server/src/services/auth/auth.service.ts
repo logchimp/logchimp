@@ -32,7 +32,7 @@ export class AuthService {
     const userEmail = (email || "").trim().toLowerCase();
 
     const userId = uuidv4();
-    const name = sanitiseName(options.name);
+    const name = sanitiseName(options.user?.name);
 
     // get username from email address after truncating to first 30 characters and sanitising it
     const baseUsername = sanitiseUsername(userEmail.split("@")[0].slice(0, 30));
@@ -42,8 +42,8 @@ export class AuthService {
 
     // hash password
     let hashedPassword: string | null;
-    if (options.password) {
-      hashedPassword = hashPassword(options.password);
+    if (options.user?.password) {
+      hashedPassword = hashPassword(options.user.password);
     }
 
     if (await this.isEmailUniqueQuery(email)) {
@@ -61,16 +61,18 @@ export class AuthService {
 
     await assignEveryoneRoleQuery(newUser.userId);
 
-    const tokenPayload: IVerifyEmailJwtPayload = {
-      userId: newUser.userId,
-      email: newUser.email,
-      type: "emailVerification",
-    };
+    if (options?.options?.sendAccountVerificationEmail) {
+      const tokenPayload: IVerifyEmailJwtPayload = {
+        userId: newUser.userId,
+        email: newUser.email,
+        type: "emailVerification",
+      };
 
-    if (mailWorker.isRunning) {
-      await mailQueue.sendAccountVerificationEmail(tokenPayload);
-    } else {
-      await sendAccountVerificationEmail(tokenPayload);
+      if (mailWorker.isRunning) {
+        await mailQueue.sendAccountVerificationEmail(tokenPayload);
+      } else {
+        await sendAccountVerificationEmail(tokenPayload);
+      }
     }
 
     return newUser;

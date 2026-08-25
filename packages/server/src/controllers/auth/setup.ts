@@ -60,8 +60,13 @@ export async function setup(
 
     const authService = new AuthService();
     const user = await authService.CreateUser(email, {
-      password,
-      name,
+      user: {
+        password,
+        name,
+      },
+      options: {
+        sendAccountVerificationEmail: true,
+      },
     });
 
     // set user as owner
