@@ -52,7 +52,17 @@ export async function signup(
       password,
     });
 
-    res.status(201).send({ user });
+    const authToken = authService.generateUserAuthToken(
+      user.userId,
+      user.email,
+    );
+
+    res.status(201).send({
+      user: {
+        ...user,
+        authToken,
+      },
+    });
   } catch (err) {
     if (err instanceof UserExistsError) {
       res.status(409).send({
