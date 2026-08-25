@@ -12,7 +12,10 @@ import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
 import { type IInsertUserQuery, insertUser } from "../../repository/user";
 import { DatabaseError } from "pg";
 import { assignEveryoneRoleQuery } from "../../repository/roles";
-import type { IVerifyEmailJwtPayload } from "../../types";
+import type {
+  IAuthenticationTokenPayload,
+  IVerifyEmailJwtPayload,
+} from "../../types";
 import { mailWorker } from "../../worker/handler/mail";
 import { mailQueue } from "../../worker/tasks/mail";
 import { sendAccountVerificationEmail } from "../mail/worker.service";
@@ -70,15 +73,7 @@ export class AuthService {
       await sendAccountVerificationEmail(tokenPayload);
     }
 
-    // create auth token
-    const authToken = createToken(tokenPayload, {
-      expiresIn: "2d",
-    });
-
-    return {
-      authToken,
-      ...newUser,
-    };
+    return newUser;
   }
 
   private async isEmailUniqueQuery(email: string): Promise<boolean> {
@@ -121,5 +116,17 @@ export class AuthService {
       }
       throw err;
     }
+  }
+
+  generateUserAuthToken(userId: string, email: string) {
+    return createToken(
+      {
+        userId,
+        email,
+      } satisfies IAuthenticationTokenPayload,
+      {
+        expiresIn: "2d",
+      },
+    );
   }
 }
