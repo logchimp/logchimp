@@ -36,5 +36,6 @@ router.post(
 router.post("/auth/password/set", validateEmailToken, auth.password.set);
 
 router.get("/auth/sso/logchimp", auth.sso.logchimpIdentityCodeExchange);
+router.post("/auth/sso/logchimp", auth.sso.logchimpIdentityAuthentication);
 
 export default router;

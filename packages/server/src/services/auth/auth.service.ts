@@ -38,6 +38,7 @@ import {
 } from "./errors";
 import logger from "../../utils/logger";
 import { config } from "../../utils/logchimpConfig";
+import * as cache from "../../cache";
 
 export class AuthService {
   async CreateUser(email: string, options: CreateUserOptions) {
@@ -148,6 +149,22 @@ export class AuthService {
     }
 
     return getUser;
+  }
+
+  async LogChimpIdentityAuthentication(code: string) {
+    const userIdentityCache = await cache.valkey.get(`sso:logchimp:${code}`);
+
+    let userIdentity: {
+      userId: string;
+      email: string;
+    };
+    if (userIdentityCache) {
+      userIdentity = JSON.parse(userIdentityCache);
+    }
+
+    await cache.valkey.del(`sso:logchimp:${code}`);
+
+    return await getUserByEmail(database, userIdentity.email);
   }
 
   /**

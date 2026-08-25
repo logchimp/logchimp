@@ -101,3 +101,11 @@ export interface ILogChimpIdentityCodeExchangeQuery {
   redirect_uri?: string;
   token?: string;
 }
+
+export interface ILogChimpIdentityAuthenticationQuery {
+  code?: string;
+}
+
+export interface ILogChimpIdentityAuthenticationResponseBody {
+  user: IAuthUser;
+}

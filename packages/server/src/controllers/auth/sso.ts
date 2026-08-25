@@ -3,8 +3,10 @@ import { AuthService } from "../../services/auth/auth.service";
 import * as cache from "../../cache";
 import crypto from "node:crypto";
 import type {
-  IApiErrorResponse,
   ILogChimpIdentityCodeExchangeQuery,
+  IApiErrorResponse,
+  ILogChimpIdentityAuthenticationQuery,
+  ILogChimpIdentityAuthenticationResponseBody,
 } from "@logchimp/types";
 import { config } from "../../utils/logchimpConfig";
 import { getSafeURI } from "../../helpers";
@@ -50,4 +52,34 @@ export async function logchimpIdentityCodeExchange(
   );
 
   res.redirect(`${redirectUri}?code=${onetimeCode}`);
+}
+
+type LogChimpIdentityAuthenticationResponse =
+  | ILogChimpIdentityAuthenticationResponseBody
+  | IApiErrorResponse;
+
+export async function logchimpIdentityAuthentication(
+  req: Request<unknown, unknown, unknown, ILogChimpIdentityAuthenticationQuery>,
+  res: Response<LogChimpIdentityAuthenticationResponse>,
+) {
+  const code = (req.query?.code || "").toString().trim();
+  if (!code) {
+    res.status(403).send({
+      message: "Invalid code provided",
+      code: "INVALID_CODE",
+    });
+    return;
+  }
+
+  const authService = new AuthService();
+  const user = await authService.LogChimpIdentityAuthentication(code);
+
+  const authToken = authService.generateUserAuthToken(user.userId, user.email);
+
+  res.status(200).send({
+    user: {
+      ...user,
+      authToken,
+    },
+  });
 }
