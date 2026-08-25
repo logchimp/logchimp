@@ -46,7 +46,7 @@ export class AuthService {
       hashedPassword = hashPassword(options.user.password);
     }
 
-    if (await this.isEmailUniqueQuery(email)) {
+    if (await this.isEmailUniqueQuery(userEmail)) {
       throw new UserExistsError();
     }
 
@@ -54,7 +54,7 @@ export class AuthService {
       userId,
       name,
       username: _generateUniqueUsername(baseUsername),
-      email,
+      email: userEmail,
       hashedPassword,
       avatar,
     });
