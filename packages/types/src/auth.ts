@@ -96,3 +96,8 @@ export interface IValidateEmailVerificationTokenResponseBody {
     success: boolean;
   };
 }
+
+export interface ILogChimpIdentityCodeExchangeQuery {
+  redirect_uri?: string;
+  token?: string;
+}

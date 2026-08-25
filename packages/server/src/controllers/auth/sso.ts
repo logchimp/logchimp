@@ -2,9 +2,10 @@ import type { Request, Response } from "express";
 import { AuthService } from "../../services/auth/auth.service";
 import * as cache from "../../cache";
 import crypto from "node:crypto";
+import type { ILogChimpIdentityCodeExchangeQuery } from "@logchimp/types";
 
 export async function logchimpIdentityCodeExchange(
-  req: Request,
+  req: Request<unknown, unknown, unknown, ILogChimpIdentityCodeExchangeQuery>,
   res: Response,
 ) {
   // ?redirect_uri=
