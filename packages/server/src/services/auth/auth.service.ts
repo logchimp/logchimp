@@ -124,13 +124,18 @@ export class AuthService {
       throw new AuthenticationFailedError();
     }
 
+    const name = (decode.name || "").trim();
     const email = (decode.email || "").trim().toLocaleLowerCase();
 
     let getUser = await getUserByEmail(database, email);
 
     if (!getUser) {
       try {
-        await this.CreateUser(email, {});
+        await this.CreateUser(email, {
+          user: {
+            name,
+          },
+        });
       } catch (error) {
         if (!(error instanceof UserExistsError)) {
           throw error;

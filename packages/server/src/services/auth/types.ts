@@ -13,6 +13,7 @@ export type CreateUserOptions = {
 };
 
 export type SsoLogChimpIdentityPayload = {
+  name?: string | null;
   email: string;
   avatar?: string;
 };
