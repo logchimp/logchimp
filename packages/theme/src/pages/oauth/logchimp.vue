@@ -43,6 +43,8 @@ onMounted(() => {
     isLoading.value = true;
     onMountedHandler(code);
   } else {
+    isError.value = true;
+    isLoading.value = false;
   }
 });
 </script>
