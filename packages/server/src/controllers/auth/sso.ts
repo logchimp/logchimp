@@ -84,7 +84,11 @@ export async function logchimpIdentityAuthentication(
 
     res.status(200).send({
       user: {
-        ...user,
+        userId: user.userId,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        username: user.username,
         authToken,
       },
     });
