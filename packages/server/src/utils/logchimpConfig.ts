@@ -46,6 +46,7 @@ interface Config {
   mailPort: number;
 
   // LogChimp Identity
+  ssoLogChimpIdentityAllowedRedirectURI: string | undefined;
   ssoLogChimpIdentityPublicKey: string | undefined;
 }
 
@@ -160,6 +161,8 @@ class ConfigManager {
       mailPassword: config.mail?.password,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
 
+      ssoLogChimpIdentityAllowedRedirectURI:
+        config.sso?.logchimp?.allowed_redirect_uri,
       ssoLogChimpIdentityPublicKey: config.sso?.logchimp?.public_key,
 
       version: "",
@@ -221,6 +224,8 @@ class ConfigManager {
       mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : DEFAULT_MAIL_PORT,
 
+      ssoLogChimpIdentityAllowedRedirectURI:
+        process.env.LOGCHIMP_IDENTITY_ALLOWED_REDIRECT_URI,
       ssoLogChimpIdentityPublicKey: process.env.LOGCHIMP_IDENTITY_PUBLIC_KEY,
 
       version: "",
