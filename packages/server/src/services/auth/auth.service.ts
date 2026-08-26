@@ -129,7 +129,14 @@ export class AuthService {
     let getUser = await getUserByEmail(database, email);
 
     if (!getUser) {
-      await this.CreateUser(email, {});
+      try {
+        await this.CreateUser(email, {});
+      } catch (error) {
+        if (!(error instanceof UserExistsError)) {
+          throw error;
+        }
+      }
+
       getUser = await getUserByEmail(database, email);
     }
 
