@@ -2,14 +2,30 @@ import type { Request, Response } from "express";
 import { AuthService } from "../../services/auth/auth.service";
 import * as cache from "../../cache";
 import crypto from "node:crypto";
-import type { ILogChimpIdentityCodeExchangeQuery } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  ILogChimpIdentityCodeExchangeQuery,
+} from "@logchimp/types";
+import { config } from "../../utils/logchimpConfig";
+import { getSafeURI } from "../../helpers";
 
 export async function logchimpIdentityCodeExchange(
   req: Request<unknown, unknown, unknown, ILogChimpIdentityCodeExchangeQuery>,
-  res: Response,
+  res: Response<IApiErrorResponse>,
 ) {
   // ?redirect_uri=
   const redirectUri = req.query.redirect_uri.toString();
+
+  const allowedRedirectURIs = getSafeURI(
+    (config.ssoLogChimpIdentityAllowedRedirectURI || "").trim(),
+  );
+  if (!allowedRedirectURIs.has(redirectUri)) {
+    res.status(400).send({
+      message: "Invalid redirect URI",
+      code: "INVALID_REDIRECT_URI",
+    });
+    return;
+  }
 
   // ?token=
   const token = (req.query.token.toString() || "").trim();

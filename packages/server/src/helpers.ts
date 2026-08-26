@@ -85,6 +85,31 @@ const sanitiseName = (value) => {
   return value.replace(/[^a-zA-Z .'-]/g, "").trim();
 };
 
+const getSafeURI = (value: string) => {
+  const allowedProtocols = isDevTestEnv
+    ? new Set(["https:", "http:"])
+    : new Set(["https:"]);
+  const allowedRedirectURIs = new Set<string>();
+
+  for (const part of value.split(",")) {
+    const candidate = part.trim();
+    if (!candidate) continue;
+
+    let parsed: URL;
+    try {
+      parsed = new URL(candidate);
+    } catch {
+      continue;
+    }
+
+    if (!allowedProtocols.has(parsed.protocol)) continue;
+
+    allowedRedirectURIs.add(candidate);
+  }
+
+  return allowedRedirectURIs;
+};
+
 /**
  * Sanitise URL
  *
@@ -210,6 +235,7 @@ export {
   generateHexColor,
   sanitiseUsername,
   sanitiseName,
+  getSafeURI,
   sanitiseURL,
   toSlug,
   readFile,
