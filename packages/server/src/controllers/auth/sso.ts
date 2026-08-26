@@ -15,6 +15,7 @@ export async function logchimpIdentityCodeExchange(
   const token = (req.query.token.toString() || "").trim();
   if (!token) {
     res.redirect(`${redirectUri}?code=INVALID_TOKEN`);
+    return;
   }
 
   const authService = new AuthService();
