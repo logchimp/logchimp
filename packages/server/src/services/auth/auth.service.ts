@@ -25,6 +25,7 @@ import {
   UserExistsError,
   UsernameExistsError,
 } from "./errors";
+import logger from "../../utils/logger";
 
 export class AuthService {
   async CreateUser(email: string, options: CreateUserOptions) {
@@ -61,18 +62,25 @@ export class AuthService {
 
     await assignEveryoneRoleQuery(newUser.userId);
 
-    if (options?.options?.sendAccountVerificationEmail) {
-      const tokenPayload: IVerifyEmailJwtPayload = {
-        userId: newUser.userId,
-        email: newUser.email,
-        type: "emailVerification",
-      };
+    try {
+      if (options?.options?.sendAccountVerificationEmail) {
+        const tokenPayload: IVerifyEmailJwtPayload = {
+          userId: newUser.userId,
+          email: newUser.email,
+          type: "emailVerification",
+        };
 
-      if (mailWorker.isRunning) {
-        await mailQueue.sendAccountVerificationEmail(tokenPayload);
-      } else {
-        await sendAccountVerificationEmail(tokenPayload);
+        if (mailWorker.isRunning) {
+          await mailQueue.sendAccountVerificationEmail(tokenPayload);
+        } else {
+          await sendAccountVerificationEmail(tokenPayload);
+        }
       }
+    } catch (e) {
+      logger.error({
+        message: "Failed to send account verification email",
+        error: e,
+      });
     }
 
     return newUser;
