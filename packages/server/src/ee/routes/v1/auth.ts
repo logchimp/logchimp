@@ -8,6 +8,7 @@ import { domainBlacklist } from "../../middleware/domainBlacklist";
 import { userExists } from "../../../middlewares/userExists";
 import { authRequired } from "../../../middlewares/auth";
 import { validateEmailToken } from "../../../middlewares/validateEmailToken";
+import { logchimpIdentityCodeExchange } from "../../../controllers/auth/sso";
 
 router.post(
   "/auth/signup",
@@ -87,6 +88,6 @@ router.post(
 
 // SSO
 
-router.get("/auth/sso/logchimp", auth.sso.logchimpIdentityCallback);
+router.get("/auth/sso/logchimp", auth.sso.logchimpIdentityCodeExchange);
 
 export default router;
