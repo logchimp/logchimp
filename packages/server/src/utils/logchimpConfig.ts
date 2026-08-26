@@ -44,6 +44,11 @@ interface Config {
   mailUser: string | undefined;
   mailPassword: string | undefined;
   mailPort: number;
+
+  // OIDC
+  oidcClientId: string | undefined;
+  oidcClientSecret: string | undefined;
+  oidcIssuer: string | undefined;
 }
 
 class ConfigManager {
@@ -157,6 +162,11 @@ class ConfigManager {
       mailPassword: config.mail?.password,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
 
+      // OIDC
+      oidcClientId: config.oidc?.clientId,
+      oidcClientSecret: config.oidc?.clientSecret,
+      oidcIssuer: config.oidc?.issuer,
+
       version: "",
     };
   }
@@ -215,6 +225,11 @@ class ConfigManager {
       mailUser: process.env.LOGCHIMP_MAIL_USER,
       mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
       mailPort: mailPort ? Number.parseInt(mailPort, 10) : DEFAULT_MAIL_PORT,
+
+      // OIDC
+      oidcClientId: process.env.LOGCHIMP_OIDC_CLIENT_ID,
+      oidcClientSecret: process.env.LOGCHIMP_OIDC_CLIENT_SECRET,
+      oidcIssuer: process.env.LOGCHIMP_OIDC_ISSUER,
 
       version: "",
     };
