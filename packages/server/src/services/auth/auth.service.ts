@@ -152,7 +152,7 @@ export class AuthService {
   }
 
   async LogChimpIdentityAuthentication(code: string) {
-    const userIdentityCache = await cache.valkey.get(`sso:logchimp:${code}`);
+    const userIdentityCache = await cache.valkey.getdel(`sso:logchimp:${code}`);
 
     let userIdentity: {
       userId: string;
@@ -163,8 +163,6 @@ export class AuthService {
     } else {
       throw new AuthenticationFailedError();
     }
-
-    await cache.valkey.del(`sso:logchimp:${code}`);
 
     return await getUserByEmail(database, userIdentity.email);
   }
