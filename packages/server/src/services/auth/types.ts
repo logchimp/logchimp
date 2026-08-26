@@ -6,6 +6,7 @@ export type CreateUserOptions = {
   user?: {
     password?: string;
     name?: string;
+    tenantUserId?: string;
   };
   options?: {
     sendAccountVerificationEmail?: boolean;

@@ -70,6 +70,7 @@ export class AuthService {
       email: userEmail,
       hashedPassword,
       avatar,
+      tenantUserId: options.user?.tenantUserId,
     });
 
     await assignEveryoneRoleQuery(newUser.userId);
@@ -134,6 +135,7 @@ export class AuthService {
         await this.CreateUser(email, {
           user: {
             name,
+            tenantUserId: userId,
           },
         });
       } catch (error) {

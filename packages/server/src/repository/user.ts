@@ -45,11 +45,20 @@ export interface IInsertUserQuery {
   email: string;
   hashedPassword: string;
   avatar: string;
+  tenantUserId?: string;
 }
 
 export function insertUser(
   db: Knex,
-  { name, email, hashedPassword, avatar, username, userId }: IInsertUserQuery,
+  {
+    name,
+    email,
+    hashedPassword,
+    avatar,
+    username,
+    userId,
+    tenantUserId,
+  }: IInsertUserQuery,
 ) {
   return db
     .insert({
@@ -59,6 +68,7 @@ export function insertUser(
       email,
       password: hashedPassword,
       avatar,
+      tenant_user_id: tenantUserId,
     })
     .into("users")
     .returning<Array<TCreatedUser>>([
