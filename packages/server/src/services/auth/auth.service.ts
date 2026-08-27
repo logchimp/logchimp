@@ -1,4 +1,8 @@
-import type { CreateUserOptions, TCreatedUser } from "./types";
+import type {
+  CreateUserOptions,
+  GetOrCreateOpenIDConnectUserOptions,
+  TCreatedUser,
+} from "./types";
 import {
   generateUniqueUsername as _generateUniqueUsername,
   sanitiseName,
@@ -9,7 +13,12 @@ import { v4 as uuidv4 } from "uuid";
 import { hashPassword } from "../../utils/password";
 import database from "../../database";
 import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
-import { type IInsertUserQuery, insertUser } from "../../repository/user";
+import {
+  getUserByEmail,
+  getUserById,
+  type IInsertUserQuery,
+  insertUser,
+} from "../../repository/user";
 import { DatabaseError } from "pg";
 import { assignEveryoneRoleQuery } from "../../repository/roles";
 import type {
@@ -21,11 +30,13 @@ import { mailQueue } from "../../worker/tasks/mail";
 import { sendAccountVerificationEmail } from "../mail/worker.service";
 import { createToken } from "../token.service";
 import {
+  AuthenticationFailedError,
   FailedToCreateUser,
   UserExistsError,
   UsernameExistsError,
 } from "./errors";
 import logger from "../../utils/logger";
+import type { IUserInfo } from "@logchimp/types";
 
 export class AuthService {
   async CreateUser(email: string, options: CreateUserOptions) {
@@ -39,7 +50,9 @@ export class AuthService {
     const baseUsername = sanitiseUsername(userEmail.split("@")[0].slice(0, 30));
 
     // get avatar by MD5 hashing email
-    const avatar = `https://www.gravatar.com/avatar/${md5(userEmail)}`;
+    const avatar =
+      options?.user?.avatar ||
+      `https://www.gravatar.com/avatar/${md5(userEmail)}`;
 
     // hash password
     let hashedPassword: string | null;
@@ -84,6 +97,58 @@ export class AuthService {
     }
 
     return newUser;
+  }
+
+  async GetOrCreateOpenIDConnectUser({
+    issuer,
+    subject,
+    name,
+    email,
+    emailVerified,
+    picture,
+  }: GetOrCreateOpenIDConnectUserOptions): Promise<IUserInfo> {
+    const getUserIdentity = await database("auth_identities")
+      .select<{ userId: string }>("user_id as userId")
+      .where({ provider: issuer, subject })
+      .first();
+
+    if (getUserIdentity) {
+      const user = await getUserById(database, getUserIdentity.userId);
+      if (!user) {
+        throw new AuthenticationFailedError();
+      }
+      return user;
+    }
+
+    // check if an existing email needs to be linked
+    let user = await getUserByEmail(database, email);
+    if (!user) {
+      await this.CreateUser(email, {
+        user: {
+          name,
+          avatar: picture,
+        },
+        options: {
+          sendAccountVerificationEmail:
+            typeof emailVerified === "boolean" ? emailVerified : true,
+        },
+      });
+
+      user = await getUserByEmail(database, email);
+    }
+
+    await database
+      .insert({
+        id: uuidv4(),
+        user_id: user.userId,
+        provider: issuer,
+        subject,
+        email,
+        email_verified: emailVerified,
+      })
+      .into("auth_identities");
+
+    return user;
   }
 
   private async isEmailUniqueQuery(email: string): Promise<boolean> {

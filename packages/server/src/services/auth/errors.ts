@@ -1,3 +1,10 @@
+export class AuthenticationFailedError extends Error {
+  constructor() {
+    super("Authentication failed");
+    this.name = "AuthenticationFailedError";
+  }
+}
+
 export class UserExistsError extends Error {
   constructor() {
     super("User already exists");
