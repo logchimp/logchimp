@@ -1,6 +1,7 @@
 import * as oidc from "openid-client";
 import { config } from "../../utils/logchimpConfig";
 import cache from "../../cache";
+import { sanitizeHttpUrl } from "../../helpers";
 
 const OIDC_TRANSACTION_TTL = 300; // 5 minutes
 
@@ -43,8 +44,12 @@ export class OIDCService {
       OIDC_TRANSACTION_TTL,
     );
 
+    const redirectURI = sanitizeHttpUrl(
+      `${config.apiUrl}/api/v1/auth/oidc/callback`,
+    );
+
     const authorizationUrl = oidc.buildAuthorizationUrl(oidcConfiguration, {
-      redirect_uri: `${config.apiUrl}/api/v1/auth/oidc/callback`,
+      redirect_uri: redirectURI,
       scope: "openid profile email",
       code_challenge: codeChallenge,
       code_challenge_method: "S256",

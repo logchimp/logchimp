@@ -203,6 +203,33 @@ function arraysEqual(a: string[], b: string[]) {
   return a.every((val, i) => val === b[i]);
 }
 
+function sanitizeHttpUrl(value: string) {
+  if (typeof value !== "string") {
+    throw new TypeError("URL must be a string");
+  }
+
+  let urlString = value.trim();
+
+  let url: URL;
+  try {
+    url = new URL(urlString);
+  } catch {
+    throw new TypeError(`Invalid URL: ${value}`);
+  }
+
+  let pathname = url.pathname.replace(/\/{2,}/g, "/");
+
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    pathname = pathname.slice(0, -1);
+  } else if (pathname === "/") {
+    pathname = "";
+  }
+
+  url.pathname = pathname;
+
+  return url.toString();
+}
+
 export {
   validEmail,
   validUUID,
@@ -211,6 +238,7 @@ export {
   sanitiseUsername,
   sanitiseName,
   sanitiseURL,
+  sanitizeHttpUrl,
   toSlug,
   readFile,
   isDevTestEnv,
