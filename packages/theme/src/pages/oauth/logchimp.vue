@@ -1,51 +1,38 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 import AuthForm from "../../layout/AuthForm.vue";
 import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 import Loader from "../../components/icons/Loader.vue";
-import { ssoLogChimpAuthenticate } from "../../modules/auth.ts";
-import { useUserStore } from "../../store/user.ts";
-import { getPermissions } from "../../modules/users.ts";
+import tokenError from "../../utils/tokenError.ts";
+import type { AxiosError } from "axios";
+import type { IApiErrorResponse } from "@logchimp/types";
 
 const router = useRouter();
-const route = useRoute();
-const { setUser, setPermissions } = useUserStore();
 const isLoading = ref(true);
 const isError = ref(false);
 
-async function onMountedHandler(code: string) {
+async function onMountedHandler() {
   try {
-    const response = await ssoLogChimpAuthenticate({ code });
-    setUser(response.data.user);
-
-    const permissions = await getPermissions();
-    setPermissions(permissions.data.permissions);
-
     const route = router.currentRoute.value;
     if (route.query.redirect) {
       router.push(route.query?.redirect.toString());
     } else {
       router.push("/");
     }
-  } catch (_error) {
-    // const err = error as AxiosError<IApiErrorResponse>;
+  } catch (error) {
+    const err = error as AxiosError<IApiErrorResponse>;
     isError.value = true;
+    tokenError(err);
   } finally {
     isLoading.value = false;
   }
 }
 
 onMounted(() => {
-  const code = (route.query?.code || "").toString();
-  if (code) {
-    isLoading.value = true;
-    onMountedHandler(code);
-  } else {
-    isError.value = true;
-    isLoading.value = false;
-  }
+  isLoading.value = true;
+  onMountedHandler();
 });
 </script>
 
