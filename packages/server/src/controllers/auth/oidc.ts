@@ -66,8 +66,25 @@ export async function OIDCLoginCallback(
   try {
     const user = await oidcService.Authenticate(currentUrl, oidcState);
 
+    if (user.isBlocked) {
+      res.status(403).send({
+        message: error.middleware.user.userBlocked,
+        code: "USER_BLOCK",
+      });
+      return;
+    }
+
     const getUserWithRoles = await getUserInfoWithRoles(user.userId);
     const permissions = await computePermissions(getUserWithRoles);
+
+    const hasPermissions = Array.isArray(permissions) && permissions.length > 0;
+    if (!hasPermissions) {
+      res.status(403).send({
+        message: error.middleware.auth.accessDenied,
+        code: "ACCESS_DENIED",
+      });
+      return;
+    }
 
     const allowedPermissions = new Set([
       "post:create",
