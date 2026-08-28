@@ -9,6 +9,8 @@ import { userExists } from "../../../middlewares/userExists";
 import { authRequired } from "../../../middlewares/auth";
 import { validateEmailToken } from "../../../middlewares/validateEmailToken";
 
+router.get("/auth/me", authRequired, auth.me);
+
 router.post(
   "/auth/signup",
   mailConfigExists,

@@ -1,3 +1,7 @@
+export type Me = Omit<IAuthUser, "authToken"> & {
+  permissions: Array<string>;
+};
+
 export interface IAuthUser {
   userId: string;
   avatar: string | null;
@@ -95,4 +99,8 @@ export interface IValidateEmailVerificationTokenResponseBody {
   verify: {
     success: boolean;
   };
+}
+
+export interface IAuthMeResponseBody {
+  user: Me;
 }

@@ -11,19 +11,30 @@ import tokenError from "../../utils/tokenError.ts";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
 import { getPermissions } from "../../modules/users.ts";
+import { AuthAPIService } from "../../modules/auth.ts";
 
 const router = useRouter();
-const { setAuthToken, setPermissions } = useUserStore();
+const { setAuthToken, setUser, setPermissions } = useUserStore();
 const isLoading = ref(true);
 const isError = ref(false);
 
 async function onMountedHandler() {
   try {
     const authCookie = Cookie.get("lc-auth-token");
-    if (authCookie) {
-      setAuthToken(authCookie);
+    if (!authCookie) {
+      isError.value = true;
+      isLoading.value = false;
+      return;
     }
 
+    setAuthToken(authCookie);
+
+    const authService = new AuthAPIService();
+    const getAuthUser = await authService.getMe();
+    setUser({
+      authToken: authCookie,
+      ...getAuthUser.user,
+    });
     const permissions = await getPermissions();
     setPermissions(permissions.data.permissions);
 
@@ -34,8 +45,9 @@ async function onMountedHandler() {
       router.push("/");
     }
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
     isError.value = true;
+
+    const err = error as AxiosError<IApiErrorResponse>;
     tokenError(err);
   } finally {
     isLoading.value = false;
