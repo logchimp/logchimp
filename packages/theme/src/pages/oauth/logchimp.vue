@@ -1,20 +1,32 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import Cookie from "js-cookie";
 
 import AuthForm from "../../layout/AuthForm.vue";
 import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 import Loader from "../../components/icons/Loader.vue";
+import { useUserStore } from "../../store/user.ts";
 import tokenError from "../../utils/tokenError.ts";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
+import { getPermissions } from "../../modules/users.ts";
 
 const router = useRouter();
+const { setAuthToken, setPermissions } = useUserStore();
 const isLoading = ref(true);
 const isError = ref(false);
 
 async function onMountedHandler() {
   try {
+    const authCookie = Cookie.get("lc-auth-token");
+    if (authCookie) {
+      setAuthToken(authCookie);
+    }
+
+    const permissions = await getPermissions();
+    setPermissions(permissions.data.permissions);
+
     const route = router.currentRoute.value;
     if (route.query.redirect) {
       router.push(route.query?.redirect.toString());

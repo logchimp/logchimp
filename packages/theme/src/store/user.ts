@@ -37,6 +37,20 @@ export const useUserStore = defineStore("user", () => {
     );
   }
 
+  function setAuthToken(token: string) {
+    authToken.value = token;
+
+    const getUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        authToken: token,
+        ...getUser,
+      }),
+    );
+  }
+
   function setPermissions(payload: TPermission[]) {
     permissions.value = payload;
   }
@@ -74,6 +88,7 @@ export const useUserStore = defineStore("user", () => {
     getUserId,
 
     // actions
+    setAuthToken,
     setUser,
     login,
     logout,
