@@ -48,7 +48,8 @@ export async function OIDCLoginCallback(
   req: Request,
   res: Response<OIDCLoginCallbackResponse>,
 ) {
-  const oidcState = (req.query.state.toString() || "").trim();
+  const stateParam = req.query.state;
+  const oidcState = typeof stateParam === "string" ? stateParam.trim() : "";
   if (!oidcState) {
     res.status(403).send({
       message: "Invalid OIDC transaction",
