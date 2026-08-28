@@ -3,10 +3,7 @@ import type { Request, Response } from "express";
 import { OIDCService } from "../../services/auth/oidc.service";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import type {
-  IApiErrorResponse,
-  ILogChimpOpenIDConnectLoginCallbackResponseBody,
-} from "@logchimp/types";
+import type { IApiErrorResponse } from "@logchimp/types";
 import { config } from "../../utils/logchimpConfig";
 import { AuthService } from "../../services/auth/auth.service";
 import { AuthenticationFailedError } from "../../services/auth/errors";
@@ -40,9 +37,7 @@ export async function OIDCLogin(
   }
 }
 
-type OIDCLoginCallbackResponse =
-  | ILogChimpOpenIDConnectLoginCallbackResponseBody
-  | IApiErrorResponse;
+type OIDCLoginCallbackResponse = IApiErrorResponse;
 
 export async function OIDCLoginCallback(
   req: Request,
@@ -111,16 +106,17 @@ export async function OIDCLoginCallback(
       user.email,
     );
 
-    res.status(200).send({
-      user: {
-        userId: user.userId,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        username: user.username,
-        authToken,
-      },
+    const webURL = new URL(config.webUrl);
+    res.cookie("lc-auth-token", authToken, {
+      domain: webURL.hostname,
+      secure: true,
+      // 10 minutes
+      path: "/oauth/logchimp",
+      maxAge: 1000 * 60 * 10,
+      sameSite: "none",
     });
+
+    res.redirect(`${config.webUrl}/oauth/logchimp`);
   } catch (err) {
     if (err instanceof AuthenticationFailedError) {
       res.status(403).send({
@@ -132,7 +128,7 @@ export async function OIDCLoginCallback(
 
     logger.error({
       message: "Failed to authenticate using OpenID Connect",
-      err,
+      error: err,
     });
 
     res.status(500).send({
