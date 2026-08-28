@@ -58,6 +58,8 @@ export async function OIDCLoginCallback(
   const oidcService = new OIDCService();
   const authService = new AuthService();
 
+  const redirectURI = new URL(`${config.webUrl}/oauth/logchimp`);
+
   try {
     const user = await oidcService.Authenticate(currentUrl, oidcState);
 
@@ -94,10 +96,8 @@ export async function OIDCLoginCallback(
     );
 
     if (hasRestrictedPermissions) {
-      res.status(403).send({
-        message: "User does not have permission to access this resource.",
-        code: "NOT_ENOUGH_PERMISSION",
-      });
+      redirectURI.searchParams.set("error", "not_allowed");
+      res.redirect(redirectURI.toString());
       return;
     }
 
@@ -116,13 +116,11 @@ export async function OIDCLoginCallback(
       sameSite: "none",
     });
 
-    res.redirect(`${config.webUrl}/oauth/logchimp`);
+    res.redirect(redirectURI.toString());
   } catch (err) {
     if (err instanceof AuthenticationFailedError) {
-      res.status(403).send({
-        message: "Authentication failed",
-        code: "AUTHENTICATION_FAILED",
-      });
+      redirectURI.searchParams.set("error", "not_allowed");
+      res.redirect(redirectURI.toString());
       return;
     }
 

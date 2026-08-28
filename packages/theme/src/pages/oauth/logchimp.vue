@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Cookie from "js-cookie";
 
 import AuthForm from "../../layout/AuthForm.vue";
@@ -13,22 +13,28 @@ import type { IApiErrorResponse } from "@logchimp/types";
 import { getPermissions } from "../../modules/users.ts";
 import { AuthAPIService } from "../../modules/auth.ts";
 
+const route = useRoute();
 const router = useRouter();
 const { setAuthToken, setUser, setPermissions } = useUserStore();
 const isLoading = ref(true);
 const isError = ref(false);
 
 async function onMountedHandler() {
+  const error = (route.query?.error || "").toString();
+  if (error === "not_allowed") {
+    setError();
+    return;
+  }
+
+  const authCookie = Cookie.get("lc-auth-token");
+  if (!authCookie) {
+    setError();
+    return;
+  }
+
+  setAuthToken(authCookie);
+
   try {
-    const authCookie = Cookie.get("lc-auth-token");
-    if (!authCookie) {
-      isError.value = true;
-      isLoading.value = false;
-      return;
-    }
-
-    setAuthToken(authCookie);
-
     const authService = new AuthAPIService();
     const getAuthUser = await authService.getMe();
     setUser({
@@ -58,6 +64,11 @@ onMounted(() => {
   isLoading.value = true;
   onMountedHandler();
 });
+
+function setError() {
+  isError.value = true;
+  isLoading.value = false;
+}
 </script>
 
 <template>
