@@ -10,6 +10,10 @@ import type {
 import { config } from "../../utils/logchimpConfig";
 import { AuthService } from "../../services/auth/auth.service";
 import { AuthenticationFailedError } from "../../services/auth/errors";
+import {
+  computePermissions,
+  getUserInfoWithRoles,
+} from "../../middlewares/auth/helpers";
 
 type OIDCLoginResponse = IApiErrorResponse;
 
@@ -60,6 +64,29 @@ export async function OIDCLoginCallback(
 
   try {
     const user = await oidcService.Authenticate(currentUrl, oidcState);
+
+    const getUserWithRoles = await getUserInfoWithRoles(user.userId);
+    const permissions = await computePermissions(getUserWithRoles);
+
+    const allowedPermissions = new Set([
+      "post:create",
+      "vote:create",
+      "vote:destroy",
+      "comment:create",
+      "comment:update:own",
+    ]);
+
+    const hasRestrictedPermissions = permissions.some(
+      (permission) => !allowedPermissions.has(permission),
+    );
+
+    if (hasRestrictedPermissions) {
+      res.status(403).send({
+        message: "User does not have permission to access this resource.",
+        code: "NOT_ENOUGH_PERMISSION",
+      });
+      return;
+    }
 
     const authToken = authService.generateUserAuthToken(
       user.userId,
