@@ -16,7 +16,7 @@ export async function up(knex: Knex): Promise<void> {
       code: "DATABASE_MIGRATIONS",
       message:
         "Failed to change 'password' column to nullable in 'users' table",
-      error: err,
+      err,
     });
     throw err;
   }
@@ -47,7 +47,7 @@ export async function down(knex: Knex): Promise<void> {
       code: "DATABASE_MIGRATIONS",
       message:
         "Failed to change 'password' column not nullable in 'users' table",
-      error: err,
+      err,
     });
     throw err;
   }
