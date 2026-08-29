@@ -1,6 +1,7 @@
 import type { Knex } from "knex";
 import type { IUserInfo } from "@logchimp/types";
 import type { TCreatedUser } from "../services/auth/types";
+import database from "../database";
 
 export function getUserById(db: Knex, id: string) {
   return db("users")
@@ -21,6 +22,8 @@ export function getUserById(db: Knex, id: string) {
 }
 
 export function getUserByEmail(db: Knex, email: string) {
+  const e = (email || "").trim();
+
   return db("users")
     .select<IUserInfo>(
       "userId",
@@ -34,7 +37,7 @@ export function getUserByEmail(db: Knex, email: string) {
       "notes",
       "createdAt",
     )
-    .where("email", email)
+    .where(database.raw("LOWER(email) = LOWER(?)", [e]))
     .first();
 }
 
