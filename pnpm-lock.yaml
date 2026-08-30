@@ -42,8 +42,8 @@ importers:
         specifier: latest
         version: 6.1.2(@types/node@24.11.0)(@vue/compiler-sfc@3.5.41)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.41(typescript@6.0.3))(yaml@2.9.0)
       '@maizzle/tailwindcss':
-        specifier: ^1.5.5
-        version: 1.5.5
+        specifier: ^1.5.6
+        version: 1.5.6
     devDependencies:
       '@types/node':
         specifier: ^24.11.0
@@ -836,9 +836,6 @@ packages:
       vue: ^3
     bundledDependencies:
       - maizzle
-
-  '@maizzle/tailwindcss@1.5.5':
-    resolution: {integrity: sha512-eSqHzGnKd2iODLXSY+cn9SsDX/YmmG5gxoHVsx/chrjHqWaKdHQxMtcYr/Y6/u/DcsKgT74RjNeXQI2E22U2wA==}
 
   '@maizzle/tailwindcss@1.5.6':
     resolution: {integrity: sha512-JBJJLV3x1SpG7zqgdpjMGhGzANcZ/T6qxKzxMe0TzfJJ+12a2UV4N55dWzos9xLgcdt91NySPqQRMNKWZexMUg==}
@@ -5873,8 +5870,6 @@ snapshots:
       - vite-plus
       - webpack
       - yaml
-
-  '@maizzle/tailwindcss@1.5.5': {}
 
   '@maizzle/tailwindcss@1.5.6': {}
 
