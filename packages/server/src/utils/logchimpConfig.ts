@@ -17,6 +17,7 @@ interface Config {
   isSelfHosted: boolean | undefined;
 
   // Server
+  apiUrl: string | undefined;
   serverHost: string | undefined;
   serverPort: number | undefined;
   webUrl: string | undefined;
@@ -129,6 +130,7 @@ class ConfigManager {
         config.server?.selfHosted === "true",
 
       // Server
+      apiUrl: config.server?.apiUrl,
       serverHost: config.server?.host,
       serverPort: serverPort
         ? Number.parseInt(`${config.server?.port}`, 10)
@@ -194,6 +196,7 @@ class ConfigManager {
       isSelfHosted: process.env.LOGCHIMP_IS_SELF_HOSTED === "true",
 
       // Server
+      apiUrl: process.env.LOGCHIMP_API_URL,
       serverHost: process.env.LOGCHIMP_API_HOST,
       serverPort: serverPort
         ? Number.parseInt(`${serverPort}`, 10)
@@ -271,3 +274,4 @@ class ConfigManager {
 }
 
 export const configManager = new ConfigManager();
+export const config = configManager.getConfig();

@@ -85,4 +85,6 @@ router.post(
   auth.password.set,
 );
 
+router.get("/auth/oidc/login", auth.OIDCLogin);
+
 export default router;
