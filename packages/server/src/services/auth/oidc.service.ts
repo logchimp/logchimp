@@ -2,6 +2,8 @@ import * as oidc from "openid-client";
 import { config } from "../../utils/logchimpConfig";
 import cache from "../../cache";
 import { sanitizeHttpUrl } from "../../helpers";
+import { AuthenticationFailedError } from "./errors";
+import { AuthService } from "./auth.service";
 
 const OIDC_TRANSACTION_TTL = 300; // 5 minutes
 
@@ -60,5 +62,68 @@ export class OIDCService {
     return {
       authorizationUrl,
     };
+  }
+
+  async Authenticate(currentUrl: URL, state: string) {
+    const transactionCache = await cache.getdel(`oidc:transaction:${state}`);
+
+    if (!transactionCache) {
+      throw new AuthenticationFailedError();
+    }
+
+    const transaction = JSON.parse(transactionCache) as OIDCTransaction;
+
+    const oidcConfiguration = await this.getConfiguration();
+
+    const tokens = await oidc.authorizationCodeGrant(
+      oidcConfiguration,
+      currentUrl,
+      {
+        pkceCodeVerifier: transaction.codeVerifier,
+        expectedState: transaction.state,
+        expectedNonce: transaction.nonce,
+        idTokenExpected: true,
+      },
+    );
+
+    const claims = tokens.claims();
+
+    if (!claims) {
+      throw new AuthenticationFailedError();
+    }
+
+    const issuer = claims.iss;
+    const subject = claims.sub;
+
+    if (!issuer || !subject) {
+      throw new AuthenticationFailedError();
+    }
+
+    const email =
+      typeof claims.email === "string" ? claims.email.trim().toLowerCase() : "";
+
+    const name = typeof claims.name === "string" ? claims.name.trim() : "";
+
+    const emailVerified =
+      typeof claims.email_verified === "boolean"
+        ? claims.email_verified
+        : undefined;
+
+    if (!email) {
+      throw new AuthenticationFailedError();
+    }
+
+    const authService = new AuthService();
+
+    const user = await authService.GetOrCreateOpenIDConnectUser({
+      issuer,
+      subject,
+      name,
+      email,
+      emailVerified,
+      picture: typeof claims.picture === "string" ? claims.picture : undefined,
+    });
+
+    return user;
   }
 }

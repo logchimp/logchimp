@@ -86,5 +86,6 @@ router.post(
 );
 
 router.get("/auth/oidc/login", auth.OIDCLogin);
+router.get("/auth/oidc/callback", auth.OIDCLoginCallback);
 
 export default router;

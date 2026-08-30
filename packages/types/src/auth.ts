@@ -96,3 +96,7 @@ export interface IValidateEmailVerificationTokenResponseBody {
     success: boolean;
   };
 }
+
+export interface ILogChimpOpenIDConnectLoginCallbackResponseBody {
+  user: IAuthUser;
+}

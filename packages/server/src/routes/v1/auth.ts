@@ -36,5 +36,6 @@ router.post(
 router.post("/auth/password/set", validateEmailToken, auth.password.set);
 
 router.get("/auth/oidc/login", auth.OIDCLogin);
+router.get("/auth/oidc/callback", auth.OIDCLoginCallback);
 
 export default router;

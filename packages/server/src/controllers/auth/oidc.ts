@@ -3,7 +3,17 @@ import type { Request, Response } from "express";
 import { OIDCService } from "../../services/auth/oidc.service";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  ILogChimpOpenIDConnectLoginCallbackResponseBody,
+} from "@logchimp/types";
+import { config } from "../../utils/logchimpConfig";
+import { AuthService } from "../../services/auth/auth.service";
+import { AuthenticationFailedError } from "../../services/auth/errors";
+import {
+  computePermissions,
+  getUserInfoWithRoles,
+} from "../../middlewares/auth/helpers";
 
 type OIDCLoginResponse = IApiErrorResponse;
 
@@ -26,6 +36,108 @@ export async function OIDCLogin(
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
+    });
+  }
+}
+
+type OIDCLoginCallbackResponse =
+  | ILogChimpOpenIDConnectLoginCallbackResponseBody
+  | IApiErrorResponse;
+
+export async function OIDCLoginCallback(
+  req: Request,
+  res: Response<OIDCLoginCallbackResponse>,
+) {
+  const stateParam = req.query.state;
+  const oidcState = typeof stateParam === "string" ? stateParam.trim() : "";
+  if (!oidcState) {
+    res.status(403).send({
+      message: "Invalid OIDC transaction",
+      code: "INVALID_OIDC_TRANSACTION",
+    });
+    return;
+  }
+
+  const currentUrl = new URL(config.apiUrl + req.originalUrl);
+
+  const oidcService = new OIDCService();
+  const authService = new AuthService();
+
+  try {
+    const user = await oidcService.Authenticate(currentUrl, oidcState);
+
+    if (user.isBlocked) {
+      res.status(403).send({
+        message: error.middleware.user.userBlocked,
+        code: "USER_BLOCK",
+      });
+      return;
+    }
+
+    const getUserWithRoles = await getUserInfoWithRoles(user.userId);
+    const permissions = await computePermissions(getUserWithRoles);
+
+    const hasPermissions = Array.isArray(permissions) && permissions.length > 0;
+    if (!hasPermissions) {
+      res.status(403).send({
+        message: error.middleware.auth.accessDenied,
+        code: "ACCESS_DENIED",
+      });
+      return;
+    }
+
+    const allowedPermissions = new Set([
+      "post:create",
+      "vote:create",
+      "vote:destroy",
+      "comment:create",
+      "comment:update:own",
+    ]);
+
+    const hasRestrictedPermissions = permissions.some(
+      (permission) => !allowedPermissions.has(permission),
+    );
+
+    if (hasRestrictedPermissions) {
+      res.status(403).send({
+        message: "User does not have permission to access this resource.",
+        code: "NOT_ENOUGH_PERMISSION",
+      });
+      return;
+    }
+
+    const authToken = authService.generateUserAuthToken(
+      user.userId,
+      user.email,
+    );
+
+    res.status(200).send({
+      user: {
+        userId: user.userId,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        username: user.username,
+        authToken,
+      },
+    });
+  } catch (err) {
+    if (err instanceof AuthenticationFailedError) {
+      res.status(403).send({
+        message: "Authentication failed",
+        code: "AUTHENTICATION_FAILED",
+      });
+      return;
+    }
+
+    logger.error({
+      message: "Failed to authenticate using OpenID Connect",
+      err,
+    });
+
+    res.status(500).send({
+      message: "Internal Server Error",
+      code: "INTERNAL_SERVER_ERROR",
     });
   }
 }
