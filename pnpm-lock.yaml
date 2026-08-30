@@ -242,8 +242,8 @@ importers:
         specifier: ^4.1.11
         version: 4.1.17
       uuid:
-        specifier: 9.0.1
-        version: 9.0.1
+        specifier: 11.1.1
+        version: 11.1.1
       vue:
         specifier: 3.5.41
         version: 3.5.41(typescript@5.9.3)
@@ -5054,13 +5054,12 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@12.0.1:
-    resolution: {integrity: sha512-9obBF8sMIHJWNQaO6IGOG8giGa/jUpKX34bz6o4whVs8M0WAvhID2tNxYp6A2XEBJPuZSX8wsS/6TEKfIDc+nw==}
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+  uuid@12.0.1:
+    resolution: {integrity: sha512-9obBF8sMIHJWNQaO6IGOG8giGa/jUpKX34bz6o4whVs8M0WAvhID2tNxYp6A2XEBJPuZSX8wsS/6TEKfIDc+nw==}
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -6888,13 +6887,13 @@ snapshots:
       chai: 5.2.1
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.7(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0))':
+  '@vitest/mocker@3.2.7(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 3.2.7
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0)
+      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
 
   '@vitest/pretty-format@3.2.7':
     dependencies:
@@ -10032,9 +10031,9 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  uuid@12.0.1: {}
+  uuid@11.1.1: {}
 
-  uuid@9.0.1: {}
+  uuid@12.0.1: {}
 
   v8-compile-cache-lib@3.0.1: {}
 
@@ -10133,7 +10132,7 @@ snapshots:
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.7
-      '@vitest/mocker': 3.2.7(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.30.2)(sass@1.69.5)(yaml@2.9.0))
+      '@vitest/mocker': 3.2.7(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))
       '@vitest/pretty-format': 3.2.7
       '@vitest/runner': 3.2.7
       '@vitest/snapshot': 3.2.7
