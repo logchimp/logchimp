@@ -17,7 +17,8 @@ export async function OIDCLoginCallback(
 ) {
   const redirectURI = new URL(`${config.webUrl}/oauth/logchimp`);
 
-  const oidcState = (req.query.state.toString() || "").trim();
+  const stateParam = req.query.state;
+  const oidcState = typeof stateParam === "string" ? stateParam.trim() : "";
   if (!oidcState) {
     redirectURI.searchParams.set("error", "invalid_state");
     res.redirect(redirectURI.toString());
