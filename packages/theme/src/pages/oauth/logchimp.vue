@@ -74,6 +74,10 @@ async function onMountedHandler() {
     const permissions = await getPermissions();
     setPermissions(permissions.data.permissions);
 
+    Cookie.remove("lc-auth-token", {
+      path: "/oauth/logchimp",
+    });
+
     const route = router.currentRoute.value;
     if (route.query.redirect) {
       router.push(route.query?.redirect.toString());
