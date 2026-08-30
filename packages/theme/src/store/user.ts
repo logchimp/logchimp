@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import type { IAuthUser, TPermission } from "@logchimp/types";
 
 import { router } from "../router";
+import Cookie from "js-cookie";
 
 export const useUserStore = defineStore("user", () => {
   const authToken = ref<string>("");
@@ -37,6 +38,20 @@ export const useUserStore = defineStore("user", () => {
     );
   }
 
+  function setAuthToken(token: string) {
+    authToken.value = token;
+
+    const getUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        authToken: token,
+        ...getUser,
+      }),
+    );
+  }
+
   function setPermissions(payload: TPermission[]) {
     permissions.value = payload;
   }
@@ -58,6 +73,11 @@ export const useUserStore = defineStore("user", () => {
     setPermissions([]);
 
     localStorage.removeItem("user");
+
+    Cookie.remove("lc-auth-token", {
+      path: "/oauth/logchimp",
+    });
+
     if (router.currentRoute.value.fullPath !== "/") {
       router.push("/");
     }
@@ -74,6 +94,7 @@ export const useUserStore = defineStore("user", () => {
     getUserId,
 
     // actions
+    setAuthToken,
     setUser,
     login,
     logout,

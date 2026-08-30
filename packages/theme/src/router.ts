@@ -230,6 +230,11 @@ const routes = [
     component: () => import("./pages/passwordReset/Confirm.vue"),
   },
   {
+    path: "/oauth/logchimp",
+    name: "LogChimp OAuth",
+    component: () => import("./pages/oauth/logchimp.vue"),
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "Page not found",
     component: () => import("./pages/PageNotFound.vue"),

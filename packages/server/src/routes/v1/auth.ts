@@ -11,6 +11,8 @@ import { mailConfigExists } from "../../middlewares/mailConfigExists";
 import { validateEmailToken } from "../../middlewares/validateEmailToken";
 import { authRequired } from "../../middlewares/auth";
 
+router.get("/auth/me", authRequired, auth.me);
+
 router.post("/auth/signup", mailConfigExists, auth.signup);
 router.post("/auth/login", userExists, auth.login);
 

@@ -3,13 +3,13 @@ import type { Request, Response } from "express";
 import { OIDCService } from "../../services/auth/oidc.service";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import type {
-  IApiErrorResponse,
-  ILogChimpOpenIDConnectLoginCallbackResponseBody,
-} from "@logchimp/types";
+import type { IApiErrorResponse, IUserInfo } from "@logchimp/types";
 import { config } from "../../utils/logchimpConfig";
 import { AuthService } from "../../services/auth/auth.service";
-import { AuthenticationFailedError } from "../../services/auth/errors";
+import {
+  AuthenticationFailedError,
+  OIDCAuthenticationFailedError,
+} from "../../services/auth/errors";
 import {
   computePermissions,
   getUserInfoWithRoles,
@@ -40,21 +40,19 @@ export async function OIDCLogin(
   }
 }
 
-type OIDCLoginCallbackResponse =
-  | ILogChimpOpenIDConnectLoginCallbackResponseBody
-  | IApiErrorResponse;
+type OIDCLoginCallbackResponse = IApiErrorResponse;
 
 export async function OIDCLoginCallback(
   req: Request,
   res: Response<OIDCLoginCallbackResponse>,
 ) {
+  const redirectURI = new URL(`${config.webUrl}/oauth/logchimp`);
+
   const stateParam = req.query.state;
   const oidcState = typeof stateParam === "string" ? stateParam.trim() : "";
   if (!oidcState) {
-    res.status(403).send({
-      message: "Invalid OIDC transaction",
-      code: "INVALID_OIDC_TRANSACTION",
-    });
+    redirectURI.searchParams.set("error", "invalid_state");
+    res.redirect(redirectURI.toString());
     return;
   }
 
@@ -64,7 +62,17 @@ export async function OIDCLoginCallback(
   const authService = new AuthService();
 
   try {
-    const user = await oidcService.Authenticate(currentUrl, oidcState);
+    let user: IUserInfo;
+    try {
+      user = await oidcService.Authenticate(currentUrl, oidcState);
+    } catch (err) {
+      if (err instanceof OIDCAuthenticationFailedError) {
+        redirectURI.searchParams.set("error", err.code);
+        res.redirect(redirectURI.toString());
+        return;
+      }
+      throw err;
+    }
 
     if (user.isBlocked) {
       res.status(403).send({
@@ -99,10 +107,8 @@ export async function OIDCLoginCallback(
     );
 
     if (hasRestrictedPermissions) {
-      res.status(403).send({
-        message: "User does not have permission to access this resource.",
-        code: "NOT_ENOUGH_PERMISSION",
-      });
+      redirectURI.searchParams.set("error", "not_allowed");
+      res.redirect(redirectURI.toString());
       return;
     }
 
@@ -111,28 +117,27 @@ export async function OIDCLoginCallback(
       user.email,
     );
 
-    res.status(200).send({
-      user: {
-        userId: user.userId,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        username: user.username,
-        authToken,
-      },
+    const webURL = new URL(config.webUrl);
+    res.cookie("lc-auth-token", authToken, {
+      domain: webURL.hostname,
+      secure: true,
+      // 10 minutes
+      path: "/oauth/logchimp",
+      maxAge: 1000 * 60 * 10,
+      sameSite: "none",
     });
+
+    res.redirect(redirectURI.toString());
   } catch (err) {
     if (err instanceof AuthenticationFailedError) {
-      res.status(403).send({
-        message: "Authentication failed",
-        code: "AUTHENTICATION_FAILED",
-      });
+      redirectURI.searchParams.set("error", "not_allowed");
+      res.redirect(redirectURI.toString());
       return;
     }
 
     logger.error({
       message: "Failed to authenticate using OpenID Connect",
-      err,
+      error: err,
     });
 
     res.status(500).send({

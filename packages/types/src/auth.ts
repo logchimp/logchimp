@@ -1,3 +1,7 @@
+export type Me = Omit<IAuthUser, "authToken"> & {
+  permissions: Array<string>;
+};
+
 export interface IAuthUser {
   userId: string;
   avatar: string | null;
@@ -97,6 +101,6 @@ export interface IValidateEmailVerificationTokenResponseBody {
   };
 }
 
-export interface ILogChimpOpenIDConnectLoginCallbackResponseBody {
-  user: IAuthUser;
+export interface IAuthMeResponseBody {
+  user: Me;
 }

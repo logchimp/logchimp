@@ -2,6 +2,7 @@ import axios, { type AxiosResponse } from "axios";
 import type {
   IAuthLoginRequestBody,
   IAuthLoginResponseBody,
+  IAuthMeResponseBody,
   IAuthPasswordResetResponseBody,
   IAuthSignupResponseBody,
   IPasswordResetValidationTokenResponseBody,
@@ -10,8 +11,8 @@ import type {
   IValidateEmailVerificationTokenResponseBody,
   TAuthSignupRequestBody,
 } from "@logchimp/types";
-
 import { VITE_API_URL } from "../constants";
+import { APIService } from "./api.ts";
 
 /**
  * Sign in to user account
@@ -128,3 +129,19 @@ export const setNewPassword = async ({
     },
   });
 };
+
+export class AuthAPIService extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  getMe = async (): Promise<IAuthMeResponseBody> => {
+    const url = "/v1/auth/me";
+
+    return this.get(url)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  };
+}

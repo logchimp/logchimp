@@ -8,6 +8,9 @@ import { domainBlacklist } from "../../middleware/domainBlacklist";
 import { userExists } from "../../../middlewares/userExists";
 import { authRequired } from "../../../middlewares/auth";
 import { validateEmailToken } from "../../../middlewares/validateEmailToken";
+import { OIDCLoginCallback } from "../../controllers/v1/auth";
+
+router.get("/auth/me", authRequired, auth.me);
 
 router.post(
   "/auth/signup",
@@ -86,6 +89,6 @@ router.post(
 );
 
 router.get("/auth/oidc/login", auth.OIDCLogin);
-router.get("/auth/oidc/callback", auth.OIDCLoginCallback);
+router.get("/auth/oidc/callback", OIDCLoginCallback);
 
 export default router;
