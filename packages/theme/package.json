@@ -20,7 +20,7 @@
     "axios": "1.19.0",
     "canvas-confetti": "^1.9.4",
     "dayjs": "1.11.23",
-    "dompurify": "^3.4.11",
+    "dompurify": "^3.4.14",
     "js-cookie": "^3.0.8",
     "lucide-vue": "npm:lucide-vue-next@0.546.0",
     "pinia": "2.3.1",
