@@ -43,6 +43,14 @@ const authenticateWithToken = async (
     }
   }
 
+  if (!("userId" in jwtTokenPayload)) {
+    res.status(401).send({
+      message: error.middleware.auth.invalidToken,
+      code: "INVALID_TOKEN",
+    });
+    return;
+  }
+
   try {
     const user = await getUserInfoWithRoles(jwtTokenPayload.userId);
     if (!user) {
