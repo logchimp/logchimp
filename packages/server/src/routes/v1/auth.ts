@@ -6,7 +6,6 @@ const router = express.Router();
 import * as auth from "../../controllers/auth";
 
 // middleware
-import { userExists } from "../../middlewares/userExists";
 import { mailConfigExists } from "../../middlewares/mailConfigExists";
 import { validateEmailToken } from "../../middlewares/validateEmailToken";
 import { authRequired } from "../../middlewares/auth";
@@ -14,7 +13,7 @@ import { authRequired } from "../../middlewares/auth";
 router.get("/auth/me", authRequired, auth.me);
 
 router.post("/auth/signup", mailConfigExists, auth.signup);
-router.post("/auth/login", userExists, auth.login);
+router.post("/auth/login", auth.passwordLogin);
 
 router.post("/auth/setup", mailConfigExists, auth.setup);
 router.get("/auth/setup", auth.isSiteSetup);

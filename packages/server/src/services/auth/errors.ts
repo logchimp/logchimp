@@ -7,10 +7,45 @@ export class AuthenticationFailedError extends Error {
   }
 }
 
+export class InvalidEmailError extends Error {
+  constructor() {
+    super("Invalid email");
+    this.name = "InvalidEmailError";
+  }
+}
+
+export class UserBlockedError extends Error {
+  constructor() {
+    super("User is blocked");
+    this.name = "UserBlockedError";
+  }
+}
+
+export class UserNotFoundError extends Error {
+  constructor() {
+    super("User not found");
+    this.name = "UserNotFoundError";
+  }
+}
+
 export class UserExistsError extends Error {
   constructor() {
     super("User already exists");
     this.name = "UserExistsError";
+  }
+}
+
+export class PasswordMissingError extends Error {
+  constructor() {
+    super("Password is missing");
+    this.name = "PasswordMissingError";
+  }
+}
+
+export class IncorrectPasswordError extends Error {
+  constructor() {
+    super("Incorrect password");
+    this.name = "IncorrectPasswordError";
   }
 }
 

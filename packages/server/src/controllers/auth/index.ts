@@ -1,4 +1,3 @@
-export { login } from "./login";
 export { signup } from "./signup";
 export { setup } from "./setup";
 export { isSiteSetup } from "./isSiteSetup";

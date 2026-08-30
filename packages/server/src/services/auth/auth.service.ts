@@ -7,10 +7,11 @@ import {
   generateUniqueUsername as _generateUniqueUsername,
   sanitiseName,
   sanitiseUsername,
+  validEmail,
 } from "../../helpers";
 import md5 from "md5";
 import { v4 as uuidv4 } from "uuid";
-import { hashPassword } from "../../utils/password";
+import { hashPassword, validatePassword } from "../../utils/password";
 import database from "../../database";
 import { SIGNUP_USERNAME_MAX_ATTEMPTS } from "../../constants";
 import {
@@ -32,13 +33,81 @@ import { createToken } from "../token.service";
 import {
   AuthenticationFailedError,
   FailedToCreateUser,
+  IncorrectPasswordError,
+  InvalidEmailError,
+  PasswordMissingError,
+  UserBlockedError,
   UserExistsError,
   UsernameExistsError,
+  UserNotFoundError,
 } from "./errors";
 import logger from "../../utils/logger";
 import type { IUserInfo } from "@logchimp/types";
 
 export class AuthService {
+  async PasswordLogin(email: string, password: string) {
+    const userEmail = (typeof email === "string" ? email : "")
+      .trim()
+      .toLowerCase();
+
+    if (!validEmail(email)) {
+      throw new InvalidEmailError();
+    }
+
+    const dbUser = await database("users")
+      .select<{
+        userId: string;
+        email: string;
+        name: string | null;
+        username: string;
+        password: string | null;
+        avatar: string | null;
+        isBlocked: boolean;
+      }>(
+        "userId",
+        "email",
+        "name",
+        "username",
+        "password",
+        "avatar",
+        "isBlocked",
+      )
+      .where({
+        email: userEmail,
+      })
+      .first();
+
+    if (!dbUser) {
+      throw new UserNotFoundError();
+    }
+
+    if (dbUser.isBlocked) {
+      throw new UserBlockedError();
+    }
+
+    const p = (password || "").trim();
+    if (!p) {
+      throw new PasswordMissingError();
+    }
+
+    const validateUserPassword = await validatePassword(
+      password,
+      dbUser.password,
+    );
+    if (!validateUserPassword) {
+      throw new IncorrectPasswordError();
+    }
+
+    return {
+      authToken: this.generateUserAuthToken(dbUser.userId, dbUser.email),
+      userId: dbUser.userId,
+      name: dbUser.name,
+      username: dbUser.username,
+      email: dbUser.email,
+      avatar: dbUser.avatar,
+    };
+  }
+
   async CreateUser(email: string, options: CreateUserOptions) {
     // change email to lowercase to avoid case-sensitivity
     const userEmail = (email || "").trim().toLowerCase();
