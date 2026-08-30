@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   ICreateSiteSetupRequestBody,
@@ -10,20 +10,20 @@ import database from "../../database";
 import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
 
-// services
-import { createUser } from "../../services/auth/createUser";
-
-// utils
 import { validEmail } from "../../helpers";
 import error from "../../errorResponse.json";
 import logger from "../../utils/logger";
+import { AuthService } from "../../services/auth/auth.service";
+import {
+  UserExistsError,
+  UsernameExistsError,
+} from "../../services/auth/errors";
 
 type ResponseBody = TCreateSiteSetupResponseBody | IApiErrorResponse;
 
 export async function setup(
   req: Request<unknown, unknown, ICreateSiteSetupRequestBody>,
   res: Response<ResponseBody>,
-  next: NextFunction,
 ) {
   const { name, email, password } = req.body;
   const siteTitle = String(req.body?.siteTitle || "").trim();
@@ -58,14 +58,16 @@ export async function setup(
       });
     }
 
-    const user = await createUser(req, res, next, {
-      email,
-      password,
-      name,
+    const authService = new AuthService();
+    const user = await authService.CreateUser(email, {
+      user: {
+        password,
+        name,
+      },
+      options: {
+        sendAccountVerificationEmail: true,
+      },
     });
-
-    // if user already exists, createUser returns null
-    if (!user) return;
 
     // set user as owner
     await database
@@ -93,8 +95,34 @@ export async function setup(
       }
     }
 
-    res.status(201).send({ user });
+    const authToken = authService.generateUserAuthToken(
+      user.userId,
+      user.email,
+    );
+
+    res.status(201).send({
+      user: {
+        ...user,
+        authToken,
+      },
+    });
   } catch (err) {
+    if (err instanceof UserExistsError) {
+      res.status(409).send({
+        message: error.middleware.user.userExists,
+        code: "USER_EXISTS",
+      });
+      return;
+    }
+
+    if (err instanceof UsernameExistsError) {
+      res.status(409).send({
+        message: error.api.authentication.usernameExists,
+        code: "USERNAME_EXISTS",
+      });
+      return;
+    }
+
     logger.log({
       level: "error",
       message: err,
