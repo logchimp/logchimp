@@ -1,3 +1,5 @@
+import type { OIDCAuthenticationErrorCode } from "./types";
+
 export class AuthenticationFailedError extends Error {
   constructor() {
     super("Authentication failed");
@@ -23,5 +25,14 @@ export class FailedToCreateUser extends Error {
   constructor() {
     super("Failed to create user");
     this.name = "FailedToCreateUser";
+  }
+}
+export class OIDCAuthenticationFailedError extends Error {
+  constructor(
+    public readonly code: OIDCAuthenticationErrorCode,
+    options?: { cause?: unknown },
+  ) {
+    super(`OIDC authentication failed: ${code}`, options);
+    this.name = "OIDCAuthenticationFailedError";
   }
 }

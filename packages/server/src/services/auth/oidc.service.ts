@@ -2,8 +2,15 @@ import * as oidc from "openid-client";
 import { config } from "../../utils/logchimpConfig";
 import cache from "../../cache";
 import { sanitizeHttpUrl } from "../../helpers";
-import { AuthenticationFailedError } from "./errors";
+import {
+  AuthenticationFailedError,
+  OIDCAuthenticationFailedError,
+} from "./errors";
 import { AuthService } from "./auth.service";
+import {
+  OIDC_AUTHENTICATION_ERROR_CODES,
+  type OIDCAuthenticationErrorCode,
+} from "./types";
 
 const OIDC_TRANSACTION_TTL = 300; // 5 minutes
 
@@ -12,6 +19,12 @@ type OIDCTransaction = {
   nonce: string;
   state: string;
 };
+
+export function isOIDCAuthenticationErrorCode(
+  value: string,
+): value is OIDCAuthenticationErrorCode {
+  return (OIDC_AUTHENTICATION_ERROR_CODES as readonly string[]).includes(value);
+}
 
 export class OIDCService {
   private async getConfiguration() {
@@ -75,16 +88,30 @@ export class OIDCService {
 
     const oidcConfiguration = await this.getConfiguration();
 
-    const tokens = await oidc.authorizationCodeGrant(
-      oidcConfiguration,
-      currentUrl,
-      {
-        pkceCodeVerifier: transaction.codeVerifier,
-        expectedState: transaction.state,
-        expectedNonce: transaction.nonce,
-        idTokenExpected: true,
-      },
-    );
+    let tokens: oidc.TokenEndpointResponse & oidc.TokenEndpointResponseHelpers;
+    try {
+      tokens = await oidc.authorizationCodeGrant(
+        oidcConfiguration,
+        currentUrl,
+        {
+          pkceCodeVerifier: transaction.codeVerifier,
+          expectedState: transaction.state,
+          expectedNonce: transaction.nonce,
+          idTokenExpected: true,
+        },
+      );
+    } catch (err) {
+      if (err instanceof oidc.AuthorizationResponseError) {
+        const rawCode = err.error ?? "";
+        const code = isOIDCAuthenticationErrorCode(rawCode)
+          ? rawCode
+          : "authorization_failed";
+
+        throw new OIDCAuthenticationFailedError(code, { cause: err });
+      }
+
+      throw err;
+    }
 
     const claims = tokens.claims();
 

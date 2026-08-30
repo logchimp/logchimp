@@ -3,10 +3,13 @@ import type { Request, Response } from "express";
 import { OIDCService } from "../../services/auth/oidc.service";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { IApiErrorResponse, IUserInfo } from "@logchimp/types";
 import { config } from "../../utils/logchimpConfig";
 import { AuthService } from "../../services/auth/auth.service";
-import { AuthenticationFailedError } from "../../services/auth/errors";
+import {
+  AuthenticationFailedError,
+  OIDCAuthenticationFailedError,
+} from "../../services/auth/errors";
 import {
   computePermissions,
   getUserInfoWithRoles,
@@ -43,13 +46,13 @@ export async function OIDCLoginCallback(
   req: Request,
   res: Response<OIDCLoginCallbackResponse>,
 ) {
+  const redirectURI = new URL(`${config.webUrl}/oauth/logchimp`);
+
   const stateParam = req.query.state;
   const oidcState = typeof stateParam === "string" ? stateParam.trim() : "";
   if (!oidcState) {
-    res.status(403).send({
-      message: "Invalid OIDC transaction",
-      code: "INVALID_OIDC_TRANSACTION",
-    });
+    redirectURI.searchParams.set("error", "invalid_state");
+    res.redirect(redirectURI.toString());
     return;
   }
 
@@ -58,10 +61,18 @@ export async function OIDCLoginCallback(
   const oidcService = new OIDCService();
   const authService = new AuthService();
 
-  const redirectURI = new URL(`${config.webUrl}/oauth/logchimp`);
-
   try {
-    const user = await oidcService.Authenticate(currentUrl, oidcState);
+    let user: IUserInfo;
+    try {
+      user = await oidcService.Authenticate(currentUrl, oidcState);
+    } catch (err) {
+      if (err instanceof OIDCAuthenticationFailedError) {
+        redirectURI.searchParams.set("error", err.code);
+        res.redirect(redirectURI.toString());
+        return;
+      }
+      throw err;
+    }
 
     if (user.isBlocked) {
       res.status(403).send({

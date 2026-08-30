@@ -17,12 +17,42 @@ const route = useRoute();
 const router = useRouter();
 const { setAuthToken, setUser, setPermissions } = useUserStore();
 const isLoading = ref(true);
+const errMsg = ref("");
 const isError = ref(false);
+
+const OIDC_ERROR_MESSAGES: Record<string, string> = {
+  access_denied:
+    "You cancelled the sign-in request. Please try again if this was a mistake.",
+  login_required: "Your session has expired. Please sign in again.",
+  consent_required:
+    "You need to approve the requested permissions to continue signing in.",
+  interaction_required:
+    "Additional action is required to complete sign-in. Please try again.",
+  account_selection_required:
+    "Please select an account to continue signing in.",
+  temporarily_unavailable:
+    "The sign-in service is temporarily unavailable. Please try again in a few minutes.",
+  server_error:
+    "Something went wrong with the sign-in provider. Please try again shortly.",
+  invalid_request: "We couldn't process the sign-in request. Please try again.",
+  unauthorized_client:
+    "This application isn't authorized to sign you in. Please contact support.",
+  unsupported_response_type:
+    "Sign-in isn't configured correctly. Please contact support.",
+  invalid_scope: "Sign-in isn't configured correctly. Please contact support.",
+  authorization_failed:
+    "We couldn't sign you in. Please try again, or contact support if the problem persists.",
+};
 
 async function onMountedHandler() {
   const error = (route.query?.error || "").toString();
-  if (error === "not_allowed") {
-    setError();
+  if (error) {
+    if (error in OIDC_ERROR_MESSAGES) {
+      setError(OIDC_ERROR_MESSAGES[error]);
+    } else {
+      setError();
+    }
+
     return;
   }
 
@@ -65,8 +95,9 @@ onMounted(() => {
   onMountedHandler();
 });
 
-function setError() {
+function setError(msg?: string) {
   isError.value = true;
+  errMsg.value = msg ?? "Authentication failed";
   isLoading.value = false;
 }
 </script>
@@ -89,7 +120,7 @@ function setError() {
       v-if="isError"
       class="text-center"
     >
-      Authentication failed
+      {{errMsg}}
     </div>
   </auth-form>
 </template>
