@@ -106,7 +106,7 @@ export async function filterPost(
       page,
       after,
       created,
-      boardId,
+      boardId: boardId || [],
       roadmapId,
     });
 
