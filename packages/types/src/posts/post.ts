@@ -30,15 +30,14 @@ interface IPostInfo {
 }
 
 export interface IFilterPostRequestQueryParams extends CursorPaginationParams {
-  created?: "asc" | "desc";
+  created?: ApiSortType;
 }
 
 export interface IFilterPostRequestBody {
-  boardId: string[];
+  boardId?: string[];
   roadmapId?: string;
-  page: string;
+  page?: string;
   limit?: string;
-  created: ApiSortType;
 }
 
 export interface IFilterPostResponseBody
