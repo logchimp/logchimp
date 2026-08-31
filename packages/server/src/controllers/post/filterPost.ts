@@ -64,7 +64,7 @@ export async function filterPost(
   req: Request<unknown, unknown, IFilterPostRequestBody>,
   res: Response<ResponseBody>,
 ) {
-  if (req.query?.page || req.query?.limit) {
+  if (req.body?.page || req.body?.limit) {
     logger.warn(
       "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
     );
