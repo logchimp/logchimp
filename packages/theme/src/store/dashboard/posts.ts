@@ -3,35 +3,45 @@ import { defineStore } from "pinia";
 import type { IPost } from "@logchimp/types";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
-import { getPosts } from "../../modules/posts";
+import { Posts } from "../../modules/posts";
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
   const state = ref<InfiniteScrollStateType>();
 
   const isLoading = ref<boolean>(false);
-  const page = ref<number>(1);
+  const endCursor = ref<string | undefined>();
+  const hasNextPage = ref<boolean>(false);
   const error = ref<unknown>(undefined);
 
   async function fetchPosts() {
-    if (state.value === "LOADING" || state.value === "COMPLETED") {
-      return;
-    }
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
     isLoading.value = true;
     error.value = undefined;
 
-    try {
-      const response = await getPosts({
-        page: page.value.toString(),
-        created: "DESC",
-        boardId: [],
-      });
+    const postsAPI = new Posts();
 
-      if (response.data.posts.length) {
-        posts.value.push(...response.data.posts);
-        page.value += 1;
+    try {
+      const response = await postsAPI.GetPosts(
+        {},
+        {
+          after: endCursor.value,
+          created: "DESC",
+        },
+      );
+
+      const postsList = response.posts;
+
+      if (postsList.length > 0) {
+        posts.value.push(...response.posts);
+      }
+
+      endCursor.value = response.page_info?.end_cursor || undefined;
+      hasNextPage.value = response.page_info?.has_next_page || false;
+
+      if (hasNextPage.value) {
         state.value = "LOADED";
       } else {
         state.value = "COMPLETED";

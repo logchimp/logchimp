@@ -113,7 +113,7 @@ import { useRoute, useRouter } from "vue-router";
 import type { IBoardPrivate, IPost } from "@logchimp/types";
 
 // modules
-import { getPosts } from "../../modules/posts";
+import { Posts } from "../../modules/posts";
 import { getAllBoards } from "../../ee/modules/boards";
 import { useSettingStore } from "../../store/settings";
 
@@ -136,15 +136,18 @@ const settingsStore = useSettingStore();
 async function getRecentPosts() {
   postState.value = "LOADING";
 
-  try {
-    const response = await getPosts({
-      page: "1",
-      limit: "4",
-      created: "DESC",
-      boardId: [],
-    });
+  const postsAPI = new Posts();
 
-    posts.value = response.data.posts;
+  try {
+    const response = await postsAPI.GetPosts(
+      {},
+      {
+        first: "4",
+        created: "DESC",
+      },
+    );
+
+    posts.value = response.posts;
     postState.value = "COMPLETED";
   } catch (error) {
     console.error(error);

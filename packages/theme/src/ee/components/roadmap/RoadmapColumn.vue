@@ -19,7 +19,7 @@ import { onMounted, ref } from "vue";
 import type { IPost } from "@logchimp/types";
 
 // modules
-import { getPosts } from "../../../modules/posts";
+import { Posts } from "../../../modules/posts";
 
 // components
 import RoadmapPostCard from "./RoadmapPostCard.vue";
@@ -36,16 +36,22 @@ const posts = ref<IPost[]>([]);
 
 async function getRoadmapPosts() {
   const roadmapId = props.roadmap.id;
-  try {
-    const response = await getPosts({
-      page: "1",
-      limit: "20",
-      created: "DESC",
-      boardId: [],
-      roadmapId,
-    });
 
-    posts.value = response.data.posts;
+  const postsAPI = new Posts();
+
+  try {
+    const response = await postsAPI.GetPosts(
+      {
+        boardId: [],
+        roadmapId,
+      },
+      {
+        first: "20",
+        created: "DESC",
+      },
+    );
+
+    posts.value = response.posts;
   } catch (err) {
     console.error(err);
   }

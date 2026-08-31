@@ -18,13 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineAsyncComponent } from "vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPost } from "@logchimp/types";
 
 // modules
 import { isSiteSetup } from "../modules/site";
-import { getPosts } from "../modules/posts";
+import { Posts } from "../modules/posts";
 import { useSettingStore } from "../store/settings";
 
 // components
@@ -34,6 +34,7 @@ import InfiniteScroll, {
 import PostItem from "../components/post/PostItem.vue";
 import SiteSetupCard from "../components/site/SiteSetupCard.vue";
 import TopPublicBoardsList from "../ee/components/TopPublicBoardsList.vue";
+
 const CreatePost = defineAsyncComponent(
   () => import("../components/post/CreatePost.vue"),
 );
@@ -41,7 +42,8 @@ const CreatePost = defineAsyncComponent(
 const settingsStore = useSettingStore();
 
 const posts = ref<IPost[]>([]);
-const page = ref<number>(1);
+const endCursor = ref<string | undefined>();
+const hasNextPage = ref<boolean>(false);
 const showSiteSetupCard = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
 
@@ -56,19 +58,29 @@ async function isSetup() {
 
 async function loadMorePosts() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
-
   state.value = "LOADING";
 
-  try {
-    const response = await getPosts({
-      page: page.value.toString(),
-      created: "DESC",
-      boardId: [],
-    });
+  const postsAPI = new Posts();
 
-    if (response.data.posts.length) {
-      posts.value.push(...response.data.posts);
-      page.value += 1;
+  try {
+    const response = await postsAPI.GetPosts(
+      {},
+      {
+        after: endCursor.value,
+        created: "DESC",
+      },
+    );
+
+    const postsList = response.posts;
+
+    if (postsList.length > 0) {
+      posts.value.push(...response.posts);
+    }
+
+    endCursor.value = response.page_info?.end_cursor || undefined;
+    hasNextPage.value = response.page_info?.has_next_page || false;
+
+    if (hasNextPage.value) {
       state.value = "LOADED";
     } else {
       state.value = "COMPLETED";
