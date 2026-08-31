@@ -27,14 +27,6 @@ const querySchema = z.object({
   first: z.coerce
     .string()
     .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
-  page: z.coerce
-    .string()
-    .optional()
-    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
-  limit: z.coerce
-    .string()
-    .optional()
-    .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
   after: z.uuid().optional(),
   created: z.enum(["ASC", "DESC"]).default("DESC"),
 });
