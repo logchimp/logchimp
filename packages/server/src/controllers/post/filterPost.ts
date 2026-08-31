@@ -3,6 +3,7 @@ import { z } from "zod";
 import type {
   IApiErrorResponse,
   IFilterPostRequestBody,
+  IFilterPostRequestQueryParams,
   IFilterPostResponseBody,
   IPost,
 } from "@logchimp/types";
@@ -53,7 +54,12 @@ const bodySchema = z.object({
 type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
 
 export async function filterPost(
-  req: Request<unknown, unknown, IFilterPostRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    IFilterPostRequestBody,
+    IFilterPostRequestQueryParams
+  >,
   res: Response<ResponseBody>,
 ) {
   if (req.body?.page || req.body?.limit) {

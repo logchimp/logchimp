@@ -29,7 +29,11 @@ interface IPostInfo {
   createdAt: Date;
 }
 
-export interface IFilterPostRequestBody extends CursorPaginationParams {
+export interface IFilterPostRequestQueryParams extends CursorPaginationParams {
+  created?: "asc" | "desc";
+}
+
+export interface IFilterPostRequestBody {
   boardId: string[];
   roadmapId?: string;
   page: string;
