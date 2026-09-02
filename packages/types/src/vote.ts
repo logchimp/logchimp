@@ -10,7 +10,7 @@ export interface ICurrentUserVote {
   voteId: string;
   userId: string;
   postId: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export interface IPostVote {

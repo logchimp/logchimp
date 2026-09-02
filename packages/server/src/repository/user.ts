@@ -1,7 +1,23 @@
 import type { Knex } from "knex";
-import type { IUserInfo } from "@logchimp/types";
+import type { IPublicUserInfo, IUserInfo } from "@logchimp/types";
 import type { TCreatedUser } from "../services/auth/types";
 import database from "../database";
+
+export class UserRepository {
+  db: Knex;
+
+  constructor(db: Knex) {
+    this.db = db;
+  }
+
+  async GetUserPublicInfo(userIds: string[]) {
+    if (userIds.length === 0) return [];
+    return this.db
+      .select<IPublicUserInfo[]>("userId", "name", "avatar", "username")
+      .from("users")
+      .whereIn("userId", userIds);
+  }
+}
 
 export function getUserById(db: Knex, id: string) {
   return db("users")

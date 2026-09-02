@@ -23,8 +23,15 @@ import {
   schemaBodyErrorMap,
   schemaQueryErrorMap,
 } from "../../../../controllers/post/filterPost";
-import { getBoardById } from "../../../services/boards/getBoardById";
-import { getVotes } from "../../../../services/votes/getVotes";
+import { BoardRepository } from "../../../repository/board";
+import { RoadmapRepository } from "../../../repository/roadmap";
+import { VoteRepository } from "../../../../repository/vote";
+import { UserRepository } from "../../../../repository/user";
+
+const userRepository = new UserRepository(database);
+const boardRepository = new BoardRepository(database);
+const roadmapRepository = new RoadmapRepository(database);
+const voteRepository = new VoteRepository(database);
 
 const filterPostBodySchema = v.object({
   ...bodySchema.entries,
@@ -120,27 +127,40 @@ export async function filterPost(
       return;
     }
 
+    const authorIds = new Set<string>();
+    const boardIDs = new Set<string>();
+    const roadmapIDs = new Set<string>();
+    const voterIDs = new Set<string>();
+
+    for (const post of response) {
+      authorIds.add(post.userId);
+      voterIDs.add(post.postId);
+      boardIDs.add(post.boardId);
+      roadmapIDs.add(post.roadmap_id);
+    }
+
+    const authors = await userRepository.GetUserPublicInfo([...authorIds]);
+    const boards = await boardRepository.GetBoardByIDs([...boardIDs]);
+    const roadmaps = await roadmapRepository.GetRoadmapByIDs([...roadmapIDs]);
+    const votes = await voteRepository.GetVotesByPostIDs([...voterIDs], userId);
+
     // Enrich posts with board, roadmap, and votes
     const posts: IPost[] = [];
     for (const post of response) {
-      try {
-        const board = await getBoardById(post.boardId);
-        const voters = await getVotes(post.postId, userId);
-        const roadmap = await database
-          .select("id", "name", "url", "color")
-          .from("roadmaps")
-          .where({ id: post.roadmap_id })
-          .first();
+      const author = authors.find((author) => author.userId === post.userId);
+      const board = boards.find((board) => board.boardId === post.boardId);
+      const roadmap = roadmaps.find(
+        (roadmap) => roadmap.id === post.roadmap_id,
+      );
+      const voters = votes.get(post.postId);
 
-        posts.push({
-          ...post,
-          board,
-          roadmap,
-          voters,
-        });
-      } catch (err) {
-        logger.log({ level: "error", message: err });
-      }
+      posts.push({
+        ...post,
+        author: author,
+        board: board,
+        roadmap: roadmap,
+        voters: voters,
+      });
     }
 
     const postDataLength = posts.length;
@@ -232,6 +252,7 @@ async function buildPostsQuery({
     "postId",
     "title",
     "slug",
+    "userId",
     "boardId",
     "roadmap_id",
     "contentMarkdown",
