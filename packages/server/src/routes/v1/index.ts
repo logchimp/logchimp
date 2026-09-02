@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import logger from "../../utils/logger";
+import { config } from "../../utils/logchimpConfig";
 
 import auth from "./auth";
 import posts from "./posts";
@@ -29,7 +30,7 @@ export async function initialiseEERoutes() {
 }
 
 export const ready = (async () => {
-  await initialiseEERoutes();
+  config?.licenseKey ? await initialiseEERoutes() : null;
 
   if (!eeRoutesLoaded) {
     router.use("/api/v1", auth, posts);
