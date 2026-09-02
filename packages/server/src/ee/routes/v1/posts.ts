@@ -12,7 +12,7 @@ import type {
 
 // controller
 import * as post from "../../../controllers/post";
-import * as eePost from "../../../ee/controllers/v1/posts";
+import * as eePost from "../../controllers/v1/posts";
 
 // middleware
 import { authOptional, authRequired } from "../../../middlewares/auth";
@@ -22,7 +22,7 @@ import { commentExists } from "../../middleware/commentExists";
 
 const router = express.Router();
 
-router.post("/posts/get", authOptional, post.filterPost);
+router.post("/posts/get", authOptional, eePost.posts.filterPost);
 router.post("/posts/slug", authOptional, postExists, post.postBySlug);
 
 router.post("/posts", authRequired, post.create);

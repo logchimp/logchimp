@@ -10,7 +10,6 @@ import type {
 import database from "../../database";
 
 // services
-import { getBoardById } from "../../ee/services/boards/getBoardById";
 import { getVotes } from "../../services/votes/getVotes";
 
 // utils
@@ -18,13 +17,12 @@ import {
   parseAndValidateLimit,
   parseAndValidatePage,
   validUUID,
-  validUUIDs,
 } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_POSTS_FILTER_COUNT } from "../../constants";
 
-const querySchema = v.object({
+export const querySchema = v.object({
   first: v.pipe(
     v.optional(v.string(), GET_POSTS_FILTER_COUNT.toString()),
     v.transform((value) =>
@@ -37,7 +35,7 @@ const querySchema = v.object({
   created: v.optional(v.picklist(["ASC", "DESC"]), "DESC"),
 });
 
-const bodySchema = v.object({
+export const bodySchema = v.object({
   /**
    * @deprecated Use `first` and `after` instead.
    * For backward compatibility to support offset pagination.
@@ -62,28 +60,18 @@ const bodySchema = v.object({
       ),
     ),
   ),
-  boardId: v.optional(
-    v.pipe(
-      v.array(v.string()),
-      v.transform((value) => (Array.isArray(value) ? validUUIDs(value) : [])),
-    ),
-  ),
-  roadmapId: v.optional(
-    v.pipe(
-      v.string(),
-      v.transform((value) => validUUID(value)),
-    ),
-  ),
 });
 
-const schemaQueryErrorMap = {
+export const schemaQueryErrorMap = {
   INVALID_CURSOR: error.general.invalidCursor,
   MIN_VALUE_1: error.general.minValue1,
 };
 
-const schemaBodyErrorMap = {};
+export const schemaBodyErrorMap = {};
 
-type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
+export type FilterPostResponseBody =
+  | IFilterPostResponseBody
+  | IApiErrorResponse;
 
 export async function filterPost(
   req: Request<
@@ -92,7 +80,7 @@ export async function filterPost(
     IFilterPostRequestBody,
     IFilterPostRequestQueryParams
   >,
-  res: Response<ResponseBody>,
+  res: Response<FilterPostResponseBody>,
 ) {
   if (req.body?.page || req.body?.limit) {
     logger.warn(
@@ -130,7 +118,7 @@ export async function filterPost(
     });
   }
 
-  const { page, limit, boardId, roadmapId } = body.output;
+  const { page, limit } = body.output;
   const { first: _first, after, created } = query.output;
 
   const first = _first ?? limit ?? GET_POSTS_FILTER_COUNT;
@@ -150,8 +138,6 @@ export async function filterPost(
       page,
       after,
       created,
-      boardId: boardId || [],
-      roadmapId,
     });
 
     if (page && response.length === 0) {
@@ -163,22 +149,16 @@ export async function filterPost(
       return;
     }
 
-    // Enrich posts with board, roadmap, and votes
+    // Enrich posts with votes
     const posts: IPost[] = [];
     for (const post of response) {
       try {
-        const board = await getBoardById(post.boardId);
         const voters = await getVotes(post.postId, userId);
-        const roadmap = await database
-          .select("id", "name", "url", "color")
-          .from("roadmaps")
-          .where({ id: post.roadmap_id })
-          .first();
 
         posts.push({
           ...post,
-          board,
-          roadmap,
+          board: null,
+          roadmap: null,
           voters,
         });
       } catch (err) {
@@ -205,8 +185,6 @@ export async function filterPost(
     if (!page) {
       const metadataResults = await getPostMetadata({
         after,
-        boardId,
-        roadmapId,
         created,
       });
       if (metadataResults) {
@@ -261,34 +239,20 @@ async function buildPostsQuery({
   page,
   after,
   created,
-  boardId,
-  roadmapId,
 }: {
   first: number;
   page?: number;
   after?: string;
   created: "ASC" | "DESC";
-  boardId: string[];
-  roadmapId?: string | null;
 }) {
   let queryBuilder = database("posts").select(
     "postId",
     "title",
     "slug",
-    "boardId",
-    "roadmap_id",
     "contentMarkdown",
     "createdAt",
     "updatedAt",
   );
-
-  // Apply filters
-  if (boardId.length > 0) {
-    queryBuilder = queryBuilder.whereIn("boardId", boardId);
-  }
-  if (roadmapId) {
-    queryBuilder = queryBuilder.where("roadmap_id", roadmapId);
-  }
 
   if (page) {
     queryBuilder = queryBuilder.offset(first * (page - 1));
@@ -334,37 +298,19 @@ async function buildPostsQuery({
 
 async function getPostMetadata({
   after,
-  boardId = [] as string[],
-  roadmapId,
   created = "DESC",
 }: {
   after?: string;
-  boardId?: string[];
-  roadmapId?: string | null;
   created?: "ASC" | "DESC";
 }) {
   return database.transaction(async (trx) => {
     // Total count
     const totalCountQuery = trx("posts").count("* as count");
 
-    if (boardId.length > 0) {
-      totalCountQuery.whereIn("boardId", boardId);
-    }
-    if (roadmapId) {
-      totalCountQuery.where("roadmap_id", roadmapId);
-    }
-
     const totalCountResult = await totalCountQuery.first();
 
     // Remaining results after cursor
     let remainingQuery = trx("posts").as("next");
-
-    if (boardId.length > 0) {
-      remainingQuery = remainingQuery.whereIn("boardId", boardId);
-    }
-    if (roadmapId) {
-      remainingQuery = remainingQuery.where("roadmap_id", roadmapId);
-    }
 
     if (after) {
       const cursorPost = await trx("posts")
