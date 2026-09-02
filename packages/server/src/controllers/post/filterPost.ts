@@ -8,11 +8,6 @@ import type {
   IPost,
 } from "@logchimp/types";
 import database from "../../database";
-
-// services
-import { getVotes } from "../../services/votes/getVotes";
-
-// utils
 import {
   parseAndValidateLimit,
   parseAndValidatePage,
@@ -21,6 +16,12 @@ import {
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_POSTS_FILTER_COUNT } from "../../constants";
+import { UserRepository } from "../../repository/user";
+import { VoteRepository } from "../../repository/vote";
+import { valkey } from "../../cache";
+
+const userRepository = new UserRepository(database, valkey);
+const voteRepository = new VoteRepository(database, valkey);
 
 export const querySchema = v.object({
   first: v.pipe(
@@ -149,14 +150,29 @@ export async function filterPost(
       return;
     }
 
+    const authorIds = new Set<string>();
+    const voterIDs = new Set<string>();
+
+    for (const post of response) {
+      authorIds.add(post.userId);
+      voterIDs.add(post.postId);
+    }
+
+    const authors = await userRepository.GetUserPublicInfo([...authorIds]);
+    const votes = await voteRepository.GetVotesByPostIDs([...voterIDs], userId);
+
     // Enrich posts with votes
     const posts: IPost[] = [];
     for (const post of response) {
       try {
-        const voters = await getVotes(post.postId, userId);
+        const author = authors.find((author) => author.userId === post.userId);
+        const voters = votes.get(post.postId);
+
+        post.userId = undefined;
 
         posts.push({
           ...post,
+          author,
           board: null,
           roadmap: null,
           voters,
@@ -249,6 +265,7 @@ async function buildPostsQuery({
     "postId",
     "title",
     "slug",
+    "userId",
     "contentMarkdown",
     "createdAt",
     "updatedAt",
