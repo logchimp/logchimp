@@ -256,3 +256,4 @@ class ConfigManager {
 }
 
 export const configManager = new ConfigManager();
+export const config = configManager.getConfig();
