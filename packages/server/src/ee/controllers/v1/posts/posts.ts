@@ -27,11 +27,12 @@ import { BoardRepository } from "../../../repository/board";
 import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
+import { valkey } from "../../../../cache";
 
-const userRepository = new UserRepository(database);
-const boardRepository = new BoardRepository(database);
-const roadmapRepository = new RoadmapRepository(database);
-const voteRepository = new VoteRepository(database);
+const userRepository = new UserRepository(database, valkey);
+const boardRepository = new BoardRepository(database, valkey);
+const roadmapRepository = new RoadmapRepository(database, valkey);
+const voteRepository = new VoteRepository(database, valkey);
 
 const filterPostBodySchema = v.object({
   ...bodySchema.entries,
@@ -140,8 +141,10 @@ export async function filterPost(
     }
 
     const authors = await userRepository.GetUserPublicInfo([...authorIds]);
-    const boards = await boardRepository.GetBoardByIDs([...boardIDs]);
-    const roadmaps = await roadmapRepository.GetRoadmapByIDs([...roadmapIDs]);
+    const boards = await boardRepository.GetPublicBoardByIDs([...boardIDs]);
+    const roadmaps = await roadmapRepository.GetPublicRoadmapByIDs([
+      ...roadmapIDs,
+    ]);
     const votes = await voteRepository.GetVotesByPostIDs([...voterIDs], userId);
 
     // Enrich posts with board, roadmap, and votes

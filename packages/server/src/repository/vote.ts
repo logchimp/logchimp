@@ -1,6 +1,6 @@
-import type { Knex } from "knex";
 import logger from "../utils/logger";
 import type { IPostVote } from "@logchimp/types";
+import { QueryRepository } from "./query";
 
 export interface IVoteTableColumns {
   voteId: string;
@@ -15,13 +15,7 @@ export interface IUserVoter extends IVoteTableColumns {
   avatar: string;
 }
 
-export class VoteRepository {
-  db: Knex;
-
-  constructor(db: Knex) {
-    this.db = db;
-  }
-
+export class VoteRepository extends QueryRepository {
   async GetVotesByPostIDs(
     postIds: string[],
     userId?: string,
@@ -99,9 +93,6 @@ export class VoteRepository {
       .from("votes")
       .innerJoin("users", "votes.userId", "users.userId")
       .whereIn("votes.postId", postIds);
-
-    console.log("ranked query:");
-    console.log(rankedSubquery.toQuery());
 
     return this.db
       .select<Array<IUserVoter & { rn: number }>>("*")
