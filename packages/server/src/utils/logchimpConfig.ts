@@ -121,6 +121,8 @@ class ConfigManager {
 
     const serverPort = config.server?.port;
     const mailPort = config.mail?.port;
+    const databasePort = config.database?.port;
+    const databaseSsl = config.database?.ssl;
 
     return {
       secretKey: this.envString(config.server?.secretKey),
@@ -133,7 +135,9 @@ class ConfigManager {
       apiUrl: this.envString(config.server?.apiUrl),
       serverHost: this.envString(config.server?.host),
       serverPort: serverPort
-        ? Number.parseInt(`${config.server?.port}`, 10)
+        ? typeof serverPort === "string"
+          ? Number.parseInt(this.envString(serverPort), 10)
+          : serverPort
         : DEFAULT_SERVER_PORT,
       webUrl: this.envString(config.server?.webUrl),
 
@@ -147,12 +151,16 @@ class ConfigManager {
       databaseHost: this.envString(config.database?.host),
       databaseUser: this.envString(config.database?.user),
       databasePassword: this.envString(config.database?.password),
-      databasePort: config.database?.port,
+      databasePort: databasePort
+        ? typeof databasePort === "string"
+          ? Number.parseInt(this.envString(databasePort), 10)
+          : databasePort
+        : DEFAULT_DATABASE_PORT,
       databaseName: this.envString(config.database?.name),
       databaseSsl:
-        config.database?.ssl === "true" ||
-        config.database?.ssl === true ||
-        false,
+        typeof databaseSsl === "string"
+          ? this.envString(databaseSsl) === "true"
+          : databaseSsl === true,
 
       // Cache
       cachePrefix: this.envString(config?.cache?.prefix),
@@ -162,7 +170,11 @@ class ConfigManager {
       mailHost: this.envString(config.mail?.host),
       mailUser: this.envString(config.mail?.user),
       mailPassword: this.envString(config.mail?.password),
-      mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
+      mailPort: mailPort
+        ? typeof mailPort === "string"
+          ? Number.parseInt(this.envString(mailPort), 10)
+          : mailPort
+        : 465,
 
       // OIDC
       oidcClientId: this.envString(config.oidc?.clientId),
@@ -188,6 +200,7 @@ class ConfigManager {
 
     const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
     const databasePort = process.env.LOGCHIMP_DB_PORT;
+    const databaseSsl = process.env.LOGCHIMP_DB_SSL;
     const mailPort = process.env.LOGCHIMP_MAIL_PORT;
 
     return {
@@ -199,7 +212,9 @@ class ConfigManager {
       apiUrl: this.envString(process.env.LOGCHIMP_API_URL),
       serverHost: this.envString(process.env.LOGCHIMP_API_HOST),
       serverPort: serverPort
-        ? Number.parseInt(`${serverPort}`, 10)
+        ? typeof serverPort === "string"
+          ? Number.parseInt(this.envString(serverPort), 10)
+          : serverPort
         : DEFAULT_SERVER_PORT,
       webUrl: this.envString(process.env.LOGCHIMP_WEB_URL),
 
@@ -214,10 +229,15 @@ class ConfigManager {
       databaseUser: this.envString(process.env.LOGCHIMP_DB_USER),
       databasePassword: this.envString(process.env.LOGCHIMP_DB_PASSWORD),
       databasePort: databasePort
-        ? Number.parseInt(databasePort, 10)
+        ? typeof databasePort === "string"
+          ? Number.parseInt(this.envString(databasePort), 10)
+          : databasePort
         : DEFAULT_DATABASE_PORT,
       databaseName: this.envString(process.env.LOGCHIMP_DB_DATABASE),
-      databaseSsl: process.env.LOGCHIMP_DB_SSL === "true",
+      databaseSsl:
+        typeof databaseSsl === "string"
+          ? this.envString(databaseSsl) === "true"
+          : databaseSsl,
 
       // Cache
       cachePrefix: this.envString(process.env.LOGCHIMP_CACHE_PREFIX),
@@ -227,7 +247,11 @@ class ConfigManager {
       mailHost: this.envString(process.env.LOGCHIMP_MAIL_HOST),
       mailUser: this.envString(process.env.LOGCHIMP_MAIL_USER),
       mailPassword: this.envString(process.env.LOGCHIMP_MAIL_PASSWORD),
-      mailPort: mailPort ? Number.parseInt(mailPort, 10) : DEFAULT_MAIL_PORT,
+      mailPort: mailPort
+        ? typeof mailPort === "string"
+          ? Number.parseInt(this.envString(mailPort), 10)
+          : mailPort
+        : DEFAULT_MAIL_PORT,
 
       // OIDC
       oidcClientId: this.envString(process.env.LOGCHIMP_OIDC_CLIENT_ID),
