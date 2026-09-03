@@ -22,7 +22,14 @@ import { commentExists } from "../../middleware/commentExists";
 
 const router = express.Router();
 
-router.post("/posts/get", authOptional, eePost.posts.filterPost);
+router.post(
+  "/posts/get",
+  authOptional,
+  withLicenseGuard(eePost.posts.filterPost, {
+    requiredPlan: ["pro", "business", "enterprise"],
+    skipHandlerOnFailure: false,
+  }),
+);
 router.post("/posts/slug", authOptional, postExists, post.postBySlug);
 
 router.post("/posts", authRequired, post.create);

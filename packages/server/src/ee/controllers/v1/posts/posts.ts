@@ -67,7 +67,7 @@ export async function filterPost(
 
   const query = v.safeParse(filterPostQuerySchema, req.query);
   if (!query.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
@@ -78,11 +78,12 @@ export async function filterPost(
         code: issue.message,
       })),
     });
+    return;
   }
 
   const body = v.safeParse(filterPostBodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -93,6 +94,7 @@ export async function filterPost(
         code: issue.message,
       })),
     });
+    return;
   }
 
   const { page, limit, boardId, roadmapId } = body.output;
@@ -100,10 +102,11 @@ export async function filterPost(
 
   const first = _first || limit;
   if (after && !validUUID(after)) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid cursor format",
     });
+    return;
   }
 
   // @ts-expect-error
@@ -156,6 +159,10 @@ export async function filterPost(
         (roadmap) => roadmap.id === post.roadmap_id,
       );
       const voters = votes.get(post.postId);
+
+      post.userId = undefined;
+      post.boardId = undefined;
+      post.roadmap_id = undefined;
 
       posts.push({
         ...post,
@@ -263,7 +270,9 @@ async function buildPostsQuery({
     "updatedAt",
   );
 
+  // console.log("build posts query:");
   // Apply filters
+  // console.log("board ID:", boardId);
   if (boardId.length > 0) {
     queryBuilder = queryBuilder.whereIn("boardId", boardId);
   }
