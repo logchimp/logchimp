@@ -240,9 +240,15 @@ class ConfigManager {
       }
     }
 
+    const cleanedFile = fileConfig
+      ? Object.fromEntries(
+          Object.entries(fileConfig).filter(([, v]) => v !== undefined),
+        )
+      : {};
+
     return {
       ...envConfig,
-      ...(fileConfig || {}),
+      ...cleanedFile,
       version: packageJson.version,
     };
   }
