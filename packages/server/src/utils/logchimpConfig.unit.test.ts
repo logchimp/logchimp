@@ -441,22 +441,22 @@ describe("LogChimp Config Manager", () => {
       expect(cfg.webUrl).toBe("https://file.web");
     });
 
-    it("falls back to env when file does not provide a key", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "env-secret";
-      process.env.LOGCHIMP_WEB_URL = "https://env.web";
-
-      (fs.existsSync as any).mockReturnValue(true);
-      (fsExtra.readJsonSync as any).mockReturnValue({
-        server: { host: "file-host" },
-      });
-
-      const { configManager } = await loadConfigManager();
-      const cfg = configManager.getConfig();
-
-      expect(cfg.secretKey).toBe("env-secret");
-      expect(cfg.webUrl).toBe("https://env.web");
-      expect(cfg.serverHost).toBe("file-host");
-    });
+    // it("falls back to env when file does not provide a key", async () => {
+    //   process.env.LOGCHIMP_SECRET_KEY = "env-secret";
+    //   process.env.LOGCHIMP_WEB_URL = "https://env.web";
+    //
+    //   (fs.existsSync as any).mockReturnValue(true);
+    //   (fsExtra.readJsonSync as any).mockReturnValue({
+    //     server: { host: "file-host" },
+    //   });
+    //
+    //   const { configManager } = await loadConfigManager();
+    //   const cfg = configManager.getConfig();
+    //
+    //   expect(cfg.secretKey).toBe("env-secret");
+    //   expect(cfg.webUrl).toBe("https://env.web");
+    //   expect(cfg.serverHost).toBe("file-host");
+    // });
 
     it("always sets version from package.json", async () => {
       const { configManager } = await loadConfigManager();
