@@ -121,55 +121,50 @@ class ConfigManager {
 
     const serverPort = config.server?.port;
     const mailPort = config.mail?.port;
+    const databasePort = config.database?.port;
+    const databaseSsl = config.database?.ssl;
 
     return {
-      secretKey: config.server?.secretKey,
-      machineSignature: config.server?.machineSignature,
-      isSelfHosted:
-        config.server?.selfHosted === true ||
-        config.server?.selfHosted === "true",
+      secretKey: this.envString(config.server?.secretKey),
+      machineSignature: this.envString(config.server?.machineSignature),
+      isSelfHosted: this.envBoolean(config.server?.selfHosted),
 
       // Server
-      apiUrl: config.server?.apiUrl,
-      serverHost: config.server?.host,
-      serverPort: serverPort
-        ? Number.parseInt(`${config.server?.port}`, 10)
-        : DEFAULT_SERVER_PORT,
-      webUrl: config.server?.webUrl,
+      apiUrl: this.envString(config.server?.apiUrl),
+      serverHost: this.envString(config.server?.host),
+      serverPort: this.envNumber(serverPort, DEFAULT_SERVER_PORT),
+      webUrl: this.envString(config.server?.webUrl),
 
       // License
-      licenseKey: config?.license?.key,
-      licenseSignature: config?.license?.signature,
-      licensePilotUrl: config?.license?.pilotUrl,
+      licenseKey: this.envString(config?.license?.key),
+      licenseSignature: this.envString(config?.license?.signature),
+      licensePilotUrl: this.envString(config?.license?.pilotUrl),
 
       // Database
-      databaseUrl: config.database?.url,
-      databaseHost: config.database?.host,
-      databaseUser: config.database?.user,
-      databasePassword: config.database?.password,
-      databasePort: config.database?.port,
-      databaseName: config.database?.name,
-      databaseSsl:
-        config.database?.ssl === "true" ||
-        config.database?.ssl === true ||
-        false,
+      databaseUrl: this.envString(config.database?.url),
+      databaseHost: this.envString(config.database?.host),
+      databaseUser: this.envString(config.database?.user),
+      databasePassword: this.envString(config.database?.password),
+      databasePort: this.envNumber(databasePort, DEFAULT_DATABASE_PORT),
+      databaseName: this.envString(config.database?.name),
+      databaseSsl: this.envBoolean(databaseSsl),
 
       // Cache
-      cachePrefix: config?.cache?.prefix,
-      cacheUrl: config.cache?.url,
+      cachePrefix: this.envString(config?.cache?.prefix),
+      cacheUrl: this.envString(config.cache?.url),
 
       // Mail
-      mailHost: config.mail?.host,
-      mailUser: config.mail?.user,
-      mailPassword: config.mail?.password,
-      mailPort: mailPort ? Number.parseInt(mailPort, 10) : 465,
+      mailHost: this.envString(config.mail?.host),
+      mailUser: this.envString(config.mail?.user),
+      mailPassword: this.envString(config.mail?.password),
+      mailPort: this.envNumber(mailPort, 465),
 
       // OIDC
-      oidcClientId: config.oidc?.clientId,
-      oidcClientSecret: config.oidc?.clientSecret,
-      oidcIssuer: config.oidc?.issuer,
+      oidcClientId: this.envString(config.oidc?.clientId),
+      oidcClientSecret: this.envString(config.oidc?.clientSecret),
+      oidcIssuer: this.envString(config.oidc?.issuer),
 
-      version: "",
+      version: this.envString(""),
     };
   }
 
@@ -188,53 +183,50 @@ class ConfigManager {
 
     const serverPort = process.env.LOGCHIMP_SERVER_PORT || process.env.PORT;
     const databasePort = process.env.LOGCHIMP_DB_PORT;
+    const databaseSsl = process.env.LOGCHIMP_DB_SSL;
     const mailPort = process.env.LOGCHIMP_MAIL_PORT;
 
     return {
-      secretKey: process.env.LOGCHIMP_SECRET_KEY,
-      machineSignature: process.env.LOGCHIMP_MACHINE_SIGNATURE,
-      isSelfHosted: process.env.LOGCHIMP_IS_SELF_HOSTED === "true",
+      secretKey: this.envString(process.env.LOGCHIMP_SECRET_KEY),
+      machineSignature: this.envString(process.env.LOGCHIMP_MACHINE_SIGNATURE),
+      isSelfHosted: this.envBoolean(process.env.LOGCHIMP_IS_SELF_HOSTED),
 
       // Server
-      apiUrl: process.env.LOGCHIMP_API_URL,
-      serverHost: process.env.LOGCHIMP_API_HOST,
-      serverPort: serverPort
-        ? Number.parseInt(`${serverPort}`, 10)
-        : DEFAULT_SERVER_PORT,
-      webUrl: process.env.LOGCHIMP_WEB_URL,
+      apiUrl: this.envString(process.env.LOGCHIMP_API_URL),
+      serverHost: this.envString(process.env.LOGCHIMP_API_HOST),
+      serverPort: this.envNumber(serverPort, DEFAULT_SERVER_PORT),
+      webUrl: this.envString(process.env.LOGCHIMP_WEB_URL),
 
       // License
-      licenseKey: process.env.LOGCHIMP_LICENSE_KEY,
-      licenseSignature: process.env.LOGCHIMP_SIGNATURE_TOKEN,
-      licensePilotUrl: process.env.LOGCHIMP_PILOT_URL,
+      licenseKey: this.envString(process.env.LOGCHIMP_LICENSE_KEY),
+      licenseSignature: this.envString(process.env.LOGCHIMP_SIGNATURE_TOKEN),
+      licensePilotUrl: this.envString(process.env.LOGCHIMP_PILOT_URL),
 
       // Database
-      databaseUrl: process.env.LOGCHIMP_DB_URL,
-      databaseHost: process.env.LOGCHIMP_DB_HOST,
-      databaseUser: process.env.LOGCHIMP_DB_USER,
-      databasePassword: process.env.LOGCHIMP_DB_PASSWORD,
-      databasePort: databasePort
-        ? Number.parseInt(databasePort, 10)
-        : DEFAULT_DATABASE_PORT,
-      databaseName: process.env.LOGCHIMP_DB_DATABASE,
-      databaseSsl: process.env.LOGCHIMP_DB_SSL === "true",
+      databaseUrl: this.envString(process.env.LOGCHIMP_DB_URL),
+      databaseHost: this.envString(process.env.LOGCHIMP_DB_HOST),
+      databaseUser: this.envString(process.env.LOGCHIMP_DB_USER),
+      databasePassword: this.envString(process.env.LOGCHIMP_DB_PASSWORD),
+      databasePort: this.envNumber(databasePort, DEFAULT_DATABASE_PORT),
+      databaseName: this.envString(process.env.LOGCHIMP_DB_DATABASE),
+      databaseSsl: this.envBoolean(databaseSsl),
 
       // Cache
-      cachePrefix: process.env.LOGCHIMP_CACHE_PREFIX || "logchimp:",
-      cacheUrl: process.env.LOGCHIMP_VALKEY_URL,
+      cachePrefix: this.envString(process.env.LOGCHIMP_CACHE_PREFIX),
+      cacheUrl: this.envString(process.env.LOGCHIMP_VALKEY_URL),
 
       // Mail
-      mailHost: process.env.LOGCHIMP_MAIL_HOST,
-      mailUser: process.env.LOGCHIMP_MAIL_USER,
-      mailPassword: process.env.LOGCHIMP_MAIL_PASSWORD,
-      mailPort: mailPort ? Number.parseInt(mailPort, 10) : DEFAULT_MAIL_PORT,
+      mailHost: this.envString(process.env.LOGCHIMP_MAIL_HOST),
+      mailUser: this.envString(process.env.LOGCHIMP_MAIL_USER),
+      mailPassword: this.envString(process.env.LOGCHIMP_MAIL_PASSWORD),
+      mailPort: this.envNumber(mailPort, DEFAULT_MAIL_PORT),
 
       // OIDC
-      oidcClientId: process.env.LOGCHIMP_OIDC_CLIENT_ID,
-      oidcClientSecret: process.env.LOGCHIMP_OIDC_CLIENT_SECRET,
-      oidcIssuer: process.env.LOGCHIMP_OIDC_ISSUER,
+      oidcClientId: this.envString(process.env.LOGCHIMP_OIDC_CLIENT_ID),
+      oidcClientSecret: this.envString(process.env.LOGCHIMP_OIDC_CLIENT_SECRET),
+      oidcIssuer: this.envString(process.env.LOGCHIMP_OIDC_ISSUER),
 
-      version: "",
+      version: this.envString(""),
     };
   }
 
@@ -255,22 +247,41 @@ class ConfigManager {
     };
   }
 
-  // private getEnv = <K extends keyof NodeJS.ProcessEnv>(key: K, fallback?: NodeJS.ProcessEnv[K]): NodeJS.ProcessEnv[K] => {
-  //   const value = process.env[key] as NodeJS.ProcessEnv[K] | undefined;
-  //
-  //   if (value === undefined) {
-  //     // handle fallback falsy cases that should still be used as value
-  //     if (fallback === false || fallback === "" || fallback === 0) {
-  //       return fallback;
-  //     }
-  //     if (fallback) {
-  //       return fallback;
-  //     }
-  //     throw new Error(`Missing environment variable: ${key}.`);
-  //   }
-  //
-  //   return value;
-  // };
+  private envString(key?: string, fallback?: string) {
+    if (key === undefined) {
+      if (fallback === "") {
+        return fallback;
+      }
+      if (fallback) return fallback;
+      return undefined;
+    }
+
+    return (key || "").trim();
+  }
+
+  private envNumber(
+    value: string | number | undefined | null,
+    fallback: number,
+  ): number {
+    if (value === undefined || value === null) {
+      return fallback;
+    }
+
+    if (typeof value === "string") {
+      const parsed = Number.parseInt(this.envString(value), 10);
+      return Number.isNaN(parsed) ? fallback : parsed;
+    }
+
+    return value;
+  }
+
+  private envBoolean(value: string | boolean | undefined | null): boolean {
+    if (typeof value === "string") {
+      return this.envString(value) === "true";
+    }
+
+    return value === true;
+  }
 }
 
 export const configManager = new ConfigManager();
