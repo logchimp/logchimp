@@ -45,7 +45,15 @@ export class VoteRepository extends QueryRepository {
       }
 
       for (const v of rankedVotes) {
-        votesMap.get(v.postId)?.votes.push(v);
+        votesMap.get(v.postId)?.votes.push({
+          userId: v.userId,
+          name: v.name,
+          username: v.username,
+          avatar: v.avatar,
+          createdAt: v.createdAt,
+          postId: v.postId,
+          voteId: v.voteId,
+        });
       }
 
       for (const vv of viewerVotes) {
