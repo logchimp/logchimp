@@ -123,7 +123,7 @@ export async function filterPost(
   const { page, limit, boardId, roadmapId } = body.output;
   const { first: _first, after, created } = query.output;
 
-  const first = _first || limit;
+  const first = _first ?? limit ?? GET_POSTS_FILTER_COUNT;
   if (after && !validUUID(after)) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
