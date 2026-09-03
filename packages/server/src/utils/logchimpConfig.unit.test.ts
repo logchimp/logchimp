@@ -1,6 +1,4 @@
-// packages/server/src/utils/logchimpConfig.spec.ts
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import path from "path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import fs from "fs";
 import fsExtra from "fs-extra";
 
@@ -32,19 +30,13 @@ async function loadConfigManager() {
 }
 
 describe("LogChimp Config Manager", () => {
-  const originalEnv = { ...process.env };
-
   beforeEach(() => {
-    // Reset environment
-    process.env = { ...originalEnv };
-    // Clear any previous mocks
     vi.clearAllMocks();
-    // Default: no config file
     (fs.existsSync as any).mockReturnValue(false);
   });
 
   afterEach(() => {
-    process.env = originalEnv;
+    vi.unstubAllEnvs();
   });
 
   // ---------------------------------------------------------------
@@ -61,20 +53,20 @@ describe("LogChimp Config Manager", () => {
 
     it("returns empty string when fallback is empty string", async () => {
       // version is forced to packageJson.version, but we can still check trimming
-      process.env.LOGCHIMP_SECRET_KEY = "   ";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "   ");
       const { configManager } = await loadConfigManager();
       const cfg = configManager.getConfig();
       expect(cfg.secretKey).toBe(""); // trimmed empty
     });
 
     it("trims whitespace from string values", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "  my-secret  ";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "  my-secret  ");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().secretKey).toBe("my-secret");
     });
 
     it("handles empty string value", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().secretKey).toBe("");
     });
@@ -105,9 +97,9 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("parses string number correctly", async () => {
-      process.env.LOGCHIMP_SERVER_PORT = "9000";
-      process.env.LOGCHIMP_DB_PORT = "5433";
-      process.env.LOGCHIMP_MAIL_PORT = "587";
+      vi.stubEnv("LOGCHIMP_SERVER_PORT", "9000");
+      vi.stubEnv("LOGCHIMP_DB_PORT", "5433");
+      vi.stubEnv("LOGCHIMP_MAIL_PORT", "587");
 
       const { configManager } = await loadConfigManager();
       const cfg = configManager.getConfig();
@@ -117,13 +109,13 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("parses string number with whitespace", async () => {
-      process.env.LOGCHIMP_SERVER_PORT = "  9001  ";
+      vi.stubEnv("LOGCHIMP_SERVER_PORT", "  9001  ");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().serverPort).toBe(9001);
     });
 
     it("falls back to default on invalid string (NaN)", async () => {
-      process.env.LOGCHIMP_SERVER_PORT = "not-a-number";
+      vi.stubEnv("LOGCHIMP_SERVER_PORT", "not-a-number");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().serverPort).toBe(8000);
     });
@@ -144,14 +136,14 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("prefers PORT env var when LOGCHIMP_SERVER_PORT is missing", async () => {
-      process.env.PORT = "4000";
+      vi.stubEnv("PORT", "4000");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().serverPort).toBe(4000);
     });
 
     it("LOGCHIMP_SERVER_PORT takes precedence over PORT", async () => {
-      process.env.PORT = "4000";
-      process.env.LOGCHIMP_SERVER_PORT = "5000";
+      vi.stubEnv("PORT", "4000");
+      vi.stubEnv("LOGCHIMP_SERVER_PORT", "5000");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().serverPort).toBe(5000);
     });
@@ -164,25 +156,25 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("returns true for string 'true'", async () => {
-      process.env.LOGCHIMP_DB_SSL = "true";
+      vi.stubEnv("LOGCHIMP_DB_SSL", "true");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().databaseSsl).toBe(true);
     });
 
     it("returns false for string 'false'", async () => {
-      process.env.LOGCHIMP_DB_SSL = "false";
+      vi.stubEnv("LOGCHIMP_DB_SSL", "false");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().databaseSsl).toBe(false);
     });
 
     it("returns false for any other string", async () => {
-      process.env.LOGCHIMP_DB_SSL = "yes";
+      vi.stubEnv("LOGCHIMP_DB_SSL", "yes");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().databaseSsl).toBe(false);
     });
 
     it("trims string before comparison", async () => {
-      process.env.LOGCHIMP_DB_SSL = "  true  ";
+      vi.stubEnv("LOGCHIMP_DB_SSL", "  true  ");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().databaseSsl).toBe(true);
     });
@@ -227,13 +219,13 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("true from env LOGCHIMP_IS_SELF_HOSTED=true", async () => {
-      process.env.LOGCHIMP_IS_SELF_HOSTED = "true";
+      vi.stubEnv("LOGCHIMP_IS_SELF_HOSTED", "true");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().isSelfHosted).toBe(true);
     });
 
     it("false from env LOGCHIMP_IS_SELF_HOSTED=false", async () => {
-      process.env.LOGCHIMP_IS_SELF_HOSTED = "false";
+      vi.stubEnv("LOGCHIMP_IS_SELF_HOSTED", "false");
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().isSelfHosted).toBe(false);
     });
@@ -357,32 +349,32 @@ describe("LogChimp Config Manager", () => {
 
   describe("getEnvConfig", () => {
     it("reads every supported environment variable", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "env-secret";
-      process.env.LOGCHIMP_MACHINE_SIGNATURE = "env-sig";
-      process.env.LOGCHIMP_IS_SELF_HOSTED = "true";
-      process.env.LOGCHIMP_API_URL = "https://api.env";
-      process.env.LOGCHIMP_API_HOST = "1.2.3.4";
-      process.env.LOGCHIMP_SERVER_PORT = "9000";
-      process.env.LOGCHIMP_WEB_URL = "https://web.env";
-      process.env.LOGCHIMP_LICENSE_KEY = "env-license";
-      process.env.LOGCHIMP_SIGNATURE_TOKEN = "env-license-sig";
-      process.env.LOGCHIMP_PILOT_URL = "https://pilot.env";
-      process.env.LOGCHIMP_DB_URL = "postgres://env";
-      process.env.LOGCHIMP_DB_HOST = "db.env";
-      process.env.LOGCHIMP_DB_USER = "envuser";
-      process.env.LOGCHIMP_DB_PASSWORD = "envpass";
-      process.env.LOGCHIMP_DB_PORT = "5435";
-      process.env.LOGCHIMP_DB_DATABASE = "envdb";
-      process.env.LOGCHIMP_DB_SSL = "true";
-      process.env.LOGCHIMP_CACHE_PREFIX = "env-prefix";
-      process.env.LOGCHIMP_VALKEY_URL = "valkey://env";
-      process.env.LOGCHIMP_MAIL_HOST = "smtp.env";
-      process.env.LOGCHIMP_MAIL_USER = "envmail";
-      process.env.LOGCHIMP_MAIL_PASSWORD = "envmailpass";
-      process.env.LOGCHIMP_MAIL_PORT = "465";
-      process.env.LOGCHIMP_OIDC_CLIENT_ID = "env-oidc-id";
-      process.env.LOGCHIMP_OIDC_CLIENT_SECRET = "env-oidc-secret";
-      process.env.LOGCHIMP_OIDC_ISSUER = "https://oidc.env";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "env-secret");
+      vi.stubEnv("LOGCHIMP_MACHINE_SIGNATURE", "env-sig");
+      vi.stubEnv("LOGCHIMP_IS_SELF_HOSTED", "true");
+      vi.stubEnv("LOGCHIMP_API_URL", "https://api.env");
+      vi.stubEnv("LOGCHIMP_API_HOST", "1.2.3.4");
+      vi.stubEnv("LOGCHIMP_SERVER_PORT", "9000");
+      vi.stubEnv("LOGCHIMP_WEB_URL", "https://web.env");
+      vi.stubEnv("LOGCHIMP_LICENSE_KEY", "env-license");
+      vi.stubEnv("LOGCHIMP_SIGNATURE_TOKEN", "env-license-sig");
+      vi.stubEnv("LOGCHIMP_PILOT_URL", "https://pilot.env");
+      vi.stubEnv("LOGCHIMP_DB_URL", "postgres://env");
+      vi.stubEnv("LOGCHIMP_DB_HOST", "db.env");
+      vi.stubEnv("LOGCHIMP_DB_USER", "envuser");
+      vi.stubEnv("LOGCHIMP_DB_PASSWORD", "envpass");
+      vi.stubEnv("LOGCHIMP_DB_PORT", "5435");
+      vi.stubEnv("LOGCHIMP_DB_DATABASE", "envdb");
+      vi.stubEnv("LOGCHIMP_DB_SSL", "true");
+      vi.stubEnv("LOGCHIMP_CACHE_PREFIX", "env-prefix");
+      vi.stubEnv("LOGCHIMP_VALKEY_URL", "valkey://env");
+      vi.stubEnv("LOGCHIMP_MAIL_HOST", "smtp.env");
+      vi.stubEnv("LOGCHIMP_MAIL_USER", "envmail");
+      vi.stubEnv("LOGCHIMP_MAIL_PASSWORD", "envmailpass");
+      vi.stubEnv("LOGCHIMP_MAIL_PORT", "465");
+      vi.stubEnv("LOGCHIMP_OIDC_CLIENT_ID", "env-oidc-id");
+      vi.stubEnv("LOGCHIMP_OIDC_CLIENT_SECRET", "env-oidc-secret");
+      vi.stubEnv("LOGCHIMP_OIDC_ISSUER", "https://oidc.env");
 
       const { configManager } = await loadConfigManager();
       const cfg = configManager.getConfig();
@@ -422,8 +414,8 @@ describe("LogChimp Config Manager", () => {
 
   describe("mergeConfigs precedence", () => {
     it("file values override env values (current implementation)", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "env-secret";
-      process.env.LOGCHIMP_WEB_URL = "https://env.web";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "env-secret");
+      vi.stubEnv("LOGCHIMP_WEB_URL", "https://env.web");
 
       (fs.existsSync as any).mockReturnValue(true);
       (fsExtra.readJsonSync as any).mockReturnValue({
@@ -442,8 +434,8 @@ describe("LogChimp Config Manager", () => {
     });
 
     // it("falls back to env when file does not provide a key", async () => {
-    //   process.env.LOGCHIMP_SECRET_KEY = "env-secret";
-    //   process.env.LOGCHIMP_WEB_URL = "https://env.web";
+    //   vi.stubEnv("LOGCHIMP_SECRET_KEY", "env-secret");
+    //   vi.stubEnv("LOGCHIMP_WEB_URL", "https://env.web");
     //
     //   (fs.existsSync as any).mockReturnValue(true);
     //   (fsExtra.readJsonSync as any).mockReturnValue({
@@ -470,8 +462,8 @@ describe("LogChimp Config Manager", () => {
 
   describe("licensePilotUrl clearing", () => {
     it("clears pilotUrl from env when licenseKey is present (non-dev)", async () => {
-      process.env.LOGCHIMP_LICENSE_KEY = "some-key";
-      process.env.LOGCHIMP_PILOT_URL = "https://pilot.env";
+      vi.stubEnv("LOGCHIMP_LICENSE_KEY", "some-key");
+      vi.stubEnv("LOGCHIMP_PILOT_URL", "https://pilot.env");
 
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().licensePilotUrl).toBeUndefined();
@@ -493,8 +485,8 @@ describe("LogChimp Config Manager", () => {
     it("keeps pilotUrl in dev/test environment", async () => {
       // Force isDevTestEnv = true for this test
       vi.doMock("../helpers", () => ({ isDevTestEnv: true }));
-      process.env.LOGCHIMP_LICENSE_KEY = "some-key";
-      process.env.LOGCHIMP_PILOT_URL = "https://pilot.env";
+      vi.stubEnv("LOGCHIMP_LICENSE_KEY", "some-key");
+      vi.stubEnv("LOGCHIMP_PILOT_URL", "https://pilot.env");
 
       const { configManager } = await loadConfigManager();
       expect(configManager.getConfig().licensePilotUrl).toBe(
@@ -512,11 +504,11 @@ describe("LogChimp Config Manager", () => {
 
   describe("caching and reload", () => {
     it("caches the config on first getConfig()", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "first";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "first");
       const { configManager } = await loadConfigManager();
 
       const first = configManager.getConfig();
-      process.env.LOGCHIMP_SECRET_KEY = "second"; // change after load
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "second"); // change after load
       const second = configManager.getConfig();
 
       expect(first).toBe(second); // same object reference
@@ -524,11 +516,11 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("reload() forces a fresh load", async () => {
-      process.env.LOGCHIMP_SECRET_KEY = "first";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "first");
       const { configManager } = await loadConfigManager();
 
       const first = configManager.getConfig();
-      process.env.LOGCHIMP_SECRET_KEY = "second";
+      vi.stubEnv("LOGCHIMP_SECRET_KEY", "second");
       const reloaded = configManager.reload();
 
       expect(reloaded).not.toBe(first);
@@ -552,7 +544,7 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("does not warn about missing webUrl when it is present", async () => {
-      process.env.LOGCHIMP_WEB_URL = "https://example.com";
+      vi.stubEnv("LOGCHIMP_WEB_URL", "https://example.com");
       const { configManager } = await loadConfigManager();
       configManager.getConfig();
 
@@ -572,7 +564,7 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("logs deprecation for LOGCHIMP_MAIL_SERVICE", async () => {
-      process.env.LOGCHIMP_MAIL_SERVICE = "smtp";
+      vi.stubEnv("LOGCHIMP_MAIL_SERVICE", "smtp");
       const { configManager } = await loadConfigManager();
       configManager.getConfig();
 
@@ -584,7 +576,7 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("logs deprecation for LOGCHIMP_THEME_STANDALONE", async () => {
-      process.env.LOGCHIMP_THEME_STANDALONE = "true";
+      vi.stubEnv("LOGCHIMP_THEME_STANDALONE", "true");
       const { configManager } = await loadConfigManager();
       configManager.getConfig();
 
@@ -674,8 +666,8 @@ describe("LogChimp Config Manager", () => {
     });
 
     it("trims all string env values", async () => {
-      process.env.LOGCHIMP_API_URL = "  https://api.trimmed  ";
-      process.env.LOGCHIMP_DB_HOST = "\tdb.trimmed\n";
+      vi.stubEnv("LOGCHIMP_API_URL", "  https://api.trimmed  ");
+      vi.stubEnv("LOGCHIMP_DB_HOST", "\tdb.trimmed\n");
       const { configManager } = await loadConfigManager();
       const cfg = configManager.getConfig();
       expect(cfg.apiUrl).toBe("https://api.trimmed");
