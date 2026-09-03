@@ -288,23 +288,6 @@ class ConfigManager {
 
     return value === true;
   }
-
-  // private getEnv = <K extends keyof NodeJS.ProcessEnv>(key: K, fallback?: NodeJS.ProcessEnv[K]): NodeJS.ProcessEnv[K] => {
-  //   const value = process.env[key] as NodeJS.ProcessEnv[K] | undefined;
-  //
-  //   if (value === undefined) {
-  //     // handle fallback falsy cases that should still be used as value
-  //     if (fallback === false || fallback === "" || fallback === 0) {
-  //       return fallback;
-  //     }
-  //     if (fallback) {
-  //       return fallback;
-  //     }
-  //     throw new Error(`Missing environment variable: ${key}.`);
-  //   }
-  //
-  //   return value;
-  // };
 }
 
 export const configManager = new ConfigManager();
