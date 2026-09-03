@@ -59,7 +59,7 @@ export class QueryRepository {
   ) {
     const { results, idField, keyPrefix, ttlSeconds } = options;
 
-    if (results.length === 0) return;
+    if (results.length === 0 || !this.cache) return;
 
     const pipeline = this.cache.pipeline();
 
