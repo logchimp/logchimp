@@ -28,6 +28,7 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
+import { GET_POSTS_FILTER_COUNT } from "../../../../constants";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -100,7 +101,7 @@ export async function filterPost(
   const { page, limit, boardId, roadmapId } = body.output;
   const { first: _first, after, created } = query.output;
 
-  const first = _first || limit;
+  const first = _first ?? limit ?? GET_POSTS_FILTER_COUNT;
   if (after && !validUUID(after)) {
     res.status(400).json({
       code: "VALIDATION_ERROR",
