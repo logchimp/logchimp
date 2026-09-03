@@ -39,5 +39,10 @@ declare namespace NodeJS {
     readonly LOGCHIMP_MAIL_USER: string | undefined;
     readonly LOGCHIMP_MAIL_PASSWORD: string | undefined;
     readonly LOGCHIMP_MAIL_PORT: string | undefined;
+
+    // LogChimp SSO Authentication
+    readonly LOGCHIMP_OIDC_ISSUER: string | undefined;
+    readonly LOGCHIMP_OIDC_CLIENT_ID: string | undefined;
+    readonly LOGCHIMP_OIDC_CLIENT_SECRET: string | undefined;
   }
 }
