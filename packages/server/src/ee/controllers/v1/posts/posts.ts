@@ -140,8 +140,12 @@ export async function filterPost(
     for (const post of response) {
       authorIds.add(post.userId);
       voterIDs.add(post.postId);
-      boardIDs.add(post.boardId);
-      roadmapIDs.add(post.roadmap_id);
+      if (post.boardId) {
+        boardIDs.add(post.boardId);
+      }
+      if (post.roadmap_id) {
+        roadmapIDs.add(post.roadmap_id);
+      }
     }
 
     const authors = await userRepository.GetUserPublicInfo([...authorIds]);
