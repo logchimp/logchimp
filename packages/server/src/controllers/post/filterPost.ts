@@ -38,12 +38,22 @@ const querySchema = v.object({
 });
 
 const bodySchema = v.object({
+  /**
+   * @deprecated Use `first` and `after` instead.
+   * For backward compatibility to support offset pagination.
+   * Will be removed in the next major release.
+   */
   page: v.optional(
     v.pipe(
       v.string(),
       v.transform((value) => parseAndValidatePage(value)),
     ),
   ),
+  /**
+   * @deprecated Use `first` and `after` instead.
+   * For backward compatibility to support offset pagination.
+   * Will be removed in the next major release.
+   */
   limit: v.optional(
     v.pipe(
       v.string(),
