@@ -59,8 +59,6 @@ export async function filter(
   req: Request<IGetRoadmapsParams>,
   res: Response<ResponseBody>,
 ) {
-  console.log("roadmap filter EE");
-
   const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
     res.status(400).json({
