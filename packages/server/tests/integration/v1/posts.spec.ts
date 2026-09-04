@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
@@ -15,6 +15,8 @@ import {
   vote as assignVote,
 } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
+import { GET_POSTS_FILTER_COUNT } from "../../../src/constants";
+import { describeEE, itEE } from "../../utils/skipEE";
 
 /**
  * Malicious/HTML-injection payloads used to verify that the post `title` and
@@ -64,64 +66,9 @@ const contentPayloads = [
   `javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/"/+/onmouseover=1/+/[*/[]/+alert(1)//'>`,
   `'"--></style></script><script>alert(String.fromCharCode(88,83,83))</script>`,
 ];
-import { GET_POSTS_FILTER_COUNT } from "../../../src/constants";
 
 // Get posts with filters
-describe("POST /api/v1/posts/get", () => {
-  it("should use default page=1 and default limit when no filters are provided", async () => {
-    const { user: authUser } = await createUser({ isVerified: true });
-    const board = await generateBoard({}, true);
-    const roadmap = await generateRoadmap({}, true);
-
-    // Create 12 posts to exceed typical default [GET_POSTS_FILTER_COUNT]
-    const createdSlugs: string[] = [];
-    for (let i = 0; i < 12; i++) {
-      const p = await generatePost(
-        {
-          userId: authUser.userId,
-          boardId: board.boardId,
-          roadmapId: roadmap.id,
-        },
-        true,
-      );
-      createdSlugs.push(p.slug);
-    }
-
-    // Call with no filters and no pagination params
-    const resDefault = await supertest(app).post("/api/v1/posts/get");
-    expect(resDefault.headers["content-type"]).toContain("application/json");
-    expect(resDefault.status).toBe(200);
-
-    // Default page should be 1 => should return the newest posts first (DESC is default)
-    const slugsDefault: string[] = resDefault.body.posts.map(
-      (p: IPost) => p.slug,
-    );
-    expect(Array.isArray(resDefault.body.posts)).toBeTruthy();
-    expect(resDefault.body.posts.length).toBeGreaterThan(0);
-
-    // Verify DESC: last created slug should appear at or before index of earlier ones
-    const last = createdSlugs[createdSlugs.length - 1];
-    const first = createdSlugs[0];
-    const idxLast = slugsDefault.indexOf(last);
-    const idxFirst = slugsDefault.indexOf(first);
-    if (idxLast !== -1 && idxFirst !== -1) {
-      expect(idxLast).toBeLessThan(idxFirst);
-    }
-
-    // Now request page 2 explicitly to ensure default was page 1
-    const resPage2 = await supertest(app)
-      .post("/api/v1/posts/get")
-      .send({ page: 2 });
-    expect(resPage2.headers["content-type"]).toContain("application/json");
-    expect(resPage2.status).toBe(200);
-
-    // There should be minimal overlap between default page (1) and page 2 when many posts exist
-    const setDefault = new Set(slugsDefault);
-    const slugsPage2 = resPage2.body.posts.map((p: IPost) => p.slug);
-    const intersection = slugsPage2.filter((s: string) => setDefault.has(s));
-    expect(intersection.length).toBeLessThan(slugsPage2.length);
-  });
-
+describeEE("POST /api/v1/posts/get", () => {
   it.skip("should return empty posts array when no posts exist", async () => {
     const response = await supertest(app).post("/api/v1/posts/get").send({
       boardId: [],
@@ -133,192 +80,6 @@ describe("POST /api/v1/posts/get", () => {
 
     expect(Array.isArray(response.body.posts)).toBeTruthy();
     expect(response.body.posts).toHaveLength(0);
-  });
-
-  it("should filter posts by boardId list", async () => {
-    const boardA = await generateBoard({}, true);
-    const boardB = await generateBoard({}, true);
-    const roadmap = await generateRoadmap({}, true);
-    const { user: authUser } = await createUser();
-
-    const post1 = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: boardA.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-    const postA2 = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: boardA.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-    await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: boardB.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-
-    const response = await supertest(app)
-      .post("/api/v1/posts/get")
-      .send({
-        boardId: [boardA.boardId],
-        userId: "",
-        limit: 10,
-        page: 1,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-
-    const posts = response.body.posts;
-    expect(Array.isArray(posts)).toBeTruthy();
-    expect(posts.length).toBeGreaterThanOrEqual(2);
-
-    // All returned posts should belong to boardA
-    posts.forEach((p: IPost) => {
-      expect(p.board.boardId).toBe(boardA.boardId);
-      expect(p.board).toBeDefined();
-      expect(p.roadmap).toBeDefined();
-      expect(Array.isArray(p.voters.votes)).toBeTruthy();
-    });
-
-    const slugs = posts.map((p: IPost) => p.slug);
-    expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
-
-    if (cache.isActive) {
-      // should cache the boardA by ID
-      const boardACacheStr = await cache.valkey.get(
-        `board:public:${boardA.boardId}`,
-      );
-      const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
-      expect(boardA).toMatchObject(boardACache);
-
-      // should not have boardB cached
-      const boardBCache = await cache.valkey.get(
-        `board:public:${boardB.boardId}`,
-      );
-      expect(boardBCache).toBeNull();
-    }
-  });
-
-  it("should filter posts by roadmapId", async () => {
-    const board = await generateBoard({}, true);
-    const roadmapA = await generateRoadmap({}, true);
-    const roadmapB = await generateRoadmap({}, true);
-    const { user: authUser } = await createUser({ isVerified: true });
-
-    const postR1 = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: board.boardId,
-        roadmapId: roadmapA.id,
-      },
-      true,
-    );
-    await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: board.boardId,
-        roadmapId: roadmapB.id,
-      },
-      true,
-    );
-
-    const response = await supertest(app).post("/api/v1/posts/get").send({
-      roadmapId: roadmapA.id,
-      userId: "",
-      limit: 10,
-      page: 1,
-    });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(200);
-
-    const posts = response.body.posts;
-    expect(posts.length).toBeGreaterThanOrEqual(1);
-    posts.forEach((p: IPost) => {
-      expect(p.roadmap.id).toBe(roadmapA.id);
-    });
-    expect(posts.map((p: IPost) => p.slug)).toEqual(
-      expect.arrayContaining([postR1.slug]),
-    );
-  });
-
-  it("should paginate results with limit and page", async () => {
-    const board = await generateBoard({}, true);
-    const roadmap = await generateRoadmap({}, true);
-    const { user: authUser } = await createUser({ isVerified: true });
-
-    // Create 3 posts
-    const post1 = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: board.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-    const post2 = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: board.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-    const post3 = await generatePost(
-      {
-        userId: authUser.userId,
-        boardId: board.boardId,
-        roadmapId: roadmap.id,
-      },
-      true,
-    );
-
-    const page0 = await supertest(app)
-      .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], userId: "", limit: 2, page: 1 });
-    const page1 = await supertest(app)
-      .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], userId: "", limit: 2, page: 2 });
-
-    expect(page0.status).toBe(200);
-    expect(page1.status).toBe(200);
-    expect(page0.headers["content-type"]).toContain("application/json");
-    expect(page1.headers["content-type"]).toContain("application/json");
-    expect(page0.body.posts.length).toBeLessThanOrEqual(2);
-    expect(page1.body.posts.length).toBeLessThanOrEqual(2);
-
-    // Ensure no overlap between pages when there are at least 3 posts
-    const slugs0 = new Set(page0.body.posts.map((p: IPost) => p.slug));
-    const slugs1 = new Set(page1.body.posts.map((p: IPost) => p.slug));
-    const intersection = [...Array.from(slugs0)].filter((key) =>
-      slugs1.has(key),
-    );
-    expect(intersection.length).toBe(0);
-
-    // Ensure union contains created slugs
-    const union = new Set([...Array.from(slugs0), ...Array.from(slugs1)]);
-    const createdSlugs = [post1.slug, post2.slug, post3.slug];
-    const foundCount = createdSlugs.filter((s) => union.has(s)).length;
-    expect(foundCount).toBeGreaterThanOrEqual(3);
-
-    if (cache.isActive) {
-      // should cache the boardA by ID
-      const boardCacheStr = await cache.valkey.get(
-        `board:public:${board.boardId}`,
-      );
-      const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
-      expect(board).toMatchObject(boardCache);
-    }
   });
 
   it("should order posts in ASC order when specified", async () => {
@@ -354,7 +115,7 @@ describe("POST /api/v1/posts/get", () => {
 
     const asc = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], userId: "", limit: 10, page: 1 })
+      .send({ boardId: [board.boardId], userId: "", limit: "10", page: "1" })
       .query({ created: "ASC" });
 
     expect(asc.headers["content-type"]).toContain("application/json");
@@ -399,7 +160,7 @@ describe("POST /api/v1/posts/get", () => {
     const res = await supertest(app)
       .post("/api/v1/posts/get")
       .set("Authorization", `Bearer ${user.authToken}`)
-      .send({ boardId: [board.boardId], limit: 10, page: 1 });
+      .send({ boardId: [board.boardId] });
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
@@ -431,7 +192,7 @@ describe("POST /api/v1/posts/get", () => {
 
     const res = await supertest(app)
       .post("/api/v1/posts/get")
-      .send({ boardId: [board.boardId], limit: 10, page: 1 });
+      .send({ boardId: [board.boardId] });
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
@@ -442,7 +203,344 @@ describe("POST /api/v1/posts/get", () => {
     expect(found.voters.viewerVote).toBeUndefined();
   });
 
-  describe("Cursor Pagination", () => {
+  // Right now we can only load one type of API endpoint (CE / EE)
+  describe.skip("CE: Offset pagination", () => {
+    it("should not include posts with boards", async () => {
+      const boardA = await generateBoard({}, true);
+      const boardB = await generateBoard({}, true);
+      const roadmap = await generateRoadmap({}, true);
+      const { user: authUser } = await createUser();
+
+      const post1 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: boardA.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+      const postA2 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: boardA.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+      await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: boardB.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+
+      const response = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({
+          boardId: [boardA.boardId],
+          userId: "",
+          limit: "10",
+          page: "1",
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const posts = response.body.posts;
+      expect(Array.isArray(posts)).toBeTruthy();
+      expect(posts.length).toBeGreaterThanOrEqual(2);
+
+      posts.forEach((p: IPost) => {
+        expect(p.board).toBeNull();
+        expect(p.roadmap).toBeNull();
+        expect(Array.isArray(p.voters.votes)).toBeTruthy();
+      });
+
+      const slugs = posts.map((p: IPost) => p.slug);
+      expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
+    });
+  });
+
+  describeEE("EE: Offset pagination", () => {
+    itEE(
+      "should use default page=1 and default limit when no filters are provided",
+      async () => {
+        const { user: authUser } = await createUser({ isVerified: true });
+        const board = await generateBoard({}, true);
+        const roadmap = await generateRoadmap({}, true);
+
+        // Create 12 posts to exceed typical default [GET_POSTS_FILTER_COUNT]
+        const createdSlugs: string[] = [];
+        for (let i = 0; i < 12; i++) {
+          const p = await generatePost(
+            {
+              userId: authUser.userId,
+              boardId: board.boardId,
+              roadmapId: roadmap.id,
+            },
+            true,
+          );
+          createdSlugs.push(p.slug);
+        }
+
+        // Call with no filters and no pagination params
+        const resDefault = await supertest(app).post("/api/v1/posts/get");
+        expect(resDefault.headers["content-type"]).toContain(
+          "application/json",
+        );
+        expect(resDefault.status).toBe(200);
+
+        // Default page should be 1 => should return the newest posts first (DESC is default)
+        const slugsDefault: string[] = resDefault.body.posts.map(
+          (p: IPost) => p.slug,
+        );
+        expect(Array.isArray(resDefault.body.posts)).toBeTruthy();
+        expect(resDefault.body.posts.length).toBeGreaterThan(0);
+
+        // Verify DESC: last created slug should appear at or before index of earlier ones
+        const last = createdSlugs[createdSlugs.length - 1];
+        const first = createdSlugs[0];
+        const idxLast = slugsDefault.indexOf(last);
+        const idxFirst = slugsDefault.indexOf(first);
+        if (idxLast !== -1 && idxFirst !== -1) {
+          expect(idxLast).toBeLessThan(idxFirst);
+        }
+
+        // Now request page 2 explicitly to ensure default was page 1
+        const resPage2 = await supertest(app)
+          .post("/api/v1/posts/get")
+          .send({ page: "2" });
+        expect(resPage2.headers["content-type"]).toContain("application/json");
+        expect(resPage2.status).toBe(200);
+
+        // There should be minimal overlap between default page (1) and page 2 when many posts exist
+        const setDefault = new Set(slugsDefault);
+        const slugsPage2 = resPage2.body.posts.map((p: IPost) => p.slug);
+        const intersection = slugsPage2.filter((s: string) =>
+          setDefault.has(s),
+        );
+        expect(intersection.length).toBeLessThan(slugsPage2.length);
+      },
+    );
+
+    itEE("should coerce page=0 and page=-1 to page=1", async () => {
+      const page0 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ page: "0" });
+
+      const pageNeg1 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ page: "-1" });
+
+      const page1 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ page: "1" });
+
+      expect(page0.status).toBe(200);
+      expect(pageNeg1.status).toBe(200);
+      expect(page1.status).toBe(200);
+
+      const ids0 = page0.body.posts.map((p: IPost) => p.postId);
+      const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.postId);
+      const ids1 = page1.body.posts.map((p: IPost) => p.postId);
+
+      expect(ids0).toEqual(ids1);
+      expect(idsNeg1).toEqual(ids1);
+      expect(ids1).toEqual(ids1);
+    });
+
+    itEE("should filter posts by boardId list", async () => {
+      const boardA = await generateBoard({}, true);
+      const boardB = await generateBoard({}, true);
+      const roadmap = await generateRoadmap({}, true);
+      const { user: authUser } = await createUser();
+
+      const post1 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: boardA.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+      const postA2 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: boardA.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+      await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: boardB.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+
+      const response = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({
+          boardId: [boardA.boardId],
+          userId: "",
+          limit: "10",
+          page: "1",
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const posts = response.body.posts;
+      expect(Array.isArray(posts)).toBeTruthy();
+      expect(posts.length).toBeGreaterThanOrEqual(2);
+
+      // All returned posts should belong to boardA
+      posts.forEach((p: IPost) => {
+        expect(p.board.boardId).toBe(boardA.boardId);
+        expect(p.board).toBeDefined();
+        expect(p.roadmap).toBeDefined();
+        expect(Array.isArray(p.voters.votes)).toBeTruthy();
+      });
+
+      const slugs = posts.map((p: IPost) => p.slug);
+      expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
+
+      if (cache.isActive) {
+        // should cache the boardA by ID
+        const boardACacheStr = await cache.valkey.get(
+          `board:public:${boardA.boardId}`,
+        );
+        const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
+        expect(boardA).toMatchObject(boardACache);
+
+        // should not have boardB cached
+        const boardBCache = await cache.valkey.get(
+          `board:public:${boardB.boardId}`,
+        );
+        expect(boardBCache).toBeNull();
+      }
+    });
+
+    itEE("should filter posts by roadmapId", async () => {
+      const board = await generateBoard({}, true);
+      const roadmapA = await generateRoadmap({}, true);
+      const roadmapB = await generateRoadmap({}, true);
+      const { user: authUser } = await createUser({ isVerified: true });
+
+      const postR1 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmapA.id,
+        },
+        true,
+      );
+      await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmapB.id,
+        },
+        true,
+      );
+
+      const response = await supertest(app).post("/api/v1/posts/get").send({
+        roadmapId: roadmapA.id,
+        userId: "",
+        limit: "10",
+        page: "1",
+      });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const posts = response.body.posts;
+      expect(posts.length).toBeGreaterThanOrEqual(1);
+      posts.forEach((p: IPost) => {
+        expect(p.roadmap.id).toBe(roadmapA.id);
+      });
+      expect(posts.map((p: IPost) => p.slug)).toEqual(
+        expect.arrayContaining([postR1.slug]),
+      );
+    });
+
+    itEE("should paginate results with limit=2 and page", async () => {
+      const board = await generateBoard({}, true);
+      const roadmap = await generateRoadmap({}, true);
+      const { user: authUser } = await createUser({ isVerified: true });
+
+      // Create 3 posts
+      const post1 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+      const post2 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+      const post3 = await generatePost(
+        {
+          userId: authUser.userId,
+          boardId: board.boardId,
+          roadmapId: roadmap.id,
+        },
+        true,
+      );
+
+      const page0 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ boardId: [board.boardId], userId: "", limit: "2", page: "1" });
+      const page1 = await supertest(app)
+        .post("/api/v1/posts/get")
+        .send({ boardId: [board.boardId], userId: "", limit: "2", page: "2" });
+
+      expect(page0.status).toBe(200);
+      expect(page1.status).toBe(200);
+
+      expect(page0.headers["content-type"]).toContain("application/json");
+      expect(page1.headers["content-type"]).toContain("application/json");
+
+      expect(page0.body.posts.length).toBeLessThanOrEqual(2);
+      expect(page1.body.posts.length).toBeLessThanOrEqual(2);
+
+      // Ensure no overlap between pages when there are at least 3 posts
+      const slugs0 = new Set(page0.body.posts.map((p: IPost) => p.slug));
+      const slugs1 = new Set(page1.body.posts.map((p: IPost) => p.slug));
+      const intersection = [...Array.from(slugs0)].filter((key) =>
+        slugs1.has(key),
+      );
+      expect(intersection.length).toBe(0);
+
+      // Ensure union contains created slugs
+      const union = new Set([...Array.from(slugs0), ...Array.from(slugs1)]);
+      const createdSlugs = [post1.slug, post2.slug, post3.slug];
+      const foundCount = createdSlugs.filter((s) => union.has(s)).length;
+      expect(foundCount).toBeGreaterThanOrEqual(3);
+
+      if (cache.isActive) {
+        // should cache the boardA by ID
+        const boardCacheStr = await cache.valkey.get(
+          `board:public:${board.boardId}`,
+        );
+        const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+        expect(board).toMatchObject(boardCache);
+      }
+    });
+  });
+
+  describeEE("Cursor Pagination", () => {
     let authUser: any;
     let board: any;
     let roadmap: any;
@@ -614,7 +712,7 @@ describe("POST /api/v1/posts/get", () => {
 
       expect(res.body.code).toBe("VALIDATION_ERROR");
       expect(res.body.message).toBe("Invalid query parameters");
-      expect(res.body.errors?.[0]?.message).toMatch(/invalid uuid/gi);
+      expect(res.body.errors?.[0]?.message).toMatch("Invalid cursor value");
     });
 
     it("should handle cursor pagination correctly", async () => {
@@ -644,80 +742,6 @@ describe("POST /api/v1/posts/get", () => {
       const ids1 = res1.body.results.map((p: IPost) => p.postId);
       const ids2 = res2.body.results.map((p: IPost) => p.postId);
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
-    });
-  });
-  describe("Offset Pagination", () => {
-    let authUser: any;
-    let board: any;
-    let roadmap: any;
-
-    beforeAll(async () => {
-      const userData = await createUser({ isVerified: true });
-      authUser = userData.user;
-      board = await generateBoard({}, true);
-      roadmap = await generateRoadmap({}, true);
-
-      // Generate 15 posts for pagination
-      for (let i = 0; i < 15; i++) {
-        await generatePost(
-          {
-            userId: authUser.userId,
-            boardId: board.boardId,
-            roadmapId: roadmap.id,
-          },
-          true,
-        );
-      }
-    });
-
-    it("should support offset pagination via page param", async () => {
-      const page1 = await supertest(app)
-        .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], limit: 5, page: 1 })
-        .query({ created: "ASC" });
-
-      const page2 = await supertest(app)
-        .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], limit: 5, page: 2 })
-        .query({ created: "ASC" });
-
-      expect(page1.status).toBe(200);
-      expect(page2.status).toBe(200);
-      const ids1 = page1.body.posts.map((p: IPost) => p.postId);
-      const ids2 = page2.body.posts.map((p: IPost) => p.postId);
-
-      const overlap = ids1.filter((id: string) => ids2.includes(id));
-      expect(overlap.length).toBe(0);
-    });
-
-    it("should coerce page=0 or -1 to page=1", async () => {
-      const page0 = await supertest(app)
-        .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], limit: 5, page: 0 });
-
-      const pageNeg1 = await supertest(app)
-        .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], limit: 5, page: -1 });
-
-      const page1 = await supertest(app)
-        .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], limit: 5, page: 1 });
-
-      const ids0 = page0.body.posts.map((p: IPost) => p.postId);
-      const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.postId);
-      const ids1 = page1.body.posts.map((p: IPost) => p.postId);
-
-      expect(ids0).toEqual(ids1);
-      expect(idsNeg1).toEqual(ids1);
-    });
-
-    it("should return empty posts when '?page=1000'", async () => {
-      const res = await supertest(app)
-        .post("/api/v1/posts/get")
-        .send({ boardId: [board.boardId], page: 1000 });
-
-      expect(res.status).toBe(200);
-      expect(res.body.posts).toHaveLength(0);
     });
   });
 });
