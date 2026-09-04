@@ -83,6 +83,8 @@ export async function filterPost(
   >,
   res: Response<FilterPostResponseBody>,
 ) {
+  console.log("filterPost CE");
+
   if (req.body?.page || req.body?.limit) {
     logger.warn(
       "Offset-based pagination is deprecated and will be removed in next major release. Please migrate to cursor pagination instead.",
