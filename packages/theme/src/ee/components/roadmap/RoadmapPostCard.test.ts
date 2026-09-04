@@ -34,7 +34,7 @@ describe("post card", () => {
               avatar: "https://www.gravatar.com/avatar/1",
               username: "peg-legge",
               postId: "",
-              createdAt: new Date(),
+              createdAt: new Date().toString(),
             },
             {
               // random UUID
@@ -44,7 +44,7 @@ describe("post card", () => {
               avatar: "https://www.gravatar.com/avatar/2",
               username: "peter",
               postId: "",
-              createdAt: new Date(),
+              createdAt: new Date().toString(),
             },
           ],
         },
