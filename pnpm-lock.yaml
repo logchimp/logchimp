@@ -118,7 +118,7 @@ importers:
         specifier: ^12.0.1
         version: 12.0.1
       valibot:
-        specifier: ^1.2.0
+        specifier: ^1.4.2
         version: 1.4.2(typescript@5.9.3)
       validator:
         specifier: ^13.15.35
