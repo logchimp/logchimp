@@ -52,18 +52,10 @@ export async function passwordLogin(
       return;
     }
 
-    if (err instanceof UserNotFoundError) {
+    if (err instanceof UserNotFoundError || err instanceof UserBlockedError) {
       res.status(404).send({
         message: error.middleware.user.userNotFound,
         code: "USER_NOT_FOUND",
-      });
-      return;
-    }
-
-    if (err instanceof UserBlockedError) {
-      res.status(403).send({
-        message: error.middleware.user.userBlocked,
-        code: "USER_BLOCKED",
       });
       return;
     }
