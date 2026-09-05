@@ -1,5 +1,6 @@
 import type { Knex } from "knex";
 import type Valstash from "iovalkey";
+import logger from "../utils/logger";
 
 type GetManyWithCachedOptions = {
   ids: string[];
@@ -41,15 +42,25 @@ export class QueryRepository {
     if (ids.length === 0) return { results, missingIds };
 
     const keys = ids.map((id) => `${keyPrefix}:${id}`);
-    const cached = await this.cache.mget(keys);
 
-    cached.forEach((raw, index) => {
-      if (raw) {
-        results.push(JSON.parse(raw) as T);
-      } else {
-        missingIds.push(ids[index]);
-      }
-    });
+    try {
+      const cached = await this.cache.mget(keys);
+
+      cached.forEach((raw, index) => {
+        if (raw) {
+          results.push(JSON.parse(raw) as T);
+        } else {
+          missingIds.push(ids[index]);
+        }
+      });
+    } catch (err) {
+      logger.error({
+        message: "Error fetching cached results",
+        err,
+      });
+
+      missingIds.push(...ids);
+    }
 
     return { results, missingIds };
   }
@@ -68,6 +79,13 @@ export class QueryRepository {
       pipeline.set(key, JSON.stringify(item), "EX", ttlSeconds);
     }
 
-    await pipeline.exec();
+    try {
+      await pipeline.exec();
+    } catch (err) {
+      logger.error({
+        message: "Error caching missing results",
+        err,
+      });
+    }
   }
 }
