@@ -34,7 +34,7 @@
     "openid-client": "^6.8.7",
     "pg": "^8.7.1",
     "uuid": "^12.0.1",
-    "valibot": "^1.2.0",
+    "valibot": "^1.4.2",
     "validator": "^13.15.35",
     "winston": "^3.3.3",
     "xss": "^1.0.15"
