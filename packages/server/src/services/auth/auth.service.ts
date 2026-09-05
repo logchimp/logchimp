@@ -85,8 +85,7 @@ export class AuthService {
       throw new UserBlockedError();
     }
 
-    const p = (password || "").trim();
-    if (!p) {
+    if (typeof password !== "string" || !password.trim()) {
       throw new PasswordMissingError();
     }
 
