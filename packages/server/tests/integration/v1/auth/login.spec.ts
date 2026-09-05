@@ -106,7 +106,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password",
     });
 
-    expect(response.statusCode).toBe(403);
+    expect(response.statusCode).toBe(404);
     expect(response.body.code).toBe("USER_NOT_FOUND");
   });
 });
