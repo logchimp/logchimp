@@ -27,7 +27,7 @@
     "reka-ui": "^2.10.1",
     "tailwindcss": "^4.1.11",
     "uuid": "11.1.1",
-    "vue": "3.5.41",
+    "vue": "3.5.42",
     "vue-gtag": "3.5.2",
     "vue-router": "4.6.4",
     "vuedraggable": "^4.1.0"
