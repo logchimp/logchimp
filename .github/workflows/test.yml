@@ -155,7 +155,6 @@ jobs:
       LOGCHIMP_MAIL_USER: test
       LOGCHIMP_MAIL_PASSWORD: test
       LOGCHIMP_MAIL_PORT: 1025
-      LOGCHIMP_LICENSE_KEY: ${{ secrets.LOGCHIMP_LICENSE_KEY }}
       SKIP_EE_TESTS: ${{ secrets.LC_SUBMODULES_TOKEN == '' && 'true' || 'false' }}
 
     strategy:
@@ -220,6 +219,8 @@ jobs:
             pnpm --filter @logchimp/email-templates copy;
 
       - name: Testing
+        env:
+          LOGCHIMP_LICENSE_KEY: ${{ secrets.LOGCHIMP_LICENSE_KEY }}
         run: pnpm --filter @logchimp/api test:integration --retry 1
 
       - name: Label PR if EE tests are skipped
