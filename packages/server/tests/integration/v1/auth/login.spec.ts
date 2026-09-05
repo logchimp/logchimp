@@ -94,7 +94,7 @@ describe("POST /api/v1/auth/login", () => {
     expect(user.password).toBeUndefined();
   });
 
-  it('should throw error "USER_BLOCKED"', async () => {
+  it('should throw error "USER_NOT_FOUND" on user blocked', async () => {
     const email = faker.internet.email();
     await createUser({
       email,
@@ -106,7 +106,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password",
     });
 
-    expect(response.statusCode).toBe(403);
-    expect(response.body.code).toBe("USER_BLOCKED");
+    expect(response.statusCode).toBe(404);
+    expect(response.body.code).toBe("USER_NOT_FOUND");
   });
 });

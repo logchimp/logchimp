@@ -27,8 +27,7 @@ router.post(
     requiredPlan: ["pro", "business", "enterprise"],
     skipHandlerOnFailure: true,
   }),
-  userExists,
-  auth.login,
+  auth.passwordLogin,
 );
 
 router.post(

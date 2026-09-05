@@ -63,7 +63,9 @@ export function domainBlacklist(
 ) {
   // @ts-expect-error - `req.user` is not typed in Express Request by default
   const rawEmail = req.body?.email || req.user?.email || "";
-  const email = (typeof rawEmail === "string" ? rawEmail : "").toLowerCase();
+  const email = (typeof rawEmail === "string" ? rawEmail : "")
+    .trim()
+    .toLowerCase();
 
   if (!validEmail(email)) {
     return res.status(400).json({
