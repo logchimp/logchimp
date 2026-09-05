@@ -30,7 +30,7 @@
     "lodash": "^4.18.1",
     "md5": "^2.3.0",
     "nanoid": "^3.3.18",
-    "nodemailer": "9.0.3",
+    "nodemailer": "9.1.1",
     "openid-client": "^6.8.7",
     "pg": "^8.7.1",
     "uuid": "^12.0.1",
