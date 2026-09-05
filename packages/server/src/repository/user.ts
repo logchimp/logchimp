@@ -1,7 +1,37 @@
 import type { Knex } from "knex";
-import type { IUserInfo } from "@logchimp/types";
+import type { IPublicUserInfo, IUserInfo } from "@logchimp/types";
 import type { TCreatedUser } from "../services/auth/types";
 import database from "../database";
+import { QueryRepository } from "./query";
+import { DAY } from "../cache/time";
+
+export class UserRepository extends QueryRepository {
+  async GetUserPublicInfo(userIds: string[]) {
+    const keyPrefix = "user:public";
+
+    if (userIds.length === 0) return [];
+
+    const { results, missingIds } =
+      await this.GetManyWithCached<IPublicUserInfo>({
+        keyPrefix,
+        ids: userIds,
+      });
+
+    const dbResults = await this.db
+      .select<IPublicUserInfo[]>("userId", "name", "avatar", "username")
+      .from("users")
+      .whereIn("userId", missingIds);
+
+    await this.CacheMissingResults<IPublicUserInfo>({
+      idField: "userId",
+      keyPrefix,
+      results: dbResults,
+      ttlSeconds: DAY * 3,
+    });
+
+    return [...results, ...dbResults];
+  }
+}
 
 export function getUserById(db: Knex, id: string) {
   return db("users")

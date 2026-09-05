@@ -219,6 +219,8 @@ jobs:
             pnpm --filter @logchimp/email-templates copy;
 
       - name: Testing
+        env:
+          LOGCHIMP_LICENSE_KEY: ${{ secrets.LOGCHIMP_LICENSE_KEY }}
         run: pnpm --filter @logchimp/api test:integration --retry 1
 
       - name: Label PR if EE tests are skipped

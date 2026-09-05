@@ -5,6 +5,7 @@ import database from "../../database";
 import { sanitiseName } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import * as cache from "../../cache";
 
 export async function updateProfile(req: Request, res: Response) {
   // @ts-expect-error
@@ -30,6 +31,16 @@ export async function updateProfile(req: Request, res: Response) {
         userId,
       })
       .returning(["userId", "name", "username", "email"]);
+
+    if (cache.isActive) {
+      try {
+        await cache.valkey.del(`user:public:${userId}`);
+      } catch (e) {
+        logger.error({
+          message: e,
+        });
+      }
+    }
 
     const user = users[0];
 

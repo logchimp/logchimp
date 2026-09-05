@@ -11,6 +11,7 @@ import database from "../../../../database";
 import { validUUID } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import * as cache from "../../../../cache";
 
 type ResponseBody = TDeleteRoadmapResponseBody | IApiErrorResponse;
 
@@ -36,6 +37,16 @@ export async function deleteById(
     await database.delete().from("roadmaps").where({
       id: id,
     });
+
+    if (cache.isActive) {
+      try {
+        await cache.valkey.del(`roadmap:public:${id}`);
+      } catch (e) {
+        logger.error({
+          message: e,
+        });
+      }
+    }
 
     res.sendStatus(204);
   } catch (err) {

@@ -10,6 +10,7 @@ import type {
 import * as v from "valibot";
 
 import database from "../../../../database";
+import * as cache from "../../../../cache";
 
 // utils
 import logger from "../../../../utils/logger";
@@ -112,6 +113,16 @@ export async function updateRoadmap(
         "display",
         "created_at",
       ]);
+
+    if (cache.isActive) {
+      try {
+        await cache.valkey.del(`roadmap:public:${id}`);
+      } catch (e) {
+        logger.error({
+          message: e,
+        });
+      }
+    }
 
     const roadmap = roadmaps[0];
 

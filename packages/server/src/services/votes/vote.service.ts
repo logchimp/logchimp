@@ -6,13 +6,7 @@ import database from "../../database";
 import logger from "../../utils/logger";
 import { ConflictError, ErrorCode, NotFoundError } from "../../utils/error";
 import error from "../../errorResponse.json";
-
-export interface IVoteTableColumns {
-  voteId: string;
-  userId: string;
-  postId: string;
-  createdAt: Date;
-}
+import type { IVoteTableColumns } from "../../repository/vote";
 
 interface GetVotesParams {
   postId: string;

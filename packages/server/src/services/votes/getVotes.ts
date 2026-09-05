@@ -2,7 +2,7 @@ import type { ICurrentUserVote, IUserVoter } from "@logchimp/types";
 
 import database from "../../database";
 import logger from "../../utils/logger";
-import type { IVoteTableColumns } from "./vote.service";
+import type { IVoteTableColumns } from "../../repository/vote";
 
 export async function getVotes(postId: string, userId?: string) {
   try {
