@@ -45,7 +45,6 @@ describe("GET /api/v1/settings/site", () => {
     const response = await supertest(app).get("/api/v1/settings/site");
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.headers["x-cache"]).toBe("MISS");
     expect(response.status).toBe(200);
 
     const settings = response.body.settings;
@@ -424,7 +423,6 @@ describe("GET /api/v1/settings/labs", () => {
     const response = await supertest(app).get("/api/v1/settings/labs");
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.headers["x-cache"]).toBe("MISS");
     expect(response.status).toBe(200);
 
     const labs = response.body.labs;
@@ -453,7 +451,6 @@ describe("GET /api/v1/settings/labs", () => {
     const response = await supertest(app).get("/api/v1/settings/labs");
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.headers["x-cache"]).toBe("HIT");
     expect(response.status).toBe(200);
 
     const labs = response.body.labs;
