@@ -158,8 +158,10 @@ export async function filterPost(
       voterIDs.add(post.postId);
     }
 
-    const authors = await userRepository.GetUserPublicInfo([...authorIds]);
-    const votes = await voteRepository.GetVotesByPostIDs([...voterIDs], userId);
+    const [authors, votes] = await Promise.all([
+      userRepository.GetUserPublicInfo([...authorIds]),
+      voteRepository.GetVotesByPostIDs([...voterIDs], userId),
+    ]);
 
     // Enrich posts with votes
     const posts: IPost[] = [];

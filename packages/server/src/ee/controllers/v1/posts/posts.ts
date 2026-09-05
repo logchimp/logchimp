@@ -28,7 +28,6 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
-import { GET_POSTS_FILTER_COUNT } from "../../../../constants";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -148,12 +147,12 @@ export async function filterPost(
       }
     }
 
-    const authors = await userRepository.GetUserPublicInfo([...authorIds]);
-    const boards = await boardRepository.GetPublicBoardByIDs([...boardIDs]);
-    const roadmaps = await roadmapRepository.GetPublicRoadmapByIDs([
-      ...roadmapIDs,
+    const [authors, boards, roadmaps, votes] = await Promise.all([
+      userRepository.GetUserPublicInfo([...authorIds]),
+      boardRepository.GetPublicBoardByIDs([...boardIDs]),
+      roadmapRepository.GetPublicRoadmapByIDs([...roadmapIDs]),
+      voteRepository.GetVotesByPostIDs([...voterIDs], userId),
     ]);
-    const votes = await voteRepository.GetVotesByPostIDs([...voterIDs], userId);
 
     // Enrich posts with board, roadmap, and votes
     const posts: IPost[] = [];
