@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { z } from "zod";
+import * as v from "valibot";
 import type {
   IApiErrorResponse,
   IFilterPostRequestBody,
@@ -24,32 +24,64 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { GET_POSTS_FILTER_COUNT } from "../../constants";
 
-const querySchema = z.object({
-  first: z.coerce
-    .string()
-    .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
-  after: z.uuid().optional(),
-  created: z.enum(["ASC", "DESC"]).default("DESC"),
+const querySchema = v.object({
+  first: v.pipe(
+    v.optional(v.string(), GET_POSTS_FILTER_COUNT.toString()),
+    v.transform((value) =>
+      parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT),
+    ),
+    v.number(),
+    v.minValue(1, "MIN_VALUE_1"),
+  ),
+  after: v.optional(v.pipe(v.string(), v.uuid("INVALID_CURSOR"))),
+  created: v.optional(v.picklist(["ASC", "DESC"]), "DESC"),
 });
 
-const bodySchema = z.object({
-  page: z.coerce
-    .string()
-    .optional()
-    .transform((value) => (value ? parseAndValidatePage(value) : undefined)),
-  limit: z.coerce
-    .string()
-    .optional()
-    .transform((value) => parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT)),
-  boardId: z
-    .array(z.string())
-    .optional()
-    .transform((value) => (Array.isArray(value) ? validUUIDs(value) : [])),
-  roadmapId: z
-    .string()
-    .optional()
-    .transform((value) => validUUID(value)),
+const bodySchema = v.object({
+  /**
+   * @deprecated Use `first` and `after` instead.
+   * For backward compatibility to support offset pagination.
+   * Will be removed in the next major release.
+   */
+  page: v.optional(
+    v.pipe(
+      v.string(),
+      v.transform((value) => parseAndValidatePage(value)),
+    ),
+  ),
+  /**
+   * @deprecated Use `first` and `after` instead.
+   * For backward compatibility to support offset pagination.
+   * Will be removed in the next major release.
+   */
+  limit: v.optional(
+    v.pipe(
+      v.string(),
+      v.transform((value) =>
+        parseAndValidateLimit(value, GET_POSTS_FILTER_COUNT),
+      ),
+    ),
+  ),
+  boardId: v.optional(
+    v.pipe(
+      v.array(v.string()),
+      v.transform((value) => (Array.isArray(value) ? validUUIDs(value) : [])),
+    ),
+  ),
+  roadmapId: v.optional(
+    v.pipe(
+      v.string(),
+      v.transform((value) => validUUID(value)),
+    ),
+  ),
 });
+
+const schemaQueryErrorMap = {
+  INVALID_CURSOR: error.general.invalidCursor,
+  MIN_VALUE_1: error.general.minValue1,
+};
+
+const schemaBodyErrorMap = {};
 
 type ResponseBody = IFilterPostResponseBody | IApiErrorResponse;
 
@@ -68,28 +100,40 @@ export async function filterPost(
     );
   }
 
-  const query = querySchema.safeParse(req.query);
+  const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
-      errors: query.error.issues,
+      errors: query.issues.map((issue) => ({
+        ...issue,
+        message: schemaQueryErrorMap[issue.message]
+          ? schemaQueryErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
   }
 
-  const body = bodySchema.safeParse(req.body);
+  const body = v.safeParse(bodySchema, req.body);
   if (!body.success) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
-      errors: body.error.issues,
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
   }
 
-  const { page, limit, boardId, roadmapId } = body.data;
-  const { first: _first, after, created } = query.data;
+  const { page, limit, boardId, roadmapId } = body.output;
+  const { first: _first, after, created } = query.output;
 
-  const first = _first || limit;
+  const first = _first ?? limit ?? GET_POSTS_FILTER_COUNT;
   if (after && !validUUID(after)) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",
