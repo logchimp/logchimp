@@ -94,8 +94,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       knex:
-        specifier: ^2.5.1
-        version: 2.5.1(pg@8.19.0)(supports-color@5.5.0)
+        specifier: ^3.3.0
+        version: 3.3.0(pg@8.19.0)(supports-color@5.5.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -3495,20 +3495,24 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
-  knex@2.5.1:
-    resolution: {integrity: sha512-z78DgGKUr4SE/6cm7ku+jHvFT0X97aERh/f0MUKAKgFnwCYBEW4TFBqtHWFYiJFid7fMrtpZ/gxJthvz5mEByA==}
-    engines: {node: '>=12'}
+  knex@3.3.0:
+    resolution: {integrity: sha512-LgWl031hNuLv9Lhxdd9093zULa2aNcoP04Bk29e5NidgRcEr/T0rAr2WYi4BhjTiCDoQiRU56meUE5rppLKZzQ==}
+    engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
       better-sqlite3: '*'
+      mariadb: '*'
       mysql: '*'
       mysql2: '*'
       pg: '*'
       pg-native: '*'
+      pg-query-stream: ^4.14.0
       sqlite3: '*'
       tedious: '*'
     peerDependenciesMeta:
       better-sqlite3:
+        optional: true
+      mariadb:
         optional: true
       mysql:
         optional: true
@@ -3517,6 +3521,8 @@ packages:
       pg:
         optional: true
       pg-native:
+        optional: true
+      pg-query-stream:
         optional: true
       sqlite3:
         optional: true
@@ -4147,8 +4153,8 @@ packages:
   pg-connection-string@2.11.0:
     resolution: {integrity: sha512-kecgoJwhOpxYU21rZjULrmrBJ698U2RxXofKVzOn5UDj61BPj/qMb7diYUR1nLScCDbrztQFl1TaQZT0t1EtzQ==}
 
-  pg-connection-string@2.6.1:
-    resolution: {integrity: sha512-w6ZzNu6oMmIzEAYVw+RLK0+nqHPt8K3ZnknKi+g48Ak2pr3dtljJW3o+D/n2zzCG07Zoe9VOX3aiKpj+BN0pjg==}
+  pg-connection-string@2.6.2:
+    resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
 
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -4748,8 +4754,8 @@ packages:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
 
-  tarn@3.0.2:
-    resolution: {integrity: sha512-51LAVKUSZSVfI05vjPESNc5vwqqZpbXCsU+/+wxlOrUjk2SnFTt97v9ZgQrD4YmxYW1Px6w2KjaDitCfkvgxMQ==}
+  tarn@3.1.2:
+    resolution: {integrity: sha512-3RTvqKZcK/17jnJ8rMKFXbyNogywTs1z0gVPPwFsJGX46rkmUHOdIaSQ/aVO1rS7nH+soiXiWk7rvUXxndm8Dg==}
     engines: {node: '>=8.0.0'}
 
   test-mixer@4.2.3:
@@ -8208,7 +8214,7 @@ snapshots:
 
   is-core-module@2.16.1:
     dependencies:
-      hasown: 2.0.2
+      hasown: 2.0.4
 
   is-extendable@0.1.1: {}
 
@@ -8345,7 +8351,7 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  knex@2.5.1(pg@8.19.0)(supports-color@5.5.0):
+  knex@3.3.0(pg@8.19.0)(supports-color@5.5.0):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
@@ -8356,10 +8362,10 @@ snapshots:
       getopts: 2.3.0
       interpret: 2.2.0
       lodash: 4.18.1
-      pg-connection-string: 2.6.1
+      pg-connection-string: 2.6.2
       rechoir: 0.8.0
       resolve-from: 5.0.0
-      tarn: 3.0.2
+      tarn: 3.1.2
       tildify: 2.0.0
     optionalDependencies:
       pg: 8.19.0
@@ -9018,7 +9024,7 @@ snapshots:
 
   pg-connection-string@2.11.0: {}
 
-  pg-connection-string@2.6.1: {}
+  pg-connection-string@2.6.2: {}
 
   pg-int8@1.0.1: {}
 
@@ -9710,7 +9716,7 @@ snapshots:
 
   tapable@2.3.3: {}
 
-  tarn@3.0.2: {}
+  tarn@3.1.2: {}
 
   test-mixer@4.2.3:
     dependencies:
