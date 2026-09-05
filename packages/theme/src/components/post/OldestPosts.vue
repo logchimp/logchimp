@@ -16,7 +16,7 @@ import { ref } from "vue";
 import type { IPost } from "@logchimp/types";
 
 // modules
-import { getPosts } from "../../modules/posts";
+import { Posts } from "../../modules/posts";
 
 // components
 import InfiniteScroll, {
@@ -34,7 +34,8 @@ const props = defineProps({
 });
 
 const posts = ref<IPost[]>([]);
-const page = ref<number>(1);
+const endCursor = ref<string | undefined>();
+const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>();
 
 async function getMorePosts() {
@@ -42,16 +43,29 @@ async function getMorePosts() {
   const boardId = props.board.boardId;
   state.value = "LOADING";
 
-  try {
-    const response = await getPosts({
-      page: page.value.toString(),
-      created: "ASC",
-      boardId: [boardId],
-    });
+  const postsAPI = new Posts();
 
-    if (response.data.posts.length) {
-      posts.value.push(...response.data.posts);
-      page.value += 1;
+  try {
+    const response = await postsAPI.GetPosts(
+      {
+        boardId: [boardId],
+      },
+      {
+        after: endCursor.value,
+        created: "ASC",
+      },
+    );
+
+    const postsList = response.posts;
+
+    if (postsList.length > 0) {
+      posts.value.push(...response.posts);
+    }
+
+    endCursor.value = response.page_info?.end_cursor || undefined;
+    hasNextPage.value = response.page_info?.has_next_page || false;
+
+    if (hasNextPage.value) {
       state.value = "LOADED";
     } else {
       state.value = "COMPLETED";
