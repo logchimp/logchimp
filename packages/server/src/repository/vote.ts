@@ -69,7 +69,8 @@ export class VoteRepository extends QueryRepository {
         level: "error",
         message: err,
       });
-      return votesMap;
+
+      throw err;
     }
   }
 
