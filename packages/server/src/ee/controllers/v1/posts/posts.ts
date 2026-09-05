@@ -172,8 +172,8 @@ export async function filterPost(
       posts.push({
         ...post,
         author: author,
-        board: board,
-        roadmap: roadmap,
+        board: board ?? null,
+        roadmap: roadmap ?? null,
         voters: voters,
       });
     }
