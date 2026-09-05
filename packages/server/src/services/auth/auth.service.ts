@@ -50,7 +50,7 @@ export class AuthService {
       .trim()
       .toLowerCase();
 
-    if (!validEmail(email)) {
+    if (!validEmail(userEmail)) {
       throw new InvalidEmailError();
     }
 
