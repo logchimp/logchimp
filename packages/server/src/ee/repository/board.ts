@@ -1,6 +1,9 @@
 import type { IBoard, IBoardPrivate } from "@logchimp/types";
 import { QueryRepository } from "../../repository/query";
 import { DAY } from "../../cache/time";
+import logger from "../../utils/logger";
+
+type BoardCacheKey = "public" | "detail" | "private";
 
 export class BoardRepository extends QueryRepository {
   async GetPublicBoardByIDs(boardIds: string[]): Promise<IBoard[]> {
@@ -63,5 +66,22 @@ export class BoardRepository extends QueryRepository {
     });
 
     return [...results, ...dbResults];
+  }
+
+  async InvalidateBoardCache(
+    boardIds: string[],
+    keys?: BoardCacheKey[],
+  ): Promise<void> {
+    if (!this.cache || boardIds.length === 0) return;
+
+    const cacheKeys = boardIds.flatMap((boardId) =>
+      keys.map((key) => `board:${key}:${boardId}`),
+    );
+
+    try {
+      await this.cache.del(cacheKeys);
+    } catch (err) {
+      logger.log({ level: "error", message: err });
+    }
   }
 }

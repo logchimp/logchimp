@@ -9,16 +9,19 @@ import type {
 import * as v from "valibot";
 
 import database from "../../../../database";
-import { invalidateBoardCache } from "../../../services/boards/invalidateCache";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { BoardRepository } from "../../../repository/board";
+import { valkey } from "../../../../cache";
 
 type ResponseBody =
   | TBoardUpdateResponseBody
   | IApiErrorResponse
   | IApiValidationErrorResponse;
+
+const boardRepository = new BoardRepository(database, valkey);
 
 const bodySchema = v.object({
   name: v.message(
@@ -129,7 +132,7 @@ export async function updateBoard(
 
     const board = boards[0];
 
-    await invalidateBoardCache(boardId);
+    await boardRepository.InvalidateBoardCache([boardId]);
 
     res.status(200).send({ board });
   } catch (err) {
