@@ -440,6 +440,8 @@ export async function updatePost(
   // @ts-expect-error
   const slugId = (req.post as GetPostStatement).slugId;
   // @ts-expect-error
+  const currentBoardId = (req.post as GetPostStatement).boardId;
+  // @ts-expect-error
   const currentRoadmapId = (req.post as GetPostStatement).roadmap_id;
 
   const checkPermission = permissions.includes("post:update");
@@ -468,12 +470,11 @@ export async function updatePost(
   }
 
   const id = validUUID(req.body.id);
-  const boardId = validUUID(req.body.boardId);
 
-  const hasRoadmapId = Object.prototype.hasOwnProperty.call(
-    body.output,
-    "roadmapId",
-  );
+  const hasBoardId = Object.hasOwn(body.output, "boardId");
+  const newBoardId = hasBoardId ? validUUID(req.body.boardId) : undefined;
+
+  const hasRoadmapId = Object.hasOwn(body.output, "roadmapId");
   const newRoadmapId = hasRoadmapId ? validUUID(req.body.roadmapId) : undefined;
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
@@ -493,7 +494,7 @@ export async function updatePost(
         title,
         slug,
         contentMarkdown,
-        boardId,
+        ...(hasBoardId ? { boardId: newBoardId } : {}),
         ...(hasRoadmapId ? { roadmap_id: newRoadmapId } : {}),
         updatedAt: new Date().toJSON(),
       })
@@ -519,6 +520,13 @@ export async function updatePost(
           message: err,
         });
       }
+    }
+
+    if (newBoardId && newBoardId !== currentBoardId) {
+      await boardRepository.InvalidateBoardCache(
+        [currentBoardId, newBoardId],
+        ["private", "detail"],
+      );
     }
 
     const post = posts[0];
