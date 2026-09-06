@@ -10,6 +10,10 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { validUUID } from "../../../../helpers";
+import { BoardRepository } from "../../../repository/board";
+import { valkey } from "../../../../cache";
+
+const boardRepository = new BoardRepository(database, valkey);
 
 type ResponseBody = IGetBoardsByUrlResponseBody | IApiErrorResponse;
 
@@ -41,26 +45,11 @@ export async function boardByUrl(
   }
 
   try {
-    const board = await database
-      .select(
-        "boards.boardId",
-        "boards.name",
-        "boards.color",
-        "boards.url",
-        "boards.display",
-        "boards.view_voters",
-        "boards.createdAt",
-      )
-      .count("posts", { as: "post_count" })
-      .from("boards")
-      .leftJoin("posts", "boards.boardId", "posts.boardId")
-      .where({
-        "boards.boardId": boardId,
-      })
-      .groupBy("boards.boardId")
-      .first();
+    const board = await boardRepository.GetPrivateBoardByIDs([boardId]);
 
-    res.status(200).send({ board });
+    res.status(200).send({
+      board: board[0],
+    });
   } catch (err) {
     logger.log({
       level: "error",
