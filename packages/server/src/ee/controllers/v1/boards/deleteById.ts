@@ -2,12 +2,14 @@ import type { Request, Response } from "express";
 import { validate as validateUUID } from "uuid";
 import type { IBoardDeleteRequestBody, TPermission } from "@logchimp/types";
 import database from "../../../../database";
-import * as cache from "../../../../cache";
-import { invalidateBoardCache } from "../../../services/boards/invalidateCache";
+import { valkey } from "../../../../cache";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { BoardRepository } from "../../../repository/board";
+
+const boardRepository = new BoardRepository(database, valkey);
 
 export async function deleteById(
   req: Request<unknown, unknown, IBoardDeleteRequestBody>,
@@ -51,9 +53,7 @@ export async function deleteById(
   }
 
   if (boardDeleted) {
-    if (cache.isActive) {
-      await invalidateBoardCache(boardId);
-    }
+    await boardRepository.InvalidateBoardCache([boardId]);
 
     res.sendStatus(204);
   } else {
