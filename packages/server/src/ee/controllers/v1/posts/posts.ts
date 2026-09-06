@@ -522,11 +522,14 @@ export async function updatePost(
       }
     }
 
-    if (newBoardId && newBoardId !== currentBoardId) {
-      await boardRepository.InvalidateBoardCache(
-        [currentBoardId, newBoardId],
-        ["private", "detail"],
+    if (hasBoardId && newBoardId !== currentBoardId) {
+      const boardIds = [currentBoardId, newBoardId].filter(
+        (boardId): boardId is string => Boolean(boardId),
       );
+      await boardRepository.InvalidateBoardCache(boardIds, [
+        "private",
+        "detail",
+      ]);
     }
 
     const post = posts[0];
