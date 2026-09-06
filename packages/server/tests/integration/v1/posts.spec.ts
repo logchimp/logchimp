@@ -774,7 +774,7 @@ describe("POST /api/v1/posts", () => {
     });
 
     const response = await supertest(app)
-      .post("/api/v1/boards")
+      .post("/api/v1/posts")
       .set("Authorization", `Bearer ${authUser.authToken}`);
 
     expect(response.headers["content-type"]).toContain("application/json");
