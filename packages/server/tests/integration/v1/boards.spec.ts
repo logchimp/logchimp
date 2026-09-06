@@ -429,6 +429,8 @@ describeEE("GET /boards/:url", () => {
     "board+with+plus",
     "board#with#hash",
     "a@@@@@@@@",
+    "a".repeat(5000), // 5000 characters
+    "बोर्ड",
   ].map((name) =>
     itEE(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
       const res = await supertest(app).get(`/api/v1/boards/${name}`);

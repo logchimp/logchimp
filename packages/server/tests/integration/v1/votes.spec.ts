@@ -101,7 +101,7 @@ describe("POST /api/v1/votes", () => {
     expect(response.body.code).toBe("VOTE_EXISTS");
   });
 
-  it("should add a vote", async () => {
+  it("should vote on a post", async () => {
     const { user } = await createUser({
       isVerified: true,
     });
@@ -126,6 +126,22 @@ describe("POST /api/v1/votes", () => {
     expect(response.body.voters.votesCount).toBe(1);
     expect(response.body.voters.viewerVote.userId).toBe(user.userId);
     expect(response.body.voters.viewerVote.postId).toBe(p1.postId);
+  });
+
+  it("should allow another user to vote on a author's post", async () => {
+    const { user: author } = await createUser({ isVerified: true });
+    const { user: voter } = await createUser({ isVerified: true });
+
+    const post = await generatePost({ userId: author.userId }, true);
+
+    const response = await supertest(app)
+      .post("/api/v1/votes")
+      .set("Authorization", `Bearer ${voter.authToken}`)
+      .send({ postId: post.postId });
+
+    expect(response.status).toBe(201);
+    expect(response.body.voters.votesCount).toBe(1);
+    expect(response.body.voters.viewerVote.userId).toBe(voter.userId);
   });
 });
 
@@ -215,7 +231,7 @@ describe("DELETE /api/v1/votes", () => {
     expect(response.body.code).toBe("VOTE_NOT_FOUND");
   });
 
-  it("should add a vote", async () => {
+  it("should allow voter to delete own vote", async () => {
     const { user } = await createUser({
       isVerified: true,
     });
@@ -240,5 +256,23 @@ describe("DELETE /api/v1/votes", () => {
     expect(response.body.voters.votesCount).toBe(0);
     expect(response.body.voters.votes).toHaveLength(0);
     expect(response.body.voters.viewerVote).toBeUndefined();
+  });
+
+  it("should not allow a user to delete another user's vote", async () => {
+    const { user: author } = await createUser({ isVerified: true });
+    const { user: other } = await createUser({ isVerified: true });
+
+    const post = await generatePost({ userId: author.userId }, true);
+
+    // Author adds a vote
+    await assignVote(author.userId, post.postId);
+
+    const response = await supertest(app)
+      .delete("/api/v1/votes")
+      .set("Authorization", `Bearer ${other.authToken}`)
+      .send({ postId: post.postId });
+
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe("VOTE_NOT_FOUND");
   });
 });
