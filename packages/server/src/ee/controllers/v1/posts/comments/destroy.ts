@@ -43,8 +43,17 @@ export async function destroy(
   }
 
   // @ts-expect-error
+  const userId = req.user?.userId as string | undefined;
+
+  // @ts-expect-error
   const permissions = (req.user?.permissions || []) as TPermission[];
-  const hasPermission = permissions.includes("comment:delete:any");
+  const requiredPermission = [
+    "comment:delete:own",
+    "comment:delete:any",
+  ] satisfies TPermission[];
+  const hasPermission = requiredPermission.some((permission) =>
+    permissions.includes(permission),
+  );
   if (!hasPermission) {
     res.status(403).send({
       message: error.api.roles.notEnoughPermission,
@@ -65,6 +74,43 @@ export async function destroy(
       code: "NOT_ENOUGH_PERMISSION",
     });
     return;
+  }
+
+  const ownComment = permissions.includes(
+    "comment:delete:own" satisfies TPermission,
+  );
+  if (ownComment && !permissions.includes("comment:delete:any")) {
+    let isAuthor: { id: string } | undefined;
+    try {
+      isAuthor = await database
+        .select<{ id: string }>("id")
+        .from("posts_activity")
+        .where({
+          type: "comment",
+          posts_comments_id: comment_id,
+          author_id: userId,
+        })
+        .first();
+    } catch (err) {
+      logger.error({
+        level: "error",
+        message: "failed to check if user is author of comment",
+        err,
+      });
+      res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
+      });
+      return;
+    }
+
+    if (!isAuthor?.id) {
+      res.status(403).send({
+        message: error.api.comments.notAnAuthor,
+        code: "UNAUTHORIZED_NOT_AUTHOR",
+      });
+      return;
+    }
   }
 
   try {
