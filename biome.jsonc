@@ -7,6 +7,15 @@
       }
     }
   },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!.idea",
+      "!packages/{server,theme,types}/dist",
+      "!packages/email-templates/{.maizzle,dist}"
+    ]
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
@@ -28,16 +37,7 @@
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineWidth": 80,
-    "includes": [
-      "**",
-      "!.idea",
-      "!packages/theme/dist/**",
-      "!packages/email-templates/.maizzle",
-      "!packages/email-templates/dist",
-      "!packages/server/dist/**",
-      "!packages/types/dist/**"
-    ]
+    "lineWidth": 80
   },
   "linter": {
     "enabled": true,
@@ -46,16 +46,7 @@
       "style": {
         "useNodejsImportProtocol": "off"
       }
-    },
-    "includes": [
-      "**",
-      "!.idea",
-      "!packages/theme/dist/**",
-      "!packages/email-templates/.maizzle",
-      "!packages/email-templates/dist",
-      "!packages/server/dist/**",
-      "!packages/types/dist/**"
-    ]
+    }
   },
   "overrides": [
     {
