@@ -53,7 +53,7 @@ export class BoardRepository extends QueryRepository {
       .from("boards")
       .leftJoin("posts", "boards.boardId", "posts.boardId")
       .groupBy("boards.boardId")
-      .whereIn("boardId", missingIds);
+      .whereIn("boards.boardId", missingIds);
 
     await this.CacheMissingResults<IBoardPrivate>({
       idField: "boardId",
