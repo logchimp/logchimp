@@ -1,14 +1,14 @@
 import express from "express";
-const router = express.Router();
-
 import * as auth from "../../../controllers/auth";
 import { mailConfigExists } from "../../../middlewares/mailConfigExists";
 import { withLicenseGuardWrapper } from "../../../middlewares/licenseGuardWrapper";
 import { domainBlacklist } from "../../middleware/domainBlacklist";
-import { userExists } from "../../../middlewares/userExists";
 import { authRequired } from "../../../middlewares/auth";
 import { validateEmailToken } from "../../../middlewares/validateEmailToken";
 import { OIDCLoginCallback } from "../../controllers/v1/auth";
+import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+
+const router = express.Router();
 
 router.get("/auth/me", authRequired, auth.me);
 
@@ -88,6 +88,12 @@ router.post(
 );
 
 router.get("/auth/oidc/login", auth.OIDCLogin);
-router.get("/auth/oidc/callback", OIDCLoginCallback);
+router.get(
+  "/auth/oidc/callback",
+  withLicenseGuard(OIDCLoginCallback, {
+    requiredPlan: ["pro", "business", "enterprise"],
+    skipHandlerOnFailure: false,
+  }),
+);
 
 export default router;
