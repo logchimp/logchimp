@@ -1020,69 +1020,67 @@ describe("PATCH /api/v1/posts", () => {
       },
     ];
 
-    it.each(testCases)("should throw error $testName", async ({
-      omitField,
-      overrideFields,
-      expectedError,
-      expectedStatus,
-    }) => {
-      const board = await generateBoard({}, true);
-      const roadmap = await generateRoadmap({}, true);
-      const { user: author } = await createUser({ isVerified: true });
-      const post = await generatePost(
-        {
+    it.each(testCases)(
+      "should throw error $testName",
+      async ({ omitField, overrideFields, expectedError, expectedStatus }) => {
+        const board = await generateBoard({}, true);
+        const roadmap = await generateRoadmap({}, true);
+        const { user: author } = await createUser({ isVerified: true });
+        const post = await generatePost(
+          {
+            userId: author.userId,
+            boardId: board.boardId,
+            roadmapId: roadmap.id,
+          },
+          true,
+        );
+
+        // Build the request body
+        const requestBody: IUpdatePostRequestBody = {
+          id: post.postId,
+          title: post.title,
+          slugId: post.slugId,
           userId: author.userId,
           boardId: board.boardId,
           roadmapId: roadmap.id,
-        },
-        true,
-      );
+          contentMarkdown: post.contentMarkdown,
+        };
 
-      // Build the request body
-      const requestBody: IUpdatePostRequestBody = {
-        id: post.postId,
-        title: post.title,
-        slugId: post.slugId,
-        userId: author.userId,
-        boardId: board.boardId,
-        roadmapId: roadmap.id,
-        contentMarkdown: post.contentMarkdown,
-      };
+        // Omit field if specified
+        if (Array.isArray(omitField)) {
+          omitField.forEach((field) => {
+            requestBody[field] = undefined;
+          });
+        } else if (omitField) {
+          requestBody[omitField] = undefined;
+        }
 
-      // Omit field if specified
-      if (Array.isArray(omitField)) {
-        omitField.forEach((field) => {
-          requestBody[field] = undefined;
-        });
-      } else if (omitField) {
-        requestBody[omitField] = undefined;
-      }
+        // Override fields if specified
+        if (overrideFields) {
+          Object.assign(requestBody, overrideFields);
+        }
 
-      // Override fields if specified
-      if (overrideFields) {
-        Object.assign(requestBody, overrideFields);
-      }
+        const response = await supertest(app)
+          .patch("/api/v1/posts")
+          .set("Authorization", `Bearer ${author.authToken}`)
+          .send(requestBody);
 
-      const response = await supertest(app)
-        .patch("/api/v1/posts")
-        .set("Authorization", `Bearer ${author.authToken}`)
-        .send(requestBody);
-
-      expect(response.headers["content-type"]).toContain("application/json");
-      expect(response.status).toBe(expectedStatus);
-      expect(response.body.code).toBe("VALIDATION_ERROR");
-      expect(response.body.message).toBe("Invalid body parameters");
-      expect(response.body.errors).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            ...(expectedError.message && {
-              message: expectedError.message,
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(expectedStatus);
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.body.message).toBe("Invalid body parameters");
+        expect(response.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              ...(expectedError.message && {
+                message: expectedError.message,
+              }),
+              code: expectedError.code,
             }),
-            code: expectedError.code,
-          }),
-        ]),
-      );
-    });
+          ]),
+        );
+      },
+    );
   });
 
   it('should throw error "NOT_ENOUGH_PERMISSION" when not author and without permission', async () => {

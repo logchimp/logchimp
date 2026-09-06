@@ -90,7 +90,7 @@ export class PermissionService {
     this.permissionRef.set(permission, id);
     this.permissionEntity.add(response);
 
-    if (options && options?.enableLogging) {
+    if (options?.enableLogging) {
       logger.info(`Permission added: ${permission}`);
     }
   }
