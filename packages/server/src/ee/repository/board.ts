@@ -70,7 +70,7 @@ export class BoardRepository extends QueryRepository {
 
   async InvalidateBoardCache(
     boardIds: string[],
-    keys?: BoardCacheKey[],
+    keys: BoardCacheKey[] = ["public", "detail", "private"],
   ): Promise<void> {
     if (!this.cache || boardIds.length === 0) return;
 
