@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN \
-    npm i -g pnpm && \
+    npm i -g pnpm@11.25.0 && \
     pnpm install --frozen-lockfile --prod=false && \
     pnpm --filter="@logchimp/types" exec pnpm build && \
     # TODO: use pnpm build script which does typescript check
