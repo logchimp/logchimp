@@ -52,7 +52,7 @@ export class BoardRepository extends QueryRepository {
         "boards.view_voters",
         "boards.createdAt",
       )
-      .count<IBoardPrivate[]>("posts", { as: "post_count" })
+      .count<IBoardPrivate[]>("posts.postId", { as: "post_count" })
       .from("boards")
       .leftJoin("posts", "boards.boardId", "posts.boardId")
       .groupBy("boards.boardId")
