@@ -33,7 +33,16 @@ router.post(
 router.post("/posts/slug", authOptional, postExists, post.postBySlug);
 
 router.post("/posts", authRequired, post.create);
-router.patch("/posts", authRequired, postExists, eePost.posts.updatePost);
+router.patch(
+  "/posts",
+  authRequired,
+  // @ts-expect-error
+  postExists,
+  withLicenseGuard(eePost.posts.updatePost, {
+    requiredPlan: ["pro", "business", "enterprise"],
+    skipHandlerOnFailure: false,
+  }),
+);
 
 // votes
 router.get<IGetPostVotesRequestParams>(
