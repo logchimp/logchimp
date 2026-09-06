@@ -3,12 +3,16 @@ import type {
   IAddVoteRequestParams,
   TRemoveVoteRequestParams,
 } from "@logchimp/types";
-const router = express.Router();
-
 import { authRequired } from "../../../middlewares/auth/authRequired";
 import { postExists } from "../../../middlewares/postExists";
 import * as vote from "../../controllers/v1/vote";
 import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+import * as votes from "../../../controllers/votes";
+
+const router = express.Router();
+
+router.post("/votes", authRequired, postExists, votes.add);
+router.delete("/votes", authRequired, postExists, votes.remove);
 
 router.post<IAddVoteRequestParams>(
   "/posts/:post_id/votes/:user_id",
