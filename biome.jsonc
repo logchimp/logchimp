@@ -33,6 +33,8 @@
       "**",
       "!.idea",
       "!packages/theme/dist/**",
+      "!packages/email-templates/.maizzle",
+      "!packages/email-templates/dist",
       "!packages/server/dist/**",
       "!packages/types/dist/**"
     ]
@@ -49,6 +51,8 @@
       "**",
       "!.idea",
       "!packages/theme/dist/**",
+      "!packages/email-templates/.maizzle",
+      "!packages/email-templates/dist",
       "!packages/server/dist/**",
       "!packages/types/dist/**"
     ]
