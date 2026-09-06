@@ -1,11 +1,12 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 import type {
-  IDeletePostByIdRequestBody,
-  IGetPostBySlugRequestBody,
-  IUpdatePostRequestBody,
-  IGetPostActivityRequestParam,
-  IRemoveVoteRequestBody,
   IAddVoteRequestBody,
+  IApiErrorResponse,
+  IDeletePostByIdRequestBody,
+  IGetPostActivityRequestParam,
+  IGetPostBySlugRequestBody,
+  IRemoveVoteRequestBody,
+  IUpdatePostRequestBody,
 } from "@logchimp/types";
 import database from "../database";
 
@@ -23,7 +24,7 @@ type RequestBody =
 
 export async function postExists(
   req: Request<IGetPostActivityRequestParam, unknown, RequestBody>,
-  res: Response,
+  res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
   const { id, slug } = getPostIdentifier(req);

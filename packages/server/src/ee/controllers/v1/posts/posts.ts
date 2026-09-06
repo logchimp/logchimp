@@ -444,15 +444,16 @@ export async function updatePost(
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const body = v.safeParse(updatePostBodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -463,6 +464,7 @@ export async function updatePost(
         code: issue.message,
       })),
     });
+    return;
   }
 
   const id = validUUID(req.body.id);
