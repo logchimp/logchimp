@@ -13,7 +13,8 @@
       "**",
       "!.idea",
       "!packages/{server,theme,types}/dist",
-      "!packages/email-templates/{.maizzle,dist}"
+      "!packages/email-templates/{.maizzle,dist}",
+      "!packages/server/src/services/mail/templates"
     ]
   },
   "javascript": {
