@@ -57,7 +57,6 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   distance: 20,
-  state: "LOADING",
   canLoadMore: true,
   immediateCheck: true,
 });
@@ -80,20 +79,26 @@ watch(
   },
 );
 
-function executeInfiniteScroll() {
-  if (props.state === "COMPLETED" || props.state === "ERROR") return;
-  props.onInfinite();
-}
+const canLoadMore = computed(() => {
+  return (
+    props.canLoadMore &&
+    props.state !== "COMPLETED" &&
+    props.state !== "LOADING" &&
+    props.state !== "ERROR"
+  );
+});
 
-useInfiniteScroll(window, executeInfiniteScroll, {
+useInfiniteScroll(window, props.onInfinite, {
   distance: props.distance,
   direction: "bottom",
-  canLoadMore: () => !noMoreResults.value || props.state !== "ERROR",
+  canLoadMore: () => {
+    return canLoadMore.value;
+  },
 });
 
 onMounted(() => {
-  if (props.immediateCheck) {
-    executeInfiniteScroll();
+  if (props.immediateCheck && canLoadMore.value) {
+    props.onInfinite();
   }
 });
 </script>
