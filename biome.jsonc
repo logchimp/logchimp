@@ -7,6 +7,16 @@
       }
     }
   },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!.idea",
+      "!packages/{server,theme,types}/dist",
+      "!packages/email-templates/{.maizzle,dist}",
+      "!packages/server/src/services/mail/templates"
+    ]
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
@@ -28,30 +38,16 @@
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineWidth": 80,
-    "includes": [
-      "**",
-      "!.idea",
-      "!packages/theme/dist/**",
-      "!packages/server/dist/**",
-      "!packages/types/dist/**"
-    ]
+    "lineWidth": 80
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "useNodejsImportProtocol": "off"
       }
-    },
-    "includes": [
-      "**",
-      "!.idea",
-      "!packages/theme/dist/**",
-      "!packages/server/dist/**",
-      "!packages/types/dist/**"
-    ]
+    }
   },
   "overrides": [
     {

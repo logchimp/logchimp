@@ -6,7 +6,7 @@ import type { IAuthenticationMiddlewareUser } from "../../types";
 const authorize = (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
   const user = req.user as IAuthenticationMiddlewareUser;
-  if (!user || !user.userId) {
+  if (!user?.userId) {
     res.status(401).send({
       message: error.middleware.auth.authorizationFailed,
       code: "AUTHORIZATION_FAILED",

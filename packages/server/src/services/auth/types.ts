@@ -1,6 +1,4 @@
 import type { IAuthUser } from "@logchimp/types";
-import { config } from "../../utils/logchimpConfig";
-import * as oidc from "openid-client";
 
 export type TCreatedUser = Omit<IAuthUser, "authToken">;
 

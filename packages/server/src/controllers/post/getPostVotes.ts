@@ -77,7 +77,7 @@ export async function getPostVotes(
         viewerVote,
       },
     });
-  } catch (err) {
+  } catch (_err) {
     res.status(500).send({
       message: error.general.serverError,
       code: "SERVER_ERROR",
