@@ -79,7 +79,7 @@ async function getBoards() {
     if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {
       errorCode.value = err.response.data.code;
     } else if (err.response?.status === 404) {
-      errorCode.value = "BOARDS_NOT_FOUND"
+      errorCode.value = "BOARDS_NOT_FOUND";
     }
   }
 }
