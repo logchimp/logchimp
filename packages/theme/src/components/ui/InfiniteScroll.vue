@@ -83,8 +83,7 @@ watch(
 
 const canLoadMore = computed(() => {
   return (
-    props.canLoadMore &&
-    (props.state === "IDLE" || props.state === "LOADED")
+    props.canLoadMore && (props.state === "IDLE" || props.state === "LOADED")
   );
 });
 
