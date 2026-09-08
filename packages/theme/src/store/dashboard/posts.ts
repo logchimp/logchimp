@@ -1,25 +1,24 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IPost } from "@logchimp/types";
+import type { IApiErrorResponse, IPost } from "@logchimp/types";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import { Posts } from "../../modules/posts";
+import type { AxiosError } from "axios";
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
-  const isLoading = ref<boolean>(false);
   const endCursor = ref<string | undefined>();
   const hasNextPage = ref<boolean>(false);
-  const error = ref<unknown>(undefined);
+  const errorCode = ref<unknown>(undefined);
 
   async function fetchPosts() {
     if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
-    isLoading.value = true;
-    error.value = undefined;
+    errorCode.value = undefined;
 
     const postsAPI = new Posts();
 
@@ -46,12 +45,13 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
       } else {
         state.value = "COMPLETED";
       }
-    } catch (err) {
-      console.error("Error fetching posts:", err);
+    } catch (error) {
+      const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
-      error.value = err;
-    } finally {
-      isLoading.value = false;
+
+      if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
+        errorCode.value = err.response.data.code;
+      }
     }
   }
 
@@ -79,6 +79,7 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   return {
     posts,
     state,
+    error: errorCode,
 
     fetchPosts,
     appendPost,
