@@ -9,7 +9,7 @@ const usersServices = new Users();
 
 export const useDashboardUsers = defineStore("dashboardUsers", () => {
   const users = ref<IUser[]>([]);
-  const state = ref<InfiniteScrollStateType>();
+  const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
   const isLoading = ref<boolean>(false);

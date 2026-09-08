@@ -9,7 +9,7 @@ const roleServices = new Roles();
 
 export const useDashboardRoles = defineStore("dashboardRoles", () => {
   const roles = ref<IRole[]>([]);
-  const state = ref<InfiniteScrollStateType>();
+  const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
   const isLoading = ref<boolean>(false);

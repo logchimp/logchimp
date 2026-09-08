@@ -45,7 +45,7 @@ const posts = ref<IPost[]>([]);
 const endCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
 const showSiteSetupCard = ref<boolean>(false);
-const state = ref<InfiniteScrollStateType>();
+const state = ref<InfiniteScrollStateType>("IDLE");
 
 async function isSetup() {
   try {

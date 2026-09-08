@@ -7,7 +7,7 @@ import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScr
 
 export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   const roadmaps = ref<IRoadmapPrivate[]>([]);
-  const state = ref<InfiniteScrollStateType>();
+  const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
