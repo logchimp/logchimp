@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
+import { CircleXIcon } from "lucide-vue";
 
 import Table from "../../../../components/ui/Table/Table.vue";
 import ColorDot from "../../../../components/ui/ColorDot/ColorDot.vue";
@@ -30,14 +31,27 @@ async function getBoards() {
     boards.value = response.data.boards;
     state.value = "COMPLETED";
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<IApiErrorResponse>;
     state.value = "ERROR";
+
+    if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
+      errorCode.value = err.response.data.code;
+    }
   }
 }
 </script>
 
 <template>
-  <Table>
+  <div
+    v-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
+    class="border border-dashed border-red-300/80 rounded-lg p-4 text-center flex flex-col items-center gap-y-2.5"
+  >
+    <CircleXIcon class="stroke-red-600" />
+    <span class="text-neutral-700 text-sm">
+      Failed to display boards.
+    </span>
+  </div>
+  <Table v-else>
     <template #header>
       <Td
         :head="true"
