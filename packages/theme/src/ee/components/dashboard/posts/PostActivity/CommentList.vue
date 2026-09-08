@@ -31,7 +31,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const page = ref<number>(1);
-const state = ref<InfiniteScrollStateType>();
+const state = ref<InfiniteScrollStateType>("IDLE");
 const data = computed(
   () => postActivityEEStore.activityDashboard[props.postId] || [],
 );

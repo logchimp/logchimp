@@ -30,6 +30,7 @@ import ClientError from "./ClientError.vue";
 import LoaderContainer from "./LoaderContainer.vue";
 
 export type InfiniteScrollStateType =
+  | "IDLE"
   | "LOADING"
   | "LOADED"
   | "COMPLETED"
@@ -43,7 +44,7 @@ interface Props {
    */
   distance?: number;
   /**
-   * @default LOADING
+   * @default IDLE
    */
   state?: InfiniteScrollStateType;
   onInfinite: () => Promise<void> | void;
@@ -57,6 +58,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   distance: 20,
+  state: "IDLE",
   canLoadMore: true,
   immediateCheck: true,
 });
@@ -82,9 +84,7 @@ watch(
 const canLoadMore = computed(() => {
   return (
     props.canLoadMore &&
-    props.state !== "COMPLETED" &&
-    props.state !== "LOADING" &&
-    props.state !== "ERROR"
+    (props.state === "IDLE" || props.state === "LOADED")
   );
 });
 

@@ -14,7 +14,7 @@ import { getAllBoards } from "../../../modules/boards.ts";
 import type { AxiosError } from "axios";
 
 const boards = ref<IBoardPrivate[]>([]);
-const state = ref<InfiniteScrollStateType>();
+const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string | null>(null);
 
 async function getBoards() {

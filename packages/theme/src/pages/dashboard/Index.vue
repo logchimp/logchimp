@@ -79,7 +79,7 @@ const RecentlyCreatedBoards = defineAsyncComponent(
   () => import("../../ee/components/dashboard/index/RecentlyCreatedBoards.vue"),
 );
 const posts = ref<IPost[]>([]);
-const postState = ref<InfiniteScrollStateType>();
+const postState = ref<InfiniteScrollStateType>("IDLE");
 const settingsStore = useSettingStore();
 
 async function getRecentPosts() {
