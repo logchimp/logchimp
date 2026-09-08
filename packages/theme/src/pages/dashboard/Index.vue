@@ -51,70 +51,19 @@
 
     <div class="flex-1">
       <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">Boards</div>
-      <Table>
-        <template #header>
-          <Td
-            :head="true"
-            :style="{
-              minWidth: '350px',
-            }"
-            class="flex-1"
-          >
-            Name
-          </Td>
-          <Td
-            :style="{
-              width: '100px',
-            }"
-            :head="true"
-          >
-            Posts
-          </Td>
-        </template>
-
-        <Tr
-          v-for="board in boards"
-          :key="board.boardId"
-        >
-          <div class="flex items-center">
-            <Td
-              :style="{
-                minWidth: '350px',
-              }"
-              class="flex-1 flex items-center gap-x-3"
-            >
-              <ColorDot :color="board.color" />
-              <span>
-                {{ board.name }}
-              </span>
-            </Td>
-            <Td
-              :style="{
-                width: '100px',
-              }"
-            >
-              {{ board.post_count }}
-            </Td>
-          </div>
-        </Tr>
-
-        <template #infinite-loader>
-          <infinite-scroll :on-infinite="getBoards" :state="boardState" />
-        </template>
-      </Table>
+      <recently-created-boards />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { useRoute, useRouter } from "vue-router";
-import type { IBoardPrivate, IPost } from "@logchimp/types";
+import type { IPost } from "@logchimp/types";
 
 // modules
 import { Posts } from "../../modules/posts";
-import { getAllBoards } from "../../ee/modules/boards";
 import { useSettingStore } from "../../store/settings";
 
 // components
@@ -122,15 +71,15 @@ import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../components/ui/InfiniteScroll.vue";
 import Table from "../../components/ui/Table/Table.vue";
-import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 import Tr from "../../components/ui/Table/Tr.vue";
 import Td from "../../components/ui/Table/Td.vue";
 
+const RecentlyCreatedBoards = defineAsyncComponent(
+  () => import("../../ee/components/dashboard/index/RecentlyCreatedBoards.vue"),
+);
 const posts = ref<IPost[]>([]);
 const postState = ref<InfiniteScrollStateType>();
-const boards = ref<IBoardPrivate[]>([]);
-const boardState = ref<InfiniteScrollStateType>();
 const settingsStore = useSettingStore();
 
 async function getRecentPosts() {
@@ -152,22 +101,6 @@ async function getRecentPosts() {
   } catch (error) {
     console.error(error);
     postState.value = "ERROR";
-  }
-}
-
-async function getBoards() {
-  try {
-    const response = await getAllBoards({
-      page: "1",
-      limit: "4",
-      created: "DESC",
-    });
-
-    boards.value = response.data.boards;
-    boardState.value = "COMPLETED";
-  } catch (error) {
-    console.error(error);
-    boardState.value = "ERROR";
   }
 }
 
