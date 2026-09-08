@@ -52,10 +52,14 @@ withDefaults(defineProps<Props>(), {
       </p>
 
       <p
-        v-if="description"
+        v-if="description || $slots.description"
         class="mb-8 mt-3 text-center text-sm text-neutral-500"
       >
-        {{description}}
+        <template v-if="description">
+          {{description}}
+        </template>
+        <slot v-else name="description" />
+
         <template v-if="learnMore">
           <a
             :href="learnMore"
