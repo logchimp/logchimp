@@ -1,20 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
-import jwt, { type JwtPayload } from "jsonwebtoken";
-import type {
-  IPasswordResetJwtPayload,
-  IVerifyEmailJwtPayload,
-} from "@logchimp/types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../../src/app";
 import database from "../../../../src/database";
-import { configManager } from "../../../../src/utils/logchimpConfig";
 import { createToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
-
-const config = configManager.getConfig();
 
 describe("POST /api/v1/auth/email/verify", () => {
   it("should throw error 'INVALID_AUTH_HEADER'", async () => {
