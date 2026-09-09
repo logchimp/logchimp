@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="errorCode === 'LICENSE_VALIDATION_FAILED' || errorCode === 'BOARDS_NOT_FOUND'"
-    class="text-center text-gray-600 text-sm"
+    class="text-center"
   >
     <p>
       No boards available
