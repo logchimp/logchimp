@@ -19,7 +19,7 @@ import { defineAsyncComponent, onMounted } from "vue";
 import { useHead } from "@vueuse/head";
 import { useRoute, useRouter } from "vue-router";
 
-// components
+import { useSettingStore } from "../../store/settings";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
 
 const RecentlyCreatedPosts = defineAsyncComponent(
@@ -31,6 +31,7 @@ const RecentlyCreatedBoards = defineAsyncComponent(
 
 const route = useRoute();
 const routerInstance = useRouter();
+const settingsStore = useSettingStore();
 
 onMounted(() => {
   if (route.query.onboarding === "complete") {
