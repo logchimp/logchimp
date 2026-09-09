@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 
@@ -274,5 +274,12 @@ describe("DELETE /api/v1/votes", () => {
 
     expect(response.status).toBe(404);
     expect(response.body.code).toBe("VOTE_NOT_FOUND");
+
+    const remainingVote = await database
+      .select<{ voteId: string }>("voteId")
+      .from("votes")
+      .where({ userId: author.userId, postId: post.postId })
+      .first();
+    expect(remainingVote).toBeDefined();
   });
 });
