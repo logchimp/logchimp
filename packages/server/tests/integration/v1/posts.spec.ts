@@ -17,6 +17,7 @@ import {
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { GET_POSTS_FILTER_COUNT } from "../../../src/constants";
 import { describeEE, itEE } from "../../utils/skipEE";
+import { removeRoleFromUserId } from "../../utils/roles";
 
 /**
  * Malicious/HTML-injection payloads used to verify that the post `title` and
@@ -771,6 +772,14 @@ describe("POST /api/v1/posts", () => {
   it("should throw error not having 'post:create' permission", async () => {
     const { user: authUser } = await createUser({
       isVerified: true,
+    });
+
+    await createRoleWithPermissions(authUser.userId, ["role:unassign"], {
+      roleName: "Role destroyer",
+    });
+    await removeRoleFromUserId(authUser.userId, {
+      name: "@everyone",
+      isSystem: true,
     });
 
     const response = await supertest(app)
