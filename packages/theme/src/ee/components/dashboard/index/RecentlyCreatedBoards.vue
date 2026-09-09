@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
-import { KeyIcon } from "lucide-vue";
+import type { AxiosError } from "axios";
 
 import Table from "../../../../components/ui/Table/Table.vue";
 import ColorDot from "../../../../components/ui/ColorDot/ColorDot.vue";
@@ -11,7 +11,6 @@ import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../../components/ui/InfiniteScroll.vue";
 import { getAllBoards } from "../../../modules/boards.ts";
-import type { AxiosError } from "axios";
 import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
 
 const boards = ref<IBoardPrivate[]>([]);
@@ -20,7 +19,9 @@ const errorCode = ref<string | null>(null);
 
 async function getBoards() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
   state.value = "LOADING";
+  errorCode.value = null;
 
   try {
     const response = await getAllBoards({
@@ -75,8 +76,8 @@ async function getBoards() {
       <div class="flex items-center">
         <Td
           :style="{
-                minWidth: '350px',
-              }"
+            minWidth: '350px',
+          }"
           class="flex-1 flex items-center gap-x-3"
         >
           <ColorDot :color="board.color" />
