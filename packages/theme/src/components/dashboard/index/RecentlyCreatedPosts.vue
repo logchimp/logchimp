@@ -89,6 +89,7 @@ async function getRecentPosts() {
         <router-link
           :to="`/dashboard/posts/${encodeURIComponent(post.slug)}`"
           class="absolute inset-0"
+          :aria-label="`View post: ${post.title}`"
         />
       </div>
     </Tr>
