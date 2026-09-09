@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div v-if="dashboardRoles.isLoading">
+    <div v-if="dashboardRoles.state === 'LOADING'">
       Loading...
     </div>
 

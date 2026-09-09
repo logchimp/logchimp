@@ -17,17 +17,23 @@
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
-    <post-item
-      v-for="post in dashboardPosts.posts"
-      :key="post.postId"
-      :post="post"
-      :dashboard="true"
+    <license-validation-failed
+      v-if="displayLicenseValidationFailed"
+      resource-type="posts"
     />
+    <template v-else>
+      <post-item
+        v-for="post in dashboardPosts.posts"
+        :key="post.postId"
+        :post="post"
+        :dashboard="true"
+      />
 
-    <infinite-scroll
-      :on-infinite="dashboardPosts.fetchPosts"
-      :state="dashboardPosts.state"
-    />
+      <infinite-scroll
+        :on-infinite="dashboardPosts.fetchPosts"
+        :state="dashboardPosts.state"
+      />
+    </template>
 	</div>
 </template>
 
@@ -48,11 +54,16 @@ import PostItem from "../../../components/post/PostItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import Button from "../../../components/ui/Button.vue";
+import LicenseValidationFailed from "../../../components/LicenseValidationFailed.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
-
 const createPostButtonLoading = ref(false);
+const displayLicenseValidationFailed = computed(
+  () =>
+    dashboardPosts.error === "LICENSE_VALIDATION_FAILED" ||
+    dashboardPosts.error === "LICENSE_INSUFFICIENT_TIER",
+);
 
 const postTemplate = {
   postId: "",

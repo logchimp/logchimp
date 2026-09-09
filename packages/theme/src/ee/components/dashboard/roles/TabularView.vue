@@ -1,5 +1,9 @@
 <template>
-  <Table :disableDividers="requireUpgrade">
+  <license-validation-failed
+    v-if="dashboardRoles.error === 'LICENSE_VALIDATION_FAILED'"
+    resource-type="roles"
+    />
+  <Table v-else :disableDividers="requireUpgrade">
     <template #header>
       <Td :head="true" />
       <Td
@@ -23,7 +27,7 @@
     <template v-if="requireUpgrade">
       <div class="pointer-events-none select-none divide-y divide-neutral-200 relative" aria-hidden="true">
         <Tr
-          v-for="role in EXAMPLE_ROLES_DATA"
+          v-for="role in EXAMPLE_ROLES_DATA.slice(0, 3)"
           :key="role.id"
         >
           <TabularItem :role="role" />
@@ -77,6 +81,7 @@ import Td from "../../../../components/ui/Table/Td.vue";
 import { EXAMPLE_ROLES_DATA } from "./example-data";
 import EmptyScreen from "../../../../components/EmptyScreen.vue";
 import Button from "../../../../components/ui/Button.vue";
+import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
 
 const dashboardRoles = useDashboardRoles();
 const requireUpgrade = computed(

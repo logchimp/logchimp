@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
-import { CircleXIcon } from "lucide-vue";
+import type { AxiosError } from "axios";
 
 import Table from "../../../../components/ui/Table/Table.vue";
 import ColorDot from "../../../../components/ui/ColorDot/ColorDot.vue";
@@ -11,7 +11,8 @@ import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../../components/ui/InfiniteScroll.vue";
 import { getAllBoards } from "../../../modules/boards.ts";
-import type { AxiosError } from "axios";
+import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
+import ClientError from "../../../../components/ui/ClientError.vue";
 
 const boards = ref<IBoardPrivate[]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
@@ -19,7 +20,9 @@ const errorCode = ref<string | null>(null);
 
 async function getBoards() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
   state.value = "LOADING";
+  errorCode.value = null;
 
   try {
     const response = await getAllBoards({
@@ -34,6 +37,11 @@ async function getBoards() {
     const err = error as AxiosError<IApiErrorResponse>;
     state.value = "ERROR";
 
+    if (err.status === 404) {
+      errorCode.value = "BOARDS_NOT_FOUND";
+      return;
+    }
+
     if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
       errorCode.value = err.response.data.code;
     }
@@ -42,15 +50,10 @@ async function getBoards() {
 </script>
 
 <template>
-  <div
+  <license-validation-failed
     v-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
-    class="border border-dashed border-red-300/80 rounded-lg p-4 text-center flex flex-col items-center gap-y-2.5"
-  >
-    <CircleXIcon class="stroke-red-600" />
-    <span class="text-neutral-700 text-sm">
-      Failed to display boards.
-    </span>
-  </div>
+    resource-type="boards"
+  />
   <Table v-else>
     <template #header>
       <Td
@@ -79,8 +82,8 @@ async function getBoards() {
       <div class="flex items-center">
         <Td
           :style="{
-                minWidth: '350px',
-              }"
+            minWidth: '350px',
+          }"
           class="flex-1 flex items-center gap-x-3"
         >
           <ColorDot :color="board.color" />
@@ -99,7 +102,13 @@ async function getBoards() {
     </Tr>
 
     <template #infinite-loader>
-      <infinite-scroll :on-infinite="getBoards" :state="state" />
+      <infinite-scroll :on-infinite="getBoards" :state="state">
+        <template #error>
+          <client-error>
+            No boards available
+          </client-error>
+        </template>
+      </infinite-scroll>
     </template>
   </Table>
 </template>
