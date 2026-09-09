@@ -38,7 +38,7 @@
       <EmptyScreen
         title="Roadmaps"
         description="Keep your customers up-to-date as your team releases the customer feedbacks. Upgrade to Pro plan to access this feature."
-        learnMore="https://docs.logchimp.app/guide/boards"
+        learnMore="https://docs.logchimp.app/guide/roadmaps"
         :border="false"
         :icon="KanbanIcon"
         padding-y="pt-0 pb-7 lg:pb-20"
