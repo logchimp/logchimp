@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 import { getAllBoards } from "../../modules/boards";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
@@ -8,8 +9,7 @@ import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScr
 export const useDashboardBoards = defineStore("dashboardBoards", () => {
   const boards = ref<IBoardPrivate[]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
-  const isLoading = ref<boolean>(false);
-  const error = ref<unknown>(undefined);
+  const errorCode = ref<unknown>(undefined);
 
   const page = ref<number>(1);
 
@@ -17,8 +17,7 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
     if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
-    isLoading.value = true;
-    error.value = undefined;
+    errorCode.value = undefined;
 
     try {
       const response = await getAllBoards({
@@ -33,12 +32,13 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
       } else {
         state.value = "COMPLETED";
       }
-    } catch (err) {
-      console.error(error);
-      error.value = err;
+    } catch (error) {
+      const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
-    } finally {
-      isLoading.value = false;
+
+      if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
+        errorCode.value = err.response.data.code;
+      }
     }
   }
 
@@ -66,6 +66,7 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
   return {
     boards,
     state,
+    error: errorCode,
 
     fetchBoards,
     appendBoard,

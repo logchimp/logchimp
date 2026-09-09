@@ -17,18 +17,10 @@
   </DashboardPageHeader>
 
 	<div class="px-3 lg:px-6">
-    <div
+    <license-validation-failed
       v-if="dashboardPosts.error === 'LICENSE_VALIDATION_FAILED'"
-      class="border border-dashed border-red-300/80 rounded-lg p-4 text-center flex flex-col items-center gap-y-2.5"
-    >
-      <KeyIcon class="stroke-red-600" />
-      <p class="mb-1 font-medium">License issue</p>
-      <span
-        class="text-neutral-600 text-sm"
-      >
-        We are unable to display posts due to a license validation failure.
-      </span>
-    </div>
+      resource-type="posts"
+    />
     <template v-else>
       <post-item
         v-for="post in dashboardPosts.posts"
@@ -48,7 +40,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import { KeyIcon } from "lucide-vue";
 
 // modules
 import { useDashboardPosts } from "../../../store/dashboard/posts";
@@ -63,6 +54,7 @@ import PostItem from "../../../components/post/PostItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import Button from "../../../components/ui/Button.vue";
+import LicenseValidationFailed from "../../../components/LicenseValidationFailed.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();

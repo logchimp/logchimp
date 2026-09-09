@@ -1,5 +1,9 @@
 <template>
-  <Table>
+  <license-validation-failed
+    v-if="dashboardBoards.error === 'LICENSE_VALIDATION_FAILED'"
+    resource-type="boards"
+  />
+  <Table v-else>
     <template #header>
       <Td :head="true" />
       <Td
@@ -57,6 +61,7 @@ import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
 import Td from "../../../../components/ui/Table/Td.vue";
 import Tr from "../../../../components/ui/Table/Tr.vue";
+import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
 
 const dashboardBoards = useDashboardBoards();
 </script>

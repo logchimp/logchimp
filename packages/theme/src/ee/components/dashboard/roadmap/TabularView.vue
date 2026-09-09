@@ -1,5 +1,9 @@
 <template>
-  <Table>
+  <license-validation-failed
+    v-if="dashboardRoadmaps.error === 'LICENSE_VALIDATION_FAILED'"
+    resource-type="roadmaps"
+  />
+  <Table v-else>
     <template #header>
       <Td :head="true" />
       <Td
@@ -62,6 +66,7 @@ import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
 import Td from "../../../../components/ui/Table/Td.vue";
 import TabularItem from "./TabularItem/TabularItem.vue";
 import Tr from "../../../../components/ui/Table/Tr.vue";
+import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
 
 const dashboardRoadmaps = useDashboardRoadmaps();
 

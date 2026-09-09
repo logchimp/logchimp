@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IRole } from "@logchimp/types";
+import type { IApiErrorResponse, IRole } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 import { Roles } from "../../modules/roles";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
@@ -12,16 +13,14 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
   const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
-  const error = ref<unknown>(undefined);
+  const errorCode = ref<unknown>(undefined);
   const currentCursor = ref<string>();
 
   async function fetchRoles() {
     if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
-    isLoading.value = true;
-    error.value = undefined;
+    errorCode.value = undefined;
 
     try {
       const response = await roleServices.getAll({
@@ -42,12 +41,13 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
         state.value = "COMPLETED";
         hasNextPage.value = false;
       }
-    } catch (err) {
-      // @ts-expect-error
-      error.value = err?.response?.data?.code ?? err;
+    } catch (error) {
+      const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
-    } finally {
-      isLoading.value = false;
+
+      if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
+        errorCode.value = err.response.data.code;
+      }
     }
   }
 
@@ -73,8 +73,7 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
   return {
     roles,
     state,
-    isLoading,
-    error,
+    error: errorCode,
 
     fetchRoles,
     appendRole,

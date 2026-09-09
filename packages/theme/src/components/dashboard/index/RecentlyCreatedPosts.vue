@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import type { IApiErrorResponse, IPost } from "@logchimp/types";
 import type { AxiosError } from "axios";
-import { KeyIcon } from "lucide-vue";
 
 import InfiniteScroll, {
   type InfiniteScrollStateType,
@@ -12,6 +11,7 @@ import Tr from "../../../components/ui/Table/Tr.vue";
 import Td from "../../../components/ui/Table/Td.vue";
 
 import { Posts } from "../../../modules/posts.ts";
+import LicenseValidationFailed from "../../LicenseValidationFailed.vue";
 
 const posts = ref<IPost[]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
@@ -46,18 +46,10 @@ async function getRecentPosts() {
 </script>
 
 <template>
-  <div
+  <license-validation-failed
     v-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
-    class="border border-dashed border-red-300/80 rounded-lg p-4 text-center flex flex-col items-center gap-y-2.5"
-  >
-    <KeyIcon class="stroke-red-600" />
-    <p class="mb-1 font-medium">License issue</p>
-    <span
-      class="text-neutral-600 text-sm"
-    >
-      We are unable to display posts due to a license validation failure.
-    </span>
-  </div>
+    resource-type="posts"
+  />
   <Table
     v-else
   >

@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { IApiErrorResponse, IRoadmapPrivate } from "@logchimp/types";
+import type { AxiosError } from "axios";
 
 import { getAllRoadmaps } from "../../modules/roadmaps";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
@@ -10,19 +11,15 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
-  const isLoading = ref<boolean>(false);
-  const error = ref<unknown>(undefined);
+  const errorCode = ref<unknown>(undefined);
 
   const currentCursor = ref<string>();
 
   async function fetchRoadmaps() {
-    if (state.value === "LOADING" || state.value === "COMPLETED") {
-      return;
-    }
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
     state.value = "LOADING";
-    isLoading.value = true;
-    error.value = undefined;
+    errorCode.value = undefined;
 
     try {
       const response = await getAllRoadmaps({
@@ -44,12 +41,13 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
         state.value = "COMPLETED";
         hasNextPage.value = false;
       }
-    } catch (err) {
-      console.error("Error fetching roadmaps:", err);
+    } catch (error) {
+      const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
-      error.value = err;
-    } finally {
-      isLoading.value = false;
+
+      if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
+        errorCode.value = err.response.data.code;
+      }
     }
   }
 
@@ -105,6 +103,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   return {
     roadmaps,
     state,
+    error: errorCode,
 
     fetchRoadmaps,
     appendRoadmap,
