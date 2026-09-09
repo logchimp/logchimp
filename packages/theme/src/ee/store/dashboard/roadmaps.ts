@@ -45,8 +45,11 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
       const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
 
-      if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
-        errorCode.value = err.response.data.code;
+      // HTTP API error handling
+      switch (err.response?.data?.code) {
+        case "LICENSE_VALIDATION_FAILED":
+        case "LICENSE_INSUFFICIENT_TIER":
+          errorCode.value = err.response.data.code;
       }
     }
   }

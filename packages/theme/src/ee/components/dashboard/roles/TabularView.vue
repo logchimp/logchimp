@@ -27,7 +27,7 @@
     <template v-if="requireUpgrade">
       <div class="pointer-events-none select-none divide-y divide-neutral-200 relative" aria-hidden="true">
         <Tr
-          v-for="role in EXAMPLE_ROLES_DATA"
+          v-for="role in EXAMPLE_ROLES_DATA.slice(0, 3)"
           :key="role.id"
         >
           <TabularItem :role="role" />
