@@ -1,7 +1,7 @@
 <template>
   <roadmap-skeleton v-if="loading" />
   <div
-    v-else-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
+    v-else-if="errorCode === 'LICENSE_VALIDATION_FAILED' || errorCode === 'ROADMAPS_NOT_FOUND'"
     class="text-center"
   >
     <p>
@@ -87,6 +87,8 @@ async function getRoadmaps(after: string | undefined, isScroll = false) {
     const err = error as AxiosError<IApiErrorResponse>;
     if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {
       errorCode.value = err.response.data.code;
+    } else if (err.response?.status === 404) {
+      errorCode.value = "ROADMAPS_NOT_FOUND";
     }
   } finally {
     loading.value = false;
