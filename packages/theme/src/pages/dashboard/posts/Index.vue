@@ -18,7 +18,7 @@
 
 	<div class="px-3 lg:px-6">
     <license-validation-failed
-      v-if="dashboardPosts.error === 'LICENSE_VALIDATION_FAILED'"
+      v-if="displayLicenseValidationFailed"
       resource-type="posts"
     />
     <template v-else>
@@ -59,6 +59,11 @@ import LicenseValidationFailed from "../../../components/LicenseValidationFailed
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
 const createPostButtonLoading = ref(false);
+const displayLicenseValidationFailed = computed(
+  () =>
+    dashboardPosts.error === "LICENSE_VALIDATION_FAILED" ||
+    dashboardPosts.error === "LICENSE_INSUFFICIENT_TIER",
+);
 
 const postTemplate = {
   postId: "",
