@@ -58,7 +58,6 @@ import LicenseValidationFailed from "../../../components/LicenseValidationFailed
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
-const errorCode = ref<string | null>(null);
 const createPostButtonLoading = ref(false);
 
 const postTemplate = {
