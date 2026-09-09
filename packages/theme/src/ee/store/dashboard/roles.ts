@@ -45,6 +45,11 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
       const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
 
+      if (err.response?.status === 404) {
+        errorCode.value = "LICENSE_INSUFFICIENT_TIER";
+        return;
+      }
+
       // HTTP API error handling
       switch (err.response?.data?.code) {
         case "LICENSE_INSUFFICIENT_TIER":

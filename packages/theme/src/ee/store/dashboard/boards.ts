@@ -36,11 +36,17 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
       const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
 
+      if (err.response?.status === 404) {
+        errorCode.value = "LICENSE_INSUFFICIENT_TIER";
+        return;
+      }
+
       // HTTP API error handling
       switch (err.response?.data?.code) {
         case "LICENSE_VALIDATION_FAILED":
         case "LICENSE_INSUFFICIENT_TIER":
           errorCode.value = err.response.data.code;
+          return;
       }
     }
   }

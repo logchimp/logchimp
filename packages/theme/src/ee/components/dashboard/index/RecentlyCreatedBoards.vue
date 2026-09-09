@@ -12,6 +12,7 @@ import InfiniteScroll, {
 } from "../../../../components/ui/InfiniteScroll.vue";
 import { getAllBoards } from "../../../modules/boards.ts";
 import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
+import ClientError from "../../../../components/ui/ClientError.vue";
 
 const boards = ref<IBoardPrivate[]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
@@ -35,6 +36,11 @@ async function getBoards() {
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     state.value = "ERROR";
+
+    if (err.status === 404) {
+      errorCode.value = "BOARDS_NOT_FOUND";
+      return;
+    }
 
     if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {
       errorCode.value = err.response.data.code;
@@ -96,7 +102,13 @@ async function getBoards() {
     </Tr>
 
     <template #infinite-loader>
-      <infinite-scroll :on-infinite="getBoards" :state="state" />
+      <infinite-scroll :on-infinite="getBoards" :state="state">
+        <template #error>
+          <client-error>
+            No boards available
+          </client-error>
+        </template>
+      </infinite-scroll>
     </template>
   </Table>
 </template>
