@@ -19,7 +19,9 @@ const errorCode = ref<string | null>(null);
 
 async function getRecentPosts() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
   state.value = "LOADING";
+  errorCode.value = null;
 
   const postsAPI = new Posts();
 
