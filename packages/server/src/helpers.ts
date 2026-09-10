@@ -99,7 +99,8 @@ const sanitiseURL = (value: string): string => {
   return value
     .trim()
     .toLocaleLowerCase()
-    .replace(/^_+|\W+|[^\w]|\s/g, "-");
+    .replace(/^_+|\W+|[^\w]|\s/g, "-")
+    .replace(/^-+|-+$/g, "");
 };
 
 /**
