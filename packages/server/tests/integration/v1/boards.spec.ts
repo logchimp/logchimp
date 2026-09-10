@@ -643,10 +643,12 @@ describeEE("GET /boards/search/:name", () => {
     { name: "emoji board 🚀", searchTerm: "🚀" },
     { name: "unicode बोर्ड", searchTerm: "बोर्ड" },
     { name: "board with spaces", searchTerm: "with spaces" },
-    { name: "board+with+plus", searchTerm: "plus" },
-    { name: "board#with#hash", searchTerm: "hash" },
+    { name: "board+with+plus", searchTerm: "+" },
+    { name: "board#with#hash", searchTerm: "#" },
+    { name: "Hello World!!!", searchTerm: "!" },
     { name: "a@@@@@@@@", searchTerm: "a@@" },
-    { name: "Hello World!!!", searchTerm: "Hello" },
+    { name: "completion 100% ready", searchTerm: "100%" },
+    { name: "board_with_underscore", searchTerm: "_" },
   ];
 
   itEE.each(searchSpecialCases)(
