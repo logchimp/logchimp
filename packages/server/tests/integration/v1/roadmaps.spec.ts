@@ -580,6 +580,49 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
   });
+
+  const searchSpecialCases = [
+    { name: "emoji roadmap 🚀", searchTerm: "emoji" },
+    { name: "emoji roadmap 🚀", searchTerm: "🚀" },
+    { name: "unicode बोर्ड", searchTerm: "बोर्ड" },
+    { name: "roadmap with spaces", searchTerm: "with spaces" },
+    { name: "roadmap+with+plus", searchTerm: "plus" },
+    { name: "roadmap#with#hash", searchTerm: "hash" },
+    { name: "a@@@@@@@@", searchTerm: "a@@" },
+    { name: "Hello World!!!", searchTerm: "Hello" },
+  ];
+
+  itEE.each(searchSpecialCases)(
+    "should find roadmap named '$name' when searching for '$searchTerm'",
+    async ({ name, searchTerm }) => {
+      const roadmap = await generateRoadmap({ name, display: true }, true);
+
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["roadmap:read"], {
+        roleName: "Roadmap Reader",
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/roadmaps/search/${encodeURIComponent(searchTerm)}`)
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const roadmaps = response.body.roadmaps;
+      expect(roadmaps.length).toBeGreaterThanOrEqual(1);
+
+      expect(roadmaps).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: roadmap.id,
+            name: roadmap.name,
+            url: roadmap.url,
+          }),
+        ]),
+      );
+    },
+  );
 });
 
 // Create new roadmaps
