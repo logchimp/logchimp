@@ -689,6 +689,36 @@ describeEE("GET /boards/search/:name", () => {
       );
     },
   );
+
+  itEE("should search board by URL", async () => {
+    const urlSuffix = faker.string.alphanumeric(8).toLowerCase();
+    const url = faker.string.alphanumeric(5).toLowerCase() + urlSuffix;
+    const board = await generateBoards(
+      {
+        url,
+      },
+      true,
+    );
+
+    const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["board:read"], {
+      roleName: "Board Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/boards/search/${encodeURIComponent(urlSuffix)}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const boards = response.body.boards;
+    expect(boards.length).toBe(1);
+
+    const board1 = boards[0];
+    expect(board1.name).toBe(board.name);
+    expect(board1.url).toBe(url);
+  });
 });
 
 // Create new boards
