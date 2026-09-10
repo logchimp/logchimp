@@ -98,7 +98,7 @@ const sanitiseURL = (value: string): string => {
 
   return value
     .trim()
-    .toLocaleLowerCase()
+    .toLowerCase()
     .replace(/^_+|\W+|[^\w]|\s/g, "-")
     .replace(/^-+|-+$/g, "");
 };
