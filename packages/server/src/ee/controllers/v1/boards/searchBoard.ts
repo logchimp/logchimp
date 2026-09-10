@@ -45,7 +45,16 @@ export async function searchBoard(
     .count("posts", { as: "post_count" })
     .leftJoin("posts", "boards.boardId", "posts.boardId")
     .from("boards")
-    .groupBy("boards.boardId");
+    .groupBy("boards.boardId")
+    .orderByRaw(
+      `CASE
+        WHEN lower(boards.name) = lower(?) THEN 0
+        WHEN boards.name ILIKE ? THEN 1
+        ELSE 2
+      END
+    `,
+      [escaped, `${escaped}%`],
+    );
 
   if (escaped) {
     query.where((builder) => {
