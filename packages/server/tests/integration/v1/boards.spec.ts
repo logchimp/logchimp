@@ -637,6 +637,49 @@ describeEE("GET /boards/search/:name", () => {
       ]),
     );
   });
+
+  const searchSpecialCases = [
+    { name: "emoji board 🚀", searchTerm: "emoji" },
+    { name: "emoji board 🚀", searchTerm: "🚀" },
+    { name: "unicode बोर्ड", searchTerm: "बोर्ड" },
+    { name: "board with spaces", searchTerm: "with spaces" },
+    { name: "board+with+plus", searchTerm: "plus" },
+    { name: "board#with#hash", searchTerm: "hash" },
+    { name: "a@@@@@@@@", searchTerm: "a@@" },
+    { name: "Hello World!!!", searchTerm: "Hello" },
+  ];
+
+  itEE.each(searchSpecialCases)(
+    "should find board named '$name' when searching for '$searchTerm'",
+    async ({ name, searchTerm }) => {
+      const board = await generateBoards({ name, display: true }, true);
+
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["board:read"], {
+        roleName: "Board Reader",
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/boards/search/${encodeURIComponent(searchTerm)}`)
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const boards = response.body.boards;
+      expect(boards.length).toBeGreaterThanOrEqual(1);
+
+      expect(boards).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            boardId: board.boardId,
+            name: board.name,
+            url: board.url,
+          }),
+        ]),
+      );
+    },
+  );
 });
 
 // Create new boards
