@@ -1093,6 +1093,31 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(responseBoard.view_voters).toBe(newBoard.view_voters);
     expect(responseBoard.display).toBe(newBoard.display);
   });
+
+  itEE("should trim leading dashes from the updated board url", async () => {
+    const base = faker.string.alphanumeric(8).toLowerCase();
+    const board = await generateBoards({}, true);
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+        name: board.name,
+        url: `---${base}`,
+        color: board.color,
+        view_voters: board.view_voters,
+        display: board.display,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.board.url).toBe(base);
+  });
 });
 
 // Delete boards by id
