@@ -48,12 +48,13 @@ export async function searchBoard(
     .groupBy("boards.boardId")
     .orderByRaw(
       `CASE
-        WHEN lower(boards.name) = lower(?) THEN 0
-        WHEN boards.name ILIKE ? THEN 1
+        WHEN lower(boards.name) = lower(?)
+          OR lower(boards.url) = lower(?) THEN 0
+        WHEN boards.name ILIKE ?
+          OR boards.url ILIKE ? THEN 1
         ELSE 2
-      END
-    `,
-      [name, `${escaped}%`],
+      END`,
+      [name, name, `${escaped}%`, `${escaped}%`],
     );
 
   if (escaped) {
