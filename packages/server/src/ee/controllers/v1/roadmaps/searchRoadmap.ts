@@ -33,7 +33,17 @@ export async function searchRoadmap(
 
   const escaped = name.replace(/[%_]/g, "\\$&");
 
-  const query = database<IRoadmapPrivate>("roadmaps").select();
+  const query = database<IRoadmapPrivate>("roadmaps")
+    .select()
+    .orderByRaw(
+      `CASE
+        WHEN lower(name) = lower(?) THEN 0
+        WHEN name ILIKE ? THEN 1
+        ELSE 2
+      END
+    `,
+      [escaped, `${escaped}%`],
+    );
 
   if (escaped) {
     query.where((builder) => {
