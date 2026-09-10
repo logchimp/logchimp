@@ -685,8 +685,6 @@ describeEE("POST /api/v1/roadmaps", () => {
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(201);
 
-        console.log(res.body);
-
         const roadmap = res.body.roadmap;
         expect(roadmap.name).toBe(expected);
       },
