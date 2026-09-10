@@ -30,7 +30,7 @@ export async function searchBoard(
     return;
   }
 
-  const escaped = name.replace(/[%_]/g, "\\$&");
+  const escaped = name.replace(/[\\%_]/g, "\\$&");
 
   const query = database
     .select(
