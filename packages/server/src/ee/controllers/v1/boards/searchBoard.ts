@@ -53,7 +53,7 @@ export async function searchBoard(
         ELSE 2
       END
     `,
-      [escaped, `${escaped}%`],
+      [name, `${escaped}%`],
     );
 
   if (escaped) {
