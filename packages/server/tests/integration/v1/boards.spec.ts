@@ -653,6 +653,10 @@ describeEE("GET /boards/search/:name", () => {
     "should find board named '$name' when searching for '$searchTerm'",
     async ({ name, searchTerm }) => {
       const board = await generateBoards({ name, display: true }, true);
+      const nonMatchingBoard = await generateBoards(
+        { name: "unrelated", display: true },
+        true,
+      );
 
       const { user: authUser } = await createUser();
       await createRoleWithPermissions(authUser.userId, ["board:read"], {
@@ -668,6 +672,9 @@ describeEE("GET /boards/search/:name", () => {
 
       const boards = response.body.boards;
       expect(boards.length).toBeGreaterThanOrEqual(1);
+      expect(boards.map((b: IBoardPrivate) => b.boardId)).not.toContain(
+        nonMatchingBoard.boardId,
+      );
 
       expect(boards).toEqual(
         expect.arrayContaining([
