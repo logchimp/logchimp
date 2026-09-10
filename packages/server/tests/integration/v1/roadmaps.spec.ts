@@ -1,8 +1,9 @@
-import { it, expect, beforeAll } from "vitest";
+import { beforeAll, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
 import type {
+  IAuthLoginResponseBody,
   IGetRoadmapByUrlResponseBody,
   IRoadmapPrivate,
   IUpdateRoadmapRequestBody,
@@ -359,7 +360,7 @@ describeEE("GET /api/v1/roadmaps", () => {
 
 // Get roadmaps by URL
 describeEE("GET /api/v1/roadmaps/:url", () => {
-  [
+  const testCasesArr = [
     "ROADMAP_NOT_FOUND",
     "undefined",
     "null",
@@ -369,14 +370,22 @@ describeEE("GET /api/v1/roadmaps/:url", () => {
     "roadmap+with+plus",
     "roadmap#with#hash",
     "456575634",
-  ].map((name) =>
-    itEE(`should throw error "ROADMAP_NOT_FOUND" for '${name}'`, async () => {
+    "a@@@@@@@@",
+    "a".repeat(5000), // 5000 characters
+    "बोर्ड",
+    "...",
+    "😀️😇️",
+  ];
+
+  itEE.each(testCasesArr)(
+    `should throw error "ROADMAP_NOT_FOUND" for '%s'`,
+    async (name) => {
       const res = await supertest(app).get(`/api/v1/roadmaps/${name}`);
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(404);
       expect(res.body.code).toBe("ROADMAP_NOT_FOUND");
-    }),
+    },
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
@@ -463,26 +472,35 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  ["ROADMAP_NOT_FOUND", "undefined", "null", null, undefined, "456575634"].map(
-    (name) =>
-      itEE(`should get 0 search results for "${name}" roadmaps`, async () => {
-        const { user } = await createUser({
-          isVerified: true,
-        });
-        await createRoleWithPermissions(user.userId, ["roadmap:read"], {
-          roleName: "Roadmap Reader",
-        });
+  const zeroSearchResultsArr = [
+    "ROADMAP_NOT_FOUND",
+    "undefined",
+    "null",
+    null,
+    undefined,
+    "456575634",
+  ];
 
-        const response = await supertest(app)
-          .get(`/api/v1/roadmaps/search/${name}`)
-          .set("Authorization", `Bearer ${user.authToken}`);
+  itEE.each(zeroSearchResultsArr)(
+    `should get 0 search results for "%s" roadmaps`,
+    async (name) => {
+      const { user } = await createUser({
+        isVerified: true,
+      });
+      await createRoleWithPermissions(user.userId, ["roadmap:read"], {
+        roleName: "Roadmap Reader",
+      });
 
-        expect(response.body.roadmaps).toStrictEqual([]);
-        expect(response.body.roadmaps).toHaveLength(0);
+      const response = await supertest(app)
+        .get(`/api/v1/roadmaps/search/${name}`)
+        .set("Authorization", `Bearer ${user.authToken}`);
 
-        expect(response.headers["content-type"]).toContain("application/json");
-        expect(response.status).toBe(200);
-      }),
+      expect(response.body.roadmaps).toStrictEqual([]);
+      expect(response.body.roadmaps).toHaveLength(0);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+    },
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
@@ -616,6 +634,78 @@ describeEE("POST /api/v1/roadmaps", () => {
     expect(roadmap.index).toBeDefined();
     expect(roadmap.created_at).toBeDefined();
   });
+
+  describeEE("", () => {
+    let createUserResponse: IAuthLoginResponseBody | undefined;
+    beforeAll(async () => {
+      createUserResponse = await createUser({
+        isVerified: true,
+      });
+      await createRoleWithPermissions(
+        createUserResponse.user.userId,
+        ["roadmap:create"],
+        {
+          roleName: "Roadmap Creator",
+        },
+      );
+    });
+
+    // --- line break ---
+
+    const testCasesArr = [
+      { input: "feature requests", expected: "feature requests" },
+      { input: "", expected: "new roadmap" },
+      { input: "undefined", expected: "undefined" },
+      { input: "null", expected: "null" },
+      { input: null, expected: "new roadmap" },
+      { input: undefined, expected: "new roadmap" },
+      { input: "456575634", expected: "456575634" },
+      {
+        input: "roadmap name with spaces",
+        expected: "roadmap name with spaces",
+      },
+      { input: "roadmap+with+plus", expected: "roadmap+with+plus" },
+      { input: "roadmap#with#hash", expected: "roadmap#with#hash" },
+      { input: "a@@@@@@@@", expected: "a@@@@@@@@" },
+      { input: "बोर्ड", expected: "बोर्ड" },
+      { input: ".", expected: "." },
+      { input: "...", expected: "..." },
+      { input: "../...", expected: "../..." },
+      { input: "😀️😈️", expected: "😀️😈️" },
+    ];
+
+    itEE.each(testCasesArr)(
+      `should create with name: '$input'`,
+      async ({ input, expected }) => {
+        const res = await supertest(app)
+          .post("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+          .send({ name: input });
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(201);
+
+        console.log(res.body);
+
+        const roadmap = res.body.roadmap;
+        expect(roadmap.name).toBe(expected);
+      },
+    );
+
+    itEE("should throw server error on long roadmap name", async () => {
+      const res = await supertest(app)
+        .post("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+        .send({
+          name: "a".repeat(5000), // 5000 characters
+          display: true,
+        });
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(500);
+      expect(res.body.code).toBe("SERVER_ERROR");
+    });
+  });
 });
 
 // Update roadmaps
@@ -669,11 +759,36 @@ describeEE("PATCH /api/v1/roadmaps", () => {
   describeEE("Validation Errors", () => {
     const testCases = [
       {
+        // testName:
+        testName: "ROADMAP_NAME_MISSING on empty name",
+        omitField: null,
+        overrideFields: {
+          name: "",
+        },
+        expectedError: {
+          message: "Roadmap name missing",
+          code: "ROADMAP_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
         testName: "ROADMAP_NAME_MISSING",
         omitField: "name",
         expectedError: {
           message: "Roadmap name missing",
           code: "ROADMAP_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "ROADMAP_URL_MISSING on empty url",
+        omitField: null,
+        overrideFields: {
+          url: "",
+        },
+        expectedError: {
+          message: "Roadmap url cannot be empty",
+          code: "ROADMAP_URL_MISSING",
         },
         expectedStatus: 400,
       },
