@@ -649,7 +649,7 @@ describeEE("GET /boards/search/:name", () => {
     { name: "a@@@@@@@@", searchTerm: "a@@" },
     { name: "completion 100% ready", searchTerm: "100%" },
     { name: "board_with_underscore", searchTerm: "_" },
-    { name: String.raw`board\\with\\backslash`, searchTerm: String.raw`\\` },
+    { name: "board\\with\\backslash", searchTerm: "\\" },
   ];
 
   itEE.each(searchSpecialCases)(
