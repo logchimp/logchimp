@@ -1,5 +1,6 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { defineStore } from "pinia";
+import { useDebounceFn } from "@vueuse/core";
 import type { IApiErrorResponse, IPost } from "@logchimp/types";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
@@ -10,13 +11,12 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
+  const searchQuery = ref<string | undefined>();
   const endCursor = ref<string | undefined>();
   const hasNextPage = ref<boolean>(false);
   const errorCode = ref<unknown>(undefined);
 
   async function fetchPosts() {
-    if (state.value === "LOADING" || state.value === "COMPLETED") return;
-
     state.value = "LOADING";
     errorCode.value = undefined;
 
@@ -24,7 +24,9 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
 
     try {
       const response = await postsAPI.GetPosts(
-        {},
+        {
+          query: searchQuery.value,
+        },
         {
           after: endCursor.value,
           created: "DESC",
@@ -79,9 +81,27 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
     posts.value.splice(postIdx, 1);
   }
 
+  const debounceFetchPosts = useDebounceFn(async () => {
+    state.value = "IDLE";
+    endCursor.value = undefined;
+    hasNextPage.value = false;
+    errorCode.value = undefined;
+    posts.value = [];
+
+    await fetchPosts();
+  }, 800);
+
+  watch(
+    () => searchQuery.value,
+    async () => {
+      await debounceFetchPosts();
+    },
+  );
+
   return {
     posts,
     state,
+    searchQuery,
     error: errorCode,
 
     fetchPosts,

@@ -22,6 +22,12 @@
       resource-type="posts"
     />
     <template v-else>
+      <l-text
+        v-model="dashboardPosts.searchQuery"
+        label="Search posts"
+        placeholder="Search posts by title"
+      />
+
       <post-item
         v-for="post in dashboardPosts.posts"
         :key="post.postId"
@@ -55,6 +61,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import Button from "../../../components/ui/Button.vue";
 import LicenseValidationFailed from "../../../components/LicenseValidationFailed.vue";
+import LText from "../../../components/ui/input/LText.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();

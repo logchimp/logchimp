@@ -43,6 +43,7 @@ export class Posts extends APIService {
     const url = `/v1/posts/get?${searchParams.toString()}`;
 
     return this.post(url.toString(), {
+      query: body.query,
       page: body.page,
       boardId: body.boardId,
       roadmapId: body.roadmapId,
