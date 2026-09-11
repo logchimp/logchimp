@@ -633,6 +633,36 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
       );
     },
   );
+
+  itEE("should search roadmap by URL", async () => {
+    const urlSuffix = faker.string.alphanumeric(8).toLowerCase();
+    const url = faker.string.alphanumeric(5).toLowerCase() + urlSuffix;
+    const roadmap = await generateRoadmap(
+      {
+        url,
+      },
+      true,
+    );
+
+    const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["roadmap:read"], {
+      roleName: "Roadmap Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/roadmaps/search/${encodeURIComponent(urlSuffix)}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const roadmaps = response.body.roadmaps;
+    expect(roadmaps.length).toBe(1);
+
+    const roadmap1 = roadmaps[0];
+    expect(roadmap1.name).toBe(roadmap.name);
+    expect(roadmap1.url).toBe(url);
+  });
 });
 
 // Create new roadmaps
