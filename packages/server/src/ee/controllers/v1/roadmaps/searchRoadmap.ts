@@ -37,12 +37,13 @@ export async function searchRoadmap(
     .select()
     .orderByRaw(
       `CASE
-        WHEN lower(name) = lower(?) THEN 0
-        WHEN name ILIKE ? THEN 1
+        WHEN lower(name) = lower(?)
+          OR lower(url) = lower(?) THEN 0
+        WHEN name ILIKE ?
+          OR url ILIKE ? THEN 1
         ELSE 2
-      END
-    `,
-      [escaped, `${escaped}%`],
+      END`,
+      [name, name, `${escaped}%`, `${escaped}%`],
     );
 
   if (escaped) {
