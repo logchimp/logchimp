@@ -134,7 +134,7 @@ export async function filterPost(
   // @ts-expect-error
   const userId: string | undefined = req.user?.userId;
 
-  const escapedQuery = searchQuery.replace(/[\\%_]/g, "\\$&");
+  const escapedQuery = (searchQuery || "").replace(/[\\%_]/g, "\\$&");
 
   try {
     const response = await buildPostsQuery({
