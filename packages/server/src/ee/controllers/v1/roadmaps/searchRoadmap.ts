@@ -31,7 +31,7 @@ export async function searchRoadmap(
     return;
   }
 
-  const escaped = name.replace(/[%_]/g, "\\$&");
+  const escaped = name.replace(/[\\%_]/g, "\\$&");
 
   const query = database<IRoadmapPrivate>("roadmaps")
     .select()
