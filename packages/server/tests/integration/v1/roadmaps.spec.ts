@@ -586,10 +586,13 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     { name: "emoji roadmap 🚀", searchTerm: "🚀" },
     { name: "unicode बोर्ड", searchTerm: "बोर्ड" },
     { name: "roadmap with spaces", searchTerm: "with spaces" },
-    { name: "roadmap+with+plus", searchTerm: "plus" },
-    { name: "roadmap#with#hash", searchTerm: "hash" },
+    { name: "roadmap+with+plus", searchTerm: "+" },
+    { name: "roadmap#with#hash", searchTerm: "#" },
     { name: "a@@@@@@@@", searchTerm: "a@@" },
-    { name: "Hello World!!!", searchTerm: "Hello" },
+    { name: "Hello World!!!", searchTerm: "!!!" },
+    { name: "completion 100% ready", searchTerm: "100%" },
+    { name: "roadmap_with_underscore", searchTerm: "_" },
+    { name: String.raw`roadmap\\with\\backslash`, searchTerm: String.raw`\\` },
   ];
 
   itEE.each(searchSpecialCases)(
