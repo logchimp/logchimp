@@ -476,9 +476,11 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     "ROADMAP_NOT_FOUND",
     "undefined",
     "null",
-    null,
-    undefined,
     "456575634",
+    "roadmap name with spaces",
+    "roadmap+with+plus",
+    "roadmap#with#hash",
+    "a@@@@@@@@",
   ];
 
   itEE.each(zeroSearchResultsArr)(
@@ -491,8 +493,13 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
         roleName: "Roadmap Reader",
       });
 
+      const i =
+        name === null || name === undefined || name === ""
+          ? name
+          : `${name}-${faker.string.alphanumeric(8)}`;
+
       const response = await supertest(app)
-        .get(`/api/v1/roadmaps/search/${name}`)
+        .get(`/api/v1/roadmaps/search/${encodeURIComponent(i)}`)
         .set("Authorization", `Bearer ${user.authToken}`);
 
       expect(response.body.roadmaps).toStrictEqual([]);
@@ -579,6 +586,89 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
+  });
+
+  const searchSpecialCases = [
+    { name: "emoji roadmap 🚀", searchTerm: "emoji" },
+    { name: "emoji roadmap 🚀", searchTerm: "🚀" },
+    { name: "unicode बोर्ड", searchTerm: "बोर्ड" },
+    { name: "roadmap with spaces", searchTerm: "with spaces" },
+    { name: "roadmap+with+plus", searchTerm: "+" },
+    { name: "roadmap#with#hash", searchTerm: "#" },
+    { name: "a@@@@@@@@", searchTerm: "a@@" },
+    { name: "Hello World!!!", searchTerm: "!!!" },
+    { name: "completion 100% ready", searchTerm: "100%" },
+    { name: "roadmap_with_underscore", searchTerm: "_" },
+    { name: "roadmap\\with\\backslash", searchTerm: "\\" },
+  ];
+
+  itEE.each(searchSpecialCases)(
+    "should find roadmap named '$name' when searching for '$searchTerm'",
+    async ({ name, searchTerm }) => {
+      const roadmap = await generateRoadmap({ name, display: true }, true);
+      const nonMatchingRoadmap = await generateRoadmap(
+        { name: "unrelated", display: true },
+        true,
+      );
+
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["roadmap:read"], {
+        roleName: "Roadmap Reader",
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/roadmaps/search/${encodeURIComponent(searchTerm)}`)
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const roadmaps = response.body.roadmaps;
+      expect(roadmaps.length).toBeGreaterThanOrEqual(1);
+      expect(roadmaps.map((r: IRoadmapPrivate) => r.id)).not.toContain(
+        nonMatchingRoadmap.id,
+      );
+
+      expect(roadmaps).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: roadmap.id,
+            name: roadmap.name,
+            url: roadmap.url,
+          }),
+        ]),
+      );
+    },
+  );
+
+  itEE("should search roadmap by URL", async () => {
+    const urlSuffix = faker.string.alphanumeric(8).toLowerCase();
+    const url = faker.string.alphanumeric(5).toLowerCase() + urlSuffix;
+    const roadmap = await generateRoadmap(
+      {
+        url,
+      },
+      true,
+    );
+
+    const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["roadmap:read"], {
+      roleName: "Roadmap Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/roadmaps/search/${encodeURIComponent(urlSuffix)}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const roadmaps = response.body.roadmaps;
+    expect(roadmaps.length).toBe(1);
+
+    const roadmap1 = roadmaps[0];
+    expect(roadmap1.name).toBe(roadmap.name);
+    expect(roadmap1.url).toBe(url);
   });
 });
 
@@ -677,16 +767,23 @@ describeEE("POST /api/v1/roadmaps", () => {
     itEE.each(testCasesArr)(
       `should create with name: '$input'`,
       async ({ input, expected }) => {
+        const unique = `${input ?? "empty"}-${faker.string.alphanumeric(8)}`;
+        const i =
+          input === null || input === undefined || input === ""
+            ? input
+            : unique;
+        const e = expected === "new roadmap" ? "new roadmap" : unique;
+
         const res = await supertest(app)
           .post("/api/v1/roadmaps")
           .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-          .send({ name: input });
+          .send({ name: i });
 
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(201);
 
         const roadmap = res.body.roadmap;
-        expect(roadmap.name).toBe(expected);
+        expect(roadmap.name).toBe(e);
       },
     );
 

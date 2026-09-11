@@ -18,7 +18,7 @@ export async function searchRoadmap(
   req: Request<ISearchRoadmapRequestParam>,
   res: Response<ResponseBody>,
 ) {
-  const { name } = req.params;
+  const name = (req.params?.name || "").trim();
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
@@ -31,10 +31,31 @@ export async function searchRoadmap(
     return;
   }
 
+  const escaped = name.replace(/[\\%_]/g, "\\$&");
+
+  const query = database<IRoadmapPrivate>("roadmaps")
+    .select()
+    .orderByRaw(
+      `CASE
+        WHEN lower(name) = lower(?)
+          OR lower(url) = lower(?) THEN 0
+        WHEN name ILIKE ?
+          OR url ILIKE ? THEN 1
+        ELSE 2
+      END`,
+      [name, name, `${escaped}%`, `${escaped}%`],
+    );
+
+  if (escaped) {
+    query.where((builder) => {
+      builder
+        .where("name", "ILIKE", `%${escaped}%`)
+        .orWhere("url", "ILIKE", `%${escaped}%`);
+    });
+  }
+
   try {
-    const roadmaps = await database<IRoadmapPrivate>("roadmaps")
-      .select()
-      .where("name", "ILIKE", `${name}%`);
+    const roadmaps = await query;
 
     res.status(200).send({
       roadmaps,
