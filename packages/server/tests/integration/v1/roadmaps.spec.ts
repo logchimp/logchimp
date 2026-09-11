@@ -596,6 +596,10 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     "should find roadmap named '$name' when searching for '$searchTerm'",
     async ({ name, searchTerm }) => {
       const roadmap = await generateRoadmap({ name, display: true }, true);
+      const nonMatchingRoadmap = await generateRoadmap(
+        { name: "unrelated", display: true },
+        true,
+      );
 
       const { user: authUser } = await createUser();
       await createRoleWithPermissions(authUser.userId, ["roadmap:read"], {
@@ -611,6 +615,9 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
 
       const roadmaps = response.body.roadmaps;
       expect(roadmaps.length).toBeGreaterThanOrEqual(1);
+      expect(roadmaps.map((r: IRoadmapPrivate) => r.id)).not.toContain(
+        nonMatchingRoadmap.id,
+      );
 
       expect(roadmaps).toEqual(
         expect.arrayContaining([
