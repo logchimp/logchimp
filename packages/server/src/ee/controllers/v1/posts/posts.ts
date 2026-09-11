@@ -97,7 +97,7 @@ export async function filterPost(
     return;
   }
 
-  const { page, limit, boardId, roadmapId } = body.output;
+  const { page, limit, boardId, roadmapId, query: searchQuery } = body.output;
   const { first: _first, after, created } = query.output;
 
   const first = page ? (limit ?? _first) : _first;
@@ -112,6 +112,8 @@ export async function filterPost(
   // @ts-expect-error
   const userId: string | undefined = req.user?.userId;
 
+  const escapedQuery = (searchQuery || "").replace(/[\\%_]/g, "\\$&");
+
   try {
     const response = await buildPostsQuery({
       first,
@@ -120,6 +122,7 @@ export async function filterPost(
       created,
       boardId: boardId || [],
       roadmapId,
+      query: escapedQuery,
     });
 
     if (page && response.length === 0) {
@@ -196,6 +199,7 @@ export async function filterPost(
     if (!page) {
       const metadataResults = await getPostMetadata({
         after,
+        query: escapedQuery,
         boardId,
         roadmapId,
         created,
@@ -254,6 +258,7 @@ async function buildPostsQuery({
   created,
   boardId,
   roadmapId,
+  query = "",
 }: {
   first: number;
   page?: number;
@@ -261,6 +266,7 @@ async function buildPostsQuery({
   created: "ASC" | "DESC";
   boardId: string[];
   roadmapId?: string | null;
+  query?: string;
 }) {
   let queryBuilder = database("posts").select(
     "postId",
@@ -274,9 +280,10 @@ async function buildPostsQuery({
     "updatedAt",
   );
 
-  // console.log("build posts query:");
   // Apply filters
-  // console.log("board ID:", boardId);
+  if (query.length > 0) {
+    queryBuilder = queryBuilder.where("title", "ILIKE", `%${query}%`);
+  }
   if (boardId.length > 0) {
     queryBuilder = queryBuilder.whereIn("boardId", boardId);
   }
@@ -328,11 +335,13 @@ async function buildPostsQuery({
 
 async function getPostMetadata({
   after,
+  query = "",
   boardId = [] as string[],
   roadmapId,
   created = "DESC",
 }: {
   after?: string;
+  query?: string;
   boardId?: string[];
   roadmapId?: string | null;
   created?: "ASC" | "DESC";
@@ -341,6 +350,9 @@ async function getPostMetadata({
     // Total count
     const totalCountQuery = trx("posts").count("* as count");
 
+    if (query.length > 0) {
+      totalCountQuery.where("title", "ILIKE", `%${query}%`);
+    }
     if (boardId.length > 0) {
       totalCountQuery.whereIn("boardId", boardId);
     }
@@ -353,6 +365,9 @@ async function getPostMetadata({
     // Remaining results after cursor
     let remainingQuery = trx("posts").as("next");
 
+    if (query.length > 0) {
+      remainingQuery = remainingQuery.where("title", "ILIKE", `%${query}%`);
+    }
     if (boardId.length > 0) {
       remainingQuery = remainingQuery.whereIn("boardId", boardId);
     }

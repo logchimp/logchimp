@@ -37,6 +37,7 @@ export const querySchema = v.object({
 });
 
 export const bodySchema = v.object({
+  query: v.optional(v.pipe(v.string(), v.trim(), v.toLowerCase())),
   /**
    * @deprecated Use `first` and `after` instead.
    * For backward compatibility to support offset pagination.
@@ -119,7 +120,7 @@ export async function filterPost(
     });
   }
 
-  const { page, limit } = body.output;
+  const { page, limit, query: searchQuery } = body.output;
   const { first: _first, after, created } = query.output;
 
   const first = page ? (limit ?? _first) : _first;
@@ -133,12 +134,15 @@ export async function filterPost(
   // @ts-expect-error
   const userId: string | undefined = req.user?.userId;
 
+  const escapedQuery = searchQuery.replace(/[\\%_]/g, "\\$&");
+
   try {
     const response = await buildPostsQuery({
       first,
       page,
       after,
       created,
+      query: escapedQuery,
     });
 
     if (page && response.length === 0) {
@@ -257,11 +261,13 @@ async function buildPostsQuery({
   page,
   after,
   created,
+  query = "",
 }: {
   first: number;
   page?: number;
   after?: string;
   created: "ASC" | "DESC";
+  query?: string;
 }) {
   let queryBuilder = database("posts").select(
     "postId",
@@ -272,6 +278,11 @@ async function buildPostsQuery({
     "createdAt",
     "updatedAt",
   );
+
+  // Apply filters
+  if (query.length > 0) {
+    queryBuilder = queryBuilder.where("title", "ILIKE", `%${query}%`);
+  }
 
   if (page) {
     queryBuilder = queryBuilder.offset(first * (page - 1));
@@ -317,19 +328,29 @@ async function buildPostsQuery({
 
 async function getPostMetadata({
   after,
+  query = "",
   created = "DESC",
 }: {
   after?: string;
+  query?: string;
   created?: "ASC" | "DESC";
 }) {
   return database.transaction(async (trx) => {
     // Total count
     const totalCountQuery = trx("posts").count("* as count");
 
+    if (query.length > 0) {
+      totalCountQuery.where("title", "ILIKE", `%${query}%`);
+    }
+
     const totalCountResult = await totalCountQuery.first();
 
     // Remaining results after cursor
     let remainingQuery = trx("posts").as("next");
+
+    if (query.length > 0) {
+      remainingQuery = remainingQuery.where("title", "ILIKE", `%${query}%`);
+    }
 
     if (after) {
       const cursorPost = await trx("posts")
