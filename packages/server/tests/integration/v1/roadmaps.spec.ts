@@ -898,6 +898,60 @@ describeEE("PATCH /api/v1/roadmaps", () => {
     );
   });
 
+  function makeSlugCase(input: string, expected: string) {
+    const base = faker.string.alphanumeric(8).toLowerCase();
+    const exp = expected === "" ? base : `${base}-${expected}`;
+    return {
+      url: `${base} ${input}`,
+      expected: exp,
+    };
+  }
+
+  const slugUpdateCases = [
+    makeSlugCase("feature-requests", "feature-requests"),
+    makeSlugCase("Feature Requests", "feature-requests"),
+    makeSlugCase("roadmap name with spaces", "roadmap-name-with-spaces"),
+    makeSlugCase("roadmap+with+plus", "roadmap-with-plus"),
+    makeSlugCase("roadmap#with#hash", "roadmap-with-hash"),
+    makeSlugCase("a@@@@@@@@", "a"),
+    makeSlugCase("बोर्ड", ""),
+    makeSlugCase("😀️😈️", ""),
+    makeSlugCase("...", ""),
+    makeSlugCase("../...", ""),
+    makeSlugCase("Hello World!!!", "hello-world"),
+    makeSlugCase("  multiple   spaces  ", "multiple-spaces"),
+    makeSlugCase("UPPERCASE-SLUG", "uppercase-slug"),
+  ];
+
+  itEE.each(slugUpdateCases)(
+    "should update roadmap url to '$url' → '$expected'",
+    async ({ url, expected }) => {
+      const roadmap = await generateRoadmap({}, true);
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+        roleName: "Roadmap Patcher",
+      });
+
+      const response = await supertest(app)
+        .patch("/api/v1/roadmaps")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          id: roadmap.id,
+          name: roadmap.name,
+          url,
+          color: roadmap.color,
+          display: roadmap.display,
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const updated = response.body.roadmap;
+      expect(updated.id).toBe(roadmap.id);
+      expect(updated.url).toBe(expected);
+    },
+  );
+
   itEE("should update roadmap", async () => {
     const { user } = await createUser({
       isVerified: true,
@@ -929,6 +983,30 @@ describeEE("PATCH /api/v1/roadmaps", () => {
     expect(roadmap.display).toBe(r1.display);
     expect(roadmap.index).toBe(r1.index);
     expect(roadmap.created_at).toBe(r1.created_at);
+  });
+
+  itEE("should trim leading dashes from the updated roadmap url", async () => {
+    const base = faker.string.alphanumeric(8).toLowerCase();
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+      roleName: "roadmap Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        id: roadmap.id,
+        name: roadmap.name,
+        url: `---${base}`,
+        color: roadmap.color,
+        display: roadmap.display,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.roadmap.url).toBe(base);
   });
 });
 
