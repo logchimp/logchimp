@@ -592,7 +592,7 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     { name: "Hello World!!!", searchTerm: "!!!" },
     { name: "completion 100% ready", searchTerm: "100%" },
     { name: "roadmap_with_underscore", searchTerm: "_" },
-    { name: String.raw`roadmap\\with\\backslash`, searchTerm: String.raw`\\` },
+    { name: "roadmap\\with\\backslash", searchTerm: "\\" },
   ];
 
   itEE.each(searchSpecialCases)(
