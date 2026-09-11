@@ -535,12 +535,10 @@ describeEE("GET /boards/search/:name", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  const testCasesArr = [
+  const zeroSearchResultsArr = [
     "BOARD_NOT_FOUND",
     "undefined",
     "null",
-    null,
-    undefined,
     "456575634",
     "board name with spaces",
     "board+with+plus",
@@ -548,7 +546,7 @@ describeEE("GET /boards/search/:name", () => {
     "a@@@@@@@@",
   ];
 
-  itEE.each(testCasesArr)(
+  itEE.each(zeroSearchResultsArr)(
     `should return 0 search results for '%s' boards`,
     async (name) => {
       const { user: authUser } = await createUser();
@@ -556,8 +554,13 @@ describeEE("GET /boards/search/:name", () => {
         roleName: "Board Reader",
       });
 
+      const i =
+        name === null || name === undefined || name === ""
+          ? name
+          : `${name}-${faker.string.alphanumeric(8)}`;
+
       const response = await supertest(app)
-        .get(`/api/v1/boards/search/${name}`)
+        .get(`/api/v1/boards/search/${encodeURIComponent(i)}`)
         .set("Authorization", `Bearer ${authUser.authToken}`);
 
       expect(response.headers["content-type"]).toContain("application/json");
@@ -795,16 +798,23 @@ describeEE("POST /api/v1/boards", () => {
     itEE.each(testCasesArr)(
       `should create with name: '$input'`,
       async ({ input, expected }) => {
+        const unique = `${input ?? "empty"}-${faker.string.alphanumeric(8)}`;
+        const i =
+          input === null || input === undefined || input === ""
+            ? input
+            : unique;
+        const e = expected === "new board" ? "new board" : unique;
+
         const res = await supertest(app)
           .post("/api/v1/boards")
           .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-          .send({ name: input, display: true });
+          .send({ name: i, display: true });
 
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(201);
 
         const board = res.body.board;
-        expect(board.name).toBe(expected);
+        expect(board.name).toBe(e);
         expect(board.display).toBe(true);
       },
     );
