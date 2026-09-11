@@ -206,6 +206,7 @@ export async function filterPost(
 
     if (!page) {
       const metadataResults = await getPostMetadata({
+        query: escapedQuery,
         after,
         created,
       });
