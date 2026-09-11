@@ -1,6 +1,7 @@
-import { it, expect, beforeAll } from "vitest";
+import { beforeAll, expect, it } from "vitest";
 import supertest from "supertest";
 import type {
+  IAuthLoginResponseBody,
   IBoardDetail,
   IBoardPrivate,
   IBoardUpdateRequestBody,
@@ -11,8 +12,8 @@ import { faker } from "@faker-js/faker";
 import app from "../../../src/app";
 import database from "../../../src/database";
 import {
-  type BoardInsertRecord,
   board as generateBoards,
+  type BoardInsertRecord,
 } from "../../utils/generators";
 import { createUser } from "../../utils/seed/user";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
@@ -418,7 +419,7 @@ describeEE("GET /api/v1/boards", () => {
 
 // Get boards by URL
 describeEE("GET /boards/:url", () => {
-  [
+  const testCasesArr = [
     "BOARD_NOT_FOUND",
     "undefined",
     "null",
@@ -429,13 +430,20 @@ describeEE("GET /boards/:url", () => {
     "board+with+plus",
     "board#with#hash",
     "a@@@@@@@@",
-  ].map((name) =>
-    itEE(`should throw error "BOARD_NOT_FOUND" for '${name}'`, async () => {
+    "a".repeat(5000), // 5000 characters
+    "बोर्ड",
+    "...",
+    "😀️😇️",
+  ];
+
+  itEE.each(testCasesArr)(
+    "should throw error \"BOARD_NOT_FOUND\" for '%s'",
+    async (name) => {
       const res = await supertest(app).get(`/api/v1/boards/${name}`);
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(404);
       expect(res.body.code).toBe("BOARD_NOT_FOUND");
-    }),
+    },
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
@@ -527,7 +535,7 @@ describeEE("GET /boards/search/:name", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  [
+  const testCasesArr = [
     "BOARD_NOT_FOUND",
     "undefined",
     "null",
@@ -538,8 +546,11 @@ describeEE("GET /boards/search/:name", () => {
     "board+with+plus",
     "board#with#hash",
     "a@@@@@@@@",
-  ].map((name) =>
-    itEE(`should return 0 search results for '${name}' boards`, async () => {
+  ];
+
+  itEE.each(testCasesArr)(
+    `should return 0 search results for '%s' boards`,
+    async (name) => {
       const { user: authUser } = await createUser();
       await createRoleWithPermissions(authUser.userId, ["board:read"], {
         roleName: "Board Reader",
@@ -552,7 +563,7 @@ describeEE("GET /boards/search/:name", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(200);
       expect(response.body.boards).toHaveLength(0);
-    }),
+    },
   );
 
   ["*&^(*&$%&*^&%&^%*"].map((name) =>
@@ -662,49 +673,72 @@ describeEE("POST /api/v1/boards", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  itEE("should create a board", async () => {
-    const board: BoardInsertRecord = await generateBoards({}, false);
-    const { user: authUser } = await createUser();
-
-    await createRoleWithPermissions(authUser.userId, ["board:create"], {
-      roleName: "Board Creator",
+  describeEE("", () => {
+    let createUserResponse: IAuthLoginResponseBody | undefined;
+    beforeAll(async () => {
+      createUserResponse = await createUser({
+        isVerified: true,
+      });
+      await createRoleWithPermissions(
+        createUserResponse.user.userId,
+        ["board:create"],
+        {
+          roleName: "Board Creator",
+        },
+      );
     });
 
-    const response = await supertest(app)
-      .post(`/api/v1/boards/`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        name: board.name,
-        display: board.display,
-      });
+    // --- line break ---
 
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(201);
-    const boardResponse = response.body.board;
-    expect(boardResponse.name).toBe(board.name);
-    expect(boardResponse.display).toBe(board.display);
-  });
+    const testCasesArr = [
+      { input: "feature requests", expected: "feature requests" },
+      { input: "", expected: "new board" },
+      { input: "undefined", expected: "undefined" },
+      { input: "null", expected: "null" },
+      { input: null, expected: "new board" },
+      { input: undefined, expected: "new board" },
+      { input: "456575634", expected: "456575634" },
+      { input: "board name with spaces", expected: "board name with spaces" },
+      { input: "board+with+plus", expected: "board+with+plus" },
+      { input: "board#with#hash", expected: "board#with#hash" },
+      { input: "a@@@@@@@@", expected: "a@@@@@@@@" },
+      { input: "बोर्ड", expected: "बोर्ड" },
+      { input: ".", expected: "." },
+      { input: "...", expected: "..." },
+      { input: "../...", expected: "../..." },
+      { input: "😀️😈️", expected: "😀️😈️" },
+    ];
 
-  itEE("should create a board without a name", async () => {
-    const { user: authUser } = await createUser();
-    const display = Math.random() >= 0.5;
+    itEE.each(testCasesArr)(
+      `should create with name: '$input'`,
+      async ({ input, expected }) => {
+        const res = await supertest(app)
+          .post("/api/v1/boards")
+          .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+          .send({ name: input, display: true });
 
-    await createRoleWithPermissions(authUser.userId, ["board:create"], {
-      roleName: "Board Creator",
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(201);
+
+        const board = res.body.board;
+        expect(board.name).toBe(expected);
+        expect(board.display).toBe(true);
+      },
+    );
+
+    itEE("should throw server error on long board name", async () => {
+      const res = await supertest(app)
+        .post("/api/v1/boards")
+        .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+        .send({
+          name: "a".repeat(5000), // 5000 characters
+          display: true,
+        });
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(500);
+      expect(res.body.code).toBe("SERVER_ERROR");
     });
-
-    const response = await supertest(app)
-      .post(`/api/v1/boards/`)
-      .set("Authorization", `Bearer ${authUser.authToken}`)
-      .send({
-        display,
-      });
-
-    expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.status).toBe(201);
-    const boardResponse = response.body.board;
-    expect(boardResponse.name).toBe("new board");
-    expect(boardResponse.display).toBe(display);
   });
 });
 
@@ -783,11 +817,35 @@ describeEE("PATCH /api/v1/boards", () => {
   describeEE("Validation Errors", () => {
     const testCases = [
       {
+        testName: "BOARD_NAME_MISSING on empty name",
+        omitField: null,
+        overrideFields: {
+          name: "",
+        },
+        expectedError: {
+          message: "Board name missing",
+          code: "BOARD_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
         testName: "BOARD_NAME_MISSING",
         omitField: "name",
         expectedError: {
           message: "Board name missing",
           code: "BOARD_NAME_MISSING",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "BOARD_URL_MISSING on empty url",
+        omitField: null,
+        overrideFields: {
+          url: "",
+        },
+        expectedError: {
+          message: "Board url cannot be empty",
+          code: "BOARD_URL_MISSING",
         },
         expectedStatus: 400,
       },
