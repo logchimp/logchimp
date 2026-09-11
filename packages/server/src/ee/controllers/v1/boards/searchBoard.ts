@@ -17,7 +17,7 @@ export async function searchBoard(
   req: Request<ISearchBoardRequestParams>,
   res: Response<ResponseBody>,
 ) {
-  const { name } = req.params;
+  const name = (req.params?.name || "").trim();
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
@@ -30,22 +30,43 @@ export async function searchBoard(
     return;
   }
 
+  const escaped = name.replace(/[\\%_]/g, "\\$&");
+
+  const query = database
+    .select(
+      "boards.boardId",
+      "boards.name",
+      "boards.color",
+      "boards.url",
+      "boards.display",
+      "boards.view_voters",
+      "boards.createdAt",
+    )
+    .count("posts", { as: "post_count" })
+    .leftJoin("posts", "boards.boardId", "posts.boardId")
+    .from("boards")
+    .groupBy("boards.boardId")
+    .orderByRaw(
+      `CASE
+        WHEN lower(boards.name) = lower(?)
+          OR lower(boards.url) = lower(?) THEN 0
+        WHEN boards.name ILIKE ?
+          OR boards.url ILIKE ? THEN 1
+        ELSE 2
+      END`,
+      [name, name, `${escaped}%`, `${escaped}%`],
+    );
+
+  if (escaped) {
+    query.where((builder) => {
+      builder
+        .where("boards.name", "ILIKE", `%${escaped}%`)
+        .orWhere("boards.url", "ILIKE", `%${escaped}%`);
+    });
+  }
+
   try {
-    const boards = await database
-      .select(
-        "boards.boardId",
-        "boards.name",
-        "boards.color",
-        "boards.url",
-        "boards.display",
-        "boards.view_voters",
-        "boards.createdAt",
-      )
-      .count("posts", { as: "post_count" })
-      .leftJoin("posts", "boards.boardId", "posts.boardId")
-      .from("boards")
-      .where("name", "ILIKE", `${name}%`)
-      .groupBy("boards.boardId");
+    const boards = await query;
 
     res.status(200).send({
       boards,

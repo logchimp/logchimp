@@ -535,12 +535,10 @@ describeEE("GET /boards/search/:name", () => {
     expect(response.body.code).toBe("NOT_ENOUGH_PERMISSION");
   });
 
-  const testCasesArr = [
+  const zeroSearchResultsArr = [
     "BOARD_NOT_FOUND",
     "undefined",
     "null",
-    null,
-    undefined,
     "456575634",
     "board name with spaces",
     "board+with+plus",
@@ -548,7 +546,7 @@ describeEE("GET /boards/search/:name", () => {
     "a@@@@@@@@",
   ];
 
-  itEE.each(testCasesArr)(
+  itEE.each(zeroSearchResultsArr)(
     `should return 0 search results for '%s' boards`,
     async (name) => {
       const { user: authUser } = await createUser();
@@ -556,8 +554,13 @@ describeEE("GET /boards/search/:name", () => {
         roleName: "Board Reader",
       });
 
+      const i =
+        name === null || name === undefined || name === ""
+          ? name
+          : `${name}-${faker.string.alphanumeric(8)}`;
+
       const response = await supertest(app)
-        .get(`/api/v1/boards/search/${name}`)
+        .get(`/api/v1/boards/search/${encodeURIComponent(i)}`)
         .set("Authorization", `Bearer ${authUser.authToken}`);
 
       expect(response.headers["content-type"]).toContain("application/json");
@@ -637,6 +640,89 @@ describeEE("GET /boards/search/:name", () => {
       ]),
     );
   });
+
+  const searchSpecialCases = [
+    { name: "emoji board 🚀", searchTerm: "emoji" },
+    { name: "emoji board 🚀", searchTerm: "🚀" },
+    { name: "unicode बोर्ड", searchTerm: "बोर्ड" },
+    { name: "board with spaces", searchTerm: "with spaces" },
+    { name: "board+with+plus", searchTerm: "+" },
+    { name: "board#with#hash", searchTerm: "#" },
+    { name: "Hello World!!!", searchTerm: "!" },
+    { name: "a@@@@@@@@", searchTerm: "a@@" },
+    { name: "completion 100% ready", searchTerm: "100%" },
+    { name: "board_with_underscore", searchTerm: "_" },
+    { name: "board\\with\\backslash", searchTerm: "\\" },
+  ];
+
+  itEE.each(searchSpecialCases)(
+    "should find board named '$name' when searching for '$searchTerm'",
+    async ({ name, searchTerm }) => {
+      const board = await generateBoards({ name, display: true }, true);
+      const nonMatchingBoard = await generateBoards(
+        { name: "unrelated", display: true },
+        true,
+      );
+
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["board:read"], {
+        roleName: "Board Reader",
+      });
+
+      const response = await supertest(app)
+        .get(`/api/v1/boards/search/${encodeURIComponent(searchTerm)}`)
+        .set("Authorization", `Bearer ${authUser.authToken}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const boards = response.body.boards;
+      expect(boards.length).toBeGreaterThanOrEqual(1);
+      expect(boards.map((b: IBoardPrivate) => b.boardId)).not.toContain(
+        nonMatchingBoard.boardId,
+      );
+
+      expect(boards).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            boardId: board.boardId,
+            name: board.name,
+            url: board.url,
+          }),
+        ]),
+      );
+    },
+  );
+
+  itEE("should search board by URL", async () => {
+    const urlSuffix = faker.string.alphanumeric(8).toLowerCase();
+    const url = faker.string.alphanumeric(5).toLowerCase() + urlSuffix;
+    const board = await generateBoards(
+      {
+        url,
+      },
+      true,
+    );
+
+    const { user: authUser } = await createUser();
+    await createRoleWithPermissions(authUser.userId, ["board:read"], {
+      roleName: "Board Reader",
+    });
+
+    const response = await supertest(app)
+      .get(`/api/v1/boards/search/${encodeURIComponent(urlSuffix)}`)
+      .set("Authorization", `Bearer ${authUser.authToken}`);
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const boards = response.body.boards;
+    expect(boards.length).toBe(1);
+
+    const board1 = boards[0];
+    expect(board1.name).toBe(board.name);
+    expect(board1.url).toBe(url);
+  });
 });
 
 // Create new boards
@@ -712,16 +798,23 @@ describeEE("POST /api/v1/boards", () => {
     itEE.each(testCasesArr)(
       `should create with name: '$input'`,
       async ({ input, expected }) => {
+        const unique = `${input ?? "empty"}-${faker.string.alphanumeric(8)}`;
+        const i =
+          input === null || input === undefined || input === ""
+            ? input
+            : unique;
+        const e = expected === "new board" ? "new board" : unique;
+
         const res = await supertest(app)
           .post("/api/v1/boards")
           .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-          .send({ name: input, display: true });
+          .send({ name: i, display: true });
 
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(201);
 
         const board = res.body.board;
-        expect(board.name).toBe(expected);
+        expect(board.name).toBe(e);
         expect(board.display).toBe(true);
       },
     );
