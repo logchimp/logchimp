@@ -1006,6 +1006,61 @@ describeEE("PATCH /api/v1/boards", () => {
     },
   );
 
+  function makeSlugCase(input: string, expected: string) {
+    const base = faker.string.alphanumeric(8).toLowerCase();
+    const exp = expected === "" ? base : `${base}-${expected}`;
+    return {
+      url: `${base} ${input}`,
+      expected: exp,
+    };
+  }
+
+  const slugUpdateCases = [
+    makeSlugCase("feature-requests", "feature-requests"),
+    makeSlugCase("Feature Requests", "feature-requests"),
+    makeSlugCase("board name with spaces", "board-name-with-spaces"),
+    makeSlugCase("board+with+plus", "board-with-plus"),
+    makeSlugCase("board#with#hash", "board-with-hash"),
+    makeSlugCase("a@@@@@@@@", "a"),
+    makeSlugCase("बोर्ड", ""),
+    makeSlugCase("😀️😈️", ""),
+    makeSlugCase("...", ""),
+    makeSlugCase("../...", ""),
+    makeSlugCase("Hello World!!!", "hello-world"),
+    makeSlugCase("  multiple   spaces  ", "multiple-spaces"),
+    makeSlugCase("UPPERCASE-SLUG", "uppercase-slug"),
+  ];
+
+  itEE.each(slugUpdateCases)(
+    "should update board url to '$url' → '$expected'",
+    async ({ url, expected }) => {
+      const board = await generateBoards({}, true);
+      const { user: authUser } = await createUser();
+      await createRoleWithPermissions(authUser.userId, ["board:update"], {
+        roleName: "Board Patcher",
+      });
+
+      const response = await supertest(app)
+        .patch("/api/v1/boards")
+        .set("Authorization", `Bearer ${authUser.authToken}`)
+        .send({
+          boardId: board.boardId,
+          name: board.name,
+          url,
+          color: board.color,
+          view_voters: board.view_voters,
+          display: board.display,
+        });
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(200);
+
+      const updated = response.body.board;
+      expect(updated.boardId).toBe(board.boardId);
+      expect(updated.url).toBe(expected);
+    },
+  );
+
   itEE("should UPDATE board", async () => {
     const board: BoardInsertRecord = await generateBoards({}, true);
     const newBoard: BoardInsertRecord = await generateBoards({}, false);
@@ -1037,6 +1092,31 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(responseBoard.color).toBe(newBoard.color);
     expect(responseBoard.view_voters).toBe(newBoard.view_voters);
     expect(responseBoard.display).toBe(newBoard.display);
+  });
+
+  itEE("should trim leading dashes from the updated board url", async () => {
+    const base = faker.string.alphanumeric(8).toLowerCase();
+    const board = await generateBoards({}, true);
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+        name: board.name,
+        url: `---${base}`,
+        color: board.color,
+        view_voters: board.view_voters,
+        display: board.display,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.board.url).toBe(base);
   });
 });
 
