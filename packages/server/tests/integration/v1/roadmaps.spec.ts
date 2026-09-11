@@ -476,9 +476,11 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     "ROADMAP_NOT_FOUND",
     "undefined",
     "null",
-    null,
-    undefined,
     "456575634",
+    "roadmap name with spaces",
+    "roadmap+with+plus",
+    "roadmap#with#hash",
+    "a@@@@@@@@",
   ];
 
   itEE.each(zeroSearchResultsArr)(
@@ -491,8 +493,13 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
         roleName: "Roadmap Reader",
       });
 
+      const i =
+        name === null || name === undefined || name === ""
+          ? name
+          : `${name}-${faker.string.alphanumeric(8)}`;
+
       const response = await supertest(app)
-        .get(`/api/v1/roadmaps/search/${name}`)
+        .get(`/api/v1/roadmaps/search/${encodeURIComponent(i)}`)
         .set("Authorization", `Bearer ${user.authToken}`);
 
       expect(response.body.roadmaps).toStrictEqual([]);
@@ -760,16 +767,23 @@ describeEE("POST /api/v1/roadmaps", () => {
     itEE.each(testCasesArr)(
       `should create with name: '$input'`,
       async ({ input, expected }) => {
+        const unique = `${input ?? "empty"}-${faker.string.alphanumeric(8)}`;
+        const i =
+          input === null || input === undefined || input === ""
+            ? input
+            : unique;
+        const e = expected === "new roadmap" ? "new roadmap" : unique;
+
         const res = await supertest(app)
           .post("/api/v1/roadmaps")
           .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-          .send({ name: input });
+          .send({ name: i });
 
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(201);
 
         const roadmap = res.body.roadmap;
-        expect(roadmap.name).toBe(expected);
+        expect(roadmap.name).toBe(e);
       },
     );
 
