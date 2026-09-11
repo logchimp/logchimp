@@ -984,6 +984,30 @@ describeEE("PATCH /api/v1/roadmaps", () => {
     expect(roadmap.index).toBe(r1.index);
     expect(roadmap.created_at).toBe(r1.created_at);
   });
+
+  itEE("should trim leading dashes from the updated roadmap url", async () => {
+    const base = faker.string.alphanumeric(8).toLowerCase();
+    const roadmap = await generateRoadmap({}, true);
+    const { user: authUser } = await createUser();
+
+    await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+      roleName: "roadmap Patcher",
+    });
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        id: roadmap.id,
+        name: roadmap.name,
+        url: `---${base}`,
+        color: roadmap.color,
+        display: roadmap.display,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.roadmap.url).toBe(base);
+  });
 });
 
 // Delete roadmaps
