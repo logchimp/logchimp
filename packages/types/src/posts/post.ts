@@ -36,6 +36,7 @@ export interface IFilterPostRequestQueryParams extends CursorPaginationParams {
 export interface IFilterPostRequestBody {
   boardId?: string[];
   roadmapId?: string;
+  query?: string;
   page?: string;
   limit?: string;
 }

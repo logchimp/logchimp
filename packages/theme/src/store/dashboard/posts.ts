@@ -1,21 +1,28 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { defineStore } from "pinia";
+import { useDebounceFn } from "@vueuse/core";
 import type { IApiErrorResponse, IPost } from "@logchimp/types";
+import { type AxiosError, isCancel } from "axios";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import { Posts } from "../../modules/posts";
-import type { AxiosError } from "axios";
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
+  const searchQuery = ref<string | undefined>();
   const endCursor = ref<string | undefined>();
   const hasNextPage = ref<boolean>(false);
   const errorCode = ref<unknown>(undefined);
 
+  let abortController: AbortController | null = null;
+
   async function fetchPosts() {
     if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
+    abortController?.abort();
+    abortController = new AbortController();
 
     state.value = "LOADING";
     errorCode.value = undefined;
@@ -24,12 +31,19 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
 
     try {
       const response = await postsAPI.GetPosts(
-        {},
+        {
+          query: searchQuery.value,
+        },
         {
           after: endCursor.value,
           created: "DESC",
         },
+        {
+          signal: abortController.signal,
+        },
       );
+
+      if (abortController.signal.aborted) return;
 
       const postsList = response.posts;
 
@@ -47,6 +61,10 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
       }
     } catch (error) {
       const err = error as AxiosError<IApiErrorResponse>;
+
+      // axios request canceled
+      if (isCancel(err) || err.code === "ERR_CANCELED") return;
+
       state.value = "ERROR";
 
       // HTTP API error handling
@@ -79,9 +97,30 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
     posts.value.splice(postIdx, 1);
   }
 
+  const debounceFetchPosts = useDebounceFn(async () => {
+    endCursor.value = undefined;
+    hasNextPage.value = false;
+    errorCode.value = undefined;
+    posts.value = [];
+
+    await fetchPosts();
+  }, 800);
+
+  watch(
+    () => searchQuery.value,
+    async (newValue, oldValue) => {
+      if (newValue === oldValue) return;
+      abortController?.abort();
+      state.value = "IDLE";
+
+      await debounceFetchPosts();
+    },
+  );
+
   return {
     posts,
     state,
+    searchQuery,
     error: errorCode,
 
     fetchPosts,
