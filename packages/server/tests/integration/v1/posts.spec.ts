@@ -783,6 +783,7 @@ describeEE("POST /api/v1/posts/get", () => {
       { title: "Hello World!!!", searchTerm: "!" },
       { title: "a@@@@@@@@", searchTerm: "a@@" },
       { title: "completion 100% ready", searchTerm: "100%" },
+      { title: "percentage", searchTerm: "%" },
       { title: "post_with_underscore", searchTerm: "_" },
       { title: "post\\with\\backslash", searchTerm: "\\" },
       { title: "Mixed Case Search", searchTerm: "mIxEd cAsE" },
@@ -791,29 +792,33 @@ describeEE("POST /api/v1/posts/get", () => {
     itEE.each(searchCases)(
       "should find post named $title when searching for $searchTerm",
       async ({ title, searchTerm }) => {
+        const unique = faker.string.alphanumeric(10);
+
         const { user: authUser } = await createUser();
 
         const post = await generatePost(
           {
-            title,
+            title: `${title} ${searchTerm}${unique}`,
             userId: authUser.userId,
           },
           true,
         );
         const nonMatchingPost = await generatePost(
-          { title: "unrelated", userId: authUser.userId },
+          { title: `unrelated ${unique}`, userId: authUser.userId },
           true,
         );
 
-        const response = await supertest(app).post(`/api/v1/posts/get`).send({
-          query: searchTerm,
-        });
+        const response = await supertest(app)
+          .post(`/api/v1/posts/get`)
+          .send({
+            query: `${searchTerm}${unique}`,
+          });
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
 
         const posts = response.body.posts;
-        expect(posts.length).toBeGreaterThanOrEqual(1);
+        expect(posts.length).toBe(1);
         expect(posts.map((p: IPost) => p.postId)).not.toContain(
           nonMatchingPost.postId,
         );
