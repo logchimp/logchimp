@@ -58,11 +58,11 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
         state.value = "COMPLETED";
       }
     } catch (error) {
-      // axios request canceled
-      if (isCancel(error) || (error as any)?.code === "ERR_CANCELED") return;
-
       const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
+
+      // axios request canceled
+      if (isCancel(err) || err.code === "ERR_CANCELED") return;
 
       // HTTP API error handling
       switch (err.response?.data?.code) {
