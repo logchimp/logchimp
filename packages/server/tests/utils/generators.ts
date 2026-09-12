@@ -77,7 +77,7 @@ interface PostArgs {
 }
 
 const post = async (post: PostArgs, insertToDb = false) => {
-  const title = faker.commerce.productName();
+  const title = post?.title ?? faker.commerce.productName();
   const contentMarkdown = post?.contentMarkdown || faker.lorem.text();
 
   // generate slug unique identification

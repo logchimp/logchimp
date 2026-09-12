@@ -745,6 +745,90 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
   });
+
+  describeEE("Search by title", () => {
+    const zeroSearchResultsArr = [
+      "POST_NOT_FOUND",
+      "undefined",
+      "null",
+      "456575634",
+      "post name with spaces",
+      "post+with+plus",
+      "post#with#hash",
+      "a@@@@@@@@",
+      "*&^(*&$%&*^&%&^%*",
+    ];
+
+    itEE.each(zeroSearchResultsArr)(
+      `should return 0 search results for '%s' posts`,
+      async (name) => {
+        const response = await supertest(app)
+          .post(`/api/v1/posts/get`)
+          .send({
+            query: `${name}-${faker.string.alphanumeric(8)}`,
+          });
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+        expect(response.body.posts).toHaveLength(0);
+      },
+    );
+
+    const searchCases = [
+      { title: "emoji post 🚀", searchTerm: "emoji" },
+      { title: "emoji post 🚀", searchTerm: "🚀" },
+      { title: "unicode बोर्ड", searchTerm: "बोर्ड" },
+      { title: "post with spaces", searchTerm: "with spaces" },
+      { title: "post+with+plus", searchTerm: "+" },
+      { title: "post#with#hash", searchTerm: "#" },
+      { title: "Hello World!!!", searchTerm: "!" },
+      { title: "a@@@@@@@@", searchTerm: "a@@" },
+      { title: "completion 100% ready", searchTerm: "100%" },
+      { title: "post_with_underscore", searchTerm: "_" },
+      { title: "post\\with\\backslash", searchTerm: "\\" },
+    ];
+
+    itEE.each(searchCases)(
+      "should find post named '$title' when searching for '$searchTerm'",
+      async ({ title, searchTerm }) => {
+        const { user: authUser } = await createUser();
+
+        const post = await generatePost(
+          {
+            title,
+            userId: authUser.userId,
+          },
+          true,
+        );
+        const nonMatchingPost = await generatePost(
+          { title: "unrelated", userId: authUser.userId },
+          true,
+        );
+
+        const response = await supertest(app).post(`/api/v1/posts/get`).send({
+          query: searchTerm,
+        });
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.status).toBe(200);
+
+        const posts = response.body.posts;
+        expect(posts.length).toBeGreaterThanOrEqual(1);
+        expect(posts.map((p: IPost) => p.postId)).not.toContain(
+          nonMatchingPost.postId,
+        );
+
+        expect(posts).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              postId: post.postId,
+              title: post.title,
+            }),
+          ]),
+        );
+      },
+    );
+  });
 });
 
 // Create new posts
