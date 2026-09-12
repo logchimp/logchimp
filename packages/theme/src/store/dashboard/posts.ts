@@ -19,6 +19,8 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   let abortController: AbortController | null = null;
 
   async function fetchPosts() {
+    if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
     abortController?.abort();
     abortController = new AbortController();
 
@@ -105,7 +107,8 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
 
   watch(
     () => searchQuery.value,
-    async () => {
+    async (newValue, oldValue) => {
+      if (newValue === oldValue) return;
       abortController?.abort();
       state.value = "IDLE";
 
