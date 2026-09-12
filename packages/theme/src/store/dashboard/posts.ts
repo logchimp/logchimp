@@ -2,10 +2,10 @@ import { ref, watch } from "vue";
 import { defineStore } from "pinia";
 import { useDebounceFn } from "@vueuse/core";
 import type { IApiErrorResponse, IPost } from "@logchimp/types";
+import { type AxiosError, isCancel } from "axios";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 import { Posts } from "../../modules/posts";
-import type { AxiosError } from "axios";
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
@@ -16,7 +16,12 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const hasNextPage = ref<boolean>(false);
   const errorCode = ref<unknown>(undefined);
 
+  let abortController: AbortController | null = null;
+
   async function fetchPosts() {
+    abortController?.abort();
+    abortController = new AbortController();
+
     state.value = "LOADING";
     errorCode.value = undefined;
 
@@ -31,7 +36,12 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
           after: endCursor.value,
           created: "DESC",
         },
+        {
+          signal: abortController.signal,
+        },
       );
+
+      if (abortController.signal.aborted) return;
 
       const postsList = response.posts;
 
@@ -48,6 +58,9 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
         state.value = "COMPLETED";
       }
     } catch (error) {
+      // axios request canceled
+      if (isCancel(error) || (error as any)?.code === "ERR_CANCELED") return;
+
       const err = error as AxiosError<IApiErrorResponse>;
       state.value = "ERROR";
 
@@ -82,6 +95,8 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   }
 
   const debounceFetchPosts = useDebounceFn(async () => {
+    abortController?.abort();
+
     state.value = "IDLE";
     endCursor.value = undefined;
     hasNextPage.value = false;

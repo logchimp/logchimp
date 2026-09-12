@@ -1,5 +1,5 @@
 // packages
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type {
   ICreatePostRequestBody,
   ICreatePostResponseBody,
@@ -26,11 +26,13 @@ export class Posts extends APIService {
    * Get posts
    * @param body
    * @param query
+   * @param config
    * @returns {Promise<AxiosResponse<IFilterPostResponseBody>>} response
    */
   async GetPosts(
     body: IFilterPostRequestBody,
     query?: IFilterPostRequestQueryParams,
+    config: AxiosRequestConfig = {},
   ): Promise<IFilterPostResponseBody> {
     const searchParams = new URLSearchParams();
     for (const queryKey in query) {
@@ -42,12 +44,16 @@ export class Posts extends APIService {
 
     const url = `/v1/posts/get?${searchParams.toString()}`;
 
-    return this.post(url.toString(), {
-      query: body.query,
-      page: body.page,
-      boardId: body.boardId,
-      roadmapId: body.roadmapId,
-    })
+    return this.post(
+      url.toString(),
+      {
+        query: body.query,
+        page: body.page,
+        boardId: body.boardId,
+        roadmapId: body.roadmapId,
+      },
+      config,
+    )
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
