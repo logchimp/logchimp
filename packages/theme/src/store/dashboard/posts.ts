@@ -95,9 +95,6 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   }
 
   const debounceFetchPosts = useDebounceFn(async () => {
-    abortController?.abort();
-
-    state.value = "IDLE";
     endCursor.value = undefined;
     hasNextPage.value = false;
     errorCode.value = undefined;
@@ -109,6 +106,9 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   watch(
     () => searchQuery.value,
     async () => {
+      abortController?.abort();
+      state.value = "IDLE";
+
       await debounceFetchPosts();
     },
   );
