@@ -775,7 +775,6 @@ describeEE("POST /api/v1/posts/get", () => {
     );
 
     const searchCases = [
-      { title: "emoji post 🚀", searchTerm: "emoji" },
       { title: "emoji post 🚀", searchTerm: "🚀" },
       { title: "unicode बोर्ड", searchTerm: "बोर्ड" },
       { title: "post with spaces", searchTerm: "with spaces" },
@@ -786,10 +785,11 @@ describeEE("POST /api/v1/posts/get", () => {
       { title: "completion 100% ready", searchTerm: "100%" },
       { title: "post_with_underscore", searchTerm: "_" },
       { title: "post\\with\\backslash", searchTerm: "\\" },
+      { title: "Mixed Case Search", searchTerm: "mIxEd cAsE" },
     ];
 
     itEE.each(searchCases)(
-      "should find post named '$title' when searching for '$searchTerm'",
+      "should find post named $title when searching for $searchTerm",
       async ({ title, searchTerm }) => {
         const { user: authUser } = await createUser();
 
@@ -826,6 +826,11 @@ describeEE("POST /api/v1/posts/get", () => {
             }),
           ]),
         );
+
+        expect(response.body.total_count).toBe(1);
+        expect(response.body.total_pages).toBe(1);
+        expect(response.body.page_info.count).toBe(1);
+        expect(response.body.page_info.has_next_page).toBe(false);
       },
     );
   });
