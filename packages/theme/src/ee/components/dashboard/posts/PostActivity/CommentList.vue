@@ -9,7 +9,11 @@
     />
   </div>
 
-  <infinite-scroll :on-infinite="fetchPostActivity" :state="state" />
+  <infinite-scroll
+    :immediate-check="data.length === 0"
+    :on-infinite="fetchPostActivity"
+    :state="state"
+  />
 </template>
 
 <script setup lang="ts">

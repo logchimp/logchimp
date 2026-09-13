@@ -61,6 +61,7 @@
 
     <template #infinite-loader v-if="!requireUpgrade">
       <infinite-scroll
+        :immediate-check="dashboardRoles.roles.length === 0"
         :on-infinite="dashboardRoles.fetchRoles"
         :state="dashboardRoles.state"
       />
