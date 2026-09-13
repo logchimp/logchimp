@@ -38,19 +38,20 @@
       <CreateRoadmapItem
         v-if="search && suggestions.length === 0"
         :search="search"
-        @created="selectHandler"
+        @created="createRoadmap"
       />
     </div>
   </DropdownMenuContent>
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, useId, watch, nextTick } from "vue";
+import { nextTick, ref, useId, useTemplateRef, watch } from "vue";
 import { DropdownMenuContent } from "reka-ui";
 import { watchDebounced } from "@vueuse/core";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
 import { searchRoadmap as searchRoadmapApi } from "../../../../../ee/modules/roadmaps";
+import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 import { type TCurrentRoadmap, useRoadmapSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
@@ -66,6 +67,7 @@ interface Props {
   isOpen: boolean;
 }
 const props = defineProps<Props>();
+const dashboardRoadmaps = useDashboardRoadmaps();
 const searchRoadmap = useRoadmapSearch();
 
 watch(
@@ -104,6 +106,15 @@ watchDebounced(
 function selectHandler(e: TCurrentRoadmap) {
   if (e === undefined) return;
   searchRoadmap.select(e);
+}
+
+function createRoadmap(e: TCurrentRoadmap) {
+  if (e === undefined) return;
+  searchRoadmap.select(e);
+
+  if (e) {
+    dashboardRoadmaps.appendRoadmap(e);
+  }
 }
 
 function resetSuggestions() {
