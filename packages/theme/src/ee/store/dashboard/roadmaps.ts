@@ -61,7 +61,9 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   function appendRoadmap(roadmap: IRoadmapPrivate) {
-    const existingIdx = roadmaps.value.findIndex((item) => item.id === roadmap.id);
+    const existingIdx = roadmaps.value.findIndex(
+      (item) => item.id === roadmap.id,
+    );
     if (existingIdx !== -1) {
       Object.assign(roadmaps.value[existingIdx], roadmap);
     } else {
@@ -114,6 +116,15 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     });
   }
 
+  async function resetRoadmaps() {
+    currentCursor.value = undefined;
+    hasNextPage.value = false;
+    errorCode.value = undefined;
+    roadmaps.value = [];
+
+    await fetchRoadmaps();
+  }
+
   return {
     roadmaps,
     state,
@@ -124,5 +135,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     updateRoadmap,
     removeRoadmap,
     sortRoadmap,
+    resetRoadmaps,
   };
 });
