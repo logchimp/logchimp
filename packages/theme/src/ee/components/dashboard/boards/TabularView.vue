@@ -43,6 +43,7 @@
 
     <template #infinite-loader>
       <infinite-scroll
+        :immediate-check="dashboardBoards.boards.length === 0"
         :on-infinite="dashboardBoards.fetchBoards"
         :state="dashboardBoards.state"
       />

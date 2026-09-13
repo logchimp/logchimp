@@ -25,7 +25,8 @@
     />
 
     <infinite-scroll
-      :on-infinite="dashboardPosts.fetchPosts"
+      :immediate-check="dashboardPosts.posts.length === 0"
+        :on-infinite="dashboardPosts.fetchPosts"
       :state="dashboardPosts.state"
     />
 	</div>

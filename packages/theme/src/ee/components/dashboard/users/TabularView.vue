@@ -56,6 +56,7 @@
 
     <template #infinite-loader>
       <infinite-scroll
+        :immediate-check="dashboardUsers.users.length === 0"
         :on-infinite="dashboardUsers.fetchUsers"
         :state="dashboardUsers.state"
       />
