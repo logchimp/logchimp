@@ -36,6 +36,7 @@
       />
 
       <infinite-scroll
+        :immediate-check="dashboardPosts.posts.length === 0"
         :on-infinite="dashboardPosts.fetchPosts"
         :state="dashboardPosts.state"
       />
