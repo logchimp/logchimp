@@ -70,6 +70,7 @@
 
     <template #infinite-loader v-if="!requireUpgrade">
       <infinite-scroll
+        :immediate-check="dashboardRoadmaps.roadmaps.length === 0"
         :on-infinite="dashboardRoadmaps.fetchRoadmaps"
         :state="dashboardRoadmaps.state"
       />
