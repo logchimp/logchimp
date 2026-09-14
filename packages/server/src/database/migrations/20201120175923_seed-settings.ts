@@ -1,11 +1,13 @@
 import type { Knex } from "knex";
 import logger from "../../utils/logger";
 
+const title = "LogChimp";
+
 export async function up(knex: Knex): Promise<void> {
   try {
     await knex("settings").insert([
       {
-        title: "LogChimp",
+        title,
         description: "Track user feedback to build better products",
         accentColor: "484d7c",
         logo: "https://cdn.logchimp.codecarrot.net/logchimp_circular_logo.png",
@@ -30,7 +32,9 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   try {
-    await knex("settings").delete();
+    await knex("settings")
+      .delete()
+      .whereRaw("LOWER(title) = LOWER(?)", [title]);
 
     logger.info({
       code: "DATABASE_SEEDS",
