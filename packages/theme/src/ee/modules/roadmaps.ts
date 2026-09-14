@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type {
   ICreateRoadmapRequestBody,
   IDeleteRoadmapRequestBody,
@@ -21,10 +21,12 @@ import { useUserStore } from "../../store/user";
  * Get all roadmaps with cursor-based pagination
  *
  * @param {IGetRoadmapsParams} params - Pagination parameters
+ * @param config
  * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
  */
 export const getAllRoadmaps = async (
   params: IGetRoadmapsParams = {},
+  config: AxiosRequestConfig = {},
 ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
   const searchParams = new URLSearchParams();
 
@@ -47,6 +49,7 @@ export const getAllRoadmaps = async (
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
+    ...config,
   });
 };
 
