@@ -7,7 +7,6 @@ import type {
   IGetBoardsRequestQuery,
   IGetBoardsResponseBody,
   ISearchBoardResponseBody,
-  TBoardCheckNameResponse,
   TBoardCheckSlugResponse,
   TBoardCreateRequestBody,
   TBoardCreateResponseBody,
@@ -151,24 +150,3 @@ export class BoardsEE extends APIService {
     });
   };
 }
-
-/**
- * Check board name
- * DEPRECATED, will be removed
- */
-export const checkBoardName = async (
-  name: string,
-): Promise<AxiosResponse<TBoardCheckNameResponse>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/boards/check-name`,
-    data: {
-      name,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
