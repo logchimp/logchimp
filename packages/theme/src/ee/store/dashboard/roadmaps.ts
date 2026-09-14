@@ -3,8 +3,10 @@ import { defineStore } from "pinia";
 import type { IApiErrorResponse, IRoadmapPrivate } from "@logchimp/types";
 import { type AxiosError, isCancel } from "axios";
 
-import { getAllRoadmaps } from "../../modules/roadmaps";
+import { RoadmapsEE } from "../../modules/roadmaps";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
+
+const roadmapsEEAPI = new RoadmapsEE();
 
 export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   const roadmaps = ref<IRoadmapPrivate[]>([]);
@@ -26,7 +28,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     errorCode.value = undefined;
 
     try {
-      const response = await getAllRoadmaps(
+      const response = await roadmapsEEAPI.GetAllRoadmaps(
         {
           after: currentCursor.value,
           visibility: ["public", "private"],

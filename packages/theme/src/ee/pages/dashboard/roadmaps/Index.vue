@@ -37,7 +37,7 @@ import { storeToRefs } from "pinia";
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
-import { createRoadmap } from "../../../modules/roadmaps";
+import { RoadmapsEE } from "../../../modules/roadmaps";
 import { useSettingsEEStore } from "../../../store/settings";
 
 // components
@@ -61,12 +61,13 @@ const createRoadmapButtonDisabled = computed(() => {
   const checkPermission = permissions.includes("roadmap:create");
   return !checkPermission;
 });
+const roadmapEEAPI = new RoadmapsEE();
 
 async function createRoadmapHandler() {
   createRoadmapButtonLoading.value = true;
 
   try {
-    const response = await createRoadmap();
+    const response = await roadmapEEAPI.CreateRoadmap();
     const roadmap = response.data.roadmap;
 
     dashboardRoadmaps.appendRoadmap(roadmap);

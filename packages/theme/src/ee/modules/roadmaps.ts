@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import type {
   ICreateRoadmapRequestBody,
   IDeleteRoadmapRequestBody,
@@ -15,178 +15,112 @@ import type {
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
-import { useUserStore } from "../../store/user";
+import { APIService } from "../../modules/api";
 
-/**
- * Get all roadmaps with cursor-based pagination
- *
- * @param {IGetRoadmapsParams} params - Pagination parameters
- * @param config
- * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
- */
-export const getAllRoadmaps = async (
-  params: IGetRoadmapsParams = {},
-  config: AxiosRequestConfig = {},
-): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
-  const searchParams = new URLSearchParams();
-
-  for (const paramsKey in params) {
-    const value = params[paramsKey as keyof IGetRoadmapsParams];
-    if (value) {
-      searchParams.append(paramsKey, value.toString());
-    }
+export class RoadmapsEE extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
   }
 
-  const url = `${VITE_API_URL}/api/v1/roadmaps${
-    searchParams.toString() ? `?${searchParams.toString()}` : ""
-  }`;
+  /**
+   * Get all roadmaps with cursor-based pagination
+   *
+   * @param {IGetRoadmapsParams} params - Pagination parameters
+   * @param config
+   * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
+   */
+  GetAllRoadmaps = async (
+    params: IGetRoadmapsParams = {},
+    config: AxiosRequestConfig = {},
+  ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
+    return this.get("/v1/roadmaps", params, config)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  };
 
-  const { authToken } = useUserStore();
+  /**
+   * Get board by URL
+   * @param {string} url board url
+   * @returns {Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>>} response
+   */
+  GetRoadmapByUrl = async (
+    url: string,
+  ): Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>> => {
+    return this.get(`/v1/roadmaps/${encodeURIComponent(url)}`);
+  };
 
-  return await axios({
-    method: "GET",
-    url,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-    ...config,
-  });
-};
+  /**
+   * Search roadmap by name
+   * @param {string} name roadmap name
+   * @returns {object} response
+   */
+  SearchRoadmap = async (
+    name: string,
+  ): Promise<AxiosResponse<ISearchRoadmapResponseBody>> => {
+    return this.get(`v1/roadmaps/search/${encodeURIComponent(name)}`);
+  };
 
-/**
- * Get board by URL
- * @param {string} url board url
- * @returns {Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>>} response
- */
-export const getRoadmapByUrl = async (
-  url: string,
-): Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>> => {
-  const { authToken } = useUserStore();
+  /**
+   * Create new roadmap
+   * @param {object} roadmap
+   * @param {string} [roadmap.name=] roadmap name
+   * @returns {Promise<AxiosResponse<TCreateRoadmapResponseBody>>} response
+   */
+  CreateRoadmap = async (
+    roadmap?: ICreateRoadmapRequestBody,
+  ): Promise<AxiosResponse<TCreateRoadmapResponseBody>> => {
+    return this.post("/v1/roadmaps", roadmap);
+  };
 
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/roadmaps/${encodeURIComponent(url)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- * Search roadmap by name
- * @param {string} name roadmap name
- * @returns {object} response
- */
-export const searchRoadmap = async (
-  name: string,
-): Promise<AxiosResponse<ISearchRoadmapResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/roadmaps/search/${encodeURIComponent(name)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- * Create new roadmap
- * @param {object} roadmap
- * @param {string} [roadmap.name=] roadmap name
- * @returns {Promise<AxiosResponse<TCreateRoadmapResponseBody>>} response
- */
-export const createRoadmap = async (
-  roadmap?: ICreateRoadmapRequestBody,
-): Promise<AxiosResponse<TCreateRoadmapResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/roadmaps`,
-    data: {
-      name: roadmap?.name,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- * Update roadmap
- *
- * @param {object} roadmap update roadmap data
- * @param {string} roadmap.name roadmap name
- * @param {string} roadmap.url roadmap url
- * @param {string} roadmap.color roadmap color
- * @param {boolean} roadmap.display display roadmap on the site
- * @returns {object} response
- */
-export const updateRoadmap = async (
-  roadmap: IUpdateRoadmapRequestBody,
-): Promise<AxiosResponse<TUpdateRoadmapResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "PATCH",
-    url: `${VITE_API_URL}/api/v1/roadmaps`,
-    data: {
+  /**
+   * Update roadmap
+   *
+   * @param {object} roadmap update roadmap data
+   * @param {string} roadmap.name roadmap name
+   * @param {string} roadmap.url roadmap url
+   * @param {string} roadmap.color roadmap color
+   * @param {boolean} roadmap.display display roadmap on the site
+   * @returns {object} response
+   */
+  UpdateRoadmap = async (
+    roadmap: IUpdateRoadmapRequestBody,
+  ): Promise<AxiosResponse<TUpdateRoadmapResponseBody>> => {
+    return this.put("/v1/roadmaps", {
       ...roadmap,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- * Sort roadmap
- */
-export const sortRoadmap = async ({
-  from,
-  to,
-}: ISortRoadmapRequestBody): Promise<
-  AxiosResponse<TSortRoadmapResponseBody>
-> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "PATCH",
-    url: `${VITE_API_URL}/api/v1/roadmaps/sort`,
-    data: {
+  /**
+   * Sort roadmap
+   */
+  SortRoadmap = async ({
+    from,
+    to,
+  }: ISortRoadmapRequestBody): Promise<
+    AxiosResponse<TSortRoadmapResponseBody>
+  > => {
+    return this.put("/v1/roadmaps/sort", {
       from,
       to,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- * delete roadmap
- *
- * @param {string} id roadmap id
- *
- * @returns {object} response
- */
-export const deleteRoadmap = async ({
-  id,
-}: IDeleteRoadmapRequestBody): Promise<
-  AxiosResponse<TDeleteRoadmapResponseBody>
-> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "DELETE",
-    url: `${VITE_API_URL}/api/v1/roadmaps`,
-    data: {
+  /**
+   * delete roadmap
+   *
+   * @param {string} id roadmap id
+   *
+   * @returns {object} response
+   */
+  DeleteRoadmap = async ({
+    id,
+  }: IDeleteRoadmapRequestBody): Promise<
+    AxiosResponse<TDeleteRoadmapResponseBody>
+  > => {
+    return this.delete("/v1/roadmaps", {
       id,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
+}

@@ -40,7 +40,7 @@
 import { inject, ref } from "vue";
 
 import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
-import { deleteRoadmap } from "../../../../modules/roadmaps";
+import { RoadmapsEE } from "../../../../modules/roadmaps";
 import { roadmapKey } from "./options";
 import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 
@@ -53,6 +53,7 @@ interface Props {
 defineProps<Props>();
 const emit = defineEmits<(e: "close", value: boolean) => void>();
 const loading = ref<boolean>(false);
+const roadmapEEAPI = new RoadmapsEE();
 
 async function deleteRoadmapHandler() {
   if (!roadmap) return;
@@ -61,7 +62,7 @@ async function deleteRoadmapHandler() {
   loading.value = true;
 
   try {
-    const response = await deleteRoadmap({ id: roadmap.id });
+    const response = await roadmapEEAPI.DeleteRoadmap({ id: roadmap.id });
 
     if (response.status === 204) {
       dashboardRoadmaps.removeRoadmap(roadmap.id);
