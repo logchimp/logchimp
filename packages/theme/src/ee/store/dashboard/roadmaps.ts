@@ -117,6 +117,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   async function resetRoadmaps() {
+    state.value = "IDLE";
     currentCursor.value = undefined;
     hasNextPage.value = false;
     errorCode.value = undefined;
