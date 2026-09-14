@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { IApiErrorResponse, IRoadmapPrivate } from "@logchimp/types";
-import type { AxiosError } from "axios";
+import { type AxiosError, isCancel } from "axios";
 
 import { getAllRoadmaps } from "../../modules/roadmaps";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
@@ -14,18 +14,27 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   const errorCode = ref<unknown>(undefined);
 
   const currentCursor = ref<string>();
+  let abortController: AbortController | null = null;
 
   async function fetchRoadmaps() {
     if (state.value === "LOADING" || state.value === "COMPLETED") return;
+
+    abortController?.abort();
+    abortController = new AbortController();
 
     state.value = "LOADING";
     errorCode.value = undefined;
 
     try {
-      const response = await getAllRoadmaps({
-        after: currentCursor.value,
-        visibility: ["public", "private"],
-      });
+      const response = await getAllRoadmaps(
+        {
+          after: currentCursor.value,
+          visibility: ["public", "private"],
+        },
+        {
+          signal: abortController.signal,
+        },
+      );
 
       const results = response.data.results;
       const pageInfo = response.data.page_info;
@@ -43,6 +52,10 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
       }
     } catch (error) {
       const err = error as AxiosError<IApiErrorResponse>;
+
+      // axios request canceled
+      if (isCancel(err) || err.code === "ERR_CANCELED") return;
+
       state.value = "ERROR";
 
       if (err.response?.status === 404) {
@@ -61,7 +74,14 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
   }
 
   function appendRoadmap(roadmap: IRoadmapPrivate) {
-    roadmaps.value.push(roadmap);
+    const existingIdx = roadmaps.value.findIndex(
+      (item) => item.id === roadmap.id,
+    );
+    if (existingIdx !== -1) {
+      Object.assign(roadmaps.value[existingIdx], roadmap);
+    } else {
+      roadmaps.value.push(roadmap);
+    }
   }
 
   function updateRoadmap(roadmap: IRoadmapPrivate) {
@@ -109,6 +129,17 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     });
   }
 
+  async function resetRoadmaps() {
+    abortController?.abort();
+    state.value = "IDLE";
+    currentCursor.value = undefined;
+    hasNextPage.value = false;
+    errorCode.value = undefined;
+    roadmaps.value = [];
+
+    await fetchRoadmaps();
+  }
+
   return {
     roadmaps,
     state,
@@ -119,5 +150,6 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     updateRoadmap,
     removeRoadmap,
     sortRoadmap,
+    resetRoadmaps,
   };
 });
