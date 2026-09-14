@@ -78,7 +78,7 @@ import type { IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { router } from "../../../router";
-import { updateBoard } from "../../modules/boards";
+import { BoardsEE } from "../../modules/boards";
 import { useUserStore } from "../../../store/user";
 import { useDashboardBoards } from "../../store/dashboard/boards";
 
@@ -108,6 +108,7 @@ const props = defineProps<Props>();
 const boardSlug = ref("");
 const saveButtonLoading = ref(false);
 const board = reactive<IBoardPrivate>(props.board);
+const boardsEEAPI = new BoardsEE();
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
@@ -146,7 +147,7 @@ async function update() {
     if (boardSlug.value) {
       body.url = boardSlug.value;
     }
-    const response = await updateBoard(body);
+    const response = await boardsEEAPI.UpdateBoard(body);
 
     dashboardBoards.updateBoard(response.data.board);
     router.push("/dashboard/boards");

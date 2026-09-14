@@ -36,16 +36,21 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import type { IBoardDetail } from "@logchimp/types";
-import { getPublicBoards } from "../modules/boards";
+import { BoardsEE } from "../modules/boards";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 
 const boards = ref<IBoardDetail[]>([]);
+const boardsEEAPI = new BoardsEE();
 
-onMounted(async () => {
-  const response = await getPublicBoards({
+async function getBoardsHandler() {
+  const response = await boardsEEAPI.GetPublicBoards({
     first: "5",
     created: "DESC",
   });
   boards.value = response.data.boards;
+}
+
+onMounted(async () => {
+  getBoardsHandler();
 });
 </script>

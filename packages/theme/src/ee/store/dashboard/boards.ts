@@ -3,8 +3,9 @@ import { defineStore } from "pinia";
 import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
 import type { AxiosError } from "axios";
 
-import { getAllBoards } from "../../modules/boards";
+import { BoardsEE } from "../../modules/boards";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
+const boardsEEAPI = new BoardsEE();
 
 export const useDashboardBoards = defineStore("dashboardBoards", () => {
   const boards = ref<IBoardPrivate[]>([]);
@@ -20,7 +21,7 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
     errorCode.value = undefined;
 
     try {
-      const response = await getAllBoards({
+      const response = await boardsEEAPI.GetAllBoards({
         page: page.value.toString(),
         created: "DESC",
       });
