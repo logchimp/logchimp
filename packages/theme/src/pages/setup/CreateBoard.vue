@@ -46,7 +46,7 @@ import { useHead } from "@vueuse/head";
 import { router } from "../../router";
 import { useSettingStore } from "../../store/settings";
 import { useUserStore } from "../../store/user";
-import { createBoard } from "../../ee/modules/boards";
+import { BoardsEE } from "../../ee/modules/boards";
 
 // components
 import AuthForm from "../../layout/AuthForm.vue";
@@ -65,6 +65,7 @@ const boardName = reactive({
   },
 });
 const buttonLoading = ref(false);
+const boardsEEAPI = new BoardsEE();
 
 const { get: siteSettings } = useSettingStore();
 const { permissions } = useUserStore();
@@ -88,7 +89,7 @@ async function create() {
   buttonLoading.value = true;
 
   try {
-    await createBoard({
+    await boardsEEAPI.CreateBoard({
       name: boardName.value,
       display: true,
     });

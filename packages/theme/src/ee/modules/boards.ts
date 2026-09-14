@@ -1,196 +1,156 @@
 // packages
 import axios, { type AxiosResponse } from "axios";
 import type {
+  IBoardUpdateRequestBody,
   IFilterBoardResponseBody,
+  IGetBoardsByUrlResponseBody,
   IGetBoardsRequestQuery,
   IGetBoardsResponseBody,
-  TBoardCheckSlugResponse,
+  ISearchBoardResponseBody,
   TBoardCheckNameResponse,
+  TBoardCheckSlugResponse,
   TBoardCreateRequestBody,
   TBoardCreateResponseBody,
-  IBoardUpdateRequestBody,
-  TFilterBoardRequestQuery,
   TBoardUpdateResponseBody,
-  IGetBoardsByUrlResponseBody,
-  ISearchBoardResponseBody,
+  TFilterBoardRequestQuery,
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
+import { APIService } from "../../modules/api.ts";
 
-/**
- *  Get public boards
- * @param {string} first number of items to fetch
- * @param {string} after cursor to fetch next page
- * @param {ApiSortType} created sort type asc or desc
- * @returns {Promise<AxiosResponse<IFilterBoardResponseBody>>} response
- */
-export const getPublicBoards = async ({
-  first,
-  after,
-  created = "DESC",
-}: TFilterBoardRequestQuery): Promise<
-  AxiosResponse<IFilterBoardResponseBody>
-> => {
-  const { authToken } = useUserStore();
+export class BoardsEE extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
 
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/boards`,
-    params: {
+  /**
+   *  Get public boards
+   * @param {string} first number of items to fetch
+   * @param {string} after cursor to fetch next page
+   * @param {ApiSortType} created sort type asc or desc
+   * @returns {Promise<AxiosResponse<IFilterBoardResponseBody>>} response
+   */
+  GetPublicBoards = async ({
+    first,
+    after,
+    created = "DESC",
+  }: TFilterBoardRequestQuery): Promise<
+    AxiosResponse<IFilterBoardResponseBody>
+  > => {
+    return this.get("/v1/boards", {
       after,
       first,
       created,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- *	Get all boards
- * @param {string} page page number default to 1
- * @param {string} limit number of items per page
- * @param {ApiSortType} created sort type asc or desc
- * @returns {Promise<AxiosResponse<IGetBoardsResponseBody>>} response
- */
-export const getAllBoards = async ({
-  page = "1",
-  limit = "10",
-  created = "DESC",
-}: IGetBoardsRequestQuery): Promise<AxiosResponse<IGetBoardsResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/boards/get`,
-    params: {
+  /**
+   *	Get all boards
+   * @param {string} page page number default to 1
+   * @param {string} limit number of items per page
+   * @param {ApiSortType} created sort type asc or desc
+   * @returns {Promise<AxiosResponse<IGetBoardsResponseBody>>} response
+   */
+  GetAllBoards = async ({
+    page = "1",
+    limit = "10",
+    created = "DESC",
+  }: IGetBoardsRequestQuery): Promise<
+    AxiosResponse<IGetBoardsResponseBody>
+  > => {
+    return this.get("/v1/boards/get", {
       page,
       limit,
       created,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- *	Get board by URL
- * @param {string} url board url
- * @returns {Promise<AxiosResponse<IGetBoardsByUrlResponseBody>>} response
- */
-export const getBoardByUrl = async (
-  url: string,
-): Promise<AxiosResponse<IGetBoardsByUrlResponseBody>> => {
-  const { authToken } = useUserStore();
+  /**
+   *	Get board by URL
+   * @param {string} url board url
+   * @returns {Promise<AxiosResponse<IGetBoardsByUrlResponseBody>>} response
+   */
+  GetBoardByUrl = async (
+    url: string,
+  ): Promise<AxiosResponse<IGetBoardsByUrlResponseBody>> => {
+    return this.get(`/v1/boards/${encodeURIComponent(url)}`);
+  };
 
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/boards/${encodeURIComponent(url)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+  /**
+   * Search board by name
+   * @param {string} name board name
+   * @returns {Promise<AxiosResponse<ISearchBoardResponseBody>>} response
+   */
+  SearchBoard = async (
+    name: string,
+  ): Promise<AxiosResponse<ISearchBoardResponseBody>> => {
+    return this.get(`/v1/boards/search/${encodeURIComponent(name)}`);
+  };
 
-/**
- * Search board by name
- * @param {string} name board name
- * @returns {Promise<AxiosResponse<ISearchBoardResponseBody>>} response
- */
-export const searchBoard = async (
-  name: string,
-): Promise<AxiosResponse<ISearchBoardResponseBody>> => {
-  const { authToken } = useUserStore();
+  /**
+   * Create new board
+   * @param {object} board
+   * @param {string} board.name
+   * @param {string} board.display
+   * @returns {Promise<AxiosResponse<TBoardCreateRequestBody>>} response
+   */
+  CreateBoard = async (
+    board?: TBoardCreateRequestBody,
+  ): Promise<AxiosResponse<TBoardCreateResponseBody>> => {
+    return this.post("/v1/boards", board);
+  };
 
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/boards/search/${encodeURIComponent(name)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- * Create new board
- * @param {object} arg0
- * @param {string} arg0.name
- * @param {string} arg0.display
- * @returns {Promise<AxiosResponse<TBoardCreateRequestBody>>} response
- */
-export const createBoard = async ({
-  name,
-  display,
-}: TBoardCreateRequestBody): Promise<
-  AxiosResponse<TBoardCreateResponseBody>
-> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/boards`,
-    data: {
-      name,
-      display,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- * Update board
- * @param {object} board update board data
- * @param {string} board.boardId board ID
- * @param {string} board.name board name
- * @param {string} board.url board url
- * @param {string} board.color board color
- * @param {boolean} board.view_voters view voters in this board
- * @param {boolean} board.display display board on the site
- * @returns {Promise<AxiosResponse<TBoardUpdateResponseBody>>} response
- */
-export const updateBoard = async (
-  board: IBoardUpdateRequestBody,
-): Promise<AxiosResponse<TBoardUpdateResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "PATCH",
-    url: `${VITE_API_URL}/api/v1/boards`,
-    data: {
+  /**
+   * Update board
+   * @param {object} board update board data
+   * @param {string} board.boardId board ID
+   * @param {string} board.name board name
+   * @param {string} board.url board url
+   * @param {string} board.color board color
+   * @param {boolean} board.view_voters view voters in this board
+   * @param {boolean} board.display display board on the site
+   * @returns {Promise<AxiosResponse<TBoardUpdateResponseBody>>} response
+   */
+  UpdateBoard = async (
+    board: IBoardUpdateRequestBody,
+  ): Promise<AxiosResponse<TBoardUpdateResponseBody>> => {
+    return this.put("/v1/boards", {
       ...board,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- * delete board
- * @param {string} boardId board id
- * @returns {Promise<AxiosResponse<string>>} response
- */
-export const deleteBoard = async (
-  boardId: string,
-): Promise<AxiosResponse<string>> => {
-  const { authToken } = useUserStore();
+  /**
+   * delete board
+   * @param {string} boardId board id
+   * @returns {Promise<AxiosResponse<string>>} response
+   */
+  DeleteBoard = async (boardId: string): Promise<AxiosResponse<string>> => {
+    const { authToken } = useUserStore();
 
-  return await axios({
-    method: "DELETE",
-    url: `${VITE_API_URL}/api/v1/boards`,
-    data: {
-      boardId,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    return await axios({
+      method: "DELETE",
+      url: `${VITE_API_URL}/api/v1/boards`,
+      data: {
+        boardId,
+      },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  };
+
+  /*
+   * Check if board slug exists
+   */
+  CheckBoardSlug = async (
+    url: string,
+  ): Promise<AxiosResponse<TBoardCheckSlugResponse>> => {
+    return this.post("/v1/boards/check-slug", {
+      url,
+    });
+  };
+}
 
 /**
  * Check board name
@@ -206,26 +166,6 @@ export const checkBoardName = async (
     url: `${VITE_API_URL}/api/v1/boards/check-name`,
     data: {
       name,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/*
- * Check if board slug exists
- */
-export const checkBoardSlug = async (
-  url: string,
-): Promise<AxiosResponse<TBoardCheckSlugResponse>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/boards/check-slug`,
-    data: {
-      url,
     },
     headers: {
       Authorization: `Bearer ${authToken}`,
