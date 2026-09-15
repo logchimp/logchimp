@@ -10,13 +10,14 @@ import Td from "../../../../components/ui/Table/Td.vue";
 import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../../components/ui/InfiniteScroll.vue";
-import { getAllBoards } from "../../../modules/boards.ts";
+import { BoardsEE } from "../../../modules/boards";
 import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
 import ClientError from "../../../../components/ui/ClientError.vue";
 
 const boards = ref<IBoardPrivate[]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string | null>(null);
+const boardsEEAPI = new BoardsEE();
 
 async function getBoards() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
@@ -25,7 +26,7 @@ async function getBoards() {
   errorCode.value = null;
 
   try {
-    const response = await getAllBoards({
+    const response = await boardsEEAPI.GetAllBoards({
       page: "1",
       limit: "4",
       created: "DESC",

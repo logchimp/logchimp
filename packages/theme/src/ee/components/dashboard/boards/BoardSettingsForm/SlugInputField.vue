@@ -3,8 +3,7 @@ import { ref, reactive, watch } from "vue";
 import { CheckCircle2 as CheckCircle } from "lucide-vue";
 import { watchDebounced } from "@vueuse/core";
 
-import { checkBoardSlug } from "../../../../modules/boards";
-
+import { BoardsEE } from "../../../../modules/boards";
 import HelperText from "../../../../../components/ui/input/HelperText.vue";
 import LText from "../../../../../components/ui/input/LText.vue";
 import Loader from "../../../../../components/icons/Loader.vue";
@@ -25,6 +24,7 @@ const DEFAULT_STATE: TDefaultState = {
   loading: false,
 };
 const state = reactive(DEFAULT_STATE);
+const boardsEEAPI = new BoardsEE();
 
 watchDebounced(
   () => value.value,
@@ -38,7 +38,7 @@ watchDebounced(
     state.loading = true;
 
     try {
-      const response = await checkBoardSlug(newValue);
+      const response = await boardsEEAPI.CheckBoardSlug(newValue);
       state.available = response.data.available;
     } catch (err) {
       console.error(err);

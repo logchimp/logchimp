@@ -39,7 +39,7 @@
 import { inject, ref } from "vue";
 
 import { boardKey } from "./options";
-import { deleteBoard } from "../../../../modules/boards";
+import { BoardsEE } from "../../../../modules/boards";
 import { useDashboardBoards } from "../../../../store/dashboard/boards";
 import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 
@@ -52,6 +52,7 @@ interface Props {
 defineProps<Props>();
 const emit = defineEmits<(e: "close", value: boolean) => void>();
 const loading = ref<boolean>(false);
+const boardsEEAPI = new BoardsEE();
 
 async function deleteBoardHandler() {
   if (!board) return;
@@ -60,7 +61,7 @@ async function deleteBoardHandler() {
   loading.value = true;
 
   try {
-    const response = await deleteBoard(board.boardId);
+    const response = await boardsEEAPI.DeleteBoard(board.boardId);
 
     if (response.status === 204) {
       dashboardBoards.removeBoard(board.boardId);

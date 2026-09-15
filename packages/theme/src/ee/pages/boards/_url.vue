@@ -48,7 +48,7 @@ import type { AxiosError } from "axios";
 import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
 
 // modules
-import { getBoardByUrl } from "../../modules/boards";
+import { BoardsEE } from "../../modules/boards";
 
 // components
 import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
@@ -76,6 +76,7 @@ const loading = ref<boolean>(false);
 const isBoardExist = ref<boolean>(false);
 
 const { get: siteSettings } = useSettingStore();
+const boardsEEAPI = new BoardsEE();
 
 const activeTab = computed(() => {
   switch (tab.value) {
@@ -104,7 +105,7 @@ async function getBoard() {
   }
 
   try {
-    const response = await getBoardByUrl(url);
+    const response = await boardsEEAPI.GetBoardByUrl(url);
     isBoardExist.value = true;
     Object.assign(board, response.data.board);
   } catch (error) {

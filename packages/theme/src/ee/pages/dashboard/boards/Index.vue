@@ -34,7 +34,7 @@ import { storeToRefs } from "pinia";
 // modules
 import { router } from "../../../../router";
 import { useUserStore } from "../../../../store/user";
-import { createBoard } from "../../../modules/boards";
+import { BoardsEE } from "../../../modules/boards";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
 import { useSettingsEEStore } from "../../../store/settings";
 
@@ -54,6 +54,7 @@ const settingsEEStore = useSettingsEEStore();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
 
 const createBoardButtonLoading = ref(false);
+const boardsEEAPI = new BoardsEE();
 
 const createBoardPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("board:create");
@@ -64,7 +65,7 @@ async function createBoardHandler() {
   createBoardButtonLoading.value = true;
 
   try {
-    const response = await createBoard({});
+    const response = await boardsEEAPI.CreateBoard();
 
     dashboardBoards.appendBoard(response.data.board);
 
