@@ -37,7 +37,7 @@
 import { ref } from "vue";
 import type { IPostActivity } from "@logchimp/types";
 
-import { deleteComment } from "../../modules/posts";
+import { PostsEE } from "../../modules/posts";
 import { usePostActivityEEStore } from "../../store/postActivity";
 
 import Dialog from "../../../components/ui/Dialog/Dialog.vue";
@@ -52,13 +52,14 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits<(e: "close", value: boolean) => void>();
 const loading = ref<boolean>(false);
+const postsEEAPI = new PostsEE();
 
 async function deleteHandler() {
   if (loading.value) return;
   loading.value = true;
 
   try {
-    const response = await deleteComment(
+    const response = await postsEEAPI.DeleteComment(
       props.postId,
       props.activity.comment.id,
     );

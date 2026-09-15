@@ -50,7 +50,7 @@ import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
 import type { AxiosError } from "axios";
 
 // modules
-import { addComment } from "../../modules/posts";
+import { PostsEE } from "../../modules/posts";
 import tokenError from "../../../utils/tokenError";
 import { useUserStore } from "../../../store/user";
 import { useSettingsEEStore } from "../../store/settings";
@@ -70,6 +70,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const { permissions } = useUserStore();
 const settingsEEStore = useSettingsEEStore();
+const postsEEAPI = new PostsEE();
 
 const emit = defineEmits<(e: "add-comment", comment: IPostActivity) => void>();
 
@@ -93,7 +94,7 @@ async function submitComment() {
   try {
     loading.value = true;
 
-    const response = await addComment(props.postId, {
+    const response = await postsEEAPI.AddComment(props.postId, {
       body: comment.value,
       is_internal: isInternal.value,
     });

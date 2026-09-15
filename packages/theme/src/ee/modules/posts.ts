@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 import type {
   IAddVoteV2ResponseBody,
   ICreatePostCommentRequestBody,
@@ -11,7 +11,6 @@ import type {
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
-import { useUserStore } from "../../store/user";
 import { APIService } from "../../modules/api";
 
 export class PostsEE extends APIService {
@@ -37,101 +36,71 @@ export class PostsEE extends APIService {
         throw error;
       });
   }
-}
 
-/**
- * Get post activity
- * @param {string} post_id post UUID
- * @param {object} activity
- * @param {string} activity.page page number
- * @param {string} activity.limit number of items in a page
- * @param {string[]} activity.visibility visibility of the activity
- * @returns {Promise<AxiosResponse<IGetPostActivityResponseBody>>}
- */
-export const postActivity = async (
-  post_id: string,
-  {
-    page,
-    limit,
-    visibility,
-  }: Omit<IGetPostActivityRequestQuery, "visibility"> & {
-    visibility: Array<TFilterPostActivityVisibility>;
-  },
-): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/activity`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
+  /**
+   * Get post activity
+   * @param {string} post_id post UUID
+   * @param {object} activity
+   * @param {string} activity.page page number
+   * @param {string} activity.limit number of items in a page
+   * @param {string[]} activity.visibility visibility of the activity
+   * @returns {Promise<AxiosResponse<IGetPostActivityResponseBody>>}
+   */
+  GetPostActivities = async (
+    post_id: string,
+    {
+      page,
+      limit,
+      visibility,
+    }: Omit<IGetPostActivityRequestQuery, "visibility"> & {
+      visibility: Array<TFilterPostActivityVisibility>;
     },
-    params: {
+  ): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
+    return this.get(`/v1/posts/${encodeURIComponent(post_id)}/activity`, {
       page,
       limit,
       visibility: visibility.join(","),
-    },
-  });
-};
+    });
+  };
 
-/**
- * Add comment to a post
- * @param {string} post_id
- * @param {object} comment
- * @param {string} comment.body
- * @param {boolean} comment.is_internal
- * @returns {Promise<AxiosResponse<ICreatePostCommentResponseBody>>}
- */
-export const addComment = async (
-  post_id: string,
-  { body, is_internal = false }: ICreatePostCommentRequestBody,
-): Promise<AxiosResponse<ICreatePostCommentResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments`,
-    data: {
+  /**
+   * Add comment to a post
+   * @param {string} post_id
+   * @param {object} comment
+   * @param {string} comment.body
+   * @param {boolean} comment.is_internal
+   * @returns {Promise<AxiosResponse<ICreatePostCommentResponseBody>>}
+   */
+  AddComment = async (
+    post_id: string,
+    { body, is_internal = false }: ICreatePostCommentRequestBody,
+  ): Promise<AxiosResponse<ICreatePostCommentResponseBody>> => {
+    return this.post(`v1/posts/${encodeURIComponent(post_id)}/comments`, {
       body,
       is_internal,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-export async function updateComment(
-  post_id: string,
-  comment_id: string,
-  { body, is_internal = false }: Partial<IUpdatePostCommentRequestBody>,
-): Promise<AxiosResponse<IUpdatePostCommentResponseBody>> {
-  const { authToken } = useUserStore();
+  UpdateComment = async (
+    post_id: string,
+    comment_id: string,
+    { body, is_internal = false }: Partial<IUpdatePostCommentRequestBody>,
+  ): Promise<AxiosResponse<IUpdatePostCommentResponseBody>> => {
+    return this.put(
+      `/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
+      {
+        body,
+        is_internal,
+      },
+    );
+  };
 
-  return await axios({
-    method: "PUT",
-    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
-    data: {
-      body,
-      is_internal,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-}
-
-export async function deleteComment(
-  post_id: string,
-  comment_id: string,
-): Promise<AxiosResponse> {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "DELETE",
-    url: `${VITE_API_URL}/api/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
+  DeleteComment = async (
+    post_id: string,
+    comment_id: string,
+  ): Promise<AxiosResponse> => {
+    return this.delete(
+      `/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
+    );
+  };
 }
