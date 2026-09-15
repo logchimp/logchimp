@@ -62,7 +62,7 @@ import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../router";
-import { signin } from "../modules/auth";
+import { AuthAPI } from "../modules/auth";
 import { UsersAPI } from "../modules/users";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
@@ -79,7 +79,6 @@ const emailError = reactive({
   show: false,
   message: "",
 });
-
 const password = ref<string>("");
 const passwordError = reactive({
   show: false,
@@ -88,6 +87,7 @@ const passwordError = reactive({
 const buttonLoading = ref<boolean>(false);
 
 const { get: siteSettings } = useSettingStore();
+const authAPI = new AuthAPI();
 const usersAPI = new UsersAPI();
 const { getUserId, setUser, setPermissions } = useUserStore();
 
@@ -116,7 +116,7 @@ async function login() {
   buttonLoading.value = true;
 
   try {
-    const response = await signin({
+    const response = await authAPI.Signin({
       email: email.value,
       password: password.value,
     });
