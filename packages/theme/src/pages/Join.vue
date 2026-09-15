@@ -59,7 +59,7 @@ import type { IApiErrorResponse } from "@logchimp/types";
 // modules
 import { router } from "../router";
 import { signup } from "../modules/auth";
-import { getPermissions } from "../modules/users";
+import { UsersAPI } from "../modules/users";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
 
@@ -74,6 +74,7 @@ import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { getUserId, login, setPermissions } = useUserStore();
+const usersAPI = new UsersAPI();
 
 const email = ref("");
 const emailError = reactive({
@@ -126,7 +127,7 @@ async function join() {
     });
 
     login(response.data.user);
-    const permissions = await getPermissions();
+    const permissions = await usersAPI.GetPermissions();
     setPermissions(permissions.data.permissions);
 
     const route = router.currentRoute.value;

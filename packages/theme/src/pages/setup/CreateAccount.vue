@@ -69,7 +69,7 @@ import type { IApiErrorResponse } from "@logchimp/types";
 // modules
 import { router } from "../../router";
 import { siteSetup } from "../../modules/site";
-import { getPermissions } from "../../modules/users";
+import { UsersAPI } from "../../modules/users";
 import { useSettingStore } from "../../store/settings";
 import { useUserStore } from "../../store/user";
 
@@ -83,6 +83,7 @@ import Button from "../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { login, setPermissions } = useUserStore();
+const usersAPI = new UsersAPI();
 
 const siteTitle = reactive({
   value: "",
@@ -166,7 +167,7 @@ async function createAccount() {
 
     login(response.data.user);
 
-    const permissions = await getPermissions();
+    const permissions = await usersAPI.GetPermissions();
     setPermissions(permissions.data.permissions);
 
     router.push("/setup/create-board");
