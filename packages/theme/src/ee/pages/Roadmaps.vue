@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, onMounted } from "vue";
+import { onMounted, ref, useTemplateRef } from "vue";
 import { useHead } from "@vueuse/head";
 import { useInfiniteScroll } from "@vueuse/core";
 import type {
@@ -46,7 +46,7 @@ import type {
 import type { AxiosError } from "axios";
 
 // modules
-import { getAllRoadmaps } from "../modules/roadmaps";
+import { RoadmapsEE } from "../modules/roadmaps";
 import { useSettingStore } from "../../store/settings";
 
 // components
@@ -64,12 +64,14 @@ const errorCode = ref<string>();
 const loading = ref(true);
 const scrollLoading = ref(false);
 
+const roadmapsEEAPI = new RoadmapsEE();
+
 async function getRoadmaps(after: string | undefined, isScroll = false) {
   if (isScroll) scrollLoading.value = true;
   else loading.value = true;
 
   try {
-    const response = await getAllRoadmaps({
+    const response = await roadmapsEEAPI.GetAllRoadmaps({
       first: "4",
       after: after == null ? undefined : after,
       visibility: ["public"],

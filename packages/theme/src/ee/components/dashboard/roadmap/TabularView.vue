@@ -89,7 +89,7 @@ import type {
   VueDraggableEndEvent,
   VueDraggableEvent,
 } from "../../../lib/vuedraggable/types";
-import { sortRoadmap } from "../../../modules/roadmaps";
+import { RoadmapsEE } from "../../../modules/roadmaps";
 
 import Table from "../../../../components/ui/Table/Table.vue";
 import InfiniteScroll from "../../../../components/ui/InfiniteScroll.vue";
@@ -107,6 +107,7 @@ const requireUpgrade = computed(
     dashboardRoadmaps.state === "ERROR" &&
     dashboardRoadmaps.error === "LICENSE_INSUFFICIENT_TIER",
 );
+const roadmapEEAPI = new RoadmapsEE();
 
 const sort = ref<ISortRoadmapRequestBody>({
   from: {
@@ -148,7 +149,7 @@ async function initialiseSort(event: VueDraggableEndEvent) {
   }
 
   try {
-    const response = await sortRoadmap(sort.value);
+    const response = await roadmapEEAPI.SortRoadmap(sort.value);
 
     if (response.status === 200) {
       dashboardRoadmaps.sortRoadmap(sort.value.from.index, sort.value.to.index);

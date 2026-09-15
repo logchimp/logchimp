@@ -76,7 +76,7 @@ import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
 // modules
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
-import { updateRoadmap } from "../../modules/roadmaps";
+import { RoadmapsEE } from "../../modules/roadmaps";
 import { useDashboardRoadmaps } from "../../store/dashboard/roadmaps";
 
 // components
@@ -119,6 +119,8 @@ const roadmapFieldError = reactive({
   message: "",
 });
 
+const roadmapEEAPI = new RoadmapsEE();
+
 function hideNameError(event: FormFieldErrorType) {
   roadmapFieldError.show = event.show;
   roadmapFieldError.message = event.message;
@@ -134,7 +136,7 @@ async function updateHandler() {
   updateButtonLoading.value = true;
 
   try {
-    const response = await updateRoadmap({
+    const response = await roadmapEEAPI.UpdateRoadmap({
       ...roadmap,
     });
 

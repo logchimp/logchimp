@@ -20,13 +20,14 @@ import { DropdownMenuItem } from "reka-ui";
 import { PlusIcon } from "lucide-vue";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
-import { createRoadmap } from "../../../../modules/roadmaps";
+import { RoadmapsEE } from "../../../../modules/roadmaps";
 
 interface Props {
   search: string;
 }
 const props = defineProps<Props>();
 const emit = defineEmits<(e: "created", event: IRoadmapPrivate) => void>();
+const roadmapEEAPI = new RoadmapsEE();
 
 const loading = ref(false);
 
@@ -35,7 +36,7 @@ async function createRoadmapHandler() {
   loading.value = true;
 
   try {
-    const response = await createRoadmap({
+    const response = await roadmapEEAPI.CreateRoadmap({
       name: props.search,
     });
     const roadmap = response.data.roadmap;
