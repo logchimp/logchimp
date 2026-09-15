@@ -48,7 +48,7 @@ import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
-import { requestPasswordReset } from "../../modules/auth";
+import { AuthAPI } from "../../modules/auth";
 import { useSettingStore } from "../../store/settings";
 
 // component
@@ -61,6 +61,7 @@ import Button from "../../components/ui/Button.vue";
 import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
+const authAPI = new AuthAPI();
 
 const email = ref("");
 const emailError = reactive({
@@ -89,7 +90,7 @@ async function forgetPassword() {
   buttonLoading.value = true;
 
   try {
-    const response = await requestPasswordReset(email.value);
+    const response = await authAPI.RequestPasswordReset(email.value);
 
     hideForm.value = true;
     if (response.data.reset.success) {

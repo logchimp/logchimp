@@ -11,7 +11,7 @@ import tokenError from "../../utils/tokenError.ts";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
 import { UsersAPI } from "../../modules/users.ts";
-import { AuthAPIService } from "../../modules/auth.ts";
+import { AuthAPI } from "../../modules/auth.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -66,7 +66,7 @@ async function onMountedHandler() {
   setAuthToken(authCookie);
 
   try {
-    const authService = new AuthAPIService();
+    const authService = new AuthAPI();
     const getAuthUser = await authService.getMe();
     setUser({
       authToken: authCookie,
