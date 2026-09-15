@@ -34,7 +34,7 @@ import { storeToRefs } from "pinia";
 // modules
 import { router } from "../../../../../router";
 import { useUserStore } from "../../../../../store/user";
-import { createRole } from "../../../../modules/roles";
+import { RolesEEAPI } from "../../../../modules/roles";
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useSettingsEEStore } from "../../../../store/settings";
 
@@ -52,6 +52,7 @@ const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const settingsEEStore = useSettingsEEStore();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
+const rolesEEAPI = new RolesEEAPI();
 
 const createRoleButtonLoading = ref(false);
 
@@ -63,9 +64,9 @@ const createRoleButtonDisabled = computed(() => {
 async function createRoleHandler() {
   createRoleButtonLoading.value = true;
   try {
-    const response = await createRole();
+    const response = await rolesEEAPI.CreateRole();
 
-    const role = response.data.role;
+    const role = response.role;
     router.push(
       `/dashboard/settings/roles/${encodeURIComponent(role.id)}/settings`,
     );

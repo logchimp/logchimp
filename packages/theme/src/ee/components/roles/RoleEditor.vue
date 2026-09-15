@@ -370,13 +370,13 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import type { IRole, TPermission, IPermissionsState } from "@logchimp/types";
-import { ShieldAlert, ComputerIcon, TriangleAlert } from "lucide-vue";
+import type { IPermissionsState, IRole, TPermission } from "@logchimp/types";
+import { ComputerIcon, ShieldAlert, TriangleAlert } from "lucide-vue";
 
 // modules
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
-import { updateRole } from "../../modules/roles";
+import { RolesEEAPI } from "../../modules/roles";
 import { useDashboardRoles } from "../../store/dashboard/roles";
 
 // components
@@ -393,6 +393,7 @@ import RoleModifyPermissionScope from "./ModifyPermissionScope.vue";
 
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
+const rolesEEAPI = new RolesEEAPI();
 
 interface Props {
   title: string;
@@ -439,17 +440,15 @@ async function updateRoleHandler() {
   }
 
   try {
-    const response = await updateRole({
+    const response = await rolesEEAPI.UpdateRole({
       id: role.value.id,
       name: role.value.name,
       description: role.value.description,
       permissions: activePermissions,
     });
 
-    if (response.status === 200) {
-      dashboardRoles.updateRole(response.data.role);
-      router.push("/dashboard/settings/roles");
-    }
+    dashboardRoles.updateRole(response.role);
+    router.push("/dashboard/settings/roles");
   } catch (err) {
     console.error(err);
   } finally {
