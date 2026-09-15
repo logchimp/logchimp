@@ -30,11 +30,11 @@ import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useDashboardUsers } from "../../../../../store/dashboard/users";
 import DropdownV2CheckboxItem from "../../../../../components/ui/DropdownV2/CheckboxItem.vue";
 import { userIdKey } from "./options";
-import { UsersEe } from "../../../../modules/users";
+import { UsersEEAPI } from "../../../../modules/users";
 
 const dashboardRoles = useDashboardRoles();
 const dashboardUsers = useDashboardUsers();
-const usersEeServices = new UsersEe();
+const usersEeServices = new UsersEEAPI();
 
 onMounted(() => {
   dashboardRoles.fetchRoles();

@@ -82,7 +82,68 @@ export class Roles extends APIService {
     super(baseURL || `${VITE_API_URL}/api`);
   }
 
-  async getAll(params: IGetRolesParams = {}): Promise<IPaginatedRolesResponse> {
+  /**
+   * Get role by UUID
+   * @param {string} id role id
+   * @returns {Promise<AxiosResponse<IGetRoleByIdResponseBody>>} response
+   */
+  GetRole = async (
+    id: string,
+  ): Promise<AxiosResponse<IGetRoleByIdResponseBody>> => {
+    const { authToken } = useUserStore();
+
+    return await axios({
+      method: "GET",
+      url: `${VITE_API_URL}/api/v1/roles/${encodeURIComponent(id)}`,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  };
+
+  /**
+   * Create role
+   * @returns {Promise<AxiosResponse<ICreateRoleResponseBody>>} response
+   */
+  CreateRole = async (): Promise<AxiosResponse<ICreateRoleResponseBody>> => {
+    const { authToken } = useUserStore();
+
+    return await axios({
+      method: "POST",
+      url: `${VITE_API_URL}/api/v1/roles`,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  };
+
+  /**
+   * Update a role
+   * @param {object} role update role
+   * @param {string} role.id role id
+   * @param {string} role.name role name
+   * @param {string} role.description role description
+   * @param {string[]} role.permissions list of permission
+   * @returns {Promise<AxiosResponse<IUpdateRoleResponseBody>>} response
+   */
+  UpdateRole = async (
+    role: IUpdateRoleRequestBody,
+  ): Promise<AxiosResponse<IUpdateRoleResponseBody>> => {
+    const { authToken } = useUserStore();
+
+    return await axios({
+      method: "PATCH",
+      url: `${VITE_API_URL}/api/v1/roles`,
+      data: {
+        ...role,
+      },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  };
+
+  async GetAll(params: IGetRolesParams = {}): Promise<IPaginatedRolesResponse> {
     const searchParams = new URLSearchParams();
 
     for (const paramsKey in params) {

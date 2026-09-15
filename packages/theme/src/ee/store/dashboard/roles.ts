@@ -23,7 +23,7 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
     errorCode.value = undefined;
 
     try {
-      const response = await roleServices.getAll({
+      const response = await roleServices.GetAll({
         after: currentCursor.value,
       });
 
