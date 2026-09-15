@@ -95,7 +95,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 10
+          version: 10.34.5
 
       - name: Get pnpm store directory
         id: pnpm-cache
