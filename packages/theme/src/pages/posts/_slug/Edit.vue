@@ -49,7 +49,7 @@ import type { IApiErrorResponse, IDashboardPost } from "@logchimp/types";
 import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import { getPostBySlug, updatePost } from "../../../modules/posts";
+import { PostsAPI } from "../../../modules/posts";
 
 // components
 import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
@@ -60,6 +60,7 @@ import Button from "../../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { permissions, getUserId } = useUserStore();
+const postsAPI = new PostsAPI();
 
 // posts
 const post = reactive<IDashboardPost>({
@@ -130,7 +131,7 @@ async function getPost() {
   }
 
   try {
-    const response = await getPostBySlug(slug);
+    const response = await postsAPI.GetPostBySlug(slug);
 
     post.title = response.data.post.title;
     post.contentMarkdown = response.data.post.contentMarkdown;
@@ -169,7 +170,7 @@ async function savePost() {
   };
 
   try {
-    const response = await updatePost(postData);
+    const response = await postsAPI.UpdatePost(postData);
 
     router.push(`/posts/${encodeURIComponent(response.data.post.slug)}`);
   } catch (error) {

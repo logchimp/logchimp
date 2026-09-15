@@ -10,20 +10,19 @@ import Table from "../../../components/ui/Table/Table.vue";
 import Tr from "../../../components/ui/Table/Tr.vue";
 import Td from "../../../components/ui/Table/Td.vue";
 
-import { Posts } from "../../../modules/posts.ts";
+import { PostsAPI } from "../../../modules/posts.ts";
 import LicenseValidationFailed from "../../LicenseValidationFailed.vue";
 
 const posts = ref<IPost[]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string | null>(null);
+const postsAPI = new PostsAPI();
 
 async function getRecentPosts() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
 
   state.value = "LOADING";
   errorCode.value = null;
-
-  const postsAPI = new Posts();
 
   try {
     const response = await postsAPI.GetPosts(

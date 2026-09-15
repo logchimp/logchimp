@@ -62,7 +62,7 @@ import DOMPurify from "dompurify";
 import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import { getPostBySlug } from "../../../modules/posts";
+import { PostsAPI } from "../../../modules/posts";
 import { useSettingsEEStore } from "../../../ee/store/settings";
 
 // components
@@ -78,6 +78,7 @@ const PostActivityRenderer = defineAsyncComponent(
 const { permissions, getUserId } = useUserStore();
 const { get: siteSettings } = useSettingStore();
 const settingsEEStore = useSettingsEEStore();
+const postsAPI = new PostsAPI();
 
 dayjs.extend(relativeTime);
 
@@ -130,7 +131,7 @@ async function postBySlug() {
   if (route.params.slug) {
     try {
       const slug = route.params.slug.toString();
-      const response = await getPostBySlug(slug);
+      const response = await postsAPI.GetPostBySlug(slug);
 
       postLoading.value = false;
       Object.assign(post, response.data.post);
