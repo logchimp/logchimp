@@ -1,5 +1,5 @@
 // packages
-import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import type {
   ICreatePostRequestBody,
   ICreatePostResponseBody,
@@ -17,7 +17,7 @@ import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
 import { APIService } from "./api.ts";
 
-export class Posts extends APIService {
+export class PostsAPI extends APIService {
   constructor(baseURL?: string) {
     super(baseURL || `${VITE_API_URL}/api`);
   }
@@ -60,7 +60,7 @@ export class Posts extends APIService {
       });
   }
 
-  async getPostVotes(
+  async GetPostVotes(
     postId: string,
     params: IGetPostVotesRequestQuery = {},
   ): Promise<IPaginatedPostVotesResponse> {
@@ -83,83 +83,56 @@ export class Posts extends APIService {
         throw error;
       });
   }
-}
 
-/**
- * Create post
- * @param {object} post create post args
- * @param {string} post.boardId board UUID
- * @param {string} post.title
- * @param {string} post.description
- * @returns {Promise<AxiosResponse<ICreatePostResponseBody>>} response
- */
-export const createPost = async (
-  post: ICreatePostRequestBody,
-): Promise<AxiosResponse<ICreatePostResponseBody>> => {
-  const { getUserId, authToken } = useUserStore();
+  /**
+   * Create post
+   * @param {object} post create post args
+   * @param {string} post.boardId board UUID
+   * @param {string} post.title
+   * @param {string} post.description
+   * @returns {Promise<AxiosResponse<ICreatePostResponseBody>>} response
+   */
+  CreatePost = async (
+    post: ICreatePostRequestBody,
+  ): Promise<AxiosResponse<ICreatePostResponseBody>> => {
+    const { getUserId } = useUserStore();
 
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/posts`,
-    data: {
+    return this.post("/v1/posts", {
       title: post.title,
       contentMarkdown: post.contentMarkdown,
       userId: getUserId,
       boardId: post.boardId,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- * Get post by slug
- * @param {string} slug post slug
- * @returns {Promise<AxiosResponse<IGetPostBySlugResponseBody>>} response
- */
-export const getPostBySlug = async (
-  slug: string,
-): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "POST",
-    url: `${VITE_API_URL}/api/v1/posts/slug`,
-    data: {
+  /**
+   * Get post by slug
+   * @param {string} slug post slug
+   * @returns {Promise<AxiosResponse<IGetPostBySlugResponseBody>>} response
+   */
+  GetPostBySlug = async (
+    slug: string,
+  ): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
+    return this.post("/v1/posts/slug", {
       slug,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+    });
+  };
 
-/**
- * Update post
- * @param {object} post update post data
- * @param {string} post.id post UUID
- * @param {string} post.title post title
- * @param {string} post.contentMarkdown post body in markdown format
- * @param {string} post.slugId post slug UUID
- * @param {string} post.userId post author UUID
- * @param {string} post.boardId post board UUID
- * @param {string} post.roadmapId post roadmap UUID
- * @returns {Promise<AxiosResponse<TUpdatePostResponseBody>>} response
- */
-export const updatePost = async (
-  post: IUpdatePostRequestBody,
-): Promise<AxiosResponse<TUpdatePostResponseBody>> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "PATCH",
-    url: `${VITE_API_URL}/api/v1/posts`,
-    data: {
-      ...post,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
+  /**
+   * Update post
+   * @param {object} post update post data
+   * @param {string} post.id post UUID
+   * @param {string} post.title post title
+   * @param {string} post.contentMarkdown post body in markdown format
+   * @param {string} post.slugId post slug UUID
+   * @param {string} post.userId post author UUID
+   * @param {string} post.boardId post board UUID
+   * @param {string} post.roadmapId post roadmap UUID
+   * @returns {Promise<AxiosResponse<TUpdatePostResponseBody>>} response
+   */
+  UpdatePost = async (
+    post: IUpdatePostRequestBody,
+  ): Promise<AxiosResponse<TUpdatePostResponseBody>> => {
+    return this.put("/v1/posts", post);
+  };
+}
