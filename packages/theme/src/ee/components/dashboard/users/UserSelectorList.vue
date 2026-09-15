@@ -21,7 +21,7 @@
 import { onMounted, ref } from "vue";
 import type { IAddVoteV2ResponseBody, IUser } from "@logchimp/types";
 
-import { Users as UserService } from "../../../../modules/users";
+import { UsersAPI as UserService } from "../../../../modules/users";
 import { PostsEE as PostEEService } from "../../../../ee/modules/posts";
 
 const users = ref<Array<IUser>>([]);
@@ -44,7 +44,7 @@ async function getVotes() {
   loading.value = true;
 
   try {
-    const data = await userService.getAll({});
+    const data = await userService.GetAll({});
 
     users.value = data.users;
   } catch (e) {

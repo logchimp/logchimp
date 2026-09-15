@@ -4,7 +4,9 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "./store/user";
 import { isSiteSetup } from "./modules/site";
-import { checkUserDashboardAccess } from "./modules/users";
+import { UsersAPI } from "./modules/users";
+
+const usersAPI = new UsersAPI();
 
 const routes = [
   {
@@ -113,7 +115,7 @@ const routes = [
         }
 
         // Check user access to dashboard
-        const response = await checkUserDashboardAccess();
+        const response = await usersAPI.CheckUserDashboardAccess();
         if (response.data.access) {
           return next();
         }
