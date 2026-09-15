@@ -36,7 +36,7 @@ import type {
 
 // modules
 import { router } from "../../../../../router";
-import { getRole } from "../../../../modules/roles";
+import { RolesEEAPI } from "../../../../modules/roles";
 
 // components
 import Dashboard404 from "../../../../../components/dashboard/404.vue";
@@ -46,6 +46,7 @@ import RoleEditor from "../../../../components/roles/RoleEditor.vue";
 
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
+const rolesEEAPI = new RolesEEAPI();
 
 const title = ref("");
 const role = ref<IRole>({
@@ -114,7 +115,7 @@ async function getRoleHandler(id: string) {
   errorCode.value = undefined;
 
   try {
-    const response = await getRole(id);
+    const response = await rolesEEAPI.GetRole(id);
 
     title.value = response.data.role.name;
     role.value = response.data.role;

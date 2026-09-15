@@ -3,10 +3,10 @@ import { defineStore } from "pinia";
 import type { IApiErrorResponse, IRole } from "@logchimp/types";
 import type { AxiosError } from "axios";
 
-import { Roles } from "../../modules/roles";
+import { RolesEEAPI } from "../../modules/roles";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
 
-const roleServices = new Roles();
+const roleServices = new RolesEEAPI();
 
 export const useDashboardRoles = defineStore("dashboardRoles", () => {
   const roles = ref<IRole[]>([]);
