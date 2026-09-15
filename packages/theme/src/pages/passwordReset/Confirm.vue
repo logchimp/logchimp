@@ -64,7 +64,7 @@ import { useHead } from "@vueuse/head";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 
 // modules
-import { validateResetPasswordToken, setNewPassword } from "../../modules/auth";
+import { AuthAPI } from "../../modules/auth";
 import { router } from "../../router";
 import { useSettingStore } from "../../store/settings";
 
@@ -77,6 +77,7 @@ import Button from "../../components/ui/Button.vue";
 import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
+const authAPI = new AuthAPI();
 
 const password = reactive({
   value: "",
@@ -123,7 +124,7 @@ async function validateToken() {
 
   try {
     const token = route.query.token.toString();
-    const response = await validateResetPasswordToken(token);
+    const response = await authAPI.ValidateResetPasswordToken(token);
 
     if (response.data.reset.valid) {
       validToken.loading = false;
@@ -166,7 +167,7 @@ async function setPassword() {
   buttonLoading.value = true;
 
   try {
-    const response = await setNewPassword({
+    const response = await authAPI.SetNewPassword({
       token,
       password: password.value,
     });
