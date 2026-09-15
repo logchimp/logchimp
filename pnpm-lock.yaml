@@ -40,7 +40,7 @@ importers:
     dependencies:
       '@maizzle/framework':
         specifier: latest
-        version: 6.1.3(@types/node@24.11.0)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.42(typescript@6.0.3))(yaml@2.9.0)
+        version: 6.1.4(@types/node@24.11.0)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.42(typescript@6.0.3))(yaml@2.9.0)
       '@maizzle/tailwindcss':
         specifier: ^1.5.6
         version: 1.5.6
@@ -267,8 +267,8 @@ importers:
         specifier: 10.0.0
         version: 10.0.0
       '@vitejs/plugin-vue':
-        specifier: 6.0.8
-        version: 6.0.8(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))
+        specifier: 6.0.9
+        version: 6.0.9(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))
       '@vue/test-utils':
         specifier: 2.4.11
         version: 2.4.11(@vue/compiler-dom@3.5.42)(@vue/server-renderer@3.5.42)(vue@3.5.42(typescript@5.9.3))
@@ -818,8 +818,8 @@ packages:
     peerDependencies:
       vue: '>=3.0.1'
 
-  '@maizzle/framework@6.1.3':
-    resolution: {integrity: sha512-JAYseYY7eE5WIMOWkx9LJ23sS3nF6+K2VgPTdjyZHap2oh8K/nmPmXA3G8sVAxsHjCCszJ97ZqCKgcAsfjoUwQ==}
+  '@maizzle/framework@6.1.4':
+    resolution: {integrity: sha512-cXv/ITn202sGUVygxq0eOs+Ov7ylvRqnDk8iQrL0pWS5u48eYBGoeLNgnp9MQOTU3+T4pwKC749QTq840yvpxQ==}
     hasBin: true
     peerDependencies:
       shiki: ^1 || ^2 || ^3 || ^4
@@ -2176,6 +2176,13 @@ packages:
 
   '@vitejs/plugin-vue@6.0.8':
     resolution: {integrity: sha512-0ZjgOg7oO6farnNGup7yvoM/YXZV84OZxHAwtflItNa/6zzQyVb5LNxyea3FEKEX2XlagIKzrlH7wwxkKgtiew==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+      vue: ^3.2.25
+
+  '@vitejs/plugin-vue@6.0.9':
+    resolution: {integrity: sha512-rD/MORlhaZMlXWW0rEn4FB4wMinWC0z/D7Ye160S5+Rs1mC8ZDAdcDp4SjKfUhG5t8q1ktcPVw4xuTkPRlzrSA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -3904,11 +3911,6 @@ packages:
 
   nanoid@3.3.16:
     resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-
-  nanoid@3.3.18:
-    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -5728,7 +5730,7 @@ snapshots:
     dependencies:
       vue: 3.5.42(typescript@6.0.3)
 
-  '@maizzle/framework@6.1.3(@types/node@24.11.0)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.42(typescript@6.0.3))(yaml@2.9.0)':
+  '@maizzle/framework@6.1.4(@types/node@24.11.0)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.3)(lightningcss@1.32.0)(rolldown@1.1.5)(rollup@4.60.1)(shiki@4.3.1)(tailwind-merge@3.6.0)(vue@3.5.42(typescript@6.0.3))(yaml@2.9.0)':
     dependencies:
       '@lucide/vue': 1.25.0(vue@3.5.42(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
@@ -6801,17 +6803,17 @@ snapshots:
       - utf-8-validate
       - webpack
 
-  '@vitejs/plugin-vue@6.0.8(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      '@rolldown/pluginutils': 1.0.1
-      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
-      vue: 3.5.42(typescript@5.9.3)
-
   '@vitejs/plugin-vue@6.0.8(vite@8.1.5(@types/node@24.11.0)(esbuild@0.27.3)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.42(typescript@6.0.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.1.5(@types/node@24.11.0)(esbuild@0.27.3)(jiti@2.7.0)(yaml@2.9.0)
       vue: 3.5.42(typescript@6.0.3)
+
+  '@vitejs/plugin-vue@6.0.9(vite@6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))':
+    dependencies:
+      '@rolldown/pluginutils': 1.0.1
+      vite: 6.4.3(@types/node@24.11.0)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.69.5)(yaml@2.9.0)
+      vue: 3.5.42(typescript@5.9.3)
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -8659,8 +8661,6 @@ snapshots:
 
   nanoid@3.3.16: {}
 
-  nanoid@3.3.18: {}
-
   nanoid@3.3.19: {}
 
   nearley@2.20.1:
@@ -9044,7 +9044,7 @@ snapshots:
 
   postcss@8.5.19:
     dependencies:
-      nanoid: 3.3.18
+      nanoid: 3.3.19
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
