@@ -20,13 +20,14 @@
 import { computed, ref } from "vue";
 
 import ActivityItem from "../../../../components/activity/ActivityItem.vue";
-import { postActivity } from "../../../../modules/posts";
+import { PostsEE } from "../../../../modules/posts";
 import InfiniteScroll, {
   type InfiniteScrollStateType,
 } from "../../../../../components/ui/InfiniteScroll.vue";
 import { usePostActivityEEStore } from "../../../../store/postActivity";
 
 const postActivityEEStore = usePostActivityEEStore();
+const postsEEAPI = new PostsEE();
 
 interface Props {
   postId: string;
@@ -45,7 +46,7 @@ async function fetchPostActivity() {
   state.value = "LOADING";
 
   try {
-    const response = await postActivity(props.postId, {
+    const response = await postsEEAPI.GetPostActivities(props.postId, {
       page: page.value.toString(),
       visibility: ["public", "internal"],
     });

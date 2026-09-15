@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, ref } from "vue";
 import dayjs from "dayjs";
 import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
 import { LockKeyhole, Trash2Icon } from "lucide-vue";
@@ -89,13 +89,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import type { AxiosError } from "axios";
 
 import { useUserStore } from "../../../store/user";
-import { updateComment } from "../../modules/posts";
+import { PostsEE } from "../../modules/posts";
 import tokenError from "../../../utils/tokenError";
 
 import { Avatar } from "../../../components/ui/Avatar";
 import LTextarea from "../../../components/ui/input/LTextarea.vue";
 import LButton from "../../../components/ui/Button.vue";
 import { usePostActivityEEStore } from "../../store/postActivity";
+
 const DeleteCommentDialog = defineAsyncComponent(
   () => import("./DeleteCommentDialog.vue"),
 );
@@ -103,6 +104,7 @@ const DeleteCommentDialog = defineAsyncComponent(
 dayjs.extend(relativeTime);
 const { permissions, getUserId } = useUserStore();
 const postActivityEEStore = usePostActivityEEStore();
+const postsEEAPI = new PostsEE();
 
 interface Props {
   postId: string;
@@ -140,10 +142,14 @@ async function updateCommentHandler() {
 
   isLoading.value = true;
   try {
-    const res = await updateComment(props.postId, props.activity.comment.id, {
-      body: comment.value,
-      is_internal: props.activity.comment.is_internal,
-    });
+    const res = await postsEEAPI.UpdateComment(
+      props.postId,
+      props.activity.comment.id,
+      {
+        body: comment.value,
+        is_internal: props.activity.comment.is_internal,
+      },
+    );
 
     if (res.status === 200) {
       postActivityEEStore.updatePostActivity(props.postId, {
