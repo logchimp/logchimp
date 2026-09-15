@@ -16,7 +16,7 @@ import { ref } from "vue";
 import type { IPost } from "@logchimp/types";
 
 // modules
-import { Posts } from "../../modules/posts";
+import { PostsAPI } from "../../modules/posts";
 
 // components
 import InfiniteScroll, {
@@ -37,13 +37,12 @@ const posts = ref<IPost[]>([]);
 const endCursor = ref<string | undefined>();
 const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>("IDLE");
+const postsAPI = new PostsAPI();
 
 async function getMorePosts() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
   const boardId = props.board.boardId;
   state.value = "LOADING";
-
-  const postsAPI = new Posts();
 
   try {
     const response = await postsAPI.GetPosts(

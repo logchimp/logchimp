@@ -24,7 +24,7 @@ import type { IPost } from "@logchimp/types";
 
 // modules
 import { isSiteSetup } from "../modules/site";
-import { Posts } from "../modules/posts";
+import { PostsAPI } from "../modules/posts";
 import { useSettingStore } from "../store/settings";
 
 // components
@@ -40,6 +40,7 @@ const CreatePost = defineAsyncComponent(
 );
 
 const settingsStore = useSettingStore();
+const postsAPI = new PostsAPI();
 
 const posts = ref<IPost[]>([]);
 const endCursor = ref<string | undefined>();
@@ -59,8 +60,6 @@ async function isSetup() {
 async function loadMorePosts() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
   state.value = "LOADING";
-
-  const postsAPI = new Posts();
 
   try {
     const response = await postsAPI.GetPosts(
