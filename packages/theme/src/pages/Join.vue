@@ -127,7 +127,7 @@ async function join() {
       password: password.value,
     });
 
-    login(response.data.user);
+    login(response.user);
     const permissions = await usersAPI.GetPermissions();
     setPermissions(permissions.permissions);
 

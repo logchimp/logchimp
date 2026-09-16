@@ -93,7 +93,7 @@ async function forgetPassword() {
     const response = await authAPI.RequestPasswordReset(email.value);
 
     hideForm.value = true;
-    if (response.data.reset.success) {
+    if (response.reset.success) {
       requestSuccess.value = true;
     } else {
       requestError.value = true;

@@ -126,7 +126,7 @@ async function validateToken() {
     const token = route.query.token.toString();
     const response = await authAPI.ValidateResetPasswordToken(token);
 
-    if (response.data.reset.valid) {
+    if (response.reset.valid) {
       validToken.loading = false;
       validToken.success = true;
     }
@@ -172,7 +172,7 @@ async function setPassword() {
       password: password.value,
     });
 
-    if (response.data.reset.success) {
+    if (response.reset.success) {
       changePassword.success = true;
     }
   } catch (err) {

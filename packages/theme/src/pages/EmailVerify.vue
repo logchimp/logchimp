@@ -69,7 +69,7 @@ async function verifyEmail() {
     const token = route.query.token.toString();
     const response = await authAPI.VerifyUserEmail(token);
 
-    if (response.data.verify.success) {
+    if (response.verify.success) {
       success.value = true;
       loading.value = false;
     }

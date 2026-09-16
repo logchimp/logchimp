@@ -120,7 +120,7 @@ async function login() {
       email: email.value,
       password: password.value,
     });
-    setUser(response.data.user);
+    setUser(response.user);
 
     const permissions = await usersAPI.GetPermissions();
     setPermissions(permissions.permissions);
