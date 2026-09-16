@@ -9,7 +9,6 @@ export async function up(knex: Knex): Promise<void> {
         table
           .string("email", 320)
           .notNullable()
-
           .primary()
           .references("email")
           .inTable("users")
