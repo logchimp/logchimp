@@ -42,7 +42,7 @@ export class UsersAPI extends APIService {
   }: IUpdateUserSettingsArgs): Promise<
     IAuthUserProfileResponse<IAuthUserProfile>
   > => {
-    return this.put("/v1/users/profile", {
+    return this.patch("/v1/users/profile", {
       name,
     })
       .then((response) => response?.data)
