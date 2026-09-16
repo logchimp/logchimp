@@ -33,7 +33,7 @@ importers:
         specifier: ^24.3.1
         version: 24.13.4
       dotenv:
-        specifier: ^17.3.1
+        specifier: ^17.4.2
         version: 17.4.2
 
   packages/email-templates:
@@ -70,7 +70,7 @@ importers:
         specifier: ^3.4.15
         version: 3.4.15
       dotenv:
-        specifier: ^17.3.1
+        specifier: ^17.4.2
         version: 17.4.2
       express:
         specifier: ^4.22.2
