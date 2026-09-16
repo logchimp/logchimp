@@ -1,5 +1,9 @@
-import type { Request, Response, NextFunction } from "express";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { NextFunction, Request, Response } from "express";
+import type {
+  IApiErrorResponse,
+  IAssignRoleToUserRequestParams,
+  TUnassignRoleToUserRequestParams,
+} from "@logchimp/types";
 import database from "../database";
 
 // utils
@@ -7,8 +11,12 @@ import { validEmail, validUUID } from "../helpers";
 import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
+type RequestParam =
+  | IAssignRoleToUserRequestParams
+  | TUnassignRoleToUserRequestParams;
+
 export async function userExists(
-  req: Request,
+  req: Request<RequestParam>,
   res: Response<IApiErrorResponse>,
   next: NextFunction,
 ) {
