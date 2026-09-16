@@ -52,7 +52,7 @@ import { useHead } from "@vueuse/head";
 import { useDashboardPosts } from "../../../store/dashboard/posts";
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
-import { createPost } from "../../../modules/posts";
+import { PostsAPI } from "../../../modules/posts";
 
 // components
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
@@ -66,6 +66,8 @@ import LText from "../../../components/ui/input/LText.vue";
 
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
+const postsAPI = new PostsAPI();
+
 const createPostButtonLoading = ref(false);
 const displayLicenseValidationFailed = computed(
   () =>
@@ -116,11 +118,11 @@ async function createPostHandler() {
   createPostButtonLoading.value = true;
 
   try {
-    const response = await createPost({});
-    Object.assign(postTemplate, response.data.post);
+    const response = await postsAPI.CreatePost({});
+    Object.assign(postTemplate, response.post);
     dashboardPosts.appendPost(postTemplate);
 
-    const url = response.data.post.slug;
+    const url = response.post.slug;
     router.push(`/dashboard/posts/${encodeURIComponent(url)}`);
   } catch (err) {
     console.error(err);

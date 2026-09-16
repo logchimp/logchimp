@@ -5,7 +5,9 @@ import type { IApiErrorResponse, IPost } from "@logchimp/types";
 import { type AxiosError, isCancel } from "axios";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
-import { Posts } from "../../modules/posts";
+import { PostsAPI } from "../../modules/posts";
+
+const postsAPI = new PostsAPI();
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
@@ -26,8 +28,6 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
 
     state.value = "LOADING";
     errorCode.value = undefined;
-
-    const postsAPI = new Posts();
 
     try {
       const response = await postsAPI.GetPosts(

@@ -49,7 +49,7 @@ import type { IApiErrorResponse, IDashboardPost } from "@logchimp/types";
 import { router } from "../../../router";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import { getPostBySlug, updatePost } from "../../../modules/posts";
+import { PostsAPI } from "../../../modules/posts";
 
 // components
 import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
@@ -60,6 +60,7 @@ import Button from "../../../components/ui/Button.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { permissions, getUserId } = useUserStore();
+const postsAPI = new PostsAPI();
 
 // posts
 const post = reactive<IDashboardPost>({
@@ -130,15 +131,15 @@ async function getPost() {
   }
 
   try {
-    const response = await getPostBySlug(slug);
+    const response = await postsAPI.GetPostBySlug(slug);
 
-    post.title = response.data.post.title;
-    post.contentMarkdown = response.data.post.contentMarkdown;
-    post.postId = response.data.post.postId;
-    post.slugId = response.data.post.slugId;
-    post.author = response.data.post.author;
-    post.board = response.data.post.board;
-    post.roadmap = response.data.post.roadmap;
+    post.title = response.post.title;
+    post.contentMarkdown = response.post.contentMarkdown;
+    post.postId = response.post.postId;
+    post.slugId = response.post.slugId;
+    post.author = response.post.author;
+    post.board = response.post.board;
+    post.roadmap = response.post.roadmap;
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     if (err.response?.data?.code === "POST_NOT_FOUND") {
@@ -169,9 +170,9 @@ async function savePost() {
   };
 
   try {
-    const response = await updatePost(postData);
+    const response = await postsAPI.UpdatePost(postData);
 
-    router.push(`/posts/${encodeURIComponent(response.data.post.slug)}`);
+    router.push(`/posts/${encodeURIComponent(response.post.slug)}`);
   } catch (error) {
     console.log(error);
   } finally {

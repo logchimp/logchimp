@@ -23,22 +23,24 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, defineAsyncComponent } from "vue";
+import { defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IDashboardPost } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import { getPostBySlug } from "../../../../modules/posts";
+import { PostsAPI } from "../../../../modules/posts";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
 import Dashboard500 from "../../../../components/dashboard/500.vue";
 import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
+
 const DashboardPostViewer = defineAsyncComponent(
   () => import("../../../../components/dashboard/posts/PostViewer.vue"),
 );
 
+const postsAPI = new PostsAPI();
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
 const post = reactive<IDashboardPost>({
@@ -82,8 +84,8 @@ async function postBySlug(slug: string) {
   errorCode.value = undefined;
 
   try {
-    const response = await getPostBySlug(slug);
-    Object.assign(post, response.data.post);
+    const response = await postsAPI.GetPostBySlug(slug);
+    Object.assign(post, response.post);
   } catch (err) {
     console.error(err);
     // @ts-expect-error

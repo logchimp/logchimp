@@ -40,7 +40,7 @@ import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
-import { createPost } from "../../modules/posts";
+import { PostsAPI } from "../../modules/posts";
 import { useUserStore } from "../../store/user";
 
 // components
@@ -55,6 +55,7 @@ import { useLoginRedirectUrl } from "../../hooks/useLoginRedirectUrl";
 
 const router = useRouter();
 const { permissions, getUserId } = useUserStore();
+const postsAPI = new PostsAPI();
 
 const props = defineProps({
   boardId: {
@@ -103,14 +104,14 @@ async function submitPost() {
 
   loading.value = true;
   try {
-    const response = await createPost({
+    const response = await postsAPI.CreatePost({
       title: title.value,
       contentMarkdown: description.value,
       boardId: props.boardId,
     });
 
     // redirect to post
-    const slug = response.data.post.slug;
+    const slug = response.post.slug;
     router.push(`${dashboardUrl.value}/posts/${encodeURIComponent(slug)}`);
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;

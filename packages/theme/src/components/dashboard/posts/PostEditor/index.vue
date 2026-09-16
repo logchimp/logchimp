@@ -98,7 +98,7 @@ import type { IDashboardPost } from "@logchimp/types";
 import { storeToRefs } from "pinia";
 
 // modules
-import { updatePost } from "../../../../modules/posts";
+import { PostsAPI } from "../../../../modules/posts";
 import { useDashboardPosts } from "../../../../store/dashboard/posts";
 import { useSettingsEEStore } from "../../../../ee/store/settings";
 
@@ -121,6 +121,7 @@ import Checkbox from "../../../ui/Checkbox.vue";
 const dashboardPosts = useDashboardPosts();
 const settingsEEStore = useSettingsEEStore();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
+const postsAPI = new PostsAPI();
 
 interface Props {
   post: IDashboardPost;
@@ -163,7 +164,7 @@ async function updatePostHandler() {
   setLoading(true);
 
   try {
-    const response = await updatePost({
+    const response = await postsAPI.UpdatePost({
       id: post.postId,
       title: post.title,
       contentMarkdown: post.contentMarkdown,
@@ -176,7 +177,7 @@ async function updatePostHandler() {
       },
     });
 
-    Object.assign(post, response.data.post);
+    Object.assign(post, response.post);
     dashboardPosts.updatePost(post);
     emit("updated", post);
     notifyVoters.roadmap = false;

@@ -39,7 +39,7 @@
 import { defineAsyncComponent, onMounted, ref } from "vue";
 import type { IUserVoteV2 } from "@logchimp/types";
 
-import { Posts } from "../../../../../modules/posts";
+import { PostsAPI } from "../../../../../modules/posts";
 import { Avatar } from "../../../../ui/Avatar";
 const UserSelectorList = defineAsyncComponent(
   () =>
@@ -48,7 +48,7 @@ const UserSelectorList = defineAsyncComponent(
 
 const votes = ref<Array<IUserVoteV2>>([]);
 const loading = ref(false);
-const postService = new Posts();
+const postService = new PostsAPI();
 
 interface Props {
   postId: string;
@@ -62,7 +62,7 @@ async function getVotes() {
   loading.value = true;
 
   try {
-    const data = await postService.getPostVotes(props.postId, {
+    const data = await postService.GetPostVotes(props.postId, {
       first: "10",
     });
     votes.value = data.votes.results;

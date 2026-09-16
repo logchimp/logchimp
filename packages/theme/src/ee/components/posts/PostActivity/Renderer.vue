@@ -43,7 +43,7 @@
 import { computed, ref, defineAsyncComponent } from "vue";
 import type { IPostActivity } from "@logchimp/types";
 
-import { postActivity } from "../../../modules/posts";
+import { PostsEE } from "../../../modules/posts";
 import { usePostActivityEEStore } from "../../../store/postActivity";
 import { useUserStore } from "../../../../store/user";
 import PostActivityList from "./List.vue";
@@ -60,6 +60,7 @@ const SigninToComment = defineAsyncComponent(
 
 const { getUserId } = useUserStore();
 const postActivityEEStore = usePostActivityEEStore();
+const postsEEAPI = new PostsEE();
 
 interface Props {
   postId: string;
@@ -75,16 +76,13 @@ async function fetchPostActivity() {
   state.value = "LOADING";
 
   try {
-    const response = await postActivity(props.postId, {
+    const response = await postsEEAPI.GetPostActivities(props.postId, {
       page: page.value.toString(),
       visibility: ["public"],
     });
 
-    if (response.data.activity.length) {
-      postActivityEEStore.loadPostActivity(
-        props.postId,
-        response.data.activity,
-      );
+    if (response.activity.length) {
+      postActivityEEStore.loadPostActivity(props.postId, response.activity);
       page.value += 1;
       state.value = "LOADED";
     } else {
