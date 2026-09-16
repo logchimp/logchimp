@@ -51,11 +51,8 @@ async function fetchPostActivity() {
       visibility: ["public", "internal"],
     });
 
-    if (response.data.activity.length) {
-      postActivityEEStore.loadPostActivity(
-        props.postId,
-        response.data.activity,
-      );
+    if (response.activity.length) {
+      postActivityEEStore.loadPostActivity(props.postId, response.activity);
       page.value += 1;
       state.value = "LOADED";
     } else {

@@ -151,13 +151,11 @@ async function updateCommentHandler() {
       },
     );
 
-    if (res.status === 200) {
-      postActivityEEStore.updatePostActivity(props.postId, {
-        ...props.activity,
-        comment: res.data.comment,
-      });
-      isEditing.value = false;
-    }
+    postActivityEEStore.updatePostActivity(props.postId, {
+      ...props.activity,
+      comment: res.comment,
+    });
+    isEditing.value = false;
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     tokenError(err);

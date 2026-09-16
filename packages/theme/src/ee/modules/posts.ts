@@ -44,7 +44,7 @@ export class PostsEE extends APIService {
    * @param {string} activity.page page number
    * @param {string} activity.limit number of items in a page
    * @param {string[]} activity.visibility visibility of the activity
-   * @returns {Promise<AxiosResponse<IGetPostActivityResponseBody>>}
+   * @returns {Promise<IGetPostActivityResponseBody>}
    */
   GetPostActivities = async (
     post_id: string,
@@ -55,12 +55,16 @@ export class PostsEE extends APIService {
     }: Omit<IGetPostActivityRequestQuery, "visibility"> & {
       visibility: Array<TFilterPostActivityVisibility>;
     },
-  ): Promise<AxiosResponse<IGetPostActivityResponseBody>> => {
+  ): Promise<IGetPostActivityResponseBody> => {
     return this.get(`/v1/posts/${encodeURIComponent(post_id)}/activity`, {
       page,
       limit,
       visibility: visibility.join(","),
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -69,30 +73,38 @@ export class PostsEE extends APIService {
    * @param {object} comment
    * @param {string} comment.body
    * @param {boolean} comment.is_internal
-   * @returns {Promise<AxiosResponse<ICreatePostCommentResponseBody>>}
+   * @returns {Promise<ICreatePostCommentResponseBody>}
    */
   AddComment = async (
     post_id: string,
     { body, is_internal = false }: ICreatePostCommentRequestBody,
-  ): Promise<AxiosResponse<ICreatePostCommentResponseBody>> => {
+  ): Promise<ICreatePostCommentResponseBody> => {
     return this.post(`v1/posts/${encodeURIComponent(post_id)}/comments`, {
       body,
       is_internal,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   UpdateComment = async (
     post_id: string,
     comment_id: string,
     { body, is_internal = false }: Partial<IUpdatePostCommentRequestBody>,
-  ): Promise<AxiosResponse<IUpdatePostCommentResponseBody>> => {
+  ): Promise<IUpdatePostCommentResponseBody> => {
     return this.put(
       `/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
       {
         body,
         is_internal,
       },
-    );
+    )
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   DeleteComment = async (

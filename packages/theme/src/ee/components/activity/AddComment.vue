@@ -102,7 +102,7 @@ async function submitComment() {
     comment.value = "";
     loading.value = false;
 
-    emit("add-comment", response?.data?.activity);
+    emit("add-comment", response?.activity);
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     tokenError(err);
