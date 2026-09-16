@@ -39,7 +39,7 @@ async function createBoardHandler() {
     const response = await boardsEEAPI.CreateBoard({
       name: props.search,
     });
-    const board = response.data.board;
+    const board = response.board;
 
     emit("created", board);
     loading.value = false;

@@ -67,9 +67,9 @@ async function createBoardHandler() {
   try {
     const response = await boardsEEAPI.CreateBoard();
 
-    dashboardBoards.appendBoard(response.data.board);
+    dashboardBoards.appendBoard(response.board);
 
-    const url = response.data.board.url;
+    const url = response.board.url;
     router.push(`/dashboard/boards/${encodeURIComponent(url)}/settings`);
   } catch (err) {
     console.error(err);

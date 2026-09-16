@@ -39,7 +39,7 @@ watchDebounced(
 
     try {
       const response = await boardsEEAPI.CheckBoardSlug(newValue);
-      state.available = response.data.available;
+      state.available = response.available;
     } catch (err) {
       console.error(err);
     } finally {

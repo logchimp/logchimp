@@ -1,5 +1,4 @@
 // packages
-import axios, { type AxiosResponse } from "axios";
 import type {
   IBoardUpdateRequestBody,
   IFilterBoardResponseBody,
@@ -15,8 +14,8 @@ import type {
 } from "@logchimp/types";
 
 import { VITE_API_URL } from "../../constants";
-import { useUserStore } from "../../store/user";
 import { APIService } from "../../modules/api.ts";
+import type { AxiosResponse } from "axios";
 
 export class BoardsEE extends APIService {
   constructor(baseURL?: string) {
@@ -28,20 +27,22 @@ export class BoardsEE extends APIService {
    * @param {string} first number of items to fetch
    * @param {string} after cursor to fetch next page
    * @param {ApiSortType} created sort type asc or desc
-   * @returns {Promise<AxiosResponse<IFilterBoardResponseBody>>} response
+   * @returns {Promise<IFilterBoardResponseBody>} response
    */
   GetPublicBoards = async ({
     first,
     after,
     created = "DESC",
-  }: TFilterBoardRequestQuery): Promise<
-    AxiosResponse<IFilterBoardResponseBody>
-  > => {
+  }: TFilterBoardRequestQuery): Promise<IFilterBoardResponseBody> => {
     return this.get("/v1/boards", {
       after,
       first,
       created,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -49,42 +50,48 @@ export class BoardsEE extends APIService {
    * @param {string} page page number default to 1
    * @param {string} limit number of items per page
    * @param {ApiSortType} created sort type asc or desc
-   * @returns {Promise<AxiosResponse<IGetBoardsResponseBody>>} response
+   * @returns {Promise<IGetBoardsResponseBody>} response
    */
   GetAllBoards = async ({
     page = "1",
     limit = "10",
     created = "DESC",
-  }: IGetBoardsRequestQuery): Promise<
-    AxiosResponse<IGetBoardsResponseBody>
-  > => {
+  }: IGetBoardsRequestQuery): Promise<IGetBoardsResponseBody> => {
     return this.get("/v1/boards/get", {
       page,
       limit,
       created,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    *	Get board by URL
    * @param {string} url board url
-   * @returns {Promise<AxiosResponse<IGetBoardsByUrlResponseBody>>} response
+   * @returns {Promise<IGetBoardsByUrlResponseBody>} response
    */
-  GetBoardByUrl = async (
-    url: string,
-  ): Promise<AxiosResponse<IGetBoardsByUrlResponseBody>> => {
-    return this.get(`/v1/boards/${encodeURIComponent(url)}`);
+  GetBoardByUrl = async (url: string): Promise<IGetBoardsByUrlResponseBody> => {
+    return this.get(`/v1/boards/${encodeURIComponent(url)}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    * Search board by name
    * @param {string} name board name
-   * @returns {Promise<AxiosResponse<ISearchBoardResponseBody>>} response
+   * @returns {Promise<ISearchBoardResponseBody>} response
    */
-  SearchBoard = async (
-    name: string,
-  ): Promise<AxiosResponse<ISearchBoardResponseBody>> => {
-    return this.get(`/v1/boards/search/${encodeURIComponent(name)}`);
+  SearchBoard = async (name: string): Promise<ISearchBoardResponseBody> => {
+    return this.get(`/v1/boards/search/${encodeURIComponent(name)}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -92,12 +99,16 @@ export class BoardsEE extends APIService {
    * @param {object} board
    * @param {string} board.name
    * @param {string} board.display
-   * @returns {Promise<AxiosResponse<TBoardCreateRequestBody>>} response
+   * @returns {Promise<TBoardCreateRequestBody>} response
    */
   CreateBoard = async (
     board?: TBoardCreateRequestBody,
-  ): Promise<AxiosResponse<TBoardCreateResponseBody>> => {
-    return this.post("/v1/boards", board);
+  ): Promise<TBoardCreateResponseBody> => {
+    return this.post("/v1/boards", board)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -109,14 +120,18 @@ export class BoardsEE extends APIService {
    * @param {string} board.color board color
    * @param {boolean} board.view_voters view voters in this board
    * @param {boolean} board.display display board on the site
-   * @returns {Promise<AxiosResponse<TBoardUpdateResponseBody>>} response
+   * @returns {Promise<TBoardUpdateResponseBody>} response
    */
   UpdateBoard = async (
     board: IBoardUpdateRequestBody,
-  ): Promise<AxiosResponse<TBoardUpdateResponseBody>> => {
-    return this.put("/v1/boards", {
+  ): Promise<TBoardUpdateResponseBody> => {
+    return this.patch("/v1/boards", {
       ...board,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -125,28 +140,21 @@ export class BoardsEE extends APIService {
    * @returns {Promise<AxiosResponse<string>>} response
    */
   DeleteBoard = async (boardId: string): Promise<AxiosResponse<string>> => {
-    const { authToken } = useUserStore();
-
-    return await axios({
-      method: "DELETE",
-      url: `${VITE_API_URL}/api/v1/boards`,
-      data: {
-        boardId,
-      },
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+    return this.delete("/v1/boards", {
+      boardId,
     });
   };
 
   /*
    * Check if board slug exists
    */
-  CheckBoardSlug = async (
-    url: string,
-  ): Promise<AxiosResponse<TBoardCheckSlugResponse>> => {
+  CheckBoardSlug = async (url: string): Promise<TBoardCheckSlugResponse> => {
     return this.post("/v1/boards/check-slug", {
       url,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 }

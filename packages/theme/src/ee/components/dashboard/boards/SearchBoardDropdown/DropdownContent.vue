@@ -93,7 +93,7 @@ watchDebounced(
 
     try {
       const response = await boardsEEAPI.SearchBoard(searchTerm);
-      suggestions.value = response.data.boards;
+      suggestions.value = response.boards;
     } catch (err) {
       console.error(err);
       resetSuggestions();

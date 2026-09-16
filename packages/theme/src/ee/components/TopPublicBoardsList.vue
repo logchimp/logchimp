@@ -47,7 +47,7 @@ async function getBoardsHandler() {
     first: "5",
     created: "DESC",
   });
-  boards.value = response.data.boards;
+  boards.value = response.boards;
 }
 
 onMounted(async () => {

@@ -107,7 +107,7 @@ async function getBoard() {
   try {
     const response = await boardsEEAPI.GetBoardByUrl(url);
     isBoardExist.value = true;
-    Object.assign(board, response.data.board);
+    Object.assign(board, response.board);
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     if (err.response?.data?.code === "BOARD_NOT_FOUND") {

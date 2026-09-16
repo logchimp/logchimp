@@ -149,7 +149,7 @@ async function update() {
     }
     const response = await boardsEEAPI.UpdateBoard(body);
 
-    dashboardBoards.updateBoard(response.data.board);
+    dashboardBoards.updateBoard(response.board);
     router.push("/dashboard/boards");
   } catch (error) {
     console.error(error);

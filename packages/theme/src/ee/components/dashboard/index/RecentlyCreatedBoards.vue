@@ -32,7 +32,7 @@ async function getBoards() {
       created: "DESC",
     });
 
-    boards.value = response.data.boards;
+    boards.value = response.boards;
     state.value = "COMPLETED";
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;

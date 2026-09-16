@@ -26,8 +26,8 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
         created: "DESC",
       });
 
-      if (response.data.boards.length) {
-        boards.value.push(...response.data.boards);
+      if (response.boards.length) {
+        boards.value.push(...response.boards);
         page.value += 1;
         state.value = "LOADED";
       } else {

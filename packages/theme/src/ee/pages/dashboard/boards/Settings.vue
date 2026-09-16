@@ -59,8 +59,8 @@ async function getBoard(url: string) {
   try {
     const response = await boardsEEAPI.GetBoardByUrl(url);
 
-    title.value = response.data.board.name;
-    Object.assign(board, response.data.board);
+    title.value = response.board.name;
+    Object.assign(board, response.board);
   } catch (err) {
     console.error(err);
     // @ts-expect-error
