@@ -68,7 +68,7 @@ import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../router";
-import { getUserSettings, updateUserSettings } from "../modules/users";
+import { UsersAPI } from "../modules/users";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
 import tokenError from "../utils/tokenError";
@@ -83,6 +83,7 @@ import AccountVerificationAlert from "../components/account/VerificationAlert.vu
 
 const { get: siteSettings } = useSettingStore();
 const { getUserId } = useUserStore();
+const usersAPI = new UsersAPI();
 
 const user = reactive({
   username: "",
@@ -106,12 +107,12 @@ async function getUser() {
   loading.value = true;
 
   try {
-    const response = await getUserSettings();
+    const response = await usersAPI.GetUserSettings();
 
-    name.value = response.data.user.name;
-    user.username = response.data.user.username;
-    user.email = response.data.user.email;
-    isVerified.value = response.data.user.isVerified;
+    name.value = response.user.name;
+    user.username = response.user.username;
+    user.email = response.user.email;
+    isVerified.value = response.user.isVerified;
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     tokenError(err);
@@ -124,11 +125,11 @@ async function updateSettings() {
   updateUserButtonLoading.value = true;
 
   try {
-    const response = await updateUserSettings({
+    const response = await usersAPI.UpdateUserSettings({
       name: name.value,
     });
 
-    name.value = response.data.user.name;
+    name.value = response.user.name;
     updateUserButtonLoading.value = false;
     // TODO: Add TS types
     // biome-ignore lint: Add TS types

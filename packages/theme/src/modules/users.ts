@@ -1,117 +1,87 @@
-// packages
-import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type {
   IAuthUserProfile,
   IAuthUserProfileResponse,
-  IUpdateUserSettingsArgs,
+  ICheckUserDashboardAccess,
   IGetPermissionResponse,
-  IGetUsersResponseBody,
   IGetUsersRequestQuery,
+  IGetUsersResponseBody,
+  IUpdateUserSettingsArgs,
 } from "@logchimp/types";
 
 // store
-import { useUserStore } from "../store/user";
-
 import { APIService } from "./api";
 import { VITE_API_URL } from "../constants";
 
-/**
- * Get user settings
- * @returns {Promise<AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>>} response
- */
-export const getUserSettings = async (): Promise<
-  AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>
-> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/users/profile`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- *	Update user settings
- * @param {object} user update user data
- * @param {string} user.name user's name
- * @returns {Promise<AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>>} response
- */
-export const updateUserSettings = async ({
-  name,
-}: IUpdateUserSettingsArgs): Promise<
-  AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>
-> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "patch",
-    url: `${VITE_API_URL}/api/v1/users/profile`,
-    data: {
-      name,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- * Get authenticated user permissions
- */
-export const getPermissions = async (): Promise<
-  AxiosResponse<IGetPermissionResponse>
-> => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/users/permissions`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-/**
- *	Check if user have access to dashboard
- *
- * @returns {object} response
- */
-export const checkUserDashboardAccess = async () => {
-  const { authToken } = useUserStore();
-
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/users/dashboard`,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-};
-
-export class Users extends APIService {
+export class UsersAPI extends APIService {
   constructor(baseURL?: string) {
     super(baseURL || `${VITE_API_URL}/api`);
   }
 
   /**
-   * @param {Partial<IGetUsersRequestQuery>} [params={}] - URL parameters
-   * @returns {Promise<AxiosResponse<IGetUsersResponseBody>>}
+   * Get user settings
+   * @returns {Promise<IAuthUserProfileResponse<IAuthUserProfile>>} response
    */
-  async getAll(
+  GetUserSettings = async (): Promise<
+    IAuthUserProfileResponse<IAuthUserProfile>
+  > => {
+    return this.get("/v1/users/profile")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  };
+
+  /**
+   *	Update user settings
+   * @param {object} user update user data
+   * @param {string} user.name user's name
+   * @returns {Promise<IAuthUserProfileResponse<IAuthUserProfile>>} response
+   */
+  UpdateUserSettings = async ({
+    name,
+  }: IUpdateUserSettingsArgs): Promise<
+    IAuthUserProfileResponse<IAuthUserProfile>
+  > => {
+    return this.patch("/v1/users/profile", {
+      name,
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  };
+
+  /**
+   * Get authenticated user permissions
+   */
+  GetPermissions = async (): Promise<IGetPermissionResponse> => {
+    return this.get("/v1/users/permissions")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  };
+
+  /**
+   * Check if user have access to dashboard
+   * @returns {Promise<ICheckUserDashboardAccess>}
+   */
+  CheckUserDashboardAccess = async (): Promise<ICheckUserDashboardAccess> => {
+    return this.get("/v1/users/dashboard")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
+  };
+
+  /**
+   * @param {Partial<IGetUsersRequestQuery>} [params={}] - URL parameters
+   * @returns {Promise<IGetUsersResponseBody>}
+   */
+  async GetAll(
     params: Partial<IGetUsersRequestQuery> = {},
   ): Promise<IGetUsersResponseBody> {
-    const { authToken } = useUserStore();
-    const config: AxiosRequestConfig = {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    };
-
-    return this.get("/v1/users", params, config)
+    return this.get("/v1/users", params)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;

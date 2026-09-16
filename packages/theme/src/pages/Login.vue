@@ -63,7 +63,7 @@ import type { AxiosError } from "axios";
 // modules
 import { router } from "../router";
 import { signin } from "../modules/auth";
-import { getPermissions } from "../modules/users";
+import { UsersAPI } from "../modules/users";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
 
@@ -88,6 +88,7 @@ const passwordError = reactive({
 const buttonLoading = ref<boolean>(false);
 
 const { get: siteSettings } = useSettingStore();
+const usersAPI = new UsersAPI();
 const { getUserId, setUser, setPermissions } = useUserStore();
 
 function hideEmailError() {
@@ -121,8 +122,8 @@ async function login() {
     });
     setUser(response.data.user);
 
-    const permissions = await getPermissions();
-    setPermissions(permissions.data.permissions);
+    const permissions = await usersAPI.GetPermissions();
+    setPermissions(permissions.permissions);
 
     const route = router.currentRoute.value;
     if (route.query.redirect) {

@@ -26,7 +26,7 @@ import packageJson from "../package.json";
 import { useSettingStore } from "./store/settings";
 import { useUserStore } from "./store/user";
 import { useAlertStore } from "./store/alert";
-import { getPermissions } from "./modules/users";
+import { UsersAPI } from "./modules/users";
 import tokenError from "./utils/tokenError";
 
 // components
@@ -35,6 +35,7 @@ import { Alert } from "./components/ui/Alert";
 const settingsStore = useSettingStore();
 const { getAlerts, remove: removeAlert } = useAlertStore();
 const userStore = useUserStore();
+const usersAPI = new UsersAPI();
 
 const logchimpVersion = computed(() => packageJson.version);
 
@@ -76,8 +77,8 @@ onMounted(async () => {
      * and the data still exists on client-side.
      */
     try {
-      const permissions = await getPermissions();
-      userStore.setPermissions(permissions.data.permissions);
+      const permissions = await usersAPI.GetPermissions();
+      userStore.setPermissions(permissions.permissions);
     } catch (error) {
       const err = error as AxiosError<IApiErrorResponse>;
       tokenError(err);

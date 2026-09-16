@@ -2,10 +2,10 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { IUser, IUserRole } from "@logchimp/types";
 
-import { Users } from "../../modules/users";
+import { UsersAPI } from "../../modules/users";
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
 
-const usersServices = new Users();
+const usersServices = new UsersAPI();
 
 export const useDashboardUsers = defineStore("dashboardUsers", () => {
   const users = ref<IUser[]>([]);
@@ -24,7 +24,7 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     error.value = undefined;
 
     try {
-      const response = await usersServices.getAll({
+      const response = await usersServices.GetAll({
         after: currentCursor.value,
       });
 

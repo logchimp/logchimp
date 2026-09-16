@@ -10,7 +10,7 @@ import { useUserStore } from "../../store/user.ts";
 import tokenError from "../../utils/tokenError.ts";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
-import { getPermissions } from "../../modules/users.ts";
+import { UsersAPI } from "../../modules/users.ts";
 import { AuthAPIService } from "../../modules/auth.ts";
 
 const route = useRoute();
@@ -19,6 +19,7 @@ const { setAuthToken, setUser, setPermissions } = useUserStore();
 const isLoading = ref(true);
 const errMsg = ref("");
 const isError = ref(false);
+const usersAPI = new UsersAPI();
 
 const OIDC_ERROR_MESSAGES: Record<string, string> = {
   access_denied:
@@ -71,8 +72,8 @@ async function onMountedHandler() {
       authToken: authCookie,
       ...getAuthUser.user,
     });
-    const permissions = await getPermissions();
-    setPermissions(permissions.data.permissions);
+    const permissions = await usersAPI.GetPermissions();
+    setPermissions(permissions.permissions);
 
     Cookie.remove("lc-auth-token", {
       path: "/oauth/logchimp",
