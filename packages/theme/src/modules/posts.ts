@@ -1,5 +1,4 @@
-// packages
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import type {
   ICreatePostRequestBody,
   ICreatePostResponseBody,
@@ -90,11 +89,11 @@ export class PostsAPI extends APIService {
    * @param {string} post.boardId board UUID
    * @param {string} post.title
    * @param {string} post.description
-   * @returns {Promise<AxiosResponse<ICreatePostResponseBody>>} response
+   * @returns {Promise<ICreatePostResponseBody>} response
    */
   CreatePost = async (
     post: ICreatePostRequestBody,
-  ): Promise<AxiosResponse<ICreatePostResponseBody>> => {
+  ): Promise<ICreatePostResponseBody> => {
     const { getUserId } = useUserStore();
 
     return this.post("/v1/posts", {
@@ -102,20 +101,26 @@ export class PostsAPI extends APIService {
       contentMarkdown: post.contentMarkdown,
       userId: getUserId,
       boardId: post.boardId,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    * Get post by slug
    * @param {string} slug post slug
-   * @returns {Promise<AxiosResponse<IGetPostBySlugResponseBody>>} response
+   * @returns {Promise<IGetPostBySlugResponseBody>} response
    */
-  GetPostBySlug = async (
-    slug: string,
-  ): Promise<AxiosResponse<IGetPostBySlugResponseBody>> => {
+  GetPostBySlug = async (slug: string): Promise<IGetPostBySlugResponseBody> => {
     return this.post("/v1/posts/slug", {
       slug,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -128,11 +133,15 @@ export class PostsAPI extends APIService {
    * @param {string} post.userId post author UUID
    * @param {string} post.boardId post board UUID
    * @param {string} post.roadmapId post roadmap UUID
-   * @returns {Promise<AxiosResponse<TUpdatePostResponseBody>>} response
+   * @returns {Promise<TUpdatePostResponseBody>} response
    */
   UpdatePost = async (
     post: IUpdatePostRequestBody,
-  ): Promise<AxiosResponse<TUpdatePostResponseBody>> => {
-    return this.put("/v1/posts", post);
+  ): Promise<TUpdatePostResponseBody> => {
+    return this.put("/v1/posts", post)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 }

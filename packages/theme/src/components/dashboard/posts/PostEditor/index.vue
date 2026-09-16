@@ -177,7 +177,7 @@ async function updatePostHandler() {
       },
     });
 
-    Object.assign(post, response.data.post);
+    Object.assign(post, response.post);
     dashboardPosts.updatePost(post);
     emit("updated", post);
     notifyVoters.roadmap = false;

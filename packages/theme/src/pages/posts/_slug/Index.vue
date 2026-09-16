@@ -134,12 +134,12 @@ async function postBySlug() {
       const response = await postsAPI.GetPostBySlug(slug);
 
       postLoading.value = false;
-      Object.assign(post, response.data.post);
+      Object.assign(post, response.post);
       isPostExist.value = true;
 
-      if (response.data.post?.contentMarkdown) {
+      if (response.post?.contentMarkdown) {
         postContent.value = DOMPurify.sanitize(
-          response.data.post.contentMarkdown.replace(/\n/g, "<br>"),
+          response.post.contentMarkdown.replace(/\n/g, "<br>"),
         );
       }
     } catch (error: unknown) {

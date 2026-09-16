@@ -111,7 +111,7 @@ async function submitPost() {
     });
 
     // redirect to post
-    const slug = response.data.post.slug;
+    const slug = response.post.slug;
     router.push(`${dashboardUrl.value}/posts/${encodeURIComponent(slug)}`);
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;

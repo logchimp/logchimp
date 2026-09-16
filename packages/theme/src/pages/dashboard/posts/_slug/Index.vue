@@ -85,7 +85,7 @@ async function postBySlug(slug: string) {
 
   try {
     const response = await postsAPI.GetPostBySlug(slug);
-    Object.assign(post, response.data.post);
+    Object.assign(post, response.post);
   } catch (err) {
     console.error(err);
     // @ts-expect-error

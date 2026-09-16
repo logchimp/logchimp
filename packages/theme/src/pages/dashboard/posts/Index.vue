@@ -119,10 +119,10 @@ async function createPostHandler() {
 
   try {
     const response = await postsAPI.CreatePost({});
-    Object.assign(postTemplate, response.data.post);
+    Object.assign(postTemplate, response.post);
     dashboardPosts.appendPost(postTemplate);
 
-    const url = response.data.post.slug;
+    const url = response.post.slug;
     router.push(`/dashboard/posts/${encodeURIComponent(url)}`);
   } catch (err) {
     console.error(err);
