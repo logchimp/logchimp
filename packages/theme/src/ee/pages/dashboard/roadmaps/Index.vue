@@ -68,7 +68,7 @@ async function createRoadmapHandler() {
 
   try {
     const response = await roadmapEEAPI.CreateRoadmap();
-    const roadmap = response.data.roadmap;
+    const roadmap = response.roadmap;
 
     dashboardRoadmaps.appendRoadmap(roadmap);
     router.push(

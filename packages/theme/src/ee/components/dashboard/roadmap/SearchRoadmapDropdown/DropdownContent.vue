@@ -95,7 +95,7 @@ watchDebounced(
 
     try {
       const response = await roadmapEEAPI.SearchRoadmap(searchTerm);
-      suggestions.value = response.data.roadmaps;
+      suggestions.value = response.roadmaps;
     } catch (err) {
       console.error(err);
       resetSuggestions();

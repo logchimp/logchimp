@@ -56,13 +56,13 @@ async function getRoadmap(url: string) {
   try {
     const response = await roadmapsEEAPI.GetRoadmapByUrl(url);
 
-    title.value = response.data.roadmap.name;
+    title.value = response.roadmap.name;
     Object.assign(roadmap, {
-      id: response.data.roadmap.id,
+      id: response.roadmap.id,
       name: title.value,
-      url: response.data.roadmap.url,
-      color: response.data.roadmap.color,
-      display: response.data.roadmap.display,
+      url: response.roadmap.url,
+      color: response.roadmap.color,
+      display: response.roadmap.display,
     });
   } catch (err) {
     console.error(err);

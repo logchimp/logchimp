@@ -140,10 +140,8 @@ async function updateHandler() {
       ...roadmap,
     });
 
-    if (response.status === 200) {
-      dashboardRoadmaps.updateRoadmap(response.data.roadmap);
-      router.push("/dashboard/roadmaps");
-    }
+    dashboardRoadmaps.updateRoadmap(response.roadmap);
+    router.push("/dashboard/roadmaps");
   } catch (err) {
     console.error(err);
   } finally {

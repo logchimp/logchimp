@@ -27,13 +27,22 @@ export class RoadmapsEE extends APIService {
    *
    * @param {IGetRoadmapsParams} params - Pagination parameters
    * @param config
-   * @returns {Promise<AxiosResponse<IPaginatedRoadmapsResponse>>} response
+   * @returns {Promise<IPaginatedRoadmapsResponse>} response
    */
   GetAllRoadmaps = async (
     params: IGetRoadmapsParams = {},
     config: AxiosRequestConfig = {},
-  ): Promise<AxiosResponse<IPaginatedRoadmapsResponse>> => {
-    return this.get("/v1/roadmaps", params, config)
+  ): Promise<IPaginatedRoadmapsResponse> => {
+    const searchParams = new URLSearchParams();
+
+    for (const paramsKey in params) {
+      const value = params[paramsKey as keyof IGetRoadmapsParams];
+      if (value) {
+        searchParams.append(paramsKey, value.toString());
+      }
+    }
+
+    return this.get(`/v1/roadmaps?${searchParams.toString()}`, {}, config)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
@@ -43,12 +52,16 @@ export class RoadmapsEE extends APIService {
   /**
    * Get board by URL
    * @param {string} url board url
-   * @returns {Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>>} response
+   * @returns {Promise<IGetRoadmapByUrlResponseBody>} response
    */
   GetRoadmapByUrl = async (
     url: string,
-  ): Promise<AxiosResponse<IGetRoadmapByUrlResponseBody>> => {
-    return this.get(`/v1/roadmaps/${encodeURIComponent(url)}`);
+  ): Promise<IGetRoadmapByUrlResponseBody> => {
+    return this.get(`/v1/roadmaps/${encodeURIComponent(url)}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -56,22 +69,28 @@ export class RoadmapsEE extends APIService {
    * @param {string} name roadmap name
    * @returns {object} response
    */
-  SearchRoadmap = async (
-    name: string,
-  ): Promise<AxiosResponse<ISearchRoadmapResponseBody>> => {
-    return this.get(`v1/roadmaps/search/${encodeURIComponent(name)}`);
+  SearchRoadmap = async (name: string): Promise<ISearchRoadmapResponseBody> => {
+    return this.get(`v1/roadmaps/search/${encodeURIComponent(name)}`)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    * Create new roadmap
    * @param {object} roadmap
    * @param {string} [roadmap.name=] roadmap name
-   * @returns {Promise<AxiosResponse<TCreateRoadmapResponseBody>>} response
+   * @returns {Promise<TCreateRoadmapResponseBody>} response
    */
   CreateRoadmap = async (
     roadmap?: ICreateRoadmapRequestBody,
-  ): Promise<AxiosResponse<TCreateRoadmapResponseBody>> => {
-    return this.post("/v1/roadmaps", roadmap);
+  ): Promise<TCreateRoadmapResponseBody> => {
+    return this.post("/v1/roadmaps", roadmap)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
@@ -86,10 +105,14 @@ export class RoadmapsEE extends APIService {
    */
   UpdateRoadmap = async (
     roadmap: IUpdateRoadmapRequestBody,
-  ): Promise<AxiosResponse<TUpdateRoadmapResponseBody>> => {
+  ): Promise<TUpdateRoadmapResponseBody> => {
     return this.put("/v1/roadmaps", {
       ...roadmap,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**

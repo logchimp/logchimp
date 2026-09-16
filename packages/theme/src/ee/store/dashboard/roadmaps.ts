@@ -38,8 +38,8 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
         },
       );
 
-      const results = response.data.results;
-      const pageInfo = response.data.page_info;
+      const results = response.results;
+      const pageInfo = response.page_info;
 
       if (results.length > 0) {
         roadmaps.value.push(...results);

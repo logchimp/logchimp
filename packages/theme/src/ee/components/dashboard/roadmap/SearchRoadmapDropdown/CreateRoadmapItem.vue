@@ -39,7 +39,7 @@ async function createRoadmapHandler() {
     const response = await roadmapEEAPI.CreateRoadmap({
       name: props.search,
     });
-    const roadmap = response.data.roadmap;
+    const roadmap = response.roadmap;
 
     emit("created", roadmap);
     loading.value = false;

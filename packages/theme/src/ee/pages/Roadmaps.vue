@@ -14,9 +14,9 @@
       v-if="roadmaps.length > 0"
       ref="roadmapElement"
       :class="[
-      'overflow-x-auto h-[500px] overflow-y-hidden',
-      'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]',
-    ]"
+        'overflow-x-auto h-[500px] overflow-y-hidden',
+        'grid grid-flow-col gap-x-4 md:gap-x-6 auto-cols-[minmax(22rem,24rem)]',
+      ]"
     >
       <roadmap-column
         v-for="roadmap in roadmaps"
@@ -38,11 +38,7 @@
 import { onMounted, ref, useTemplateRef } from "vue";
 import { useHead } from "@vueuse/head";
 import { useInfiniteScroll } from "@vueuse/core";
-import type {
-  IApiErrorResponse,
-  IPaginatedRoadmapsResponse,
-  IRoadmap,
-} from "@logchimp/types";
+import type { IApiErrorResponse, IRoadmap } from "@logchimp/types";
 import type { AxiosError } from "axios";
 
 // modules
@@ -77,14 +73,13 @@ async function getRoadmaps(after: string | undefined, isScroll = false) {
       visibility: ["public"],
     });
 
-    const paginatedData: IPaginatedRoadmapsResponse = response.data;
-    const roadmapList = paginatedData.results;
+    const roadmapList = response.results;
 
     if (roadmapList.length > 0) {
       roadmaps.value.push(...roadmapList);
     }
-    endCursor.value = paginatedData.page_info.end_cursor || undefined;
-    hasNextPage.value = paginatedData.page_info.has_next_page;
+    endCursor.value = response.page_info.end_cursor || undefined;
+    hasNextPage.value = response.page_info.has_next_page;
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {
