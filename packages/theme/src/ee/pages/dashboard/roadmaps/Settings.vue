@@ -29,7 +29,7 @@ import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import { getRoadmapByUrl } from "../../../modules/roadmaps";
+import { RoadmapsEE } from "../../../modules/roadmaps";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
@@ -47,21 +47,22 @@ const roadmap = reactive<IUpdateRoadmapRequestBody>({
   color: "",
   display: false,
 });
+const roadmapsEEAPI = new RoadmapsEE();
 
 async function getRoadmap(url: string) {
   loading.value = true;
   errorCode.value = undefined;
 
   try {
-    const response = await getRoadmapByUrl(url);
+    const response = await roadmapsEEAPI.GetRoadmapByUrl(url);
 
-    title.value = response.data.roadmap.name;
+    title.value = response.roadmap.name;
     Object.assign(roadmap, {
-      id: response.data.roadmap.id,
+      id: response.roadmap.id,
       name: title.value,
-      url: response.data.roadmap.url,
-      color: response.data.roadmap.color,
-      display: response.data.roadmap.display,
+      url: response.roadmap.url,
+      color: response.roadmap.color,
+      display: response.roadmap.display,
     });
   } catch (err) {
     console.error(err);

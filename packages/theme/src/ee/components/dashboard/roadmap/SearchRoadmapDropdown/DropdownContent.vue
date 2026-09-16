@@ -50,7 +50,7 @@ import { DropdownMenuContent } from "reka-ui";
 import { watchDebounced } from "@vueuse/core";
 import type { IRoadmapPrivate } from "@logchimp/types";
 
-import { searchRoadmap as searchRoadmapApi } from "../../../../../ee/modules/roadmaps";
+import { RoadmapsEE } from "../../../../modules/roadmaps";
 import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 import { type TCurrentRoadmap, useRoadmapSearch } from "./search";
 
@@ -69,6 +69,7 @@ interface Props {
 const props = defineProps<Props>();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const searchRoadmap = useRoadmapSearch();
+const roadmapEEAPI = new RoadmapsEE();
 
 watch(
   () => props.isOpen,
@@ -93,8 +94,8 @@ watchDebounced(
     }
 
     try {
-      const response = await searchRoadmapApi(searchTerm);
-      suggestions.value = response.data.roadmaps;
+      const response = await roadmapEEAPI.SearchRoadmap(searchTerm);
+      suggestions.value = response.roadmaps;
     } catch (err) {
       console.error(err);
       resetSuggestions();
