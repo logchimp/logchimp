@@ -138,7 +138,7 @@ export class PostsAPI extends APIService {
   UpdatePost = async (
     post: IUpdatePostRequestBody,
   ): Promise<TUpdatePostResponseBody> => {
-    return this.put("/v1/posts", post)
+    return this.patch("/v1/posts", post)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
