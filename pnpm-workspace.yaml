@@ -7,3 +7,6 @@ allowBuilds:
   msgpackr-extract: true
   protobufjs: true
   vue-demi: true
+
+minimumReleaseAgeExclude:
+  - prettier@3.9.7

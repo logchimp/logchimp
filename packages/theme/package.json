@@ -8,7 +8,11 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test:unit": "vitest"
+    "test:unit": "vitest",
+    "format": "prettier --write \"src/**/*.vue\"",
+    "format:check": "prettier --check \"src/**/*.vue\"",
+    "lint": "eslint \"src/**/*.vue\"",
+    "lint:fix": "eslint \"src/**/*.vue\" --fix"
   },
   "dependencies": {
     "@logchimp/types": "workspace:*",
@@ -37,13 +41,20 @@
     "@types/js-cookie": "^3.0.6",
     "@types/uuid": "10.0.0",
     "@vitejs/plugin-vue": "6.0.8",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/test-utils": "2.4.11",
     "@vue/tsconfig": "^0.9.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-vue": "^10.11.0",
+    "globals": "^17.12.0",
     "jsdom": "^20.0.3",
+    "prettier": "^3.9.7",
     "sass": "1.69.5",
     "typescript": "5.9.3",
     "vite": "6.4.3",
     "vitest": "4.1.11",
+    "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "3.1.5"
   }
 }
