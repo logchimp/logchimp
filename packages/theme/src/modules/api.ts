@@ -15,14 +15,21 @@ export abstract class APIService {
    * @param {string} baseURL - The base URL for all HTTP requests
    */
   protected constructor(baseURL: string) {
-    const { authToken } = useUserStore();
-
     this.baseURL = baseURL;
     this.axiosInstance = axios.create({
       baseURL,
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+    });
+
+    this.axiosInstance.interceptors.request.use((config) => {
+      const { authToken } = useUserStore();
+
+      if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
+      } else {
+        delete config.headers.Authorization;
+      }
+
+      return config;
     });
   }
 
