@@ -42,7 +42,7 @@ import type { IApiErrorResponse } from "@logchimp/types";
 // modules
 import { router } from "../router";
 import { useSettingStore } from "../store/settings";
-import { verifyUserEmail } from "../modules/auth";
+import { AuthAPI } from "../modules/auth";
 
 // components
 import AuthForm from "../layout/AuthForm.vue";
@@ -51,6 +51,7 @@ import LoaderContainer from "../components/ui/LoaderContainer.vue";
 import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
+const authAPI = new AuthAPI();
 
 const loading = ref(true);
 const success = ref(false);
@@ -66,9 +67,9 @@ async function verifyEmail() {
 
   try {
     const token = route.query.token.toString();
-    const response = await verifyUserEmail(token);
+    const response = await authAPI.VerifyUserEmail(token);
 
-    if (response.data.verify.success) {
+    if (response.verify.success) {
       success.value = true;
       loading.value = false;
     }

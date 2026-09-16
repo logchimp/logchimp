@@ -58,7 +58,7 @@ import type { IApiErrorResponse } from "@logchimp/types";
 
 // modules
 import { router } from "../router";
-import { signup } from "../modules/auth";
+import { AuthAPI } from "../modules/auth";
 import { UsersAPI } from "../modules/users";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
@@ -74,6 +74,7 @@ import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
 const { get: siteSettings } = useSettingStore();
 const { getUserId, login, setPermissions } = useUserStore();
+const authAPI = new AuthAPI();
 const usersAPI = new UsersAPI();
 
 const email = ref("");
@@ -121,12 +122,12 @@ async function join() {
   buttonLoading.value = true;
 
   try {
-    const response = await signup({
+    const response = await authAPI.Signup({
       email: email.value,
       password: password.value,
     });
 
-    login(response.data.user);
+    login(response.user);
     const permissions = await usersAPI.GetPermissions();
     setPermissions(permissions.permissions);
 
