@@ -1,10 +1,16 @@
 import type { Request, Response } from "express";
-import type { TPermission } from "@logchimp/types";
+import type {
+  IApiErrorResponse,
+  ICheckUserDashboardAccess,
+  TPermission,
+} from "@logchimp/types";
 
 // utils
 import error from "../../errorResponse.json";
 
-export function accessDashboard(req: Request, res: Response) {
+type ResponseBody = ICheckUserDashboardAccess | IApiErrorResponse;
+
+export function accessDashboard(req: Request, res: Response<ResponseBody>) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("dashboard:read");

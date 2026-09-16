@@ -73,7 +73,7 @@ async function onMountedHandler() {
       ...getAuthUser.user,
     });
     const permissions = await usersAPI.GetPermissions();
-    setPermissions(permissions.data.permissions);
+    setPermissions(permissions.permissions);
 
     Cookie.remove("lc-auth-token", {
       path: "/oauth/logchimp",

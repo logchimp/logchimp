@@ -128,7 +128,7 @@ async function join() {
 
     login(response.data.user);
     const permissions = await usersAPI.GetPermissions();
-    setPermissions(permissions.data.permissions);
+    setPermissions(permissions.permissions);
 
     const route = router.currentRoute.value;
     if (route.query.redirect) {

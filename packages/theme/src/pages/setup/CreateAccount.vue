@@ -168,7 +168,7 @@ async function createAccount() {
     login(response.data.user);
 
     const permissions = await usersAPI.GetPermissions();
-    setPermissions(permissions.data.permissions);
+    setPermissions(permissions.permissions);
 
     router.push("/setup/create-board");
   } catch (err) {

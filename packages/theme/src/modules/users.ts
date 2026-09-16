@@ -1,7 +1,7 @@
-import type { AxiosResponse } from "axios";
 import type {
   IAuthUserProfile,
   IAuthUserProfileResponse,
+  ICheckUserDashboardAccess,
   IGetPermissionResponse,
   IGetUsersRequestQuery,
   IGetUsersResponseBody,
@@ -19,48 +19,64 @@ export class UsersAPI extends APIService {
 
   /**
    * Get user settings
-   * @returns {Promise<AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>>} response
+   * @returns {Promise<IAuthUserProfileResponse<IAuthUserProfile>>} response
    */
   GetUserSettings = async (): Promise<
-    AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>
+    IAuthUserProfileResponse<IAuthUserProfile>
   > => {
-    return this.get("/v1/users/profile");
+    return this.get("/v1/users/profile")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    *	Update user settings
    * @param {object} user update user data
    * @param {string} user.name user's name
-   * @returns {Promise<AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>>} response
+   * @returns {Promise<IAuthUserProfileResponse<IAuthUserProfile>>} response
    */
   UpdateUserSettings = async ({
     name,
   }: IUpdateUserSettingsArgs): Promise<
-    AxiosResponse<IAuthUserProfileResponse<IAuthUserProfile>>
+    IAuthUserProfileResponse<IAuthUserProfile>
   > => {
     return this.put("/v1/users/profile", {
       name,
-    });
+    })
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    * Get authenticated user permissions
    */
-  GetPermissions = async (): Promise<AxiosResponse<IGetPermissionResponse>> => {
-    return this.get("/v1/users/permissions");
+  GetPermissions = async (): Promise<IGetPermissionResponse> => {
+    return this.get("/v1/users/permissions")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    * Check if user have access to dashboard
-   * @returns {object} response
+   * @returns {Promise<ICheckUserDashboardAccess>}
    */
-  CheckUserDashboardAccess = async () => {
-    return this.get("/v1/users/dashboard");
+  CheckUserDashboardAccess = async (): Promise<ICheckUserDashboardAccess> => {
+    return this.get("/v1/users/dashboard")
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error;
+      });
   };
 
   /**
    * @param {Partial<IGetUsersRequestQuery>} [params={}] - URL parameters
-   * @returns {Promise<AxiosResponse<IGetUsersResponseBody>>}
+   * @returns {Promise<IGetUsersResponseBody>}
    */
   async GetAll(
     params: Partial<IGetUsersRequestQuery> = {},

@@ -109,10 +109,10 @@ async function getUser() {
   try {
     const response = await usersAPI.GetUserSettings();
 
-    name.value = response.data.user.name;
-    user.username = response.data.user.username;
-    user.email = response.data.user.email;
-    isVerified.value = response.data.user.isVerified;
+    name.value = response.user.name;
+    user.username = response.user.username;
+    user.email = response.user.email;
+    isVerified.value = response.user.isVerified;
   } catch (error) {
     const err = error as AxiosError<IApiErrorResponse>;
     tokenError(err);
@@ -129,7 +129,7 @@ async function updateSettings() {
       name: name.value,
     });
 
-    name.value = response.data.user.name;
+    name.value = response.user.name;
     updateUserButtonLoading.value = false;
     // TODO: Add TS types
     // biome-ignore lint: Add TS types

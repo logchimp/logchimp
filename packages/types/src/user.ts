@@ -75,3 +75,7 @@ export type TUserAssignRoleResponse =
   | {
       success: 0;
     };
+
+export type ICheckUserDashboardAccess = {
+  access: boolean;
+};

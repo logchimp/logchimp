@@ -78,7 +78,7 @@ onMounted(async () => {
      */
     try {
       const permissions = await usersAPI.GetPermissions();
-      userStore.setPermissions(permissions.data.permissions);
+      userStore.setPermissions(permissions.permissions);
     } catch (error) {
       const err = error as AxiosError<IApiErrorResponse>;
       tokenError(err);

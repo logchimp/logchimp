@@ -116,7 +116,7 @@ const routes = [
 
         // Check user access to dashboard
         const response = await usersAPI.CheckUserDashboardAccess();
-        if (response.data.access) {
+        if (response.access) {
           return next();
         }
 
