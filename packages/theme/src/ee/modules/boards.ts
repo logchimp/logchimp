@@ -23,22 +23,26 @@ export class BoardsEE extends APIService {
   }
 
   /**
-   *  Get public boards
-   * @param {string} first number of items to fetch
-   * @param {string} after cursor to fetch next page
-   * @param {ApiSortType} created sort type asc or desc
+   * Get public boards
+   * @param {TFilterBoardRequestQuery} params
+   * @param {string} params.first number of items to fetch
+   * @param {string} params.after cursor to fetch next page
+   * @param {ApiSortType} params.created sort type asc or desc
    * @returns {Promise<IFilterBoardResponseBody>} response
    */
-  GetPublicBoards = async ({
-    first,
-    after,
-    created = "DESC",
-  }: TFilterBoardRequestQuery): Promise<IFilterBoardResponseBody> => {
-    return this.get("/v1/boards", {
-      after,
-      first,
-      created,
-    })
+  GetPublicBoards = async (
+    params: TFilterBoardRequestQuery,
+  ): Promise<IFilterBoardResponseBody> => {
+    const searchParams = new URLSearchParams();
+
+    for (const paramsKey in params) {
+      const value = params[paramsKey as keyof TFilterBoardRequestQuery];
+      if (value) {
+        searchParams.append(paramsKey, value.toString());
+      }
+    }
+
+    return this.get(`/v1/boards?${searchParams.toString()}`, {})
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
