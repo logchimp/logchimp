@@ -29,7 +29,7 @@ import type { IBoardPrivate } from "@logchimp/types";
 
 // modules
 import { router } from "../../../../router";
-import { getBoardByUrl } from "../../../modules/boards";
+import { BoardsEE } from "../../../modules/boards";
 
 // components
 import Dashboard404 from "../../../../components/dashboard/404.vue";
@@ -50,16 +50,17 @@ const board = reactive<IBoardPrivate>({
   createdAt: new Date(),
   post_count: "",
 });
+const boardsEEAPI = new BoardsEE();
 
 async function getBoard(url: string) {
   loading.value = true;
   errorCode.value = undefined;
 
   try {
-    const response = await getBoardByUrl(url);
+    const response = await boardsEEAPI.GetBoardByUrl(url);
 
-    title.value = response.data.board.name;
-    Object.assign(board, response.data.board);
+    title.value = response.board.name;
+    Object.assign(board, response.board);
   } catch (err) {
     console.error(err);
     // @ts-expect-error

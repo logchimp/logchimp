@@ -20,7 +20,7 @@ import { DropdownMenuItem } from "reka-ui";
 import { PlusIcon } from "lucide-vue";
 import type { IBoardPrivate } from "@logchimp/types";
 
-import { createBoard } from "../../../../modules/boards";
+import { BoardsEE } from "../../../../modules/boards";
 
 interface Props {
   search: string;
@@ -29,16 +29,17 @@ const props = defineProps<Props>();
 const emit = defineEmits<(e: "created", event: IBoardPrivate) => void>();
 
 const loading = ref(false);
+const boardsEEAPI = new BoardsEE();
 
 async function createBoardHandler() {
   if (loading.value) return;
   loading.value = true;
 
   try {
-    const response = await createBoard({
+    const response = await boardsEEAPI.CreateBoard({
       name: props.search,
     });
-    const board = response.data.board;
+    const board = response.board;
 
     emit("created", board);
     loading.value = false;

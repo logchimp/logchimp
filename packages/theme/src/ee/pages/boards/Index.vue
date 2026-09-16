@@ -34,7 +34,7 @@ import type { IApiErrorResponse, IBoardDetail } from "@logchimp/types";
 import type { AxiosError } from "axios";
 
 // modules
-import { getPublicBoards } from "../../modules/boards";
+import { BoardsEE } from "../../modules/boards";
 import { useSettingStore } from "../../../store/settings";
 
 // components
@@ -50,23 +50,25 @@ const endCursor = ref<string | undefined>();
 const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string>();
 
+const boardsEEAPI = new BoardsEE();
+
 async function getBoards() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;
   state.value = "LOADING";
 
   try {
-    const response = await getPublicBoards({
+    const response = await boardsEEAPI.GetPublicBoards({
       first: "8",
       after: endCursor.value,
       created: "DESC",
     });
 
-    if (response.data.boards.length) {
-      boards.value.push(...response.data.boards);
+    if (response.boards.length) {
+      boards.value.push(...response.boards);
     }
-    endCursor.value = response.data.page_info?.end_cursor || undefined;
+    endCursor.value = response.page_info?.end_cursor || undefined;
 
-    const nextPage = response.data.page_info?.has_next_page;
+    const nextPage = response.page_info?.has_next_page;
     if (nextPage) {
       state.value = "LOADED";
     } else {

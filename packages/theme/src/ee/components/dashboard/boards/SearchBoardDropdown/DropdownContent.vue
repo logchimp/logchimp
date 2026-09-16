@@ -50,7 +50,7 @@ import { DropdownMenuContent } from "reka-ui";
 import { watchDebounced } from "@vueuse/core";
 import type { IBoardPrivate } from "@logchimp/types";
 
-import { searchBoard as searchBoardApi } from "../../../../modules/boards";
+import { BoardsEE } from "../../../../modules/boards";
 import { type TCurrentBoard, useBoardSearch } from "./search";
 
 import ItemSuggestionDropdownItem from "../../../ItemSuggestionDropdownItem.vue";
@@ -61,6 +61,7 @@ const search = ref("");
 const suggestions = ref<IBoardPrivate[]>([]);
 const searchInputId = useId();
 const searchInputRef = useTemplateRef<HTMLInputElement>("searchInputRef");
+const boardsEEAPI = new BoardsEE();
 
 interface Props {
   isOpen: boolean;
@@ -91,8 +92,8 @@ watchDebounced(
     }
 
     try {
-      const response = await searchBoardApi(searchTerm);
-      suggestions.value = response.data.boards;
+      const response = await boardsEEAPI.SearchBoard(searchTerm);
+      suggestions.value = response.boards;
     } catch (err) {
       console.error(err);
       resetSuggestions();
