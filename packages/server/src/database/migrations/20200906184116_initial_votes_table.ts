@@ -4,7 +4,7 @@ import logger from "../../utils/logger";
 export async function up(knex: Knex): Promise<void> {
   try {
     await knex.schema.createTable("votes", (table) => {
-      table.uuid("voteId").notNullable().unique().primary();
+      table.uuid("voteId").notNullable().primary();
       table.uuid("userId").references("userId").inTable("users").notNullable();
       table
         .uuid("postId")
