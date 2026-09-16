@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-2">
       <span class="text-sm text-neutral-700 font-medium">
-        {{votes.length}} Voter{{votes.length === 1 ? '' : 's'}}
+        {{ votes.length }} Voter{{ votes.length === 1 ? "" : "s" }}
       </span>
 
       <button
@@ -13,9 +13,7 @@
       </button>
     </div>
 
-    <template v-if="loading">
-      Loading...
-    </template>
+    <template v-if="loading"> Loading... </template>
     <template v-else-if="votes.length > 0">
       <div class="flex items-center -space-x-3.5 mb-2">
         <Avatar

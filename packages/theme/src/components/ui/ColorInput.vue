@@ -6,24 +6,24 @@
         class="color-preview"
         data-test="color-preview"
         :class="{
-          'input-error': error.show
+          'input-error': error.show,
         }"
         :style="{
-          backgroundColor: `#${modelValue ? modelValue : 'fff'}`
+          backgroundColor: `#${modelValue ? modelValue : 'fff'}`,
         }"
       />
       <input
         :value="modelValue"
         class="input-field"
         :class="{
-          'input-error': error.show
+          'input-error': error.show,
         }"
         type="text"
         placeholder="abcdef"
         spellcheck="false"
         @input="input"
         @click="hideError"
-      >
+      />
     </div>
     <p
       v-if="error.show"
@@ -68,7 +68,7 @@ function input(event: Event) {
 }
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .color-input
 	display: flex
 	position: relative

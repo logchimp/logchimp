@@ -1,21 +1,21 @@
 <template>
   <loader-container v-if="postLoading" />
-	<template v-else>
-		<div v-if="isPostExist" class="flex-2">
-			<div class="flex items-start">
-				<div>
-					<vote
-						:post-id="post.postId"
-						:votes-count="post.voters.votesCount"
-						:is-voted="isVoted"
-						@update-voters="updateVoters"
-					/>
-				</div>
-				<div class="w-full">
-					<h1 class="font-medium text-4xl mb-2.5 break-all">
-						{{ post.title }}
-					</h1>
-					<div class="flex items-center justify-between mb-6">
+  <template v-else>
+    <div v-if="isPostExist" class="flex-2">
+      <div class="flex items-start">
+        <div>
+          <vote
+            :post-id="post.postId"
+            :votes-count="post.voters.votesCount"
+            :is-voted="isVoted"
+            @update-voters="updateVoters"
+          />
+        </div>
+        <div class="w-full">
+          <h1 class="font-medium text-4xl mb-2.5 break-all">
+            {{ post.title }}
+          </h1>
+          <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-x-4">
               <div class="flex items-center gap-x-2">
                 <avatar
@@ -24,30 +24,34 @@
                 />
                 {{ postAuthorName }}
               </div>
-              <div class="bg-neutral-300 h-4 w-px" aria-hidden="true"/>
+              <div class="bg-neutral-300 h-4 w-px" aria-hidden="true" />
               <time
-                :title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
+                :title="
+                  dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')
+                "
                 class="text-sm text-neutral-700"
               >
                 {{ dayjs(post.createdAt).fromNow() }}
               </time>
             </div>
 
-						<PostViewMoreOptions v-if="postAuthor" :post="post" class="ml-auto" />
-					</div>
-				</div>
-			</div>
+            <PostViewMoreOptions
+              v-if="postAuthor"
+              :post="post"
+              class="ml-auto"
+            />
+          </div>
+        </div>
+      </div>
 
-			<p v-html="postContent" />
+      <p v-html="postContent" />
 
-      <div class="mt-8" v-if="settingsEEStore.license.hierarchy >= 1">
+      <div v-if="settingsEEStore.license.hierarchy >= 1" class="mt-8">
         <post-activity-renderer :post-id="post.postId" />
       </div>
-		</div>
-		<p v-else>
-			There is no such post.
-		</p>
-	</template>
+    </div>
+    <p v-else>There is no such post.</p>
+  </template>
 </template>
 
 <script setup lang="ts">

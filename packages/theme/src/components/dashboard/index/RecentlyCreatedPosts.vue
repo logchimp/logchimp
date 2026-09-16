@@ -51,9 +51,7 @@ async function getRecentPosts() {
     v-if="errorCode === 'LICENSE_VALIDATION_FAILED'"
     resource-type="posts"
   />
-  <Table
-    v-else
-  >
+  <Table v-else>
     <template #header>
       <Td
         :head="true"
@@ -64,15 +62,10 @@ async function getRecentPosts() {
       >
         Title
       </Td>
-      <Td :head="true">
-        Votes
-      </Td>
+      <Td :head="true"> Votes </Td>
     </template>
 
-    <Tr
-      v-for="post in posts"
-      :key="post.postId"
-    >
+    <Tr v-for="post in posts" :key="post.postId">
       <div class="relative flex items-center">
         <Td
           :style="{

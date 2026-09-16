@@ -1,10 +1,8 @@
 <template>
   <DashboardPageHeader :mb="false">
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/posts">
-          Posts
-        </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/posts"> Posts </BreadcrumbItem>
 
         <!-- Show divider & title once data loaded -->
         <template v-if="post.title">
@@ -41,15 +39,15 @@
       />
 
       <div class="mt-10">
-        <h6 class="form-section-title">
-          Comments
-        </h6>
+        <h6 class="form-section-title">Comments</h6>
         <dashboard-post-activity-renderer
           v-if="settingsEEStore.license.hierarchy >= 1"
           :post="post"
         />
         <div v-else class="text-sm">
-          Please upgrade to <a href="/dashboard/settings/billing">higher plan</a> to view comments.
+          Please upgrade to
+          <a href="/dashboard/settings/billing">higher plan</a> to view
+          comments.
         </div>
       </div>
     </div>

@@ -5,10 +5,9 @@
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
-<style lang='scss' module>
+<style lang="scss" module>
 .root {
   position: absolute;
   width: 100%;

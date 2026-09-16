@@ -1,5 +1,3 @@
 <template>
-  <div>
-    select
-  </div>
+  <div>select</div>
 </template>

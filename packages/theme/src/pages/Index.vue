@@ -1,15 +1,13 @@
 <template>
   <div class="flex flex-col-reverse lg:flex-row mb-16 lg:gap-x-8">
     <main class="grow-[2] shrink basis-0">
-      <post-item
-        v-for="post in posts"
-        :key="post.postId"
-        :post="post"
-      />
+      <post-item v-for="post in posts" :key="post.postId" :post="post" />
 
       <infinite-scroll :on-infinite="loadMorePosts" :state="state" />
     </main>
-    <aside class="flex-1 h-full mb-6 lg:mb-0 grid grid-cols-1 gap-y-4 lg:sticky lg:top-20">
+    <aside
+      class="flex-1 h-full mb-6 lg:mb-0 grid grid-cols-1 gap-y-4 lg:sticky lg:top-20"
+    >
       <site-setup-card v-if="showSiteSetupCard" />
       <create-post v-else />
       <top-public-boards-list />

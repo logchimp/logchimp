@@ -9,7 +9,7 @@
         'max-w-sm': size === 'sm',
         'max-w-lg': size === 'md',
         'max-w-2xl': size === 'lg',
-      }
+      },
     ]"
   >
     <header class="flex items-center justify-between mb-2">

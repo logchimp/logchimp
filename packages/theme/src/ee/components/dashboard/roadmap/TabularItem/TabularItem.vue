@@ -11,13 +11,10 @@
       <div
         :class="[
           'flex items-center justify-center',
-          'cursor-grab group-hover/grab:bg-neutral-200/70 rounded-md py-2'
+          'cursor-grab group-hover/grab:bg-neutral-200/70 rounded-md py-2',
         ]"
       >
-        <grip-icon
-          aria-hidden="true"
-          class="stroke-neutral-400 size-5"
-        />
+        <grip-icon aria-hidden="true" class="stroke-neutral-400 size-5" />
       </div>
     </Td>
 

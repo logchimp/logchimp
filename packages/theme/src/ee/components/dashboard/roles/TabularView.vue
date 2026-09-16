@@ -2,8 +2,8 @@
   <license-validation-failed
     v-if="dashboardRoles.error === 'LICENSE_VALIDATION_FAILED'"
     resource-type="roles"
-    />
-  <Table v-else :disableDividers="requireUpgrade">
+  />
+  <Table v-else :disable-dividers="requireUpgrade">
     <template #header>
       <Td :head="true" />
       <Td
@@ -25,11 +25,11 @@
     </template>
 
     <template v-if="requireUpgrade">
-      <div class="pointer-events-none select-none divide-y divide-neutral-200 relative" aria-hidden="true">
-        <Tr
-          v-for="role in EXAMPLE_ROLES_DATA.slice(0, 3)"
-          :key="role.id"
-        >
+      <div
+        class="pointer-events-none select-none divide-y divide-neutral-200 relative"
+        aria-hidden="true"
+      >
+        <Tr v-for="role in EXAMPLE_ROLES_DATA.slice(0, 3)" :key="role.id">
           <TabularItem :role="role" />
         </Tr>
         <div class="absolute inset-0 bg-linear-to-t from-white to-white/30" />
@@ -38,7 +38,7 @@
       <EmptyScreen
         title="Roles and Permissions"
         description="Want to have more control in your organisation? Upgrade to Enterprise plan to access advanced features and manage your team more efficiently."
-        learnMore="https://docs.logchimp.app/guide/dashboard/role-permission"
+        learn-more="https://docs.logchimp.app/guide/dashboard/role-permission"
         :border="false"
         :icon="ShieldIcon"
         padding-y="pt-0 pb-7 lg:pb-20"
@@ -51,15 +51,12 @@
       </EmptyScreen>
     </template>
     <template v-else>
-      <Tr
-        v-for="role in dashboardRoles.roles"
-        :key="role.id"
-      >
+      <Tr v-for="role in dashboardRoles.roles" :key="role.id">
         <TabularItem :role="role" />
       </Tr>
     </template>
 
-    <template #infinite-loader v-if="!requireUpgrade">
+    <template v-if="!requireUpgrade" #infinite-loader>
       <infinite-scroll
         :immediate-check="dashboardRoles.roles.length === 0"
         :on-infinite="dashboardRoles.fetchRoles"

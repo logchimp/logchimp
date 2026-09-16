@@ -1,22 +1,17 @@
 <template>
   <div>
-    <h4 class="form-header" data-testid="page-title">
-      Account settings
-    </h4>
+    <h4 class="form-header" data-testid="page-title">Account settings</h4>
     <loader-container v-if="loading" />
     <div v-else>
       <server-error v-if="serverError" @close="serverError = false" />
 
       <!-- Account verification alert -->
-      <AccountVerificationAlert
-        v-if="!isVerified"
-        class="mb-8"
-      />
+      <AccountVerificationAlert v-if="!isVerified" class="mb-8" />
 
       <form
-        @submit.prevent="updateSettings"
         data-testid="settings-form"
         class="space-y-4"
+        @submit.prevent="updateSettings"
       >
         <l-text
           v-model="name.value"
@@ -25,9 +20,9 @@
           name="Name"
           placeholder="Full name"
           class="user-settings-name-item"
+          :error="name.error"
           @keyup-enter="updateSettings"
           @hide-error="hideNameError"
-          :error="name.error"
         />
         <l-text
           v-model="user.username"

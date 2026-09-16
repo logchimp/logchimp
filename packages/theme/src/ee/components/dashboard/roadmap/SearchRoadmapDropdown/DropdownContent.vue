@@ -2,7 +2,7 @@
   <DropdownMenuContent
     :class="[
       'w-(--reka-popper-anchor-width) max-h-60 overflow-y-auto',
-      'shadow-sm border border-neutral-300 bg-white rounded-lg'
+      'shadow-sm border border-neutral-300 bg-white rounded-lg',
     ]"
     side="bottom"
     :loop="true"
@@ -12,21 +12,18 @@
     <div class="border-b border-neutral-300 sticky top-0 bg-white">
       <input
         :id="searchInputId"
+        ref="searchInputRef"
         v-model="search"
         placeholder="Search roadmaps..."
         class="px-4 py-3 outline-none grow border-none sm:text-sm w-full"
         autocomplete="off"
         autocorrect="off"
         spellCheck="false"
-        ref="searchInputRef"
       />
     </div>
 
     <div class="w-full">
-     <NoRoadmap
-       v-if="searchRoadmap.roadmap"
-       @select="selectHandler"
-     />
+      <NoRoadmap v-if="searchRoadmap.roadmap" @select="selectHandler" />
 
       <ItemSuggestionDropdownItem
         v-for="item in suggestions"

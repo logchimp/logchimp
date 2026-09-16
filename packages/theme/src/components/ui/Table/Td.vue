@@ -5,8 +5,8 @@
       {
         'px-6': !ignorePx,
         'py-4': !ignorePy,
-        'text-sm tracking-wide font-bold': head
-      }
+        'text-sm tracking-wide font-bold': head,
+      },
     ]"
   >
     <slot />

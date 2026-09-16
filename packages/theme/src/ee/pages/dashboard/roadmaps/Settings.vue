@@ -3,8 +3,8 @@
     :class="[
       'flex-1',
       {
-        'flex items-center': loading || errorCode
-      }
+        'flex items-center': loading || errorCode,
+      },
     ]"
   >
     <LoaderContainer v-if="loading" />
@@ -16,9 +16,7 @@
     <Dashboard404 v-else-if="errorCode === 'ROADMAP_NOT_FOUND'">
       Roadmap not found
     </Dashboard404>
-    <Dashboard500 v-else>
-      Something went wrong.
-    </Dashboard500>
+    <Dashboard500 v-else> Something went wrong. </Dashboard500>
   </div>
 </template>
 

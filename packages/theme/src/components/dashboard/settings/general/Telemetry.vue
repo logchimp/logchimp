@@ -1,8 +1,10 @@
 <template>
-  <div class="form-section" v-if="showTelemetryForm">
+  <div v-if="showTelemetryForm" class="form-section">
     <h6 class="form-section-title">Telemetry</h6>
 
-    <div class="border border-neutral-200 rounded-lg px-6 py-4 flex items-center justify-between">
+    <div
+      class="border border-neutral-200 rounded-lg px-6 py-4 flex items-center justify-between"
+    >
       <div class="flex items-center gap-x-3">
         <div aria-hidden="true" class="rounded-full bg-neutral-200 p-3">
           <TelescopeIcon class="stroke-neutral-700" />
@@ -12,7 +14,8 @@
             Allow LogChimp to collect anonymous usage events
           </div>
           <p class="text-sm text-neutral-700/70">
-            We collect usage events without any PII to analyse and improve LogChimp.
+            We collect usage events without any PII to analyse and improve
+            LogChimp.
           </p>
         </div>
       </div>
@@ -36,5 +39,3 @@ defineOptions({
   name: "SettingsTelemetryForm",
 });
 </script>
-
-

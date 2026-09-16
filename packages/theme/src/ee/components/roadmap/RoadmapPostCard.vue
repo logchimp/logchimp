@@ -10,8 +10,15 @@
       <div class="w-full">
         <div class="flex items-center w-full gap-x-2">
           <div>
-            <router-link data-test="post-link" :to="`/posts/${encodeURIComponent(post.slug)}`">
-              <div class="text-xl font-medium mb-0.5 break-all text-(--color-text-black)">{{ post.title }}</div>
+            <router-link
+              data-test="post-link"
+              :to="`/posts/${encodeURIComponent(post.slug)}`"
+            >
+              <div
+                class="text-xl font-medium mb-0.5 break-all text-(--color-text-black)"
+              >
+                {{ post.title }}
+              </div>
             </router-link>
             <span
               v-if="!isExpanded && post.board"
@@ -23,7 +30,7 @@
             <time
               v-else
               data-test="post-date"
-							:title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
+              :title="dayjs(post.createdAt).format('dddd, DD MMMM YYYY hh:mm')"
               class="post-date"
             >
               {{ dayjs(post.createdAt).fromNow() }}
@@ -32,7 +39,7 @@
           <button
             data-test="post-card-toggle"
             :style="{
-              transform: isExpanded ? 'rotateX(180deg)' : ''
+              transform: isExpanded ? 'rotateX(180deg)' : '',
             }"
             type="button"
             :class="[
@@ -43,7 +50,10 @@
             :aria-label="isExpanded ? 'collapse' : 'expand'"
             @click="isExpanded = !isExpanded"
           >
-            <arrow-top-icon aria-hidden="true" class="size-5 stroke-neutral-700/70 group-hover:stroke-neutral-70 focus:stroke-neutral-700" />
+            <arrow-top-icon
+              aria-hidden="true"
+              class="size-5 stroke-neutral-700/70 group-hover:stroke-neutral-70 focus:stroke-neutral-700"
+            />
           </button>
         </div>
         <p
@@ -108,4 +118,3 @@ function updateVoters(voters: IPostVote) {
   postData.value.voters.viewerVote = voters.viewerVote;
 }
 </script>
-

@@ -1,6 +1,6 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
         <BreadcrumbItem>Boards</BreadcrumbItem>
       </Breadcrumbs>
@@ -19,11 +19,11 @@
     </UpgradeTooltip>
   </DashboardPageHeader>
 
-	<div class="px-3 lg:px-6">
+  <div class="px-3 lg:px-6">
     <LicenseRequired>
       <TabularView />
     </LicenseRequired>
-	</div>
+  </div>
 </template>
 
 <script setup lang="ts">

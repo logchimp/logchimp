@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="data.length === 0"
-    class="text-neutral-500 text-sm text-center"
-  >
+  <div v-if="data.length === 0" class="text-neutral-500 text-sm text-center">
     Add your first comment
   </div>
   <div v-else class="grid gap-y-5">
@@ -29,4 +26,3 @@ defineOptions({
   name: "PostActivityList",
 });
 </script>
-

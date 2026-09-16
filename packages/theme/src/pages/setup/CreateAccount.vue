@@ -1,9 +1,7 @@
 <template>
   <auth-layout>
     <div class="onboarding-header">
-      <h2 class="onboarding-heading">
-        Create an account
-      </h2>
+      <h2 class="onboarding-heading">Create an account</h2>
     </div>
     <server-error v-if="serverError" @close="serverError = false" />
     <card data-testid="owner-account-form">

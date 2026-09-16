@@ -1,7 +1,7 @@
 <template>
   <DialogRoot>
     <DialogTrigger
-       :class="['cursor-pointer z-[1] inset-0 absolute outline-none']"
+      :class="['cursor-pointer z-[1] inset-0 absolute outline-none']"
     />
 
     <DialogPortal>

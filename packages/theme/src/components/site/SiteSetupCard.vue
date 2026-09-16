@@ -1,10 +1,8 @@
 <template>
   <card>
-    <template #title>
-			Setup your LogChimp site
-    </template>
+    <template #title> Setup your LogChimp site </template>
     <template #label>
-			Complete your LogChimp site setup to access dashboard.
+      Complete your LogChimp site setup to access dashboard.
     </template>
 
     <div :class="$style.cta">
@@ -17,7 +15,7 @@
       <img
         src="/dashboard-loading-skeleton.png"
         alt="Dashboard loading skeleton"
-      >
+      />
     </div>
   </card>
 </template>
@@ -30,14 +28,14 @@ import Button from "../ui/Button.vue";
 
 <style module>
 .cta {
-	margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 .image {
-	max-width: 20rem;
-	margin-left: auto;
-	margin-right: auto;
+  max-width: 20rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 .image img {
-	width: 100%;
+  width: 100%;
 }
 </style>

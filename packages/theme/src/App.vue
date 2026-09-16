@@ -6,8 +6,8 @@
       :title="alert.title"
       :type="alert.type"
       :timeout="alert.timeout"
-      @remove="removeAlert(index)"
       :is-toast="true"
+      @remove="removeAlert(index)"
     />
   </div>
   <router-view />
@@ -153,7 +153,7 @@ useHead({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .alerts
 	position: fixed
 	top: 1.5rem

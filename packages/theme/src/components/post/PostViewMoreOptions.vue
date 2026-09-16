@@ -7,12 +7,10 @@
       </DropdownMenuTrigger>
     </template>
 
-    <DropdownV2Content
-      align="end"
-      side="bottom"
-      :loop="true"
-    >
-      <dropdown-item @click="router.push(`/posts/${encodeURIComponent(post.slug)}/edit`)">
+    <DropdownV2Content align="end" side="bottom" :loop="true">
+      <dropdown-item
+        @click="router.push(`/posts/${encodeURIComponent(post.slug)}/edit`)"
+      >
         <template #icon>
           <edit-icon aria-hidden="true" />
         </template>

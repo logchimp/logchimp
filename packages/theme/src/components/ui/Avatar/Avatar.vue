@@ -1,14 +1,11 @@
 <template>
   <div class="select-none overflow-hidden">
-    <div
-      v-if="src"
-      data-test="avatar-image"
-    >
+    <div v-if="src" data-test="avatar-image">
       <img
         :src="src"
         :alt="name"
         class="max-w-8 max-h-8 size-8 rounded-full pointer-events-none"
-      >
+      />
     </div>
     <div
       v-else
@@ -17,7 +14,9 @@
         'max-w-8 max-h-8 size-8 rounded-full',
         'border font-medium uppercase',
         'flex items-center justify-center',
-        bgColor === 'dark' ? 'text-(--color-white) border-(--color-white)' : 'text-(--color-black) border-(--color-black)'
+        bgColor === 'dark'
+          ? 'text-(--color-white) border-(--color-white)'
+          : 'text-(--color-black) border-(--color-black)',
       ]"
     >
       {{ name.slice(0, 1) }}

@@ -10,16 +10,9 @@
       </DropdownMenuTrigger>
     </template>
 
-    <DropdownV2Content
-      align="end"
-      side="bottom"
-      :loop="true"
-      :side-offset="8"
-    >
+    <DropdownV2Content align="end" side="bottom" :loop="true" :side-offset="8">
       <template v-if="accessDashboard">
-        <dropdown-item
-          @click="router.push('/dashboard')"
-        >
+        <dropdown-item @click="router.push('/dashboard')">
           <template #icon>
             <dashboard-icon aria-hidden="true" />
           </template>
@@ -28,18 +21,14 @@
         <DropdownV2Separator />
       </template>
 
-      <dropdown-item
-       @click="router.push('/settings')"
-      >
+      <dropdown-item @click="router.push('/settings')">
         <template #icon>
           <settings-icon aria-hidden="true" />
         </template>
         Settings
       </dropdown-item>
 
-      <dropdown-item
-        @click="userStore.logout"
-      >
+      <dropdown-item @click="userStore.logout">
         <template #icon>
           <logout-icon aria-hidden="true" />
         </template>

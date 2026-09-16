@@ -1,9 +1,7 @@
 <template>
   <auth-form>
     <AuthFormHeader>
-      <template #heading>
-        Forgot password
-      </template>
+      <template #heading> Forgot password </template>
     </AuthFormHeader>
 
     <server-error v-if="serverError" @close="serverError = false" />
@@ -26,7 +24,7 @@
     </div>
     <div v-if="requestSuccess" class="card">
       <p>You will receive a password reset email soon.</p>
-      <br>
+      <br />
       <p>Follow the link in the email to reset your password.</p>
     </div>
     <div v-if="requestError" class="card">
@@ -34,9 +32,7 @@
     </div>
     <AuthFormHelperText v-if="siteSettings.allowSignup">
       Don't have an account yet?
-      <router-link to="/join">
-        Sign up
-      </router-link>
+      <router-link to="/join"> Sign up </router-link>
     </AuthFormHelperText>
   </auth-form>
 </template>

@@ -9,14 +9,14 @@
     ]"
     data-test="toggle"
     :model-value="modelValue || checked"
-    @update:modelValue="$emit('update:modelValue', $event)"
     :disabled="disabled"
     :required="required"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <SwitchThumb
       :class="[
         'size-[18px] my-auto bg-white text-xs flex items-center justify-center shadow-xl rounded-full',
-        'transition-transform translate-x-[3px] will-change-transform data-[state=checked]:translate-x-full'
+        'transition-transform translate-x-[3px] will-change-transform data-[state=checked]:translate-x-full',
       ]"
     />
   </SwitchRoot>

@@ -3,10 +3,7 @@
     class="p-1.5 rounded-full bg-neutral-200 cursor-pointer"
     aria-label="close"
   >
-    <CloseIcon
-      class="stroke-neutral-700 size-4"
-      aria-hidden="true"
-    />
+    <CloseIcon class="stroke-neutral-700 size-4" aria-hidden="true" />
   </DialogClose>
 </template>
 

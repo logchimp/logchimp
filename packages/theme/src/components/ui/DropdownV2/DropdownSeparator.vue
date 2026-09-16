@@ -1,8 +1,6 @@
 <template>
   <dropdown-menu-separator
-    :class="[
-      'w-[calc(100%-12px)] h-px bg-neutral-300 my-1.5 mx-1.5',
-    ]"
+    :class="['w-[calc(100%-12px)] h-px bg-neutral-300 my-1.5 mx-1.5']"
   />
 </template>
 

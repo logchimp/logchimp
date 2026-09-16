@@ -9,7 +9,7 @@
         ]"
         :disabled="disabled"
       >
-        <PlusIcon aria-hidden="true" class="stroke-neutral-700 size-5"/>
+        <PlusIcon aria-hidden="true" class="stroke-neutral-700 size-5" />
         <span class="sr-only">Add role</span>
       </DropdownMenuTrigger>
     </template>
@@ -17,7 +17,7 @@
     <DropdownV2Content
       align="start"
       side="right"
-      :sideOffset="10"
+      :side-offset="10"
       :loop="true"
       :max-height="200"
     >

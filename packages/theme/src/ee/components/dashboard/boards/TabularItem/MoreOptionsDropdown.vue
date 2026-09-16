@@ -7,7 +7,10 @@
           'p-2.5 rounded-full hover:bg-neutral-300',
         ]"
       >
-        <MoreHorizontalIcon aria-hidden="true" class="stroke-neutral-400 group-hover/menu:stroke-neutral-700 size-5" />
+        <MoreHorizontalIcon
+          aria-hidden="true"
+          class="stroke-neutral-400 group-hover/menu:stroke-neutral-700 size-5"
+        />
         <span class="sr-only">More options</span>
       </DropdownMenuTrigger>
     </template>

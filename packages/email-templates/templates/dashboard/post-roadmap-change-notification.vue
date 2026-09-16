@@ -18,9 +18,10 @@ const data = {
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
       media="screen"
-    >
+    />
     <Preheader>
-      Post you upvoted has an update - {{ preview('siteTitle', data.siteTitle) }}
+      Post you upvoted has an update -
+      {{ preview("siteTitle", data.siteTitle) }}
     </Preheader>
 
     <Container class="max-w-xl">
@@ -34,31 +35,32 @@ const data = {
       </a>
 
       <Text>
-        An update on a post you upvoted: <a
+        An update on a post you upvoted:
+        <a
           class="font-bold underline decoration-dotted text-black"
           :href="preview('postUrl', data.postUrl)"
         >
-          {{ preview('postTitle', data.postTitle)}}
-        </a>,
-        has been moved to <span
+          {{ preview("postTitle", data.postTitle) }} </a
+        >, has been moved to
+        <span
           class="font-bold"
           :style="{
-            color: `#${preview('roadmapColor', data.roadmapColor)}`
+            color: `#${preview('roadmapColor', data.roadmapColor)}`,
           }"
         >
-          {{ preview('roadmapTitle', data.roadmapTitle) }}
-        </span>.
+          {{ preview("roadmapTitle", data.roadmapTitle) }} </span
+        >.
       </Text>
 
       <Section class="bg-neutral-50 px-5 py-1 rounded-xl">
         <Text class="text-sm font-bold underline decoration-dotted">
           <a :href="preview('postUrl', data.postUrl)" class="text-black">
-            {{ preview('postTitle', data.postTitle)}}
+            {{ preview("postTitle", data.postTitle) }}
           </a>
         </Text>
 
         <Text class="text-neutral-600 text-xs">
-          {{ preview('postDescription', data.postDescription) }}
+          {{ preview("postDescription", data.postDescription) }}
         </Text>
       </Section>
 
@@ -66,14 +68,15 @@ const data = {
 
       <Section>
         <Text class="text-xs/4.5 text-gray-400">
-          This email was intended for {{ preview('recipientEmail', data.recipientEmail)}}.
+          This email was intended for
+          {{ preview("recipientEmail", data.recipientEmail) }}.
         </Text>
 
         <Text class="mb-0 text-xs/4.5 text-gray-400">
-          Copyright &copy; {{ preview('fullYear', data.fullYear) }} {{ preview('siteTitle', data.siteTitle) }}. All rights reserved.
+          Copyright &copy; {{ preview("fullYear", data.fullYear) }}
+          {{ preview("siteTitle", data.siteTitle) }}. All rights reserved.
         </Text>
       </Section>
     </Container>
   </Layout>
 </template>
-

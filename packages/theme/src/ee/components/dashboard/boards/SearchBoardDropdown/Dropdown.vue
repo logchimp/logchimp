@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DropdownV2 :open="isOpen" @update:open="onToggle" :model="false">
+    <DropdownV2 :open="isOpen" :model="false" @update:open="onToggle">
       <template #trigger>
         <DropdownMenuTrigger
           :class="[
@@ -10,7 +10,7 @@
             'text-left text-sm font-medium',
             'flex items-center justify-between gap-x-4',
             'disabled:bg-neutral-100 disabled:cursor-not-allowed',
-            board?.boardId ? 'py-1.5' : 'py-2.5'
+            board?.boardId ? 'py-1.5' : 'py-2.5',
           ]"
           :disabled="disabled"
         >
@@ -21,10 +21,10 @@
               </div>
               <div>
                 <div class="text-md font-semibold line-clamp-1">
-                  {{board.name}}
+                  {{ board.name }}
                 </div>
                 <p class="text-xs text-neutral-500 line-clamp-1 leading-3">
-                  {{board.url}}
+                  {{ board.url }}
                 </p>
               </div>
             </div>
@@ -36,7 +36,10 @@
           </template>
           <ChevronDown
             aria-hidden="true"
-            :class="['stroke-neutral-700 group-disabled:stroke-neutral-500 flex-shrink-0 size-6','group-data-[state=open]:rotate-180 transition duration-150']"
+            :class="[
+              'stroke-neutral-700 group-disabled:stroke-neutral-500 flex-shrink-0 size-6',
+              'group-data-[state=open]:rotate-180 transition duration-150',
+            ]"
           />
         </DropdownMenuTrigger>
       </template>

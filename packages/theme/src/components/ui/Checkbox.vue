@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { CheckboxIndicator, CheckboxRoot } from "reka-ui";
 import { CheckIcon } from "lucide-vue";
 
@@ -18,15 +18,15 @@ defineEmits(["update:modelValue"]);
 
 <template>
   <CheckboxRoot
-    :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    :model-value="modelValue"
     :disabled="disabled"
     :class="[
       'hover:bg-neutral-50 size-5 appearance-none',
       'flex items-center justify-center rounded-(--border-radius-default) border outline-none',
       'not-disabled:bg-white not-disabled:border-gray-400',
-      'disabled:bg-gray-200/80 disabled:border-gray-300 disabled:cursor-not-allowed'
+      'disabled:bg-gray-200/80 disabled:border-gray-300 disabled:cursor-not-allowed',
     ]"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <CheckboxIndicator
       class="size-full rounded flex items-center justify-center"

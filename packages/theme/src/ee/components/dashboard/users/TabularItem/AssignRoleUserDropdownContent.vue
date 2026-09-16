@@ -1,18 +1,16 @@
 <template>
   <div class="">
-    <div v-if="dashboardRoles.state === 'LOADING'">
-      Loading...
-    </div>
+    <div v-if="dashboardRoles.state === 'LOADING'">Loading...</div>
 
     <DropdownV2CheckboxItem
       v-for="role in dashboardRoles.roles"
-      :model-value="userHasRole(role.id)"
-      @update:model-value="(checked) => updateRoleHandler(role.id, checked)"
-      :keep-open-on-shift="true"
       :key="role.id"
+      :model-value="userHasRole(role.id)"
+      :keep-open-on-shift="true"
+      @update:model-value="(checked) => updateRoleHandler(role.id, checked)"
     >
       <span>
-        {{role.name}}
+        {{ role.name }}
       </span>
       <ComputerIcon
         v-if="role.isSystem"

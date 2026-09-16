@@ -6,10 +6,16 @@
   >
     <color-dot :color="color" />
     <div class="flex items-center justify-between w-full overflow-hidden">
-      <div data-test="board-item-name" class="text-(--color-gray-40) font-medium truncate">
+      <div
+        data-test="board-item-name"
+        class="text-(--color-gray-40) font-medium truncate"
+      >
         {{ name }}
       </div>
-      <div data-test="board-item-postcount" class="text-(--color-gray-60) font-semibold text-sm ml-4">
+      <div
+        data-test="board-item-postcount"
+        class="text-(--color-gray-60) font-semibold text-sm ml-4"
+      >
         {{ postCount }}
       </div>
     </div>

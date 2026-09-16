@@ -20,11 +20,54 @@
 pre-commit:
   parallel: true
   jobs:
-    - run: |
+    - name: biome
+      run: |
         PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
         $PNPM_CMD biome format --write {staged_files}
-      glob: "*.{js,ts,vue,json,css,html}"
+      glob: "*.{js,ts,json,css,html}"
       stage_fixed: true
+
+    # Biome's Vue support is partial, so .vue files are formatted with Prettier
+    # and linted with ESLint (see each package's eslint.config.js).
+    - name: theme (vue)
+      group:
+        piped: true
+        jobs:
+          - name: prettier
+            root: "packages/theme/"
+            run: |
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              $PNPM_CMD exec prettier --write {staged_files}
+            glob: "packages/theme/**/*.vue"
+            stage_fixed: true
+
+          - name: eslint
+            root: "packages/theme/"
+            run: |
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              $PNPM_CMD exec eslint --fix {staged_files}
+            glob: "packages/theme/**/*.vue"
+            stage_fixed: true
+
+    - name: email-templates (vue)
+      group:
+        piped: true
+        jobs:
+          - name: prettier
+            root: "packages/email-templates/"
+            run: |
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              $PNPM_CMD exec prettier --write {staged_files}
+            glob: "packages/email-templates/**/*.vue"
+            stage_fixed: true
+
+          - name: eslint
+            root: "packages/email-templates/"
+            run: |
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              $PNPM_CMD exec eslint --fix {staged_files}
+            glob: "packages/email-templates/**/*.vue"
+            stage_fixed: true
 
 #     - name: rubocop
 #       glob: "*.rb"

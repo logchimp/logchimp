@@ -5,16 +5,11 @@
       'cursor-pointer outline-none',
       'bg-white hover:bg-neutral-300/50 data-[highlighted]:bg-neutral-300/50',
     ]"
+    text-value=""
     @click="$emit('select', null)"
-    textValue=""
   >
-    <CircleDashed
-      aria-hidden="true"
-      class="size-4 stroke-neutral-700"
-    />
-    <div class="text-md">
-      No board
-    </div>
+    <CircleDashed aria-hidden="true" class="size-4 stroke-neutral-700" />
+    <div class="text-md">No board</div>
   </DropdownMenuItem>
 </template>
 

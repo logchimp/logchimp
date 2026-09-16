@@ -15,22 +15,27 @@
           Resend
         </Button>
 
-        <div :class="['flex items-center gap-x-2 transition-opacity', requestStatus.isShown ? 'opacity-100' : 'opacity-0']">
+        <div
+          :class="[
+            'flex items-center gap-x-2 transition-opacity',
+            requestStatus.isShown ? 'opacity-100' : 'opacity-0',
+          ]"
+        >
           <!-- Success -->
           <template v-if="requestStatus.status === 'success'">
-            <CheckCircle2Icon aria-hidden="true" class="size-5 stroke-green-600" />
+            <CheckCircle2Icon
+              aria-hidden="true"
+              class="size-5 stroke-green-600"
+            />
             <span class="font-medium">Email sent</span>
           </template>
 
           <!-- Error -->
           <template v-if="requestStatus.status === 'error'">
             <XCircleIcon aria-hidden="true" class="size-5 stroke-red-500" />
-            <span class="font-medium">
-              Request failed
-            </span>
+            <span class="font-medium"> Request failed </span>
           </template>
         </div>
-
       </div>
     </template>
   </alert>

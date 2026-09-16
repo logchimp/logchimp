@@ -3,24 +3,24 @@
     <AuthFormHeader />
 
     <!-- Success -->
-    <div v-if="success" class="card text-center flex flex-col items-center space-y-4">
+    <div
+      v-if="success"
+      class="card text-center flex flex-col items-center space-y-4"
+    >
       <success-icon class="w-8 h-8" color="#64B285" />
 
-      <p>
-        Thank you for verifying your account.
-      </p>
-      <AuthFormHelperText>
-        You may close this window.
-      </AuthFormHelperText>
+      <p>Thank you for verifying your account.</p>
+      <AuthFormHelperText> You may close this window. </AuthFormHelperText>
     </div>
 
     <!-- Error -->
-    <div v-if="error" class="card text-center flex flex-col items-center space-y-4">
+    <div
+      v-if="error"
+      class="card text-center flex flex-col items-center space-y-4"
+    >
       <error-icon class="w-8 h-8" color="#DE544E" />
 
-      <p>
-        Invalid or expired link. Please try again.
-      </p>
+      <p>Invalid or expired link. Please try again.</p>
       <AuthFormHelperText>
         Contact the site owner in case this happens again.
       </AuthFormHelperText>

@@ -1,10 +1,8 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/boards">
-          Boards
-        </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/boards"> Boards </BreadcrumbItem>
 
         <template v-if="title">
           <BreadcrumbDivider />
@@ -94,9 +92,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 const SlugInputField = defineAsyncComponent(
   () =>
-    import(
-      "../../../ee/components/dashboard/boards/BoardSettingsForm/SlugInputField.vue"
-    ),
+    import("../../../ee/components/dashboard/boards/BoardSettingsForm/SlugInputField.vue"),
 );
 
 interface Props {

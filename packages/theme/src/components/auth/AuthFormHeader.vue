@@ -7,10 +7,7 @@ const { get: siteSettings } = useSettingStore();
 
 <template>
   <div class="flex flex-col items-center mb-8">
-    <site-branding
-      :title="siteSettings.title"
-      :logo="siteSettings.logo"
-    />
+    <site-branding :title="siteSettings.title" :logo="siteSettings.logo" />
     <template v-if="$slots.heading">
       <h1 class="text-3xl font-normal text-center mt-4 mb-0">
         <slot name="heading" />

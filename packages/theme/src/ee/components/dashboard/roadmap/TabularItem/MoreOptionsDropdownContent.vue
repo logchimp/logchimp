@@ -1,12 +1,14 @@
 <template>
-  <DropdownV2Content
-    align="end"
-    side="bottom"
-    :loop="true"
-  >
+  <DropdownV2Content align="end" side="bottom" :loop="true">
     <DropdownItem
-      @click="roadmap?.url ? router.push(`/dashboard/roadmaps/${encodeURIComponent(roadmap.url)}/settings`) : undefined"
       :disabled="!roadmap?.url"
+      @click="
+        roadmap?.url
+          ? router.push(
+              `/dashboard/roadmaps/${encodeURIComponent(roadmap.url)}/settings`,
+            )
+          : undefined
+      "
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
@@ -15,8 +17,8 @@
     </DropdownItem>
     <DropdownItem
       v-if="settings.developer_mode"
-      @click="roadmap?.id ? useCopyText(roadmap.id) : undefined"
       :disabled="!roadmap?.id"
+      @click="roadmap?.id ? useCopyText(roadmap.id) : undefined"
     >
       <template #icon>
         <copy-icon aria-hidden="true" />
@@ -36,7 +38,10 @@
     </DropdownItem>
   </DropdownV2Content>
 
-  <DeleteRoadmapDialog :open="openConfirmDialog" @close="(e) => openConfirmDialog = e" />
+  <DeleteRoadmapDialog
+    :open="openConfirmDialog"
+    @close="(e) => (openConfirmDialog = e)"
+  />
 </template>
 
 <script setup lang="ts">

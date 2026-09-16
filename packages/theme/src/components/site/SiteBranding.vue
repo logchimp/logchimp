@@ -1,26 +1,29 @@
 <template>
-	<router-link data-testid="site-branding" :to="link" class="flex items-center gap-x-2.5 select-none">
-		<div v-if="logo" class="size-7 bg-neutral-100 rounded-full overflow-hidden shrink-0">
-			<img
-        class="size-7 rounded-full"
-				:src="logo"
-				:alt="title || undefined"
-			>
-		</div>
-		<p
-			v-if="title"
-			:class="[
+  <router-link
+    data-testid="site-branding"
+    :to="link"
+    class="flex items-center gap-x-2.5 select-none"
+  >
+    <div
+      v-if="logo"
+      class="size-7 bg-neutral-100 rounded-full overflow-hidden shrink-0"
+    >
+      <img class="size-7 rounded-full" :src="logo" :alt="title || undefined" />
+    </div>
+    <p
+      v-if="title"
+      :class="[
         'font-semibold text-lg break-all',
         {
           'text-neutral-800': textColor === 'black',
-          'text-white': textColor === 'white'
-        }
+          'text-white': textColor === 'white',
+        },
       ]"
       data-testid="site-name"
-		>
-			{{ title }}
-		</p>
-	</router-link>
+    >
+      {{ title }}
+    </p>
+  </router-link>
 </template>
 
 <script setup lang="ts">

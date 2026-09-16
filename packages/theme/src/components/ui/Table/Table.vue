@@ -13,7 +13,7 @@ withDefaults(defineProps<Props>(), {
     :class="[
       'border border-(--border-color-default)',
       'rounded-lg w-full overflow-hidden',
-      'bg-white drop-shadow-xs'
+      'bg-white drop-shadow-xs',
     ]"
   >
     <div
@@ -22,23 +22,16 @@ withDefaults(defineProps<Props>(), {
         'flex items-center',
         'border-b-2 border-b-(--border-color-default)',
         'select-none pointer-events-none',
-        'px-2'
+        'px-2',
       ]"
     >
       <slot name="header" />
     </div>
 
-    <div
-      :class="[
-        disableDividers ? [] : ['divide-y-1 divide-neutral-200'],
-      ]"
-    >
+    <div :class="[disableDividers ? [] : ['divide-y-1 divide-neutral-200']]">
       <slot />
     </div>
 
-    <slot
-      v-if="$slots['infinite-loader']"
-      name="infinite-loader"
-    />
+    <slot v-if="$slots['infinite-loader']" name="infinite-loader" />
   </div>
 </template>

@@ -10,14 +10,14 @@
       >
         Name
       </Td>
-       <Td
-         :head="true"
-         :style="{
+      <Td
+        :head="true"
+        :style="{
           minWidth: '350px',
         }"
         class="flex-1"
-       >
-         Roles
+      >
+        Roles
       </Td>
       <Td
         :head="true"
@@ -44,14 +44,8 @@
       />
     </template>
 
-    <Tr
-      v-for="row in dashboardUsers.users"
-      :key="row.userId"
-    >
-      <TabularItem
-        :user="row"
-        :settings="settings"
-      />
+    <Tr v-for="row in dashboardUsers.users" :key="row.userId">
+      <TabularItem :user="row" :settings="settings" />
     </Tr>
 
     <template #infinite-loader>

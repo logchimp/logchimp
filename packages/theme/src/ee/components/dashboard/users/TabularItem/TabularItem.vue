@@ -8,13 +8,12 @@
       }"
     >
       <avatar
-        :src="user.avatar" :name="user.name || user.username"
+        :src="user.avatar"
+        :name="user.name || user.username"
         class="shrink-0"
-        bgColor="light"
+        bg-color="light"
       />
-      <span
-        class="text-black line-clamp-1 truncate"
-      >
+      <span class="text-black line-clamp-1 truncate">
         {{ user.name || user.username }}
       </span>
       <UserInfoDialog :user="user" />

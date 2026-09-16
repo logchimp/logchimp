@@ -1,12 +1,13 @@
 <template>
   <roadmap-skeleton v-if="loading" />
   <div
-    v-else-if="errorCode === 'LICENSE_VALIDATION_FAILED' || errorCode === 'ROADMAPS_NOT_FOUND'"
+    v-else-if="
+      errorCode === 'LICENSE_VALIDATION_FAILED' ||
+      errorCode === 'ROADMAPS_NOT_FOUND'
+    "
     class="text-center"
   >
-    <p>
-      No roadmaps available
-    </p>
+    <p>No roadmaps available</p>
   </div>
   <template v-else>
     <!-- Show roadmaps grid only when we have roadmaps -->
@@ -24,10 +25,7 @@
         :roadmap="roadmap"
       />
 
-      <div
-        v-if="scrollLoading"
-        class="flex items-center justify-center"
-      >
+      <div v-if="scrollLoading" class="flex items-center justify-center">
         <LoaderContainer />
       </div>
     </div>

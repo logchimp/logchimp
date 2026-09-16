@@ -3,8 +3,8 @@
     :class="[
       'flex-1',
       {
-        'flex items-center': loading || errorCode
-      }
+        'flex items-center': loading || errorCode,
+      },
     ]"
   >
     <Dashboard404 v-if="errorCode === 'POST_NOT_FOUND'">
@@ -16,9 +16,7 @@
       :post="post"
       @updated="handlePostUpdated"
     />
-    <Dashboard500 v-else>
-      Something went wrong.
-    </Dashboard500>
+    <Dashboard500 v-else> Something went wrong. </Dashboard500>
   </div>
 </template>
 

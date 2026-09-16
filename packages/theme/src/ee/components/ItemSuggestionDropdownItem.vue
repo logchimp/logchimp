@@ -14,7 +14,9 @@
       <div data-test="board-suggestion-name" class="text-md font-semibold">
         {{ suggestion.name }}
       </div>
-      <p data-test="board-suggestion-url" class="text-xs text-neutral-500">{{ suggestion.url }}</p>
+      <p data-test="board-suggestion-url" class="text-xs text-neutral-500">
+        {{ suggestion.url }}
+      </p>
     </div>
   </DropdownMenuItem>
 </template>

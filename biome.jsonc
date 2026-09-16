@@ -14,7 +14,8 @@
       "!.idea",
       "!packages/{server,theme,types}/dist",
       "!packages/email-templates/{.maizzle,dist}",
-      "!packages/server/src/services/mail/templates"
+      "!packages/server/src/services/mail/templates",
+      "!**/*.vue"
     ]
   },
   "javascript": {
@@ -48,23 +49,5 @@
         "useNodejsImportProtocol": "off"
       }
     }
-  },
-  "overrides": [
-    {
-      "includes": [
-        "packages/theme/**/*.vue",
-        "packages/email-templates/templates/**/*.vue"
-      ],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "noUnusedVariables": "off",
-            "noUnusedImports": "off",
-            // Temporarily disabled due to Biome error
-            "noVueDuplicateKeys": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }

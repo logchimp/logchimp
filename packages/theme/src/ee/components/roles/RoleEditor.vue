@@ -2,9 +2,7 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/settings/roles">
-          Roles
-        </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/settings/roles"> Roles </BreadcrumbItem>
 
         <template v-if="title">
           <BreadcrumbDivider />
@@ -65,12 +63,14 @@
         <div class="form-column">
           <l-textarea
             :model-value="role.description ?? undefined"
-            @update:model-value="(value: string) => role.description = value ?? null"
             :disabled="disableRoleEditorForm"
             label="Description"
             rows="4"
             name="Role description"
             placeholder="What's about this role?"
+            @update:model-value="
+              (value: string) => (role.description = value ?? null)
+            "
           />
         </div>
       </div>
@@ -80,12 +80,12 @@
       <p class="form-section-title">Posts permissions</p>
       <div class="form-columns">
         <div class="form-column">
-<!--          <toggle-item-->
-<!--            v-model="permissions.post.read"-->
-<!--            :disabled="disableRoleEditorForm"-->
-<!--            label="Read"-->
-<!--            :disabled="true"-->
-<!--          />-->
+          <!--          <toggle-item-->
+          <!--            v-model="permissions.post.read"-->
+          <!--            :disabled="disableRoleEditorForm"-->
+          <!--            label="Read"-->
+          <!--            :disabled="true"-->
+          <!--          />-->
           <toggle-item
             v-model="permissions.post.update"
             :disabled="disableRoleEditorForm"
@@ -346,13 +346,13 @@
       <p class="form-section-title">Settings permissions</p>
       <div class="form-columns">
         <div class="form-column">
-<!--          <toggle-item-->
-<!--            v-model="permissions.settings.read"-->
-<!--            :disabled="disableRoleEditorForm"-->
-<!--            label="Read"-->
-<!--            note="This permission allows you to read LogChimp settings."-->
-<!--            :disabled="true"-->
-<!--          />-->
+          <!--          <toggle-item-->
+          <!--            v-model="permissions.settings.read"-->
+          <!--            :disabled="disableRoleEditorForm"-->
+          <!--            label="Read"-->
+          <!--            note="This permission allows you to read LogChimp settings."-->
+          <!--            :disabled="true"-->
+          <!--          />-->
           <toggle-item
             v-model="permissions.settings.update"
             :disabled="disableRoleEditorForm"
@@ -361,8 +361,7 @@
           />
         </div>
 
-        <div class="form-column">
-        </div>
+        <div class="form-column"></div>
       </div>
     </div>
   </div>

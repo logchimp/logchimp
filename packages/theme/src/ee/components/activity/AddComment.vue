@@ -1,27 +1,26 @@
 <template>
-	<div
+  <div
     :class="[
       'p-8 border bg-white rounded-(--border-radius-default)',
-      isInternal ? [
-        'ring-4 ring-(--color-logchimp-brand-color)/10 border-(--color-logchimp-brand-color)',
-      ] : 'border-(--color-gray-90)',
+      isInternal
+        ? [
+            'ring-4 ring-(--color-logchimp-brand-color)/10 border-(--color-logchimp-brand-color)',
+          ]
+        : 'border-(--color-gray-90)',
     ]"
   >
-		<l-text
-			v-model="comment"
-			name="comment"
-			placeholder="Leave a comment"
-			@keyup-enter="submitComment"
+    <l-text
+      v-model="comment"
+      name="comment"
+      placeholder="Leave a comment"
       :disabled="!canCreateComment"
-		/>
+      @keyup-enter="submitComment"
+    />
 
-		<div class="flex items-center justify-end space-x-8">
+    <div class="flex items-center justify-end space-x-8">
       <Tooltip v-if="allowInternal">
         <template #trigger>
-          <toggle
-            v-model="isInternal"
-            :disabled="!canMarkCommentInternal"
-          />
+          <toggle v-model="isInternal" :disabled="!canMarkCommentInternal" />
         </template>
 
         <template v-if="settingsEEStore.license.hierarchy >= 2">
@@ -32,16 +31,16 @@
         </template>
       </Tooltip>
 
-			<Button
-				type="primary"
-				:loading="loading"
-				:disabled="!canSubmitComment"
-				@click="submitComment"
-			>
-				Submit
-			</Button>
-		</div>
-	</div>
+      <Button
+        type="primary"
+        :loading="loading"
+        :disabled="!canSubmitComment"
+        @click="submitComment"
+      >
+        Submit
+      </Button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

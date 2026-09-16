@@ -7,28 +7,28 @@
           label="Title"
           placeholder="Name of the feature"
           :error="postFieldError"
-          @hide-error="hideTitleError"
           class="!mb-1"
+          @hide-error="hideTitleError"
         />
 
-        <HelperText :isError="post.title.length > MAX_TITLE_LENGTH">
+        <HelperText :is-error="post.title.length > MAX_TITLE_LENGTH">
           {{ MAX_TITLE_LENGTH - post.title.length }} characters
         </HelperText>
 
         <l-textarea
           :model-value="post.contentMarkdown ?? undefined"
-          @update:model-value="(value) => post.contentMarkdown = value ?? null"
           label="Description"
           rows="4"
           placeholder="What would you use it for?"
+          @update:model-value="
+            (value) => (post.contentMarkdown = value ?? null)
+          "
         />
       </div>
 
       <div class="form-column">
         <div>
-          <p class="input-field-label">
-            Preview
-          </p>
+          <p class="input-field-label">Preview</p>
           <div class="card">
             <post-item v-if="!saveBtnLoading" :post="post" />
           </div>
@@ -38,31 +38,28 @@
   </div>
 
   <div class="form-section">
-    <h6 class="form-section-title">
-      Other
-    </h6>
+    <h6 class="form-section-title">Other</h6>
     <div class="form-columns">
       <div class="form-column">
         <div class="flex items-center justify-between gap-2">
-          <InputLabel html-for="" class="mb-0">
-            Board
-          </InputLabel>
-          <UpgradeTooltip v-if="!hasValidLicense" :has-valid-license="hasValidLicense">
+          <InputLabel html-for="" class="mb-0"> Board </InputLabel>
+          <UpgradeTooltip
+            v-if="!hasValidLicense"
+            :has-valid-license="hasValidLicense"
+          >
             <LicenseCrown color="neutral" />
           </UpgradeTooltip>
         </div>
-        <SearchBoardDropdown
-          :board="post.board"
-          @selected="selectBoard"
-        />
+        <SearchBoardDropdown :board="post.board" @selected="selectBoard" />
       </div>
 
       <div class="form-column">
         <div class="flex items-center justify-between gap-2">
-          <InputLabel html-for="" class="mb-0">
-            Roadmap
-          </InputLabel>
-          <UpgradeTooltip v-if="!hasValidLicense" :has-valid-license="hasValidLicense">
+          <InputLabel html-for="" class="mb-0"> Roadmap </InputLabel>
+          <UpgradeTooltip
+            v-if="!hasValidLicense"
+            :has-valid-license="hasValidLicense"
+          >
             <LicenseCrown color="neutral" />
           </UpgradeTooltip>
         </div>
@@ -73,7 +70,7 @@
         <div
           :class="[
             isRoadmapModified ? 'text-neutral-800' : 'text-neutral-400',
-            'flex items-center justify-between mt-2'
+            'flex items-center justify-between mt-2',
           ]"
         >
           <label class="text-sm" :for="notifyVotersRoadmap">
@@ -82,9 +79,9 @@
 
           <Checkbox
             :aria-labelledby="notifyVotersRoadmap"
-            :modelValue="notifyVoters.roadmap"
-            @update:modelValue="notifyVoters.roadmap = $event"
+            :model-value="notifyVoters.roadmap"
             :disabled="!isRoadmapModified"
+            @update:model-value="notifyVoters.roadmap = $event"
           />
         </div>
       </div>

@@ -3,10 +3,10 @@
     :class="[
       'w-full text-left text-neutral-700 hover:bg-neutral-300/50',
       'cursor-pointer outline-none',
-      'flex items-center gap-x-4 px-4 py-3'
+      'flex items-center gap-x-4 px-4 py-3',
     ]"
+    text-value=""
     @click="createRoadmapHandler"
-    textValue=""
     @select="(e: Event) => e.preventDefault()"
   >
     <PlusIcon class="size-4" aria-hidden="true" />

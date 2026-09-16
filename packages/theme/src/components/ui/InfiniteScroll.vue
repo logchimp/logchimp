@@ -13,9 +13,7 @@
     </template>
     <template v-if="state === 'ERROR'">
       <slot name="error">
-        <client-error>
-          Something went wrong!
-        </client-error>
+        <client-error> Something went wrong! </client-error>
       </slot>
     </template>
   </div>
@@ -30,11 +28,7 @@ import ClientError from "./ClientError.vue";
 import LoaderContainer from "./LoaderContainer.vue";
 
 export type InfiniteScrollStateType =
-  | "IDLE"
-  | "LOADING"
-  | "LOADED"
-  | "COMPLETED"
-  | "ERROR";
+  "IDLE" | "LOADING" | "LOADED" | "COMPLETED" | "ERROR";
 
 interface Props {
   /**

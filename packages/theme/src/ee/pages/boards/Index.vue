@@ -1,11 +1,12 @@
 <template>
   <div
-    v-if="errorCode === 'LICENSE_VALIDATION_FAILED' || errorCode === 'BOARDS_NOT_FOUND'"
+    v-if="
+      errorCode === 'LICENSE_VALIDATION_FAILED' ||
+      errorCode === 'BOARDS_NOT_FOUND'
+    "
     class="text-center"
   >
-    <p>
-      No boards available
-    </p>
+    <p>No boards available</p>
   </div>
   <div v-else>
     <div v-if="boards.length > 0" class="boards-lists">
@@ -101,7 +102,7 @@ defineOptions({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .boards-lists
 	display: grid
 	grid-template-columns: 1fr

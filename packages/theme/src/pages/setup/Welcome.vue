@@ -1,21 +1,21 @@
 <template>
-	<div class="onboarding onboarding-content">
-		<div class="onboarding-header">
-			<h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
-			<p class="onboarding-label">
-				Let’s setup your LogChimp site to track user feedback for building
-				better products.
-			</p>
-		</div>
-		<Button type="primary" class="welcome-button" href="/setup/create-account">
-			Create an account
-		</Button>
-		<img
-			class="welcome-image"
-			src="https://cdn.logchimp.codecarrot.net/logchimp-home-preview.png"
-			alt="LogChimp homepage preview"
-		/>
-	</div>
+  <div class="onboarding onboarding-content">
+    <div class="onboarding-header">
+      <h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
+      <p class="onboarding-label">
+        Let’s setup your LogChimp site to track user feedback for building
+        better products.
+      </p>
+    </div>
+    <Button type="primary" class="welcome-button" href="/setup/create-account">
+      Create an account
+    </Button>
+    <img
+      class="welcome-image"
+      src="https://cdn.logchimp.codecarrot.net/logchimp-home-preview.png"
+      alt="LogChimp homepage preview"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -43,7 +43,7 @@ defineOptions({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .welcome-image
 	width: 100%
 	border-radius: var(--border-radius-default)

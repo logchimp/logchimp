@@ -7,7 +7,9 @@
         <div class="size-2.5 rounded-full bg-(--color-gray-95)"></div>
         <div class="h-3 w-24 bg-(--color-gray-95) rounded"></div>
       </header>
-      <div class="rounded-md bg-(--color-gray-95) flex-grow min-h-0 overflow-y-auto" />
+      <div
+        class="rounded-md bg-(--color-gray-95) flex-grow min-h-0 overflow-y-auto"
+      />
     </div>
   </div>
 </template>

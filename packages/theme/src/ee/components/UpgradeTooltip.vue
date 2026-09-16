@@ -20,9 +20,7 @@ defineProps<Props>();
   <slot v-if="hasValidLicense" />
   <TooltipProvider v-else>
     <TooltipRoot>
-      <TooltipTrigger
-        :disabled="IS_PROD && !hasValidLicense"
-      >
+      <TooltipTrigger :disabled="IS_PROD && !hasValidLicense">
         <slot />
       </TooltipTrigger>
 
@@ -33,13 +31,15 @@ defineProps<Props>();
           ]"
           :side-offset="10"
         >
-          <div class="flex max-w-xs flex-col items-center p-4 text-center text-sm text-neutral-700">
+          <div
+            class="flex max-w-xs flex-col items-center p-4 text-center text-sm text-neutral-700"
+          >
             <template v-if="IS_DEV">
               You can test this feature locally but not on production.
             </template>
             <template v-else>
-              This is a commercial feature.
-              To purchase a commercial license, please reach out to our sales team.
+              This is a commercial feature. To purchase a commercial license,
+              please reach out to our sales team.
             </template>
             <a class="underline" :href="DEFAULT_LOGCHIMP_PILOT_URL">
               Contact Sales

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex justify-center">
+  <div class="flex justify-center">
     <div class="hover:bg-neutral-200/70 rounded-lg">
       <a
         :href="href"
