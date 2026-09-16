@@ -54,7 +54,7 @@ export class RolesEEAPI extends APIService {
   UpdateRole = async (
     role: IUpdateRoleRequestBody,
   ): Promise<IUpdateRoleResponseBody> => {
-    return this.put("/v1/roles", role)
+    return this.patch("/v1/roles", role)
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
