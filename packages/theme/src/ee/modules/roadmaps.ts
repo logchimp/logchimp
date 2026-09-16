@@ -106,7 +106,7 @@ export class RoadmapsEE extends APIService {
   UpdateRoadmap = async (
     roadmap: IUpdateRoadmapRequestBody,
   ): Promise<TUpdateRoadmapResponseBody> => {
-    return this.put("/v1/roadmaps", {
+    return this.patch("/v1/roadmaps", {
       ...roadmap,
     })
       .then((response) => response?.data)
@@ -124,7 +124,7 @@ export class RoadmapsEE extends APIService {
   }: ISortRoadmapRequestBody): Promise<
     AxiosResponse<TSortRoadmapResponseBody>
   > => {
-    return this.put("/v1/roadmaps/sort", {
+    return this.patch("/v1/roadmaps/sort", {
       from,
       to,
     });

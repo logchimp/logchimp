@@ -48,6 +48,17 @@ export abstract class APIService {
   }
 
   /**
+   * Makes a PATCH request to the specified URL
+   * @param {string} url - The endpoint URL
+   * @param {object} [data={}] - Request body data
+   * @param {AxiosRequestConfig} [config={}] - Additional axios configuration
+   * @returns {Promise} Axios response promise
+   */
+  patch(url: string, data = {}, config: AxiosRequestConfig = {}) {
+    return this.axiosInstance.patch(url, data, config);
+  }
+
+  /**
    * Makes a PUT request to the specified URL
    * @param {string} url - The endpoint URL
    * @param {object} [data={}] - Request body data
