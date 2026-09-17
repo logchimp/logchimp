@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN \
     pnpm --filter="@logchimp/api" exec pnpm tsc; \
     pnpm --filter="@logchimp/email-templates" build;
 
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
