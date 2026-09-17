@@ -82,7 +82,7 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       bullmq:
-        specifier: ^6.0.7
+        specifier: ^6.3.6
         version: 6.3.6(ioredis@6.0.0(supports-color@5.5.0))(pg@8.23.0)
       cors:
         specifier: ^2.8.6
