@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/roadmaps"> Roadmaps </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/roadmaps">Roadmaps</BreadcrumbItem>
 
         <!-- Show divider & title once data loaded -->
         <template v-if="title">

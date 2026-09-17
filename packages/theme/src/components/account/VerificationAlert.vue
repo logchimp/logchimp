@@ -33,7 +33,7 @@
           <!-- Error -->
           <template v-if="requestStatus.status === 'error'">
             <XCircleIcon aria-hidden="true" class="size-5 stroke-red-500" />
-            <span class="font-medium"> Request failed </span>
+            <span class="font-medium">Request failed</span>
           </template>
         </div>
       </div>

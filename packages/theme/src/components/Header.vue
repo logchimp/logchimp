@@ -11,7 +11,7 @@
         <nav>
           <HeaderAuthDropdown v-if="userStore.user.userId" />
           <div v-else class="flex items-center">
-            <Button type="primary" href="/login" size="small"> Login </Button>
+            <Button type="primary" href="/login" size="small">Login</Button>
             <Button
               v-if="settingsStore.get.allowSignup"
               type="primary"

@@ -102,7 +102,7 @@ async function getBoards() {
     <template #infinite-loader>
       <infinite-scroll :on-infinite="getBoards" :state="state">
         <template #error>
-          <client-error> No boards available </client-error>
+          <client-error>No boards available</client-error>
         </template>
       </infinite-scroll>
     </template>

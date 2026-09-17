@@ -2,9 +2,9 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/settings"> Settings </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/settings">Settings</BreadcrumbItem>
         <BreadcrumbDivider />
-        <BreadcrumbItem> Labs </BreadcrumbItem>
+        <BreadcrumbItem>Labs</BreadcrumbItem>
       </Breadcrumbs>
     </template>
 

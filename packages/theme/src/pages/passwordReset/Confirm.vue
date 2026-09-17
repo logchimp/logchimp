@@ -2,7 +2,7 @@
   <auth-form>
     <div>
       <AuthFormHeader>
-        <template #heading> Set new password </template>
+        <template #heading>Set new password</template>
       </AuthFormHeader>
 
       <div v-if="validToken.success">

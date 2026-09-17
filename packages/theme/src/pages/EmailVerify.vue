@@ -10,7 +10,7 @@
       <success-icon class="w-8 h-8" color="#64B285" />
 
       <p>Thank you for verifying your account.</p>
-      <AuthFormHelperText> You may close this window. </AuthFormHelperText>
+      <AuthFormHelperText>You may close this window.</AuthFormHelperText>
     </div>
 
     <!-- Error -->

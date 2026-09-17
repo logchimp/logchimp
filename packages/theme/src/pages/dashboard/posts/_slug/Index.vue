@@ -16,7 +16,7 @@
       :post="post"
       @updated="handlePostUpdated"
     />
-    <Dashboard500 v-else> Something went wrong. </Dashboard500>
+    <Dashboard500 v-else>Something went wrong.</Dashboard500>
   </div>
 </template>
 

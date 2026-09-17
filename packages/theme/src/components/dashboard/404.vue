@@ -16,7 +16,7 @@ defineOptions({
     />
     <div class="flex flex-col items-center justify-center gap-y-2">
       <div class="font-medium">
-        <slot> Page not found </slot>
+        <slot>Page not found</slot>
       </div>
       <p class="text-xs text-neutral-800">
         We could not find the page you were looking for.

@@ -62,7 +62,7 @@ async function getRecentPosts() {
       >
         Title
       </Td>
-      <Td :head="true"> Votes </Td>
+      <Td :head="true">Votes</Td>
     </template>
 
     <Tr v-for="post in posts" :key="post.postId">

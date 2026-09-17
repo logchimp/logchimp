@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem> Roadmaps </BreadcrumbItem>
+        <BreadcrumbItem>Roadmaps</BreadcrumbItem>
       </Breadcrumbs>
     </template>
 

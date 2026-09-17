@@ -1,7 +1,11 @@
 <template>
   <div class="onboarding onboarding-content">
     <div class="onboarding-header">
-      <h2 class="onboarding-heading">Welcome to <span>LogChimp</span>!</h2>
+      <h2 class="onboarding-heading">
+        Welcome to
+        <span>LogChimp</span>
+        !
+      </h2>
       <p class="onboarding-label">
         Let’s setup your LogChimp site to track user feedback for building
         better products.

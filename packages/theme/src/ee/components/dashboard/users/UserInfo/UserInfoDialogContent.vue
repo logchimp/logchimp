@@ -1,6 +1,6 @@
 <template>
   <DialogContent>
-    <template #title> User Details </template>
+    <template #title>User Details</template>
 
     <div class="grid gap-y-4 sm:gap-y-6">
       <div
@@ -36,9 +36,9 @@
         <div class="p-3 border border-(--border-color-default) rounded-lg">
           <div class="mb-2 flex items-center gap-x-1">
             <AccountInfoIcon aria-hidden="true" class="size-4" />
-            <span class="text-sm font-medium text-neutral-700"
-              >Account Information</span
-            >
+            <span class="text-sm font-medium text-neutral-700">
+              Account Information
+            </span>
           </div>
 
           <div class="grid gap-y-3">
@@ -61,9 +61,9 @@
         <div class="p-3 border border-(--border-color-default) rounded-lg">
           <div class="mb-2 flex items-center gap-x-1">
             <ActivityIcon aria-hidden="true" class="size-4" />
-            <span class="text-sm font-medium text-neutral-700"
-              >Activity Stats</span
-            >
+            <span class="text-sm font-medium text-neutral-700">
+              Activity Stats
+            </span>
           </div>
 
           <ul class="grid gap-y-1 text-xs text-neutral-700">

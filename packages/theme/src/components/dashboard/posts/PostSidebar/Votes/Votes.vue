@@ -13,7 +13,7 @@
       </button>
     </div>
 
-    <template v-if="loading"> Loading... </template>
+    <template v-if="loading">Loading...</template>
     <template v-else-if="votes.length > 0">
       <div class="flex items-center -space-x-3.5 mb-2">
         <Avatar

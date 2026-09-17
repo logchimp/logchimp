@@ -2,7 +2,7 @@
   <DashboardPageHeader :mb="false">
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/posts"> Posts </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/posts">Posts</BreadcrumbItem>
 
         <!-- Show divider & title once data loaded -->
         <template v-if="post.title">
@@ -46,8 +46,8 @@
         />
         <div v-else class="text-sm">
           Please upgrade to
-          <a href="/dashboard/settings/billing">higher plan</a> to view
-          comments.
+          <a href="/dashboard/settings/billing">higher plan</a>
+          to view comments.
         </div>
       </div>
     </div>

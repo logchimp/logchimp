@@ -1,7 +1,7 @@
 <template>
   <auth-form>
     <AuthFormHeader>
-      <template #heading> Welcome back! </template>
+      <template #heading>Welcome back!</template>
     </AuthFormHeader>
 
     <form class="card" data-testid="login-form" @submit.prevent="login">
@@ -34,10 +34,10 @@
     </form>
 
     <AuthFormHelperText>
-      <router-link to="/password-reset"> Forgot password? </router-link>
+      <router-link to="/password-reset">Forgot password?</router-link>
       <div v-if="siteSettings.allowSignup">
         • Don't have an account yet?
-        <router-link to="/join"> Sign up </router-link>
+        <router-link to="/join">Sign up</router-link>
       </div>
     </AuthFormHelperText>
   </auth-form>

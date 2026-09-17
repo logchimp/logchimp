@@ -1,7 +1,7 @@
 <template>
   <auth-form>
     <AuthFormHeader>
-      <template #heading> Forgot password </template>
+      <template #heading>Forgot password</template>
     </AuthFormHeader>
 
     <server-error v-if="serverError" @close="serverError = false" />
@@ -32,7 +32,7 @@
     </div>
     <AuthFormHelperText v-if="siteSettings.allowSignup">
       Don't have an account yet?
-      <router-link to="/join"> Sign up </router-link>
+      <router-link to="/join">Sign up</router-link>
     </AuthFormHelperText>
   </auth-form>
 </template>

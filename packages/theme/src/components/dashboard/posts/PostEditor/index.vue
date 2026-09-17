@@ -42,7 +42,7 @@
     <div class="form-columns">
       <div class="form-column">
         <div class="flex items-center justify-between gap-2">
-          <InputLabel html-for="" class="mb-0"> Board </InputLabel>
+          <InputLabel html-for="" class="mb-0">Board</InputLabel>
           <UpgradeTooltip
             v-if="!hasValidLicense"
             :has-valid-license="hasValidLicense"
@@ -55,7 +55,7 @@
 
       <div class="form-column">
         <div class="flex items-center justify-between gap-2">
-          <InputLabel html-for="" class="mb-0"> Roadmap </InputLabel>
+          <InputLabel html-for="" class="mb-0">Roadmap</InputLabel>
           <UpgradeTooltip
             v-if="!hasValidLicense"
             :has-valid-license="hasValidLicense"

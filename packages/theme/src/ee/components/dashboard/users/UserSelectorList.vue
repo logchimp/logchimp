@@ -1,5 +1,5 @@
 <template>
-  <template v-if="loading"> Loading... </template>
+  <template v-if="loading">Loading...</template>
   <template v-else-if="isError">
     Something went wrong. Please try again later.
   </template>

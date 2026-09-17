@@ -17,9 +17,9 @@
 
       <div class="form-columns">
         <div class="form-column">
-          <a class="font-medium" :href="DEFAULT_LOGCHIMP_PILOT_URL"
-            >Manage your billing plan</a
-          >
+          <a class="font-medium" :href="DEFAULT_LOGCHIMP_PILOT_URL">
+            Manage your billing plan
+          </a>
           on LogChimp Pilot.
         </div>
       </div>

@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/boards"> Boards </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/boards">Boards</BreadcrumbItem>
 
         <template v-if="title">
           <BreadcrumbDivider />

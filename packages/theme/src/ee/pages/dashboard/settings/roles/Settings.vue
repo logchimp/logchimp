@@ -17,7 +17,7 @@
     <Dashboard404 v-else-if="errorCode === 'ROLE_NOT_FOUND'">
       Role not found
     </Dashboard404>
-    <Dashboard500 v-else> Something went wrong. </Dashboard500>
+    <Dashboard500 v-else>Something went wrong.</Dashboard500>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <card>
-    <template #title> Login </template>
-    <template #label> Log in to your account to give feedback </template>
+    <template #title>Login</template>
+    <template #label>Log in to your account to give feedback</template>
 
     <Button type="primary" :href="loginRedirect" :full-width="true">
       Login

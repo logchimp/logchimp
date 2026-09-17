@@ -1,7 +1,7 @@
 <template>
   <auth-form>
     <AuthFormHeader>
-      <template #heading> Create your account </template>
+      <template #heading>Create your account</template>
     </AuthFormHeader>
 
     <server-error v-if="serverError" @close="serverError = false" />
@@ -41,7 +41,7 @@
 
     <AuthFormHelperText>
       Already have an account?
-      <router-link to="/login"> Log in </router-link>
+      <router-link to="/login">Log in</router-link>
     </AuthFormHelperText>
   </auth-form>
 </template>

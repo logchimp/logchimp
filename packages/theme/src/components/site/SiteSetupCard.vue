@@ -1,14 +1,12 @@
 <template>
   <card>
-    <template #title> Setup your LogChimp site </template>
+    <template #title>Setup your LogChimp site</template>
     <template #label>
       Complete your LogChimp site setup to access dashboard.
     </template>
 
     <div :class="$style.cta">
-      <Button type="primary" href="/setup/welcome">
-        Create owner account
-      </Button>
+      <Button type="primary" href="/setup/welcome">Create owner account</Button>
     </div>
 
     <div :class="$style.image">

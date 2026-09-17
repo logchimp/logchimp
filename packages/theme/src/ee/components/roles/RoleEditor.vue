@@ -2,7 +2,7 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/settings/roles"> Roles </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/settings/roles">Roles</BreadcrumbItem>
 
         <template v-if="title">
           <BreadcrumbDivider />

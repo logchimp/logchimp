@@ -13,7 +13,7 @@ const href = computed(() => useLoginRedirectUrl());
     <div class="font-medium text-neutral-700">Login to leave a comment</div>
 
     <div>
-      <a :href="href"> Login </a>
+      <a :href="href">Login</a>
     </div>
   </div>
 </template>
