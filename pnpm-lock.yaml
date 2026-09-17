@@ -40,7 +40,7 @@ importers:
     dependencies:
       '@maizzle/framework':
         specifier: latest
-        version: 6.1.6(@oxc-project/types@0.149.0)(@types/node@24.13.4)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.7)(lightningcss@1.33.0)(rolldown@1.2.8)(rollup@4.63.3)(shiki@4.4.3)(tailwind-merge@3.7.0)(vue@3.5.42(typescript@6.0.3))
+        version: 6.1.7(@oxc-project/types@0.149.0)(@types/node@24.13.4)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.7)(lightningcss@1.33.0)(rolldown@1.2.8)(rollup@4.63.3)(shiki@4.4.3)(tailwind-merge@3.7.0)(vue@3.5.42(typescript@6.0.3))
       '@maizzle/tailwindcss':
         specifier: ^1.5.6
         version: 1.5.6
@@ -233,8 +233,8 @@ importers:
         specifier: 14.3.0
         version: 14.3.0(vue@3.5.42(typescript@5.9.3))
       '@vueuse/head':
-        specifier: 1.3.1
-        version: 1.3.1(vue@3.5.42(typescript@5.9.3))
+        specifier: 2.0.0
+        version: 2.0.0(vue@3.5.42(typescript@5.9.3))
       axios:
         specifier: 1.19.0
         version: 1.19.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
@@ -881,8 +881,8 @@ packages:
     peerDependencies:
       vue: '>=3.0.1'
 
-  '@maizzle/framework@6.1.6':
-    resolution: {integrity: sha512-vmNndOK/lt4S1oyBZJdDBMB85djPbYuo2nQWiFY0y5wjCJHh8DbfRZOoT84hVXf30H23zvmNR7bl6aPqLc6edw==}
+  '@maizzle/framework@6.1.7':
+    resolution: {integrity: sha512-Pb19QGh8DvSzs/zrxvE4U840uMZQ/clA9tH5TiV3Dyt0LmfNZYGuWoGuvVd6z76gBs3eWsvbDZgwH+3OnJzSqQ==}
     hasBin: true
     peerDependencies:
       shiki: ^1 || ^2 || ^3 || ^4
@@ -1825,13 +1825,6 @@ packages:
     resolution: {integrity: sha512-8d3m2NyveQ2Ws4OUd7Zz3zsPP835Nqi4Rm3ZMoLdUjTfnEJejIMPJGR8b09foiPEG4GXV9j+QWyDRuM9VHOuVw==}
     engines: {node: '>=16'}
 
-  '@vitejs/plugin-vue@6.0.8':
-    resolution: {integrity: sha512-0ZjgOg7oO6farnNGup7yvoM/YXZV84OZxHAwtflItNa/6zzQyVb5LNxyea3FEKEX2XlagIKzrlH7wwxkKgtiew==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    peerDependencies:
-      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.2.25
-
   '@vitejs/plugin-vue@6.0.9':
     resolution: {integrity: sha512-rD/MORlhaZMlXWW0rEn4FB4wMinWC0z/D7Ye160S5+Rs1mC8ZDAdcDp4SjKfUhG5t8q1ktcPVw4xuTkPRlzrSA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -1987,8 +1980,8 @@ packages:
     peerDependencies:
       vue: ^3.5.0
 
-  '@vueuse/head@1.3.1':
-    resolution: {integrity: sha512-XCcHGfDzkGlHS7KIPJVYN//L7jpfASLsN7MUE19ndHVQLnPIDxqFLDl7IROsY81PKzawVAUe4OYVWcGixseWxA==}
+  '@vueuse/head@2.0.0':
+    resolution: {integrity: sha512-ykdOxTGs95xjD4WXE4na/umxZea2Itl0GWBILas+O4oqS7eXIods38INvk3XkJKjqMdWPcpCyLX/DioLQxU1KA==}
     peerDependencies:
       vue: '>=2.7 || >=3'
 
@@ -5381,14 +5374,14 @@ snapshots:
     dependencies:
       vue: 3.5.42(typescript@6.0.3)
 
-  '@maizzle/framework@6.1.6(@oxc-project/types@0.149.0)(@types/node@24.13.4)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.7)(lightningcss@1.33.0)(rolldown@1.2.8)(rollup@4.63.3)(shiki@4.4.3)(tailwind-merge@3.7.0)(vue@3.5.42(typescript@6.0.3))':
+  '@maizzle/framework@6.1.7(@oxc-project/types@0.149.0)(@types/node@24.13.4)(@vue/compiler-sfc@3.5.42)(esbuild@0.27.7)(lightningcss@1.33.0)(rolldown@1.2.8)(rollup@4.63.3)(shiki@4.4.3)(tailwind-merge@3.7.0)(vue@3.5.42(typescript@6.0.3))':
     dependencies:
       '@lucide/vue': 1.46.0(vue@3.5.42(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
       '@tailwindcss/postcss': 4.3.3
       '@tailwindcss/vite': 4.3.3(vite@8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0))
       '@unhead/vue': 3.4.1(@oxc-project/types@0.149.0)(esbuild@0.27.7)(lightningcss@1.33.0)(rolldown@1.2.8)(rollup@4.63.3)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.42(typescript@6.0.3))
-      '@vitejs/plugin-vue': 6.0.8(vite@8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.42(typescript@6.0.3))
+      '@vitejs/plugin-vue': 6.0.9(vite@8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.42(typescript@6.0.3))
       '@vueuse/core': 14.3.0(vue@3.5.42(typescript@6.0.3))
       class-variance-authority: 0.7.1
       clsx: 2.1.1
@@ -6309,17 +6302,17 @@ snapshots:
       '@valkey/valkey-glide-linux-x64-gnu': 2.5.2
       '@valkey/valkey-glide-linux-x64-musl': 2.5.2
 
-  '@vitejs/plugin-vue@6.0.8(vite@8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.42(typescript@6.0.3))':
-    dependencies:
-      '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0)
-      vue: 3.5.42(typescript@6.0.3)
-
   '@vitejs/plugin-vue@6.0.9(vite@6.4.3(@types/node@24.13.4)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 6.4.3(@types/node@24.13.4)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5)
       vue: 3.5.42(typescript@5.9.3)
+
+  '@vitejs/plugin-vue@6.0.9(vite@8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      '@rolldown/pluginutils': 1.0.1
+      vite: 8.3.0(@types/node@24.13.4)(esbuild@0.27.7)(jiti@2.7.0)
+      vue: 3.5.42(typescript@6.0.3)
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -6544,7 +6537,7 @@ snapshots:
       '@vueuse/shared': 14.3.0(vue@3.5.42(typescript@6.0.3))
       vue: 3.5.42(typescript@6.0.3)
 
-  '@vueuse/head@1.3.1(vue@3.5.42(typescript@5.9.3))':
+  '@vueuse/head@2.0.0(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       '@unhead/dom': 1.11.20
       '@unhead/schema': 1.11.20
