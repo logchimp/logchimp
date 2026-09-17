@@ -84,8 +84,8 @@
       </li>
     </ul>
 
-    <LanguageDropdown/>
-    
+    <LanguageDropdown />
+
     <div class="mt-auto relative">
       <dashboard-sidebar-auth-user-dropdown />
       <p

@@ -2,7 +2,10 @@
   <DropdownV2 v-if="showLanguageDropdown">
     <template #trigger>
       <DropdownMenuTrigger>
-        <button type="button" class="px-3 py-1 text-sm bg-white text-black rounded-lg ">
+        <button
+          type="button"
+          class="px-3 py-1 text-sm bg-white text-black rounded-lg"
+        >
           <span>{{ currentLanguageLabel }}</span>
         </button>
       </DropdownMenuTrigger>
@@ -15,7 +18,6 @@
         @click="setLanguage(lang.value)"
       >
         {{ lang.label }}
-        
       </dropdown-item>
     </DropdownV2Content>
   </DropdownV2>
