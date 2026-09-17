@@ -1,5 +1,8 @@
 name: "Vue tools"
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main, master]
