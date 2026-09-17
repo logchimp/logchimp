@@ -5,14 +5,14 @@ permissions:
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
     paths:
       - ".github/workflows/vue-tools.yml"
       - "packages/**"
       - "package.json"
       - "pnpm-lock.yaml"
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
     paths:
       - ".github/workflows/vue-tools.yml"
       - "packages/**"
@@ -23,6 +23,7 @@ on:
   workflow_dispatch:
 
 env:
+  node-version: 24
   pnpm-version: 10
 
 jobs:
@@ -39,7 +40,7 @@ jobs:
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node_version: 22
+          node_version: ${{ env.node-version }}
           pnpm_version: ${{ env.pnpm-version }}
 
       - name: Prettier
@@ -61,7 +62,7 @@ jobs:
 
       - uses: codecarrotlabs/github-actions/.github/actions/node-pnpm@c7e1e7605a3c05a042093219be7020e35b66f494
         with:
-          node_version: 22
+          node_version: ${{ env.node-version }}
           pnpm_version: ${{ env.pnpm-version }}
 
       - name: Prettier
