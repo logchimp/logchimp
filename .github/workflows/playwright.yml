@@ -15,7 +15,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 env:
-  node-version: 22
+  node-version: 24
   pnpm-version: 10
 
 jobs:

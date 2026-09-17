@@ -11,6 +11,9 @@ permissions:
   pull-requests: write
   contents: read
 
+env:
+  node-version: 24
+
 jobs:
   trust-check:
     if: github.event_name == 'pull_request_target'
@@ -187,7 +190,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: ${{ env.node-version }}
 
       - name: Install wait-on and pnpm
         run: npm install -g wait-on pnpm serve
