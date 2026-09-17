@@ -1,3 +1,12 @@
 {
-  "tasks.autoRun": ["LogChimp Theme Dev"]
+  "tasks.autoRun": ["LogChimp Theme Dev"],
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "eslint.validate": ["vue"],
+  "eslint.workingDirectories": ["packages/theme", "packages/email-templates"]
 }

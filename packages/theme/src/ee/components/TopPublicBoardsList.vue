@@ -10,9 +10,7 @@
       >
         View all boards
       </a>
-      <p v-else class="text-sm text-neutral-700">
-        No boards available
-      </p>
+      <p v-else class="text-sm text-neutral-700">No boards available</p>
 
       <a
         v-for="board in boards"
@@ -23,10 +21,14 @@
         <div class="flex items-center justify-between gap-x-4 px-4 py-1.5">
           <div class="flex items-center gap-x-3">
             <ColorDot :color="board.color" />
-            <span class="font-medium text-neutral-700 break-all">{{board.name}}</span>
+            <span class="font-medium text-neutral-700 break-all">
+              {{ board.name }}
+            </span>
           </div>
 
-          <p v-if="board.post_count" class="font-semibold text-xs">{{board.post_count}}</p>
+          <p v-if="board.post_count" class="font-semibold text-xs">
+            {{ board.post_count }}
+          </p>
         </div>
       </a>
     </div>

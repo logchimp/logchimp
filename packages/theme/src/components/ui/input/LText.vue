@@ -1,10 +1,6 @@
 <template>
   <label class="input">
-    <p
-      v-if="label"
-      data-test="input-field-label"
-      class="input-field-label"
-    >
+    <p v-if="label" data-test="input-field-label" class="input-field-label">
       {{ label }}
     </p>
     <input
@@ -13,7 +9,7 @@
       class="input-field input-text"
       :class="{
         'input-field-disabled': disabled,
-        'input-error': error.show
+        'input-error': error.show,
       }"
       :value="modelValue"
       :placeholder="placeholder"
@@ -22,7 +18,7 @@
       @click="hideError"
       @keyup.enter="keyUpEnter"
       @keyup="keyup"
-    >
+    />
     <p v-if="description" class="input-description">
       {{ description }}
     </p>

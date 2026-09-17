@@ -1,9 +1,7 @@
 <template>
   <auth-form>
     <div class="onboarding-header">
-      <h2 class="onboarding-heading">
-        Create a new board
-      </h2>
+      <h2 class="onboarding-heading">Create a new board</h2>
       <p class="onboarding-label">
         A board is a place where people can post and vote on ideas for a
         specific topic.
@@ -20,7 +18,7 @@
         @keyup-enter="create"
         @hide-error="hideBoardNameError"
       />
-      <div style="display: flex; justify-content: center;">
+      <div style="display: flex; justify-content: center">
         <Button
           :loading="buttonLoading"
           :disabled="createBoardPermissionDisabled"
@@ -33,7 +31,9 @@
     </div>
 
     <AuthFormHelperText>
-      You can <router-link :to="DASHBOARD_ONBOARDING_COMPLETE_URL">skip</router-link> and create one later.
+      You can
+      <router-link :to="DASHBOARD_ONBOARDING_COMPLETE_URL">skip</router-link>
+      and create one later.
     </AuthFormHelperText>
   </auth-form>
 </template>

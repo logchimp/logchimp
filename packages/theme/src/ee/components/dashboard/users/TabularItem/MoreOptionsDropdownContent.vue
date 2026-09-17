@@ -1,7 +1,7 @@
 <template>
   <dropdown-item
-    @click="userId ? useCopyText(userId) : undefined"
     :disabled="!userId"
+    @click="userId ? useCopyText(userId) : undefined"
   >
     <template #icon>
       <copy-icon aria-hidden="true" />

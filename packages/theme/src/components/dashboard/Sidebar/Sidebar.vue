@@ -17,17 +17,14 @@ function away() {
 </script>
 
 <template>
-  <DialogBackdrop
-    :is-visible="dashboard.isSidebarOpen"
-    class="md:hidden"
-  />
+  <DialogBackdrop :is-visible="dashboard.isSidebarOpen" class="md:hidden" />
   <div
+    v-on-click-outside="away"
     :class="[
       'z-50 md:z-auto w-[220px] h-dvh overflow-hidden overflow-y-auto bg-neutral-200',
       'fixed md:sticky left-0 top-0 transition-transform md:translate-x-0',
       dashboard.isSidebarOpen ? '' : '-translate-x-full',
     ]"
-    v-on-click-outside="away"
   >
     <SidebarContent />
   </div>

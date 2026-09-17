@@ -34,26 +34,21 @@ defineOptions({
     :aria-disabled="disabled ? 'true' : undefined"
   >
     <div>
-      <label
-        :for="id"
-      >
+      <label :for="id">
         {{ label }}
       </label>
       <p
         v-if="note"
-       data-test="toggle-item-note"
-       class="mt-2 text-sm text-(--color-gray-50)"
+        data-test="toggle-item-note"
+        class="mt-2 text-sm text-(--color-gray-50)"
       >
-        {{note}}
+        {{ note }}
       </p>
     </div>
 
     <div>
       <!-- dropdown -->
-      <select
-        :value="modelValue"
-        @change="onSelectUpdate"
-      >
+      <select :value="modelValue" @change="onSelectUpdate">
         <option value="none">None</option>
         <option value="own">Own</option>
         <option value="any">Any</option>

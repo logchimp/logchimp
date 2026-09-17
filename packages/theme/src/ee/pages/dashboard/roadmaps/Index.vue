@@ -1,10 +1,8 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem>
-          Roadmaps
-        </BreadcrumbItem>
+        <BreadcrumbItem>Roadmaps</BreadcrumbItem>
       </Breadcrumbs>
     </template>
 

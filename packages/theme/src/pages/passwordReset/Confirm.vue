@@ -2,9 +2,7 @@
   <auth-form>
     <div>
       <AuthFormHeader>
-        <template #heading>
-          Set new password
-        </template>
+        <template #heading>Set new password</template>
       </AuthFormHeader>
 
       <div v-if="validToken.success">
@@ -29,7 +27,7 @@
             @keyup-enter="setPassword"
             @hide-error="hideConfirmPasswordError"
           />
-          <div style="display: flex; justify-content: center;">
+          <div style="display: flex; justify-content: center">
             <Button
               type="primary"
               :loading="buttonLoading"

@@ -95,15 +95,13 @@ watch(
       class="!mb-0"
       @keydown="validateBoardUrl"
     />
-    <HelperText>
-      Alphabets, numbers or underscore are allowed.
-    </HelperText>
+    <HelperText>Alphabets, numbers or underscore are allowed.</HelperText>
 
     <!-- Loading / Available / Not available states -->
     <HelperText
       :class="[
         'flex items-center gap-x-1 font-medium transition-opacity',
-        value !== currentValue ? 'opacity-100' : 'opacity-0'
+        value !== currentValue ? 'opacity-100' : 'opacity-0',
       ]"
       aria-hidden="true"
     >

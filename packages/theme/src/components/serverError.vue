@@ -1,10 +1,10 @@
 <template>
-	<div class="server-error">
-		<span>
-			Something went wrong! Please try again or contact the site owner.
-		</span>
-		<close-icon @click.native="$emit('close')" />
-	</div>
+  <div class="server-error">
+    <span>
+      Something went wrong! Please try again or contact the site owner.
+    </span>
+    <close-icon @click="$emit('close')" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +15,7 @@ defineOptions({
 });
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .server-error
 	padding: 0.875rem
 	border-radius: var(--border-radius-default)

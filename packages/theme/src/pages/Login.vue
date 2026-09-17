@@ -1,9 +1,7 @@
 <template>
   <auth-form>
     <AuthFormHeader>
-      <template #heading>
-        Welcome back!
-      </template>
+      <template #heading>Welcome back!</template>
     </AuthFormHeader>
 
     <form class="card" data-testid="login-form" @submit.prevent="login">
@@ -29,25 +27,17 @@
       />
 
       <div class="flex justify-center">
-        <Button
-          type="primary"
-          :loading="buttonLoading"
-          @click="login"
-        >
+        <Button type="primary" :loading="buttonLoading" @click="login">
           Login
         </Button>
       </div>
     </form>
 
     <AuthFormHelperText>
-      <router-link to="/password-reset">
-        Forgot password?
-      </router-link>
+      <router-link to="/password-reset">Forgot password?</router-link>
       <div v-if="siteSettings.allowSignup">
-       • Don't have an account yet?
-        <router-link to="/join">
-          Sign up
-        </router-link>
+        • Don't have an account yet?
+        <router-link to="/join">Sign up</router-link>
       </div>
     </AuthFormHelperText>
   </auth-form>

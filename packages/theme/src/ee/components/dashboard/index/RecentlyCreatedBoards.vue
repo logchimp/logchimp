@@ -76,10 +76,7 @@ async function getBoards() {
       </Td>
     </template>
 
-    <Tr
-      v-for="board in boards"
-      :key="board.boardId"
-    >
+    <Tr v-for="board in boards" :key="board.boardId">
       <div class="flex items-center">
         <Td
           :style="{
@@ -105,9 +102,7 @@ async function getBoards() {
     <template #infinite-loader>
       <infinite-scroll :on-infinite="getBoards" :state="state">
         <template #error>
-          <client-error>
-            No boards available
-          </client-error>
+          <client-error>No boards available</client-error>
         </template>
       </infinite-scroll>
     </template>

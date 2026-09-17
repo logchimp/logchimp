@@ -5,7 +5,7 @@
       :value="modelValue"
       class="input-field input-textarea"
       :class="{
-        'input-field-disabled': disabled
+        'input-field-disabled': disabled,
       }"
       :placeholder="placeholder"
       :rows="rows"

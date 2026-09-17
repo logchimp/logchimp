@@ -2,9 +2,17 @@
   <div class="flex flex-col gap-2.5 h-full min-h-0">
     <header data-test="roadmap-header" class="flex items-center gap-x-1.5">
       <color-dot :color="roadmap.color" />
-      <div data-test="roadmap-name" class="text-sm text-(--color-gray-60) break-all">{{ roadmap.name }}</div>
+      <div
+        data-test="roadmap-name"
+        class="text-sm text-(--color-gray-60) break-all"
+      >
+        {{ roadmap.name }}
+      </div>
     </header>
-    <div data-test="roadmap-column" class="grid gap-y-3 rounded-md bg-(--color-gray-95) p-3 flex-grow min-h-0 overflow-y-auto">
+    <div
+      data-test="roadmap-column"
+      class="grid gap-y-3 rounded-md bg-(--color-gray-95) p-3 flex-grow min-h-0 overflow-y-auto"
+    >
       <roadmap-post-card
         v-for="post in posts"
         :key="post.postId"
@@ -58,4 +66,3 @@ async function getRoadmapPosts() {
 
 onMounted(() => getRoadmapPosts());
 </script>
-

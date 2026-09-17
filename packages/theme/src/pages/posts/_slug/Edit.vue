@@ -2,41 +2,39 @@
   <template v-if="isPostExist">
     <h1 class="text-2xl font-medium mb-8">Edit post</h1>
     <loader-container v-if="postLoading" />
-		<div v-else>
-			<l-text
-				v-model="post.title"
-				label="Title"
-				type="text"
-				name="Post title"
-				placeholder="Name of the feature"
-				:error="postFieldError"
-				:disabled="updatePostPermissionDisabled"
-				@keyup-enter="savePost"
-				@hide-error="hideTitleError"
-			/>
-			<l-textarea
+    <div v-else>
+      <l-text
+        v-model="post.title"
+        label="Title"
+        type="text"
+        name="Post title"
+        placeholder="Name of the feature"
+        :error="postFieldError"
+        :disabled="updatePostPermissionDisabled"
+        @keyup-enter="savePost"
+        @hide-error="hideTitleError"
+      />
+      <l-textarea
         :model-value="post.contentMarkdown ?? undefined"
-        @update:model-value="(value) => post.contentMarkdown = value ?? null"
-				label="Description"
-				name="Post description"
-				placeholder="What would you use it for?"
-				:disabled="updatePostPermissionDisabled"
-			/>
-			<div class="flex justify-start">
-				<Button
-					type="primary"
-					:loading="postSubmitting"
-					:disabled="updatePostPermissionDisabled"
-					@click="savePost"
-				>
-					Update
-				</Button>
-			</div>
-		</div>
+        label="Description"
+        name="Post description"
+        placeholder="What would you use it for?"
+        :disabled="updatePostPermissionDisabled"
+        @update:model-value="(value) => (post.contentMarkdown = value ?? null)"
+      />
+      <div class="flex justify-start">
+        <Button
+          type="primary"
+          :loading="postSubmitting"
+          :disabled="updatePostPermissionDisabled"
+          @click="savePost"
+        >
+          Update
+        </Button>
+      </div>
+    </div>
   </template>
-  <p v-else>
-    There is no such post.
-  </p>
+  <p v-else>There is no such post.</p>
 </template>
 
 <script setup lang="ts">

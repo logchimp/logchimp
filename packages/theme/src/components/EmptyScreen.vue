@@ -24,7 +24,7 @@ withDefaults(defineProps<Props>(), {
         'border border-(--color-gray-90)': border,
         'border-dashed': dashedBorder,
       },
-      paddingY ? paddingY : 'py-7 lg:py-20'
+      paddingY ? paddingY : 'py-7 lg:py-20',
     ]"
   >
     <div
@@ -43,12 +43,11 @@ withDefaults(defineProps<Props>(), {
         'max-w-md',
         {
           'mt-6': icon,
-        }
+        },
       ]"
     >
-      <p
-        class="font-medium text-base text-center text-neutral-950">
-        {{title}}
+      <p class="font-medium text-base text-center text-neutral-950">
+        {{ title }}
       </p>
 
       <p
@@ -56,7 +55,7 @@ withDefaults(defineProps<Props>(), {
         class="mb-8 mt-3 text-center text-sm text-neutral-500"
       >
         <template v-if="description">
-          {{description}}
+          {{ description }}
         </template>
         <slot v-else name="description" />
 

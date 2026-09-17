@@ -1,12 +1,14 @@
 <template>
-  <DropdownV2Content
-    align="end"
-    side="bottom"
-    :loop="true"
-  >
+  <DropdownV2Content align="end" side="bottom" :loop="true">
     <DropdownItem
-      @click="roleId ? router.push(`/dashboard/settings/roles/${encodeURIComponent(roleId)}/settings`) : undefined"
       :disabled="!roleId"
+      @click="
+        roleId
+          ? router.push(
+              `/dashboard/settings/roles/${encodeURIComponent(roleId)}/settings`,
+            )
+          : undefined
+      "
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
@@ -15,8 +17,8 @@
     </DropdownItem>
     <DropdownItem
       v-if="settings.developer_mode"
-      @click="roleId ? useCopyText(roleId) : undefined"
       :disabled="!roleId"
+      @click="roleId ? useCopyText(roleId) : undefined"
     >
       <template #icon>
         <copy-icon aria-hidden="true" />

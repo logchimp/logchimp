@@ -1,6 +1,6 @@
 <template>
   <div class="border-l border-neutral-300/70 p-4">
-    <Votes :postId="postId" />
+    <Votes :post-id="postId" />
   </div>
 </template>
 

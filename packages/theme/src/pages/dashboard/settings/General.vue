@@ -1,6 +1,6 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
         <BreadcrumbItem>Settings</BreadcrumbItem>
       </Breadcrumbs>
@@ -22,26 +22,26 @@
         <div class="form-column">
           <l-text
             :model-value="siteName.value ?? undefined"
-            @update:model-value="(value) => siteName.value = value ?? null"
             label="Site name"
             placeholder="Enter site name"
             :error="siteName.error"
+            @update:model-value="(value) => (siteName.value = value ?? null)"
             @hide-error="hideSiteNameError"
           />
 
           <l-text
             :model-value="description.value ?? undefined"
-            @update:model-value="(value) => description.value = value ?? null"
             label="Description"
             placeholder="Site description"
             data-testid="site-description"
             :error="description.error"
+            @update:model-value="(value) => (description.value = value ?? null)"
             @hide-error="hideDescriptionError"
           />
 
           <toggle-item
-            data-testid="allow-signup"
             v-model="allowSignup"
+            data-testid="allow-signup"
             label="Allow signups"
             note="Allows users to create account?"
           />
@@ -49,28 +49,28 @@
 
         <div class="form-column">
           <div class="grid gap-y-4">
-           <div>
-             <InputLabel html-for="logo_preview">Logo</InputLabel>
-             <div
-               :class="[
-                'size-16 border border-(--color-gray-90) bg-(--color-gray-97)',
-                'rounded-full select-none pointer-events-none overflow-hidden'
-              ]"
-             >
-               <img
-                 v-if="logo"
-                 :src="logo"
-                 :alt="siteName.value || ''"
-                 class="w-full h-full"
-               />
-             </div>
-           </div>
+            <div>
+              <InputLabel html-for="logo_preview">Logo</InputLabel>
+              <div
+                :class="[
+                  'size-16 border border-(--color-gray-90) bg-(--color-gray-97)',
+                  'rounded-full select-none pointer-events-none overflow-hidden',
+                ]"
+              >
+                <img
+                  v-if="logo"
+                  :src="logo"
+                  :alt="siteName.value || ''"
+                  class="w-full h-full"
+                />
+              </div>
+            </div>
             <l-text
               :model-value="logo ?? undefined"
-              @update:model-value="(value) => logo = value ?? null"
               label="Logo URL"
               data-testid="logo-url"
               placeholder="https://avatar-url.png"
+              @update:model-value="(value) => (logo = value ?? null)"
             />
           </div>
         </div>
@@ -83,7 +83,7 @@
         <div class="form-column">
           <color-input
             :model-value="accentColor.value ?? undefined"
-            @update:model-value="(value) => accentColor.value = value ?? null"
+            @update:model-value="(value) => (accentColor.value = value ?? null)"
           />
         </div>
       </div>
@@ -95,18 +95,22 @@
         <div class="form-column">
           <l-text
             :model-value="googleAnalyticsId.value ?? undefined"
-            @update:model-value="(value) => googleAnalyticsId.value = value ?? null"
             label="Google Analytics"
             placeholder="UA-12345678-0"
             :error="googleAnalyticsId.error"
+            @update:model-value="
+              (value) => (googleAnalyticsId.value = value ?? null)
+            "
             @hide-error="hideGoogleAnalyticsError"
           />
         </div>
 
         <div class="form-column">
           <toggle-item
+            v-model="developer_mode"
             data-testid="developer-mode"
-            v-model="developer_mode" label="Developer Mode" />
+            label="Developer Mode"
+          />
         </div>
       </div>
     </div>

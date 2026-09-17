@@ -1,30 +1,24 @@
 <template>
-	<div class="flex items-center navbar">
-		<router-link to="/" class="navbar-item">
-			<div class="navbar-item-icon">
-				<home-icon aria-hidden="true" />
-			</div>
-			<div class="navbar-item-content">
-				Home
-			</div>
-		</router-link>
-		<router-link to="/roadmaps" class="navbar-item">
-			<div class="navbar-item-icon">
-				<roadmap-icon />
-			</div>
-			<div class="navbar-item-content">
-				Roadmaps
-			</div>
-		</router-link>
-		<router-link to="/boards" class="navbar-item">
-			<div class="navbar-item-icon">
-				<board-icon aria-hidden="true" />
-			</div>
-			<div class="navbar-item-content">
-				Boards
-			</div>
-		</router-link>
-	</div>
+  <div class="flex items-center navbar">
+    <router-link to="/" class="navbar-item">
+      <div class="navbar-item-icon">
+        <home-icon aria-hidden="true" />
+      </div>
+      <div class="navbar-item-content">Home</div>
+    </router-link>
+    <router-link to="/roadmaps" class="navbar-item">
+      <div class="navbar-item-icon">
+        <roadmap-icon />
+      </div>
+      <div class="navbar-item-content">Roadmaps</div>
+    </router-link>
+    <router-link to="/boards" class="navbar-item">
+      <div class="navbar-item-icon">
+        <board-icon aria-hidden="true" />
+      </div>
+      <div class="navbar-item-content">Boards</div>
+    </router-link>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -35,7 +29,7 @@ import { Home as HomeIcon, Columns as BoardIcon } from "lucide-vue";
 import RoadmapIcon from "./icons/Roadmap.vue";
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .navbar-item
   display: flex
   align-items: center

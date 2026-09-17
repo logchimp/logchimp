@@ -2,7 +2,7 @@
   <DropdownMenuContent
     :class="[
       'p-1 w-44 overflow-y-auto',
-      'shadow-sm border border-neutral-300 bg-white rounded-lg'
+      'shadow-sm border border-neutral-300 bg-white rounded-lg',
     ]"
     :style="{
       'max-height': maxHeight ? `${maxHeight}px` : undefined,

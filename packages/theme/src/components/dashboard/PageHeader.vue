@@ -21,7 +21,7 @@ defineOptions({
     :class="[
       'flex items-center justify-between px-3 lg:px-6 py-3.5',
       'border-b border-b-neutral-300/70',
-      mb ? 'mb-6' : ''
+      mb ? 'mb-6' : '',
     ]"
   >
     <div class="flex items-center gap-x-3">

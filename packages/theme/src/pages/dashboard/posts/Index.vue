@@ -1,6 +1,6 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
         <BreadcrumbItem>Posts</BreadcrumbItem>
       </Breadcrumbs>
@@ -16,7 +16,7 @@
     </Button>
   </DashboardPageHeader>
 
-	<div class="px-3 lg:px-6">
+  <div class="px-3 lg:px-6">
     <license-validation-failed
       v-if="displayLicenseValidationFailed"
       resource-type="posts"
@@ -41,7 +41,7 @@
         :state="dashboardPosts.state"
       />
     </template>
-	</div>
+  </div>
 </template>
 
 <script setup lang="ts">

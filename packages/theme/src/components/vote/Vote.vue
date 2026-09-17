@@ -1,31 +1,31 @@
 <template>
-	<button
-		data-test="vote"
-		:class="[
+  <button
+    data-test="vote"
+    :class="[
       'group flex flex-col items-center select-none rounded-md pt-[5px] px-2 pb-2',
       'border border-(--color-gray-90) hover:border-(--color-gray-80) cursor-pointer',
       // loading
-			loading && 'opacity-80 cursor-wait',
+      loading && 'opacity-80 cursor-wait',
       // disabled
       'disabled:bg-(--color-gray-95) disabled:border-(--color-gray-95)',
       'disabled:cursor-default disabled:opacity-70',
       // look into these styles
-      'mr-4'
-		]"
-		@click="changeVote"
+      'mr-4',
+    ]"
     type="button"
     :aria-disabled="disabled ? 'true' : undefined"
     :disabled="disabled ? 'true' : undefined"
-	>
-		<arrow-icon
-			data-test="vote-arrow"
-			:class="[
+    @click="changeVote"
+  >
+    <arrow-icon
+      data-test="vote-arrow"
+      :class="[
         'mb-[3px] group-disabled:fill-(--color-gray-80)',
-        isVoted ? 'fill-(--color-brand-color)' : 'fill-(--color-gray-90)'
+        isVoted ? 'fill-(--color-brand-color)' : 'fill-(--color-gray-90)',
       ]"
-		/>
-		<span data-test="vote-count">{{ votesCount }}</span>
-	</button>
+    />
+    <span data-test="vote-count">{{ votesCount }}</span>
+  </button>
 </template>
 
 <script setup lang="ts">

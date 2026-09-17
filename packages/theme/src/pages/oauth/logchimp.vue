@@ -117,15 +117,10 @@ function setError(msg?: string) {
     >
       <Loader class="spinner stroke-neutral-800 size-6" />
 
-      <div class="text-neutral-700">
-        Please do not refresh the page.
-      </div>
+      <div class="text-neutral-700">Please do not refresh the page.</div>
     </div>
-    <div
-      v-if="isError"
-      class="text-center"
-    >
-      {{errMsg}}
+    <div v-if="isError" class="text-center">
+      {{ errMsg }}
     </div>
   </auth-form>
 </template>

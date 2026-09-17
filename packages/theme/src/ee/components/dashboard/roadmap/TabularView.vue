@@ -25,7 +25,10 @@
     </template>
 
     <template v-if="requireUpgrade">
-      <div class="pointer-events-none select-none divide-y divide-neutral-200 relative" aria-hidden="true">
+      <div
+        class="pointer-events-none select-none divide-y divide-neutral-200 relative"
+        aria-hidden="true"
+      >
         <Tr
           v-for="roadmap in EXAMPLE_ROADMAPS_DATA.slice(0, 3)"
           :key="roadmap.id"
@@ -38,7 +41,7 @@
       <EmptyScreen
         title="Roadmaps"
         description="Keep your customers up-to-date as your team releases the customer feedbacks. Upgrade to Pro plan to access this feature."
-        learnMore="https://docs.logchimp.app/guide/roadmaps"
+        learn-more="https://docs.logchimp.app/guide/roadmaps"
         :border="false"
         :icon="KanbanIcon"
         padding-y="pt-0 pb-7 lg:pb-20"
@@ -68,7 +71,7 @@
       </draggable>
     </template>
 
-    <template #infinite-loader v-if="!requireUpgrade">
+    <template v-if="!requireUpgrade" #infinite-loader>
       <infinite-scroll
         :immediate-check="dashboardRoadmaps.roadmaps.length === 0"
         :on-infinite="dashboardRoadmaps.fetchRoadmaps"

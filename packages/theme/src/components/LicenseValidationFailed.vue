@@ -12,10 +12,9 @@ defineProps<{
   >
     <KeyIcon class="stroke-red-600" />
     <p class="mb-1 font-medium">License issue</p>
-    <span
-      class="text-neutral-600 text-sm"
-    >
-      We are unable to display {{resourceType}} due to a license validation failure.
+    <span class="text-neutral-600 text-sm">
+      We are unable to display {{ resourceType }} due to a license validation
+      failure.
     </span>
   </div>
 </template>

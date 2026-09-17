@@ -13,9 +13,11 @@ withDefaults(defineProps<Props>(), {
   <PhCrownSimple
     :size="20"
     weight="regular"
-    :class="[{
-      'fill-white': color === 'white',
-      'fill-(--color-neutral-400)': color === 'neutral',
-    }]"
+    :class="[
+      {
+        'fill-white': color === 'white',
+        'fill-(--color-neutral-400)': color === 'neutral',
+      },
+    ]"
   />
 </template>

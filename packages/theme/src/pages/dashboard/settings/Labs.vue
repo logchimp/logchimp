@@ -1,14 +1,10 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/settings">
-          Settings
-        </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/settings">Settings</BreadcrumbItem>
         <BreadcrumbDivider />
-        <BreadcrumbItem>
-          Labs
-        </BreadcrumbItem>
+        <BreadcrumbItem>Labs</BreadcrumbItem>
       </Breadcrumbs>
     </template>
 
@@ -24,9 +20,7 @@
 
   <div class="px-3 lg:px-6">
     <div class="form-section">
-      <p class="form-section-title">
-        Beta features
-      </p>
+      <p class="form-section-title">Beta features</p>
 
       <div class="form-columns">
         <div class="form-column">

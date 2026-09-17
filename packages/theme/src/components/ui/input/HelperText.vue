@@ -1,6 +1,5 @@
 <template>
   <div class="text-xs text-right" :class="textColorClass">
-
     <slot />
   </div>
 </template>

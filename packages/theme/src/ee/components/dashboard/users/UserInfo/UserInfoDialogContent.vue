@@ -1,24 +1,22 @@
 <template>
   <DialogContent>
-    <template #title>
-      User Details
-    </template>
+    <template #title>User Details</template>
 
     <div class="grid gap-y-4 sm:gap-y-6">
       <div
         :class="[
           'flex items-start justify-between',
-          'p-3 border border-(--border-color-default) rounded-lg'
+          'p-3 border border-(--border-color-default) rounded-lg',
         ]"
       >
         <div class="flex items-center gap-x-3">
-          <Avatar
-            :src="user.avatar"
-            :name="user.username || user.name || ''"
-          />
+          <Avatar :src="user.avatar" :name="user.username || user.name || ''" />
           <div>
             <div class="mb-px">
-              <div v-if="user.name" class="text-sm font-medium text-neutral-900">
+              <div
+                v-if="user.name"
+                class="text-sm font-medium text-neutral-900"
+              >
                 {{ user.name }}
               </div>
               <p class="text-xs text-neutral-600">@{{ user.username }}</p>
@@ -35,12 +33,12 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        <div
-          class="p-3 border border-(--border-color-default) rounded-lg"
-        >
+        <div class="p-3 border border-(--border-color-default) rounded-lg">
           <div class="mb-2 flex items-center gap-x-1">
             <AccountInfoIcon aria-hidden="true" class="size-4" />
-            <span class="text-sm font-medium text-neutral-700">Account Information</span>
+            <span class="text-sm font-medium text-neutral-700">
+              Account Information
+            </span>
           </div>
 
           <div class="grid gap-y-3">
@@ -63,15 +61,21 @@
         <div class="p-3 border border-(--border-color-default) rounded-lg">
           <div class="mb-2 flex items-center gap-x-1">
             <ActivityIcon aria-hidden="true" class="size-4" />
-            <span class="text-sm font-medium text-neutral-700">Activity Stats</span>
+            <span class="text-sm font-medium text-neutral-700">
+              Activity Stats
+            </span>
           </div>
 
           <ul class="grid gap-y-1 text-xs text-neutral-700">
-            <li class="flex justify-between px-2 py-1.5 rounded-md bg-neutral-100">
+            <li
+              class="flex justify-between px-2 py-1.5 rounded-md bg-neutral-100"
+            >
               <div class="font-medium">Posts</div>
               <span class="font-semibold">{{ user.posts }}</span>
             </li>
-            <li class="flex justify-between px-2 py-1.5 rounded-md bg-neutral-100">
+            <li
+              class="flex justify-between px-2 py-1.5 rounded-md bg-neutral-100"
+            >
               <div class="font-medium">Votes</div>
               <span class="font-semibold">{{ user.votes }}</span>
             </li>
@@ -86,11 +90,7 @@
         </div>
 
         <div class="flex flex-wrap gap-1.5">
-          <RoleBadge
-            v-for="role in user.roles"
-            :key="role.id"
-            :role="role"
-          />
+          <RoleBadge v-for="role in user.roles" :key="role.id" :role="role" />
         </div>
       </div>
     </div>

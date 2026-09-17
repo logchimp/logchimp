@@ -12,7 +12,7 @@ defineProps({
     data-test="color-dot"
     class="size-2.5 rounded-full"
     :style="{
-      backgroundColor: `#${color}`
+      backgroundColor: `#${color}`,
     }"
     aria-hidden="true"
   />

@@ -2,7 +2,7 @@
   <div
     class="toggle-item"
     :class="{
-      'opacity-60': disabled
+      'opacity-60': disabled,
     }"
     :aria-disabled="disabled ? 'true' : undefined"
   >
@@ -12,16 +12,16 @@
         data-test="toggle-item-label"
         class="select-none font-medium"
         :class="{
-          'cursor-pointer': !disabled
+          'cursor-pointer': !disabled,
         }"
       >
         {{ label }}
       </label>
       <toggle
         :id="id"
-        :modelValue="modelValue"
-        @update:modelValue="$emit('update:modelValue', $event)"
+        :model-value="modelValue"
         :disabled="disabled"
+        @update:model-value="$emit('update:modelValue', $event)"
       />
     </div>
     <p
@@ -56,7 +56,7 @@ const id = computed(() => props.id || useId());
 defineEmits<(e: "update:modelValue", event: boolean) => void>();
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .toggle-item
   &:not(:last-child)
     margin-bottom: 1rem

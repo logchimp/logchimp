@@ -1,6 +1,6 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
         <BreadcrumbItem>Roles</BreadcrumbItem>
       </Breadcrumbs>

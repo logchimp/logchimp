@@ -17,9 +17,7 @@
             <ComputerIcon class="size-5 stroke-neutral-400" />
           </TooltipTrigger>
           <TooltipPortal>
-            <TooltipContent>
-              System role
-            </TooltipContent>
+            <TooltipContent>System role</TooltipContent>
           </TooltipPortal>
         </TooltipRoot>
       </TooltipProvider>

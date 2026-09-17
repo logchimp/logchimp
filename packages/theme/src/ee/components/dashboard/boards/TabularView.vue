@@ -37,7 +37,10 @@
     </template>
 
     <template v-if="requireUpgrade">
-      <div class="pointer-events-none select-none divide-y divide-neutral-200 relative" aria-hidden="true">
+      <div
+        class="pointer-events-none select-none divide-y divide-neutral-200 relative"
+        aria-hidden="true"
+      >
         <Tr
           v-for="board in EXAMPLE_BOARDS_DATA.slice(0, 3)"
           :key="board.boardId"
@@ -50,7 +53,7 @@
       <EmptyScreen
         title="Boards"
         description="Want to organize your customers feedback into groups? Upgrade to Pro plan to access this feature."
-        learnMore="https://docs.logchimp.app/guide/boards"
+        learn-more="https://docs.logchimp.app/guide/boards"
         :border="false"
         :icon="BoxesIcon"
         padding-y="pt-0 pb-7 lg:pb-20"
@@ -63,17 +66,12 @@
       </EmptyScreen>
     </template>
     <template v-else>
-      <Tr
-        v-for="board in dashboardBoards.boards"
-        :key="board.boardId"
-      >
-        <TabularItem
-          :board="board"
-        />
+      <Tr v-for="board in dashboardBoards.boards" :key="board.boardId">
+        <TabularItem :board="board" />
       </Tr>
     </template>
 
-    <template #infinite-loader v-if="!requireUpgrade">
+    <template v-if="!requireUpgrade" #infinite-loader>
       <infinite-scroll
         :immediate-check="dashboardBoards.boards.length === 0"
         :on-infinite="dashboardBoards.fetchBoards"

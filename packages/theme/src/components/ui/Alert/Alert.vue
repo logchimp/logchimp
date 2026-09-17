@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      animationDuration: timeout / 1000 + 's'
+      animationDuration: timeout / 1000 + 's',
     }"
     :class="{
       [$style.alert]: true,
@@ -19,12 +19,12 @@
           'flex size-6 [&>svg]:size-6',
           type === 'success' && '[&>svg]:stroke-emerald-600',
           type === 'warning' && '[&>svg]:stroke-(--color-yellow-400)',
-          type === 'error' && '[&>svg]:stroke-(--color-red-800)'
+          type === 'error' && '[&>svg]:stroke-(--color-red-800)',
         ]"
       >
         <slot name="icon">
           <success-icon v-if="type === 'success'" aria-hidden="true" />
-          <warning-icon  v-if="type === 'warning'" aria-hidden="true" />
+          <warning-icon v-if="type === 'warning'" aria-hidden="true" />
           <error-icon v-if="type === 'error'" aria-hidden="true" />
         </slot>
       </div>
@@ -42,12 +42,12 @@
 
     <div v-if="hasFooter" :class="$style.footer">
       <div
+        v-if="hasDescription"
         :class="[
           'mt-2 ml-9 text-sm',
           type === 'warning' && 'text-(--color-yellow-700)',
           type === 'error' && 'text-(--color-red-700)',
         ]"
-        v-if="hasDescription"
       >
         <template v-if="$slots.description">
           <slot name="description" />
@@ -57,7 +57,7 @@
         </template>
       </div>
 
-      <div class="mt-4" v-if="$slots.cta">
+      <div v-if="$slots.cta" class="mt-4">
         <slot name="cta" />
       </div>
     </div>
@@ -98,7 +98,7 @@ const props = defineProps({
 const hasDescription = computed(
   () => props.description || useSlots().description,
 );
-const hasFooter = computed(() => hasDescription || useSlots().cta);
+const hasFooter = computed(() => hasDescription.value || useSlots().cta);
 const emit = defineEmits(["remove"]);
 
 onMounted(() => {
@@ -106,11 +106,11 @@ onMounted(() => {
 });
 </script>
 
-<style lang='scss' module>
+<style lang="scss" module>
 .alert.toast {
   box-shadow: 2px 4px 20px 2px rgba(0, 0, 0, 0.12);
   animation-name: alertfade;
-	animation-timing-function: linear;
+  animation-timing-function: linear;
   max-width: 250px;
 
   @keyframes alertfade {
@@ -120,7 +120,7 @@ onMounted(() => {
     60% {
       opacity: 1;
     }
-    80%{
+    80% {
       opacity: 0.5;
     }
     100% {

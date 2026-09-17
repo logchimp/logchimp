@@ -1,16 +1,14 @@
 <template>
-	<component
-		:is="href ? 'a' : as"
-		:class="[
+  <component
+    :is="href ? 'a' : as"
+    :class="[
       'group flex items-center justify-center gap-2 relative leading-5',
       'overflow-hidden select-none rounded-(--border-radius-default)',
       'text-md font-medium',
       // TODO: improve a11y styles
       'outline-none',
       // primary
-      type === 'primary' && [
-        'bg-(--color-brand-color) text-white',
-      ],
+      type === 'primary' && ['bg-(--color-brand-color) text-white'],
       {
         [`button-${type}`]: !!type,
         'border border-white/50 hover:border-white': outline,
@@ -23,27 +21,19 @@
         'opacity-70': loading,
         // disabled
         'opacity-70 cursor-not-allowed': disabled,
-      }
-		]"
-		:href="href ? href : undefined"
-		@click="click"
-    :disabled="(as === 'button' && disabled) ? 'true' : undefined"
+      },
+    ]"
+    :href="href ? href : undefined"
+    :disabled="as === 'button' && disabled ? 'true' : undefined"
     :aria-disabled="disabled ? 'true' : undefined"
     :aria-busy="loading ? true : undefined"
-	>
-		<div
-      v-if="loading"
-      aria-hidden="true"
-    >
-      <loader-icon
-        :class="[
-          'spinner',
-          type === 'primary' && 'stroke-white'
-        ]"
-      />
-		</div>
+    @click="click"
+  >
+    <div v-if="loading" aria-hidden="true">
+      <loader-icon :class="['spinner', type === 'primary' && 'stroke-white']" />
+    </div>
     <slot />
-	</component>
+  </component>
 </template>
 
 <script setup lang="ts">

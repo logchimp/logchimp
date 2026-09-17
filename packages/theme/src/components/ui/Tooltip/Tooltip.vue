@@ -9,7 +9,7 @@
           :class="[
             'animate-slide-up-fade pointer-events-auto items-center',
             'overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm',
-            'text-xs px-2 py-1 text-neutral-700'
+            'text-xs px-2 py-1 text-neutral-700',
           ]"
           :side-offset="10"
         >

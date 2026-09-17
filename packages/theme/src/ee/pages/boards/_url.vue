@@ -5,19 +5,13 @@
       <div class="flex flex-col-reverse lg:flex-row mb-16 lg:space-x-8">
         <main class="grow-2 shrink basis-0">
           <tab class="mb-5">
-            <tab-item
-              :active="tab === 'latest'"
-              @click="updateTab('latest')"
-            >
+            <tab-item :active="tab === 'latest'" @click="updateTab('latest')">
               <template #icon>
                 <sort-desc-icon />
               </template>
               Latest
             </tab-item>
-            <tab-item
-              :active="tab === 'oldest'"
-              @click="updateTab('oldest')"
-            >
+            <tab-item :active="tab === 'oldest'" @click="updateTab('oldest')">
               <template #icon>
                 <sort-asc-icon />
               </template>
@@ -32,9 +26,7 @@
         </aside>
       </div>
     </div>
-    <p v-else>
-      There is no such board.
-    </p>
+    <p v-else>There is no such board.</p>
   </template>
 </template>
 

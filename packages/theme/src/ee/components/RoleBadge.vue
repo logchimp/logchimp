@@ -6,12 +6,9 @@
     ]"
   >
     <span>
-      {{role.name}}
+      {{ role.name }}
     </span>
-    <ComputerIcon
-      v-if="role.isSystem"
-      class="size-4 stroke-neutral-500"
-    />
+    <ComputerIcon v-if="role.isSystem" class="size-4 stroke-neutral-500" />
   </div>
 </template>
 

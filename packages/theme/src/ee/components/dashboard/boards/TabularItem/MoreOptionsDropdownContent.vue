@@ -1,12 +1,14 @@
 <template>
-  <DropdownV2Content
-    align="end"
-    side="bottom"
-    :loop="true"
-  >
+  <DropdownV2Content align="end" side="bottom" :loop="true">
     <dropdown-item
-      @click="board?.url ? router.push(`/dashboard/boards/${encodeURIComponent(board?.url)}/settings`) : undefined"
       :disabled="!board?.url"
+      @click="
+        board?.url
+          ? router.push(
+              `/dashboard/boards/${encodeURIComponent(board?.url)}/settings`,
+            )
+          : undefined
+      "
     >
       <template #icon>
         <settings-icon aria-hidden="true" />
@@ -15,8 +17,8 @@
     </dropdown-item>
     <dropdown-item
       v-if="settings.developer_mode"
-      @click="board?.boardId ? useCopyText(board.boardId) : undefined"
       :disabled="!board?.boardId"
+      @click="board?.boardId ? useCopyText(board.boardId) : undefined"
     >
       <template #icon>
         <copy-icon aria-hidden="true" />
@@ -38,7 +40,7 @@
 
   <DeleteBoardDialog
     :open="openConfirmDialog"
-    @close="(e) => openConfirmDialog = e"
+    @close="(e) => (openConfirmDialog = e)"
   />
 </template>
 

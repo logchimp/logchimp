@@ -1,6 +1,6 @@
 <template>
   <DashboardPageHeader>
-    <template v-slot:left>
+    <template #left>
       <Breadcrumbs>
         <BreadcrumbItem>Billing</BreadcrumbItem>
       </Breadcrumbs>
@@ -8,7 +8,7 @@
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
-    <div class="form-section" v-if="IS_DEV">
+    <div v-if="IS_DEV" class="form-section">
       <LocalLicenseAlert />
     </div>
 
@@ -17,7 +17,10 @@
 
       <div class="form-columns">
         <div class="form-column">
-          <a class="font-medium" :href="DEFAULT_LOGCHIMP_PILOT_URL">Manage your billing plan</a> on LogChimp Pilot.
+          <a class="font-medium" :href="DEFAULT_LOGCHIMP_PILOT_URL">
+            Manage your billing plan
+          </a>
+          on LogChimp Pilot.
         </div>
       </div>
     </div>

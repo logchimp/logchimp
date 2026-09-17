@@ -13,7 +13,8 @@
       >
         <div
           data-testid="title"
-          class="text-(--color-text-black) text-xl font-medium break-all">
+          class="text-(--color-text-black) text-xl font-medium break-all"
+        >
           {{ postData.title }}
         </div>
       </router-link>
@@ -21,7 +22,7 @@
         v-if="postData.roadmap?.id"
         class="mt-1 uppercase font-medium text-sm break-all"
         :style="{
-          color: `#${postData.roadmap.color}`
+          color: `#${postData.roadmap.color}`,
         }"
       >
         {{ postData.roadmap.name }}
@@ -34,8 +35,8 @@
         {{ useTrim(postData.contentMarkdown, 120) }}
       </p>
       <board-badge
-        class="mt-2.5"
         v-if="postData.board?.boardId"
+        class="mt-2.5"
         :show-board="showBoard"
         :name="postData.board.name"
         :color="postData.board.color"

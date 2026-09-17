@@ -1,21 +1,21 @@
 <template>
   <DropdownMenuCheckboxItem
-    :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    :model-value="modelValue"
+    :disabled="disabled"
+    :class="[
+      // styled copied from DropdownV2Item.vue
+      'group text-sm rounded-md flex items-center gap-x-2.5 py-2 px-3 select-none outline-none',
+      'hover:bg-neutral-200/70',
+      // disabled
+      'data-[disabled]:pointer-events-none data-[disabled]:opacity-70',
+    ]"
+    @update:model-value="$emit('update:modelValue', $event)"
     @pointerdown="onPointerDown"
     @pointerup="onPointerUp"
     @pointercancel="onPointerCancel"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
     @select="onSelect"
-    :disabled="disabled"
-    :class="[
-      // styled copied from DropdownV2Item.vue
-       'group text-sm rounded-md flex items-center gap-x-2.5 py-2 px-3 select-none outline-none',
-      'hover:bg-neutral-200/70',
-      // disabled
-      'data-[disabled]:pointer-events-none data-[disabled]:opacity-70',
-    ]"
   >
     <div class="size-5">
       <DropdownMenuItemIndicator>
@@ -27,8 +27,8 @@
 
     <!-- TODO: work on styles -->
     <div
-      class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8"
       v-if="$slots.shortcut"
+      class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8"
     >
       <slot name="shortcut" />
     </div>

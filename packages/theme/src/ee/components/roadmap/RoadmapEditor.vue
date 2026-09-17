@@ -2,9 +2,7 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem to="/dashboard/roadmaps">
-          Roadmaps
-        </BreadcrumbItem>
+        <BreadcrumbItem to="/dashboard/roadmaps">Roadmaps</BreadcrumbItem>
 
         <!-- Show divider & title once data loaded -->
         <template v-if="title">
@@ -53,9 +51,7 @@
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">
-        Privacy
-      </h6>
+      <h6 class="form-section-title">Privacy</h6>
       <div class="form-columns">
         <div class="form-column">
           <toggle-item

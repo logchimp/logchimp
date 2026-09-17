@@ -1,15 +1,16 @@
 <template>
-  <template v-if="loading">
-    Loading...
-  </template>
+  <template v-if="loading">Loading...</template>
   <template v-else-if="isError">
     Something went wrong. Please try again later.
   </template>
-  <div v-else class="max-h-60 overflow-y-auto h-full border border-neutral-300 rounded-md">
+  <div
+    v-else
+    class="max-h-60 overflow-y-auto h-full border border-neutral-300 rounded-md"
+  >
     <button
-      type="button"
       v-for="user in users"
       :key="user.userId"
+      type="button"
       @click="addVote(user.userId)"
     >
       {{ user.name || user.username }}

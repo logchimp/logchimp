@@ -1,37 +1,35 @@
 <template>
   <add-comment
     v-if="getUserId"
-    @add-comment="addCommentHandler"
     :post-id="postId"
+    @add-comment="addCommentHandler"
   />
   <signin-to-comment v-else />
 
   <div class="mt-8">
     <div class="flex items-center mb-5">
-      <div class="font-semibold uppercase text-sm">
-        Activity
-      </div>
+      <div class="font-semibold uppercase text-sm">Activity</div>
 
-<!--      <div class="flex items-center ml-auto gap-x-3">-->
-<!--      <div-->
-<!--        class="cursor-pointer"-->
-<!--        :class="{-->
-<!--          'underline': activity.sort === 'desc'-->
-<!--        }"-->
-<!--        @click="activity.sort = 'desc'"-->
-<!--      >-->
-<!--        Newest-->
-<!--      </div>-->
-<!--      <div-->
-<!--        class="cursor-pointer"-->
-<!--        :class="{-->
-<!--          'underline': activity.sort === 'asc'-->
-<!--        }"-->
-<!--        @click="activity.sort = 'asc'"-->
-<!--      >-->
-<!--        Oldest-->
-<!--      </div>-->
-<!--    </div>-->
+      <!--      <div class="flex items-center ml-auto gap-x-3">-->
+      <!--      <div-->
+      <!--        class="cursor-pointer"-->
+      <!--        :class="{-->
+      <!--          'underline': activity.sort === 'desc'-->
+      <!--        }"-->
+      <!--        @click="activity.sort = 'desc'"-->
+      <!--      >-->
+      <!--        Newest-->
+      <!--      </div>-->
+      <!--      <div-->
+      <!--        class="cursor-pointer"-->
+      <!--        :class="{-->
+      <!--          'underline': activity.sort === 'asc'-->
+      <!--        }"-->
+      <!--        @click="activity.sort = 'asc'"-->
+      <!--      >-->
+      <!--        Oldest-->
+      <!--      </div>-->
+      <!--    </div>-->
     </div>
 
     <post-activity-list :post-id="postId" :data="data" />
