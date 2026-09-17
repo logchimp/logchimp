@@ -28,6 +28,6 @@
     "open-source"
   ],
   "engines": {
-    "node": ">=22 < 23"
+    "node": ">=24 < 25"
   }
 }
