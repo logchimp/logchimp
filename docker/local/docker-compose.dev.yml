@@ -3,7 +3,7 @@ name: "LogChimp-Dev"
 x-postgres-environment: &postgres-environment
   "LOGCHIMP_DB_HOST": db
   "LOGCHIMP_DB_DATABASE": ${POSTGRES_DB:-db}
-  "LOGCHIMP_DB_PORT": ${POSTGRES_PORT:-5432}
+  "LOGCHIMP_DB_PORT": 5432
   "LOGCHIMP_DB_USER": ${POSTGRES_USER:-lc}
   "LOGCHIMP_DB_PASSWORD": ${POSTGRES_PASSWORD:-password}
   "LOGCHIMP_DB_SSL": ${LOGCHIMP_DB_SSL:-false}
