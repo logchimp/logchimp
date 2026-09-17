@@ -1,12 +1,13 @@
 import { createI18n } from "vue-i18n";
 import { watchEffect } from "vue";
+import Cookie from "js-cookie";
 
 //locales
 import en from "../locales/en.json";
 import fr from "../locales/fr.json";
 import hi from "../locales/hi.json";
 
-const savedLocale = localStorage.getItem("locale") || "en";
+const savedLocale = Cookie.get("hl") || "en";
 
 const i18n = createI18n({
   legacy: false,
@@ -20,7 +21,7 @@ const i18n = createI18n({
 });
 
 watchEffect(() => {
-  localStorage.setItem("locale", i18n.global.locale.value);
+  Cookie.set("hl", i18n.global.locale.value);
 });
 
 export default i18n;
