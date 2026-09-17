@@ -33,7 +33,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [22]
+        node: [24]
         os: [ubuntu-24.04]
 
     steps:
@@ -58,7 +58,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [22]
+        node: [24]
         os: [ubuntu-24.04]
 
     steps:
@@ -85,7 +85,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [22]
+        node: [24]
         os: [ubuntu-24.04]
 
     steps:
@@ -113,7 +113,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [22]
+        node: [24]
         os: [ubuntu-24.04]
 
     steps:
@@ -160,7 +160,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [22]
+        node: [24]
         postgres: [12.18, 14, 16, 17, 18]
         os: [ubuntu-24.04]
 
