@@ -7,7 +7,11 @@
     "dev": "maizzle serve",
     "build": "NODE_ENV=production maizzle build",
     "copy": "cp -r ./dist/** ../server/src/services/mail/templates",
-    "postinstall": "maizzle prepare"
+    "postinstall": "maizzle prepare",
+    "format": "prettier --write \"templates/**/*.vue\"",
+    "format:check": "prettier --check \"templates/**/*.vue\"",
+    "lint": "eslint \"templates/**/*.vue\"",
+    "lint:fix": "eslint \"templates/**/*.vue\" --fix"
   },
   "dependencies": {
     "@maizzle/framework": "latest",
@@ -15,6 +19,13 @@
   },
   "devDependencies": {
     "@types/node": "^24.11.0",
-    "typescript": "^6.0.3"
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.9.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-vue": "^10.11.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.7",
+    "typescript": "^6.0.3",
+    "vue-eslint-parser": "^10.4.1"
   }
 }
