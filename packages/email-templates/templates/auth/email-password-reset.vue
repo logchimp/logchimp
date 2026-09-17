@@ -29,12 +29,13 @@ const data = {
         />
       </a>
 
-      <Text> Hello, </Text>
+      <Text>Hello,</Text>
 
       <Text>
         You can change your account password by clicking the "Reset password"
         button. This link will
-        <strong>expire in 1 hour</strong>.
+        <strong>expire in 1 hour</strong>
+        .
       </Text>
 
       <Text>
@@ -66,7 +67,7 @@ const data = {
         </a>
       </Text>
 
-      <Text> Thanks </Text>
+      <Text>Thanks</Text>
 
       <Text>
         {{ preview("siteTitle", data.siteTitle) }}

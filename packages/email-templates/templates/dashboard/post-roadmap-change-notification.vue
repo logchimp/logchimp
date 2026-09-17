@@ -40,16 +40,18 @@ const data = {
           class="font-bold underline decoration-dotted text-black"
           :href="preview('postUrl', data.postUrl)"
         >
-          {{ preview("postTitle", data.postTitle) }} </a
-        >, has been moved to
+          {{ preview("postTitle", data.postTitle) }}
+        </a>
+        , has been moved to
         <span
           class="font-bold"
           :style="{
             color: `#${preview('roadmapColor', data.roadmapColor)}`,
           }"
         >
-          {{ preview("roadmapTitle", data.roadmapTitle) }} </span
-        >.
+          {{ preview("roadmapTitle", data.roadmapTitle) }}
+        </span>
+        .
       </Text>
 
       <Section class="bg-neutral-50 px-5 py-1 rounded-xl">

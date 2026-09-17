@@ -28,13 +28,14 @@ const data = {
         />
       </a>
 
-      <Text> Hello, </Text>
+      <Text>Hello,</Text>
 
-      <Text> Thank you for creating an account. </Text>
+      <Text>Thank you for creating an account.</Text>
 
       <Text>
         Please confirm your email address by clicking the
-        <strong>Confirm email</strong> button below:
+        <strong>Confirm email</strong>
+        button below:
       </Text>
 
       <Text>
@@ -66,7 +67,7 @@ const data = {
         </a>
       </Text>
 
-      <Text> Thanks </Text>
+      <Text>Thanks</Text>
 
       <Text>
         {{ preview("siteTitle", data.siteTitle) }}
