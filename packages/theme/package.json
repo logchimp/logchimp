@@ -43,7 +43,7 @@
     "@vitejs/plugin-vue": "6.0.8",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.9.0",
-    "@vue/test-utils": "2.4.11",
+    "@vue/test-utils": "2.5.1",
     "@vue/tsconfig": "^0.9.1",
     "eslint": "^10.10.0",
     "eslint-plugin-vue": "^10.11.0",
