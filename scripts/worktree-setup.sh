@@ -69,7 +69,7 @@ setup_worktree() {
     if [ -x "$(command -v pnpm)" ]; then
       pnpm install
     else
-      pkgx +nodejs.org@22 +pnpm.io pnpm install
+      pkgx +nodejs.org@24 +pnpm.io pnpm install
     fi
 
     # Build @logchimp/types package

@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  node: 22
+  node: 24
   pnpm-version: 10
   REGISTRY_OWNER: logchimp
 

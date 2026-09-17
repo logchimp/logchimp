@@ -21,7 +21,7 @@ pre-commit:
   parallel: true
   jobs:
     - run: |
-        PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+        PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@24 +pnpm.io pnpm")
         $PNPM_CMD biome format --write {staged_files}
       glob: "*.{js,ts,vue,json,css,html}"
       stage_fixed: true

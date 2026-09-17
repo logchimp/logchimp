@@ -6,7 +6,7 @@
     "ghcr.io/devcontainers/features/docker-in-docker": {},
     "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "22",
+      "version": "24",
       "packageManager": "pnpm"
     },
     "ghcr.io/devcontainers-contrib/features/typescript:2": {}

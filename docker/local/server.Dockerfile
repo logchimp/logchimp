@@ -1,4 +1,4 @@
-FROM node:22-bullseye
+FROM node:24-bullseye
 
 WORKDIR /app
 COPY ./packages/types/ ./packages/types/
