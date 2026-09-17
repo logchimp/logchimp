@@ -529,12 +529,12 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
     }),
   );
 
-  const roadmapName = faker.commerce
+  const roadmapName = `${faker.commerce
     .productName()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .substring(0, 50)
-    .replace(/^-+|-+$/g, "");
+    .substring(0, 20)
+    .replace(/^-+|-+$/g, "")}-${faker.string.alphanumeric(8).toLowerCase()}`;
   itEE(`should show 2 "${roadmapName}" matching roadmaps`, async () => {
     const r1 = await generateRoadmap(
       {
