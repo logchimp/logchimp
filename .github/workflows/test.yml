@@ -246,5 +246,5 @@ jobs:
       - name: Store Code Coverage
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-node@22-pg@${{ matrix.postgres }}
+          name: coverage-node@${{ matrix.node }}-pg@${{ matrix.postgres }}
           path: ./coverage
