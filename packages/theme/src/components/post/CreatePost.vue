@@ -2,11 +2,11 @@
   <div class="card">
     <l-text
       v-model="title.value"
-      label="Title"
+      :label="t('posts.post_title_label')"
       type="text"
       name="Post title"
       data-test="post-title"
-      placeholder="Name of the feature"
+      :placeholder="t('posts.post_title_placeholder')"
       :error="title.error"
       :disabled="createPostPermissionDisabled"
       @keyup-enter="submitPost"
@@ -14,10 +14,10 @@
     />
     <l-textarea
       v-model="description"
-      label="Description"
+      :label="t('posts.description_label')"
       rows="4"
       name="Post description"
-      placeholder="What would you use it for?"
+      :placeholder="t('posts.description_placeholder')"
       :disabled="createPostPermissionDisabled"
     />
     <Button
@@ -28,7 +28,7 @@
       :disabled="createPostPermissionDisabled"
       @click="submitPost"
     >
-      Submit
+      {{ t("actions.submit") }}
     </Button>
   </div>
 </template>
@@ -38,6 +38,7 @@ import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { PostsAPI } from "../../modules/posts";
@@ -56,6 +57,8 @@ import { useLoginRedirectUrl } from "../../hooks/useLoginRedirectUrl";
 const router = useRouter();
 const { permissions, getUserId } = useUserStore();
 const postsAPI = new PostsAPI();
+
+const { t } = useI18n();
 
 const props = defineProps({
   boardId: {

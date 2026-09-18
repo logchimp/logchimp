@@ -22,7 +22,7 @@
       :disabled="disableRoleEditorForm"
       @click="updateRoleHandler"
     >
-      Save
+      {{ t("actions.save") }}
     </Button>
   </DashboardPageHeader>
 
@@ -371,6 +371,7 @@
 import { computed, reactive, ref } from "vue";
 import type { IPermissionsState, IRole, TPermission } from "@logchimp/types";
 import { ComputerIcon, ShieldAlert, TriangleAlert } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../router";
@@ -393,6 +394,7 @@ import RoleModifyPermissionScope from "./ModifyPermissionScope.vue";
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const rolesEEAPI = new RolesEEAPI();
+const { t } = useI18n();
 
 interface Props {
   title: string;

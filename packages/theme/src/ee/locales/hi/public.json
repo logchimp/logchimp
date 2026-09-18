@@ -1,1 +1,14 @@
-{}
+{
+  "boards": {
+    "boards": "बोर्ड्स",
+    "view_all_boards": "सभी बोर्ड्स देखें",
+    "no_boards_available": "कोई बोर्ड्स अवेलेबल नहीं हैं"
+  },
+  "roadmaps": {
+    "roadmaps": "रोडमैप्स",
+    "no_roadmaps_available": "कोई रोडमैप्स अवेलेबल नहीं हैं"
+  },
+  "errors": {
+    "board_not_found": "बोर्ड नहीं मिला"
+  }
+}
