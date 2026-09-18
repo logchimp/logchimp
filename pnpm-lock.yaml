@@ -224,7 +224,7 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1(vue@3.5.42(typescript@5.9.3))
       '@tailwindcss/vite':
-        specifier: ^4.1.11
+        specifier: ^4.3.3
         version: 4.3.3(vite@6.4.3(@types/node@24.13.4)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))
       '@vueuse/components':
         specifier: 14.3.0
@@ -260,7 +260,7 @@ importers:
         specifier: ^2.10.4
         version: 2.10.4(vue@3.5.42(typescript@5.9.3))
       tailwindcss:
-        specifier: ^4.1.11
+        specifier: ^4.3.3
         version: 4.3.3
       uuid:
         specifier: 11.1.1
