@@ -244,6 +244,9 @@ importers:
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
+      deepmerge:
+        specifier: ^4.3.1
+        version: 4.3.1
       dompurify:
         specifier: ^3.4.15
         version: 3.4.15
@@ -6671,8 +6674,8 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.70.0
       debug: 4.4.3(supports-color@5.5.0)
       minimatch: 10.2.6
-      semver: 7.7.3
-      tinyglobby: 0.2.15
+      semver: 7.8.5
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -6686,8 +6689,8 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.70.0
       debug: 4.4.3(supports-color@5.5.0)
       minimatch: 10.2.6
-      semver: 7.7.3
-      tinyglobby: 0.2.15
+      semver: 7.8.5
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
