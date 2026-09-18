@@ -6,6 +6,7 @@ import type { RouteLocationNormalized } from "vue-router";
 //locales
 import enCommon from "../locales/en/common.json";
 
+const FALLBACK_LOCALE = "en";
 const SUPPORTED_LOCALES = ["en", "fr", "hi"] as const;
 type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -20,7 +21,7 @@ function isSupportedLocale(locale: string): locale is SupportedLocale {
 const i18n = createI18n({
   legacy: false,
   locale: "en",
-  fallbackLocale: "en",
+  fallbackLocale: FALLBACK_LOCALE,
   messages: {
     en: enCommon,
   },
@@ -53,6 +54,14 @@ async function loadAndMergeNamespace(locale: string, namespace: string) {
   return { ...ce, ...ee };
 }
 
+function mergeIntoLocale(locale: string, messages: Record<string, unknown>) {
+  const existing = i18n.global.getLocaleMessage(locale) || {};
+  i18n.global.setLocaleMessage(locale, {
+    ...existing,
+    ...messages,
+  });
+}
+
 export async function loadLocaleForRoute(
   locale: SupportedLocale,
   path: string,
@@ -62,11 +71,19 @@ export async function loadLocaleForRoute(
     return;
   }
 
+  const pageNs = path.startsWith("/dashboard") ? "dashboard" : "public";
+
+  // current locale
   const common = await loadAndMergeNamespace(locale, "common");
-  const page = await loadAndMergeNamespace(
-    locale,
-    path.startsWith("dashboard") ? "dashboard" : "public",
-  );
+  const page = await loadAndMergeNamespace(locale, pageNs);
+  mergeIntoLocale(locale, { ...common, ...page });
+
+  // fallback locale
+  if (locale !== FALLBACK_LOCALE) {
+    const fbCommon = await loadAndMergeNamespace(FALLBACK_LOCALE, "common");
+    const fbPage = await loadAndMergeNamespace(FALLBACK_LOCALE, pageNs);
+    mergeIntoLocale(FALLBACK_LOCALE, { ...fbCommon, ...fbPage });
+  }
 
   i18n.global.setLocaleMessage(locale, {
     ...common,
