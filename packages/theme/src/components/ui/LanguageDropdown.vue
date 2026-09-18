@@ -15,7 +15,8 @@
       <dropdown-item
         v-for="lang in availableLanguages"
         :key="lang.value"
-        @click="setLanguage(lang.value)"
+        :text-value="lang.label"
+        @click="setLocale(lang.value)"
       >
         {{ lang.label }}
       </dropdown-item>
@@ -27,6 +28,7 @@
 import { computed } from "vue";
 import { DropdownMenuTrigger } from "reka-ui";
 import { useI18n } from "vue-i18n";
+import { setLocale } from "../../plugins/i18n";
 
 // components
 import DropdownV2 from "./DropdownV2/Dropdown.vue";
@@ -47,10 +49,6 @@ const currentLanguageLabel = computed(() => {
   );
   return current ? current.label : "Language";
 });
-
-const setLanguage = (lang: string) => {
-  locale.value = lang;
-};
 
 const showLanguageDropdown = computed(
   () => import.meta.env.VITE_SHOW_LANGUAGE_DROPDOWN === "true",
