@@ -145,7 +145,7 @@ importers:
         specifier: ^13.15.35
         version: 13.15.35
       winston:
-        specifier: ^3.3.3
+        specifier: ^3.19.0
         version: 3.19.0
       xss:
         specifier: ^1.0.15
