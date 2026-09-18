@@ -19,7 +19,7 @@
       :disabled="updateBoardPermissionDisabled"
       @click="update"
     >
-      Save
+      {{ t("actions.save") }}
     </Button>
   </DashboardPageHeader>
 
@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, defineAsyncComponent } from "vue";
 import type { IBoardPrivate } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../router";
@@ -108,6 +109,7 @@ const boardsEEAPI = new BoardsEE();
 
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
+const { t } = useI18n();
 
 const updateBoardPermissionDisabled = computed(() => {
   return !permissions.includes("board:update");

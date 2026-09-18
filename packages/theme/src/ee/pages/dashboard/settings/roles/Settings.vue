@@ -17,7 +17,9 @@
     <Dashboard404 v-else-if="errorCode === 'ROLE_NOT_FOUND'">
       Role not found
     </Dashboard404>
-    <Dashboard500 v-else>Something went wrong.</Dashboard500>
+    <Dashboard500 v-else>
+      {{ t("errors.something_went_wrong") }}
+    </Dashboard500>
   </div>
 </template>
 
@@ -31,6 +33,7 @@ import type {
   IPermissionsState,
   TPermissionScope,
 } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../../../router";
@@ -42,6 +45,7 @@ import Dashboard500 from "../../../../../components/dashboard/500.vue";
 import LoaderContainer from "../../../../../components/ui/LoaderContainer.vue";
 import RoleEditor from "../../../../components/roles/RoleEditor.vue";
 
+const { t } = useI18n();
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
 const rolesEEAPI = new RolesEEAPI();

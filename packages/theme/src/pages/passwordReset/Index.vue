@@ -28,7 +28,9 @@
       <p>Follow the link in the email to reset your password.</p>
     </div>
     <div v-if="requestError" class="card">
-      <p>Something went wrong!</p>
+      <p>
+        {{ t("errors.something_went_wrong") }}
+      </p>
     </div>
     <AuthFormHelperText v-if="siteSettings.allowSignup">
       Don't have an account yet?
@@ -42,6 +44,7 @@ import { reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { AuthAPI } from "../../modules/auth";
@@ -56,6 +59,7 @@ import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 
+const { t } = useI18n();
 const { get: siteSettings } = useSettingStore();
 const authAPI = new AuthAPI();
 

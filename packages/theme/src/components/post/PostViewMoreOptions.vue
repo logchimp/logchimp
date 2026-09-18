@@ -14,7 +14,7 @@
         <template #icon>
           <edit-icon aria-hidden="true" />
         </template>
-        Edit
+        {{ t("actions.edit") }}
       </dropdown-item>
     </DropdownV2Content>
   </dropdown-v2>
@@ -24,11 +24,14 @@
 import { DropdownMenuTrigger } from "reka-ui";
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
 import type { IPost } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 import { router } from "../../router";
 import DropdownV2 from "../ui/DropdownV2/Dropdown.vue";
 import DropdownV2Content from "../ui/DropdownV2/DropdownContent.vue";
 import DropdownItem from "../ui/DropdownV2/DropdownItem.vue";
+
+const { t } = useI18n();
 
 interface Props {
   post: IPost;

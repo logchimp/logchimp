@@ -13,7 +13,9 @@
           <nav>
             <HeaderAuthDropdown v-if="userStore.user.userId" />
             <div v-else class="flex items-center">
-              <Button type="primary" href="/login" size="small">Login</Button>
+              <Button type="primary" href="/login" size="small">
+                {{ t("auth.login") }}
+              </Button>
               <Button
                 v-if="settingsStore.get.allowSignup"
                 type="primary"
@@ -21,7 +23,7 @@
                 href="/join"
                 size="small"
               >
-                Create an account
+                {{ t("auth.create_an_account") }}
               </Button>
             </div>
           </nav>
@@ -34,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
 
@@ -46,4 +50,5 @@ import LanguageDropdown from "./ui/LanguageDropdown.vue";
 
 const settingsStore = useSettingStore();
 const userStore = useUserStore();
+const { t } = useI18n();
 </script>

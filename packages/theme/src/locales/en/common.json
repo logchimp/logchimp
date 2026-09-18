@@ -1,4 +1,5 @@
 {
+  "home": "Home",
   "actions": {
     "edit": "Edit",
     "save": "Save",
@@ -12,6 +13,14 @@
     "copy": "Copy",
     "copySuccess": "Copied",
     "copyError": "Copy failed"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign up",
+    "create_an_account": "Create an account",
+    "email_address_label": "Email address",
+    "password_label": "Password",
+    "create_account": "Create account"
   },
   "errors": {
     "post_not_found": "Post not found",

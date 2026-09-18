@@ -35,7 +35,7 @@
           'absolute right-1 top-1/2 -translate-y-1/2': !minimal,
         },
       ]"
-      :aria-label="isCopied ? 'Copied' : 'Copy'"
+      :aria-label="isCopied ? t('actions.copied') : t('actions.copy')"
       @click="copy(value)"
     >
       <CheckIcon
@@ -51,8 +51,10 @@
 import { computed } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { Copy as CopyIcon, Check as CheckIcon } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 const { copy, copied: isCopied, isSupported } = useClipboard();
+const { t } = useI18n();
 
 interface Props {
   value: string;

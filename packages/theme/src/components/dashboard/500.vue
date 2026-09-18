@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ServerCrashIcon } from "lucide-vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 defineOptions({
   name: "Dashboard500",
@@ -16,7 +19,7 @@ defineOptions({
     />
     <div class="flex flex-col items-center justify-center gap-y-2">
       <div class="font-medium">
-        <slot>Something went wrong.</slot>
+        <slot>{{ t("errors.something_went_wrong") }}</slot>
       </div>
       <p class="text-xs text-neutral-800">
         An unexpected error occurred on our end. Not your fault. Refresh or try

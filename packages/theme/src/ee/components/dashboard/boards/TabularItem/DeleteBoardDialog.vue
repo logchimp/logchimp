@@ -22,7 +22,7 @@
           class="px-3 py-2 text-sm rounded-md border border-gray-600 hover:bg-gray-100 select-none"
           @click="() => $emit('close', false)"
         >
-          Cancel
+          {{ t("actions.cancel") }}
         </button>
         <button
           :class="[
@@ -32,7 +32,7 @@
           :disabled="loading"
           @click="deleteBoardHandler"
         >
-          {{ loading ? "Deleting..." : "Delete" }}
+          {{ loading ? "Deleting..." : t("actions.delete") }}
         </button>
       </div>
     </template>
@@ -41,6 +41,7 @@
 
 <script setup lang="ts">
 import { inject, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { boardKey } from "./options";
 import { BoardsEE } from "../../../../modules/boards";
@@ -49,6 +50,7 @@ import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 
 const board = inject(boardKey);
 const dashboardBoards = useDashboardBoards();
+const { t } = useI18n();
 
 interface Props {
   open: boolean;

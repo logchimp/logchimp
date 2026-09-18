@@ -1,1 +1,19 @@
-{}
+{
+  "onboarding": {
+    "setup_logchimp_site_title": "अपना LogChimp साइट सेटअप करें",
+    "setup_logchimp_site_description": "सभी फीचर्स एक्सेस करने के लिए अपना LogChimp सेटअप पूरा करें।",
+    "create_owner_account": "ओनर अकाउंट बनाएं"
+  },
+  "auth": {
+    "create_your_account": "अपना अकाउंट बनाएं",
+    "welcome_back": "वेलकम बैक!",
+    "dont_have_account_yet": "क्या आपका अभी तक कोई खाता नहीं है?",
+    "forgot_password": "पासवर्ड भूल गए?"
+  },
+  "posts": {
+    "post_title_label": "टाइटल",
+    "post_title_placeholder": "फीचर का नाम",
+    "description_label": "पोस्ट डिस्क्रिप्शन",
+    "description_placeholder": "आप इसे किस लिए यूज़ करेंगे?"
+  }
+}

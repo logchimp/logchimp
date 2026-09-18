@@ -1,1 +1,14 @@
-{}
+{
+  "boards": {
+    "boards": "Boards",
+    "view_all_boards": "View all boards",
+    "no_boards_available": "No boards available"
+  },
+  "roadmaps": {
+    "roadmaps": "Roadmaps",
+    "no_roadmaps_available": "No roadmaps available"
+  },
+  "errors": {
+    "board_not_found": "Board not found"
+  }
+}

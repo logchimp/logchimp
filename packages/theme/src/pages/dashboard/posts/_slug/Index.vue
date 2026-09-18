@@ -8,7 +8,7 @@
     ]"
   >
     <Dashboard404 v-if="errorCode === 'POST_NOT_FOUND'">
-      Post not found
+      {{ t("errors.post_not_found") }}
     </Dashboard404>
     <LoaderContainer v-else-if="loading" />
     <DashboardPostViewer
@@ -16,7 +16,9 @@
       :post="post"
       @updated="handlePostUpdated"
     />
-    <Dashboard500 v-else>Something went wrong.</Dashboard500>
+    <Dashboard500 v-else>
+      {{ t("errors.something_went_wrong") }}
+    </Dashboard500>
   </div>
 </template>
 
@@ -24,6 +26,7 @@
 import { defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IDashboardPost } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../../router";
@@ -38,6 +41,7 @@ const DashboardPostViewer = defineAsyncComponent(
   () => import("../../../../components/dashboard/posts/PostViewer.vue"),
 );
 
+const { t } = useI18n();
 const postsAPI = new PostsAPI();
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);

@@ -25,7 +25,7 @@
         />
         <div class="flex justify-end mt-0.5">
           <LButton type="primary" size="small" @click="updateCommentHandler">
-            Save
+            {{ t("actions.save") }}
           </LButton>
         </div>
       </div>
@@ -82,6 +82,7 @@ import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
 import { LockKeyhole, Trash2Icon } from "lucide-vue";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { AxiosError } from "axios";
+import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "../../../store/user";
 import { PostsEE } from "../../modules/posts";
@@ -98,6 +99,7 @@ const DeleteCommentDialog = defineAsyncComponent(
 
 dayjs.extend(relativeTime);
 const { permissions, getUserId } = useUserStore();
+const { t } = useI18n();
 const postActivityEEStore = usePostActivityEEStore();
 const postsEEAPI = new PostsEE();
 

@@ -20,7 +20,7 @@
       :disabled="updateRoadmapButtonDisabled"
       @click="updateHandler"
     >
-      Save
+      {{ t("actions.save") }}
     </Button>
   </DashboardPageHeader>
 
@@ -68,6 +68,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../router";
@@ -88,6 +89,7 @@ import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivi
 
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
+const { t } = useI18n();
 
 interface Props {
   title: string;

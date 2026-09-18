@@ -20,7 +20,7 @@
       :disabled="hasPermission"
       @click="updatePostHandler"
     >
-      Save
+      {{ t("actions.save") }}
     </Button>
   </DashboardPageHeader>
 
@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from "vue";
 import type { IDashboardPost } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 import DashboardPostEditor from "./PostEditor/index.vue";
 import Button from "../../ui/Button.vue";
@@ -80,6 +81,7 @@ const DashboardPostActivityRenderer = defineAsyncComponent(
 const settingsEEStore = useSettingsEEStore();
 const { labs } = useSettingStore();
 const { permissions } = useUserStore();
+const { t } = useI18n();
 
 interface Props {
   post: IDashboardPost;

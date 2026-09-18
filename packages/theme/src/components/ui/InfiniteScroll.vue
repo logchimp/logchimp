@@ -13,7 +13,9 @@
     </template>
     <template v-if="state === 'ERROR'">
       <slot name="error">
-        <client-error>Something went wrong!</client-error>
+        <client-error>
+          {{ t("errors.something_went_wrong") }}
+        </client-error>
       </slot>
     </template>
   </div>
@@ -22,6 +24,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
+import { useI18n } from "vue-i18n";
 
 // components
 import ClientError from "./ClientError.vue";
@@ -50,6 +53,7 @@ interface Props {
   immediateCheck?: boolean;
 }
 
+const { t } = useI18n();
 const props = withDefaults(defineProps<Props>(), {
   distance: 20,
   state: "IDLE",
