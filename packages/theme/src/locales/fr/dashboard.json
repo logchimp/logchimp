@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "labs": {
+      "breadcrumbNavigate": "Paramètres",
+      "breadcrumb": "Labs",
+      "button": "Enregistrer",
+      "form": {
+        "title": "Fonctionnalités bêta",
+        "toggleItem": {
+          "label": "Commentaires",
+          "note": "Autoriser les utilisateurs à commenter les publications"
+        }
+      },
+      "metaTitle": "Laboratoires • Paramètres • Tableau de bord"
+    }
+  }
+}
