@@ -2,6 +2,7 @@ import { createI18n } from "vue-i18n";
 import { nextTick, watchEffect } from "vue";
 import Cookie from "js-cookie";
 import type { RouteLocationNormalized } from "vue-router";
+import deepmerge from "deepmerge";
 
 //locales
 import enCommon from "../locales/en/common.json";
@@ -18,12 +19,16 @@ function isSupportedLocale(locale: string): locale is SupportedLocale {
   return SUPPORTED_LOCALES.includes(locale as SupportedLocale);
 }
 
+// NOTE: This type does not accurately represent the structure of the messages
+// this is just a type for the locale files
+type Messages = typeof enCommon;
+
 const i18n = createI18n({
   legacy: false,
   locale: "en",
   fallbackLocale: FALLBACK_LOCALE,
   messages: {
-    en: enCommon,
+    en: enCommon as Messages,
   },
 });
 
@@ -33,33 +38,41 @@ watchEffect(() => {
   });
 });
 
-async function loadCeNamespace(locale: string, namespace: string) {
+async function loadCeNamespace(
+  locale: string,
+  namespace: string,
+): Promise<Messages> {
   const mod = await import(`../locales/${locale}/${namespace}.json`);
   return mod.default;
 }
 
-async function loadEeNamespace(locale: string, namespace: string) {
+async function loadEeNamespace(
+  locale: string,
+  namespace: string,
+): Promise<Messages> {
   try {
     const mod = await import(`../ee/locales/${locale}/${namespace}.json`);
     return mod.default;
   } catch {
-    return {};
+    return {} as Messages;
   }
 }
 
-async function loadAndMergeNamespace(locale: string, namespace: string) {
+async function loadAndMergeNamespace(
+  locale: string,
+  namespace: string,
+): Promise<Messages> {
   const ce = await loadCeNamespace(locale, namespace);
   const ee = await loadEeNamespace(locale, namespace);
-
-  return { ...ce, ...ee };
+  return deepmerge(ce, ee);
 }
 
-function mergeIntoLocale(locale: string, messages: Record<string, unknown>) {
-  const existing = i18n.global.getLocaleMessage(locale) || {};
-  i18n.global.setLocaleMessage(locale, {
-    ...existing,
-    ...messages,
-  });
+function mergeIntoLocale(locale: string, messages: Messages) {
+  const existing = (i18n.global.getLocaleMessage(locale) || {}) as Messages;
+  i18n.global.setLocaleMessage(
+    locale,
+    deepmerge(existing, messages) as Messages,
+  );
 }
 
 export async function loadLocaleForRoute(
@@ -76,19 +89,16 @@ export async function loadLocaleForRoute(
   // current locale
   const common = await loadAndMergeNamespace(locale, "common");
   const page = await loadAndMergeNamespace(locale, pageNs);
-  mergeIntoLocale(locale, { ...common, ...page });
+  mergeIntoLocale(locale, deepmerge(common, page));
 
   // fallback locale
   if (locale !== FALLBACK_LOCALE) {
     const fbCommon = await loadAndMergeNamespace(FALLBACK_LOCALE, "common");
     const fbPage = await loadAndMergeNamespace(FALLBACK_LOCALE, pageNs);
-    mergeIntoLocale(FALLBACK_LOCALE, { ...fbCommon, ...fbPage });
+    mergeIntoLocale(FALLBACK_LOCALE, deepmerge(fbCommon, fbPage));
   }
 
-  i18n.global.setLocaleMessage(locale, {
-    ...common,
-    ...page,
-  });
+  i18n.global.setLocaleMessage(locale, deepmerge(common, page));
 
   return nextTick();
 }
