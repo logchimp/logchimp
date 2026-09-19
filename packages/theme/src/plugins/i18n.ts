@@ -9,7 +9,7 @@ import enCommon from "../locales/en/common.json";
 
 const FALLBACK_LOCALE = "en";
 const SUPPORTED_LOCALES = ["en", "fr", "hi"] as const;
-type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 const cookieLocale = Cookie.get("hl");
 const savedLocale: SupportedLocale =
