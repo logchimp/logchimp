@@ -30,7 +30,7 @@ import { DropdownMenuTrigger } from "reka-ui";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
-import { setLocale } from "../../plugins/i18n";
+import { setLocale, type SupportedLocale } from "../../plugins/i18n";
 
 // components
 import DropdownV2 from "./DropdownV2/Dropdown.vue";
@@ -40,7 +40,10 @@ import DropdownItem from "./DropdownV2/DropdownItem.vue";
 const { locale } = useI18n();
 const route = useRoute();
 
-const availableLanguages = [
+const availableLanguages: Array<{
+  value: SupportedLocale;
+  label: string;
+}> = [
   { value: "en", label: "English" },
   { value: "fr", label: "Français" },
   { value: "hi", label: "हिन्दी" },
