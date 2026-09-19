@@ -118,7 +118,7 @@ export async function setLocale(locale: SupportedLocale, currentPath: string) {
 
 export async function onRouteChange(to: RouteLocationNormalized) {
   const locale = i18n.global.locale.value;
-  await loadLocaleForRoute(locale, to.path);
+  await setLocale(locale, to.path);
 }
 
 void setLocale(savedLocale, window.location.pathname);
