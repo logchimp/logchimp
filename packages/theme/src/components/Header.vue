@@ -8,21 +8,24 @@
           text-color="white"
         />
 
-        <nav>
-          <HeaderAuthDropdown v-if="userStore.user.userId" />
-          <div v-else class="flex items-center">
-            <Button type="primary" href="/login" size="small">Login</Button>
-            <Button
-              v-if="settingsStore.get.allowSignup"
-              type="primary"
-              :outline="true"
-              href="/join"
-              size="small"
-            >
-              Create an account
-            </Button>
-          </div>
-        </nav>
+        <div class="flex items-center gap-5">
+          <LanguageDropdown />
+          <nav>
+            <HeaderAuthDropdown v-if="userStore.user.userId" />
+            <div v-else class="flex items-center">
+              <Button type="primary" href="/login" size="small">Login</Button>
+              <Button
+                v-if="settingsStore.get.allowSignup"
+                type="primary"
+                :outline="true"
+                href="/join"
+                size="small"
+              >
+                Create an account
+              </Button>
+            </div>
+          </nav>
+        </div>
       </div>
 
       <navbar class="mt-2" />
@@ -39,6 +42,7 @@ import Navbar from "./Navbar.vue";
 import SiteBranding from "./site/SiteBranding.vue";
 import Button from "./ui/Button.vue";
 import HeaderAuthDropdown from "./HeaderAuthDropdown.vue";
+import LanguageDropdown from "./ui/LanguageDropdown.vue";
 
 const settingsStore = useSettingStore();
 const userStore = useUserStore();
