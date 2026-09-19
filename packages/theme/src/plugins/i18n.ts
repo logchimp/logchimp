@@ -1,16 +1,24 @@
-import { createI18n, type Locale } from "vue-i18n";
+import { createI18n } from "vue-i18n";
 import { nextTick, watchEffect } from "vue";
 import Cookie from "js-cookie";
 
 //locales
 import en from "../locales/en.json";
 
-const SUPPORTED_LOCALES: Locale[] = ["en", "fr", "hi"];
-const savedLocale = Cookie.get("hl") || "en";
+const SUPPORTED_LOCALES = ["en", "fr", "hi"] as const;
+type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+
+const cookieLocale = Cookie.get("hl");
+const savedLocale: SupportedLocale =
+  cookieLocale && isSupportedLocale(cookieLocale) ? cookieLocale : "en";
+
+function isSupportedLocale(locale: string): locale is SupportedLocale {
+  return SUPPORTED_LOCALES.includes(locale as SupportedLocale);
+}
 
 const i18n = createI18n({
   legacy: false,
-  locale: savedLocale,
+  locale: "en",
   fallbackLocale: "en",
   messages: {
     en,
@@ -38,16 +46,24 @@ export async function loadLocaleMessages(locale: string) {
 /**
  * Switch language (loads the file first if necessary)
  */
-export async function setLocale(locale: string) {
+export async function setLocale(locale: SupportedLocale) {
   if (!SUPPORTED_LOCALES.includes(locale)) {
     console.warn(`Unsupported locale: ${locale}`);
     return;
   }
 
-  await loadLocaleMessages(locale);
-  // @ts-expect-error - find the correct type to fix this TS error
-  i18n.global.locale.value = locale;
-  document.documentElement.setAttribute("lang", locale);
+  try {
+    await loadLocaleMessages(locale);
+    // @ts-expect-error - find the correct type to fix this TS error
+    i18n.global.locale.value = locale;
+    document.documentElement.setAttribute("lang", locale);
+  } catch (error) {
+    console.warn(`Could not load locale: ${locale}`, error);
+
+    i18n.global.locale.value = "en";
+    document.documentElement.setAttribute("lang", "en");
+    Cookie.set("hl", "en");
+  }
 }
 
 if (savedLocale !== "en") {
@@ -56,5 +72,10 @@ if (savedLocale !== "en") {
     i18n.global.locale.value = savedLocale;
   });
 }
+
+void setLocale(savedLocale).catch((error) => {
+  console.warn(`Could not load locale: ${savedLocale}`, error);
+  Cookie.set("hl", "en");
+});
 
 export default i18n;
