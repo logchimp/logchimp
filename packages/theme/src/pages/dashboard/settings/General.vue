@@ -12,7 +12,7 @@
       :disabled="updateSettingsPermissionDisabled"
       @click="updateSettingsHandler"
     >
-      Save
+      {{ t("actions.save") }}
     </Button>
   </DashboardPageHeader>
 
@@ -122,6 +122,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { useSettingStore } from "../../../store/settings";
@@ -142,6 +143,7 @@ import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
 const { updateSettings: update } = useSettingStore();
 const { permissions } = useUserStore();
+const { t } = useI18n();
 
 type TextInputField = {
   value: string | null;
