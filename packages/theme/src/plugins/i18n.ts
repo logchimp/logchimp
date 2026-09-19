@@ -98,8 +98,6 @@ export async function loadLocaleForRoute(
     mergeIntoLocale(FALLBACK_LOCALE, deepmerge(fbCommon, fbPage));
   }
 
-  i18n.global.setLocaleMessage(locale, deepmerge(common, page));
-
   return nextTick();
 }
 
