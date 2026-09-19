@@ -1,4 +1,12 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 const fixtures = vi.hoisted(() => ({
   ce: {
@@ -40,21 +48,33 @@ const fixtures = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("../locales/en/common.json", () => ({ default: fixtures.ce.en.common }));
+vi.mock("../locales/en/common.json", () => ({
+  default: fixtures.ce.en.common,
+}));
 vi.mock("../locales/en/dashboard.json", () => ({
   default: fixtures.ce.en.dashboard,
 }));
-vi.mock("../locales/en/public.json", () => ({ default: fixtures.ce.en.public }));
-vi.mock("../locales/fr/common.json", () => ({ default: fixtures.ce.fr.common }));
+vi.mock("../locales/en/public.json", () => ({
+  default: fixtures.ce.en.public,
+}));
+vi.mock("../locales/fr/common.json", () => ({
+  default: fixtures.ce.fr.common,
+}));
 vi.mock("../locales/fr/dashboard.json", () => ({
   default: fixtures.ce.fr.dashboard,
 }));
-vi.mock("../locales/fr/public.json", () => ({ default: fixtures.ce.fr.public }));
-vi.mock("../locales/hi/common.json", () => ({ default: fixtures.ce.hi.common }));
+vi.mock("../locales/fr/public.json", () => ({
+  default: fixtures.ce.fr.public,
+}));
+vi.mock("../locales/hi/common.json", () => ({
+  default: fixtures.ce.hi.common,
+}));
 vi.mock("../locales/hi/dashboard.json", () => ({
   default: fixtures.ce.hi.dashboard,
 }));
-vi.mock("../locales/hi/public.json", () => ({ default: fixtures.ce.hi.public }));
+vi.mock("../locales/hi/public.json", () => ({
+  default: fixtures.ce.hi.public,
+}));
 
 vi.mock("../ee/locales/en/common.json", () => ({
   default: fixtures.ee.en.common,
@@ -98,9 +118,7 @@ describe("i18n locale loading", () => {
   function setMessages(locale: string, messages: Record<string, unknown>) {
     i18n.global.setLocaleMessage(
       locale,
-      messages as unknown as Parameters<
-        typeof i18n.global.setLocaleMessage
-      >[1],
+      messages as unknown as Parameters<typeof i18n.global.setLocaleMessage>[1],
     );
   }
 
