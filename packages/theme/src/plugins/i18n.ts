@@ -21,7 +21,9 @@ const i18n = createI18n({
 });
 
 watchEffect(() => {
-  Cookie.set("hl", i18n.global.locale.value);
+  Cookie.set("hl", i18n.global.locale.value, {
+    expires: 365,
+  });
 });
 
 export default i18n;
