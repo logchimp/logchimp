@@ -116,21 +116,11 @@ export async function setLocale(locale: SupportedLocale, currentPath: string) {
   }
 }
 
-if (savedLocale !== "en") {
-  loadLocaleForRoute(savedLocale, window.location.pathname).then(() => {
-    // @ts-expect-error - find the correct type to fix this TS error
-    i18n.global.locale.value = savedLocale;
-  });
-}
-
 export async function onRouteChange(to: RouteLocationNormalized) {
   const locale = i18n.global.locale.value;
   await loadLocaleForRoute(locale, to.path);
 }
 
-void setLocale(savedLocale, window.location.pathname).catch((error) => {
-  console.warn(`Could not load locale: ${savedLocale}`, error);
-  Cookie.set("hl", "en");
-});
+void setLocale(savedLocale, window.location.pathname);
 
 export default i18n;
