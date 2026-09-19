@@ -4,6 +4,7 @@ extend-exclude = [
   "node_modules",
   "pnpm-lock.yaml",
   "packages/theme/src/locales/{fr,hi}/**/*.json",
+  "packages/theme/src/ee/locales/{fr,hi}/**/*.json",
 ]
 
 [default.extend-words]

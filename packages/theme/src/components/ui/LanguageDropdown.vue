@@ -16,7 +16,7 @@
         v-for="lang in availableLanguages"
         :key="lang.value"
         :text-value="lang.label"
-        @click="setLocale(lang.value)"
+        @click="setLocale(lang.value, route.path)"
       >
         {{ lang.label }}
       </dropdown-item>
@@ -28,7 +28,9 @@
 import { computed } from "vue";
 import { DropdownMenuTrigger } from "reka-ui";
 import { useI18n } from "vue-i18n";
-import { setLocale } from "../../plugins/i18n";
+import { useRoute } from "vue-router";
+
+import { setLocale, type SupportedLocale } from "../../plugins/i18n";
 
 // components
 import DropdownV2 from "./DropdownV2/Dropdown.vue";
@@ -36,8 +38,12 @@ import DropdownV2Content from "./DropdownV2/DropdownContent.vue";
 import DropdownItem from "./DropdownV2/DropdownItem.vue";
 
 const { locale } = useI18n();
+const route = useRoute();
 
-const availableLanguages = [
+const availableLanguages: Array<{
+  value: SupportedLocale;
+  label: string;
+}> = [
   { value: "en", label: "English" },
   { value: "fr", label: "Français" },
   { value: "hi", label: "हिन्दी" },
