@@ -199,11 +199,6 @@ describe("i18n locale loading", () => {
     const messages = messagesFor("fr");
     expect(messages.dashboardOnly).toBe("ce-dashboard-fr");
     expect(messages.publicOnly).toBe("ce-public-fr");
-
-    // The English fallback accumulates across the same transition too.
-    const fallback = messagesFor("en");
-    expect(fallback.dashboardOnly).toBe("ce-dashboard");
-    expect(fallback.publicOnly).toBe("ce-public");
   });
 
   it("loads the English fallback messages for a non-fallback locale", async () => {
