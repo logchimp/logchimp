@@ -2,7 +2,9 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem>Boards</BreadcrumbItem>
+        <BreadcrumbItem>
+          {{ t("boards.boards_title") }}
+        </BreadcrumbItem>
       </Breadcrumbs>
     </template>
 
@@ -13,7 +15,7 @@
         :loading="createBoardButtonLoading"
         @click="createBoardHandler"
       >
-        Create board
+        {{ t("boards.create_board_title") }}
         <LicenseCrown v-if="!hasValidLicense" />
       </Button>
     </UpgradeTooltip>
@@ -30,6 +32,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../../router";
@@ -52,6 +55,7 @@ const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 const settingsEEStore = useSettingsEEStore();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
+const { t } = useI18n();
 
 const createBoardButtonLoading = ref(false);
 const boardsEEAPI = new BoardsEE();
@@ -83,7 +87,7 @@ onMounted(() => {
 });
 
 useHead({
-  title: "Boards • Dashboard",
+  title: `${t("boards.boards_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

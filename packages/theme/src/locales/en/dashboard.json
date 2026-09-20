@@ -1,17 +1,23 @@
 {
+  "public_view_text": "Public view",
+  "license": {
+    "license_issue_title": "License issue",
+    "license_issue_description": "We are unable to display {resourceType} due to a license validation failure."
+  },
+  "users": {
+    "users_title": "Users"
+  },
   "settings": {
+    "general": {
+      "general_title": "General"
+    },
     "labs": {
-      "breadcrumbNavigate": "Settings",
-      "breadcrumb": "Labs",
-      "saveButton": "Save",
-      "form": {
-        "title": "Beta features",
-        "toggleItem": {
-          "label": "Comments",
-          "note": "Allow users to comment on posts"
-        }
-      },
-      "metaTitle": "Labs • Settings • Dashboard"
+      "labs_title": "Labs",
+      "beta_features_title": "Beta features",
+      "vote_on_behalf": {
+        "label": "Vote on Behalf",
+        "note": "Allow users to vote on behalf of others"
+      }
     }
   }
 }

@@ -15,10 +15,10 @@
       >
         <l-text
           v-model="name.value"
-          label="Name"
+          :label="t('auth_user.settings.name_label')"
           type="text"
           name="Name"
-          placeholder="Full name"
+          :placeholder="t('auth_user.settings.name_placeholder')"
           class="user-settings-name-item"
           :error="name.error"
           @keyup-enter="updateSettings"
@@ -26,18 +26,18 @@
         />
         <l-text
           v-model="user.username"
-          label="Username"
+          :label="t('auth_user.settings.username_label')"
           type="text"
           name="Username"
-          placeholder="Username"
+          :placeholder="t('auth_user.settings.username_placeholder')"
           :disabled="true"
         />
         <l-text
           v-model="user.email"
-          label="Email Address"
+          :label="t('auth_user.settings.email_address_label')"
           type="text"
           name="Email Address"
-          placeholder="Email address"
+          :placeholder="t('auth_user.settings.email_address_placeholder')"
           :disabled="true"
         />
 
@@ -47,7 +47,7 @@
             :loading="updateUserButtonLoading"
             @click="updateSettings"
           >
-            Update
+            {{ t("actions.save") }}
           </Button>
         </div>
       </form>
@@ -60,6 +60,7 @@ import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../router";
@@ -79,6 +80,7 @@ import AccountVerificationAlert from "../components/account/VerificationAlert.vu
 const { get: siteSettings } = useSettingStore();
 const { getUserId } = useUserStore();
 const usersAPI = new UsersAPI();
+const { t } = useI18n();
 
 const user = reactive({
   username: "",

@@ -2,7 +2,9 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem>Roles</BreadcrumbItem>
+        <BreadcrumbItem>
+          {{ t("roles.roles_title") }}
+        </BreadcrumbItem>
       </Breadcrumbs>
     </template>
 
@@ -13,7 +15,7 @@
         :disabled="createRoleButtonDisabled"
         @click="createRoleHandler"
       >
-        Create
+        {{ t("roles.create_roles_title") }}
         <LicenseCrown v-if="!hasValidLicense" />
       </Button>
     </UpgradeTooltip>
@@ -30,6 +32,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../../../../../router";
@@ -51,6 +54,7 @@ import LicenseCrown from "../../../../components/icons/LicenseCrown.vue";
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const settingsEEStore = useSettingsEEStore();
+const { t } = useI18n();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
 const rolesEEAPI = new RolesEEAPI();
 
@@ -83,7 +87,7 @@ onMounted(() => {
 });
 
 useHead({
-  title: "Roles • Settings • Dashboard",
+  title: `${t("roles.roles_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

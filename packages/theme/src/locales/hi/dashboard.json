@@ -1,17 +1,23 @@
 {
+  "public_view_text": "पब्लिक व्यू",
+  "license": {
+    "license_issue_title": "लाइसेंस इश्यू",
+    "license_issue_description": "लाइसेंस वैलिडेशन फेल होने के कारण हम {resourceType} डिस्प्ले नहीं कर पा रहे हैं।"
+  },
+  "users": {
+    "users_title": "यूजर्स"
+  },
   "settings": {
+    "general": {
+      "general_title": "जनरल"
+    },
     "labs": {
-      "breadcrumbNavigate": "सेटिंग्स",
-      "breadcrumb": "Labs",
-      "button": "सहेजें",
-      "form": {
-        "title": "बीटा फीचर्स",
-        "toggleItem": {
-          "label": "टिप्पणियाँ",
-          "note": "उपयोगकर्ताओं को पोस्ट पर टिप्पणी करने की अनुमति दें"
-        }
-      },
-      "metaTitle": "प्रयोगशाला • सेटिंग्स • नियंत्रण पट्ट"
+      "labs_title": "लैब्स",
+      "beta_features_title": "बीटा फीचर्स",
+      "vote_on_behalf": {
+        "label": "वोट ऑन बीहाफ",
+        "note": "यूजर्स को दूसरों की तरफ से वोट करने की परमिशन दें"
+      }
     }
   }
 }

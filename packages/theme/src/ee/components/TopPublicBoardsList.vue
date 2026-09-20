@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="mb-2 text-sm font-medium text-neutral-700/70">
-      {{ t("boards.boards") }}
+      {{ t("boards.boards_title") }}
     </p>
 
     <div class="grid grid-cols-1 gap-y-1">

@@ -13,7 +13,7 @@
         <roadmap-icon />
       </div>
       <div class="navbar-item-content">
-        {{ t("roadmaps.roadmaps") }}
+        {{ t("roadmaps.roadmaps_title") }}
       </div>
     </router-link>
     <router-link to="/boards" class="navbar-item">
@@ -21,7 +21,7 @@
         <board-icon aria-hidden="true" />
       </div>
       <div class="navbar-item-content">
-        {{ t("boards.boards") }}
+        {{ t("boards.boards_title") }}
       </div>
     </router-link>
   </div>

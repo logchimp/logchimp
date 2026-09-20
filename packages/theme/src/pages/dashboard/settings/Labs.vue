@@ -3,11 +3,11 @@
     <template #left>
       <Breadcrumbs>
         <BreadcrumbItem to="/dashboard/settings">
-          {{ t("dashboard.settings.labs.breadcrumbNavigate") }}
+          {{ t("settings.settings_title") }}
         </BreadcrumbItem>
         <BreadcrumbDivider />
         <BreadcrumbItem>
-          {{ t("dashboard.settings.labs.breadcrumb") }}
+          {{ t("settings.labs.labs_title") }}
         </BreadcrumbItem>
       </Breadcrumbs>
     </template>
@@ -18,22 +18,22 @@
       :disabled="updateSettingsPermissionDisabled"
       @click="updateSettings"
     >
-      {{ t("dashboard.settings.labs.saveButton") }}
+      {{ t("actions.save") }}
     </Button>
   </DashboardPageHeader>
 
   <div class="px-3 lg:px-6">
     <div class="form-section">
       <p class="form-section-title">
-        {{ t("dashboard.settings.labs.form.title") }}
+        {{ t("settings.labs.beta_features_title") }}
       </p>
 
       <div class="form-columns">
         <div class="form-column">
           <toggle-item
             v-model="labs.voteOnBehalf"
-            label="Vote on Behalf"
-            note="Allow users to vote on behalf of others"
+            :label="t('settings.labs.vote_on_behalf.label')"
+            :note="t('settings.labs.vote_on_behalf.note')"
           />
         </div>
 
@@ -77,8 +77,6 @@ const updateSettingsPermissionDisabled = computed(() => {
 
 const { t } = useI18n();
 
-const metaTitle = computed(() => t("dashboard.settings.labs.metaTitle"));
-
 async function updateSettings() {
   updateSettingsButtonLoading.value = true;
 
@@ -104,7 +102,7 @@ async function getSettings() {
 onMounted(() => getSettings());
 
 useHead({
-  title: metaTitle,
+  title: `${t("settings.labs.labs_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

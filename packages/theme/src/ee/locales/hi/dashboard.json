@@ -1,16 +1,18 @@
 {
+  "license": {
+    "test_feature_warning": {
+      "title": "आप इस फीचर को लोकली टेस्ट कर सकते हैं, लेकिन प्रोडक्शन पर नहीं।"
+    }
+  },
+  "roles": {
+    "roles_title": "रोल्स"
+  },
   "settings": {
     "billing": {
-      "breadcrumb": "बिलिंग",
-      "alert": {
-        "title": "हम इस समय इसके मूल्य निर्धारण मॉडल को परिभाषित करने पर काम कर रहे हैं।",
-        "description": "कृपया ध्यान दें कि कुछ <strong>फ्री</strong> योजना सुविधाएँ भुगतान योजनाओं में बदल दी जाएँगी।"
-      },
-      "activePlan": {
-        "title": "सक्रिय योजना",
-        "current": "आप वर्तमान में <strong>फ्री</strong> योजना पर हैं।"
-      },
-      "metaTitle": "बिलिंग • सेटिंग्स • डैशबोर्ड"
+      "billing_title": "बिलिंग",
+      "manage_plan": "प्लान मैनेज करें",
+      "manage_your_billing": "अपना बिलिंग प्लान मैनेज करें",
+      "on_logchimp_pilot": "LogChimp Pilot पर {link}"
     }
   }
 }

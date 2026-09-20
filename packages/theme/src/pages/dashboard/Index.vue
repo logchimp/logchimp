@@ -3,12 +3,16 @@
 
   <div class="flex items-start gap-x-4 px-3 lg:px-6 py-6">
     <div class="flex-2">
-      <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">Posts</div>
+      <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">
+        {{ t("posts.posts_title") }}
+      </div>
       <recently-created-posts />
     </div>
 
     <div class="flex-1">
-      <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">Boards</div>
+      <div class="text-neutral-500 font-medium mb-2 text-sm ml-1.5">
+        {{ t("boards.boards_title") }}
+      </div>
       <recently-created-boards />
     </div>
   </div>
@@ -18,6 +22,7 @@
 import { defineAsyncComponent, onMounted } from "vue";
 import { useHead } from "@vueuse/head";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import { useSettingStore } from "../../store/settings";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
@@ -32,6 +37,7 @@ const RecentlyCreatedBoards = defineAsyncComponent(
 const route = useRoute();
 const routerInstance = useRouter();
 const settingsStore = useSettingStore();
+const { t } = useI18n();
 
 onMounted(() => {
   if (route.query.onboarding === "complete") {

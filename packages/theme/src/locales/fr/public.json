@@ -1,1 +1,19 @@
-{}
+{
+  "onboarding": {
+    "setup_logchimp_site_title": "Configurez votre site LogChimp",
+    "setup_logchimp_site_description": "Terminez la configuration de LogChimp pour accéder à toutes les fonctionnalités.",
+    "create_owner_account": "Créer le compte propriétaire"
+  },
+  "auth": {
+    "create_your_account": "Créez votre compte",
+    "welcome_back": "Bon retour !",
+    "dont_have_account_yet": "Vous n'avez pas encore de compte ?",
+    "forgot_password": "Mot de passe oublié ?"
+  },
+  "posts": {
+    "post_title_label": "Titre",
+    "post_title_placeholder": "Nom de la fonctionnalité",
+    "description_label": "Description de la publication",
+    "description_placeholder": "Dans quel but l'utiliseriez-vous ?"
+  }
+}

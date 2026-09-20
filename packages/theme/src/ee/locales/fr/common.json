@@ -1,1 +1,5 @@
-{}
+{
+  "actions": {
+    "upgrade": "Mettre à niveau"
+  }
+}

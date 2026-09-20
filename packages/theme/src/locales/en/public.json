@@ -8,9 +8,26 @@
     "create_your_account": "Create your account",
     "welcome_back": "Welcome back!",
     "dont_have_account_yet": "Don't have an account yet?",
-    "forgot_password": "Forgot password?"
+    "forgot_password": "Forgot password?",
+    "sign_out_text": "Sign out"
+  },
+  "auth_user": {
+    "email_verification": {
+      "title": "Email verification",
+      "description": "We’ve sent you an verification email. Please follow the instructions in the email."
+    },
+    "settings": {
+      "account_settings_title": "Account settings",
+      "name_label": "Name",
+      "name_placeholder": "Enter your full name",
+      "username_label": "Username",
+      "username_placeholder": "Enter your username",
+      "email_address_label": "Email address",
+      "email_address_placeholder": "Enter your email address"
+    }
   },
   "posts": {
+    "posts_title": "Posts",
     "post_title_label": "Title",
     "post_title_placeholder": "Name of the feature",
     "description_label": "Post description",

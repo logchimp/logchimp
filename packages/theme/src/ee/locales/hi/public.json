@@ -1,14 +1,19 @@
 {
   "boards": {
-    "boards": "बोर्ड्स",
+    "boards_title": "बोर्ड्स",
+    "create_board_title": "बोर्ड बनाएं",
     "view_all_boards": "सभी बोर्ड्स देखें",
-    "no_boards_available": "कोई बोर्ड्स अवेलेबल नहीं हैं"
+    "no_boards_available": "कोई बोर्ड्स अवेलेबल नहीं हैं",
+    "upgrade_description": "क्या अपने कस्टमर्स के फ़ीडबैक को ग्रुप्स में ऑर्गेनाइज़ करना चाहते हैं? इस फीचर को एक्सेस करने के लिए {planName} प्लान में अपग्रेड करें।"
   },
   "roadmaps": {
-    "roadmaps": "रोडमैप्स",
-    "no_roadmaps_available": "कोई रोडमैप्स अवेलेबल नहीं हैं"
+    "roadmaps_title": "रोडमैप्स",
+    "create_roadmap_title": "रोडमैप बनाएं",
+    "no_roadmaps_available": "कोई रोडमैप्स अवेलेबल नहीं हैं",
+    "upgrade_description": "जैसे-जैसे आपकी टीम कस्टमर फ़ीडबैक को रिलीज़ करती है, अपने कस्टमर्स को अप-टू-डेट रखें। इस फीचर को एक्सेस करने के लिए {planName} प्लान में अपग्रेड करें।"
   },
   "errors": {
-    "board_not_found": "बोर्ड नहीं मिला"
+    "board_not_found": "बोर्ड नॉट फ़ाउंड",
+    "roadmap_not_found": "रोडमैप नॉट फ़ाउंड"
   }
 }

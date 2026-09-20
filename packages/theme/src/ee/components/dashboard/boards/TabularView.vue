@@ -52,7 +52,11 @@
 
       <EmptyScreen
         title="Boards"
-        description="Want to organize your customers feedback into groups? Upgrade to Pro plan to access this feature."
+        :description="
+          t('boards.upgrade_description', {
+            planName: 'Pro',
+          })
+        "
         learn-more="https://docs.logchimp.app/guide/boards"
         :border="false"
         :icon="BoxesIcon"
@@ -60,7 +64,7 @@
       >
         <template #button>
           <Button type="primary" href="/dashboard/settings/billing">
-            Upgrade
+            {{ t("actions.upgrade") }}
           </Button>
         </template>
       </EmptyScreen>
@@ -84,6 +88,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { BoxesIcon } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 import TabularItem from "./TabularItem/TabularItem.vue";
 import Table from "../../../../components/ui/Table/Table.vue";
@@ -96,6 +101,7 @@ import Button from "../../../../components/ui/Button.vue";
 import EmptyScreen from "../../../../components/EmptyScreen.vue";
 import { EXAMPLE_BOARDS_DATA } from "./example-data.ts";
 
+const { t } = useI18n();
 const dashboardBoards = useDashboardBoards();
 const requireUpgrade = computed(
   () =>
