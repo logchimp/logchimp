@@ -84,18 +84,26 @@ export async function loadLocaleForRoute(
     return;
   }
 
-  const pageNs = path.startsWith("/dashboard") ? "dashboard" : "public";
-
-  // current locale
-  const common = await loadAndMergeNamespace(locale, "common");
-  const page = await loadAndMergeNamespace(locale, pageNs);
-  mergeIntoLocale(locale, deepmerge(common, page));
+  const isDashboard = path.startsWith("/dashboard");
+  const parts: Messages[] = [
+    await loadAndMergeNamespace(locale, "common"),
+    await loadAndMergeNamespace(locale, "public"),
+  ];
+  if (isDashboard) {
+    parts.push(await loadAndMergeNamespace(locale, "dashboard"));
+  }
+  mergeIntoLocale(locale, deepmerge.all<Messages>(parts));
 
   // fallback locale
   if (locale !== FALLBACK_LOCALE) {
-    const fbCommon = await loadAndMergeNamespace(FALLBACK_LOCALE, "common");
-    const fbPage = await loadAndMergeNamespace(FALLBACK_LOCALE, pageNs);
-    mergeIntoLocale(FALLBACK_LOCALE, deepmerge(fbCommon, fbPage));
+    const fbParts = [
+      await loadAndMergeNamespace(FALLBACK_LOCALE, "common"),
+      await loadAndMergeNamespace(FALLBACK_LOCALE, "public"),
+    ];
+    if (isDashboard) {
+      parts.push(await loadAndMergeNamespace(FALLBACK_LOCALE, "dashboard"));
+    }
+    mergeIntoLocale(FALLBACK_LOCALE, deepmerge.all<Messages>(fbParts));
   }
 
   return nextTick();
