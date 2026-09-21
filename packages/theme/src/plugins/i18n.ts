@@ -101,7 +101,7 @@ export async function loadLocaleForRoute(
       await loadAndMergeNamespace(FALLBACK_LOCALE, "public"),
     ];
     if (isDashboard) {
-      parts.push(await loadAndMergeNamespace(FALLBACK_LOCALE, "dashboard"));
+      fbParts.push(await loadAndMergeNamespace(FALLBACK_LOCALE, "dashboard"));
     }
     mergeIntoLocale(FALLBACK_LOCALE, deepmerge.all<Messages>(fbParts));
   }
