@@ -87,7 +87,7 @@ onMounted(() => {
 });
 
 useHead({
-  title: `${t("boards.boards_title")} • ${t("dashboard_title")}`,
+  title: () => `${t("boards.boards_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

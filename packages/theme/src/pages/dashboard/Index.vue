@@ -63,7 +63,7 @@ onMounted(() => {
 });
 
 useHead({
-  title: "Dashboard",
+  title: () => t("dashboard_title"),
 });
 
 defineOptions({

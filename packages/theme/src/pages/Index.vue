@@ -93,7 +93,7 @@ async function loadMorePosts() {
 onMounted(() => isSetup());
 
 useHead({
-  title: t("home"),
+  title: () => t("home"),
   meta: [
     {
       name: "og:title",

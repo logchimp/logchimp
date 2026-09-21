@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h4 class="form-header" data-testid="page-title">Account settings</h4>
+    <h4 class="form-header" data-testid="page-title">
+      {{ t("auth_user.settings.account_settings_title") }}
+    </h4>
     <loader-container v-if="loading" />
     <div v-else>
       <server-error v-if="serverError" @close="serverError = false" />
@@ -158,11 +160,12 @@ onMounted(() => {
 });
 
 useHead({
-  title: "User settings",
+  title: () => t("auth_user.settings.account_settings_title"),
   meta: [
     {
       name: "og:title",
-      content: () => `User settings • ${siteSettings.title}`,
+      content: () =>
+        `${t("auth_user.settings.account_settings_title")} • ${siteSettings.title}`,
     },
   ],
 });

@@ -169,16 +169,16 @@ onMounted(() => {
 });
 
 useHead({
-  title: "Login",
+  title: () => t("auth.login"),
   meta: [
     {
       name: "og:title",
-      content: () => `Login • ${siteSettings.title}`,
+      content: () => `${t("auth.login")} • ${siteSettings.title}`,
     },
   ],
 });
 
 defineOptions({
-  name: "Login",
+  name: "LoginPage",
 });
 </script>

@@ -92,7 +92,7 @@ async function getBoards() {
 }
 
 useHead({
-  title: t("boards.boards_title"),
+  title: () => t("boards.boards_title"),
   meta: [
     {
       name: "og:title",

@@ -102,7 +102,8 @@ async function getSettings() {
 onMounted(() => getSettings());
 
 useHead({
-  title: `${t("settings.labs.labs_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
+  title: () =>
+    `${t("settings.labs.labs_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

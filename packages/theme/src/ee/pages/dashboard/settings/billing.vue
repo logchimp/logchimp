@@ -48,8 +48,10 @@ import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../../../constants";
 import LocalLicenseAlert from "../../../components/license/LocalLicenseAlert.vue";
 
 const { t } = useI18n();
+
 useHead({
-  title: `${t("settings.billing.billing_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
+  title: () =>
+    `${t("settings.billing.billing_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

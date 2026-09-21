@@ -88,7 +88,7 @@ onMounted(() => {
 });
 
 useHead({
-  title: `${t("roadmaps.roadmaps_title")} • ${t("dashboard_title")}`,
+  title: () => `${t("roadmaps.roadmaps_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

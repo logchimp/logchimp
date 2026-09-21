@@ -87,7 +87,8 @@ onMounted(() => {
 });
 
 useHead({
-  title: `${t("roles.roles_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
+  title: () =>
+    `${t("roles.roles_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

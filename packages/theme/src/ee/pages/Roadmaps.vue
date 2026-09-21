@@ -106,7 +106,7 @@ useInfiniteScroll(
 );
 
 useHead({
-  title: t("roadmaps.roadmaps_title"),
+  title: () => t("roadmaps.roadmaps_title"),
   meta: [
     {
       name: "og:title",
