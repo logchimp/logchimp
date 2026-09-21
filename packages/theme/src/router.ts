@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "./store/user";
 import { isSiteSetup } from "./modules/site";
 import { UsersAPI } from "./modules/users";
+import { onRouteChange } from "./plugins/i18n";
 
 const usersAPI = new UsersAPI();
 
@@ -247,5 +248,7 @@ const router = createRouter({
   history: createWebHistory("/"),
   routes,
 });
+
+router.beforeEach(onRouteChange);
 
 export { router };

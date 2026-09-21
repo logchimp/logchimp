@@ -1,0 +1,20 @@
+{
+  "actions": {
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "copy": "Copy",
+    "copySuccess": "Copied",
+    "copyError": "Copy failed"
+  },
+  "errors": {
+    "post_not_found": "Post not found",
+    "something_went_wrong": "Something went wrong."
+  }
+}

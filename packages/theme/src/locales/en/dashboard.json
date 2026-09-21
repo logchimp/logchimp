@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "labs": {
+      "breadcrumbNavigate": "Settings",
+      "breadcrumb": "Labs",
+      "saveButton": "Save",
+      "form": {
+        "title": "Beta features",
+        "toggleItem": {
+          "label": "Comments",
+          "note": "Allow users to comment on posts"
+        }
+      },
+      "metaTitle": "Labs • Settings • Dashboard"
+    }
+  }
+}

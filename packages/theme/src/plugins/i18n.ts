@@ -1,12 +1,15 @@
 import { createI18n } from "vue-i18n";
 import { nextTick, watchEffect } from "vue";
 import Cookie from "js-cookie";
+import type { RouteLocationNormalized } from "vue-router";
+import deepmerge from "deepmerge";
 
 //locales
-import en from "../locales/en.json";
+import enCommon from "../locales/en/common.json";
 
+const FALLBACK_LOCALE = "en";
 const SUPPORTED_LOCALES = ["en", "fr", "hi"] as const;
-type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 const cookieLocale = Cookie.get("hl");
 const savedLocale: SupportedLocale =
@@ -16,12 +19,16 @@ function isSupportedLocale(locale: string): locale is SupportedLocale {
   return SUPPORTED_LOCALES.includes(locale as SupportedLocale);
 }
 
+// NOTE: This type does not accurately represent the structure of the messages
+// this is just a type for the locale files
+type Messages = typeof enCommon;
+
 const i18n = createI18n({
   legacy: false,
   locale: savedLocale,
-  fallbackLocale: "en",
+  fallbackLocale: FALLBACK_LOCALE,
   messages: {
-    en,
+    en: enCommon as Messages,
   },
 });
 
@@ -31,29 +38,80 @@ watchEffect(() => {
   });
 });
 
-export async function loadLocaleMessages(locale: string) {
-  // @ts-expect-error - find the correct type to fix this TS error
-  if (i18n.global.availableLocales.includes(locale)) {
-    return;
-  }
-
-  const messages = await import(`../locales/${locale}.json`);
-
-  i18n.global.setLocaleMessage(locale, messages.default);
-  return nextTick();
+async function loadCeNamespace(
+  locale: string,
+  namespace: string,
+): Promise<Messages> {
+  const mod = await import(`../locales/${locale}/${namespace}.json`);
+  return mod.default;
 }
 
-/**
- * Switch language (loads the file first if necessary)
- */
-export async function setLocale(locale: SupportedLocale) {
+async function loadEeNamespace(
+  locale: string,
+  namespace: string,
+): Promise<Messages> {
+  try {
+    const mod = await import(`../ee/locales/${locale}/${namespace}.json`);
+    return mod.default;
+  } catch {
+    return {} as Messages;
+  }
+}
+
+async function loadAndMergeNamespace(
+  locale: string,
+  namespace: string,
+): Promise<Messages> {
+  const ce = await loadCeNamespace(locale, namespace);
+  const ee = await loadEeNamespace(locale, namespace);
+  return deepmerge(ce, ee);
+}
+
+function mergeIntoLocale(locale: string, messages: Messages) {
+  const existing = (i18n.global.getLocaleMessage(locale) || {}) as Messages;
+  i18n.global.setLocaleMessage(
+    locale,
+    deepmerge(existing, messages) as Messages,
+  );
+}
+
+export async function loadLocaleForRoute(
+  locale: SupportedLocale,
+  path: string,
+) {
   if (!SUPPORTED_LOCALES.includes(locale)) {
     console.warn(`Unsupported locale: ${locale}`);
     return;
   }
 
+  const isDashboard = path.startsWith("/dashboard");
+  const parts: Messages[] = [
+    await loadAndMergeNamespace(locale, "common"),
+    await loadAndMergeNamespace(locale, "public"),
+  ];
+  if (isDashboard) {
+    parts.push(await loadAndMergeNamespace(locale, "dashboard"));
+  }
+  mergeIntoLocale(locale, deepmerge.all<Messages>(parts));
+
+  // fallback locale
+  if (locale !== FALLBACK_LOCALE) {
+    const fbParts = [
+      await loadAndMergeNamespace(FALLBACK_LOCALE, "common"),
+      await loadAndMergeNamespace(FALLBACK_LOCALE, "public"),
+    ];
+    if (isDashboard) {
+      fbParts.push(await loadAndMergeNamespace(FALLBACK_LOCALE, "dashboard"));
+    }
+    mergeIntoLocale(FALLBACK_LOCALE, deepmerge.all<Messages>(fbParts));
+  }
+
+  return nextTick();
+}
+
+export async function setLocale(locale: SupportedLocale, currentPath: string) {
   try {
-    await loadLocaleMessages(locale);
+    await loadLocaleForRoute(locale, currentPath);
     // @ts-expect-error - find the correct type to fix this TS error
     i18n.global.locale.value = locale;
     document.documentElement.setAttribute("lang", locale);
@@ -67,13 +125,18 @@ export async function setLocale(locale: SupportedLocale) {
 }
 
 if (savedLocale !== "en") {
-  loadLocaleMessages(savedLocale).then(() => {
+  loadLocaleForRoute(savedLocale, window.location.pathname).then(() => {
     // @ts-expect-error - find the correct type to fix this TS error
     i18n.global.locale.value = savedLocale;
   });
 }
 
-void setLocale(savedLocale).catch((error) => {
+export async function onRouteChange(to: RouteLocationNormalized) {
+  const locale = i18n.global.locale.value;
+  await loadLocaleForRoute(locale, to.path);
+}
+
+void setLocale(savedLocale, window.location.pathname).catch((error) => {
   console.warn(`Could not load locale: ${savedLocale}`, error);
   Cookie.set("hl", "en");
 });
