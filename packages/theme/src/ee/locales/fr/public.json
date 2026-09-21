@@ -1,1 +1,19 @@
-{}
+{
+  "boards": {
+    "boards_title": "Tableaux",
+    "create_board_title": "Créer un tableau",
+    "view_all_boards": "Voir tous les tableaux",
+    "no_boards_available": "Aucun tableau disponible",
+    "upgrade_description": "Vous souhaitez organiser les retours de vos clients en groupes ? Passez au forfait {planName} pour accéder à cette fonctionnalité."
+  },
+  "roadmaps": {
+    "roadmaps_title": "Feuilles de route",
+    "create_roadmap_title": "Créer une feuille de route",
+    "no_roadmaps_available": "Aucune feuille de route disponible",
+    "upgrade_description": "Tenez vos clients informés au fur et à mesure que votre équipe traite leurs retours. Passez au forfait {planName} pour accéder à cette fonctionnalité."
+  },
+  "errors": {
+    "board_not_found": "Tableau introuvable",
+    "roadmap_not_found": "Feuille de route introuvable"
+  }
+}

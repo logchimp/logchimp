@@ -10,36 +10,48 @@
     </div>
 
     <SidebarList>
-      <SidebarListHeading>Manage</SidebarListHeading>
+      <SidebarListHeading>
+        {{ t("actions.manage") }}
+      </SidebarListHeading>
       <ul>
         <li>
           <SidebarItem to="/dashboard">
             <dashboard-icon />
-            <p>Dashboard</p>
+            <p>
+              {{ t("dashboard_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/boards">
             <board-icon />
-            <p>Boards</p>
+            <p>
+              {{ t("boards.boards_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/roadmaps">
             <roadmap-icon />
-            <p>Roadmaps</p>
+            <p>
+              {{ t("roadmaps.roadmaps_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/posts">
             <post-icon />
-            <p>Posts</p>
+            <p>
+              {{ t("posts.posts_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/users">
             <users-icon />
-            <p>Users</p>
+            <p>
+              {{ t("users.users_title") }}
+            </p>
           </SidebarItem>
         </li>
       </ul>
@@ -51,25 +63,33 @@
         <li>
           <SidebarItem to="/dashboard/settings/general">
             <settings-icon />
-            <p>General</p>
+            <p>
+              {{ t("settings.general.general_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/settings/billing">
             <credit-card-icon />
-            <p>Billing</p>
+            <p>
+              {{ t("settings.billing.billing_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/settings/roles">
             <shield-icon />
-            <p>Roles</p>
+            <p>
+              {{ t("roles.roles_title") }}
+            </p>
           </SidebarItem>
         </li>
         <li>
           <SidebarItem to="/dashboard/settings/labs">
             <lab-icon />
-            <p>Labs</p>
+            <p>
+              {{ t("settings.labs.labs_title") }}
+            </p>
           </SidebarItem>
         </li>
       </ul>
@@ -79,7 +99,9 @@
       <li>
         <SidebarItem to="/">
           <arrow-up-right-icon />
-          <p>Public view</p>
+          <p>
+            {{ t("public_view_text") }}
+          </p>
         </SidebarItem>
       </li>
     </ul>
@@ -110,6 +132,7 @@ import {
   ArrowUpRight as ArrowUpRightIcon,
   CreditCard as CreditCardIcon,
 } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 import { useSettingStore } from "../../../store/settings";
 import { VITE_LOGCHIMP_VERSION } from "../../../constants";
@@ -124,6 +147,7 @@ import DashboardSidebarAuthUserDropdown from "./AuthUser/Dropdown.vue";
 import LanguageDropdown from "../../ui/LanguageDropdown.vue";
 
 const { get: siteSettings } = useSettingStore();
+const { t } = useI18n();
 
 const logchimpVersion = VITE_LOGCHIMP_VERSION;
 </script>

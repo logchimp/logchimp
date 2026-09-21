@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h4 class="form-header" data-testid="page-title">Account settings</h4>
+    <h4 class="form-header" data-testid="page-title">
+      {{ t("auth_user.settings.account_settings_title") }}
+    </h4>
     <loader-container v-if="loading" />
     <div v-else>
       <server-error v-if="serverError" @close="serverError = false" />
@@ -15,10 +17,10 @@
       >
         <l-text
           v-model="name.value"
-          label="Name"
+          :label="t('auth_user.settings.name_label')"
           type="text"
           name="Name"
-          placeholder="Full name"
+          :placeholder="t('auth_user.settings.name_placeholder')"
           class="user-settings-name-item"
           :error="name.error"
           @keyup-enter="updateSettings"
@@ -26,18 +28,18 @@
         />
         <l-text
           v-model="user.username"
-          label="Username"
+          :label="t('auth_user.settings.username_label')"
           type="text"
           name="Username"
-          placeholder="Username"
+          :placeholder="t('auth_user.settings.username_placeholder')"
           :disabled="true"
         />
         <l-text
           v-model="user.email"
-          label="Email Address"
+          :label="t('auth_user.settings.email_address_label')"
           type="text"
           name="Email Address"
-          placeholder="Email address"
+          :placeholder="t('auth_user.settings.email_address_placeholder')"
           :disabled="true"
         />
 
@@ -47,7 +49,7 @@
             :loading="updateUserButtonLoading"
             @click="updateSettings"
           >
-            Update
+            {{ t("actions.save") }}
           </Button>
         </div>
       </form>
@@ -60,6 +62,7 @@ import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../router";
@@ -79,6 +82,7 @@ import AccountVerificationAlert from "../components/account/VerificationAlert.vu
 const { get: siteSettings } = useSettingStore();
 const { getUserId } = useUserStore();
 const usersAPI = new UsersAPI();
+const { t } = useI18n();
 
 const user = reactive({
   username: "",
@@ -156,11 +160,12 @@ onMounted(() => {
 });
 
 useHead({
-  title: "User settings",
+  title: () => t("auth_user.settings.account_settings_title"),
   meta: [
     {
       name: "og:title",
-      content: () => `User settings • ${siteSettings.title}`,
+      content: () =>
+        `${t("auth_user.settings.account_settings_title")} • ${siteSettings.title}`,
     },
   ],
 });

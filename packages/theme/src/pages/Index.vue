@@ -19,6 +19,7 @@
 import { defineAsyncComponent, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IPost } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { isSiteSetup } from "../modules/site";
@@ -39,6 +40,7 @@ const CreatePost = defineAsyncComponent(
 
 const settingsStore = useSettingStore();
 const postsAPI = new PostsAPI();
+const { t } = useI18n();
 
 const posts = ref<IPost[]>([]);
 const endCursor = ref<string | undefined>();
@@ -91,11 +93,11 @@ async function loadMorePosts() {
 onMounted(() => isSetup());
 
 useHead({
-  title: "Home",
+  title: () => t("home"),
   meta: [
     {
       name: "og:title",
-      content: () => `Home • ${settingsStore.get.title}`,
+      content: () => `${t("home")} • ${settingsStore.get.title}`,
     },
   ],
 });

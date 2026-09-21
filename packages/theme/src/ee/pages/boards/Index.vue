@@ -6,7 +6,9 @@
     "
     class="text-center"
   >
-    <p>No boards available</p>
+    <p>
+      {{ t("boards.no_boards_available") }}
+    </p>
   </div>
   <div v-else>
     <div v-if="boards.length > 0" class="boards-lists">
@@ -33,6 +35,7 @@ import { ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IApiErrorResponse, IBoardDetail } from "@logchimp/types";
 import type { AxiosError } from "axios";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { BoardsEE } from "../../modules/boards";
@@ -45,6 +48,7 @@ import InfiniteScroll, {
 import BoardItem from "../../components/boards/BoardItem.vue";
 
 const { get: siteSettings } = useSettingStore();
+const { t } = useI18n();
 
 const boards = ref<IBoardDetail[]>([]);
 const endCursor = ref<string | undefined>();
@@ -88,11 +92,11 @@ async function getBoards() {
 }
 
 useHead({
-  title: "Boards",
+  title: () => t("boards.boards_title"),
   meta: [
     {
       name: "og:title",
-      content: () => `Boards • ${siteSettings.title}`,
+      content: () => `${t("boards.boards_title")} • ${siteSettings.title}`,
     },
   ],
 });

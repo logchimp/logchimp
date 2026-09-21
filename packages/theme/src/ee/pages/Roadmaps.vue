@@ -7,7 +7,9 @@
     "
     class="text-center"
   >
-    <p>No roadmaps available</p>
+    <p>
+      {{ t("roadmaps.no_roadmaps_available") }}
+    </p>
   </div>
   <template v-else>
     <!-- Show roadmaps grid only when we have roadmaps -->
@@ -38,6 +40,7 @@ import { useHead } from "@vueuse/head";
 import { useInfiniteScroll } from "@vueuse/core";
 import type { IApiErrorResponse, IRoadmap } from "@logchimp/types";
 import type { AxiosError } from "axios";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { RoadmapsEE } from "../modules/roadmaps";
@@ -49,7 +52,7 @@ import RoadmapSkeleton from "../components/roadmap/RoadmapSkeleton.vue";
 import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 
 const { get: siteSettings } = useSettingStore();
-
+const { t } = useI18n();
 const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
 const roadmaps = ref<IRoadmap[]>([]);
 const endCursor = ref<string | undefined>();
@@ -103,11 +106,11 @@ useInfiniteScroll(
 );
 
 useHead({
-  title: "Roadmaps",
+  title: () => t("roadmaps.roadmaps_title"),
   meta: [
     {
       name: "og:title",
-      content: () => `Roadmaps • ${siteSettings.title}`,
+      content: () => `${t("roadmaps.roadmaps_title")} • ${siteSettings.title}`,
     },
   ],
 });
@@ -117,6 +120,6 @@ onMounted(() => {
 });
 
 defineOptions({
-  name: "Roadmaps",
+  name: "RoadmapsPublicPage",
 });
 </script>

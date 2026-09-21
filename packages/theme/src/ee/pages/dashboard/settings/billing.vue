@@ -2,7 +2,9 @@
   <DashboardPageHeader>
     <template #left>
       <Breadcrumbs>
-        <BreadcrumbItem>Billing</BreadcrumbItem>
+        <BreadcrumbItem>
+          {{ t("settings.billing.billing_title") }}
+        </BreadcrumbItem>
       </Breadcrumbs>
     </template>
   </DashboardPageHeader>
@@ -13,21 +15,29 @@
     </div>
 
     <div class="form-section">
-      <h6 class="form-section-title">Manage Plan</h6>
+      <h6 class="form-section-title">
+        {{ t("settings.billing.manage_plan") }}
+      </h6>
 
       <div class="form-columns">
-        <div class="form-column">
-          <a class="font-medium" :href="DEFAULT_LOGCHIMP_PILOT_URL">
-            Manage your billing plan
-          </a>
-          on LogChimp Pilot.
-        </div>
+        <i18n-t
+          keypath="settings.billing.on_logchimp_pilot"
+          tag="div"
+          class="form-column"
+        >
+          <template #link>
+            <a class="font-medium" :href="DEFAULT_LOGCHIMP_PILOT_URL">
+              {{ t("settings.billing.manage_your_billing") }}
+            </a>
+          </template>
+        </i18n-t>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { I18nT, useI18n } from "vue-i18n";
 import { useHead } from "@vueuse/head";
 
 // components
@@ -37,8 +47,11 @@ import BreadcrumbItem from "../../../../components/ui/breadcrumbs/BreadcrumbItem
 import { DEFAULT_LOGCHIMP_PILOT_URL, IS_DEV } from "../../../../constants";
 import LocalLicenseAlert from "../../../components/license/LocalLicenseAlert.vue";
 
+const { t } = useI18n();
+
 useHead({
-  title: "Billing • Settings • Dashboard",
+  title: () =>
+    `${t("settings.billing.billing_title")} • ${t("settings.settings_title")} • ${t("dashboard_title")}`,
 });
 
 defineOptions({

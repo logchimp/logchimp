@@ -40,7 +40,11 @@
 
       <EmptyScreen
         title="Roadmaps"
-        description="Keep your customers up-to-date as your team releases the customer feedbacks. Upgrade to Pro plan to access this feature."
+        :description="
+          t('roadmaps.upgrade_description', {
+            planName: 'Pro',
+          })
+        "
         learn-more="https://docs.logchimp.app/guide/roadmaps"
         :border="false"
         :icon="KanbanIcon"
@@ -48,7 +52,7 @@
       >
         <template #button>
           <Button type="primary" href="/dashboard/settings/billing">
-            Upgrade
+            {{ t("actions.upgrade") }}
           </Button>
         </template>
       </EmptyScreen>
@@ -86,6 +90,7 @@ import draggable from "vuedraggable";
 import { computed, ref } from "vue";
 import type { ISortRoadmapRequestBody } from "@logchimp/types";
 import { KanbanIcon } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 import { useDashboardRoadmaps } from "../../../store/dashboard/roadmaps";
 import type {
@@ -104,6 +109,7 @@ import Button from "../../../../components/ui/Button.vue";
 import EmptyScreen from "../../../../components/EmptyScreen.vue";
 import { EXAMPLE_ROADMAPS_DATA } from "./example-data.ts";
 
+const { t } = useI18n();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const requireUpgrade = computed(
   () =>

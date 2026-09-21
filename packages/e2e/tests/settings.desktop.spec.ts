@@ -32,13 +32,13 @@ test.describe("Settings", () => {
       await expect(emailInput).toBeDisabled();
     });
 
-    test("should update user's name", async ({ page }) => {
+    test("should save user's name", async ({ page }) => {
       const form = page.getByTestId("settings-form");
       const nameInput = form.getByPlaceholder("Full name");
 
       const randomName = faker.person.fullName();
       await nameInput.fill(randomName);
-      await page.getByRole("button", { name: "Update" }).click();
+      await page.getByRole("button", { name: "Save" }).click();
 
       // Reload the page and check the name
       await page.reload();

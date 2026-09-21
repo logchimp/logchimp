@@ -1,17 +1,35 @@
 {
+  "powered_by": "Powered by LogChimp",
+  "home": "Home",
+  "dashboard_title": "Dashboard",
   "actions": {
     "edit": "Edit",
     "save": "Save",
+    "resend": "Resend",
     "cancel": "Cancel",
     "delete": "Delete",
     "close": "Close",
     "confirm": "Confirm",
+    "manage": "Manage",
     "back": "Back",
     "next": "Next",
     "submit": "Submit",
     "copy": "Copy",
-    "copySuccess": "Copied",
-    "copyError": "Copy failed"
+    "copied": "Copied",
+    "copyError": "Copy failed",
+    "email_sent_text": "Email sent",
+    "request_failed_text": "Request failed"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign up",
+    "create_an_account": "Create an account",
+    "email_address_label": "Email address",
+    "password_label": "Password",
+    "create_account": "Create account"
+  },
+  "settings": {
+    "settings_title": "Settings"
   },
   "errors": {
     "post_not_found": "Post not found",

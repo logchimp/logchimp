@@ -1,4 +1,7 @@
 {
+  "powered_by": "पावर्ड बाय LogChimp",
+  "home": "होम",
+  "dashboard_title": "डैशबोर्ड",
   "actions": {
     "edit": "एडिट करें",
     "save": "सेव करें",
@@ -10,11 +13,23 @@
     "next": "नेक्स्ट जाएं",
     "submit": "सबमिट करें",
     "copy": "कॉपी करें",
-    "copySuccess": "कॉपी हो गया",
+    "copied": "कॉपी हो गया",
     "copyError": "कॉपी नहीं हो पाया"
   },
+
+  "auth": {
+    "login": "लॉगिन",
+    "signup": "साइन अप",
+    "create_an_account": "अकाउंट बनाएं",
+    "email_address_label": "ईमेल एड्रेस",
+    "password_label": "पासवर्ड",
+    "create_account": "अकाउंट बनाएं"
+  },
+  "settings": {
+    "settings_title": "सेटिंग्स"
+  },
   "errors": {
-    "post_not_found": "पोस्ट नहीं मिला",
-    "something_went_wrong": "कुछ गलत हो गया"
+    "post_not_found": "पोस्ट नॉट फ़ाउंड",
+    "something_went_wrong": "समथिंग वेंट रॉन्ग"
   }
 }

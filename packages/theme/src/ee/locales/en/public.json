@@ -1,1 +1,19 @@
-{}
+{
+  "boards": {
+    "boards_title": "Boards",
+    "create_board_title": "Create board",
+    "view_all_boards": "View all boards",
+    "no_boards_available": "No boards available",
+    "upgrade_description": "Want to organize your customers feedback into groups? Upgrade to {planName} plan to access this feature."
+  },
+  "roadmaps": {
+    "roadmaps_title": "Roadmaps",
+    "create_roadmap_title": "Create roadmap",
+    "no_roadmaps_available": "No roadmaps available",
+    "upgrade_description": "Keep your customers up-to-date as your team releases the customer feedbacks. Upgrade to {planName} plan to access this feature."
+  },
+  "errors": {
+    "board_not_found": "Board not found",
+    "roadmap_not_found": "Roadmap not found"
+  }
+}

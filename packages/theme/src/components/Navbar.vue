@@ -4,29 +4,37 @@
       <div class="navbar-item-icon">
         <home-icon aria-hidden="true" />
       </div>
-      <div class="navbar-item-content">Home</div>
+      <div class="navbar-item-content">
+        {{ t("home") }}
+      </div>
     </router-link>
     <router-link to="/roadmaps" class="navbar-item">
       <div class="navbar-item-icon">
         <roadmap-icon />
       </div>
-      <div class="navbar-item-content">Roadmaps</div>
+      <div class="navbar-item-content">
+        {{ t("roadmaps.roadmaps_title") }}
+      </div>
     </router-link>
     <router-link to="/boards" class="navbar-item">
       <div class="navbar-item-icon">
         <board-icon aria-hidden="true" />
       </div>
-      <div class="navbar-item-content">Boards</div>
+      <div class="navbar-item-content">
+        {{ t("boards.boards_title") }}
+      </div>
     </router-link>
   </div>
 </template>
 
 <script setup lang="ts">
-// packages
-import { Home as HomeIcon, Columns as BoardIcon } from "lucide-vue";
+import { Columns as BoardIcon, Home as HomeIcon } from "lucide-vue";
+import { useI18n } from "vue-i18n";
 
 // icons
 import RoadmapIcon from "./icons/Roadmap.vue";
+
+const { t } = useI18n();
 </script>
 
 <style lang="sass">

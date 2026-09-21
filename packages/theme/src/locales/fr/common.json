@@ -1,1 +1,33 @@
-{}
+{
+  "home": "Accueil",
+  "dashboard_title": "Tableau de bord",
+  "actions": {
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre",
+    "copy": "Copier",
+    "copied": "Copié",
+    "copyError": "Échec de la copie"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "create_an_account": "Créer un compte",
+    "email_address_label": "Adresse e-mail",
+    "password_label": "Mot de passe",
+    "create_account": "Créer un compte"
+  },
+  "settings": {
+    "settings_title": "Paramètres"
+  },
+  "errors": {
+    "post_not_found": "Publication introuvable",
+    "something_went_wrong": "Une erreur est survenue."
+  }
+}

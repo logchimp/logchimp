@@ -1,20 +1,5 @@
 {
   "actions": {
-    "edit": "एडिट करें",
-    "save": "सेव करें",
-    "cancel": "कैंसल करें",
-    "delete": "डिलीट करें",
-    "close": "क्लोज़ करें",
-    "confirm": "कंफर्म करें",
-    "back": "बैक जाएं",
-    "next": "नेक्स्ट जाएं",
-    "submit": "सबमिट करें",
-    "copy": "कॉपी करें",
-    "copySuccess": "कॉपी हो गया",
-    "copyError": "कॉपी नहीं हो पाया"
-  },
-  "errors": {
-    "post_not_found": "पोस्ट नहीं मिला",
-    "something_went_wrong": "कुछ गलत हो गया"
+    "upgrade": "अपग्रेड"
   }
 }

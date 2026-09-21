@@ -1,6 +1,8 @@
 <template>
   <div>
-    <p class="mb-2 text-sm font-medium text-neutral-700/70">Boards</p>
+    <p class="mb-2 text-sm font-medium text-neutral-700/70">
+      {{ t("boards.boards_title") }}
+    </p>
 
     <div class="grid grid-cols-1 gap-y-1">
       <a
@@ -8,9 +10,11 @@
         href="/boards"
         class="flex items-center gap-x-3 px-4 py-1.5 hover:bg-neutral-200 rounded-md font-medium text-neutral-700"
       >
-        View all boards
+        {{ t("boards.view_all_boards") }}
       </a>
-      <p v-else class="text-sm text-neutral-700">No boards available</p>
+      <p v-else class="text-sm text-neutral-700">
+        {{ t("boards.no_boards_available") }}
+      </p>
 
       <a
         v-for="board in boards"
@@ -38,11 +42,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import type { IBoardDetail } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 import { BoardsEE } from "../modules/boards";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 
 const boards = ref<IBoardDetail[]>([]);
 const boardsEEAPI = new BoardsEE();
+const { t } = useI18n();
 
 async function getBoardsHandler() {
   const response = await boardsEEAPI.GetPublicBoards({

@@ -16,7 +16,7 @@
           <template #icon>
             <dashboard-icon aria-hidden="true" />
           </template>
-          Dashboard
+          {{ t("dashboard_title") }}
         </dropdown-item>
         <DropdownV2Separator />
       </template>
@@ -25,14 +25,14 @@
         <template #icon>
           <settings-icon aria-hidden="true" />
         </template>
-        Settings
+        {{ t("settings.settings_title") }}
       </dropdown-item>
 
       <dropdown-item @click="userStore.logout">
         <template #icon>
           <logout-icon aria-hidden="true" />
         </template>
-        Sign out
+        {{ t("auth.sign_out_text") }}
       </dropdown-item>
 
       <dropdown-item v-if="showVersion" :disabled="true">
@@ -50,6 +50,7 @@ import {
   Settings as SettingsIcon,
 } from "lucide-vue";
 import { DropdownMenuTrigger } from "reka-ui";
+import { useI18n } from "vue-i18n";
 
 import { Avatar } from "./ui/Avatar";
 import DropdownV2 from "./ui/DropdownV2/Dropdown.vue";
@@ -63,6 +64,7 @@ import { useUserStore } from "../store/user";
 
 const settingsStore = useSettingStore();
 const userStore = useUserStore();
+const { t } = useI18n();
 
 const accessDashboard = computed(() => {
   return userStore.permissions.includes("dashboard:read");

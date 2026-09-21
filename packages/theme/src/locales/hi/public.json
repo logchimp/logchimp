@@ -1,1 +1,34 @@
-{}
+{
+  "onboarding": {
+    "setup_logchimp_site_title": "अपना LogChimp साइट सेटअप करें",
+    "setup_logchimp_site_description": "सभी फीचर्स एक्सेस करने के लिए अपना LogChimp सेटअप पूरा करें।",
+    "create_owner_account": "ओनर अकाउंट बनाएं"
+  },
+  "auth": {
+    "create_your_account": "अपना अकाउंट बनाएं",
+    "welcome_back": "वेलकम बैक!",
+    "dont_have_account_yet": "क्या आपका अभी तक कोई खाता नहीं है?",
+    "forgot_password": "पासवर्ड भूल गए?"
+  },
+  "auth_user": {
+    "email_verification": {
+      "title": "ईमेल वेरिफिकेशन",
+      "description": "वी हैव सेंट यू एन वेरिफिकेशन ईमेल। प्लीज फॉलो द इंस्ट्रक्शंस इन द ईमेल।"
+    },
+    "settings": {
+      "account_settings_title": "अकाउंट सेटिंग्स",
+      "name_label": "नेम",
+      "name_placeholder": "एंटर योर फुल नेम",
+      "username_label": "यूजरनेम",
+      "username_placeholder": "एंटर योर यूजरनेम",
+      "email_address_label": "ईमेल एड्रेस",
+      "email_address_placeholder": "एंटर योर ईमेल एड्रेस"
+    }
+  },
+  "posts": {
+    "post_title_label": "टाइटल",
+    "post_title_placeholder": "फीचर का नाम",
+    "description_label": "पोस्ट डिस्क्रिप्शन",
+    "description_placeholder": "आप इसे किस लिए यूज़ करेंगे?"
+  }
+}

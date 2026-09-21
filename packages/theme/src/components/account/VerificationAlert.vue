@@ -1,7 +1,7 @@
 <template>
   <alert
-    title="Email verification"
-    description="We’ve sent you an verification email. Please follow the instructions in the email."
+    :title="t('auth_user.email_verification.title')"
+    :description="t('auth_user.email_verification.description')"
     type="warning"
     class="mb-8"
   >
@@ -12,7 +12,7 @@
           :loading="loading"
           @click="sendEmailVerificationHandler"
         >
-          Resend
+          {{ t("actions.resend") }}
         </Button>
 
         <div
@@ -27,13 +27,17 @@
               aria-hidden="true"
               class="size-5 stroke-green-600"
             />
-            <span class="font-medium">Email sent</span>
+            <span class="font-medium">
+              {{ t("actions.email_sent_text") }}
+            </span>
           </template>
 
           <!-- Error -->
           <template v-if="requestStatus.status === 'error'">
             <XCircleIcon aria-hidden="true" class="size-5 stroke-red-500" />
-            <span class="font-medium">Request failed</span>
+            <span class="font-medium">
+              {{ t("actions.request_failed_text") }}
+            </span>
           </template>
         </div>
       </div>
@@ -46,6 +50,7 @@ import { ref, reactive } from "vue";
 import axios, { type AxiosResponse } from "axios";
 import { CheckCircle2Icon, XCircleIcon } from "lucide-vue";
 import type { IAuthEmailVerifyResponseBody } from "@logchimp/types";
+import { useI18n } from "vue-i18n";
 
 import { Alert } from "../ui/Alert";
 import Button from "../ui/Button.vue";
@@ -53,6 +58,7 @@ import { VITE_API_URL } from "../../constants";
 import { useUserStore } from "../../store/user";
 
 const { authToken } = useUserStore();
+const { t } = useI18n();
 const loading = ref<boolean>(false);
 
 interface IRequestStatus {

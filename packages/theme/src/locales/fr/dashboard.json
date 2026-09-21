@@ -1,17 +1,19 @@
 {
+  "license": {
+    "license_issue_title": "Problème de licence",
+    "license_issue_description": "Impossible d'afficher {resourceType} en raison d'un échec de validation de la licence."
+  },
+  "users": {
+    "users_title": "Utilisateurs"
+  },
   "settings": {
     "labs": {
-      "breadcrumbNavigate": "Paramètres",
-      "breadcrumb": "Labs",
-      "button": "Enregistrer",
-      "form": {
-        "title": "Fonctionnalités bêta",
-        "toggleItem": {
-          "label": "Commentaires",
-          "note": "Autoriser les utilisateurs à commenter les publications"
-        }
-      },
-      "metaTitle": "Laboratoires • Paramètres • Tableau de bord"
+      "labs_title": "Labs",
+      "beta_features_title": "Fonctionnalités bêta",
+      "vote_on_behalf": {
+        "label": "Voter au nom de",
+        "note": "Autoriser les utilisateurs à voter au nom d'autres personnes"
+      }
     }
   }
 }

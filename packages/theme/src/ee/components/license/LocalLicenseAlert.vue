@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { Alert } from "../../../components/ui/Alert";
+
+const { t } = useI18n();
 </script>
 
 <template>
-  <alert
-    title="You can test this feature locally but not on production."
-    type="warning"
-  >
+  <alert :title="t('license.test_feature_warning.title')" type="warning">
     <template #description>
       You can purchase
       <strong>LogChimp Self-Managed</strong>

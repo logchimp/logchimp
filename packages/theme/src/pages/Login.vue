@@ -1,26 +1,28 @@
 <template>
   <auth-form>
     <AuthFormHeader>
-      <template #heading>Welcome back!</template>
+      <template #heading>
+        {{ t("auth.welcome_back") }}
+      </template>
     </AuthFormHeader>
 
     <form class="card" data-testid="login-form" @submit.prevent="login">
       <l-text
         v-model="email"
-        label="Email Address"
+        :label="t('auth.email_address_label')"
         type="email"
         name="email"
-        placeholder="Email address"
+        :placeholder="t('auth.email_address_label')"
         :error="emailError"
         @keyup-enter="login"
         @hide-error="hideEmailError"
       />
       <l-text
         v-model="password"
-        label="Password"
+        :label="t('auth.password_label')"
         type="password"
         name="password"
-        placeholder="Password"
+        :placeholder="t('auth.password_label')"
         :error="passwordError"
         @keyup-enter="login"
         @hide-error="hidePasswordError"
@@ -28,16 +30,18 @@
 
       <div class="flex justify-center">
         <Button type="primary" :loading="buttonLoading" @click="login">
-          Login
+          {{ t("auth.login") }}
         </Button>
       </div>
     </form>
 
     <AuthFormHelperText>
-      <router-link to="/password-reset">Forgot password?</router-link>
+      <router-link to="/password-reset">
+        {{ t("auth.forgot_password") }}
+      </router-link>
       <div v-if="siteSettings.allowSignup">
-        • Don't have an account yet?
-        <router-link to="/join">Sign up</router-link>
+        • {{ t("auth.dont_have_account_yet") }}
+        <router-link to="/join">{{ t("auth.signup") }}</router-link>
       </div>
     </AuthFormHelperText>
   </auth-form>
@@ -49,6 +53,7 @@ import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { IApiErrorResponse } from "@logchimp/types";
 import type { AxiosError } from "axios";
+import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../router";
@@ -64,6 +69,7 @@ import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
 import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
 
+const { t } = useI18n();
 const email = ref<string>("");
 const emailError = reactive({
   show: false,
@@ -163,16 +169,16 @@ onMounted(() => {
 });
 
 useHead({
-  title: "Login",
+  title: () => t("auth.login"),
   meta: [
     {
       name: "og:title",
-      content: () => `Login • ${siteSettings.title}`,
+      content: () => `${t("auth.login")} • ${siteSettings.title}`,
     },
   ],
 });
 
 defineOptions({
-  name: "Login",
+  name: "LoginPage",
 });
 </script>
