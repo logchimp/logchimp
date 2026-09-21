@@ -169,8 +169,9 @@ describe("i18n locale loading", () => {
     await loadLocaleForRoute("en", "/dashboard/settings/labs");
 
     const messages = messagesFor("en");
+    expect(messages.commonOnly).toBe("ce-common");
     expect(messages.dashboardOnly).toBe("ce-dashboard");
-    expect(messages.publicOnly).toBeUndefined();
+    expect(messages.publicOnly).toBe("ce-public");
   });
 
   it("loads the public namespace for non-dashboard routes", async () => {
@@ -192,18 +193,51 @@ describe("i18n locale loading", () => {
     expect(messages.publicOnly).toBe("ce-public");
   });
 
+  it("keeps previously loaded namespaces after a public -> dashboard transition", async () => {
+    await loadLocaleForRoute("en", "/");
+    await loadLocaleForRoute("en", "/dashboard");
+
+    const messages = messagesFor("en");
+
+    expect(messages.commonOnly).toBe("ce-common");
+    expect(messages.publicOnly).toBe("ce-public");
+    expect(messages.dashboardOnly).toBe("ce-dashboard");
+  });
+
   it("keeps previously loaded namespaces for a non-fallback locale", async () => {
     await loadLocaleForRoute("fr", "/dashboard");
     await loadLocaleForRoute("fr", "/");
 
     const messages = messagesFor("fr");
+    expect(messages.commonOnly).toBe("ce-common-fr");
     expect(messages.dashboardOnly).toBe("ce-dashboard-fr");
     expect(messages.publicOnly).toBe("ce-public-fr");
 
     // The English fallback accumulates across the same transition too.
     const fallback = messagesFor("en");
+    expect(fallback.commonOnly).toBe("ce-common");
     expect(fallback.dashboardOnly).toBe("ce-dashboard");
     expect(fallback.publicOnly).toBe("ce-public");
+  });
+
+  it("loads common and public namespaces for non-dashboard routes", async () => {
+    await loadLocaleForRoute("en", "/boards");
+
+    const messages = messagesFor("en");
+
+    expect(messages.commonOnly).toBe("ce-common");
+    expect(messages.publicOnly).toBe("ce-public");
+    expect(messages.dashboardOnly).toBeUndefined();
+  });
+
+  it("loads common, public, and dashboard namespaces for dashboard routes", async () => {
+    await loadLocaleForRoute("en", "/dashboard/settings/labs");
+
+    const messages = messagesFor("en");
+
+    expect(messages.commonOnly).toBe("ce-common");
+    expect(messages.publicOnly).toBe("ce-public");
+    expect(messages.dashboardOnly).toBe("ce-dashboard");
   });
 
   it("loads the English fallback messages for a non-fallback locale", async () => {
