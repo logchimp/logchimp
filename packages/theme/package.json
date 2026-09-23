@@ -29,7 +29,7 @@
     "js-cookie": "^3.0.8",
     "lucide-vue": "npm:lucide-vue-next@0.546.0",
     "pinia": "2.3.1",
-    "reka-ui": "^2.10.4",
+    "reka-ui": "^2.10.5",
     "tailwindcss": "^4.3.3",
     "uuid": "11.1.1",
     "vue": "3.5.43",
