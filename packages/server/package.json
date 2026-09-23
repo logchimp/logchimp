@@ -19,7 +19,7 @@
     "cors": "^2.8.6",
     "dompurify": "^3.4.15",
     "dotenv": "^17.4.2",
-    "express": "^4.22.2",
+    "express": "^4.22.3",
     "fs-extra": "^11.4.0",
     "html-to-text": "^8.2.1",
     "ioredis": "^6.0.0",
