@@ -17,7 +17,7 @@
     "bcryptjs": "^3.0.3",
     "bullmq": "^6.3.8",
     "cors": "^2.8.6",
-    "dompurify": "^3.4.15",
+    "dompurify": "^3.4.16",
     "dotenv": "^17.4.2",
     "express": "^4.22.2",
     "fs-extra": "^11.4.0",
