@@ -94,7 +94,7 @@ importers:
         specifier: ^17.4.2
         version: 17.4.2
       express:
-        specifier: ^4.22.2
+        specifier: ^4.22.3
         version: 4.22.3(supports-color@5.5.0)
       fs-extra:
         specifier: ^11.4.0
