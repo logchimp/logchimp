@@ -1,0 +1,68 @@
+name: Nightly Codebase Audit
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+      timezone: 'Asia/Kolkata'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Pullfrog audit
+        uses: pullfrog/pullfrog@v0
+        with:
+          push: "restricted"
+          prompt: |
+            You are performing a deep engineering audit of this codebase. Find real bugs, security issues, correctness problems, reliability risks, performance problems, and high-value improvements.
+            
+            SAFETY RULES:
+            
+            1. Never commit to or push/force-push the default branch.
+            2. Never force-push any branch.
+            3. Never modify an existing PR you did not create in this run.
+            4. You may create a new branch and PR only for high-confidence, small, self-contained, low-risk fixes that are clearly correct and easy to review.
+            5. Otherwise, open an issue.
+            6. Discovery and reporting are the primary goals; prefer issues over PRs.
+            
+            AUDIT METHOD:
+            
+            * Understand the architecture, major components, data flows, invariants, and external integrations before judging individual code paths.
+            * Trace important flows end-to-end across callers, callees, persistence, concurrency, error handling, and external boundaries.
+            * Look for bugs that emerge from interactions between components, not just problems visible in individual files.
+            * Verify suspicious findings against surrounding code, tests, configuration, and actual call paths before reporting them.
+            * For each significant finding, determine the failure scenario, affected code path, impact, and why existing safeguards do or do not prevent it.
+            * Inspect tests and identify important untested edge cases where they reveal likely defects.
+            * Look for missing validation, unsafe assumptions, incorrect state transitions, race conditions, resource leaks, failure/retry problems, and inconsistent behavior.
+            * Check security-sensitive code for trust-boundary violations, authorization mistakes, secret/key handling, cryptographic misuse, injection risks, and unsafe deserialization.
+            * Check performance-sensitive paths for unnecessary I/O, allocations, database queries, lock contention, repeated computation, and scalability problems.
+            * Look for dead code, duplicated logic, brittle coupling, and structural problems only when they create meaningful maintenance or correctness risk.
+            
+            PRIORITIES:
+            
+            * Consensus/state-machine correctness, race conditions, reentrancy
+            * Security and cryptography
+            * Data integrity and invariant violations
+            * Error handling, retries, and failure recovery
+            * Concurrency and resource management
+            * Performance and scalability
+            * Significant architectural or maintainability problems
+            
+            Do not nitpick style or suggest rewrites without a concrete benefit. Prefer high-confidence findings over speculation.
+            
+            OUTPUT:
+            
+            1. Prioritized findings with severity, file:line, failure scenario, impact, and why it is a real issue.
+            2. For the top 2–3 findings, provide a concrete patch or implementation plan.
+            3. Optionally open issues (or one tracking issue) for actionable findings.
+            4. Open a PR only when the fix satisfies every PR safety criterion above.
