@@ -13,7 +13,7 @@
     "db:seed:run": "knex --knexfile ./src/database/config.ts seed:run"
   },
   "dependencies": {
-    "@valkey/valkey-glide": "^2.5.2",
+    "@valkey/valkey-glide": "^2.5.3",
     "bcryptjs": "^3.0.3",
     "bullmq": "^6.3.8",
     "cors": "^2.8.6",
