@@ -20,7 +20,7 @@
     "dompurify": "^3.4.15",
     "dotenv": "^17.4.2",
     "express": "^4.22.2",
-    "fs-extra": "^11.4.0",
+    "fs-extra": "^11.4.1",
     "html-to-text": "^8.2.1",
     "ioredis": "^6.0.0",
     "iovalkey": "^0.3.3",
