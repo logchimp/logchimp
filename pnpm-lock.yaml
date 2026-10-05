@@ -88,7 +88,7 @@ importers:
         specifier: ^2.8.6
         version: 2.8.6
       dompurify:
-        specifier: ^3.4.15
+        specifier: ^3.4.16
         version: 3.4.16
       dotenv:
         specifier: ^17.4.2
@@ -248,7 +248,7 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1
       dompurify:
-        specifier: ^3.4.15
+        specifier: ^3.4.16
         version: 3.4.16
       js-cookie:
         specifier: ^3.0.8
