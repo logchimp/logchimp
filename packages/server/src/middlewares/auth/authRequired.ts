@@ -35,15 +35,27 @@ const authenticateWithToken = async (
         // err,
       });
       return;
-    } else {
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
     }
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+    return;
   }
 
   if (!("userId" in jwtTokenPayload)) {
+    res.status(401).send({
+      message: error.middleware.auth.invalidToken,
+      code: "INVALID_TOKEN",
+    });
+    return;
+  }
+
+  // Reject non-session tokens (email verification / password reset) that
+  // share the same signing key and `userId` claim. Only session tokens may
+  // authenticate a request.
+  if ("type" in jwtTokenPayload) {
     res.status(401).send({
       message: error.middleware.auth.invalidToken,
       code: "INVALID_TOKEN",
