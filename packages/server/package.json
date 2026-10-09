@@ -15,7 +15,7 @@
   "dependencies": {
     "@valkey/valkey-glide": "^2.5.3",
     "bcryptjs": "^3.0.3",
-    "bullmq": "^6.3.8",
+    "bullmq": "^6.3.12",
     "cors": "^2.8.6",
     "dompurify": "^3.4.15",
     "dotenv": "^17.4.2",
