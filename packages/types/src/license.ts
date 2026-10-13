@@ -16,6 +16,7 @@ export type TLicenseSubscriptionType =
 
 export interface ICheckLicenseRequestBody {
   license_key: string;
+  nonce: string;
   metadata: {
     version: string;
     deploymentProvider: TDeploymentProvider;
