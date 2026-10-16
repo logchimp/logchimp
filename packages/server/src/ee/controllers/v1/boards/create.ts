@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
+  IApiValidationErrorResponse,
   TBoardCreateRequestBody,
   TBoardCreateResponseBody,
   TPermission,
@@ -17,8 +18,12 @@ import {
 } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { BOARD_NAME_MAX_LENGTH } from "../../../../constants";
 
-type ResponseBody = TBoardCreateResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | TBoardCreateResponseBody
+  | IApiErrorResponse
+  | IApiValidationErrorResponse;
 
 export async function create(
   req: Request<unknown, unknown, TBoardCreateRequestBody>,
@@ -34,6 +39,21 @@ export async function create(
     res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
+  // count code points, the same way Postgres counts varchar length
+  if (typeof name === "string" && [...name].length > BOARD_NAME_MAX_LENGTH) {
+    res.status(400).send({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: [
+        {
+          message: error.api.boards.nameTooLong,
+          code: "BOARD_NAME_TOO_LONG",
+        },
+      ],
     });
     return;
   }
