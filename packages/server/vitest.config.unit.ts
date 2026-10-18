@@ -6,6 +6,10 @@ export default defineConfig({
   ...baseConfig,
   test: {
     ...baseConfig.test,
-    include: ["./tests/unit/**/*.test.ts", "./src/**/*.test.ts"],
+    include: [
+      "./tests/unit/**/*.test.ts",
+      "./tests/ee/unit/**/*.test.ts",
+      "./src/**/*.test.ts",
+    ],
   },
 });
