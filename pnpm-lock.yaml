@@ -294,8 +294,8 @@ importers:
         specifier: 10.0.0
         version: 10.0.0
       '@vitejs/plugin-vue':
-        specifier: 6.0.9
-        version: 6.0.9(vite@6.4.3(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.43(typescript@5.9.3))
+        specifier: 6.0.10
+        version: 6.0.10(vite@6.4.3(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.43(typescript@5.9.3))
       '@vue/eslint-config-prettier':
         specifier: ^10.2.0
         version: 10.2.0(eslint@10.11.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.9.8)
@@ -1846,6 +1846,13 @@ packages:
   '@valkey/valkey-glide@2.5.3':
     resolution: {integrity: sha512-VvT7oOr1ZyvPDFUEEovYqVKNaCicUHJPmrfDyflCEi8hzH+YEdxEikYDheHGeclgFW0MlLkJ2rky6pa7tT6iqg==}
     engines: {node: '>=16'}
+
+  '@vitejs/plugin-vue@6.0.10':
+    resolution: {integrity: sha512-b80aUQh3n+qEzzZm5oQp3rT2QImeCx58K6eFl/RkJ3d65KW0kTuv5lNsLRVAjbW9YRUpo/wzmvzMgV34bTAItA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+      vue: ^3.2.25 || ^3.6.0-rc.10
 
   '@vitejs/plugin-vue@6.0.9':
     resolution: {integrity: sha512-rD/MORlhaZMlXWW0rEn4FB4wMinWC0z/D7Ye160S5+Rs1mC8ZDAdcDp4SjKfUhG5t8q1ktcPVw4xuTkPRlzrSA==}
@@ -6358,7 +6365,7 @@ snapshots:
       '@valkey/valkey-glide-linux-x64-gnu': 2.5.3
       '@valkey/valkey-glide-linux-x64-musl': 2.5.3
 
-  '@vitejs/plugin-vue@6.0.9(vite@6.4.3(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.43(typescript@5.9.3))':
+  '@vitejs/plugin-vue@6.0.10(vite@6.4.3(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.43(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 6.4.3(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5)
