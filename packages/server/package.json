@@ -60,7 +60,7 @@
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "5.9.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   },
   "engines": {
     "node": ">=24 < 25"
