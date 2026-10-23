@@ -58,7 +58,7 @@ import { useI18n } from "vue-i18n";
 // modules
 import { router } from "../router";
 import { AuthAPI } from "../modules/auth";
-import { UsersAPI } from "../modules/users";
+import { MeAPI } from "../modules/me";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
 
@@ -84,7 +84,7 @@ const buttonLoading = ref<boolean>(false);
 
 const { get: siteSettings } = useSettingStore();
 const authAPI = new AuthAPI();
-const usersAPI = new UsersAPI();
+const meAPI = new MeAPI();
 const { getUserId, setUser, setPermissions } = useUserStore();
 
 function hideEmailError() {
@@ -118,7 +118,7 @@ async function login() {
     });
     setUser(response.user);
 
-    const permissions = await usersAPI.GetPermissions();
+    const permissions = await meAPI.GetPermissions();
     setPermissions(permissions.permissions);
 
     const route = router.currentRoute.value;
