@@ -16,7 +16,7 @@ export class UsersAPI extends APIService {
   GetUserSettings = async (): Promise<
     components["schemas"]["GetUserProfileResponseBody"]
   > => {
-    return this.get("/v1/users/profile")
+    return this.get("/v1/me/profile")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
@@ -34,7 +34,7 @@ export class UsersAPI extends APIService {
   }: components["schemas"]["UpdateUserProfileRequestBody"]): Promise<
     components["schemas"]["UpdateUserProfileResponseBody"]
   > => {
-    return this.patch("/v1/users/profile", {
+    return this.patch("/v1/me/profile", {
       name,
     })
       .then((response) => response?.data)
@@ -50,7 +50,7 @@ export class UsersAPI extends APIService {
   GetPermissions = async (): Promise<
     components["schemas"]["MePermissionsResponseBody"]
   > => {
-    return this.get("/v1/users/permissions")
+    return this.get("/v1/me/permissions")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
@@ -64,7 +64,7 @@ export class UsersAPI extends APIService {
   CheckUserDashboardAccess = async (): Promise<
     components["schemas"]["CheckUserDashboardAccessResponseBody"]
   > => {
-    return this.get("/v1/users/dashboard")
+    return this.get("/v1/me/dashboard")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
