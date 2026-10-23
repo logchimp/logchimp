@@ -37,7 +37,7 @@
     "valibot": "^1.5.0",
     "validator": "^13.15.35",
     "winston": "^3.19.0",
-    "xss": "^1.0.15"
+    "xss": "^1.0.16"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
