@@ -10,7 +10,7 @@ import { useUserStore } from "../../store/user.ts";
 import tokenError from "../../utils/tokenError.ts";
 import type { AxiosError } from "axios";
 import type { IApiErrorResponse } from "@logchimp/types";
-import { UsersAPI } from "../../modules/users.ts";
+import { MeAPI } from "../../modules/me";
 import { AuthAPI } from "../../modules/auth.ts";
 
 const route = useRoute();
@@ -19,7 +19,7 @@ const { setAuthToken, setUser, setPermissions } = useUserStore();
 const isLoading = ref(true);
 const errMsg = ref("");
 const isError = ref(false);
-const usersAPI = new UsersAPI();
+const meAPI = new MeAPI();
 
 const OIDC_ERROR_MESSAGES: Record<string, string> = {
   access_denied:
@@ -72,7 +72,7 @@ async function onMountedHandler() {
       authToken: authCookie,
       ...getAuthUser.user,
     });
-    const permissions = await usersAPI.GetPermissions();
+    const permissions = await meAPI.GetPermissions();
     setPermissions(permissions.permissions);
 
     Cookie.remove("lc-auth-token", {
