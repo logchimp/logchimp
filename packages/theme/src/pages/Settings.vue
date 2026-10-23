@@ -66,7 +66,7 @@ import { useI18n } from "vue-i18n";
 
 // modules
 import { router } from "../router";
-import { UsersAPI } from "../modules/users";
+import { MeAPI } from "../modules/me";
 import { useSettingStore } from "../store/settings";
 import { useUserStore } from "../store/user";
 import tokenError from "../utils/tokenError";
@@ -81,7 +81,7 @@ import AccountVerificationAlert from "../components/account/VerificationAlert.vu
 
 const { get: siteSettings } = useSettingStore();
 const { getUserId } = useUserStore();
-const usersAPI = new UsersAPI();
+const meAPI = new MeAPI();
 const { t } = useI18n();
 
 const user = reactive({
@@ -106,7 +106,7 @@ async function getUser() {
   loading.value = true;
 
   try {
-    const response = await usersAPI.GetUserSettings();
+    const response = await meAPI.GetUserSettings();
 
     name.value = response.user.name;
     user.username = response.user.username;
@@ -124,7 +124,7 @@ async function updateSettings() {
   updateUserButtonLoading.value = true;
 
   try {
-    const response = await usersAPI.UpdateUserSettings({
+    const response = await meAPI.UpdateUserSettings({
       name: name.value,
     });
 
