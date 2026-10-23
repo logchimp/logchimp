@@ -787,19 +787,53 @@ describeEE("POST /api/v1/roadmaps", () => {
       },
     );
 
-    itEE("should throw server error on long roadmap name", async () => {
-      const res = await supertest(app)
-        .post("/api/v1/roadmaps")
-        .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-        .send({
-          name: "a".repeat(5000), // 5000 characters
-          display: true,
-        });
+    itEE.each([
+      "a".repeat(5000), // 5000 characters
+      "a".repeat(51),
+    ])(
+      "should throw error 'ROADMAP_NAME_TOO_LONG' for long roadmap name",
+      async (name) => {
+        const res = await supertest(app)
+          .post("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+          .send({
+            name,
+            display: true,
+          });
 
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(500);
-      expect(res.body.code).toBe("SERVER_ERROR");
-    });
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe("VALIDATION_ERROR");
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: "Roadmap name cannot be longer than 50 characters",
+              code: "ROADMAP_NAME_TOO_LONG",
+            }),
+          ]),
+        );
+      },
+    );
+
+    itEE.each([
+      { input: "a".repeat(50), expected: "a".repeat(50) },
+      // 50 characters, 100 UTF-16 code units
+      { input: "😀".repeat(50), expected: "😀".repeat(50) },
+      // the name is trimmed before the length check
+      { input: `  ${"b".repeat(50)}  `, expected: "b".repeat(50) },
+    ])(
+      "should create roadmap with 50 character name: '$input'",
+      async ({ input, expected }) => {
+        const res = await supertest(app)
+          .post("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+          .send({ name: input });
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(201);
+        expect(res.body.roadmap.name).toBe(expected);
+      },
+    );
   });
 });
 

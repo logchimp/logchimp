@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import type {
   IApiErrorResponse,
+  IApiValidationErrorResponse,
   TCreateRoadmapResponseBody,
   IRoadmapPrivate,
   TPermission,
@@ -18,8 +19,12 @@ import {
 } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { ROADMAP_NAME_MAX_LENGTH } from "../../../../constants";
 
-type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | TCreateRoadmapResponseBody
+  | IApiErrorResponse
+  | IApiValidationErrorResponse;
 
 export async function create(
   req: Request<unknown, unknown, ICreateRoadmapRequestBody>,
@@ -39,8 +44,22 @@ export async function create(
 
   let name: string | undefined;
   if (req.body?.name) {
-    // TODO: length check
     name = req.body.name.trim();
+  }
+
+  // count code points, the same way Postgres counts varchar length
+  if (name && [...name].length > ROADMAP_NAME_MAX_LENGTH) {
+    res.status(400).send({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: [
+        {
+          message: error.api.roadmaps.nameTooLong,
+          code: "ROADMAP_NAME_TOO_LONG",
+        },
+      ],
+    });
+    return;
   }
 
   try {
