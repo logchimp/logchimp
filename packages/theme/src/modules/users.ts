@@ -24,7 +24,7 @@ export class UsersAPI extends APIService {
   GetUserSettings = async (): Promise<
     IAuthUserProfileResponse<IAuthUserProfile>
   > => {
-    return this.get("/v1/users/profile")
+    return this.get("/v1/me/profile")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
@@ -42,7 +42,7 @@ export class UsersAPI extends APIService {
   }: IUpdateUserSettingsArgs): Promise<
     IAuthUserProfileResponse<IAuthUserProfile>
   > => {
-    return this.patch("/v1/users/profile", {
+    return this.patch("/v1/me/profile", {
       name,
     })
       .then((response) => response?.data)
@@ -55,7 +55,7 @@ export class UsersAPI extends APIService {
    * Get authenticated user permissions
    */
   GetPermissions = async (): Promise<IGetPermissionResponse> => {
-    return this.get("/v1/users/permissions")
+    return this.get("/v1/me/permissions")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
@@ -67,7 +67,7 @@ export class UsersAPI extends APIService {
    * @returns {Promise<ICheckUserDashboardAccess>}
    */
   CheckUserDashboardAccess = async (): Promise<ICheckUserDashboardAccess> => {
-    return this.get("/v1/users/dashboard")
+    return this.get("/v1/me/dashboard")
       .then((response) => response?.data)
       .catch((error) => {
         throw error;
