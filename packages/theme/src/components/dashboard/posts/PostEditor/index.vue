@@ -166,7 +166,6 @@ async function updatePostHandler() {
       title: post.title,
       contentMarkdown: post.contentMarkdown,
       slugId: post.slugId,
-      userId: post.author.userId,
       boardId: post.board ? post.board.boardId : null,
       roadmapId: post.roadmap ? post.roadmap.id : null,
       roadmap: {
