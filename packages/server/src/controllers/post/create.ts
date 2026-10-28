@@ -7,17 +7,16 @@ import type {
   ICreatePostResponseBody,
   TPermission,
 } from "@logchimp/types";
-import { POST_TITLE_MAX_LENGTH } from "../../constants";
 import * as v from "valibot";
 
 import database from "../../database";
 
 // utils
-import { generateNanoID as nanoid } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
 import { createPostRequestBodySchema } from "./schema";
+import { PostService } from "../../services/posts/post.service";
 
 type ResponseBody =
   | ICreatePostResponseBody
@@ -51,16 +50,6 @@ export async function create(
     return;
   }
 
-  let title = body.output.title;
-  let contentMarkdown = body.output.contentMarkdown;
-
-  if (title.length > POST_TITLE_MAX_LENGTH) {
-    const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
-    title = `${title.slice(0, POST_TITLE_MAX_LENGTH - 3)}...`;
-
-    contentMarkdown = `...${exceedingText}${contentMarkdown ? `\n\n${contentMarkdown}` : ""}`;
-  }
-
   const checkPermission = permissions.includes("post:create");
   if (!checkPermission) {
     return res.status(403).send({
@@ -69,15 +58,13 @@ export async function create(
     });
   }
 
-  // generate slug unique identification
-  const slugId = nanoid(20);
+  const postService = new PostService();
 
-  const slug = `${title
-    .replace(/[^\w\s]/gi, "")
-    .replace(/\s\s+/gi, " ")
-    .toLowerCase()
-    .split(" ")
-    .join("-")}-${slugId}`;
+  const { title, description } = postService.titleDescriptionOverflow(
+    body.output.title,
+    body.output.contentMarkdown,
+  );
+  const { slug, slugId } = postService.generateSlug(title);
 
   try {
     const createPost = await database
@@ -86,7 +73,7 @@ export async function create(
         title,
         slug,
         slugId,
-        contentMarkdown,
+        contentMarkdown: description,
         userId,
       })
       .into("posts")
