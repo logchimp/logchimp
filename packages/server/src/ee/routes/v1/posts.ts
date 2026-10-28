@@ -32,7 +32,7 @@ router.post(
 );
 router.post("/posts/slug", authOptional, postExists, post.postBySlug);
 
-router.post("/posts", authRequired, post.create);
+router.post("/posts", authRequired, eePost.posts.createPost);
 router.patch(
   "/posts",
   authRequired,
