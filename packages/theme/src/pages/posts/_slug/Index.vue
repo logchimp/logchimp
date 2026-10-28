@@ -15,6 +15,15 @@
           <h1 class="font-medium text-4xl mb-2.5 break-all">
             {{ post.title }}
           </h1>
+          <p
+            v-if="post.roadmap?.id"
+            class="mb-2.5 uppercase font-medium text-sm break-all"
+            :style="{
+              color: `#${post.roadmap.color}`,
+            }"
+          >
+            {{ post.roadmap.name }}
+          </p>
           <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-x-4">
               <div class="flex items-center gap-x-2">
@@ -33,6 +42,14 @@
               >
                 {{ dayjs(post.createdAt).fromNow() }}
               </time>
+              <div class="bg-neutral-300 h-4 w-px" aria-hidden="true" />
+              <board-badge
+                v-if="post.board?.boardId"
+                :name="post.board.name"
+                :color="post.board.color"
+                :url="post.board.url"
+                size="sm"
+              />
             </div>
 
             <PostViewMoreOptions
@@ -74,6 +91,7 @@ import LoaderContainer from "../../../components/ui/LoaderContainer.vue";
 import Vote from "../../../components/vote/Vote.vue";
 import { Avatar } from "../../../components/ui/Avatar";
 import PostViewMoreOptions from "../../../components/post/PostViewMoreOptions.vue";
+import BoardBadge from "../../../ee/components/boards/BoardBadge.vue";
 
 const PostActivityRenderer = defineAsyncComponent(
   () => import("../../../ee/components/posts/PostActivity/Renderer.vue"),
