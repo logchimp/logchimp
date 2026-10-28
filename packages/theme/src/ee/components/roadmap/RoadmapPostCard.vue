@@ -22,6 +22,7 @@
             </router-link>
             <board-badge
               v-if="!isExpanded && post.board"
+              data-test="post-board-name"
               :name="post.board.name"
               :color="post.board.color"
               :url="post.board.url"
