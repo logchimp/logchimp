@@ -16,7 +16,7 @@ import error from "../../errorResponse.json";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
 
-const bodySchema = v.object({
+export const updatePostRequestBodySchema = v.object({
   title: v.message(
     v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
     "POST_TITLE_MISSING",
@@ -49,7 +49,7 @@ export async function updatePost(
     });
   }
 
-  const body = v.safeParse(bodySchema, req.body);
+  const body = v.safeParse(updatePostRequestBodySchema, req.body);
   if (!body.success) {
     return res.status(400).json({
       code: "VALIDATION_ERROR",

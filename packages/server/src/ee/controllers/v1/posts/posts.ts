@@ -28,6 +28,7 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
+import { updatePostRequestBodySchema } from "../../../../controllers/post/updatePost";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -424,11 +425,7 @@ async function getPostMetadata({
 type UpdatePostResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
 
 const updatePostBodySchema = v.object({
-  title: v.message(
-    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
-    "POST_TITLE_MISSING",
-  ),
-  contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+  ...updatePostRequestBodySchema.entries,
   boardId: v.optional(v.nullable(v.string())),
   roadmapId: v.optional(v.nullable(v.string())),
   roadmap: v.optional(
