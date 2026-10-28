@@ -448,6 +448,8 @@ export async function updatePost(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   // @ts-expect-error
+  const postId = (req.post as GetPostStatement).postId;
+  // @ts-expect-error
   const authorId = (req.post as GetPostStatement).userId;
   // @ts-expect-error
   const slugId = (req.post as GetPostStatement).slugId;
@@ -481,8 +483,6 @@ export async function updatePost(
     return;
   }
 
-  const id = validUUID(req.body.id);
-
   const hasBoardId = Object.hasOwn(body.output, "boardId");
   const newBoardId = hasBoardId ? validUUID(req.body.boardId) : undefined;
 
@@ -512,7 +512,7 @@ export async function updatePost(
       })
       .from("posts")
       .where({
-        postId: id,
+        postId,
       })
       .returning("*");
 
@@ -524,7 +524,7 @@ export async function updatePost(
     ) {
       try {
         await postsQueue.postRoadmapChangeEvent({
-          postId: id,
+          postId,
         });
       } catch (err) {
         logger.log({
