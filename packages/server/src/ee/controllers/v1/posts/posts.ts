@@ -28,7 +28,7 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
-import { updatePostRequestBodySchema } from "../../../../controllers/post/schema";
+import { updatePostEERequestBodySchema } from "./schema";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -424,17 +424,6 @@ async function getPostMetadata({
 
 type UpdatePostResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
 
-const updatePostBodySchema = v.object({
-  ...updatePostRequestBodySchema.entries,
-  boardId: v.optional(v.nullable(v.string())),
-  roadmapId: v.optional(v.nullable(v.string())),
-  roadmap: v.optional(
-    v.object({
-      notifyVoters: v.boolean(),
-    }),
-  ),
-});
-
 const updatePostSchemaBodyErrorMap = {
   POST_TITLE_MISSING: error.api.posts.titleMissing,
 };
@@ -467,7 +456,7 @@ export async function updatePost(
     return;
   }
 
-  const body = v.safeParse(updatePostBodySchema, req.body);
+  const body = v.safeParse(updatePostEERequestBodySchema, req.body);
   if (!body.success) {
     res.status(400).json({
       code: "VALIDATION_ERROR",
