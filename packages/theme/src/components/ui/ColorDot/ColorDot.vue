@@ -6,7 +6,8 @@ defineProps({
   },
   size: {
     type: String,
-    validator: (value: "sm" | "md") => ["sm", "md"].includes(value),
+    validator: (value: "xs" | "sm" | "md") =>
+      ["xs", "sm", "md"].includes(value),
     default: "md",
   },
 });
