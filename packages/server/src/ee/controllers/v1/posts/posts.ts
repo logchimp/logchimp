@@ -581,12 +581,8 @@ export async function updatePost(
   const title = xss((String(rawTitle) || "").trim());
   const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
 
-  const slug = `${title
-    .replace(/[^\w\s]/gi, "")
-    .replace(/\s\s+/gi, " ")
-    .toLowerCase()
-    .split(" ")
-    .join("-")}-${slugId}`;
+  const postService = new PostService();
+  const { slug } = postService.generateSlug(title, slugId);
 
   try {
     const posts = await database

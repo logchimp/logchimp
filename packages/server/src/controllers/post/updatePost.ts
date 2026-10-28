@@ -14,6 +14,7 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { updatePostRequestBodySchema } from "./schema";
 import type { GetPostStatement } from "../../middlewares/postExists";
+import { PostService } from "../../services/posts/post.service";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
 
@@ -64,12 +65,8 @@ export async function updatePost(
   const title = xss((String(rawTitle) || "").trim());
   const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
 
-  const slug = `${title
-    .replace(/[^\w\s]/gi, "")
-    .replace(/\s\s+/gi, " ")
-    .toLowerCase()
-    .split(" ")
-    .join("-")}-${slugId}`;
+  const postService = new PostService();
+  const { slug } = postService.generateSlug(title, slugId);
 
   try {
     const posts = await database
