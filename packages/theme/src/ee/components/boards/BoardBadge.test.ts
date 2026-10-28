@@ -9,7 +9,6 @@ describe("board badge", () => {
       name: "Feature requests",
       color: "abcabc",
       url: "feature-requests",
-      showBoard: true,
     },
     stubs: {
       RouterLink: RouterLinkStub,
