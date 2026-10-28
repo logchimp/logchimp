@@ -9,6 +9,7 @@ import type {
 } from "@logchimp/types";
 import xss from "xss";
 import { POST_TITLE_MAX_LENGTH } from "../../constants";
+import * as v from "valibot";
 
 import database from "../../database";
 
@@ -17,11 +18,14 @@ import { generateNanoID as nanoid } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
+import { createPostRequestBodySchema } from "./schema";
 
 type ResponseBody =
   | ICreatePostResponseBody
   | IApiErrorResponse
   | IApiValidationErrorResponse;
+
+const schemaBodyErrorMap = {};
 
 export async function create(
   req: Request<unknown, unknown, ICreatePostRequestBody>,
@@ -32,10 +36,24 @@ export async function create(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const rawTitle = String(req.body.title || "").trim();
-  let title = xss(rawTitle) || "new post";
-  let contentMarkdown =
-    xss(String(req.body.contentMarkdown || "").trim()) || null;
+  const body = v.safeParse(createPostRequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
+
+  let title = xss(body.output.title);
+  let contentMarkdown = xss(body.output.contentMarkdown);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
     const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);

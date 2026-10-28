@@ -41,6 +41,7 @@ import { updatePostEERequestBodySchema } from "./schema";
 import { POST_TITLE_MAX_LENGTH } from "../../../../constants";
 import { v4 as uuidv4 } from "uuid";
 import { getVotes } from "../../../../services/votes/getVotes";
+import { createPostEERequestBodySchema } from "./schema";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -439,6 +440,8 @@ type CreatePostResponseBody =
   | IApiErrorResponse
   | IApiValidationErrorResponse;
 
+const createPostSchemaBodyErrorMap = {};
+
 export async function createPost(
   req: Request<unknown, unknown, ICreatePostEERequestBody>,
   res: Response<CreatePostResponseBody>,
@@ -448,11 +451,24 @@ export async function createPost(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const rawTitle = String(req.body.title || "").trim();
-  let title = xss(rawTitle) || "new post";
-  let contentMarkdown =
-    xss(String(req.body.contentMarkdown || "").trim()) || null;
-  const boardId = validUUID(req.body.boardId);
+  const body = v.safeParse(createPostEERequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: createPostSchemaBodyErrorMap[issue.message]
+          ? createPostSchemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
+
+  let title = xss(body.output.title);
+  let contentMarkdown = xss(body.output.contentMarkdown);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
     const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
@@ -488,7 +504,7 @@ export async function createPost(
         slugId,
         contentMarkdown,
         userId,
-        boardId,
+        boardId: body.output.boardId,
       })
       .into("posts")
       .returning("*");
