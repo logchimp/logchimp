@@ -42,14 +42,15 @@
               >
                 {{ dayjs(post.createdAt).fromNow() }}
               </time>
-              <div class="bg-neutral-300 h-4 w-px" aria-hidden="true" />
-              <board-badge
-                v-if="post.board?.boardId"
-                :name="post.board.name"
-                :color="post.board.color"
-                :url="post.board.url"
-                size="sm"
-              />
+              <template v-if="post.board?.boardId">
+                <div class="bg-neutral-300 h-4 w-px" aria-hidden="true" />
+                <board-badge
+                  :name="post.board.name"
+                  :color="post.board.color"
+                  :url="post.board.url"
+                  size="sm"
+                />
+              </template>
             </div>
 
             <PostViewMoreOptions
