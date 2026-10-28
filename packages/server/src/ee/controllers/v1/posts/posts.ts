@@ -28,7 +28,7 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
-import { updatePostRequestBodySchema } from "../../../../controllers/post/updatePost";
+import { updatePostRequestBodySchema } from "../../../../controllers/post/schema";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);

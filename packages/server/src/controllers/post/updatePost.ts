@@ -13,16 +13,9 @@ import database from "../../database";
 import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { updatePostRequestBodySchema } from "./schema";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
-
-export const updatePostRequestBodySchema = v.object({
-  title: v.message(
-    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
-    "POST_TITLE_MISSING",
-  ),
-  contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-});
 
 const schemaBodyErrorMap = {
   POST_TITLE_MISSING: error.api.posts.titleMissing,
