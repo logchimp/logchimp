@@ -20,13 +20,13 @@
                 {{ post.title }}
               </div>
             </router-link>
-            <span
+            <board-badge
               v-if="!isExpanded && post.board"
-              data-test="post-board-name"
-              class="uppercase text-sm font-medium break-all text-(--color-gray-70)"
-            >
-              {{ post.board.name }}
-            </span>
+              :name="post.board.name"
+              :color="post.board.color"
+              :url="post.board.url"
+              size="xs"
+            />
             <time
               v-else
               data-test="post-date"
