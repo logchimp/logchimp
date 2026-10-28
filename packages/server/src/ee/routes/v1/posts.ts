@@ -30,7 +30,7 @@ router.post(
     skipHandlerOnFailure: false,
   }),
 );
-router.post("/posts/slug", authOptional, postExists, post.postBySlug);
+router.post("/posts/slug", authOptional, postExists, eePost.posts.postBySlug);
 
 router.post("/posts", authRequired, eePost.posts.createPost);
 router.patch(
