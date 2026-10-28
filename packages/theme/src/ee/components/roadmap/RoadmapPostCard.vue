@@ -76,7 +76,6 @@
       />
       <board-badge
         v-if="post.board"
-        :show-board="true"
         :name="post.board.name"
         :color="post.board.color"
         :url="post.board.url"
