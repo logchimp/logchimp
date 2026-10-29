@@ -37,11 +37,13 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
-import { updatePostEERequestBodySchema } from "./schema";
+import {
+  createPostEERequestBodySchema,
+  updatePostEERequestBodySchema,
+} from "./schema";
 import { POST_TITLE_MAX_LENGTH } from "../../../../constants";
 import { v4 as uuidv4 } from "uuid";
 import { getVotes } from "../../../../services/votes/getVotes";
-import { createPostEERequestBodySchema } from "./schema";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -468,7 +470,7 @@ export async function createPost(
   }
 
   let title = body.output.title;
-  let contentMarkdown = xss(body.output.contentMarkdown);
+  let contentMarkdown = body.output.contentMarkdown;
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
     const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);

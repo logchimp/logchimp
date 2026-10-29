@@ -13,7 +13,10 @@ export const createPostRequestBodySchema = v.object({
         "new post",
     ),
   ),
-  contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+  contentMarkdown: v.pipe(
+    v.optional(v.nullable(v.string()), null),
+    v.transform((value) => (value ? xss(value).trim() || null : null)),
+  ),
 });
 
 export const updatePostRequestBodySchema = v.object({

@@ -53,7 +53,7 @@ export async function create(
   }
 
   let title = body.output.title;
-  let contentMarkdown = xss(body.output.contentMarkdown);
+  let contentMarkdown = body.output.contentMarkdown;
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
     const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
