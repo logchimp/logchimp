@@ -1,6 +1,5 @@
 <template>
   <router-link
-    v-if="showBoard"
     data-test="board-badge"
     class="block w-fit select-none truncate"
     :to="`/boards/${encodeURIComponent(url)}`"
@@ -33,10 +32,6 @@ defineProps({
   },
   url: {
     type: String,
-    required: true,
-  },
-  showBoard: {
-    type: Boolean,
     required: true,
   },
 });
