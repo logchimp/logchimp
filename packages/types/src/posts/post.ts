@@ -82,6 +82,9 @@ export interface IUpdatePostRequestBody {
   title: string;
   contentMarkdown: string | null;
   slugId: string;
+}
+
+export interface IUpdatePostEERequestBody extends IUpdatePostRequestBody {
   boardId?: string | null;
   roadmapId?: string | null;
   roadmap?: {

@@ -4,7 +4,7 @@ import type {
   IFilterPostRequestBody,
   IFilterPostRequestQueryParams,
   IPost,
-  IUpdatePostRequestBody,
+  IUpdatePostEERequestBody,
   TPermission,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
@@ -429,7 +429,7 @@ const updatePostSchemaBodyErrorMap = {
 };
 
 export async function updatePost(
-  req: Request<unknown, unknown, IUpdatePostRequestBody>,
+  req: Request<unknown, unknown, IUpdatePostEERequestBody>,
   res: Response<UpdatePostResponseBody>,
 ) {
   // @ts-expect-error
