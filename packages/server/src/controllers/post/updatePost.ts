@@ -46,7 +46,7 @@ export async function updatePost(
 
   const body = v.safeParse(updatePostRequestBodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -57,6 +57,7 @@ export async function updatePost(
         code: issue.message,
       })),
     });
+    return;
   }
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
