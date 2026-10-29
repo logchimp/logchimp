@@ -41,8 +41,6 @@ export async function create(
   const permissions = req.user.permissions as Array<
     components["schemas"]["Permission"]
   >;
-  const name = req.body.name || "new board";
-  const display = req.body.display;
 
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
@@ -75,10 +73,10 @@ export async function create(
     await database
       .insert({
         boardId,
-        name,
+        name: body.output.name ?? "new board",
         url: `new-board-${nanoid(10)}`,
         color: generateHexColor(),
-        display,
+        display: body.output.display,
       })
       .into("boards");
 
