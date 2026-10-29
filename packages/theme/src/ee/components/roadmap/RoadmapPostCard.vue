@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-(--border-radius-default) bg-white group">
+  <div class="rounded-(--border-radius-default) bg-white group min-w-0">
     <div class="p-3 flex items-start">
       <Vote
         :post-id="post.postId"
@@ -7,9 +7,9 @@
         :is-voted="isVoted"
         @update-voters="updateVoters"
       />
-      <div class="w-full">
-        <div class="flex items-center w-full gap-x-2">
-          <div>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center w-full gap-x-3">
+          <div class="min-w-0 flex-1">
             <router-link
               data-test="post-link"
               :to="`/posts/${encodeURIComponent(post.slug)}`"
@@ -44,7 +44,7 @@
             }"
             type="button"
             :class="[
-              'ml-auto p-1 cursor-pointer select-none rounded-full',
+              'ml-auto shrink-0 p-1 cursor-pointer select-none rounded-full',
               'bg-neutral-200/70 group-hover:bg-neutral-300 transition-background',
               'focus:bg-neutral-300 outline-none',
             ]"
@@ -69,7 +69,10 @@
     <div
       v-if="isExpanded"
       data-test="post-card-extra"
-      class="flex items-center justify-between p-3 border-t border-(--color-gray-95) overflow-hidden"
+      :class="[
+        'flex items-center justify-between space-x-3',
+        'p-3 border-t border-(--color-gray-95) overflow-hidden',
+      ]"
     >
       <avatar-stack
         :avatars="post.voters.votes"

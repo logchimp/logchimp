@@ -1,7 +1,7 @@
 <template>
   <router-link
     data-test="board-badge"
-    class="block w-fit select-none truncate"
+    class="block w-fit select-none max-w-full min-w-0"
     :to="`/boards/${encodeURIComponent(url)}`"
   >
     <div
@@ -14,10 +14,10 @@
         },
       ]"
     >
-      <color-dot :color="color" :size="size" />
+      <color-dot :color="color" :size="size" class="shrink-0" />
       <p
         :class="[
-          'ml-1.5 text-(--color-gray-50)',
+          'ml-1.5 text-(--color-gray-50) truncate min-w-0',
           {
             'text-base': size === 'md',
             'text-sm': size === 'sm',
