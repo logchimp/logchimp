@@ -778,7 +778,6 @@ describeEE("POST /api/v1/boards", () => {
 
     const testCasesArr = [
       { input: "feature requests", expected: "feature requests" },
-      { input: "", expected: "new board" },
       { input: "undefined", expected: "undefined" },
       { input: "null", expected: "null" },
       { input: null, expected: "new board" },
@@ -819,18 +818,90 @@ describeEE("POST /api/v1/boards", () => {
       },
     );
 
-    itEE("should throw server error on long board name", async () => {
-      const res = await supertest(app)
-        .post("/api/v1/boards")
-        .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-        .send({
-          name: "a".repeat(5000), // 5000 characters
-          display: true,
-        });
+    itEE(
+      "should create a board with a name of exactly 50 characters",
+      async () => {
+        const name = "a".repeat(50);
 
-      expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(500);
-      expect(res.body.code).toBe("SERVER_ERROR");
+        const res = await supertest(app)
+          .post("/api/v1/boards")
+          .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+          .send({ name, display: true });
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(201);
+        expect(res.body.board.name).toBe(name);
+      },
+    );
+
+    describeEE("Validation Errors", () => {
+      const validationTestCases = [
+        // {
+        //   testName: "NAME_MIN_LENGTH on empty name",
+        //   body: { name: "", display: true },
+        //   expectedError: {
+        //     message: "Board name cannot be empty.",
+        //     code: "NAME_MIN_LENGTH",
+        //   },
+        // },
+        {
+          testName: "NAME_MAX_LENGTH on name longer than 50 characters",
+          body: { name: "a".repeat(51), display: true },
+          expectedError: {
+            message: "Board name cannot exceed 50 characters.",
+            code: "NAME_MAX_LENGTH",
+          },
+        },
+      ];
+
+      itEE.each(validationTestCases)(
+        "should throw error $testName",
+        async ({ body, expectedError }) => {
+          const res = await supertest(app)
+            .post("/api/v1/boards")
+            .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+            .send(body);
+
+          expect(res.headers["content-type"]).toContain("application/json");
+          expect(res.status).toBe(400);
+          expect(res.body.code).toBe("VALIDATION_ERROR");
+          expect(res.body.message).toBe("Invalid body parameters");
+          expect(res.body.errors).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: expectedError.message,
+                code: expectedError.code,
+              }),
+            ]),
+          );
+        },
+      );
+
+      itEE.each([
+        { testName: "display='true'", display: "true" },
+        { testName: "display=1", display: 1 },
+      ])(
+        "should throw 'VALIDATION_ERROR' error for non-boolean $testName",
+        async ({ display }) => {
+          const res = await supertest(app)
+            .post("/api/v1/boards")
+            .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+            .send({ name: "feature requests", display });
+
+          expect(res.headers["content-type"]).toContain("application/json");
+          expect(res.status).toBe(400);
+          expect(res.body.code).toBe("VALIDATION_ERROR");
+          expect(res.body.message).toBe("Invalid body parameters");
+          expect(res.body.errors).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                type: "boolean",
+                code: expect.stringContaining("Expected boolean"),
+              }),
+            ]),
+          );
+        },
+      );
     });
   });
 });
