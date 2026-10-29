@@ -52,7 +52,7 @@ export async function create(
     return;
   }
 
-  let title = xss(body.output.title);
+  let title = body.output.title;
   let contentMarkdown = xss(body.output.contentMarkdown);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
