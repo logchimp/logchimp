@@ -6,6 +6,7 @@ import type {
   TBoardCreateResponseBody,
   TPermission,
 } from "@logchimp/types";
+import * as v from "valibot";
 
 // database
 import database from "../../../../database";
@@ -17,8 +18,14 @@ import {
 } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { createBoardEERequestBodySchema } from "./schema";
 
 type ResponseBody = TBoardCreateResponseBody | IApiErrorResponse;
+
+const createBoardSchemaBodyErrorMap = {
+  NAME_MIN_LENGTH: "Board name cannot be empty.",
+  NAME_MAX_LENGTH: "Board name cannot exceed 50 characters.",
+};
 
 export async function create(
   req: Request<unknown, unknown, TBoardCreateRequestBody>,
@@ -34,6 +41,22 @@ export async function create(
     res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
+  const body = v.safeParse(createBoardEERequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: createBoardSchemaBodyErrorMap[issue.message]
+          ? createBoardSchemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
     });
     return;
   }
