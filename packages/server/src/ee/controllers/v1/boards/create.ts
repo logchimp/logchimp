@@ -33,8 +33,6 @@ export async function create(
 ) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
-  const name = req.body.name || "new board";
-  const display = req.body.display;
 
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
@@ -65,10 +63,10 @@ export async function create(
     const createBoard = await database
       .insert({
         boardId: uuidv4(),
-        name,
+        name: body.output.name ?? "new board",
         url: `new-board-${nanoid(10)}`,
         color: generateHexColor(),
-        display,
+        display: body.output.display,
       })
       .into("boards")
       .returning("*");
