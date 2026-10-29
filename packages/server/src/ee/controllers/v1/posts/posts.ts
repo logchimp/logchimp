@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
   IApiValidationErrorResponse,
-  ICreatePostRequestBody,
+  ICreatePostEERequestBody,
   ICreatePostResponseBody,
   IFilterPostRequestBody,
   IFilterPostRequestQueryParams,
@@ -437,7 +437,7 @@ type CreatePostResponseBody =
   | IApiValidationErrorResponse;
 
 export async function createPost(
-  req: Request<unknown, unknown, ICreatePostRequestBody>,
+  req: Request<unknown, unknown, ICreatePostEERequestBody>,
   res: Response<CreatePostResponseBody>,
 ) {
   // @ts-expect-error
