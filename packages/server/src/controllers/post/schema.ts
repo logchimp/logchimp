@@ -2,15 +2,17 @@ import * as v from "valibot";
 
 export const createPostRequestBodySchema = v.object({
   title: v.pipe(
-    v.optional(
-      v.string(),
-      /**
-       * @deprecated default value will be removed in next major release
-       */
-      "new post",
+    v.optional(v.string(), ""),
+    v.trim(),
+    v.transform(
+      (value) =>
+        value ||
+        /**
+         * @deprecated default value will be removed in next major release
+         */
+        "new post",
     ),
     v.trim(),
-    v.nonEmpty(),
   ),
   contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
 });
