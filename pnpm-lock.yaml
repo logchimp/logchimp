@@ -3671,10 +3671,6 @@ packages:
     resolution: {integrity: sha512-x0InOIyzgdk+eyaWaRJFH5snEtiImgBgblZ2CyPrLmqqcuMQkEvcDPHbzqbD8eDsSeJbVOjn+crzyzHaM4D+/A==}
     engines: {node: '>=18'}
 
-  nodemailer@10.0.10:
-    resolution: {integrity: sha512-He9XskOFms62SyAKkLu8CcGcYHAo+BSHSsORI8s4PJH8qZgZY4L4lDfvyN0twvmbpyG+eGrxpyBlskj9d9rJ8A==}
-    engines: {node: '>=20.0.0'}
-
   nodemailer@10.1.4:
     resolution: {integrity: sha512-EsMnOR2oRv4LGnWvHgcVYkkQ4O2j8KO4WTw6l+PHR4sOXo8SAgIraxtEnGDmotjbhv0hDsu3IuDIFZm8iXwO4A==}
     engines: {node: '>=20.0.0'}
@@ -4268,10 +4264,6 @@ packages:
 
   sortablejs@1.14.0:
     resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
-
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
-    engines: {node: '>=0.10.0'}
 
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
@@ -5408,7 +5400,7 @@ snapshots:
   '@intlify/message-compiler@11.4.16':
     dependencies:
       '@intlify/shared': 11.4.16
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   '@intlify/shared@11.4.16': {}
 
@@ -5476,7 +5468,7 @@ snapshots:
       jiti: 2.7.0
       juice: 12.1.3
       markdown-exit: 1.3.0
-      nodemailer: 10.0.10
+      nodemailer: 10.1.4
       ora: 9.4.1
       oxfmt: 0.73.0
       pathe: 2.0.3
@@ -5867,7 +5859,7 @@ snapshots:
       jiti: 2.7.0
       lightningcss: 1.32.0
       magic-string: 0.30.21
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
       tailwindcss: 4.3.3
 
   '@tailwindcss/oxide-android-arm64@4.3.3':
@@ -6475,7 +6467,7 @@ snapshots:
       '@vue/shared': 3.5.43
       entities: 7.0.1
       estree-walker: 2.0.2
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   '@vue/compiler-core@3.5.44':
     dependencies:
@@ -8351,8 +8343,6 @@ snapshots:
 
   node-releases@2.0.56: {}
 
-  nodemailer@10.0.10: {}
-
   nodemailer@10.1.4: {}
 
   nodemon@3.1.14:
@@ -8916,7 +8906,7 @@ snapshots:
     dependencies:
       chokidar: 3.6.0
       immutable: 4.3.9
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   saxes@6.0.0:
     dependencies:
@@ -9020,8 +9010,6 @@ snapshots:
   sort-css-media-queries@3.0.5: {}
 
   sortablejs@1.14.0: {}
-
-  source-map-js@1.2.1: {}
 
   source-map-js@1.2.2: {}
 
