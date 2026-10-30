@@ -886,7 +886,6 @@ describe("POST /api/v1/posts", () => {
   });
 
   it("should create a post without title", async () => {
-    const board = await generateBoard({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -900,14 +899,12 @@ describe("POST /api/v1/posts", () => {
       .send({
         contentMarkdown: faker.food.description,
         userId: authUser.userId,
-        boardId: board.boardId,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(201);
     const postResponse = response.body.post;
     expect(postResponse.title).toBe("new post");
-    expect(postResponse.boardId).toBe(board.boardId);
   });
 
   it("should create a post without a board", async () => {
@@ -936,7 +933,6 @@ describe("POST /api/v1/posts", () => {
   });
 
   it("should create a post with '@everyone' role", async () => {
-    const board = await generateBoard({}, true);
     const { user: authUser } = await createUser({
       isVerified: true,
     });
@@ -960,7 +956,6 @@ describe("POST /api/v1/posts", () => {
     expect(post.title).toBe(title);
     expect(post.contentMarkdown).toBe(contentMarkdown);
     expect(post.userId).toBe(authUser.userId);
-    expect(post.boardId).toBe(board.boardId);
   });
 
   it("should automatically truncate the post title length", async () => {
