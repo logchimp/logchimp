@@ -20,8 +20,11 @@ import { mailWorker } from "../../../worker/handler/mail";
 
 type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
 
-export async function reset(req: Request, res: Response<ResponseBody>) {
-  const email = (req.body satisfies IAuthPasswordResetRequestBody).email;
+export async function reset(
+  req: Request<unknown, unknown, IAuthPasswordResetRequestBody>,
+  res: Response<ResponseBody>,
+) {
+  const email = req.body.email;
 
   if (!validEmail(email)) {
     res.status(400).send({
