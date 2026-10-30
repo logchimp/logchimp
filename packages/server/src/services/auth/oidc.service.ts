@@ -11,6 +11,7 @@ import {
   OIDC_AUTHENTICATION_ERROR_CODES,
   type OIDCAuthenticationErrorCode,
 } from "./types";
+import logger from "../../utils/logger";
 
 const OIDC_TRANSACTION_TTL = 300; // 5 minutes
 
@@ -52,12 +53,16 @@ export class OIDCService {
       state,
     };
 
-    await cache.set(
-      `oidc:transaction:${state}`,
-      JSON.stringify(transaction),
-      "EX",
-      OIDC_TRANSACTION_TTL,
-    );
+    try {
+      await cache.set(
+        `oidc:transaction:${state}`,
+        JSON.stringify(transaction),
+        "EX",
+        OIDC_TRANSACTION_TTL,
+      );
+    } catch (e) {
+      logger.error(e);
+    }
 
     const redirectURI = sanitizeHttpUrl(
       `${config.apiUrl}/api/v1/auth/oidc/callback`,
