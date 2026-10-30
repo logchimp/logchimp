@@ -8,10 +8,11 @@ export async function mailConfigExists(
   next: NextFunction,
 ) {
   if (!mail) {
-    return res.status(501).send({
+    res.status(501).send({
       message: "Mail configuration missing",
       code: "MAIL_CONFIG_MISSING",
     });
+    return;
   }
 
   next();

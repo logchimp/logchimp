@@ -37,7 +37,7 @@ export async function validateEmailToken(
   const token = req.body.token;
 
   if (!token) {
-    return res.status(400).send({
+    res.status(400).send({
       errors: [
         token
           ? undefined
@@ -47,6 +47,7 @@ export async function validateEmailToken(
             },
       ],
     });
+    return;
   }
 
   try {
@@ -69,10 +70,11 @@ export async function validateEmailToken(
       .first();
 
     if (!emailToken) {
-      return res.status(404).send({
+      res.status(404).send({
         message: error.api.emailVerify.invalidToken,
         code: "INVALID_TOKEN",
       });
+      return;
     }
 
     // @ts-expect-error

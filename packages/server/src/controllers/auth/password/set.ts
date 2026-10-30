@@ -27,7 +27,7 @@ export async function set(
   const email = req.email as string;
 
   if (!password) {
-    return res.status(400).send({
+    res.status(400).send({
       errors: [
         password
           ? undefined
@@ -37,6 +37,7 @@ export async function set(
             },
       ],
     });
+    return;
   }
 
   try {

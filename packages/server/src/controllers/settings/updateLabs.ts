@@ -33,10 +33,11 @@ export async function updateLabs(
     (item) => item === "settings:update",
   );
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const labsObject: Partial<ISiteSettingsLab> = {};

@@ -41,10 +41,11 @@ export async function boardExists(
     .first();
 
   if (!board) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.boards.boardNotFound,
       code: "BOARD_NOT_FOUND",
     });
+    return;
   }
 
   // @ts-expect-error
