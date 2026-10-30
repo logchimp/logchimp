@@ -39,10 +39,11 @@ export async function updatePost(
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const body = v.safeParse(updatePostRequestBodySchema, req.body);

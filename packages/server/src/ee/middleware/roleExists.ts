@@ -13,20 +13,22 @@ export async function roleExists(
   const id = validUUID(req.body.id || req.params.role_id);
 
   if (!id) {
-    return res.status(400).send({
+    res.status(400).send({
       message: error.api.roles.invalidRoleId,
       code: "INVALID_ROLE_ID",
     });
+    return;
   }
 
   const roleIdService = new RoleIdService(id);
   const role = await roleIdService.getRole();
 
   if (!role) {
-    return res.status(404).send({
+    res.status(404).send({
       message: error.api.roles.roleNotFound,
       code: "ROLE_NOT_FOUND",
     });
+    return;
   }
 
   // @ts-expect-error

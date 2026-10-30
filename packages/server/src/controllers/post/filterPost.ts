@@ -92,7 +92,7 @@ export async function filterPost(
 
   const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
@@ -103,11 +103,12 @@ export async function filterPost(
         code: issue.message,
       })),
     });
+    return;
   }
 
   const body = v.safeParse(bodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -118,6 +119,7 @@ export async function filterPost(
         code: issue.message,
       })),
     });
+    return;
   }
 
   const { page, limit, query: searchQuery } = body.output;
@@ -125,10 +127,11 @@ export async function filterPost(
 
   const first = page ? (limit ?? _first) : _first;
   if (after && !validUUID(after)) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid cursor format",
     });
+    return;
   }
 
   // @ts-expect-error

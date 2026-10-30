@@ -16,10 +16,11 @@ export function accessDashboard(req: Request, res: Response<ResponseBody>) {
   const checkPermission = permissions.includes("dashboard:read");
 
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   res.status(200).send({

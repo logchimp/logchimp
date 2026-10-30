@@ -18,10 +18,11 @@ export async function checkLicenseController(
     const result = await licenseService.checkLicense();
 
     if ("code" in result || result.status !== "active") {
-      return res.status(403).send({
+      res.status(403).send({
         message: error.middleware.license.verification,
         code: "LICENSE_VALIDATION_FAILED",
       });
+      return;
     }
 
     res.status(200).send({
