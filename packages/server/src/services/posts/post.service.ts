@@ -1,5 +1,4 @@
-import { toSlug } from "../../helpers";
-import { nanoid } from "nanoid";
+import { generateNanoID, toSlug } from "../../helpers";
 
 export class PostService {
   SLUG_LENGTH = 20;
@@ -19,7 +18,7 @@ export class PostService {
   }
 
   generateSlug(title: string, slugId?: string) {
-    const _slugId = slugId ?? nanoid(this.SLUG_LENGTH);
+    const _slugId = slugId ?? generateNanoID(this.SLUG_LENGTH);
     const slug = `${toSlug(title)}-${_slugId}`;
     return {
       slug,
