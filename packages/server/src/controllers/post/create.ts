@@ -7,7 +7,6 @@ import type {
   ICreatePostResponseBody,
   TPermission,
 } from "@logchimp/types";
-import xss from "xss";
 import { POST_TITLE_MAX_LENGTH } from "../../constants";
 import * as v from "valibot";
 
