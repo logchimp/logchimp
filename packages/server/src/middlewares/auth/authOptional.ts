@@ -32,7 +32,7 @@ export async function authOptional(
     // ignore error from JWT auth token verification
     // and move to next middleware
   }
-  if (!decoded && !decoded?.userId) {
+  if (!decoded?.userId || "type" in decoded) {
     return next();
   }
 
