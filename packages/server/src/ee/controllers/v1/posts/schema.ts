@@ -1,12 +1,14 @@
 import * as v from "valibot";
 
 import { validUUID } from "../../../../helpers";
-import { createPostRequestBodySchema } from "../../../../controllers/post/schema";
-import { updatePostRequestBodySchema } from "../../../../controllers/post/schema";
+import {
+  createPostRequestBodySchema,
+  updatePostRequestBodySchema,
+} from "../../../../controllers/post/schema";
 
 export const createPostEERequestBodySchema = v.object({
   ...createPostRequestBodySchema.entries,
-  boardId: v.optional(v.pipe(v.string(), v.transform(validUUID))),
+  boardId: v.optional(v.nullable(v.pipe(v.string(), v.transform(validUUID)))),
 });
 
 export const updatePostEERequestBodySchema = v.object({
