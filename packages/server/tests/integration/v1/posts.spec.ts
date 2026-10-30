@@ -946,7 +946,6 @@ describe("POST /api/v1/posts", () => {
         title,
         contentMarkdown,
         userId: authUser.userId,
-        boardId: board.boardId,
       });
 
     expect(response.status).toBe(201);
