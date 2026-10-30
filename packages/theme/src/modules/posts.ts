@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from "axios";
 import type {
-  ICreatePostRequestBody,
+  ICreatePostEERequestBody,
   ICreatePostResponseBody,
   IFilterPostRequestBody,
   IFilterPostRequestQueryParams,
@@ -92,7 +92,7 @@ export class PostsAPI extends APIService {
    * @returns {Promise<ICreatePostResponseBody>} response
    */
   CreatePost = async (
-    post: ICreatePostRequestBody,
+    post: ICreatePostEERequestBody,
   ): Promise<ICreatePostResponseBody> => {
     const { getUserId } = useUserStore();
 

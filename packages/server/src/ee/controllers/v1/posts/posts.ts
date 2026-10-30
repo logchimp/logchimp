@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  IApiValidationErrorResponse,
+  ICreatePostEERequestBody,
+  ICreatePostResponseBody,
   IFilterPostRequestBody,
   IFilterPostRequestQueryParams,
   IPost,
@@ -10,7 +13,11 @@ import type {
 } from "@logchimp/types";
 import * as v from "valibot";
 import database from "../../../../database";
-import { validUUID, validUUIDs } from "../../../../helpers";
+import {
+  generateNanoID as nanoid,
+  validUUID,
+  validUUIDs,
+} from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import type { GetPostStatement } from "../../../../middlewares/postExists";
@@ -29,6 +36,8 @@ import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
 import { updatePostEERequestBodySchema } from "./schema";
+import { POST_TITLE_MAX_LENGTH } from "../../../../constants";
+import { v4 as uuidv4 } from "uuid";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -420,6 +429,91 @@ async function getPostMetadata({
 
     return { totalCount, remainingResultsCount };
   });
+}
+
+type CreatePostResponseBody =
+  | ICreatePostResponseBody
+  | IApiErrorResponse
+  | IApiValidationErrorResponse;
+
+export async function createPost(
+  req: Request<unknown, unknown, ICreatePostEERequestBody>,
+  res: Response<CreatePostResponseBody>,
+) {
+  // @ts-expect-error
+  const userId = req.user.userId;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
+
+  const rawTitle = String(req.body.title || "").trim();
+  let title = xss(rawTitle) || "new post";
+  let contentMarkdown =
+    xss(String(req.body.contentMarkdown || "").trim()) || null;
+  const boardId = validUUID(req.body.boardId);
+
+  if (title.length > POST_TITLE_MAX_LENGTH) {
+    const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
+    title = `${title.slice(0, POST_TITLE_MAX_LENGTH - 3)}...`;
+
+    contentMarkdown = `...${exceedingText}${contentMarkdown ? `\n\n${contentMarkdown}` : ""}`;
+  }
+
+  const checkPermission = permissions.includes("post:create");
+  if (!checkPermission) {
+    return res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+  }
+
+  // generate slug unique identification
+  const slugId = nanoid(20);
+
+  const slug = `${title
+    .replace(/[^\w\s]/gi, "")
+    .replace(/\s\s+/gi, " ")
+    .toLowerCase()
+    .split(" ")
+    .join("-")}-${slugId}`;
+
+  try {
+    const createPost = await database
+      .insert({
+        postId: uuidv4(),
+        title,
+        slug,
+        slugId,
+        contentMarkdown,
+        userId,
+        boardId,
+      })
+      .into("posts")
+      .returning("*");
+
+    const post = createPost[0];
+
+    await database
+      .insert({
+        voteId: uuidv4(),
+        userId,
+        postId: post.postId,
+      })
+      .into("votes");
+
+    res.status(201).send({
+      post,
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+  }
 }
 
 type UpdatePostResponseBody = TUpdatePostResponseBody | IApiErrorResponse;

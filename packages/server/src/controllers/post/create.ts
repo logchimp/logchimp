@@ -13,7 +13,7 @@ import { POST_TITLE_MAX_LENGTH } from "../../constants";
 import database from "../../database";
 
 // utils
-import { generateNanoID as nanoid, validUUID } from "../../helpers";
+import { generateNanoID as nanoid } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
@@ -36,7 +36,6 @@ export async function create(
   let title = xss(rawTitle) || "new post";
   let contentMarkdown =
     xss(String(req.body.contentMarkdown || "").trim()) || null;
-  const boardId = validUUID(req.body.boardId);
 
   if (title.length > POST_TITLE_MAX_LENGTH) {
     const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
@@ -72,7 +71,6 @@ export async function create(
         slugId,
         contentMarkdown,
         userId,
-        boardId,
       })
       .into("posts")
       .returning("*");
