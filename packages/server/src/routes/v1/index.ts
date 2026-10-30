@@ -5,12 +5,13 @@ import logger from "../../utils/logger";
 import { config } from "../../utils/logchimpConfig";
 
 import auth from "./auth";
+import me from "./me";
 import posts from "./posts";
 import votes from "./votes";
 import users from "./users";
 import settings from "./settings";
 
-router.use("/api/v1", votes, users, settings);
+router.use("/api/v1", me, votes, users, settings);
 
 let eeRoutesLoaded = false;
 export async function initialiseEERoutes() {
