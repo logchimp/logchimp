@@ -8,7 +8,7 @@ import type {
   IGetPostBySlugResponseBody,
   IGetPostVotesRequestQuery,
   IPaginatedPostVotesResponse,
-  IUpdatePostRequestBody,
+  IUpdatePostEERequestBody,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
 
@@ -136,7 +136,7 @@ export class PostsAPI extends APIService {
    * @returns {Promise<TUpdatePostResponseBody>} response
    */
   UpdatePost = async (
-    post: IUpdatePostRequestBody,
+    post: IUpdatePostEERequestBody,
   ): Promise<TUpdatePostResponseBody> => {
     return this.patch("/v1/posts", post)
       .then((response) => response?.data)

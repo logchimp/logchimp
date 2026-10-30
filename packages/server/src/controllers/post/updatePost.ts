@@ -10,19 +10,12 @@ import xss from "xss";
 import database from "../../database";
 
 // utils
-import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { updatePostRequestBodySchema } from "./schema";
+import type { GetPostStatement } from "../../middlewares/postExists";
 
 type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
-
-const bodySchema = v.object({
-  title: v.message(
-    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
-    "POST_TITLE_MISSING",
-  ),
-  contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-});
 
 const schemaBodyErrorMap = {
   POST_TITLE_MISSING: error.api.posts.titleMissing,
@@ -37,9 +30,11 @@ export async function updatePost(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   // @ts-expect-error
-  const authorId = req.post.userId;
+  const postId = (req.post as GetPostStatement).postId;
   // @ts-expect-error
-  const slugId = req.post.slugId;
+  const authorId = (req.post as GetPostStatement).userId;
+  // @ts-expect-error
+  const slugId = (req.post as GetPostStatement).slugId;
 
   const checkPermission = permissions.includes("post:update");
   if (!checkPermission && userId !== authorId) {
@@ -49,9 +44,9 @@ export async function updatePost(
     });
   }
 
-  const body = v.safeParse(bodySchema, req.body);
+  const body = v.safeParse(updatePostRequestBodySchema, req.body);
   if (!body.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
@@ -62,9 +57,8 @@ export async function updatePost(
         code: issue.message,
       })),
     });
+    return;
   }
-
-  const id = validUUID(req.body.id);
 
   const { title: rawTitle, contentMarkdown: rawContentMarkdown } = body.output;
   const title = xss((String(rawTitle) || "").trim());
@@ -87,7 +81,7 @@ export async function updatePost(
       })
       .from("posts")
       .where({
-        postId: id,
+        postId,
       })
       .returning("*");
 
