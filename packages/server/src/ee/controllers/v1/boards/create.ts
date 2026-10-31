@@ -6,6 +6,7 @@ import type {
   TBoardCreateResponseBody,
   TPermission,
 } from "@logchimp/types";
+import * as v from "valibot";
 
 // database
 import database from "../../../../database";
@@ -17,8 +18,14 @@ import {
 } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { createBoardEERequestBodySchema } from "./schema";
 
 type ResponseBody = TBoardCreateResponseBody | IApiErrorResponse;
+
+const createBoardSchemaBodyErrorMap = {
+  NAME_MIN_LENGTH: "Board name cannot be empty.",
+  NAME_MAX_LENGTH: "Board name cannot exceed 50 characters.",
+};
 
 export async function create(
   req: Request<unknown, unknown, TBoardCreateRequestBody>,
@@ -26,8 +33,6 @@ export async function create(
 ) {
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
-  const name = req.body.name || "new board";
-  const display = req.body.display;
 
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
@@ -38,14 +43,30 @@ export async function create(
     return;
   }
 
+  const body = v.safeParse(createBoardEERequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: createBoardSchemaBodyErrorMap[issue.message]
+          ? createBoardSchemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
+
   try {
     const createBoard = await database
       .insert({
         boardId: uuidv4(),
-        name,
+        name: body.output.name ?? "new board",
         url: `new-board-${nanoid(10)}`,
         color: generateHexColor(),
-        display,
+        display: body.output.display,
       })
       .into("boards")
       .returning("*");
