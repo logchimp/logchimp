@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
 import supertest from "supertest";
-import type { IAuthLoginResponseBody } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
@@ -23,11 +23,11 @@ interface CreateUserArgs {
  * NOTE: this function by-passes 'allowSignup' settings
  * Should have `@everyone` role assigned.
  * @param {object} [user=undefined]
- * @returns {Promise<IAuthLoginResponseBody>}
+ * @returns {Promise<components["schemas"]["LoginResponseBody"]>}
  */
 export async function createUser(
   user?: Partial<CreateUserArgs>,
-): Promise<IAuthLoginResponseBody> {
+): Promise<components["schemas"]["LoginResponseBody"]> {
   const userId = user?.id || uuid();
   const name = user?.name;
   const email = (user?.email || faker.internet.email()).toLowerCase();

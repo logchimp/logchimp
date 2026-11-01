@@ -51,7 +51,7 @@
 // packages
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 
@@ -128,7 +128,9 @@ async function login() {
       router.push("/");
     }
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     buttonLoading.value = false;
 
     if (err.response?.data?.code === "EMAIL_INVALID") {

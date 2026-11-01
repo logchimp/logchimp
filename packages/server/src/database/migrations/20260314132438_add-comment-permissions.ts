@@ -1,10 +1,10 @@
 import type { Knex } from "knex";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { addPermission, removePermission } from "../utils";
 import logger from "../../utils/logger";
 
-const permissions: TPermission[] = [
+const permissions: Array<components["schemas"]["Permission"]> = [
   "comment:create",
   "comment:create_internal",
   "comment:update:own",

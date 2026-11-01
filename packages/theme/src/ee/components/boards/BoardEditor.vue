@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, defineAsyncComponent } from "vue";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -98,13 +98,13 @@ const SlugInputField = defineAsyncComponent(
 
 interface Props {
   title: string;
-  board: IBoardPrivate;
+  board: components["schemas"]["BoardPrivate"];
 }
 const props = defineProps<Props>();
 
 const boardSlug = ref("");
 const saveButtonLoading = ref(false);
-const board = reactive<IBoardPrivate>(props.board);
+const board = reactive<components["schemas"]["BoardPrivate"]>(props.board);
 const boardsEEAPI = new BoardsEE();
 
 const { permissions } = useUserStore();

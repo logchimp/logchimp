@@ -1,12 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  ISiteSettingsLab,
-  TGetSiteSettingsLabResponseBody,
-  TPermission,
-  TUpdateSiteSettingsLabRequestBody,
-  TUpdateSiteSettingsLabResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import database from "../../database";
 import logger from "../../utils/logger";
@@ -17,18 +10,26 @@ import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
 import { DAY } from "../../cache/time";
 
-type ResponseBody = TUpdateSiteSettingsLabResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["UpdateSiteSettingsLabsResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 /**
  * This API doesn't update the existing labs value
  * instead overrides the existing value with req.body.labs
  */
 export async function updateLabs(
-  req: Request<unknown, unknown, TUpdateSiteSettingsLabRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdateSiteSettingsLabsRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.find(
     (item) => item === "settings:update",
   );
@@ -40,7 +41,7 @@ export async function updateLabs(
     return;
   }
 
-  const labsObject: Partial<ISiteSettingsLab> = {};
+  const labsObject: Partial<components["schemas"]["SiteSettingsLabs"]> = {};
   if (typeof req.body.voteOnBehalf === "boolean") {
     labsObject.voteOnBehalf = req.body.voteOnBehalf;
   }
@@ -53,9 +54,9 @@ export async function updateLabs(
         labs: database.raw("labs::jsonb || ?::jsonb", [labsStringify]),
       })
       .from("settings")
-      .returning<Array<TGetSiteSettingsLabResponseBody>>(
-        database.raw("labs::json"),
-      );
+      .returning<
+        Array<components["schemas"]["UpdateSiteSettingsLabsResponseBody"]>
+      >(database.raw("labs::json"));
 
     const { labs } = response[0];
     if (cache.isActive) {

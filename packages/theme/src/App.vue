@@ -17,7 +17,7 @@
 // packages
 import type { AxiosError } from "axios";
 import { computed, onMounted, watch } from "vue";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 // import gtag, { setOptions, bootstrap } from "vue-gtag";
 import { useHead } from "@vueuse/head";
 
@@ -80,7 +80,9 @@ onMounted(async () => {
       const permissions = await usersAPI.GetPermissions();
       userStore.setPermissions(permissions.permissions);
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
       tokenError(err);
     }
   }

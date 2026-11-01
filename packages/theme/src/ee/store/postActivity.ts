@@ -1,14 +1,21 @@
 import { reactive } from "vue";
 import { defineStore } from "pinia";
-import type { IPostActivity } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 export const usePostActivityEEStore = defineStore("postActivityEE", () => {
   const activityIds = new Set<string>();
 
-  const activity = reactive<Record<string, IPostActivity[]>>({});
-  const activityDashboard = reactive<Record<string, IPostActivity[]>>({});
+  const activity = reactive<
+    Record<string, components["schemas"]["PostActivityItem"][]>
+  >({});
+  const activityDashboard = reactive<
+    Record<string, components["schemas"]["PostActivityItem"][]>
+  >({});
 
-  function addPostActivity(postId: string, _activity: IPostActivity) {
+  function addPostActivity(
+    postId: string,
+    _activity: components["schemas"]["PostActivityItem"],
+  ) {
     if (!_activity.comment.is_internal) {
       Object.assign(activity, {
         [postId]: [_activity, ...(activity[postId] || [])],
@@ -22,9 +29,14 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     activityIds.add(_activity.id);
   }
 
-  function loadPostActivity(postId: string, activities: IPostActivity[]) {
-    const activityArr: Array<IPostActivity> = [];
-    const dashboardActivityArr: Array<IPostActivity> = [];
+  function loadPostActivity(
+    postId: string,
+    activities: components["schemas"]["PostActivityItem"][],
+  ) {
+    const activityArr: Array<components["schemas"]["PostActivityItem"]> = [];
+    const dashboardActivityArr: Array<
+      components["schemas"]["PostActivityItem"]
+    > = [];
 
     for (let i = 0; i < activities.length; i++) {
       if (activityIds.has(activities[i].id)) continue;
@@ -47,7 +59,10 @@ export const usePostActivityEEStore = defineStore("postActivityEE", () => {
     });
   }
 
-  function updatePostActivity(postId: string, _activity: IPostActivity) {
+  function updatePostActivity(
+    postId: string,
+    _activity: components["schemas"]["PostActivityItem"],
+  ) {
     const activityIdx = activity[postId]?.findIndex(
       (activity) => _activity.id === activity.id,
     );

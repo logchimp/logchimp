@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { IApiErrorResponse, IPostVote } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 
 // modules
@@ -60,7 +60,10 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<(e: "update-voters", voters: IPostVote) => void>();
+const emit =
+  defineEmits<
+    (e: "update-voters", voters: components["schemas"]["PostVote"]) => void
+  >();
 
 const loading = ref<boolean>(false);
 const userStore = useUserStore();
@@ -84,7 +87,9 @@ async function changeVote() {
       emit("update-voters", response.data.voters);
       loading.value = false;
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
       tokenError(err);
       loading.value = false;
     }
@@ -95,7 +100,9 @@ async function changeVote() {
       emit("update-voters", response.data.voters);
       loading.value = false;
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
       tokenError(err);
       loading.value = false;
     }

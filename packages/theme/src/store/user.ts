@@ -1,6 +1,6 @@
 import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
-import type { IAuthUser, TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { router } from "../router";
 import Cookie from "js-cookie";
@@ -8,7 +8,10 @@ import Cookie from "js-cookie";
 export const useUserStore = defineStore("user", () => {
   const authToken = ref<string>("");
   const user = reactive<
-    Pick<IAuthUser, "userId" | "name" | "email" | "username" | "avatar">
+    Pick<
+      components["schemas"]["AuthUser"],
+      "userId" | "name" | "email" | "username" | "avatar"
+    >
   >({
     userId: "",
     name: "",
@@ -16,12 +19,12 @@ export const useUserStore = defineStore("user", () => {
     email: "",
     avatar: "",
   });
-  const permissions = ref<TPermission[]>([]);
+  const permissions = ref<Array<components["schemas"]["Permission"]>>([]);
 
   const getUser = computed(() => user);
   const getUserId = computed(() => user.userId);
 
-  function setUser(payload: IAuthUser) {
+  function setUser(payload: components["schemas"]["AuthUser"]) {
     authToken.value = payload.authToken;
     user.userId = payload.userId;
     user.name = payload.name;
@@ -52,11 +55,11 @@ export const useUserStore = defineStore("user", () => {
     );
   }
 
-  function setPermissions(payload: TPermission[]) {
+  function setPermissions(payload: Array<components["schemas"]["Permission"]>) {
     permissions.value = payload;
   }
 
-  function login(payload: IAuthUser) {
+  function login(payload: components["schemas"]["AuthUser"]) {
     setUser(payload);
   }
 

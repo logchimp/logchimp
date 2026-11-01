@@ -2,7 +2,7 @@ import { expect, it, beforeAll } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
 import { faker } from "@faker-js/faker";
-import type { IAuthUser, IRole, TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
@@ -18,7 +18,7 @@ const userIdSlug = toSlug(faker.commerce.productName());
 
 // Get all roles
 describeEE("GET /api/v1/roles", () => {
-  let authUser: IAuthUser;
+  let authUser: components["schemas"]["AuthUser"];
   beforeAll(async () => {
     await database.transaction(async (trx) => {
       // Seed 30 roles
@@ -73,8 +73,9 @@ describeEE("GET /api/v1/roles", () => {
         .get("/api/v1/roles")
         .set("Authorization", `Bearer ${authUser.authToken}`);
 
-      const firstItem: IRole = res.body.results[0];
-      const lastItem: IRole = res.body.results[res.body.results.length - 1];
+      const firstItem: components["schemas"]["RoleItem"] = res.body.results[0];
+      const lastItem: components["schemas"]["RoleItem"] =
+        res.body.results[res.body.results.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(200);
@@ -104,8 +105,9 @@ describeEE("GET /api/v1/roles", () => {
         .query({ first: 5 })
         .set("Authorization", `Bearer ${authUser.authToken}`);
 
-      const firstItem: IRole = res.body.results[0];
-      const lastItem: IRole = res.body.results[res.body.results.length - 1];
+      const firstItem: components["schemas"]["RoleItem"] = res.body.results[0];
+      const lastItem: components["schemas"]["RoleItem"] =
+        res.body.results[res.body.results.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(200);
@@ -135,8 +137,9 @@ describeEE("GET /api/v1/roles", () => {
         .query({ first: 25 })
         .set("Authorization", `Bearer ${authUser.authToken}`);
 
-      const firstItem: IRole = res.body.results[0];
-      const lastItem: IRole = res.body.results[res.body.results.length - 1];
+      const firstItem: components["schemas"]["RoleItem"] = res.body.results[0];
+      const lastItem: components["schemas"]["RoleItem"] =
+        res.body.results[res.body.results.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(200);
@@ -203,8 +206,12 @@ describeEE("GET /api/v1/roles", () => {
       expect(res2.body.page_info.start_cursor).toBe(res2.body.results[0].id);
       expect(res2.body.page_info.end_cursor).toBe(res2.body.results[2].id);
 
-      const ids1 = res1.body.results.map((r: IRole) => r.id);
-      const ids2 = res2.body.results.map((r: IRole) => r.id);
+      const ids1 = res1.body.results.map(
+        (r: components["schemas"]["RoleItem"]) => r.id,
+      );
+      const ids2 = res2.body.results.map(
+        (r: components["schemas"]["RoleItem"]) => r.id,
+      );
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
@@ -450,7 +457,7 @@ describeEE("GET /api/v1/roles/:id", () => {
 
   itEE("should get role by ID with permissions", async () => {
     const { user } = await createUser();
-    const permissions: TPermission[] = [
+    const permissions: Array<components["schemas"]["Permission"]> = [
       "post:read",
       "post:create",
       "post:update",

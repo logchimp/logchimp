@@ -38,7 +38,7 @@
 import { onMounted, ref, useTemplateRef } from "vue";
 import { useHead } from "@vueuse/head";
 import { useInfiniteScroll } from "@vueuse/core";
-import type { IApiErrorResponse, IRoadmap } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 
@@ -54,8 +54,8 @@ import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 const { get: siteSettings } = useSettingStore();
 const { t } = useI18n();
 const roadmapElement = useTemplateRef<HTMLElement>("roadmapElement");
-const roadmaps = ref<IRoadmap[]>([]);
-const endCursor = ref<string | undefined>();
+const roadmaps = ref<components["schemas"]["RoadmapItem"][]>([]);
+const endCursor = ref<string | null>(null);
 const hasNextPage = ref<boolean>(false);
 const errorCode = ref<string>();
 const loading = ref(true);
@@ -63,14 +63,14 @@ const scrollLoading = ref(false);
 
 const roadmapsEEAPI = new RoadmapsEE();
 
-async function getRoadmaps(after: string | undefined, isScroll = false) {
+async function getRoadmaps(after: string | null, isScroll = false) {
   if (isScroll) scrollLoading.value = true;
   else loading.value = true;
 
   try {
     const response = await roadmapsEEAPI.GetAllRoadmaps({
       first: "4",
-      after: after == null ? undefined : after,
+      after: after ?? undefined,
       visibility: ["public"],
     });
 
@@ -79,10 +79,13 @@ async function getRoadmaps(after: string | undefined, isScroll = false) {
     if (roadmapList.length > 0) {
       roadmaps.value.push(...roadmapList);
     }
-    endCursor.value = response.page_info.end_cursor || undefined;
+
+    endCursor.value = response.page_info.end_cursor;
     hasNextPage.value = response.page_info.has_next_page;
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {
       errorCode.value = err.response.data.code;
     } else if (err.response?.status === 404) {
@@ -116,7 +119,7 @@ useHead({
 });
 
 onMounted(() => {
-  getRoadmaps(undefined);
+  getRoadmaps(null);
 });
 
 defineOptions({

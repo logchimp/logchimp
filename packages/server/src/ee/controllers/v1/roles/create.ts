@@ -1,20 +1,20 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  ICreateRoleResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { RolesService } from "../../../services/roles/roles.service";
 
-type ResponseBody = ICreateRoleResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["CreateRoleResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function create(req: Request, res: Response<ResponseBody>) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.includes("role:create");
   if (!checkPermission) {
     res.status(403).send({

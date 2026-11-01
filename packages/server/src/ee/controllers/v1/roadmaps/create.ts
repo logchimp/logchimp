@@ -1,12 +1,6 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  IApiErrorResponse,
-  TCreateRoadmapResponseBody,
-  IRoadmapPrivate,
-  TPermission,
-  ICreateRoadmapRequestBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../../../database";
@@ -19,14 +13,22 @@ import {
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = TCreateRoadmapResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["CreateRoadmapResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function create(
-  req: Request<unknown, unknown, ICreateRoadmapRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CreateRoadmapRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.includes("roadmap:create");
   if (!checkPermission) {
@@ -56,7 +58,7 @@ export async function create(
         index: roadmapIndex.max + 1,
       })
       .into("roadmaps")
-      .returning<IRoadmapPrivate[]>([
+      .returning<components["schemas"]["RoadmapPrivate"][]>([
         "id",
         "name",
         "url",

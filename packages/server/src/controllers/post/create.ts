@@ -1,12 +1,6 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  IApiErrorResponse,
-  IApiValidationErrorResponse,
-  ICreatePostRequestBody,
-  ICreatePostResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 
 import database from "../../database";
@@ -19,20 +13,25 @@ import { createPostRequestBodySchema } from "./schema";
 import { PostService } from "../../services/posts/post.service";
 
 type ResponseBody =
-  | ICreatePostResponseBody
-  | IApiErrorResponse
-  | IApiValidationErrorResponse;
+  | components["schemas"]["CreatePostResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const schemaBodyErrorMap = {};
 
 export async function create(
-  req: Request<unknown, unknown, ICreatePostRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CreatePostRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const body = v.safeParse(createPostRequestBodySchema, req.body);
   if (!body.success) {

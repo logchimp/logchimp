@@ -1,6 +1,6 @@
-import type { IRole } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
-export const EXAMPLE_ROLES_DATA: Array<IRole> = [
+export const EXAMPLE_ROLES_DATA: Array<components["schemas"]["RoleItem"]> = [
   {
     id: "1",
     name: "Manager",

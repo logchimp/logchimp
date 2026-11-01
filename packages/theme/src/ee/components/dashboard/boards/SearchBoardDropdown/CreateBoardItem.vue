@@ -18,7 +18,7 @@
 import { ref } from "vue";
 import { DropdownMenuItem } from "reka-ui";
 import { PlusIcon } from "lucide-vue";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { BoardsEE } from "../../../../modules/boards";
 
@@ -26,7 +26,10 @@ interface Props {
   search: string;
 }
 const props = defineProps<Props>();
-const emit = defineEmits<(e: "created", event: IBoardPrivate) => void>();
+const emit =
+  defineEmits<
+    (e: "created", event: components["schemas"]["BoardPrivate"]) => void
+  >();
 
 const loading = ref(false);
 const boardsEEAPI = new BoardsEE();

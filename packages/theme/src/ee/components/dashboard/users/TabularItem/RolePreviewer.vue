@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IUserRole } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import RoleBadge from "../../../RoleBadge.vue";
 
 interface Props {
-  roles: IUserRole[];
+  roles: components["schemas"]["UserItemRole"][];
 }
 
 defineProps<Props>();

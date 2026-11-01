@@ -56,14 +56,14 @@ import {
   EyeOff as EyeOffIcon,
   GripVertical as GripIcon,
 } from "lucide-vue";
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { roadmapKey } from "./options";
 import Td from "../../../../../components/ui/Table/Td.vue";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 
 interface Props {
-  roadmap: IRoadmapPrivate;
+  roadmap: components["schemas"]["RoadmapPrivate"];
 }
 const props = defineProps<Props>();
 provide(roadmapKey, props.roadmap);

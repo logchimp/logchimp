@@ -1,8 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
-import type {
-  IAddVoteResponseBody,
-  TRemoveVoteResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { useUserStore } from "../store/user";
 import { VITE_API_URL } from "../constants";
@@ -10,11 +7,13 @@ import { VITE_API_URL } from "../constants";
 /**
  * Add vote to a post
  * @param {string} postId post UUID
- * @returns {Promise<AxiosResponse<IAddVoteResponseBody>>} response
+ * @returns {Promise<AxiosResponse<components["schemas"]["AddVoteToPostResponseBody"]>>} response
  */
 export const addVote = async (
   postId: string,
-): Promise<AxiosResponse<IAddVoteResponseBody>> => {
+): Promise<
+  AxiosResponse<components["schemas"]["AddVoteToPostResponseBody"]>
+> => {
   const { getUserId, authToken } = useUserStore();
 
   return await axios({
@@ -33,11 +32,11 @@ export const addVote = async (
 /**
  * Delete vote from a post
  * @param {string} postId post UUID
- * @returns {Promise<AxiosResponse<TRemoveVoteResponseBody>>} response
+ * @returns {Promise<AxiosResponse<components["schemas"]["RemoveVoteResponseBody"]>>} response
  */
 export const deleteVote = async (
   postId: string,
-): Promise<AxiosResponse<TRemoveVoteResponseBody>> => {
+): Promise<AxiosResponse<components["schemas"]["RemoveVoteResponseBody"]>> => {
   const { getUserId, authToken } = useUserStore();
 
   return await axios({

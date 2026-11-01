@@ -1,10 +1,6 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetBoardsRequestQuery,
-  IGetBoardsResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
+
 import database from "../../../../database";
 
 // utils
@@ -16,10 +12,17 @@ import {
   parseAndValidatePage,
 } from "../../../../helpers";
 
-type ResponseBody = IGetBoardsResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetBoardsResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function get(
-  req: Request<unknown, unknown, unknown, IGetBoardsRequestQuery>,
+  req: Request<
+    unknown,
+    unknown,
+    unknown,
+    operations["listBoards"]["parameters"]["query"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const created = req.query.created;
@@ -30,7 +33,9 @@ export async function get(
   const page = parseAndValidatePage(req.query?.page);
 
   // @ts-expect-error
-  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const permissions = (req?.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const hasPermission = permissions.includes("board:read");
 
   try {

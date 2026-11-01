@@ -1,14 +1,7 @@
 import * as v from "valibot";
 import type { Request, Response } from "express";
 import type { Knex } from "knex";
-import type {
-  IApiErrorResponse,
-  IPaginatedRoadmapsResponse,
-  IRoadmapPrivate,
-  IGetRoadmapsParams,
-  TPermission,
-  FilterVisibility,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../../../database";
@@ -42,21 +35,28 @@ const schemaQueryErrorMap = {
   MIN_VALUE_1: error.general.minValue1,
 };
 
-type ResponseBody = IPaginatedRoadmapsResponse | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetFilterRoadmapsResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 interface GetRoadmapQueryOptions {
   first: number;
   after?: string;
-  visibility: FilterVisibility[];
+  visibility: components["schemas"]["FilterVisibilityEnum"][];
 }
 
 interface GetRoadmapMetadataOptions {
   after?: string;
-  visibility: FilterVisibility[];
+  visibility: components["schemas"]["FilterVisibilityEnum"][];
 }
 
 export async function filter(
-  req: Request<IGetRoadmapsParams>,
+  req: Request<
+    unknown,
+    unknown,
+    unknown,
+    operations["filterRoadmaps"]["parameters"]["query"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const query = v.safeParse(querySchema, req.query);
@@ -77,7 +77,9 @@ export async function filter(
   const { first, after, visibility: _visibility } = query.output;
 
   // @ts-expect-error
-  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const permissions = (req?.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const hasPermission = permissions.includes("roadmap:read");
 
   // Sanitize visibility filter based on permission
@@ -138,7 +140,7 @@ export async function filter(
 }
 
 function getRoadmapQuery({ first, after, visibility }: GetRoadmapQueryOptions) {
-  let query = database<IRoadmapPrivate>("roadmaps")
+  let query = database<components["schemas"]["RoadmapPrivate"]>("roadmaps")
     .select("id", "name", "url", "color", "display", "index", "created_at")
     .orderBy("index", "asc")
     .limit(first);
@@ -207,7 +209,7 @@ async function getRoadmapMetadata({
 
 function applyVisibilityFilter<T>(
   query: Knex.QueryBuilder<T>,
-  visibility: FilterVisibility[],
+  visibility: components["schemas"]["FilterVisibilityEnum"][],
 ): Knex.QueryBuilder<T> {
   if (!visibility || visibility.length === 0) {
     // Default: show only public roadmaps
@@ -234,9 +236,9 @@ function applyVisibilityFilter<T>(
 }
 
 function sanitizeVisibility(
-  visibility: FilterVisibility[],
+  visibility: components["schemas"]["FilterVisibilityEnum"][],
   hasPermission: boolean,
-): FilterVisibility[] {
+): components["schemas"]["FilterVisibilityEnum"][] {
   if (hasPermission) return visibility;
   return ["public"];
 }

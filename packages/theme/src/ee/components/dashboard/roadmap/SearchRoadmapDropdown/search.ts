@@ -1,7 +1,10 @@
 import { ref } from "vue";
-import type { IRoadmap, IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
-export type TCurrentRoadmap = IRoadmap | IRoadmapPrivate | null;
+export type TCurrentRoadmap =
+  | components["schemas"]["RoadmapItem"]
+  | components["schemas"]["RoadmapPrivate"]
+  | null;
 const currentRoadmap = ref<TCurrentRoadmap>(null);
 
 export function useRoadmapSearch() {

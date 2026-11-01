@@ -1,8 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IAuthEmailVerifyResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // utils
 import logger from "../../../utils/logger";
@@ -17,7 +14,9 @@ import { mailWorker } from "../../../worker/handler/mail";
 import { mailQueue } from "../../../worker/tasks/mail";
 import { sendAccountVerificationEmail } from "../../../services/mail/worker.service";
 
-type ResponseBody = IAuthEmailVerifyResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["AuthEmailVerifyResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function verify(req: Request, res: Response<ResponseBody>) {
   // @ts-expect-error

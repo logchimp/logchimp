@@ -30,7 +30,7 @@
 import { computed, defineAsyncComponent } from "vue";
 import { PlusIcon } from "lucide-vue";
 import { DropdownMenuTrigger } from "reka-ui";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import DropdownV2 from "../../../../../components/ui/DropdownV2/Dropdown.vue";
 import DropdownV2Content from "../../../../../components/ui/DropdownV2/DropdownContent.vue";
@@ -41,7 +41,10 @@ const AssignRoleUserDropdownContent = defineAsyncComponent(
 
 const userStore = useUserStore();
 
-const REQUIRED_PERMISSIONS: TPermission[] = ["role:assign", "role:unassign"];
+const REQUIRED_PERMISSIONS: Array<components["schemas"]["Permission"]> = [
+  "role:assign",
+  "role:unassign",
+];
 const disabled = computed(() => {
   if (!userStore.getUserId) return false;
 

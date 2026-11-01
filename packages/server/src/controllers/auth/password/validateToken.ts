@@ -1,10 +1,12 @@
 import type { Request, Response } from "express";
-import type { IPasswordResetValidationTokenResponseBody } from "@logchimp/types";
 import { isDevTestEnv } from "../../../helpers";
+import type { components } from "@logchimp/api-ts-types";
 
 export async function validateToken(
   req: Request,
-  res: Response<IPasswordResetValidationTokenResponseBody>,
+  res: Response<
+    components["schemas"]["ValidatePasswordResetTokenResponseBody"]
+  >,
 ) {
   // @ts-expect-error
   const emailToken = req.token;

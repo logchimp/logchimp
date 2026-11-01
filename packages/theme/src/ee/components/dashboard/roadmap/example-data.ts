@@ -1,6 +1,8 @@
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
-export const EXAMPLE_ROADMAPS_DATA: Array<IRoadmapPrivate> = [
+export const EXAMPLE_ROADMAPS_DATA: Array<
+  components["schemas"]["RoadmapPrivate"]
+> = [
   {
     id: "1",
     name: "Backlog",

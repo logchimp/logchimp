@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { addPermission, removePermission } from "../utils";
 import logger from "../../utils/logger";
@@ -32,7 +32,7 @@ const permissions = [
   "role:destroy",
   "role:assign",
   "role:unassign",
-] satisfies TPermission[];
+] satisfies Array<components["schemas"]["Permission"]>;
 
 export async function up(knex: Knex): Promise<void> {
   try {

@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 
 // modules
@@ -71,7 +71,13 @@ const { permissions } = useUserStore();
 const settingsEEStore = useSettingsEEStore();
 const postsEEAPI = new PostsEE();
 
-const emit = defineEmits<(e: "add-comment", comment: IPostActivity) => void>();
+const emit =
+  defineEmits<
+    (
+      e: "add-comment",
+      comment: components["schemas"]["PostActivityItem"],
+    ) => void
+  >();
 
 const canCreateComment = computed(() => permissions.includes("comment:create"));
 const canMarkCommentInternal = computed(
@@ -103,7 +109,9 @@ async function submitComment() {
 
     emit("add-comment", response?.activity);
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     tokenError(err);
     loading.value = false;
   }

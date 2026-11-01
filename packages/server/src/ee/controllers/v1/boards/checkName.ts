@@ -1,21 +1,31 @@
 import type { Request, Response } from "express";
-import type { TBoardCheckNameBody, TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
+type ResponseBody =
+  | components["schemas"]["CheckBoardNameResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
+
 export async function checkName(
-  req: Request<unknown, unknown, TBoardCheckNameBody>,
-  res: Response,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CheckBoardNameRequestBody"]
+  >,
+  res: Response<ResponseBody>,
 ) {
   logger.warn(
     "`/api/v1/boards/check-name` API endpoint is deprecated and will be removed in next major release. Use `/api/v1/boards/check-slug` API endpoint.",
   );
 
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const name = req.body.name;
 
