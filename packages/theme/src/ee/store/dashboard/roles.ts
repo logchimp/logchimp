@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IApiErrorResponse, IRole } from "@logchimp/types";
 import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 import { RolesEEAPI } from "../../modules/roles";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
@@ -9,7 +9,7 @@ import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScr
 const roleServices = new RolesEEAPI();
 
 export const useDashboardRoles = defineStore("dashboardRoles", () => {
-  const roles = ref<IRole[]>([]);
+  const roles = ref<components["schemas"]["RoleItem"][]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
@@ -42,7 +42,9 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
         hasNextPage.value = false;
       }
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
       state.value = "ERROR";
 
       if (err.response?.status === 404) {
@@ -59,11 +61,11 @@ export const useDashboardRoles = defineStore("dashboardRoles", () => {
     }
   }
 
-  function appendRole(role: IRole) {
+  function appendRole(role: components["schemas"]["RoleItem"]) {
     roles.value.push(role);
   }
 
-  function updateRole(role: IRole) {
+  function updateRole(role: components["schemas"]["RoleItem"]) {
     const roleIdx = roles.value.findIndex((item) => item.id === role.id);
     if (roleIdx === -1) return;
     if (!roles.value[roleIdx]) return;

@@ -1,4 +1,4 @@
-import type { ApiSortType, IUserInfo } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../database";
@@ -9,7 +9,7 @@ import logger from "../../utils/logger";
 interface GetUserQueryOptions {
   first: number;
   after?: string;
-  created: ApiSortType;
+  created: components["schemas"]["SortTypeEnum"];
   page?: number;
 }
 
@@ -22,9 +22,9 @@ export async function getUsers({
   after,
   page,
   created,
-}: GetUserQueryOptions): Promise<IUserInfo[]> {
+}: GetUserQueryOptions): Promise<components["schemas"]["CustomerItemInfo"][]> {
   try {
-    let users = database<IUserInfo>("users")
+    let users = database<components["schemas"]["CustomerItemInfo"]>("users")
       .select(
         "userId",
         "name",

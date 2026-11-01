@@ -1,16 +1,5 @@
 import type { AxiosRequestConfig } from "axios";
-import type {
-  ICreatePostEERequestBody,
-  ICreatePostResponseBody,
-  IFilterPostRequestBody,
-  IFilterPostRequestQueryParams,
-  IFilterPostResponseBody,
-  IGetPostBySlugResponseBody,
-  IGetPostVotesRequestQuery,
-  IPaginatedPostVotesResponse,
-  IUpdatePostEERequestBody,
-  TUpdatePostResponseBody,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import { VITE_API_URL } from "../constants";
 import { useUserStore } from "../store/user";
@@ -26,20 +15,14 @@ export class PostsAPI extends APIService {
    * @param body
    * @param query
    * @param config
-   * @returns {Promise<AxiosResponse<IFilterPostResponseBody>>} response
+   * @returns {Promise<components['schemas']['GetFilterPostResponseBody']>} response
    */
   async GetPosts(
-    body: IFilterPostRequestBody,
-    query?: IFilterPostRequestQueryParams,
+    body: components["schemas"]["GetFilterPostRequestBody"],
+    query?: operations["filterPosts"]["parameters"]["query"],
     config: AxiosRequestConfig = {},
-  ): Promise<IFilterPostResponseBody> {
-    const searchParams = new URLSearchParams();
-    for (const queryKey in query) {
-      const value = query[queryKey as keyof IGetPostVotesRequestQuery];
-      if (value) {
-        searchParams.set(queryKey, value.toString());
-      }
-    }
+  ): Promise<components["schemas"]["GetFilterPostResponseBody"]> {
+    const searchParams = this.buildQueryParams(query);
 
     const url = `/v1/posts/get?${searchParams.toString()}`;
 
@@ -61,20 +44,11 @@ export class PostsAPI extends APIService {
 
   async GetPostVotes(
     postId: string,
-    params: IGetPostVotesRequestQuery = {},
-  ): Promise<IPaginatedPostVotesResponse> {
-    const searchParams = new URLSearchParams();
+    params: operations["getPostVotes"]["parameters"]["query"] = {},
+  ): Promise<components["schemas"]["GetPostVotesResponseBody"]> {
+    const searchParams = this.buildQueryParams(params);
 
-    for (const paramsKey in params) {
-      const value = params[paramsKey as keyof IGetPostVotesRequestQuery];
-      if (value) {
-        searchParams.append(paramsKey, value.toString());
-      }
-    }
-
-    const url = `/v1/posts/${postId}/votes${
-      searchParams.toString() ? `?${searchParams.toString()}` : ""
-    }`;
+    const url = `/v1/posts/${postId}/votes?${searchParams.toString()}`;
 
     return this.get(url)
       .then((response) => response?.data)
@@ -89,11 +63,11 @@ export class PostsAPI extends APIService {
    * @param {string} post.boardId board UUID
    * @param {string} post.title
    * @param {string} post.description
-   * @returns {Promise<ICreatePostResponseBody>} response
+   * @returns {Promise<components["schemas"]["CreatePostResponseBody"]>} response
    */
   CreatePost = async (
-    post: ICreatePostEERequestBody,
-  ): Promise<ICreatePostResponseBody> => {
+    post: components["schemas"]["CreatePostEERequestBody"],
+  ): Promise<components["schemas"]["CreatePostResponseBody"]> => {
     const { getUserId } = useUserStore();
 
     return this.post("/v1/posts", {
@@ -111,9 +85,11 @@ export class PostsAPI extends APIService {
   /**
    * Get post by slug
    * @param {string} slug post slug
-   * @returns {Promise<IGetPostBySlugResponseBody>} response
+   * @returns {Promise<components['schemas']['GetPostBySlugResponseBody']>} response
    */
-  GetPostBySlug = async (slug: string): Promise<IGetPostBySlugResponseBody> => {
+  GetPostBySlug = async (
+    slug: string,
+  ): Promise<components["schemas"]["GetPostBySlugResponseBody"]> => {
     return this.post("/v1/posts/slug", {
       slug,
     })
@@ -133,11 +109,11 @@ export class PostsAPI extends APIService {
    * @param {string} post.userId post author UUID
    * @param {string} post.boardId post board UUID
    * @param {string} post.roadmapId post roadmap UUID
-   * @returns {Promise<TUpdatePostResponseBody>} response
+   * @returns {Promise<components["schemas"]["UpdatePostResponseBody"]>} response
    */
   UpdatePost = async (
-    post: IUpdatePostEERequestBody,
-  ): Promise<TUpdatePostResponseBody> => {
+    post: components["schemas"]["UpdatePostEERequestBody"],
+  ): Promise<components["schemas"]["UpdatePostResponseBody"]> => {
     return this.patch("/v1/posts", post)
       .then((response) => response?.data)
       .catch((error) => {

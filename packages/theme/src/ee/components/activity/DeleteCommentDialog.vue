@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import type { IPostActivity } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { PostsEE } from "../../modules/posts";
 import { usePostActivityEEStore } from "../../store/postActivity";
@@ -48,7 +48,7 @@ const postActivityEEStore = usePostActivityEEStore();
 interface Props {
   open: boolean;
   postId: string;
-  activity: IPostActivity;
+  activity: components["schemas"]["PostActivityItem"];
 }
 const props = defineProps<Props>();
 const emit = defineEmits<(e: "close", value: boolean) => void>();

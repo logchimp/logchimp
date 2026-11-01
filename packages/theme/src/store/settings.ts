@@ -1,11 +1,11 @@
 import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
-import type { ISiteSettings } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import axios from "axios";
 import { VITE_API_URL } from "../constants";
 
 export const useSettingStore = defineStore("settings", () => {
-  const settings = reactive<ISiteSettings>({
+  const settings = reactive<components["schemas"]["SiteSettings"]>({
     title: "",
     description: "",
     logo: "",
@@ -38,11 +38,13 @@ export const useSettingStore = defineStore("settings", () => {
     }
   }
 
-  function updateSettings(payload: ISiteSettings) {
+  function updateSettings(payload: components["schemas"]["SiteSettings"]) {
     Object.assign(settings, payload);
   }
 
-  function updateLabs(payload: Partial<ISiteSettings["labs"]>) {
+  function updateLabs(
+    payload: Partial<components["schemas"]["SiteSettings"]["labs"]>,
+  ) {
     Object.assign(settings.labs, payload);
   }
 

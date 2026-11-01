@@ -1,6 +1,7 @@
+import type { components } from "@logchimp/api-ts-types";
+
 import * as cache from "../cache";
 import { CACHE_KEYS } from "../cache/keys";
-import type { ISiteSettings } from "@logchimp/types";
 import logger from "../utils/logger";
 import database from "../database";
 import { DAY } from "../cache/time";
@@ -11,7 +12,7 @@ export class workspaceRepository {
       try {
         const cached = await cache.valkey.get(CACHE_KEYS.SITE_SETTINGS);
         if (cached) {
-          return JSON.parse(cached) as ISiteSettings;
+          return JSON.parse(cached) as components["schemas"]["SiteSettings"];
         }
       } catch (err) {
         logger.error({ message: err });
@@ -20,7 +21,10 @@ export class workspaceRepository {
 
     try {
       const settings = await database("settings")
-        .select<ISiteSettings>("*", database.raw("labs::json as labs"))
+        .select<components["schemas"]["SiteSettings"]>(
+          "*",
+          database.raw("labs::json as labs"),
+        )
         .first();
 
       if (cache.isActive) {

@@ -1,9 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IValidateEmailVerificationTokenRequestBody,
-  IValidateEmailVerificationTokenResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../../database";
@@ -14,11 +10,15 @@ import error from "../../../errorResponse.json";
 import { getUserByEmail } from "../../../repository/user";
 
 type ResponseBody =
-  | IValidateEmailVerificationTokenResponseBody
-  | IApiErrorResponse;
+  | components["schemas"]["ValidateEmailVerificationTokenResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function validate(
-  req: Request<unknown, unknown, IValidateEmailVerificationTokenRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["ValidateEmailVerificationTokenRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error

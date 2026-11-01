@@ -1,12 +1,6 @@
 import type { Request, Response } from "express";
-import type {
-  IRole,
-  IApiErrorResponse,
-  IPaginatedRolesResponse,
-  TPermission,
-  IGetRolesParams,
-} from "@logchimp/types";
 import * as v from "valibot";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../../../../database";
 
 // utils
@@ -16,7 +10,9 @@ import { parseAndValidateLimit } from "../../../../helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../../constants";
 import type { IRoleTableColumns } from "../../../services/roles/roles.service";
 
-type ResponseBody = IPaginatedRolesResponse | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetFilterRolesResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const querySchema = v.object({
   first: v.pipe(
@@ -35,7 +31,12 @@ const querySchemaErrorMap = {
 };
 
 export async function get(
-  req: Request<IGetRolesParams>,
+  req: Request<
+    unknown,
+    unknown,
+    unknown,
+    operations["filterRoles"]["parameters"]["query"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const query = v.safeParse(querySchema, req.query);
@@ -55,7 +56,9 @@ export async function get(
   }
 
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
     res.status(403).send({
@@ -98,7 +101,7 @@ export async function get(
           : currentPage;
     }
 
-    const roles = [] as IRole[];
+    const roles = [] as Array<components["schemas"]["RoleItem"]>;
     for (const role of data) {
       roles.push({
         id: role.id,
@@ -107,7 +110,7 @@ export async function get(
         isSystem: !!role.is_system,
         created_at: role.created_at,
         updated_at: role.updated_at,
-      } satisfies IRole);
+      } satisfies components["schemas"]["RoleItem"]);
     }
 
     res.status(200).send({

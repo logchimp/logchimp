@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 
 import Table from "../../../../components/ui/Table/Table.vue";
@@ -14,7 +14,7 @@ import { BoardsEE } from "../../../modules/boards";
 import LicenseValidationFailed from "../../../../components/LicenseValidationFailed.vue";
 import ClientError from "../../../../components/ui/ClientError.vue";
 
-const boards = ref<IBoardPrivate[]>([]);
+const boards = ref<components["schemas"]["BoardPrivate"][]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string | null>(null);
 const boardsEEAPI = new BoardsEE();
@@ -35,7 +35,9 @@ async function getBoards() {
     boards.value = response.boards;
     state.value = "COMPLETED";
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     state.value = "ERROR";
 
     if (err.status === 404) {

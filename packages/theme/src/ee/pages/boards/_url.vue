@@ -37,7 +37,7 @@ import { useRoute } from "vue-router";
 import { useHead } from "@vueuse/head";
 import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
 import type { AxiosError } from "axios";
-import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { BoardsEE } from "../../modules/boards";
@@ -54,14 +54,14 @@ import { useSettingStore } from "../../../store/settings";
 
 const route = useRoute();
 const tab = ref("latest");
-const board = reactive<IBoardPrivate>({
+const board = reactive<components["schemas"]["BoardPrivate"]>({
   boardId: "",
   name: "",
   url: "",
   color: "",
   display: false,
   view_voters: false,
-  post_count: "",
+  post_count: 0,
   createdAt: new Date(),
 });
 const loading = ref<boolean>(false);
@@ -101,7 +101,9 @@ async function getBoard() {
     isBoardExist.value = true;
     Object.assign(board, response.board);
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     if (err.response?.data?.code === "BOARD_NOT_FOUND") {
       isBoardExist.value = false;
     }

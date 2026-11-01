@@ -1,12 +1,7 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IUpdateSiteSettingsRequestBody,
-  TPermission,
-  TUpdateSiteSettingsResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { JSDOM } from "jsdom";
-import { isURL, isHexColor } from "validator";
+import { isHexColor, isURL } from "validator";
 import createDOMPurify from "dompurify";
 import database from "../../database";
 
@@ -18,14 +13,22 @@ import error from "../../errorResponse.json";
 import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
 
-type ResponseBody = TUpdateSiteSettingsResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["UpdateSiteSettingsResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function update(
-  req: Request<unknown, unknown, IUpdateSiteSettingsRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdateSiteSettingsRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.find(
     (item) => item === "settings:update",

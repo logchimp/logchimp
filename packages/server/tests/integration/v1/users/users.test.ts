@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import supertest from "supertest";
-import type { IUserInfo } from "@logchimp/types";
 
 import app from "../../../../src/app";
 import database from "../../../../src/database";
@@ -135,7 +134,9 @@ describe("GET /api/v1/users", () => {
       .set("Authorization", `Bearer ${ownAuthToken}`)
       .query({ first: 6 });
 
-    const dates = res.body.users.map((u: IUserInfo) => new Date(u.createdAt));
+    const dates = res.body.users.map(
+      (u: components["schemas"]["CustomerItemInfo"]) => new Date(u.createdAt),
+    );
     for (let i = 0; i < dates.length - 1; i++) {
       expect(dates[i].getTime()).toBeLessThanOrEqual(dates[i + 1].getTime());
     }
@@ -162,8 +163,10 @@ describe("GET /api/v1/users", () => {
           .get("/api/v1/users")
           .set("Authorization", `Bearer ${ownAuthToken}`);
 
-        const firstItem: IUserInfo = res.body.users[0];
-        const lastItem: IUserInfo = res.body.users[res.body.users.length - 1];
+        const firstItem: components["schemas"]["CustomerItemInfo"] =
+          res.body.users[0];
+        const lastItem: components["schemas"]["CustomerItemInfo"] =
+          res.body.users[res.body.users.length - 1];
 
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(200);
@@ -208,7 +211,9 @@ describe("GET /api/v1/users", () => {
         expect(firstPage.body.page_info.count).toBeLessThanOrEqual(5);
 
         const endCursor = firstPage.body.page_info.end_cursor;
-        const page1Users = firstPage.body.users.map((u: IUserInfo) => u.userId);
+        const page1Users = firstPage.body.users.map(
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+        );
 
         const secondPage = await supertest(app)
           .get("/api/v1/users")
@@ -222,7 +227,7 @@ describe("GET /api/v1/users", () => {
         );
 
         const page2Users = secondPage.body.users.map(
-          (u: IUserInfo) => u.userId,
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
         );
         // No overlap between page 1 and page 2
         const overlap = page2Users.filter((id: string) =>
@@ -287,7 +292,8 @@ describe("GET /api/v1/users", () => {
         expect(desc.status).toBe(200);
 
         const ascDates = asc.body.users.map(
-          (u: IUserInfo) => new Date(u.createdAt),
+          (u: components["schemas"]["CustomerItemInfo"]) =>
+            new Date(u.createdAt),
         );
         for (let i = 0; i < ascDates.length - 1; i++) {
           expect(ascDates[i].getTime()).toBeLessThanOrEqual(
@@ -296,7 +302,8 @@ describe("GET /api/v1/users", () => {
         }
 
         const descDates = desc.body.users.map(
-          (u: IUserInfo) => new Date(u.createdAt),
+          (u: components["schemas"]["CustomerItemInfo"]) =>
+            new Date(u.createdAt),
         );
         for (let i = 0; i < descDates.length - 1; i++) {
           expect(descDates[i].getTime()).toBeGreaterThanOrEqual(
@@ -330,8 +337,12 @@ describe("GET /api/v1/users", () => {
         expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
         expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
 
-        const ids1 = res1.body.results.map((u: IUserInfo) => u.userId);
-        const ids2 = res2.body.results.map((u: IUserInfo) => u.userId);
+        const ids1 = res1.body.results.map(
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+        );
+        const ids2 = res2.body.results.map(
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+        );
         expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
       });
 
@@ -389,8 +400,12 @@ describe("GET /api/v1/users", () => {
       expect(page1.body.total_pages).toBeUndefined();
 
       // Verify no overlap and combined size equals limit * 2 when enough users exist
-      const ids1 = page1.body.users.map((u: IUserInfo) => u.userId);
-      const ids2 = page2.body.users.map((u: IUserInfo) => u.userId);
+      const ids1 = page1.body.users.map(
+        (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+      );
+      const ids2 = page2.body.users.map(
+        (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+      );
 
       const overlap = ids1.filter((id: string) => ids2.includes(id));
       expect(overlap.length).toBe(0);
@@ -415,9 +430,15 @@ describe("GET /api/v1/users", () => {
           .set("Authorization", `Bearer ${ownAuthToken}`)
           .query({ first: 5, page: 1, created: "ASC" });
 
-        const ids0 = page0.body.users.map((u: IUserInfo) => u.userId);
-        const idsNeg1 = pageNeg1.body.users.map((u: IUserInfo) => u.userId);
-        const ids1 = page1.body.users.map((u: IUserInfo) => u.userId);
+        const ids0 = page0.body.users.map(
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+        );
+        const idsNeg1 = pageNeg1.body.users.map(
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+        );
+        const ids1 = page1.body.users.map(
+          (u: components["schemas"]["CustomerItemInfo"]) => u.userId,
+        );
 
         expect(ids0).toEqual(ids1);
         expect(idsNeg1).toEqual(ids1);
@@ -432,7 +453,8 @@ describe("GET /api/v1/users", () => {
             created: "DESC",
           });
 
-        const users: IUserInfo[] = response.body.users;
+        const users: components["schemas"]["CustomerItemInfo"][] =
+          response.body.users;
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
         expect(users).toHaveLength(0);
@@ -449,13 +471,15 @@ describe("GET /api/v1/users", () => {
             created: "DESC",
           });
 
-        const users: IUserInfo[] = response.body.users;
+        const users: components["schemas"]["CustomerItemInfo"][] =
+          response.body.users;
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
         expect(users).toHaveLength(2);
 
         const userCreationDates = users.map(
-          (u: IUserInfo) => new Date(u.createdAt),
+          (u: components["schemas"]["CustomerItemInfo"]) =>
+            new Date(u.createdAt),
         );
 
         for (let i = 0; i < userCreationDates.length - 1; i++) {
@@ -473,14 +497,16 @@ describe("GET /api/v1/users", () => {
             limit: 15,
           });
 
-        const users: IUserInfo[] = response.body.users;
+        const users: components["schemas"]["CustomerItemInfo"][] =
+          response.body.users;
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
         expect(users).toHaveLength(10);
 
         const usersCreationDates = users.map(
-          (u: IUserInfo) => new Date(u.createdAt),
+          (u: components["schemas"]["CustomerItemInfo"]) =>
+            new Date(u.createdAt),
         );
 
         for (let i = 0; i < usersCreationDates.length - 1; i++) {

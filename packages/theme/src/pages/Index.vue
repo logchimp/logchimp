@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -42,8 +42,8 @@ const settingsStore = useSettingStore();
 const postsAPI = new PostsAPI();
 const { t } = useI18n();
 
-const posts = ref<IPost[]>([]);
-const endCursor = ref<string | undefined>();
+const posts = ref<components["schemas"]["Post"][]>([]);
+const endCursor = ref<string | null>(null);
 const hasNextPage = ref<boolean>(false);
 const showSiteSetupCard = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>("IDLE");
@@ -65,19 +65,19 @@ async function loadMorePosts() {
     const response = await postsAPI.GetPosts(
       {},
       {
-        after: endCursor.value,
+        after: endCursor.value ?? undefined,
         created: "DESC",
       },
     );
 
-    const postsList = response.posts;
-
-    if (postsList.length > 0) {
-      posts.value.push(...response.posts);
+    if (response.results.length > 0) {
+      posts.value.push(...response.results);
     }
 
-    endCursor.value = response.page_info?.end_cursor || undefined;
-    hasNextPage.value = response.page_info?.has_next_page || false;
+    if ("page_info" in response) {
+      endCursor.value = response.page_info.end_cursor;
+      hasNextPage.value = response.page_info.has_next_page;
+    }
 
     if (hasNextPage.value) {
       state.value = "LOADED";

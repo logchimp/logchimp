@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { components } from "@logchimp/api-ts-types";
 import { config } from "../../../utils/logchimpConfig";
 import { OIDCService } from "../../../services/auth/oidc.service";
 import { AuthService } from "../../../services/auth/auth.service";
@@ -7,9 +8,9 @@ import {
   OIDCAuthenticationFailedError,
 } from "../../../services/auth/errors";
 import logger from "../../../utils/logger";
-import type { IApiErrorResponse, IUserInfo } from "@logchimp/types";
 
-type OIDCLoginCallbackResponse = IApiErrorResponse;
+type OIDCLoginCallbackResponse =
+  components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function OIDCLoginCallback(
   req: Request,
@@ -31,7 +32,7 @@ export async function OIDCLoginCallback(
   const authService = new AuthService();
 
   try {
-    let user: IUserInfo;
+    let user: components["schemas"]["CustomerItemInfo"];
     try {
       user = await oidcService.Authenticate(currentUrl, oidcState);
     } catch (err) {

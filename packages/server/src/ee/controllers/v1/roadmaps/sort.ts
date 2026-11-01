@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  ISortRoadmapRequestBody,
-  TPermission,
-  TSortRoadmapResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import database from "../../../../database";
 
@@ -12,15 +7,21 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = TSortRoadmapResponseBody | IApiErrorResponse;
+type ResponseBody = components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function sort(
-  req: Request<unknown, unknown, ISortRoadmapRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["SortRoadmapRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const { from, to } = req.body;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.includes("roadmap:update");
   if (!checkPermission) {

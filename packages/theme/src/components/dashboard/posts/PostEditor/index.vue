@@ -91,7 +91,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, useId } from "vue";
-import type { IDashboardPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { storeToRefs } from "pinia";
 
 // modules
@@ -121,18 +121,18 @@ const { hasValidLicense } = storeToRefs(settingsEEStore);
 const postsAPI = new PostsAPI();
 
 interface Props {
-  post: IDashboardPost;
+  post: components["schemas"]["DashboardPost"];
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   loading: [value: boolean];
-  updated: [post: IDashboardPost];
+  updated: [post: components["schemas"]["DashboardPost"]];
 }>();
 const notifyVotersRoadmap = useId();
 
 const saveBtnLoading = ref(false);
-const post = reactive<IDashboardPost>({
+const post = reactive<components["schemas"]["DashboardPost"]>({
   ...props.post,
 });
 const notifyVoters = reactive({

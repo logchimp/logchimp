@@ -45,7 +45,7 @@
 import { ref, useTemplateRef, useId, watch, nextTick } from "vue";
 import { DropdownMenuContent } from "reka-ui";
 import { watchDebounced } from "@vueuse/core";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { BoardsEE } from "../../../../modules/boards";
 import { type TCurrentBoard, useBoardSearch } from "./search";
@@ -55,7 +55,7 @@ import NoBoard from "./NoBoard.vue";
 import CreateBoardItem from "./CreateBoardItem.vue";
 
 const search = ref("");
-const suggestions = ref<IBoardPrivate[]>([]);
+const suggestions = ref<components["schemas"]["BoardPrivate"][]>([]);
 const searchInputId = useId();
 const searchInputRef = useTemplateRef<HTMLInputElement>("searchInputRef");
 const boardsEEAPI = new BoardsEE();

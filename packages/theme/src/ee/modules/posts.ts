@@ -1,14 +1,5 @@
 import type { AxiosResponse } from "axios";
-import type {
-  IAddVoteV2ResponseBody,
-  ICreatePostCommentRequestBody,
-  ICreatePostCommentResponseBody,
-  IGetPostActivityRequestQuery,
-  IGetPostActivityResponseBody,
-  IUpdatePostCommentRequestBody,
-  IUpdatePostCommentResponseBody,
-  TFilterPostActivityVisibility,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import { VITE_API_URL } from "../../constants";
 import { APIService } from "../../modules/api";
@@ -21,7 +12,7 @@ export class PostsEE extends APIService {
   async castVoteOnBehalf(
     postId: string,
     userId: string,
-  ): Promise<IAddVoteV2ResponseBody> {
+  ): Promise<components["schemas"]["AddVoteOnBehalfOfUserResponseBody"]> {
     return this.post(`/v1/posts/${postId}/votes/${userId}`)
       .then((response) => response?.data)
       .catch((error) => {
@@ -44,7 +35,7 @@ export class PostsEE extends APIService {
    * @param {string} activity.page page number
    * @param {string} activity.limit number of items in a page
    * @param {string[]} activity.visibility visibility of the activity
-   * @returns {Promise<IGetPostActivityResponseBody>}
+   * @returns {Promise<components["schemas"]["GetPostActivityResponseBody"]>}
    */
   GetPostActivities = async (
     post_id: string,
@@ -52,14 +43,17 @@ export class PostsEE extends APIService {
       page,
       limit,
       visibility,
-    }: Omit<IGetPostActivityRequestQuery, "visibility"> & {
-      visibility: Array<TFilterPostActivityVisibility>;
+    }: Omit<
+      operations["getPostActivity"]["parameters"]["query"],
+      "visibility"
+    > & {
+      visibility?: Array<components["schemas"]["FilterVisibilityEnum"]>;
     },
-  ): Promise<IGetPostActivityResponseBody> => {
+  ): Promise<components["schemas"]["GetPostActivityResponseBody"]> => {
     return this.get(`/v1/posts/${encodeURIComponent(post_id)}/activity`, {
       page,
       limit,
-      visibility: visibility.join(","),
+      visibility: visibility ? visibility.join(",") : "",
     })
       .then((response) => response?.data)
       .catch((error) => {
@@ -70,15 +64,18 @@ export class PostsEE extends APIService {
   /**
    * Add comment to a post
    * @param {string} post_id
-   * @param {object} comment
+   * @param {components["schemas"]["CreatePostCommentRequestBody"]} comment
    * @param {string} comment.body
    * @param {boolean} comment.is_internal
-   * @returns {Promise<ICreatePostCommentResponseBody>}
+   * @returns {Promise<components['schemas']['CreatePostCommentResponseBody']>}
    */
   AddComment = async (
     post_id: string,
-    { body, is_internal = false }: ICreatePostCommentRequestBody,
-  ): Promise<ICreatePostCommentResponseBody> => {
+    {
+      body,
+      is_internal = false,
+    }: components["schemas"]["CreatePostCommentRequestBody"],
+  ): Promise<components["schemas"]["CreatePostCommentResponseBody"]> => {
     return this.post(`v1/posts/${encodeURIComponent(post_id)}/comments`, {
       body,
       is_internal,
@@ -92,8 +89,11 @@ export class PostsEE extends APIService {
   UpdateComment = async (
     post_id: string,
     comment_id: string,
-    { body, is_internal = false }: Partial<IUpdatePostCommentRequestBody>,
-  ): Promise<IUpdatePostCommentResponseBody> => {
+    {
+      body,
+      is_internal = false,
+    }: Partial<components["schemas"]["UpdatePostCommentRequestBody"]>,
+  ): Promise<components["schemas"]["UpdatePostCommentResponseBody"]> => {
     return this.put(
       `/v1/posts/${encodeURIComponent(post_id)}/comments/${encodeURIComponent(comment_id)}`,
       {

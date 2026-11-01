@@ -20,12 +20,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { IAddVoteV2ResponseBody, IUser } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { UsersAPI as UserService } from "../../../../modules/users";
 import { PostsEE as PostEEService } from "../../../../ee/modules/posts";
 
-const users = ref<Array<IUser>>([]);
+const users = ref<Array<components["schemas"]["UserItem"]>>([]);
 const loading = ref(false);
 const isError = ref(false);
 
@@ -37,7 +37,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 const emit =
-  defineEmits<(e: "add-vote", vote: IAddVoteV2ResponseBody["vote"]) => void>();
+  defineEmits<
+    (e: "add-vote", vote: components["schemas"]["UserVoteV2"]) => void
+  >();
 
 async function getVotes() {
   if (loading.value) return;

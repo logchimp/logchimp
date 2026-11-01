@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import {
   computePermissions,
@@ -47,7 +47,7 @@ export async function authOptional(
     return next();
   }
 
-  let permissions: TPermission[] = [];
+  let permissions: Array<components["schemas"]["Permission"]> = [];
   try {
     permissions = await computePermissions(user);
   } catch (err) {

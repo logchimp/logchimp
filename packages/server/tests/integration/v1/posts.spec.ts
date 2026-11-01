@@ -3,7 +3,7 @@ import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
 import xss from "xss";
-import type { IBoard, IPost, IUpdatePostRequestBody } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../src/app";
 import * as cache from "../../../src/cache";
@@ -122,7 +122,9 @@ describeEE("POST /api/v1/posts/get", () => {
     expect(asc.headers["content-type"]).toContain("application/json");
     expect(asc.status).toBe(200);
 
-    const ascSlugs = asc.body.posts.map((p: IPost) => p.slug);
+    const ascSlugs = asc.body.posts.map(
+      (p: components["schemas"]["Post"]) => p.slug,
+    );
     // In ASC, the earliest created should appear before later ones
     const idxA = ascSlugs.indexOf(post1.slug);
     const idxB = ascSlugs.indexOf(post2.slug);
@@ -136,7 +138,9 @@ describeEE("POST /api/v1/posts/get", () => {
       const boardCacheStr = await cache.valkey.get(
         `board:public:${board.boardId}`,
       );
-      const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+      const boardCache = JSON.parse(
+        boardCacheStr,
+      ) satisfies components["schemas"]["BoardItem"];
       expect(board).toMatchObject(boardCache);
     }
   });
@@ -166,7 +170,9 @@ describeEE("POST /api/v1/posts/get", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
 
-    const found = res.body.posts.find((p: IPost) => p.slug === p1.slug);
+    const found = res.body.posts.find(
+      (p: components["schemas"]["Post"]) => p.slug === p1.slug,
+    );
     expect(found).toBeDefined();
     expect(found.voters).toBeDefined();
     expect(found.voters.viewerVote).toBeDefined();
@@ -198,7 +204,9 @@ describeEE("POST /api/v1/posts/get", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
 
-    const found = res.body.posts.find((p: IPost) => p.slug === p1.slug);
+    const found = res.body.posts.find(
+      (p: components["schemas"]["Post"]) => p.slug === p1.slug,
+    );
     expect(found).toBeDefined();
     expect(found.voters).toBeDefined();
     expect(found.voters.viewerVote).toBeUndefined();
@@ -253,13 +261,13 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(Array.isArray(posts)).toBeTruthy();
       expect(posts.length).toBeGreaterThanOrEqual(2);
 
-      posts.forEach((p: IPost) => {
+      posts.forEach((p: components["schemas"]["Post"]) => {
         expect(p.board).toBeNull();
         expect(p.roadmap).toBeNull();
         expect(Array.isArray(p.voters.votes)).toBeTruthy();
       });
 
-      const slugs = posts.map((p: IPost) => p.slug);
+      const slugs = posts.map((p: components["schemas"]["Post"]) => p.slug);
       expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
     });
   });
@@ -295,7 +303,7 @@ describeEE("POST /api/v1/posts/get", () => {
 
         // Default page should be 1 => should return the newest posts first (DESC is default)
         const slugsDefault: string[] = resDefault.body.posts.map(
-          (p: IPost) => p.slug,
+          (p: components["schemas"]["Post"]) => p.slug,
         );
         expect(Array.isArray(resDefault.body.posts)).toBeTruthy();
         expect(resDefault.body.posts.length).toBeGreaterThan(0);
@@ -318,7 +326,9 @@ describeEE("POST /api/v1/posts/get", () => {
 
         // There should be minimal overlap between default page (1) and page 2 when many posts exist
         const setDefault = new Set(slugsDefault);
-        const slugsPage2 = resPage2.body.posts.map((p: IPost) => p.slug);
+        const slugsPage2 = resPage2.body.posts.map(
+          (p: components["schemas"]["Post"]) => p.slug,
+        );
         const intersection = slugsPage2.filter((s: string) =>
           setDefault.has(s),
         );
@@ -343,9 +353,15 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(pageNeg1.status).toBe(200);
       expect(page1.status).toBe(200);
 
-      const ids0 = page0.body.posts.map((p: IPost) => p.postId);
-      const idsNeg1 = pageNeg1.body.posts.map((p: IPost) => p.postId);
-      const ids1 = page1.body.posts.map((p: IPost) => p.postId);
+      const ids0 = page0.body.posts.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
+      const idsNeg1 = pageNeg1.body.posts.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
+      const ids1 = page1.body.posts.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
 
       expect(ids0).toEqual(ids1);
       expect(idsNeg1).toEqual(ids1);
@@ -400,14 +416,14 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(posts.length).toBeGreaterThanOrEqual(2);
 
       // All returned posts should belong to boardA
-      posts.forEach((p: IPost) => {
+      posts.forEach((p: components["schemas"]["Post"]) => {
         expect(p.board.boardId).toBe(boardA.boardId);
         expect(p.board).toBeDefined();
         expect(p.roadmap).toBeDefined();
         expect(Array.isArray(p.voters.votes)).toBeTruthy();
       });
 
-      const slugs = posts.map((p: IPost) => p.slug);
+      const slugs = posts.map((p: components["schemas"]["Post"]) => p.slug);
       expect(slugs).toEqual(expect.arrayContaining([post1.slug, postA2.slug]));
 
       if (cache.isActive) {
@@ -415,7 +431,9 @@ describeEE("POST /api/v1/posts/get", () => {
         const boardACacheStr = await cache.valkey.get(
           `board:public:${boardA.boardId}`,
         );
-        const boardACache = JSON.parse(boardACacheStr) satisfies IBoard;
+        const boardACache = JSON.parse(
+          boardACacheStr,
+        ) satisfies components["schemas"]["BoardItem"];
         expect(boardA).toMatchObject(boardACache);
 
         // should not have boardB cached
@@ -461,10 +479,10 @@ describeEE("POST /api/v1/posts/get", () => {
 
       const posts = response.body.posts;
       expect(posts.length).toBeGreaterThanOrEqual(1);
-      posts.forEach((p: IPost) => {
+      posts.forEach((p: components["schemas"]["Post"]) => {
         expect(p.roadmap.id).toBe(roadmapA.id);
       });
-      expect(posts.map((p: IPost) => p.slug)).toEqual(
+      expect(posts.map((p: components["schemas"]["Post"]) => p.slug)).toEqual(
         expect.arrayContaining([postR1.slug]),
       );
     });
@@ -517,8 +535,12 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(page1.body.posts.length).toBeLessThanOrEqual(2);
 
       // Ensure no overlap between pages when there are at least 3 posts
-      const slugs0 = new Set(page0.body.posts.map((p: IPost) => p.slug));
-      const slugs1 = new Set(page1.body.posts.map((p: IPost) => p.slug));
+      const slugs0 = new Set(
+        page0.body.posts.map((p: components["schemas"]["Post"]) => p.slug),
+      );
+      const slugs1 = new Set(
+        page1.body.posts.map((p: components["schemas"]["Post"]) => p.slug),
+      );
       const intersection = [...Array.from(slugs0)].filter((key) =>
         slugs1.has(key),
       );
@@ -535,7 +557,9 @@ describeEE("POST /api/v1/posts/get", () => {
         const boardCacheStr = await cache.valkey.get(
           `board:public:${board.boardId}`,
         );
-        const boardCache = JSON.parse(boardCacheStr) satisfies IBoard;
+        const boardCache = JSON.parse(
+          boardCacheStr,
+        ) satisfies components["schemas"]["BoardItem"];
         expect(board).toMatchObject(boardCache);
       }
     });
@@ -574,7 +598,7 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(res.status).toBe(200);
       expect(res.headers["content-type"]).toContain("application/json");
 
-      const posts: IPost[] = res.body.posts;
+      const posts: components["schemas"]["Post"][] = res.body.posts;
       expect(Array.isArray(posts)).toBeTruthy();
       expect(posts.length).toBeGreaterThan(0);
 
@@ -589,8 +613,9 @@ describeEE("POST /api/v1/posts/get", () => {
     it("should default to cursor pagination return default list when no '?first=' param", async () => {
       const res = await supertest(app).post("/api/v1/posts/get");
 
-      const firstItem: IPost = res.body.posts[0];
-      const lastItem: IPost = res.body.posts[res.body.posts.length - 1];
+      const firstItem: components["schemas"]["Post"] = res.body.posts[0];
+      const lastItem: components["schemas"]["Post"] =
+        res.body.posts[res.body.posts.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
       expect(res.status).toBe(200);
@@ -629,7 +654,9 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(firstPage.body.page_info.count).toBeLessThanOrEqual(5);
 
       const endCursor = firstPage.body.page_info.end_cursor;
-      const firstPageId = firstPage.body.posts.map((p: IPost) => p.postId);
+      const firstPageId = firstPage.body.posts.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
 
       const secondPage = await supertest(app)
         .post("/api/v1/posts/get")
@@ -640,7 +667,9 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(secondPage.body.page_info).toBeDefined();
       expect(secondPage.body.page_info.current_page).toBeGreaterThanOrEqual(2);
 
-      const secondPageId = secondPage.body.posts.map((p: IPost) => p.postId);
+      const secondPageId = secondPage.body.posts.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
 
       const overlap = secondPageId.filter((s) => firstPageId.includes(s));
       expect(overlap.length).toBe(0);
@@ -685,10 +714,10 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(descRes.status).toBe(200);
 
       const ascDates = ascRes.body.posts.map(
-        (p: IPost) => new Date(p.createdAt),
+        (p: components["schemas"]["Post"]) => new Date(p.createdAt),
       );
       const descDates = descRes.body.posts.map(
-        (p: IPost) => new Date(p.createdAt),
+        (p: components["schemas"]["Post"]) => new Date(p.createdAt),
       );
 
       for (let i = 0; i < ascDates.length - 1; i++) {
@@ -740,8 +769,12 @@ describeEE("POST /api/v1/posts/get", () => {
       expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
       expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
 
-      const ids1 = res1.body.results.map((p: IPost) => p.postId);
-      const ids2 = res2.body.results.map((p: IPost) => p.postId);
+      const ids1 = res1.body.results.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
+      const ids2 = res2.body.results.map(
+        (p: components["schemas"]["Post"]) => p.postId,
+      );
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
   });
@@ -819,9 +852,9 @@ describeEE("POST /api/v1/posts/get", () => {
 
         const posts = response.body.posts;
         expect(posts.length).toBe(1);
-        expect(posts.map((p: IPost) => p.postId)).not.toContain(
-          nonMatchingPost.postId,
-        );
+        expect(
+          posts.map((p: components["schemas"]["Post"]) => p.postId),
+        ).not.toContain(nonMatchingPost.postId);
 
         expect(posts).toEqual(
           expect.arrayContaining([
@@ -1029,7 +1062,7 @@ describe("POST /api/v1/posts", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(201);
 
-      const post = response.body.post as IPost;
+      const post = response.body.post as components["schemas"]["Post"];
       // controller runs: xss(rawTitle) || "new post"
       expect(post.title).toBe(xss(payload.trim()) || "new post");
       // sanitised output must never contain an executable script tag
@@ -1054,7 +1087,7 @@ describe("POST /api/v1/posts", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(201);
 
-      const post = response.body.post as IPost;
+      const post = response.body.post as components["schemas"]["Post"];
       expect(post.title).toBe("Safe title");
       expect(post.contentMarkdown).toBe(xss(payload.trim()) || null);
       if (post.contentMarkdown) {
@@ -1133,11 +1166,10 @@ describe("PATCH /api/v1/posts", () => {
         );
 
         // Build the request body
-        const requestBody: IUpdatePostRequestBody = {
+        const requestBody: components["schemas"]["UpdatePostEERequestBody"] = {
           id: post.postId,
           title: post.title,
           slugId: post.slugId,
-          userId: author.userId,
           boardId: board.boardId,
           roadmapId: roadmap.id,
           contentMarkdown: post.contentMarkdown,
@@ -1236,7 +1268,7 @@ describe("PATCH /api/v1/posts", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
-    const updated = res.body.post as IPost;
+    const updated = res.body.post as components["schemas"]["Post"];
     expect(updated.title).toBe(newTitle);
     expect(updated.contentMarkdown).toBe(newMarkdown);
 
@@ -1280,7 +1312,7 @@ describe("PATCH /api/v1/posts", () => {
 
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
-    const updated = res.body.post as IPost;
+    const updated = res.body.post as components["schemas"]["Post"];
 
     expect(updated.title).toBe(newTitle);
     // roadmap may appear as relation or field; ensure either roadmaps relation id or field reflects change
@@ -1321,7 +1353,7 @@ describe("PATCH /api/v1/posts", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(200);
 
-      const updated = response.body.post as IPost;
+      const updated = response.body.post as components["schemas"]["Post"];
       expect(updated.title).toBe(xss(payload.trim()));
       expect(updated.title).not.toMatch(/<script/i);
       expect(updated.slug).not.toMatch(/<|>/);
@@ -1354,7 +1386,7 @@ describe("PATCH /api/v1/posts", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.status).toBe(200);
 
-      const updated = response.body.post as IPost;
+      const updated = response.body.post as components["schemas"]["Post"];
       expect(updated.title).toBe("Safe title");
       // controller runs: xss(rawContentMarkdown) || null
       expect(updated.contentMarkdown).toBe(xss(payload.trim()) || null);
@@ -1538,7 +1570,7 @@ describe("POST /api/v1/posts/slug", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
 
-    const post = res.body.post as IPost;
+    const post = res.body.post as components["schemas"]["Post"];
     expect(post.voters).toBeDefined();
     expect(post.voters.viewerVote).toBeDefined();
     expect(post.voters.viewerVote.userId).toBe(user.userId);
@@ -1568,7 +1600,7 @@ describe("POST /api/v1/posts/slug", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
 
-    const post = res.body.post as IPost;
+    const post = res.body.post as components["schemas"]["Post"];
     expect(post.voters.viewerVote).toBeUndefined();
   });
 });

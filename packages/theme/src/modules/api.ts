@@ -2,6 +2,8 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 
 import { useUserStore } from "../store/user";
 
+type PrimitiveType = string | number | boolean;
+
 /**
  * Abstract base class for making HTTP requests using axios
  * @abstract
@@ -89,5 +91,22 @@ export abstract class APIService {
    */
   delete(url: string, data?: any, config: AxiosRequestConfig = {}) {
     return this.axiosInstance.delete(url, { data, ...config });
+  }
+
+  protected buildQueryParams(
+    query?: Record<string, PrimitiveType | PrimitiveType[] | null | undefined>,
+  ): URLSearchParams {
+    const searchParams = new URLSearchParams();
+
+    if (query) {
+      for (const queryKey of Object.keys(query)) {
+        const value = query[queryKey];
+        if (value !== undefined && value !== null) {
+          searchParams.set(queryKey, String(value));
+        }
+      }
+    }
+
+    return searchParams;
   }
 }

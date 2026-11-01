@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import supertest from "supertest";
-import type { IAuthUser, ISiteSettingsLab } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { faker } from "@faker-js/faker";
 
 import app from "../../../src/app";
@@ -29,7 +29,7 @@ describe("GET /api/v1/settings/site", () => {
     });
     const updateLabs = {
       voteOnBehalf: faker.datatype.boolean(),
-    } satisfies ISiteSettingsLab;
+    } satisfies components["schemas"]["SiteSettingsLabs"];
     await updateSettings({
       title,
       description,
@@ -85,7 +85,7 @@ describe("PATCH /api/v1/settings/site", () => {
   });
 
   describe("should validate logo url", () => {
-    let user: IAuthUser;
+    let user: components["schemas"]["AuthUser"];
     beforeAll(async () => {
       const authUser = await createUser();
       user = authUser.user;
@@ -409,7 +409,7 @@ describe("GET /api/v1/settings/labs", () => {
 
     const updateLabs = {
       voteOnBehalf: faker.datatype.boolean(),
-    } satisfies ISiteSettingsLab;
+    } satisfies components["schemas"]["SiteSettingsLabs"];
 
     await supertest(app)
       .patch("/api/v1/settings/labs")
@@ -442,7 +442,7 @@ describe("GET /api/v1/settings/labs", () => {
 
     const updateLabs = {
       voteOnBehalf: faker.datatype.boolean(),
-    } satisfies ISiteSettingsLab;
+    } satisfies components["schemas"]["SiteSettingsLabs"];
     await supertest(app)
       .patch("/api/v1/settings/labs")
       .set("Authorization", `Bearer ${user.authToken}`)
@@ -487,7 +487,7 @@ describe("PATCH /api/v1/settings/labs", () => {
 
     const updateLabs = {
       voteOnBehalf: faker.datatype.boolean(),
-    } as ISiteSettingsLab;
+    } as components["schemas"]["SiteSettingsLabs"];
     await supertest(app)
       .patch("/api/v1/settings/labs")
       .set("Authorization", `Bearer ${user.authToken}`)

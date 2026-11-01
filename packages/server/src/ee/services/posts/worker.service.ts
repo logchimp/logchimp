@@ -1,4 +1,4 @@
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import type { IPostRoadmapChangeEvent } from "./types";
 import database from "../../../database";
@@ -19,7 +19,7 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
           title: string;
           contentMarkdown: string | null;
           slug: string;
-        } & IRoadmapPrivate
+        } & components["schemas"]["RoadmapPrivate"]
       >(
         "p.title",
         "p.contentMarkdown",

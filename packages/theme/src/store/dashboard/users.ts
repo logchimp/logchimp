@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IUser, IUserRole } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { UsersAPI } from "../../modules/users";
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
@@ -8,13 +8,13 @@ import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll
 const usersServices = new UsersAPI();
 
 export const useDashboardUsers = defineStore("dashboardUsers", () => {
-  const users = ref<IUser[]>([]);
+  const users = ref<components["schemas"]["UserItem"][]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
   const error = ref<unknown>(undefined);
-  const currentCursor = ref<string>();
+  const currentCursor = ref<string | null>(null);
 
   async function fetchUsers() {
     if (state.value === "LOADING" || state.value === "COMPLETED") return;
@@ -25,22 +25,22 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
 
     try {
       const response = await usersServices.GetAll({
-        after: currentCursor.value,
+        after: currentCursor.value ?? undefined,
       });
 
-      const results = response.users;
-      const pageInfo = response.page_info;
+      if (response.results.length > 0) {
+        users.value.push(...response.results);
+      }
 
-      if (results.length > 0) {
-        users.value.push(...results);
+      if ("page_info" in response) {
+        currentCursor.value = response.page_info.end_cursor;
+        hasNextPage.value = response.page_info.has_next_page;
+      }
 
-        currentCursor.value = pageInfo?.end_cursor || undefined;
-        hasNextPage.value = pageInfo?.has_next_page || false;
-
-        state.value = hasNextPage.value ? "LOADED" : "COMPLETED";
+      if (hasNextPage.value) {
+        state.value = "LOADED";
       } else {
         state.value = "COMPLETED";
-        hasNextPage.value = false;
       }
     } catch (err) {
       error.value = err;
@@ -50,7 +50,10 @@ export const useDashboardUsers = defineStore("dashboardUsers", () => {
     }
   }
 
-  function appendUserRole(userId: string, role: IUserRole) {
+  function appendUserRole(
+    userId: string,
+    role: components["schemas"]["UserItemRole"],
+  ) {
     const user = getUserById(userId);
     if (!user) return;
     user.roles.push(role);

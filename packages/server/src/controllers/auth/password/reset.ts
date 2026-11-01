@@ -1,9 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IAuthPasswordResetRequestBody,
-  IAuthPasswordResetResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // services
 import { sendPasswordResetTokenMail } from "../../../services/mail/worker.service";
@@ -18,10 +14,16 @@ import database from "../../../database";
 import { mailQueue } from "../../../worker/tasks/mail";
 import { mailWorker } from "../../../worker/handler/mail";
 
-type ResponseBody = IAuthPasswordResetResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["SendPasswordResetEmailResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function reset(
-  req: Request<unknown, unknown, IAuthPasswordResetRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["SendPasswordResetEmailRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const email = req.body.email;

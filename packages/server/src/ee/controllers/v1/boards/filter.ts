@@ -1,13 +1,7 @@
 import type { Request, Response } from "express";
 import * as v from "valibot";
 import type { Knex } from "knex";
-import type {
-  IApiErrorResponse,
-  TFilterBoardRequestQuery,
-  IFilterBoardResponseBody,
-  ApiSortType,
-  IBoardPrivate,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import database from "../../../../database";
 
@@ -54,10 +48,17 @@ const schemaQueryErrorMap = {
   MIN_VALUE_1: error.general.minValue1,
 };
 
-type ResponseBody = IFilterBoardResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["FilterBoardResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function filter(
-  req: Request<unknown, unknown, unknown, TFilterBoardRequestQuery>,
+  req: Request<
+    unknown,
+    unknown,
+    unknown,
+    operations["filterPublicBoards"]["parameters"]["query"]
+  >,
   res: Response<ResponseBody>,
 ) {
   if (req.query?.page) {
@@ -151,7 +152,7 @@ export async function filter(
 interface IGetBoardQueryOptions {
   first: number;
   after?: string;
-  created: ApiSortType;
+  created: components["schemas"]["SortTypeEnum"];
   page?: number;
 }
 
@@ -163,7 +164,7 @@ export async function getBoards({
 }: IGetBoardQueryOptions) {
   try {
     let boardsQuery = database("boards")
-      .select<Array<IBoardPrivate>>(
+      .select<Array<components["schemas"]["BoardPrivate"]>>(
         "boards.boardId",
         "boards.name",
         "boards.color",
@@ -205,7 +206,8 @@ export async function getBoards({
       });
     }
 
-    const boardsData = (await boardsQuery) as unknown as IBoardPrivate[];
+    const boardsData =
+      (await boardsQuery) as unknown as components["schemas"]["BoardPrivate"][];
     return boardsData;
   } catch (error) {
     logger.log({
@@ -222,7 +224,7 @@ export async function getBoardMetaData({
   created,
 }: {
   after?: string;
-  created: ApiSortType;
+  created: components["schemas"]["SortTypeEnum"];
 }) {
   return database.transaction(async (trx) => {
     const totalCountResult = await trx("boards")
@@ -282,7 +284,7 @@ function applyCursorFilter(
     after,
     createdAt,
   }: {
-    created: ApiSortType;
+    created: components["schemas"]["SortTypeEnum"];
     after: string;
     createdAt: string;
   },

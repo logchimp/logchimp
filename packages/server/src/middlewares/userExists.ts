@@ -1,9 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IAssignRoleToUserRequestParams,
-  TUnassignRoleToUserRequestParams,
-} from "@logchimp/types";
+import type { operations, components } from "@logchimp/api-ts-types";
 import database from "../database";
 
 // utils
@@ -12,12 +8,12 @@ import logger from "../utils/logger";
 import error from "../errorResponse.json";
 
 type RequestParam =
-  | IAssignRoleToUserRequestParams
-  | TUnassignRoleToUserRequestParams;
+  | operations["assignRoleToUser"]["parameters"]["path"]
+  | operations["unassignRoleFromUser"]["parameters"]["path"];
 
 export async function userExists(
   req: Request<RequestParam>,
-  res: Response<IApiErrorResponse>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) {
   let email = (

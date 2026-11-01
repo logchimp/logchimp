@@ -1,18 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IApiValidationErrorResponse,
-  ICreatePostEERequestBody,
-  ICreatePostResponseBody,
-  IFilterPostRequestBody,
-  IFilterPostRequestQueryParams,
-  IGetPostBySlugRequestBody,
-  IGetPostBySlugResponseBody,
-  IPost,
-  IUpdatePostEERequestBody,
-  TPermission,
-  TUpdatePostResponseBody,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 import database from "../../../../database";
 import { validUUID, validUUIDs } from "../../../../helpers";
@@ -66,8 +53,8 @@ export async function filterPost(
   req: Request<
     unknown,
     unknown,
-    IFilterPostRequestBody,
-    IFilterPostRequestQueryParams
+    components["schemas"]["GetFilterPostRequestBody"],
+    operations["filterPosts"]["parameters"]["query"]
   >,
   res: Response<FilterPostResponseBody>,
 ) {
@@ -170,7 +157,7 @@ export async function filterPost(
     ]);
 
     // Enrich posts with board, roadmap, and votes
-    const posts: IPost[] = [];
+    const posts: components["schemas"]["Post"][] = [];
     for (const post of response) {
       const author = authors.find((author) => author.userId === post.userId);
       const board = boards.find((board) => board.boardId === post.boardId);
@@ -275,7 +262,7 @@ async function buildPostsQuery({
   first: number;
   page?: number;
   after?: string;
-  created: "ASC" | "DESC";
+  created: components["schemas"]["SortTypeEnum"];
   boardId: string[];
   roadmapId?: string | null;
   query?: string;
@@ -434,20 +421,25 @@ async function getPostMetadata({
 }
 
 type CreatePostResponseBody =
-  | ICreatePostResponseBody
-  | IApiErrorResponse
-  | IApiValidationErrorResponse;
+  | components["schemas"]["CreatePostResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const createPostSchemaBodyErrorMap = {};
 
 export async function createPost(
-  req: Request<unknown, unknown, ICreatePostEERequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CreatePostEERequestBody"]
+  >,
   res: Response<CreatePostResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const body = v.safeParse(createPostEERequestBodySchema, req.body);
   if (!body.success) {
@@ -522,20 +514,28 @@ export async function createPost(
   }
 }
 
-type UpdatePostResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
+type UpdatePostResponseBody =
+  | components["schemas"]["UpdatePostResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const updatePostSchemaBodyErrorMap = {
   POST_TITLE_MISSING: error.api.posts.titleMissing,
 };
 
 export async function updatePost(
-  req: Request<unknown, unknown, IUpdatePostEERequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdatePostEERequestBody"]
+  >,
   res: Response<UpdatePostResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   // @ts-expect-error
   const postId = (req.post as GetPostStatement).postId;
   // @ts-expect-error
@@ -644,10 +644,16 @@ export async function updatePost(
   }
 }
 
-type PostBySlugResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
+type PostBySlugResponseBody =
+  | components["schemas"]["GetPostBySlugResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function postBySlug(
-  req: Request<unknown, unknown, IGetPostBySlugRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["GetPostBySlugRequestBody"]
+  >,
   res: Response<PostBySlugResponseBody>,
 ) {
   // @ts-expect-error

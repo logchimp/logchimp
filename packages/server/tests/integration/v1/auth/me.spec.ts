@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { v4 as uuid } from "uuid";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../../src/app";
 import { createUser } from "../../../utils/seed/user";
@@ -15,7 +15,7 @@ const everyonePermissions = [
   "vote:destroy",
   "comment:create",
   "comment:update:own",
-] satisfies TPermission[];
+] satisfies Array<components["schemas"]["Permission"]>;
 
 describe("GET /api/v1/auth/me", () => {
   it("should throw INVALID_AUTH_HEADER", async () => {

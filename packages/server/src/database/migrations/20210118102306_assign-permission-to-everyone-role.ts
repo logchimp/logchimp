@@ -1,6 +1,6 @@
 import type { Knex } from "knex";
 import { v4 as uuidv4 } from "uuid";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import logger from "../../utils/logger";
 
@@ -24,14 +24,14 @@ interface IPermissionDatabaseTable {
 
 const getPermId = (
   list: Array<IPermissionDatabaseTable>,
-  perm: TPermission,
+  perm: components["schemas"]["Permission"],
 ) => {
   const type = perm.split(":")[0];
   const action = perm.split(":")[1];
   return list.find((item) => item.type === type && item.action === action).id;
 };
 
-const EVERYONE_PERMISSIONS: readonly TPermission[] = [
+const EVERYONE_PERMISSIONS: readonly components["schemas"]["Permission"][] = [
   "post:create",
   "vote:create",
   "vote:destroy",

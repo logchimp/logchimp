@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IAuthLoginRequestBody,
-  IAuthLoginResponseBody,
-  IAuthMeResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { getUserById } from "../../repository/user";
 import database from "../../database";
 import logger from "../../utils/logger";
@@ -18,12 +13,12 @@ import {
   UserNotFoundError,
 } from "../../services/auth/errors";
 
-type GetMeResponseBody = IAuthMeResponseBody | IApiErrorResponse;
-type PasswordLoginResponseBody = IAuthLoginResponseBody | IApiErrorResponse;
-
 export async function passwordLogin(
-  req: Request<unknown, unknown, IAuthLoginRequestBody>,
-  res: Response<PasswordLoginResponseBody>,
+  req: Request<unknown, unknown, components["schemas"]["LoginRequestBody"]>,
+  res: Response<
+    | components["schemas"]["LoginResponseBody"]
+    | components["schemas"]["GenericAPIErrorResponseBody"]
+  >,
 ) {
   const authService = new AuthService();
 
@@ -88,7 +83,13 @@ export async function passwordLogin(
   }
 }
 
-export async function me(req: Request, res: Response<GetMeResponseBody>) {
+export async function me(
+  req: Request,
+  res: Response<
+    | components["schemas"]["AuthMeResponseBody"]
+    | components["schemas"]["GenericAPIErrorResponseBody"]
+  >,
+) {
   // @ts-expect-error
   const userId = req.user.userId;
 

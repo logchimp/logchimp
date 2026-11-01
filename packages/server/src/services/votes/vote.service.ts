@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import type { IPublicUserInfo, IUserVoteV2 } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { Knex } from "knex";
 
 import database from "../../database";
@@ -140,12 +140,12 @@ export class VoteService {
   async getUserVote(
     postId: string,
     userId: string,
-  ): Promise<IUserVoteV2 | undefined> {
+  ): Promise<components["schemas"]["UserVoteV2"] | undefined> {
     const query = await database("votes")
       .select<
         | ({
             voteId: string;
-          } & IPublicUserInfo)
+          } & components["schemas"]["PublicUserInfo"])
         | undefined
       >(
         "votes.voteId",
@@ -192,7 +192,7 @@ export class VoteService {
   private async getVotesQuery({
     postId,
     options,
-  }: GetVotesParams): Promise<Array<IUserVoteV2>> {
+  }: GetVotesParams): Promise<Array<components["schemas"]["UserVoteV2"]>> {
     if (!postId) return [];
 
     let query = database("votes")
@@ -200,7 +200,7 @@ export class VoteService {
         Array<
           {
             voteId: string;
-          } & IPublicUserInfo
+          } & components["schemas"]["PublicUserInfo"]
         >
       >(
         "votes.voteId",

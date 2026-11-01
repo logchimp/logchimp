@@ -1,11 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import type {
-  IApiErrorResponse,
-  IAuthLoginResponseBody,
-  IAuthSignupResponseBody,
-  IAuthUser,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { request, test as baseTest } from "@playwright/test";
 
 import { userLogin, userSignup } from "../helpers/api";
@@ -17,14 +12,16 @@ export const test = baseTest.extend({
       `storage-owner-account.json`,
     );
 
-    async function writeStorageWithUser(user: IAuthUser) {
+    async function writeStorageWithUser(
+      user: components["schemas"]["AuthUser"],
+    ) {
       // open a real browser context so Playwright can capture localStorage
       const context = await browser.newContext();
       const page = await context.newPage();
       await page.goto(baseURL);
 
       // Store the auth user in localStorage (app reads from this key)
-      await page.evaluate((payload: IAuthUser) => {
+      await page.evaluate((payload: components["schemas"]["AuthUser"]) => {
         localStorage.setItem("user", JSON.stringify(payload));
       }, user);
 
@@ -53,7 +50,9 @@ export const test = baseTest.extend({
         email: emailEnv,
       });
 
-      let body: IAuthSignupResponseBody | IApiErrorResponse;
+      let body:
+        | components["schemas"]["SignupResponseBody"]
+        | components["schemas"]["GenericAPIErrorResponseBody"];
       try {
         body = await res.json();
       } catch (_e) {}
@@ -62,9 +61,9 @@ export const test = baseTest.extend({
       if (
         res.status() === 201 &&
         body &&
-        (body as IAuthSignupResponseBody).user
+        (body as components["schemas"]["SignupResponseBody"]).user
       ) {
-        const { user } = body as IAuthSignupResponseBody;
+        const { user } = body as components["schemas"]["SignupResponseBody"];
         await writeStorageWithUser(user);
       } else if (body && "code" in body && body.code === "SETUP_COMPLETED") {
         // Case 2: Setup already completed -> login to existing owner account
@@ -96,7 +95,8 @@ export const test = baseTest.extend({
           throw new Error(`Login failed with status ${loginRes.status()}`);
         }
 
-        const loginBody = (await loginRes.json()) as IAuthLoginResponseBody;
+        const loginBody =
+          (await loginRes.json()) as components["schemas"]["LoginResponseBody"];
         await writeStorageWithUser(loginBody.user);
       } else {
         throw new Error(

@@ -1,8 +1,5 @@
-// modules
 import express from "express";
-import type { IGetPostVotesRequestParams } from "@logchimp/types";
-
-const router = express.Router();
+import type { operations } from "@logchimp/api-ts-types";
 
 // controller
 import * as post from "../../controllers/post";
@@ -11,6 +8,8 @@ import * as post from "../../controllers/post";
 import { authOptional, authRequired } from "../../middlewares/auth";
 import { postExists } from "../../middlewares/postExists";
 
+const router = express.Router();
+
 router.post("/posts/get", authOptional, post.filterPost);
 router.post("/posts/slug", authOptional, postExists, post.postBySlug);
 
@@ -18,9 +17,8 @@ router.post("/posts", authRequired, post.create);
 router.patch("/posts", authRequired, postExists, post.updatePost);
 
 // votes
-router.get<IGetPostVotesRequestParams>(
+router.get<operations["getPostVotes"]["parameters"]["path"]>(
   "/posts/:post_id/votes",
-  // @ts-expect-error
   authOptional,
   postExists,
   post.getPostVotes,

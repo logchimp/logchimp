@@ -1,12 +1,7 @@
 import type { Request, Response } from "express";
 import * as v from "valibot";
-import type {
-  IApiErrorResponse,
-  IFilterPostRequestBody,
-  IFilterPostRequestQueryParams,
-  IFilterPostResponseBody,
-  IPost,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
+
 import database from "../../database";
 import {
   parseAndValidateLimit,
@@ -72,15 +67,15 @@ export const schemaQueryErrorMap = {
 export const schemaBodyErrorMap = {};
 
 export type FilterPostResponseBody =
-  | IFilterPostResponseBody
-  | IApiErrorResponse;
+  | components["schemas"]["GetFilterPostResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function filterPost(
   req: Request<
     unknown,
     unknown,
-    IFilterPostRequestBody,
-    IFilterPostRequestQueryParams
+    components["schemas"]["GetFilterPostRequestBody"],
+    operations["filterPosts"]["parameters"]["query"]
   >,
   res: Response<FilterPostResponseBody>,
 ) {
@@ -171,7 +166,7 @@ export async function filterPost(
     ]);
 
     // Enrich posts with votes
-    const posts: IPost[] = [];
+    const posts: components["schemas"]["Post"][] = [];
     for (const post of response) {
       try {
         const author = authors.find((author) => author.userId === post.userId);

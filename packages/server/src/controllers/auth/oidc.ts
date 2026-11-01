@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
+import type { components } from "@logchimp/api-ts-types";
 
 import { OIDCService } from "../../services/auth/oidc.service";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
-import type { IApiErrorResponse, IUserInfo } from "@logchimp/types";
 import { config } from "../../utils/logchimpConfig";
 import { AuthService } from "../../services/auth/auth.service";
 import {
@@ -15,7 +15,7 @@ import {
   getUserInfoWithRoles,
 } from "../../middlewares/auth/helpers";
 
-type OIDCLoginResponse = IApiErrorResponse;
+type OIDCLoginResponse = components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function OIDCLogin(
   _req: Request,
@@ -40,7 +40,8 @@ export async function OIDCLogin(
   }
 }
 
-type OIDCLoginCallbackResponse = IApiErrorResponse;
+type OIDCLoginCallbackResponse =
+  components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function OIDCLoginCallback(
   req: Request,
@@ -62,7 +63,7 @@ export async function OIDCLoginCallback(
   const authService = new AuthService();
 
   try {
-    let user: IUserInfo;
+    let user: components["schemas"]["CustomerItemInfo"];
     try {
       user = await oidcService.Authenticate(currentUrl, oidcState);
     } catch (err) {

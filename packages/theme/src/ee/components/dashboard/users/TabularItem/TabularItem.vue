@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { provide, defineAsyncComponent } from "vue";
-import type { IUser, ISiteSettings } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { userIdKey } from "./options";
 
@@ -83,8 +83,8 @@ const UserInfoDialog = defineAsyncComponent(
 );
 
 interface Props {
-  user: IUser;
-  settings: ISiteSettings;
+  user: components["schemas"]["UserItem"];
+  settings: components["schemas"]["SiteSettings"];
 }
 
 const props = defineProps<Props>();

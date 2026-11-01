@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IApiValidationErrorResponse,
-  ISetPasswordRequestBody,
-  ISetPasswordResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import database from "../../../database";
 
 // utils
@@ -14,12 +9,15 @@ import error from "../../../errorResponse.json";
 import { getUserByEmail } from "../../../repository/user";
 
 type ResponseBody =
-  | ISetPasswordResponseBody
-  | IApiValidationErrorResponse
-  | IApiErrorResponse;
+  | components["schemas"]["SetNewPasswordResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function set(
-  req: Request<unknown, unknown, ISetPasswordRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["SetNewPasswordRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const { password } = req.body;
@@ -28,6 +26,8 @@ export async function set(
 
   if (!password) {
     res.status(400).send({
+      message: "Invalid body parameters",
+      code: "VALIDATION_ERROR",
       errors: [
         password
           ? undefined

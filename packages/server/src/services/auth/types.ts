@@ -1,6 +1,6 @@
-import type { IAuthUser } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
-export type TCreatedUser = Omit<IAuthUser, "authToken">;
+export type TCreatedUser = Omit<components["schemas"]["AuthUser"], "authToken">;
 
 export type CreateUserOptions = {
   user?: {

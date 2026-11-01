@@ -1,9 +1,5 @@
-import type { Request, Response, NextFunction } from "express";
-import type {
-  IApiErrorResponse,
-  IGetRoadmapByUrlRequestParam,
-  IRoadmapPrivate,
-} from "@logchimp/types";
+import type { NextFunction, Request, Response } from "express";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import database from "../database";
 
@@ -12,11 +8,13 @@ import { validUUID } from "../helpers";
 import error from "../errorResponse.json";
 import logger from "../utils/logger";
 
-type RequestParams = Partial<IGetRoadmapByUrlRequestParam>;
+type RequestParams = Partial<
+  operations["getRoadmapByUrl"]["parameters"]["path"]
+>;
 
 export async function roadmapExists(
   req: Request<RequestParams>,
-  res: Response<IApiErrorResponse>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) {
   const id = validUUID(req.body.id);
@@ -31,7 +29,9 @@ export async function roadmapExists(
   }
 
   try {
-    const roadmap = await database<IRoadmapPrivate>("roadmaps")
+    const roadmap = await database<components["schemas"]["RoadmapPrivate"]>(
+      "roadmaps",
+    )
       .select("id", "name", "display", "url", "color", "created_at", "index")
       .where((builder) => {
         if (id) builder.where("id", id);
