@@ -8,6 +8,9 @@ import roles from "./roles";
 import license from "./license";
 import votes from "./votes";
 
+// integrations
+// import slack from "./slack";
+
 const router = express.Router();
 
 router.use(auth);
@@ -17,5 +20,8 @@ router.use(boards);
 router.use(roles);
 router.use(license);
 router.use(votes);
+
+// integrations
+// router.use(slack);
 
 export default router;
