@@ -22,6 +22,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/packages/types/package.json ./packages/types/package.json
 COPY --from=builder /app/packages/server/package.json ./packages/server/package.json
 COPY --from=builder /app/packages/server/dist ./packages/server/dist
