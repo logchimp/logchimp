@@ -14,6 +14,7 @@ import database from "../../../../database";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { sanitiseURL } from "../../../../helpers";
 
 type ResponseBody =
   | TUpdateRoadmapResponseBody
@@ -26,13 +27,7 @@ const bodySchema = v.object({
     "ROADMAP_NAME_MISSING",
   ),
   url: v.message(
-    v.pipe(
-      v.optional(v.string(), ""),
-      v.trim(),
-      v.toLowerCase(),
-      v.transform((url) => url.replace(/\W+/gi, "-")),
-      v.nonEmpty(),
-    ),
+    v.pipe(v.optional(v.string(), ""), v.transform(sanitiseURL), v.nonEmpty()),
     "ROADMAP_URL_MISSING",
   ),
   color: v.optional(
