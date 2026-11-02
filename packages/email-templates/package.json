@@ -18,7 +18,7 @@
     "@maizzle/tailwindcss": "^1.5.6"
   },
   "devDependencies": {
-    "@types/node": "^24.11.0",
+    "@types/node": "^24.19.2",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.9.0",
     "eslint": "^10.11.0",
