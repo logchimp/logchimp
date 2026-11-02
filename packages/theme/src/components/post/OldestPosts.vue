@@ -35,7 +35,7 @@ const props = defineProps({
 
 const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
-const state = ref<InfiniteScrollStateType>();
+const state = ref<InfiniteScrollStateType>("IDLE");
 
 async function getMorePosts() {
   if (state.value === "LOADING" || state.value === "COMPLETED") return;

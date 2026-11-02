@@ -127,9 +127,9 @@ import Tr from "../../components/ui/Table/Tr.vue";
 import Td from "../../components/ui/Table/Td.vue";
 
 const posts = ref<IPost[]>([]);
-const postState = ref<InfiniteScrollStateType>();
+const postState = ref<InfiniteScrollStateType>("IDLE");
 const boards = ref<IBoardPrivate[]>([]);
-const boardState = ref<InfiniteScrollStateType>();
+const boardState = ref<InfiniteScrollStateType>("IDLE");
 
 async function getRecentPosts() {
   postState.value = "LOADING";

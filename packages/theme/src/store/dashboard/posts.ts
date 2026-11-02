@@ -7,7 +7,7 @@ import { getPosts } from "../../modules/posts";
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
   const posts = ref<IPost[]>([]);
-  const state = ref<InfiniteScrollStateType>();
+  const state = ref<InfiniteScrollStateType>("IDLE");
 
   const isLoading = ref<boolean>(false);
   const page = ref<number>(1);

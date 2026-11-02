@@ -7,7 +7,7 @@ import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScr
 
 export const useDashboardBoards = defineStore("dashboardBoards", () => {
   const boards = ref<IBoardPrivate[]>([]);
-  const state = ref<InfiniteScrollStateType>();
+  const state = ref<InfiniteScrollStateType>("IDLE");
   const isLoading = ref<boolean>(false);
   const error = ref<unknown>(undefined);
 

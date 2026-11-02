@@ -43,7 +43,7 @@ const settingsStore = useSettingStore();
 const posts = ref<IPost[]>([]);
 const page = ref<number>(1);
 const showSiteSetupCard = ref<boolean>(false);
-const state = ref<InfiniteScrollStateType>();
+const state = ref<InfiniteScrollStateType>("IDLE");
 
 async function isSetup() {
   try {

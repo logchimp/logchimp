@@ -47,7 +47,7 @@ const { get: siteSettings } = useSettingStore();
 
 const boards = ref<IBoardDetail[]>([]);
 const endCursor = ref<string | undefined>();
-const state = ref<InfiniteScrollStateType>();
+const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string>();
 
 async function getBoards() {
