@@ -37,6 +37,8 @@ export async function updatePost(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
   // @ts-expect-error
+  const postId = req.post.postId;
+  // @ts-expect-error
   const authorId = req.post.userId;
   // @ts-expect-error
   const slugId = req.post.slugId;
@@ -64,7 +66,6 @@ export async function updatePost(
     });
   }
 
-  const id = validUUID(req.body.id);
   const boardId = validUUID(req.body.boardId);
   const roadmapId = validUUID(req.body.roadmapId);
 
@@ -91,7 +92,7 @@ export async function updatePost(
       })
       .from("posts")
       .where({
-        postId: id,
+        postId,
       })
       .returning("*");
 
