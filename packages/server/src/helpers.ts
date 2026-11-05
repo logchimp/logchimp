@@ -231,6 +231,10 @@ function sanitizeHttpUrl(value: string) {
   return url.toString();
 }
 
+function dateToISOString(date: Date | string) {
+  return date instanceof Date ? date.toISOString() : date;
+}
+
 export {
   validEmail,
   validUUID,
@@ -250,4 +254,5 @@ export {
   toTrimmedString,
   normalize,
   arraysEqual,
+  dateToISOString,
 };
