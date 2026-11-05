@@ -10,5 +10,8 @@
     "@playwright/test": "^1.63.0",
     "@types/node": "^24.19.2",
     "dotenv": "^17.4.2"
+  },
+  "dependencies": {
+    "@logchimp/api-ts-types": "^0.1.4"
   }
 }
