@@ -2,9 +2,6 @@
 
 pnpm i;
 
-# Build @logchimp/types package
-pnpm --filter="@logchimp/types" build
-
 # Boot-up db and mail services
 docker-compose -f ./docker/local/docker-compose.dev.yml \
   up -d db mail
