@@ -15,6 +15,7 @@ import { GET_POSTS_FILTER_COUNT } from "../../constants";
 import { UserRepository } from "../../repository/user";
 import { VoteRepository } from "../../repository/vote";
 import { valkey } from "../../cache";
+import { ZeroResultsCursorPagination } from "../../utils/cursor";
 
 const userRepository = new UserRepository(database, valkey);
 const voteRepository = new VoteRepository(database, valkey);
@@ -144,11 +145,12 @@ export async function filterPost(
       query: escapedQuery,
     });
 
-    if (page && response.length === 0) {
+    if (response.length === 0) {
       res.status(200).json({
         status: { code: 200, type: "success" },
         posts: [],
         results: [],
+        ...(page ? {} : ZeroResultsCursorPagination),
       });
       return;
     }

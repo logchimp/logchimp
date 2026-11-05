@@ -11,6 +11,7 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { GET_ROADMAPS_FILTER_COUNT } from "../../../../constants";
 import { parseAndValidateLimit } from "../../../../helpers";
+import { ZeroResultsCursorPagination } from "../../../../utils/cursor";
 
 const FilterVisibilitySchema = v.picklist(["public", "private"]);
 const querySchema = v.object({
@@ -92,6 +93,15 @@ export async function filter(
       visibility,
     });
     const dataLength = data.length;
+
+    if (dataLength === 0) {
+      res.status(200).json({
+        roadmaps: [],
+        results: [],
+        ...ZeroResultsCursorPagination,
+      });
+      return;
+    }
 
     const startCursor = data.length > 0 ? String(data[0].id) : null;
     const endCursor = data.length > 0 ? String(data[data.length - 1].id) : null;
