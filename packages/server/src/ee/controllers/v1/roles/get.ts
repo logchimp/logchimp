@@ -8,6 +8,7 @@ import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 import { dateToISOString, parseAndValidateLimit } from "../../../../helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../../constants";
+import { ZeroResultsCursorPagination } from "../../../../utils/cursor";
 
 type ResponseBody =
   | components["schemas"]["GetFilterRolesResponseBody"]
@@ -75,6 +76,15 @@ export async function get(
       after,
     });
     const dataLength = data.length;
+
+    if (dataLength === 0) {
+      res.status(200).json({
+        roles: [],
+        results: [],
+        ...ZeroResultsCursorPagination,
+      });
+      return;
+    }
 
     const startCursor = data.length > 0 ? String(data[0].id) : null;
     const endCursor = data.length > 0 ? String(data[data.length - 1].id) : null;

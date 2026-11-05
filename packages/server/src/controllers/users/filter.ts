@@ -12,6 +12,7 @@ import error from "../../errorResponse.json";
 import { GET_USERS_FILTER_COUNT } from "../../constants";
 import { parseAndValidateLimit, parseAndValidatePage } from "../../helpers";
 import type { IAuthenticationMiddlewareUser } from "../../types";
+import { ZeroResultsCursorPagination } from "../../utils/cursor";
 
 const querySchema = v.object({
   first: v.pipe(
@@ -98,6 +99,19 @@ export async function filter(
   try {
     const userData = await getUsers({ first, page, after, created });
     const userDataLength = userData.length;
+
+    if (userDataLength === 0) {
+      res.status(200).json({
+        status: {
+          code: 200,
+          type: "success",
+        },
+        users: [],
+        results: [],
+        ...(page ? {} : ZeroResultsCursorPagination),
+      });
+      return;
+    }
 
     let startCursor: string | null = null;
     let endCursor: string | null = null;
