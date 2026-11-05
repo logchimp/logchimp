@@ -9,7 +9,7 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { BoardRepository } from "../../../repository/board";
 import { valkey } from "../../../../cache";
-import { sanitiseURL } from "../../../../helpers";
+import { dateToISOString, sanitiseURL } from "../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["UpdateBoardResponseBody"]
@@ -128,7 +128,12 @@ export async function updateBoard(
 
     await boardRepository.InvalidateBoardCache([boardId]);
 
-    res.status(200).send({ board });
+    res.status(200).send({
+      board: {
+        ...board,
+        createdAt: dateToISOString(board.createdAt),
+      },
+    });
   } catch (err) {
     logger.log({
       level: "error",
