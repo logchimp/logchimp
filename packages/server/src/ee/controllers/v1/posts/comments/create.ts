@@ -10,7 +10,7 @@ import {
 } from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
-import { validUUID } from "../../../../../helpers";
+import { dateToISOString, validUUID } from "../../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["CreatePostCommentResponseBody"]
@@ -101,7 +101,15 @@ export async function create(
     });
 
     res.status(201).send({
-      activity: results,
+      activity: {
+        ...results,
+        created_at: dateToISOString(results.created_at),
+        comment: {
+          ...results.comment,
+          created_at: dateToISOString(results.comment.created_at),
+          updated_at: dateToISOString(results.comment.updated_at),
+        },
+      },
     });
   } catch (err) {
     logger.log({
@@ -161,7 +169,7 @@ const createCommentStatement = ({
   userId,
 }: ICreateCommentStmt) =>
   database.transaction(async (trx) => {
-    const now = new Date().toJSON();
+    const now = new Date();
     // postActivityId will be shared b/w "posts_comments" and "posts_activity" table
     const postActivityId = uuid();
 
@@ -175,7 +183,7 @@ const createCommentStatement = ({
         created_at: now,
         updated_at: now,
       })
-      .returning<components["schemas"]["CommentItem"][]>([
+      .returning([
         "id",
         "parent_id",
         "body",
@@ -204,7 +212,7 @@ const createCommentStatement = ({
           {
             id: string;
             type: components["schemas"]["PostActivityTypeEnum"];
-            created_at: string;
+            created_at: Date;
           }[]
         >(["id", "type", "created_at"]),
       trx("users")

@@ -7,6 +7,7 @@ import database from "../../../../database";
 
 // utils
 import {
+  dateToISOString,
   generateHexColor,
   generateNanoID as nanoid,
 } from "../../../../helpers";
@@ -61,7 +62,12 @@ export async function create(
     const boards = await boardRepository.GetPrivateBoardByIDs([boardId]);
     const board = boards[0];
 
-    res.status(201).send({ board });
+    res.status(201).send({
+      board: {
+        ...board,
+        createdAt: dateToISOString(board.createdAt),
+      },
+    });
   } catch (err) {
     logger.log({
       level: "error",
