@@ -29,17 +29,19 @@ export async function setup(
   const siteTitle = String(req.body?.siteTitle || "").trim();
 
   if (!validEmail(email)) {
-    return res.status(400).send({
+    res.status(400).send({
       message: error.api.authentication.invalidEmail,
       code: "EMAIL_INVALID",
     });
+    return;
   }
 
   if (!password) {
-    return res.status(400).send({
+    res.status(400).send({
       message: error.api.authentication.noPasswordProvided,
       code: "PASSWORD_MISSING",
     });
+    return;
   }
 
   try {
@@ -52,10 +54,11 @@ export async function setup(
       .first();
 
     if (isSetup) {
-      return res.status(403).send({
+      res.status(403).send({
         message: error.api.authentication.setupAlreadyCompleted,
         code: "SETUP_COMPLETED",
       });
+      return;
     }
 
     const authService = new AuthService();

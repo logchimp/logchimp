@@ -24,9 +24,10 @@ export async function getLabs(_: Request, res: Response<ResponseBody>) {
       const cached = await cache.valkey.get(CACHE_KEYS.LABS_SETTINGS);
       if (cached) {
         res.setHeader("X-Cache", "HIT");
-        return res.status(200).send({
+        res.status(200).send({
           labs: JSON.parse(cached),
         });
+        return;
       }
     } catch (err) {
       logger.error({ message: err });

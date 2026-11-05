@@ -31,10 +31,11 @@ export async function userExists(
 
   if (!id) {
     if (!validEmail(email)) {
-      return res.status(400).send({
+      res.status(400).send({
         message: error.api.authentication.invalidEmail,
         code: "EMAIL_INVALID",
       });
+      return;
     }
   } else {
     // setting email to null so that it doesn't coincide with user_id based API calls
@@ -42,10 +43,11 @@ export async function userExists(
     id = validUUID(id);
 
     if (!id) {
-      return res.status(400).send({
+      res.status(400).send({
         message: error.api.user.invalidUserId,
         code: "INVALID_USER_ID",
       });
+      return;
     }
   }
 
@@ -62,10 +64,11 @@ export async function userExists(
       .first();
 
     if (!user) {
-      return res.status(404).send({
+      res.status(404).send({
         message: error.middleware.user.userNotFound,
         code: "USER_NOT_FOUND",
       });
+      return;
     }
 
     // fill req.user only for email based API calls

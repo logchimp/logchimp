@@ -65,7 +65,7 @@ export async function filter(
 
   const query = v.safeParse(querySchema, req.query);
   if (!query.success) {
-    return res.status(400).json({
+    res.status(400).json({
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
@@ -76,17 +76,20 @@ export async function filter(
         code: issue.message,
       })),
     });
+    return;
   }
+
   const { first: _first, page, after, created, limit } = query.output;
   const first = req.query?.limit ? limit : _first;
 
   // @ts-expect-error
   const { isOwner } = req.user as IAuthenticationMiddlewareUser;
   if (!isOwner) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   try {

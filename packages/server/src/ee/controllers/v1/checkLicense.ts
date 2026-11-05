@@ -6,7 +6,7 @@ import type {
 
 import error from "../../../errorResponse.json";
 import logger from "../../../utils/logger";
-import { checkLicense as checkLicenseService } from "../../do-not-remove/services/checkLicense";
+import { licenseService } from "../../do-not-remove/services/LicenseService";
 
 type ResponseType = IApiErrorResponse | ICheckLicenseControllerResponseBody;
 
@@ -15,13 +15,14 @@ export async function checkLicenseController(
   res: Response<ResponseType>,
 ) {
   try {
-    const result = await checkLicenseService();
+    const result = await licenseService.checkLicense();
 
     if ("code" in result || result.status !== "active") {
-      return res.status(403).send({
+      res.status(403).send({
         message: error.middleware.license.verification,
         code: "LICENSE_VALIDATION_FAILED",
       });
+      return;
     }
 
     res.status(200).send({

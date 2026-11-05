@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, withDefaults } from "vue";
+import { computed, ref } from "vue";
 import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
 import type { AxiosError } from "axios";
 

@@ -24,27 +24,30 @@ export async function signup(
   const { email, password } = req.body;
 
   if (!validEmail(email)) {
-    return res.status(400).send({
+    res.status(400).send({
       message: error.api.authentication.invalidEmail,
       code: "EMAIL_INVALID",
     });
+    return;
   }
 
   if (!password) {
-    return res.status(400).send({
+    res.status(400).send({
       message: error.api.authentication.noPasswordProvided,
       code: "PASSWORD_MISSING",
     });
+    return;
   }
 
   try {
     const settings = await database.select().from("settings").first();
 
     if (!settings.allowSignup) {
-      return res.status(400).send({
+      res.status(400).send({
         message: error.api.roles.notEnoughPermission,
         code: "SIGNUP_NOT_ALLOWED",
       });
+      return;
     }
 
     const authService = new AuthService();

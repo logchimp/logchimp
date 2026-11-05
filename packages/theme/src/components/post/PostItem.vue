@@ -35,9 +35,8 @@
         {{ useTrim(postData.contentMarkdown, 120) }}
       </p>
       <board-badge
-        v-if="postData.board?.boardId"
+        v-if="postData.board?.boardId && showBoard"
         class="mt-2.5"
-        :show-board="showBoard"
         :name="postData.board.name"
         :color="postData.board.color"
         :url="postData.board.url"

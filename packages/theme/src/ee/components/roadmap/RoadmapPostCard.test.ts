@@ -73,9 +73,8 @@ describe("post card", () => {
   });
 
   it("post board name", () => {
-    expect(wrapper.find("[data-test=post-board-name]").text()).toBe(
-      "Feature requests",
-    );
+    const boardBadge = wrapper.findComponent({ name: "BoardBadge" });
+    expect(boardBadge.props("name")).toBe("Feature requests");
   });
 
   it("post card extra is not shown", () => {

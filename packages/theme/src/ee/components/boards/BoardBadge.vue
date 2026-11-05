@@ -1,15 +1,31 @@
 <template>
   <router-link
-    v-if="showBoard"
     data-test="board-badge"
-    class="block w-fit select-none truncate"
+    class="block w-fit select-none max-w-full min-w-0"
     :to="`/boards/${encodeURIComponent(url)}`"
   >
     <div
-      class="flex items-center px-2.5 py-1 bg-(--color-gray-95) rounded-full"
+      :class="[
+        'flex items-center bg-(--color-gray-95) rounded-full',
+        {
+          'px-2.5 py-1': size === 'md',
+          'px-2 py-0.75': size === 'sm',
+          'px-1.75 py-0.5': size === 'xs',
+        },
+      ]"
     >
-      <color-dot :color="color" />
-      <p class="ml-1.5 text-(--color-gray-50)" data-test="board-badge-name">
+      <color-dot :color="color" :size="size" class="shrink-0" />
+      <p
+        :class="[
+          'ml-1.5 text-(--color-gray-50) truncate min-w-0',
+          {
+            'text-base': size === 'md',
+            'text-sm': size === 'sm',
+            'text-xs': size === 'xs',
+          },
+        ]"
+        data-test="board-badge-name"
+      >
         {{ name }}
       </p>
     </div>
@@ -35,9 +51,11 @@ defineProps({
     type: String,
     required: true,
   },
-  showBoard: {
-    type: Boolean,
-    required: true,
+  size: {
+    type: String,
+    validator: (value: "xs" | "sm" | "md") =>
+      ["xs", "sm", "md"].includes(value),
+    default: "md",
   },
 });
 </script>

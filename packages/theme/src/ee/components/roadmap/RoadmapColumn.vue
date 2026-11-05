@@ -11,7 +11,7 @@
     </header>
     <div
       data-test="roadmap-column"
-      class="grid gap-y-3 rounded-md bg-(--color-gray-95) p-3 flex-grow min-h-0 overflow-y-auto"
+      class="flex flex-col gap-y-3 rounded-md bg-(--color-gray-95) p-3 grow min-h-0 overflow-y-auto"
     >
       <roadmap-post-card
         v-for="post in posts"

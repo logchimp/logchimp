@@ -1,10 +1,15 @@
 import type { Request, Response } from "express";
 import type {
   IApiErrorResponse,
+  IApiValidationErrorResponse,
+  ICreatePostEERequestBody,
+  ICreatePostResponseBody,
   IFilterPostRequestBody,
   IFilterPostRequestQueryParams,
+  IGetPostBySlugRequestBody,
+  IGetPostBySlugResponseBody,
   IPost,
-  IUpdatePostRequestBody,
+  IUpdatePostEERequestBody,
   TPermission,
   TUpdatePostResponseBody,
 } from "@logchimp/types";
@@ -28,6 +33,13 @@ import { RoadmapRepository } from "../../../repository/roadmap";
 import { VoteRepository } from "../../../../repository/vote";
 import { UserRepository } from "../../../../repository/user";
 import { valkey } from "../../../../cache";
+import {
+  createPostEERequestBodySchema,
+  updatePostEERequestBodySchema,
+} from "./schema";
+import { v4 as uuidv4 } from "uuid";
+import { getVotes } from "../../../../services/votes/getVotes";
+import { PostService } from "../../../../services/posts/post.service";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -421,35 +433,111 @@ async function getPostMetadata({
   });
 }
 
-type UpdatePostResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
+type CreatePostResponseBody =
+  | ICreatePostResponseBody
+  | IApiErrorResponse
+  | IApiValidationErrorResponse;
 
-const updatePostBodySchema = v.object({
-  title: v.message(
-    v.pipe(v.optional(v.string(), ""), v.trim(), v.nonEmpty()),
-    "POST_TITLE_MISSING",
-  ),
-  contentMarkdown: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-  boardId: v.optional(v.nullable(v.string())),
-  roadmapId: v.optional(v.nullable(v.string())),
-  roadmap: v.optional(
-    v.object({
-      notifyVoters: v.boolean(),
-    }),
-  ),
-});
+const createPostSchemaBodyErrorMap = {};
+
+export async function createPost(
+  req: Request<unknown, unknown, ICreatePostEERequestBody>,
+  res: Response<CreatePostResponseBody>,
+) {
+  // @ts-expect-error
+  const userId = req.user.userId;
+  // @ts-expect-error
+  const permissions = req.user.permissions as TPermission[];
+
+  const body = v.safeParse(createPostEERequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: createPostSchemaBodyErrorMap[issue.message]
+          ? createPostSchemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
+
+  const checkPermission = permissions.includes("post:create");
+  if (!checkPermission) {
+    res.status(403).send({
+      message: error.api.roles.notEnoughPermission,
+      code: "NOT_ENOUGH_PERMISSION",
+    });
+    return;
+  }
+
+  const postService = new PostService();
+
+  const { title, description } = postService.titleDescriptionOverflow(
+    body.output.title,
+    body.output.contentMarkdown,
+  );
+  const { slug, slugId } = postService.generateSlug(title);
+
+  try {
+    const createPost = await database
+      .insert({
+        postId: uuidv4(),
+        title,
+        slug,
+        slugId,
+        contentMarkdown: description,
+        userId,
+        boardId: body.output.boardId,
+      })
+      .into("posts")
+      .returning("*");
+
+    const post = createPost[0];
+
+    await database
+      .insert({
+        voteId: uuidv4(),
+        userId,
+        postId: post.postId,
+      })
+      .into("votes");
+
+    res.status(201).send({
+      post,
+    });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+  }
+}
+
+type UpdatePostResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
 
 const updatePostSchemaBodyErrorMap = {
   POST_TITLE_MISSING: error.api.posts.titleMissing,
 };
 
 export async function updatePost(
-  req: Request<unknown, unknown, IUpdatePostRequestBody>,
+  req: Request<unknown, unknown, IUpdatePostEERequestBody>,
   res: Response<UpdatePostResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
+  // @ts-expect-error
+  const postId = (req.post as GetPostStatement).postId;
   // @ts-expect-error
   const authorId = (req.post as GetPostStatement).userId;
   // @ts-expect-error
@@ -468,7 +556,7 @@ export async function updatePost(
     return;
   }
 
-  const body = v.safeParse(updatePostBodySchema, req.body);
+  const body = v.safeParse(updatePostEERequestBodySchema, req.body);
   if (!body.success) {
     res.status(400).json({
       code: "VALIDATION_ERROR",
@@ -484,8 +572,6 @@ export async function updatePost(
     return;
   }
 
-  const id = validUUID(req.body.id);
-
   const hasBoardId = Object.hasOwn(body.output, "boardId");
   const newBoardId = hasBoardId ? validUUID(req.body.boardId) : undefined;
 
@@ -496,12 +582,8 @@ export async function updatePost(
   const title = xss((String(rawTitle) || "").trim());
   const contentMarkdown = xss(String(rawContentMarkdown || "").trim()) || null;
 
-  const slug = `${title
-    .replace(/[^\w\s]/gi, "")
-    .replace(/\s\s+/gi, " ")
-    .toLowerCase()
-    .split(" ")
-    .join("-")}-${slugId}`;
+  const postService = new PostService();
+  const { slug } = postService.generateSlug(title, slugId);
 
   try {
     const posts = await database
@@ -515,7 +597,7 @@ export async function updatePost(
       })
       .from("posts")
       .where({
-        postId: id,
+        postId,
       })
       .returning("*");
 
@@ -527,7 +609,7 @@ export async function updatePost(
     ) {
       try {
         await postsQueue.postRoadmapChangeEvent({
-          postId: id,
+          postId,
         });
       } catch (err) {
         logger.log({
@@ -549,6 +631,70 @@ export async function updatePost(
 
     const post = posts[0];
     res.status(200).send({ post });
+  } catch (err) {
+    logger.log({
+      level: "error",
+      message: err,
+    });
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+  }
+}
+
+type PostBySlugResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
+
+export async function postBySlug(
+  req: Request<unknown, unknown, IGetPostBySlugRequestBody>,
+  res: Response<PostBySlugResponseBody>,
+) {
+  // @ts-expect-error
+  const post = req.post;
+  // @ts-expect-error
+  const userId: string | undefined = req.user?.userId;
+
+  try {
+    const author = await database
+      .select("userId", "name", "username", "avatar")
+      .from("users")
+      .where({
+        userId: post.userId,
+      })
+      .first();
+
+    const voters = await getVotes(post.postId, userId);
+
+    const board = await database
+      .select("boardId", "name", "url", "color", "createdAt")
+      .from("boards")
+      .where({
+        boardId: post.boardId,
+      })
+      .first();
+
+    const roadmap = await database
+      .select("id", "name", "url", "color")
+      .from("roadmaps")
+      .where({
+        id: post.roadmap_id,
+      })
+      .first();
+
+    post.boardId = undefined;
+    post.userId = undefined;
+    post.roadmap_id = undefined;
+
+    res.status(200).send({
+      post: {
+        board,
+        author,
+        roadmap,
+        ...post,
+        voters,
+      },
+    });
   } catch (err) {
     logger.log({
       level: "error",

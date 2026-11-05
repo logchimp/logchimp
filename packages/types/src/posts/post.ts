@@ -58,6 +58,9 @@ export interface IGetPostBySlugResponseBody {
 export interface ICreatePostRequestBody {
   title?: string;
   contentMarkdown?: string | null;
+}
+
+export interface ICreatePostEERequestBody extends ICreatePostRequestBody {
   boardId?: string;
   roadmapId?: string;
 }
@@ -82,7 +85,9 @@ export interface IUpdatePostRequestBody {
   title: string;
   contentMarkdown: string | null;
   slugId: string;
-  userId: string;
+}
+
+export interface IUpdatePostEERequestBody extends IUpdatePostRequestBody {
   boardId?: string | null;
   roadmapId?: string | null;
   roadmap?: {

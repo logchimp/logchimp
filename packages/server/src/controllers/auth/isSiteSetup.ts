@@ -25,9 +25,10 @@ export async function isSiteSetup(_: Request, res: Response<ResponseBody>) {
       const cachedSiteSetup = await cache.valkey.get(cacheKey);
       if (cachedSiteSetup) {
         res.setHeader("X-Cache", "HIT");
-        return res.status(200).send({
+        res.status(200).send({
           is_setup: true,
         });
+        return;
       }
     } catch (err) {
       logger.log({

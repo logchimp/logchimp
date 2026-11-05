@@ -28,10 +28,11 @@ export async function remove(
   const permissions = req.user.permissions as TPermission[];
   const checkPermission = permissions.includes("vote:destroy");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
   const postId = validUUID(req.body.postId);

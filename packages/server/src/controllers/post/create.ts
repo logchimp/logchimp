@@ -7,21 +7,23 @@ import type {
   ICreatePostResponseBody,
   TPermission,
 } from "@logchimp/types";
-import xss from "xss";
-import { POST_TITLE_MAX_LENGTH } from "../../constants";
+import * as v from "valibot";
 
 import database from "../../database";
 
 // utils
-import { generateNanoID as nanoid, validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 
 import error from "../../errorResponse.json";
+import { createPostRequestBodySchema } from "./schema";
+import { PostService } from "../../services/posts/post.service";
 
 type ResponseBody =
   | ICreatePostResponseBody
   | IApiErrorResponse
   | IApiValidationErrorResponse;
+
+const schemaBodyErrorMap = {};
 
 export async function create(
   req: Request<unknown, unknown, ICreatePostRequestBody>,
@@ -32,36 +34,38 @@ export async function create(
   // @ts-expect-error
   const permissions = req.user.permissions as TPermission[];
 
-  const rawTitle = String(req.body.title || "").trim();
-  let title = xss(rawTitle) || "new post";
-  let contentMarkdown =
-    xss(String(req.body.contentMarkdown || "").trim()) || null;
-  const boardId = validUUID(req.body.boardId);
-
-  if (title.length > POST_TITLE_MAX_LENGTH) {
-    const exceedingText = title.slice(POST_TITLE_MAX_LENGTH - 3);
-    title = `${title.slice(0, POST_TITLE_MAX_LENGTH - 3)}...`;
-
-    contentMarkdown = `...${exceedingText}${contentMarkdown ? `\n\n${contentMarkdown}` : ""}`;
+  const body = v.safeParse(createPostRequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: schemaBodyErrorMap[issue.message]
+          ? schemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
   }
 
   const checkPermission = permissions.includes("post:create");
   if (!checkPermission) {
-    return res.status(403).send({
+    res.status(403).send({
       message: error.api.roles.notEnoughPermission,
       code: "NOT_ENOUGH_PERMISSION",
     });
+    return;
   }
 
-  // generate slug unique identification
-  const slugId = nanoid(20);
+  const postService = new PostService();
 
-  const slug = `${title
-    .replace(/[^\w\s]/gi, "")
-    .replace(/\s\s+/gi, " ")
-    .toLowerCase()
-    .split(" ")
-    .join("-")}-${slugId}`;
+  const { title, description } = postService.titleDescriptionOverflow(
+    body.output.title,
+    body.output.contentMarkdown,
+  );
+  const { slug, slugId } = postService.generateSlug(title);
 
   try {
     const createPost = await database
@@ -70,9 +74,8 @@ export async function create(
         title,
         slug,
         slugId,
-        contentMarkdown,
+        contentMarkdown: description,
         userId,
-        boardId,
       })
       .into("posts")
       .returning("*");
