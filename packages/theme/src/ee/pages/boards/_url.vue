@@ -62,7 +62,7 @@ const board = reactive<components["schemas"]["BoardPrivate"]>({
   display: false,
   view_voters: false,
   post_count: 0,
-  createdAt: new Date(),
+  createdAt: new Date().toISOString(),
 });
 const loading = ref<boolean>(false);
 const isBoardExist = ref<boolean>(false);

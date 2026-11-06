@@ -20,7 +20,7 @@ export const EXAMPLE_BOARDS_DATA: Array<components["schemas"]["BoardPrivate"]> =
       post_count: 97,
       view_voters: true,
       url: "android-app",
-      createdAt: new Date(Date.now() - 3 * 60 * 1000),
+      createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
     },
     {
       boardId: "3",
@@ -30,7 +30,7 @@ export const EXAMPLE_BOARDS_DATA: Array<components["schemas"]["BoardPrivate"]> =
       post_count: 11,
       view_voters: false,
       url: "accessibility",
-      createdAt: new Date(Date.now() - 3 * 60 * 1000),
+      createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
     },
     {
       boardId: "4",
@@ -40,7 +40,7 @@ export const EXAMPLE_BOARDS_DATA: Array<components["schemas"]["BoardPrivate"]> =
       post_count: 53,
       view_voters: true,
       url: "ios-app",
-      createdAt: new Date(Date.now() - 3 * 60 * 1000),
+      createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
     },
     {
       boardId: "5",
@@ -50,6 +50,6 @@ export const EXAMPLE_BOARDS_DATA: Array<components["schemas"]["BoardPrivate"]> =
       post_count: 2,
       view_voters: false,
       url: "localisation",
-      createdAt: new Date(Date.now() - 3 * 60 * 1000),
+      createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
     },
   ];
