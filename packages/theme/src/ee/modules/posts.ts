@@ -44,10 +44,10 @@ export class PostsEE extends APIService {
       limit,
       visibility,
     }: Omit<
-      operations["getPostActivity"]["parameters"]["query"],
+      NonNullable<operations["getPostActivity"]["parameters"]["query"]>,
       "visibility"
     > & {
-      visibility?: Array<components["schemas"]["FilterVisibilityEnum"]>;
+      visibility?: Array<components["schemas"]["PostActivityVisibilityEnum"]>;
     },
   ): Promise<components["schemas"]["GetPostActivityResponseBody"]> => {
     return this.get(`/v1/posts/${encodeURIComponent(post_id)}/activity`, {
