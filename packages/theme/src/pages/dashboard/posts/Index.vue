@@ -118,7 +118,9 @@ async function createPostHandler() {
   createPostButtonLoading.value = true;
 
   try {
-    const response = await postsAPI.CreatePost({});
+    const response = await postsAPI.CreatePost({
+      title: "new post",
+    });
     Object.assign(postTemplate, response.post);
     dashboardPosts.appendPost(postTemplate);
 

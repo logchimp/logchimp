@@ -176,7 +176,11 @@ const accentColor = reactive<TextInputField>({
     message: "",
   },
 });
-const googleAnalyticsId = reactive<TextInputField>({
+const googleAnalyticsId = reactive<
+  Omit<TextInputField, "value"> & {
+    value?: string | null;
+  }
+>({
   value: "",
   error: {
     show: false,

@@ -50,7 +50,10 @@
             <LicenseCrown color="neutral" />
           </UpgradeTooltip>
         </div>
-        <SearchBoardDropdown :board="post.board" @selected="selectBoard" />
+        <SearchBoardDropdown
+          :board="post.board ?? null"
+          @selected="selectBoard"
+        />
       </div>
 
       <div class="form-column">
@@ -64,7 +67,7 @@
           </UpgradeTooltip>
         </div>
         <SearchRoadmapDropdown
-          :roadmap="post.roadmap"
+          :roadmap="post.roadmap ?? null"
           @selected="selectRoadmap"
         />
         <div

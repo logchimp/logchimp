@@ -41,7 +41,6 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
-import type { IDashboardPost } from "@logchimp/types";
 import type { components } from "@logchimp/api-ts-types";
 
 // modules
@@ -62,7 +61,7 @@ const { permissions, getUserId } = useUserStore();
 const postsAPI = new PostsAPI();
 
 // posts
-const post = reactive<IDashboardPost>({
+const post = reactive<components["schemas"]["DashboardPost"]>({
   postId: "",
   title: "",
   slug: "",
@@ -83,7 +82,7 @@ const post = reactive<IDashboardPost>({
     name: "",
     url: "",
     color: "",
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   },
   roadmap: {
     id: "",

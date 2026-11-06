@@ -127,23 +127,19 @@ async function getRoleHandler(id: string) {
       const [type, action, scope] = parts as [
         components["schemas"]["PermissionEntities"],
         components["schemas"]["PermissionAction"],
-        components["schemas"]["PermissionScope"],
+        components["schemas"]["PermissionScope"] | undefined,
       ];
       const permissionGroup = permissions[type];
       if (!permissionGroup) return;
       if (action in permissionGroup) {
+        const group = permissionGroup as unknown as Record<
+          string,
+          boolean | components["schemas"]["PermissionScope"]
+        >;
         if (scope) {
-          // @ts-expect-error
-          (permissionGroup as Record<PermissionAction, TPermissionScope>)[
-            action
-          ] = scope;
+          group[action] = scope;
         } else {
-          (
-            permissionGroup as Record<
-              components["schemas"]["PermissionAction"],
-              boolean
-            >
-          )[action] = true;
+          group[action] = true;
         }
       }
     });

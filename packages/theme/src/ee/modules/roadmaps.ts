@@ -51,7 +51,7 @@ export class RoadmapsEE extends APIService {
    */
   SearchRoadmap = async (
     name: string,
-  ): Promise<components["schemas"]["SearchBoardResponseBody"]> => {
+  ): Promise<components["schemas"]["SearchRoadmapResponseBody"]> => {
     return this.get(`v1/roadmaps/search/${encodeURIComponent(name)}`)
       .then((response) => response?.data)
       .catch((error) => {
