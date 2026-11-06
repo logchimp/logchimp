@@ -51,10 +51,8 @@ const post = reactive<components["schemas"]["DashboardPost"]>({
   slug: "",
   slugId: "",
   contentMarkdown: "",
-  // TODO: what should be the default/empty value
-  updatedAt: new Date(),
-  // TODO: what should be the default/empty value
-  createdAt: new Date(),
+  updatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
   author: {
     userId: "",
     name: "",
@@ -66,7 +64,7 @@ const post = reactive<components["schemas"]["DashboardPost"]>({
     name: "",
     url: "",
     color: "",
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   },
   roadmap: {
     id: "",

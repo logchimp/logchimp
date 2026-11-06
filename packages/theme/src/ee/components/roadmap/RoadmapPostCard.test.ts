@@ -15,8 +15,8 @@ describe("post card", () => {
         slug: "post-title-qwJy9_3Sm9g3Qm3r9OQk",
         contentMarkdown: "What's this feature is all about?",
         // random createdAt date
-        updatedAt: new Date("2020-12-19T09:50:10.137Z"),
-        createdAt: new Date("2020-12-19T09:50:10.137Z"),
+        updatedAt: new Date("2020-12-19T09:50:10.137Z").toISOString(),
+        createdAt: new Date("2020-12-19T09:50:10.137Z").toISOString(),
         author: {
           userId: "01982803-d099-4f03-8607-471f87d7c6e9",
           name: "",
@@ -53,7 +53,7 @@ describe("post card", () => {
           name: "Feature requests",
           color: "abcabc",
           url: "feature-requests",
-          createdAt: new Date(),
+          createdAt: new Date().toISOString(),
         },
         roadmap: null,
       },

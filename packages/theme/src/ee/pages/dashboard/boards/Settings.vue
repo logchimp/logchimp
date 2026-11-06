@@ -49,7 +49,7 @@ const board = reactive<components["schemas"]["BoardPrivate"]>({
   color: "",
   view_voters: false,
   display: false,
-  createdAt: new Date(),
+  createdAt: new Date().toDateString(),
   post_count: 0,
 });
 const boardsEEAPI = new BoardsEE();

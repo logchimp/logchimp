@@ -51,8 +51,8 @@ const role = ref<components["schemas"]["RoleItem"]>({
   name: "",
   description: "",
   isSystem: false,
-  created_at: new Date(),
-  updated_at: new Date(),
+  created_at: new Date().toDateString(),
+  updated_at: new Date().toDateString(),
 });
 const permissions = reactive<IPermissionsState>({
   post: {
