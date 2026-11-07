@@ -9,7 +9,11 @@ import database from "../../../../database";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
-import { dateToISOString, parseAndValidateLimit, parseAndValidatePage } from "../../../../helpers";
+import {
+  dateToISOString,
+  parseAndValidateLimit,
+  parseAndValidatePage,
+} from "../../../../helpers";
 
 const querySchema = v.object({
   first: v.pipe(
