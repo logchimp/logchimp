@@ -47,7 +47,10 @@ export async function create(
 
   try {
     // get maximum index value of roadmap
-    const roadmapIndex = await database.max("index").from("roadmaps").first();
+    const roadmapIndex = await database
+      .max<{ max: number }>("index")
+      .from("roadmaps")
+      .first();
 
     const createRoadmap = await database
       .insert({
@@ -55,7 +58,7 @@ export async function create(
         name: name || "new roadmap",
         url: `new-roadmap-${nanoid(10)}`,
         color: generateHexColor(),
-        index: roadmapIndex.max + 1,
+        index: (roadmapIndex?.max ?? 0) + 1,
       })
       .into("roadmaps")
       .returning<components["schemas"]["RoadmapPrivate"][]>([
