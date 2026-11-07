@@ -110,12 +110,9 @@ export class VoteRepository extends QueryRepository {
       .where("rn", "<=", limitPerPost);
   }
 
-  private async getViewerVotes(
-    postIds: string[],
-    userId: string,
-  ): Promise<IVoteTableColumns[]> {
+  private async getViewerVotes(postIds: string[], userId: string) {
     return this.db
-      .select<IVoteTableColumns[]>("*")
+      .select("*")
       .from("votes")
       .whereIn("postId", postIds)
       .andWhere({ userId });

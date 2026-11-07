@@ -3,6 +3,7 @@ import type { components } from "@logchimp/api-ts-types";
 import { QueryRepository } from "../../repository/query";
 import { DAY } from "../../cache/time";
 import logger from "../../utils/logger";
+import { dateToISOString } from "../../helpers";
 
 type BoardCacheKey = "public" | "detail" | "private";
 
@@ -22,23 +23,22 @@ export class BoardRepository extends QueryRepository {
     });
 
     const dbResults = await this.db("boards")
-      .select<components["schemas"]["BoardItem"][]>(
-        "boardId",
-        "name",
-        "url",
-        "color",
-        "createdAt",
-      )
+      .select("boardId", "name", "url", "color", "createdAt")
       .whereIn("boardId", missingIds);
+
+    const typedDbResults = dbResults.map((board) => ({
+      ...board,
+      createdAt: dateToISOString(board.createdAt),
+    })) as Array<components["schemas"]["BoardItem"]>;
 
     await this.CacheMissingResults<components["schemas"]["BoardItem"]>({
       idField: "boardId",
-      results: dbResults,
+      results: typedDbResults,
       keyPrefix,
       ttlSeconds: DAY * 7,
     });
 
-    return [...results, ...dbResults];
+    return [...results, ...typedDbResults];
   }
 
   async GetPrivateBoardByIDs(
@@ -75,8 +75,9 @@ export class BoardRepository extends QueryRepository {
 
     const typedDbResults = dbResults.map((board) => ({
       ...board,
+      createdAt: dateToISOString(board.createdAt),
       post_count: Number.parseInt(board.post_count, 10),
-    })) as components["schemas"]["BoardPrivate"][];
+    })) as Array<components["schemas"]["BoardPrivate"]>;
 
     await this.CacheMissingResults<components["schemas"]["BoardPrivate"]>({
       idField: "boardId",

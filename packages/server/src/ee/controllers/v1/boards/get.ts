@@ -8,6 +8,7 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
 import {
+  dateToISOString,
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../helpers";
@@ -68,7 +69,12 @@ export async function get(
       post_count: Number.parseInt(board.post_count, 10),
     }));
 
-    res.status(200).send({ boards });
+    const typedDbResults = boards.map((board) => ({
+      ...board,
+      createdAt: dateToISOString(board.createdAt),
+    })) as Array<components["schemas"]["BoardPrivate"]>;
+
+    res.status(200).send({ boards: typedDbResults });
   } catch (err) {
     logger.error({
       message: err,

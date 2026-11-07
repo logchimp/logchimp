@@ -10,6 +10,7 @@ import error from "../../errorResponse.json";
 import { updatePostRequestBodySchema } from "./schema";
 import type { GetPostStatement } from "../../middlewares/postExists";
 import { PostService } from "../../services/posts/post.service";
+import { dateToISOString } from "../../helpers";
 
 type ResponseBody =
   | components["schemas"]["UpdatePostResponseBody"]
@@ -88,7 +89,13 @@ export async function updatePost(
 
     const post = posts[0];
 
-    res.status(200).send({ post });
+    res.status(200).send({
+      post: {
+        ...post,
+        createdAt: dateToISOString(post.createdAt),
+        updatedAt: dateToISOString(post.updatedAt),
+      },
+    });
   } catch (err) {
     logger.log({
       level: "error",

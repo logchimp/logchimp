@@ -5,6 +5,7 @@ import database from "../../../../database";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { dateToISOString } from "../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["SearchBoardResponseBody"]
@@ -70,8 +71,13 @@ export async function searchBoard(
       post_count: Number.parseInt(board.post_count, 10),
     }));
 
+    const typedDbResults = boards.map((board) => ({
+      ...board,
+      createdAt: dateToISOString(board.createdAt),
+    })) as Array<components["schemas"]["BoardPrivate"]>;
+
     res.status(200).send({
-      boards,
+      boards: typedDbResults,
     });
   } catch (err) {
     logger.error({

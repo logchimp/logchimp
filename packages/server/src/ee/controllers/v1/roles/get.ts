@@ -6,9 +6,8 @@ import database from "../../../../database";
 // utils
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
-import { parseAndValidateLimit } from "../../../../helpers";
+import { dateToISOString, parseAndValidateLimit } from "../../../../helpers";
 import { GET_ROLES_FILTER_COUNT } from "../../../../constants";
-import type { IRoleTableColumns } from "../../../services/roles/roles.service";
 
 type ResponseBody =
   | components["schemas"]["GetFilterRolesResponseBody"]
@@ -108,8 +107,8 @@ export async function get(
         name: role.name,
         description: role.description,
         isSystem: !!role.is_system,
-        created_at: role.created_at,
-        updated_at: role.updated_at,
+        created_at: dateToISOString(role.created_at),
+        updated_at: dateToISOString(role.updated_at),
       } satisfies components["schemas"]["RoleItem"]);
     }
 
@@ -145,7 +144,7 @@ interface GetRolesQueryOptions {
 
 async function getRolesQuery({ first, after }: GetRolesQueryOptions) {
   let query = database
-    .select<IRoleTableColumns[]>(
+    .select(
       "id",
       "name",
       "description",

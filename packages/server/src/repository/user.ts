@@ -42,7 +42,7 @@ export class UserRepository extends QueryRepository {
 
 export function getUserById(db: Knex, id: string) {
   return db("users")
-    .select<components["schemas"]["CustomerItemInfo"]>(
+    .select(
       "userId",
       "name",
       "username",
@@ -62,7 +62,7 @@ export function getUserByEmail(db: Knex, email: string) {
   const e = (email || "").trim();
 
   return db("users")
-    .select<components["schemas"]["CustomerItemInfo"]>(
+    .select(
       "userId",
       "name",
       "username",

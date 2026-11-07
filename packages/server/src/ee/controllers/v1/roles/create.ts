@@ -32,9 +32,7 @@ export async function create(req: Request, res: Response<ResponseBody>) {
       throw new Error("failed to create role in DB");
     }
 
-    res.status(201).send({
-      role,
-    });
+    res.status(201).send({ role });
   } catch (err) {
     logger.error({
       message: "failed to create role in DB",

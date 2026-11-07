@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import type { components, operations } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 import database from "../../../../database";
-import { validUUID, validUUIDs } from "../../../../helpers";
+import { dateToISOString, validUUID, validUUIDs } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import type { GetPostStatement } from "../../../../middlewares/postExists";
@@ -172,6 +172,8 @@ export async function filterPost(
 
       posts.push({
         ...post,
+        createdAt: dateToISOString(post.createdAt),
+        updatedAt: dateToISOString(post.updatedAt),
         author: author,
         board: board ?? null,
         roadmap: roadmap ?? null,
@@ -496,7 +498,11 @@ export async function createPost(
       .into("votes");
 
     res.status(201).send({
-      post,
+      post: {
+        ...post,
+        createdAt: dateToISOString(post.createdAt),
+        updatedAt: dateToISOString(post.updatedAt),
+      },
     });
   } catch (err) {
     logger.log({
@@ -627,7 +633,13 @@ export async function updatePost(
     }
 
     const post = posts[0];
-    res.status(200).send({ post });
+    res.status(200).send({
+      post: {
+        ...post,
+        createdAt: dateToISOString(post.createdAt),
+        updatedAt: dateToISOString(post.updatedAt),
+      },
+    });
   } catch (err) {
     logger.log({
       level: "error",

@@ -4,6 +4,7 @@ import type { components, operations } from "@logchimp/api-ts-types";
 
 import database from "../../database";
 import {
+  dateToISOString,
   parseAndValidateLimit,
   parseAndValidatePage,
   validUUID,
@@ -176,6 +177,8 @@ export async function filterPost(
 
         posts.push({
           ...post,
+          createdAt: dateToISOString(post.createdAt),
+          updatedAt: dateToISOString(post.updatedAt),
           author,
           board: null,
           roadmap: null,
