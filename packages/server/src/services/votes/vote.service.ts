@@ -155,10 +155,8 @@ export class VoteService {
         "users.avatar",
       )
       .innerJoin("users", "votes.userId", "users.userId")
-      .where({
-        "votes.postId": postId,
-        "votes.userId": userId,
-      })
+      .where("votes.postId", postId)
+      .where("votes.userId", userId)
       .first();
 
     if (!query) return undefined;
@@ -308,7 +306,7 @@ export class VoteService {
         .first();
 
       const totalVotesCount = Number.parseInt(
-        String(totalCountQuery?.count ?? "0"),
+        totalCountQuery?.count ?? "0",
         10,
       );
 

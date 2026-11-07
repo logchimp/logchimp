@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import supertest from "supertest";
 
 import app from "../../../../src/app";
@@ -11,8 +11,10 @@ let ownAuthToken: string | null = null;
 
 // Helpers
 async function ensureUsers(minUsers: number) {
-  const existing = await database("users").count({ count: "*" }).first();
-  const existingCount = Number.parseInt(existing?.count?.toString() || "0", 10);
+  const existing = await database("users")
+    .count<{ count: string }>({ count: "*" })
+    .first();
+  const existingCount = Number.parseInt(existing?.count ?? "0", 10);
 
   const toCreate = Math.max(0, minUsers - existingCount);
   for (let i = 0; i < toCreate; i++) {

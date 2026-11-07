@@ -42,7 +42,7 @@ export async function getVotes(postId: string, userId?: string) {
 
     return {
       votes,
-      votesCount: votesCount?.count ? Number.parseInt(votesCount.count, 10) : 0,
+      votesCount: Number.parseInt(votesCount?.count ?? "0", 10),
       viewerVote,
     };
   } catch (err) {

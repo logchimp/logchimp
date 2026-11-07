@@ -128,20 +128,22 @@ export async function filter(
       }
     }
 
-    const users = [];
+    const users: Array<components["schemas"]["UserItem"]> = [];
 
     for (let i = 0; i < userDataLength; i++) {
       const userId = userData[i].userId;
 
       try {
         const postsCount = await database
-          .count()
+          .count<{ count: string }>()
           .from("posts")
-          .where({ userId });
+          .where({ userId })
+          .first();
         const votesCount = await database
-          .count()
+          .count<{ count: string }>()
           .from("votes")
-          .where({ userId });
+          .where({ userId })
+          .first();
         const roles = await database
           .select({
             id: "roles.id",
@@ -157,8 +159,8 @@ export async function filter(
           });
 
         users.push({
-          votes: votesCount[0].count,
-          posts: postsCount[0].count,
+          votes: Number.parseInt(votesCount.count, 10),
+          posts: Number.parseInt(postsCount.count, 10),
           roles,
           ...userData[i],
         });

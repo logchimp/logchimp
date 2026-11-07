@@ -169,7 +169,7 @@ async function getRoadmapMetadata({
     let totalCountQuery = trx("roadmaps");
     totalCountQuery = applyVisibilityFilter(totalCountQuery, visibility);
     const totalCountResult = await totalCountQuery
-      .count<{ count: string | number }[]>("* as count")
+      .count<{ count: string }>("* as count")
       .first();
 
     // Has next page
@@ -189,16 +189,13 @@ async function getRoadmapMetadata({
     );
 
     const hasNextPageResult = await trx
-      .count<{ count: string | number }[]>({ count: "*" })
+      .count<{ count: string }>({ count: "*" })
       .from(hasNextPageSubquery)
       .first();
 
-    const totalCount = Number.parseInt(String(totalCountResult.count), 10);
+    const totalCount = Number.parseInt(totalCountResult.count, 10);
 
-    const remainingResultsCount = Number.parseInt(
-      String(hasNextPageResult.count),
-      10,
-    );
+    const remainingResultsCount = Number.parseInt(hasNextPageResult.count, 10);
 
     return {
       totalCount,

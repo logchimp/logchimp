@@ -56,7 +56,7 @@ export class BoardRepository extends QueryRepository {
     });
 
     const dbResults = await this.db("boards")
-      .select<components["schemas"]["BoardPrivate"][]>(
+      .select(
         "boards.boardId",
         "boards.name",
         "boards.url",
@@ -65,7 +65,7 @@ export class BoardRepository extends QueryRepository {
         "boards.view_voters",
         "boards.createdAt",
       )
-      .count<components["schemas"]["BoardPrivate"][]>("posts.postId", {
+      .count("posts.postId", {
         as: "post_count",
       })
       .from("boards")
@@ -75,8 +75,7 @@ export class BoardRepository extends QueryRepository {
 
     const typedDbResults = dbResults.map((board) => ({
       ...board,
-      // convert post_count from string → number
-      post_count: Number(board.post_count),
+      post_count: Number.parseInt(board.post_count, 10),
     })) as components["schemas"]["BoardPrivate"][];
 
     await this.CacheMissingResults<components["schemas"]["BoardPrivate"]>({
