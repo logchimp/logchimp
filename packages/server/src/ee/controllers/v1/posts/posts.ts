@@ -410,11 +410,8 @@ async function getPostMetadata({
       .from(remainingQuery)
       .first();
 
-    const totalCount = Number.parseInt(String(totalCountResult.count), 10);
-    const remainingResultsCount = Number.parseInt(
-      String(remainingResult.count),
-      10,
-    );
+    const totalCount = Number.parseInt(totalCountResult.count, 10);
+    const remainingResultsCount = Number.parseInt(remainingResult.count, 10);
 
     return { totalCount, remainingResultsCount };
   });
