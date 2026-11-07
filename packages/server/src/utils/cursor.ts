@@ -1,3 +1,17 @@
+import type { components } from "@logchimp/api-ts-types";
+
+export const ZeroResultsCursorPagination = {
+  page_info: {
+    count: 0,
+    current_page: 1,
+    has_next_page: false,
+    start_cursor: null,
+    end_cursor: null,
+  },
+  total_count: 0,
+  total_pages: 1,
+} satisfies components["schemas"]["CursorPaginationMeta"];
+
 /**
  * EncodeCursor turns a cursor into an opaque Base64 string
  * @param {Date|string|number} t - Date (or value accepted by Date constructor)

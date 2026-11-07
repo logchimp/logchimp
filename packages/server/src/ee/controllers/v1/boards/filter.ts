@@ -10,10 +10,10 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
 import {
-  dateToISOString,
   parseAndValidateLimit,
-  parseAndValidatePage,
-} from "../../../../helpers";
+  parseAndValidatePage
+,} from "../../../../helpers";
+import { ZeroResultsCursorPagination } from "../../../../utils/cursor";
 
 const querySchema = v.object({
   first: v.pipe(
@@ -90,6 +90,15 @@ export async function filter(
   try {
     const boards = await getBoards({ first, page, after, created });
     const boardsLength = boards.length;
+
+    if (boardsLength === 0) {
+      res.status(200).send({
+        boards: [],
+        results: [],
+        ...(page ? {} : ZeroResultsCursorPagination),
+      });
+      return;
+    }
 
     let startCursor: string | null = null;
     let endCursor: string | null = null;

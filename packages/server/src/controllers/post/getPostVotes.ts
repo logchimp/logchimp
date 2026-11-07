@@ -7,6 +7,7 @@ import { parseAndValidateLimit } from "../../helpers";
 import error from "../../errorResponse.json";
 import { VoteService } from "../../services/votes/vote.service";
 import type { IAuthenticationMiddlewareUser } from "../../types";
+import { ZeroResultsCursorPagination } from "../../utils/cursor";
 
 type ResponseBody =
   | components["schemas"]["GetPostVotesResponseBody"]
