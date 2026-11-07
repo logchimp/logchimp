@@ -58,6 +58,7 @@ interface TableSettings {
   googleAnalyticsId: string | null;
   isPoweredBy: boolean;
   allowSignup: boolean;
+  labs: object;
 }
 
 interface TableVotes {
@@ -118,7 +119,7 @@ declare module "knex/types/tables" {
     settings: Knex.CompositeTableType<
       TableSettings,
       Partial<TableSettings> &
-        Pick<TableSettings, "isPoweredBy" | "allowSignup">,
+        Pick<TableSettings, "isPoweredBy" | "allowSignup" | "labs">,
       Partial<TableSettings>
     >;
     votes: Knex.CompositeTableType<
