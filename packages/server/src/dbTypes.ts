@@ -15,7 +15,7 @@ export interface TableUsers {
   notes: string | null;
 }
 
-interface TableAuthIdentities {
+export interface TableAuthIdentities {
   id: string;
   user_id: TableUsers["userId"];
   provider: string;
@@ -26,7 +26,7 @@ interface TableAuthIdentities {
   created_at: Date;
 }
 
-interface TableEmailVerification {
+export interface TableEmailVerification {
   email: string;
   token: string;
   createdAt: Date;
@@ -46,13 +46,13 @@ export interface TablePosts {
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 export interface TablePostsExtensions {}
 
-interface TableResetPassword {
+export interface TableResetPassword {
   email: string;
   token: string;
   createdAt: Date;
 }
 
-interface TableSettings {
+export interface TableSettings {
   title: string | null;
   description: string | null;
   logo: string | null;
@@ -65,7 +65,7 @@ interface TableSettings {
   labs: object;
 }
 
-interface TableVotes {
+export interface TableVotes {
   voteId: string;
   userId: TableUsers["userId"];
   postId: TablePosts["postId"];
