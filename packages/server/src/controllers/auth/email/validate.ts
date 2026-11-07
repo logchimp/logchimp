@@ -45,19 +45,17 @@ export async function validate(
     const verifyUser = await database("users")
       .update({
         isVerified: true,
-        updatedAt: new Date().toJSON(),
+        updatedAt: new Date(),
       })
-      .where({
-        email,
-      })
-      .returning("isVerified");
+      .where(email)
+      .returning(["isVerified"]);
 
     const isUserVerified = verifyUser[0];
     await database.delete().from("emailVerification").where({ email });
 
     res.status(200).send({
       verify: {
-        success: isUserVerified,
+        success: isUserVerified.isVerified,
       },
     });
   } catch (err) {
