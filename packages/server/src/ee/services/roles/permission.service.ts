@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
-import type { Tables } from "knex/types/tables";
 import type { components } from "@logchimp/api-ts-types";
 
 import database from "../../../database";
 import logger from "../../../utils/logger";
+import type { TablePermissions } from "../../dbTypes";
 
 export class PermissionService {
   permissionKey = new Set<string>();
-  permissionEntity = new Set<Tables["permissions"]["base"]>();
+  permissionEntity = new Set<TablePermissions>();
   permissionRef = new Map<string, string>();
 
   /**
