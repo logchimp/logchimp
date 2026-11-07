@@ -12,6 +12,6 @@
     "dotenv": "^17.4.2"
   },
   "dependencies": {
-    "@logchimp/api-ts-types": "^0.1.4"
+    "@logchimp/api-ts-types": "^0.2.1"
   }
 }
