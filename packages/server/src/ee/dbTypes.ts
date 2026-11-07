@@ -1,5 +1,15 @@
 import type { Knex } from "knex";
-import type { TableUsers } from "../dbTypes";
+import type { TableUsers, TablePosts } from "../dbTypes";
+
+interface TablePostsEE extends TablePosts {
+  boardId: TableBoards["boardId"] | null;
+  roadmap_id: TableRoadmaps["id"] | null;
+}
+
+declare module "../dbTypes" {
+  interface TablePostsExtensions
+    extends Pick<TablePostsEE, "boardId" | "roadmap_id"> {}
+}
 
 interface TablePostsActivity {
   id: string;

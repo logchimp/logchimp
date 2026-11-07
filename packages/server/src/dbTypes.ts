@@ -32,7 +32,7 @@ interface TableEmailVerification {
   createdAt: Date;
 }
 
-interface TablePosts {
+export interface TablePosts {
   postId: string;
   title: string;
   slug: string;
@@ -42,6 +42,9 @@ interface TablePosts {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+export interface TablePostsExtensions {}
 
 interface TableResetPassword {
   email: string;
@@ -105,12 +108,13 @@ declare module "knex/types/tables" {
       TableEmailVerification
     >;
     posts: Knex.CompositeTableType<
-      TablePosts,
+      TablePosts & TablePostsExtensions,
       Pick<TablePosts, "postId" | "title" | "slug" | "slugId" | "userId"> &
         Partial<
           Pick<TablePosts, "createdAt" | "updatedAt" | "contentMarkdown">
-        >,
-      Partial<TablePosts>
+        > &
+        Partial<TablePostsExtensions>,
+      Partial<TablePosts & TablePostsExtensions>
     >;
     resetPassword: Knex.CompositeTableType<
       TableResetPassword,
