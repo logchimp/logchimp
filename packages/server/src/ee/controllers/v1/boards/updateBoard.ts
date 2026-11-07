@@ -123,10 +123,10 @@ export async function updateBoard(
         boardId,
       });
 
+    await boardRepository.InvalidateBoardCache([boardId]);
+
     const boards = await boardRepository.GetPrivateBoardByIDs([boardId]);
     const board = boards[0];
-
-    await boardRepository.InvalidateBoardCache([boardId]);
 
     res.status(200).send({ board });
   } catch (err) {
