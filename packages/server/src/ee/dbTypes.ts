@@ -1,7 +1,7 @@
 import type { Knex } from "knex";
 import type { TableUsers, TablePosts } from "../dbTypes";
 
-interface TablePostsEE extends TablePosts {
+export interface TablePostsEE extends TablePosts {
   boardId: TableBoards["boardId"] | null;
   roadmap_id: TableRoadmaps["id"] | null;
 }
@@ -11,7 +11,7 @@ declare module "../dbTypes" {
     extends Pick<TablePostsEE, "boardId" | "roadmap_id"> {}
 }
 
-interface TablePostsActivity {
+export interface TablePostsActivity {
   id: string;
   type: string;
   posts_comments_id: string | null;
@@ -20,7 +20,7 @@ interface TablePostsActivity {
   created_at: Date;
 }
 
-interface TablePostsComments {
+export interface TablePostsComments {
   id: string;
   parent_id: string | null;
   activity_id: TablePostsActivity["id"];
@@ -32,7 +32,7 @@ interface TablePostsComments {
   updated_at: Date;
 }
 
-interface TableBoards {
+export interface TableBoards {
   boardId: string;
   name: string;
   url: string;
@@ -43,7 +43,7 @@ interface TableBoards {
   updatedAt: Date;
 }
 
-interface TablePermissions {
+export interface TablePermissions {
   id: string;
   name: string | null;
   type: string;
@@ -52,7 +52,7 @@ interface TablePermissions {
   created_at: Date;
 }
 
-interface TableRoles {
+export interface TableRoles {
   id: string;
   name: string;
   description: string | null;
@@ -61,19 +61,19 @@ interface TableRoles {
   updated_at: Date;
 }
 
-interface TableRolesUsers {
+export interface TableRolesUsers {
   id: string;
   role_id: TableRoles["id"];
   user_id: TableUsers["userId"];
 }
 
-interface TablePermissionsRoles {
+export interface TablePermissionsRoles {
   id: string;
   permission_id: TablePermissions["id"];
   role_id: TableRoles["id"];
 }
 
-interface TableRoadmaps {
+export interface TableRoadmaps {
   id: string;
   name: string;
   url: string;
