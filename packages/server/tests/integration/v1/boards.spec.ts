@@ -489,7 +489,7 @@ describeEE("GET /boards/:url", () => {
 
     expect(response.body.board).toStrictEqual({
       ...boardCheck,
-      post_count: "0",
+      post_count: 0,
     });
   });
 
