@@ -9,6 +9,8 @@ export async function updateUserInfo(req: Request, res: Response) {
   const { user_id } = req.params;
   const { username, name, notes } = req.body;
 
+  const userId = Array.isArray(user_id) ? user_id[0] : user_id;
+
   try {
     const user = await database
       .update({
@@ -17,11 +19,9 @@ export async function updateUserInfo(req: Request, res: Response) {
         notes,
       })
       .from("users")
-      .where([
-        {
-          userId: user_id,
-        },
-      ]);
+      .where({
+        userId,
+      });
 
     res.status(200).send({
       user,

@@ -175,11 +175,9 @@ export async function getBoards({
       )
       .count("posts", { as: "post_count" })
       .leftJoin("posts", "boards.boardId", "posts.boardId")
-      .where([
-        {
-          "boards.display": true,
-        },
-      ])
+      .where({
+        display: true,
+      })
       .groupBy("boards.boardId")
       .orderBy("boards.createdAt", created)
       .orderBy("boards.boardId", created)

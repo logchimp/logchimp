@@ -47,7 +47,9 @@ export async function validate(
         isVerified: true,
         updatedAt: new Date(),
       })
-      .where(email)
+      .where({
+        email,
+      })
       .returning(["isVerified"]);
 
     const isUserVerified = verifyUser[0];

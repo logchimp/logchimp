@@ -102,11 +102,7 @@ const insertRoleUserWithTrx = async (user_id: string, role_id: string) =>
           "roles_users.id as user_role_id",
         )
         .innerJoin("roles", "roles.id", "roles_users.role_id")
-        .where([
-          {
-            "roles_users.id": insertedData.id,
-          },
-        ])
+        .where("roles_users.id", insertedData.id)
         .first();
 
       return {
