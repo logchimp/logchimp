@@ -819,18 +819,49 @@ describeEE("POST /api/v1/boards", () => {
       },
     );
 
-    itEE("should throw server error on long board name", async () => {
+    itEE.each([
+      "a".repeat(5000), // 5000 characters
+      "a".repeat(51),
+    ])(
+      "should throw error 'BOARD_NAME_TOO_LONG' for long board name",
+      async (name) => {
+        const res = await supertest(app)
+          .post("/api/v1/boards")
+          .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
+          .send({
+            name,
+            display: true,
+          });
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(400);
+        expect(res.body.code).toBe("VALIDATION_ERROR");
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              message: "Board name cannot be longer than 50 characters",
+              code: "BOARD_NAME_TOO_LONG",
+            }),
+          ]),
+        );
+      },
+    );
+
+    itEE.each([
+      "a".repeat(50),
+      "😀".repeat(50), // 50 characters, 100 UTF-16 code units
+    ])("should create board with 50 character name", async (name) => {
       const res = await supertest(app)
         .post("/api/v1/boards")
         .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
         .send({
-          name: "a".repeat(5000), // 5000 characters
+          name,
           display: true,
         });
 
       expect(res.headers["content-type"]).toContain("application/json");
-      expect(res.status).toBe(500);
-      expect(res.body.code).toBe("SERVER_ERROR");
+      expect(res.status).toBe(201);
+      expect(res.body.board.name).toBe(name);
     });
   });
 });
