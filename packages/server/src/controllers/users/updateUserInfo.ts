@@ -17,9 +17,11 @@ export async function updateUserInfo(req: Request, res: Response) {
         notes,
       })
       .from("users")
-      .where({
-        userId: user_id,
-      });
+      .where([
+        {
+          userId: user_id,
+        },
+      ]);
 
     res.status(200).send({
       user,
