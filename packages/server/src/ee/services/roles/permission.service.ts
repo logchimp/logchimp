@@ -1,21 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
+import type { Tables } from "knex/types/tables";
 import type { components } from "@logchimp/api-ts-types";
 
 import database from "../../../database";
 import logger from "../../../utils/logger";
 
-export interface IPermissionTableColumns {
-  id: string;
-  name: string | null;
-  type: string | null;
-  action: string | null;
-  scope: string | null;
-  created_at: Date;
-}
-
 export class PermissionService {
   permissionKey = new Set<string>();
-  permissionEntity = new Set<IPermissionTableColumns>();
+  permissionEntity = new Set<Tables["permissions"]["base"]>();
   permissionRef = new Map<string, string>();
 
   /**
@@ -26,9 +18,7 @@ export class PermissionService {
     this.permissionEntity.clear();
     this.permissionRef.clear();
 
-    const perms = await database
-      .select<IPermissionTableColumns[]>()
-      .from("permissions");
+    const perms = await database.select().from("permissions");
 
     if (!perms || perms.length === 0) return [];
 
@@ -68,7 +58,7 @@ export class PermissionService {
     if (this.permissionKeys.has(permission)) return;
 
     const id = uuidv4();
-    const response = await database("permissions")
+    const [response] = await database("permissions")
       .insert({
         id,
         type,
@@ -77,14 +67,7 @@ export class PermissionService {
           scope,
         }),
       })
-      .returning<IPermissionTableColumns>([
-        "id",
-        "name",
-        "type",
-        "action",
-        "scope",
-        "created_at",
-      ]);
+      .returning(["id", "name", "type", "action", "scope", "created_at"]);
 
     this.permissionKey.add(permission);
     this.permissionRef.set(permission, id);
