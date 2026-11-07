@@ -383,7 +383,7 @@ async function getPostMetadata({
     }
 
     const remainingResult = await trx
-      .count("* as count")
+      .count<{ count: string }>("* as count")
       .from(remainingQuery)
       .first();
 

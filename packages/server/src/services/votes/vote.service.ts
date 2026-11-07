@@ -305,7 +305,7 @@ export class VoteService {
         .first();
 
       const totalVotesCount = Number.parseInt(
-        String(totalCountQuery?.count ?? "0"),
+        totalCountQuery?.count ?? "0",
         10,
       );
 

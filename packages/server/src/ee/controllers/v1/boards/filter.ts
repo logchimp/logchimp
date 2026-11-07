@@ -164,7 +164,7 @@ export async function getBoards({
 }: IGetBoardQueryOptions) {
   try {
     let boardsQuery = database("boards")
-      .select<Array<components["schemas"]["BoardPrivate"]>>(
+      .select(
         "boards.boardId",
         "boards.name",
         "boards.color",
@@ -208,9 +208,12 @@ export async function getBoards({
       });
     }
 
-    const boardsData =
-      (await boardsQuery) as unknown as components["schemas"]["BoardPrivate"][];
-    return boardsData;
+    const boards = (await boardsQuery).map((board) => ({
+      ...board,
+      post_count: Number.parseInt(board.post_count, 10),
+    }));
+
+    return boards;
   } catch (error) {
     logger.log({
       level: "error",

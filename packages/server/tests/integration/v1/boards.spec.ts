@@ -18,10 +18,10 @@ describeEE("GET /api/v1/boards", () => {
   beforeAll(async () => {
     const requiredBoards = 20;
     const existingBoardsCountResult = await database("boards")
-      .count({ count: "*" })
+      .count<{ count: string }>({ count: "*" })
       .first();
     const existingBoardsCount = Number.parseInt(
-      existingBoardsCountResult?.count?.toString() || "0",
+      existingBoardsCountResult?.count || "0",
       10,
     );
 
