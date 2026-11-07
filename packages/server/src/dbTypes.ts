@@ -58,6 +58,7 @@ interface TableSettings {
   googleAnalyticsId: string | null;
   isPoweredBy: boolean;
   allowSignup: boolean;
+  developer_mode: boolean;
   labs: object;
 }
 
@@ -118,8 +119,21 @@ declare module "knex/types/tables" {
     >;
     settings: Knex.CompositeTableType<
       TableSettings,
-      Partial<TableSettings> &
-        Pick<TableSettings, "isPoweredBy" | "allowSignup" | "labs">,
+      Partial<
+        Pick<
+          TableSettings,
+          | "title"
+          | "description"
+          | "logo"
+          | "icon"
+          | "accentColor"
+          | "googleAnalyticsId"
+          | "isPoweredBy"
+          | "allowSignup"
+          | "labs"
+          | "developer_mode"
+        >
+      >,
       Partial<TableSettings>
     >;
     votes: Knex.CompositeTableType<
