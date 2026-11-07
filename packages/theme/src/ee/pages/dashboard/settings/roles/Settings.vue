@@ -26,13 +26,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type {
-  IRole,
-  PermissionAction,
-  TPermissionEntities,
-  IPermissionsState,
-  TPermissionScope,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -44,6 +38,7 @@ import Dashboard404 from "../../../../../components/dashboard/404.vue";
 import Dashboard500 from "../../../../../components/dashboard/500.vue";
 import LoaderContainer from "../../../../../components/ui/LoaderContainer.vue";
 import RoleEditor from "../../../../components/roles/RoleEditor.vue";
+import type { IPermissionsState } from "../../../../types";
 
 const { t } = useI18n();
 const errorCode = ref<string | undefined>();
@@ -51,13 +46,13 @@ const loading = ref<boolean>(false);
 const rolesEEAPI = new RolesEEAPI();
 
 const title = ref("");
-const role = ref<IRole>({
+const role = ref<components["schemas"]["RoleItem"]>({
   id: "",
   name: "",
   description: "",
   isSystem: false,
-  created_at: new Date(),
-  updated_at: new Date(),
+  created_at: new Date().toDateString(),
+  updated_at: new Date().toDateString(),
 });
 const permissions = reactive<IPermissionsState>({
   post: {
@@ -130,20 +125,21 @@ async function getRoleHandler(id: string) {
         return;
       }
       const [type, action, scope] = parts as [
-        TPermissionEntities,
-        PermissionAction,
-        TPermissionScope,
+        components["schemas"]["PermissionEntities"],
+        components["schemas"]["PermissionAction"],
+        components["schemas"]["PermissionScope"] | undefined,
       ];
       const permissionGroup = permissions[type];
       if (!permissionGroup) return;
       if (action in permissionGroup) {
+        const group = permissionGroup as unknown as Record<
+          string,
+          boolean | components["schemas"]["PermissionScope"]
+        >;
         if (scope) {
-          // @ts-expect-error
-          (permissionGroup as Record<PermissionAction, TPermissionScope>)[
-            action
-          ] = scope;
+          group[action] = scope;
         } else {
-          (permissionGroup as Record<PermissionAction, boolean>)[action] = true;
+          group[action] = true;
         }
       }
     });

@@ -1,9 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  TPermission,
-  TUnassignRoleToUserRequestParams,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../../../../database";
 
 // utils
@@ -11,11 +7,13 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
 export async function deleteRoleFromUser(
-  req: Request<TUnassignRoleToUserRequestParams>,
-  res: Response<IApiErrorResponse>,
+  req: Request<operations["unassignRoleFromUser"]["parameters"]["path"]>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const { role_id, user_id } = req.params;
 
   const checkPermission = permissions.find((item) => item === "role:unassign");

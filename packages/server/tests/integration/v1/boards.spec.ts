@@ -1,13 +1,7 @@
 import { beforeAll, expect, it } from "vitest";
 import supertest from "supertest";
-import type {
-  IAuthLoginResponseBody,
-  IBoardDetail,
-  IBoardPrivate,
-  IBoardUpdateRequestBody,
-  IFilterBoardResponseBody,
-} from "@logchimp/types";
 import { faker } from "@faker-js/faker";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../src/app";
 import database from "../../../src/database";
@@ -72,14 +66,16 @@ describeEE("GET /api/v1/boards", () => {
       .get("/api/v1/boards")
       .query(filterQuery);
 
-    const responseBoards: IBoardDetail[] = response.body.boards;
+    const responseBoards: components["schemas"]["BoardDetail"][] =
+      response.body.boards;
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(responseBoards).toHaveLength(10);
 
     const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
+      (board: components["schemas"]["BoardDetail"]) =>
+        new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -96,14 +92,16 @@ describeEE("GET /api/v1/boards", () => {
       created: "DESC",
     });
 
-    const responseBoards: IBoardDetail[] = response.body.boards;
+    const responseBoards: components["schemas"]["BoardDetail"][] =
+      response.body.boards;
 
     expect(response.headers["content-type"]).toContain("application/json");
     expect(response.status).toBe(200);
     expect(responseBoards).toHaveLength(5);
 
     const boardCreationDates = responseBoards.map(
-      (board: IBoardDetail) => new Date(board.createdAt),
+      (board: components["schemas"]["BoardDetail"]) =>
+        new Date(board.createdAt),
     );
 
     for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -130,11 +128,15 @@ describeEE("GET /api/v1/boards", () => {
             .get("/api/v1/boards")
             .query({ first: 5, page: 1, created: "ASC" });
 
-          const ids0 = page0.body.boards.map((b: IBoardDetail) => b.boardId);
-          const idsNeg1 = pageNeg1.body.boards.map(
-            (b: IBoardDetail) => b.boardId,
+          const ids0 = page0.body.boards.map(
+            (b: components["schemas"]["BoardDetail"]) => b.boardId,
           );
-          const ids1 = page1.body.boards.map((b: IBoardDetail) => b.boardId);
+          const idsNeg1 = pageNeg1.body.boards.map(
+            (b: components["schemas"]["BoardDetail"]) => b.boardId,
+          );
+          const ids1 = page1.body.boards.map(
+            (b: components["schemas"]["BoardDetail"]) => b.boardId,
+          );
 
           expect(ids0).toEqual(ids1);
           expect(idsNeg1).toEqual(ids1);
@@ -149,7 +151,8 @@ describeEE("GET /api/v1/boards", () => {
             created: "DESC",
           });
 
-          const responseBoards: IBoardDetail[] = response.body.boards;
+          const responseBoards: components["schemas"]["BoardDetail"][] =
+            response.body.boards;
 
           expect(response.headers["content-type"]).toContain(
             "application/json",
@@ -168,14 +171,15 @@ describeEE("GET /api/v1/boards", () => {
         });
 
         const responseBoards = response.body
-          .boards as IFilterBoardResponseBody["boards"];
+          .boards as components["schemas"]["FilterBoardResponseBody"]["boards"];
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
         expect(responseBoards).toHaveLength(10);
 
         const boardCreationDates = responseBoards.map(
-          (board: IBoardDetail) => new Date(board.createdAt),
+          (board: components["schemas"]["BoardDetail"]) =>
+            new Date(board.createdAt),
         );
 
         for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -195,14 +199,15 @@ describeEE("GET /api/v1/boards", () => {
         });
 
         const responseBoards = response.body
-          .boards as IFilterBoardResponseBody["boards"];
+          .boards as components["schemas"]["FilterBoardResponseBody"]["boards"];
 
         expect(response.headers["content-type"]).toContain("application/json");
         expect(response.status).toBe(200);
         expect(responseBoards).toHaveLength(2);
 
         const boardCreationDates = responseBoards.map(
-          (board: IBoardDetail) => new Date(board.createdAt),
+          (board: components["schemas"]["BoardDetail"]) =>
+            new Date(board.createdAt),
         );
 
         for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -222,7 +227,7 @@ describeEE("GET /api/v1/boards", () => {
           });
 
           const responseBoards = response.body
-            .boards as IFilterBoardResponseBody["boards"];
+            .boards as components["schemas"]["FilterBoardResponseBody"]["boards"];
 
           expect(response.headers["content-type"]).toContain(
             "application/json",
@@ -231,7 +236,8 @@ describeEE("GET /api/v1/boards", () => {
           expect(responseBoards).toHaveLength(10);
 
           const boardCreationDates = responseBoards.map(
-            (board: IBoardDetail) => new Date(board.createdAt),
+            (board: components["schemas"]["BoardDetail"]) =>
+              new Date(board.createdAt),
           );
 
           for (let i = 0; i < boardCreationDates.length - 1; i++) {
@@ -249,8 +255,9 @@ describeEE("GET /api/v1/boards", () => {
       itEE("should return default list when no '?first=' param", async () => {
         const res = await supertest(app).get("/api/v1/boards");
 
-        const firstItem: IBoardPrivate = res.body.results[0];
-        const lastItem: IBoardPrivate =
+        const firstItem: components["schemas"]["BoardPrivate"] =
+          res.body.results[0];
+        const lastItem: components["schemas"]["BoardPrivate"] =
           res.body.results[res.body.results.length - 1];
 
         expect(res.headers["content-type"]).toContain("application/json");
@@ -280,8 +287,9 @@ describeEE("GET /api/v1/boards", () => {
           .get("/api/v1/boards")
           .query({ first: 5 });
 
-        const firstItem: IBoardPrivate = res.body.results[0];
-        const lastItem: IBoardPrivate =
+        const firstItem: components["schemas"]["BoardPrivate"] =
+          res.body.results[0];
+        const lastItem: components["schemas"]["BoardPrivate"] =
           res.body.results[res.body.results.length - 1];
 
         expect(res.headers["content-type"]).toContain("application/json");
@@ -313,8 +321,9 @@ describeEE("GET /api/v1/boards", () => {
             .get("/api/v1/boards")
             .query({ first: 25 });
 
-          const firstItem: IBoardPrivate = res.body.results[0];
-          const lastItem: IBoardPrivate =
+          const firstItem: components["schemas"]["BoardPrivate"] =
+            res.body.results[0];
+          const lastItem: components["schemas"]["BoardPrivate"] =
             res.body.results[res.body.results.length - 1];
 
           expect(res.headers["content-type"]).toContain("application/json");
@@ -362,22 +371,28 @@ describeEE("GET /api/v1/boards", () => {
           .get("/api/v1/boards")
           .query({ first: 3 });
         expect(res1.headers["content-type"]).toContain("application/json");
-        const res1Body = res1.body as IFilterBoardResponseBody;
+        const res1Body =
+          res1.body as components["schemas"]["FilterBoardResponseBody"];
         const lastId = res1Body.results[2].boardId;
 
         const res2 = await supertest(app).get("/api/v1/boards").query({
           first: 3,
           after: lastId,
         });
-        const res2Body = res2.body as IFilterBoardResponseBody;
+        const res2Body =
+          res2.body as components["schemas"]["FilterBoardResponseBody"];
         expect(res2.headers["content-type"]).toContain("application/json");
         expect(res2.status).toBe(200);
         expect(res2Body.results).toHaveLength(3);
         expect(res2Body.page_info.end_cursor).toBeTypeOf("string");
         expect(res2Body.page_info.start_cursor).toBeTypeOf("string");
 
-        const ids1 = res1Body.results.map((r: IBoardPrivate) => r.boardId);
-        const ids2 = res2Body.results.map((r: IBoardPrivate) => r.boardId);
+        const ids1 = res1Body.results.map(
+          (r: components["schemas"]["BoardPrivate"]) => r.boardId,
+        );
+        const ids2 = res2Body.results.map(
+          (r: components["schemas"]["BoardPrivate"]) => r.boardId,
+        );
         expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
       });
 
@@ -474,7 +489,7 @@ describeEE("GET /boards/:url", () => {
 
     expect(response.body.board).toStrictEqual({
       ...boardCheck,
-      post_count: "0",
+      post_count: 0,
     });
   });
 
@@ -678,9 +693,9 @@ describeEE("GET /boards/search/:name", () => {
 
       const boards = response.body.boards;
       expect(boards.length).toBeGreaterThanOrEqual(1);
-      expect(boards.map((b: IBoardPrivate) => b.boardId)).not.toContain(
-        nonMatchingBoard.boardId,
-      );
+      expect(
+        boards.map((b: components["schemas"]["BoardPrivate"]) => b.boardId),
+      ).not.toContain(nonMatchingBoard.boardId);
 
       expect(boards).toEqual(
         expect.arrayContaining([
@@ -760,7 +775,9 @@ describeEE("POST /api/v1/boards", () => {
   });
 
   describeEE("", () => {
-    let createUserResponse: IAuthLoginResponseBody | undefined;
+    let createUserResponse:
+      | components["schemas"]["LoginResponseBody"]
+      | undefined;
     beforeAll(async () => {
       createUserResponse = await createUser({
         isVerified: true,
@@ -1024,7 +1041,7 @@ describeEE("PATCH /api/v1/boards", () => {
         });
 
         // Build the request body
-        const requestBody: IBoardUpdateRequestBody = {
+        const requestBody: components["schemas"]["UpdateBoardRequestBody"] = {
           boardId: board.boardId,
           name: newBoard.name,
           url: newBoard.url,

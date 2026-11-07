@@ -1,14 +1,5 @@
 import express from "express";
-import type {
-  ICreatePostCommentRequestBody,
-  IGetPostActivityRequestParam,
-  IGetPostActivityRequestQuery,
-  IGetPostVotesRequestParams,
-  IUpdatePostCommentRequestBody,
-  IUpdatePostCommentRequestParam,
-  TCreatePostCommentRequestParam,
-  TDeletePostCommentRequestParam,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 // controller
 import * as post from "../../../controllers/post";
@@ -22,7 +13,12 @@ import { commentExists } from "../../middleware/commentExists";
 
 const router = express.Router();
 
-router.post(
+router.post<
+  unknown,
+  unknown,
+  components["schemas"]["GetFilterPostRequestBody"],
+  operations["filterPosts"]["parameters"]["query"]
+>(
   "/posts/get",
   authOptional,
   withLicenseGuard(eePost.posts.filterPost, {
@@ -36,7 +32,6 @@ router.post("/posts", authRequired, eePost.posts.createPost);
 router.patch(
   "/posts",
   authRequired,
-  // @ts-expect-error
   postExists,
   withLicenseGuard(eePost.posts.updatePost, {
     requiredPlan: ["pro", "business", "enterprise"],
@@ -45,25 +40,23 @@ router.patch(
 );
 
 // votes
-router.get<IGetPostVotesRequestParams>(
-  "/posts/:post_id/votes",
-  // @ts-expect-error
-  authOptional,
-  postExists,
-  post.getPostVotes,
-);
+router.get<
+  operations["getPostVotes"]["parameters"]["path"],
+  unknown,
+  unknown,
+  operations["getPostVotes"]["parameters"]["query"]
+>("/posts/:post_id/votes", authOptional, postExists, post.getPostVotes);
 
 router.delete("/posts", authRequired, postExists, post.deleteById);
 
 // post activity
 router.get<
-  IGetPostActivityRequestParam,
+  operations["getPostActivity"]["parameters"]["path"],
   unknown,
   unknown,
-  IGetPostActivityRequestQuery
+  operations["getPostActivity"]["parameters"]["query"]
 >(
   "/posts/:post_id/activity",
-  // @ts-expect-error
   authOptional,
   postExists,
   withLicenseGuard(eePost.activity.get, {
@@ -75,12 +68,11 @@ router.get<
 
 // post comment
 router.post<
-  TCreatePostCommentRequestParam,
+  operations["postComment"]["parameters"]["path"],
   unknown,
-  ICreatePostCommentRequestBody
+  components["schemas"]["CreatePostCommentRequestBody"]
 >(
   "/posts/:post_id/comments",
-  // @ts-expect-error
   authRequired,
   postExists,
   withLicenseGuard(eePost.comments.create, {
@@ -90,12 +82,11 @@ router.post<
   }),
 );
 router.put<
-  IUpdatePostCommentRequestParam,
+  operations["updateComment"]["parameters"]["path"],
   unknown,
-  IUpdatePostCommentRequestBody
+  components["schemas"]["UpdatePostCommentRequestBody"]
 >(
   "/posts/:post_id/comments/:comment_id",
-  // @ts-expect-error
   authRequired,
   postExists,
   commentExists,
@@ -103,9 +94,8 @@ router.put<
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.delete<TDeletePostCommentRequestParam>(
+router.delete<operations["deleteComment"]["parameters"]["path"]>(
   "/posts/:post_id/comments/:comment_id",
-  // @ts-expect-error
   authRequired,
   postExists,
   commentExists,

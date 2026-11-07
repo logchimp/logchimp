@@ -1,12 +1,4 @@
-import type {
-  IAuthUserProfile,
-  IAuthUserProfileResponse,
-  ICheckUserDashboardAccess,
-  IGetPermissionResponse,
-  IGetUsersRequestQuery,
-  IGetUsersResponseBody,
-  IUpdateUserSettingsArgs,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 // store
 import { APIService } from "./api";
@@ -19,10 +11,10 @@ export class UsersAPI extends APIService {
 
   /**
    * Get user settings
-   * @returns {Promise<IAuthUserProfileResponse<IAuthUserProfile>>} response
+   * @returns {Promise<components["schemas"]["GetUserProfileResponseBody"]>} response
    */
   GetUserSettings = async (): Promise<
-    IAuthUserProfileResponse<IAuthUserProfile>
+    components["schemas"]["GetUserProfileResponseBody"]
   > => {
     return this.get("/v1/users/profile")
       .then((response) => response?.data)
@@ -35,12 +27,12 @@ export class UsersAPI extends APIService {
    *	Update user settings
    * @param {object} user update user data
    * @param {string} user.name user's name
-   * @returns {Promise<IAuthUserProfileResponse<IAuthUserProfile>>} response
+   * @returns {Promise<components["schemas"]["UpdateUserProfileResponseBody"]>} response
    */
   UpdateUserSettings = async ({
     name,
-  }: IUpdateUserSettingsArgs): Promise<
-    IAuthUserProfileResponse<IAuthUserProfile>
+  }: components["schemas"]["UpdateUserProfileRequestBody"]): Promise<
+    components["schemas"]["UpdateUserProfileResponseBody"]
   > => {
     return this.patch("/v1/users/profile", {
       name,
@@ -53,8 +45,11 @@ export class UsersAPI extends APIService {
 
   /**
    * Get authenticated user permissions
+   * @returns {Promise<components["schemas"]["MePermissionsResponseBody"]>}
    */
-  GetPermissions = async (): Promise<IGetPermissionResponse> => {
+  GetPermissions = async (): Promise<
+    components["schemas"]["MePermissionsResponseBody"]
+  > => {
     return this.get("/v1/users/permissions")
       .then((response) => response?.data)
       .catch((error) => {
@@ -64,9 +59,11 @@ export class UsersAPI extends APIService {
 
   /**
    * Check if user have access to dashboard
-   * @returns {Promise<ICheckUserDashboardAccess>}
+   * @returns {Promise<components["schemas"]["CheckUserDashboardAccessResponseBody"]>}
    */
-  CheckUserDashboardAccess = async (): Promise<ICheckUserDashboardAccess> => {
+  CheckUserDashboardAccess = async (): Promise<
+    components["schemas"]["CheckUserDashboardAccessResponseBody"]
+  > => {
     return this.get("/v1/users/dashboard")
       .then((response) => response?.data)
       .catch((error) => {
@@ -75,12 +72,12 @@ export class UsersAPI extends APIService {
   };
 
   /**
-   * @param {Partial<IGetUsersRequestQuery>} [params={}] - URL parameters
-   * @returns {Promise<IGetUsersResponseBody>}
+   * @param {Partial<operations['filterUsers']['parameters']['query']>} [params={}] - URL parameters
+   * @returns {Promise<components["schemas"]["GetUserResponseBody"]>}
    */
   async GetAll(
-    params: Partial<IGetUsersRequestQuery> = {},
-  ): Promise<IGetUsersResponseBody> {
+    params: Partial<operations["filterUsers"]["parameters"]["query"]> = {},
+  ): Promise<components["schemas"]["GetUsersResponseBody"]> {
     return this.get("/v1/users", params)
       .then((response) => response?.data)
       .catch((error) => {

@@ -10,3 +10,4 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - prettier@3.9.7
+  - '@logchimp/api-ts-types'

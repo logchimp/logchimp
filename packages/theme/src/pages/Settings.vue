@@ -61,7 +61,7 @@
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -108,12 +108,14 @@ async function getUser() {
   try {
     const response = await usersAPI.GetUserSettings();
 
-    name.value = response.user.name;
+    name.value = response.user.name || "";
     user.username = response.user.username;
     user.email = response.user.email;
     isVerified.value = response.user.isVerified;
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     tokenError(err);
   } finally {
     loading.value = false;
@@ -128,7 +130,7 @@ async function updateSettings() {
       name: name.value,
     });
 
-    name.value = response.user.name;
+    name.value = response.user.name || "";
     updateUserButtonLoading.value = false;
     // TODO: Add TS types
     // biome-ignore lint: Add TS types

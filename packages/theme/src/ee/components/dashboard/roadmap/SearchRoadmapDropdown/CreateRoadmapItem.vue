@@ -18,7 +18,7 @@
 import { ref } from "vue";
 import { DropdownMenuItem } from "reka-ui";
 import { PlusIcon } from "lucide-vue";
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { RoadmapsEE } from "../../../../modules/roadmaps";
 
@@ -26,7 +26,10 @@ interface Props {
   search: string;
 }
 const props = defineProps<Props>();
-const emit = defineEmits<(e: "created", event: IRoadmapPrivate) => void>();
+const emit =
+  defineEmits<
+    (e: "created", event: components["schemas"]["RoadmapPrivate"]) => void
+  >();
 const roadmapEEAPI = new RoadmapsEE();
 
 const loading = ref(false);

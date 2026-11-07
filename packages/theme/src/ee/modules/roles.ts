@@ -1,11 +1,4 @@
-import type {
-  ICreateRoleResponseBody,
-  IGetRoleByIdResponseBody,
-  IGetRolesParams,
-  IPaginatedRolesResponse,
-  IUpdateRoleRequestBody,
-  IUpdateRoleResponseBody,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import { VITE_API_URL } from "../../constants";
 
@@ -20,9 +13,11 @@ export class RolesEEAPI extends APIService {
   /**
    * Get role by UUID
    * @param {string} id role id
-   * @returns {Promise<IGetRoleByIdResponseBody>} response
+   * @returns {Promise<components['schemas]]['GetRoleByIdResponseBody]>} response
    */
-  GetRole = async (id: string): Promise<IGetRoleByIdResponseBody> => {
+  GetRole = async (
+    id: string,
+  ): Promise<components["schemas"]["GetRoleByIdResponseBody"]> => {
     return this.get(`/v1/roles/${encodeURIComponent(id)}`)
       .then((response) => response?.data)
       .catch((error) => {
@@ -32,9 +27,11 @@ export class RolesEEAPI extends APIService {
 
   /**
    * Create role
-   * @returns {Promise<ICreateRoleResponseBody>} response
+   * @returns {Promise<components['schemas]>['CreateRoleResponseBody']} response
    */
-  CreateRole = async (): Promise<ICreateRoleResponseBody> => {
+  CreateRole = async (): Promise<
+    components["schemas"]["CreateRoleResponseBody"]
+  > => {
     return this.post("/v1/roles")
       .then((response) => response?.data)
       .catch((error) => {
@@ -49,11 +46,11 @@ export class RolesEEAPI extends APIService {
    * @param {string} role.name role name
    * @param {string} role.description role description
    * @param {string[]} role.permissions list of permission
-   * @returns {Promise<IUpdateRoleResponseBody>} response
+   * @returns {Promise<components["schemas"]["UpdateRoleResponseBody"]>} response
    */
   UpdateRole = async (
-    role: IUpdateRoleRequestBody,
-  ): Promise<IUpdateRoleResponseBody> => {
+    role: components["schemas"]["UpdateRoleRequestBody"],
+  ): Promise<components["schemas"]["UpdateRoleResponseBody"]> => {
     return this.patch("/v1/roles", role)
       .then((response) => response?.data)
       .catch((error) => {
@@ -61,19 +58,12 @@ export class RolesEEAPI extends APIService {
       });
   };
 
-  async GetAll(params: IGetRolesParams = {}): Promise<IPaginatedRolesResponse> {
-    const searchParams = new URLSearchParams();
+  async GetAll(
+    params: operations["filterRoles"]["parameters"]["query"] = {},
+  ): Promise<components["schemas"]["GetFilterRolesResponseBody"]> {
+    const searchParams = this.buildQueryParams(params);
 
-    for (const paramsKey in params) {
-      const value = params[paramsKey as keyof IGetRolesParams];
-      if (value) {
-        searchParams.append(paramsKey, value.toString());
-      }
-    }
-
-    const url = `/v1/roles${
-      searchParams.toString() ? `?${searchParams.toString()}` : ""
-    }`;
+    const url = `/v1/roles?${searchParams.toString()}`;
 
     return this.get(url)
       .then((response) => response?.data)

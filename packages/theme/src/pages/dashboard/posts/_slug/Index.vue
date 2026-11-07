@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IDashboardPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -45,16 +45,14 @@ const { t } = useI18n();
 const postsAPI = new PostsAPI();
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
-const post = reactive<IDashboardPost>({
+const post = reactive<components["schemas"]["DashboardPost"]>({
   postId: "",
   title: "",
   slug: "",
   slugId: "",
   contentMarkdown: "",
-  // TODO: what should be the default/empty value
-  updatedAt: new Date(),
-  // TODO: what should be the default/empty value
-  createdAt: new Date(),
+  updatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
   author: {
     userId: "",
     name: "",
@@ -66,7 +64,7 @@ const post = reactive<IDashboardPost>({
     name: "",
     url: "",
     color: "",
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   },
   roadmap: {
     id: "",
@@ -107,7 +105,9 @@ onMounted(() => {
   }
 });
 
-function handlePostUpdated(updatedPost: IDashboardPost) {
+function handlePostUpdated(
+  updatedPost: components["schemas"]["DashboardPost"],
+) {
   Object.assign(post, updatedPost);
 }
 

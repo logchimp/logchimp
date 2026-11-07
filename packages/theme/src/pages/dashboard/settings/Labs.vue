@@ -46,8 +46,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { ISiteSettingsLab } from "@logchimp/types";
 import { useI18n } from "vue-i18n";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { useSettingStore } from "../../../store/settings";
@@ -65,7 +65,7 @@ import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivi
 const { updateLabs: update } = useSettingStore();
 const { permissions } = useUserStore();
 
-const labs = ref<Partial<ISiteSettingsLab>>({
+const labs = ref<Partial<components["schemas"]["SiteSettingsLabs"]>>({
   voteOnBehalf: false,
 });
 const updateSettingsButtonLoading = ref(false);

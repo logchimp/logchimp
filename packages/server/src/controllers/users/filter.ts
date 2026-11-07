@@ -1,14 +1,10 @@
 import type { Request, Response } from "express";
 import * as v from "valibot";
-import type {
-  IApiErrorResponse,
-  IGetUsersRequestQuery,
-  IGetUsersResponseBody,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../../database";
 
 // services
-import { getUsers, getUserMetadata } from "../../services/users/getUsers";
+import { getUserMetadata, getUsers } from "../../services/users/getUsers";
 
 // utils
 import logger from "../../utils/logger";
@@ -51,10 +47,17 @@ const schemaQueryErrorMap = {
   MIN_VALUE_1: error.general.minValue1,
 };
 
-type ResponseBody = IGetUsersResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetUsersResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function filter(
-  req: Request<unknown, unknown, unknown, IGetUsersRequestQuery>,
+  req: Request<
+    unknown,
+    unknown,
+    unknown,
+    operations["filterUsers"]["parameters"]["query"]
+  >,
   res: Response<ResponseBody>,
 ) {
   if (req.query?.page || req.query?.limit) {

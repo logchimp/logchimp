@@ -50,7 +50,7 @@
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { router } from "../router";
@@ -134,7 +134,9 @@ async function join() {
       router.push("/");
     }
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
 
     if (err.response?.data?.code === "MAIL_CONFIG_MISSING") {
       serverError.value = true;

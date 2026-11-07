@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import type { IDashboardPost, IPostActivity } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { usePostActivityEEStore } from "../../../../store/postActivity";
 import DashboardPostCommentList from "./CommentList.vue";
@@ -23,11 +23,13 @@ const AddComment = defineAsyncComponent(
 const postActivityEEStore = usePostActivityEEStore();
 
 interface Props {
-  post: IDashboardPost;
+  post: components["schemas"]["DashboardPost"];
 }
 const props = defineProps<Props>();
 
-function addCommentHandler(activity: IPostActivity) {
+function addCommentHandler(
+  activity: components["schemas"]["PostActivityItem"],
+) {
   postActivityEEStore.addPostActivity(props.post.postId, activity);
 }
 

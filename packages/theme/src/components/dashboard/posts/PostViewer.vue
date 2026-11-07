@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, ref } from "vue";
-import type { IDashboardPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 import DashboardPostEditor from "./PostEditor/index.vue";
@@ -84,11 +84,11 @@ const { permissions } = useUserStore();
 const { t } = useI18n();
 
 interface Props {
-  post: IDashboardPost;
+  post: components["schemas"]["DashboardPost"];
 }
 defineProps<Props>();
 const emit = defineEmits<{
-  updated: [post: IDashboardPost];
+  updated: [post: components["schemas"]["DashboardPost"]];
 }>();
 
 const loading = ref(false);
@@ -103,7 +103,9 @@ function updatePostHandler() {
   dashboardPostEditorRef.value.updatePostHandler();
 }
 
-function handlePostUpdated(updatedPost: IDashboardPost) {
+function handlePostUpdated(
+  updatedPost: components["schemas"]["DashboardPost"],
+) {
   emit("updated", updatedPost);
 }
 

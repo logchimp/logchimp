@@ -1,12 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IApiValidationErrorResponse,
-  IRoadmapPrivate,
-  IUpdateRoadmapRequestBody,
-  TPermission,
-  TUpdateRoadmapResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 
 import database from "../../../../database";
@@ -18,9 +11,8 @@ import error from "../../../../errorResponse.json";
 import { sanitiseURL } from "../../../../helpers";
 
 type ResponseBody =
-  | TUpdateRoadmapResponseBody
-  | IApiValidationErrorResponse
-  | IApiErrorResponse;
+  | components["schemas"]["UpdateRoadmapResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const bodySchema = v.object({
   name: v.message(
@@ -51,11 +43,17 @@ const schemaBodyErrorMap = {
 };
 
 export async function updateRoadmap(
-  req: Request<unknown, unknown, IUpdateRoadmapRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdateRoadmapRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.includes("roadmap:update");
   if (!checkPermission) {
@@ -83,7 +81,7 @@ export async function updateRoadmap(
   }
 
   // @ts-expect-error
-  const id = (req.roadmap as IRoadmapPrivate).id;
+  const id = (req.roadmap as components["schemas"]["RoadmapPrivate"]).id;
   const { name, url, color, display } = body.output;
 
   try {
@@ -99,7 +97,7 @@ export async function updateRoadmap(
       .where({
         id,
       })
-      .returning<IRoadmapPrivate[]>([
+      .returning<components["schemas"]["RoadmapPrivate"][]>([
         "id",
         "name",
         "url",

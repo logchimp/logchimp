@@ -1,4 +1,4 @@
-import type { ICurrentUserVote, IUserVoter } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import database from "../../database";
 import logger from "../../utils/logger";
@@ -15,7 +15,7 @@ export async function getVotes(postId: string, userId?: string) {
       .first();
 
     const votes = await database
-      .select<Array<IUserVoter>>(
+      .select<Array<components["schemas"]["UserVote"]>>(
         "votes.*",
         "users.name",
         "users.username",
@@ -28,7 +28,7 @@ export async function getVotes(postId: string, userId?: string) {
       })
       .limit(6);
 
-    let viewerVote: ICurrentUserVote | undefined;
+    let viewerVote: components["schemas"]["CurrentUserVote"] | undefined;
     if (userId) {
       viewerVote = (await database
         .select<IVoteTableColumns>()
@@ -37,7 +37,7 @@ export async function getVotes(postId: string, userId?: string) {
           postId,
           userId,
         })
-        .first()) satisfies ICurrentUserVote;
+        .first()) satisfies components["schemas"]["CurrentUserVote"];
     }
 
     return {

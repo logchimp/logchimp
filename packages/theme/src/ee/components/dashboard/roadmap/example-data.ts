@@ -1,6 +1,8 @@
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
-export const EXAMPLE_ROADMAPS_DATA: Array<IRoadmapPrivate> = [
+export const EXAMPLE_ROADMAPS_DATA: Array<
+  components["schemas"]["RoadmapPrivate"]
+> = [
   {
     id: "1",
     name: "Backlog",
@@ -8,7 +10,7 @@ export const EXAMPLE_ROADMAPS_DATA: Array<IRoadmapPrivate> = [
     display: true,
     index: 0,
     url: "backlog",
-    created_at: new Date(Date.now() - 3 * 60 * 1000),
+    created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
   },
   {
     id: "2",
@@ -17,7 +19,7 @@ export const EXAMPLE_ROADMAPS_DATA: Array<IRoadmapPrivate> = [
     display: true,
     url: "under-review",
     index: 1,
-    created_at: new Date(Date.now() - 3 * 60 * 1000),
+    created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
   },
   {
     id: "3",
@@ -26,7 +28,7 @@ export const EXAMPLE_ROADMAPS_DATA: Array<IRoadmapPrivate> = [
     display: true,
     url: "in-progress",
     index: 2,
-    created_at: new Date(Date.now() - 3 * 60 * 1000),
+    created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
   },
   {
     id: "4",
@@ -35,6 +37,6 @@ export const EXAMPLE_ROADMAPS_DATA: Array<IRoadmapPrivate> = [
     display: true,
     url: "completed",
     index: 3,
-    created_at: new Date(Date.now() - 3 * 60 * 1000),
+    created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
   },
 ];

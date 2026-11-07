@@ -1,11 +1,5 @@
 import express from "express";
-import type {
-  IGetBoardByUrlRequestParams,
-  IGetBoardsRequestQuery,
-  ISearchBoardRequestParams,
-  TFilterBoardRequestQuery,
-} from "@logchimp/types";
-const router = express.Router();
+import type { operations } from "@logchimp/api-ts-types";
 
 // controller
 import * as boards from "../../controllers/v1/boards";
@@ -15,32 +9,41 @@ import { authOptional, authRequired } from "../../../middlewares/auth";
 import { boardExists } from "../../middleware/boardExists";
 import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
-router.get<unknown, unknown, unknown, TFilterBoardRequestQuery>(
+const router = express.Router();
+
+router.get<
+  unknown,
+  unknown,
+  unknown,
+  operations["filterPublicBoards"]["parameters"]["query"]
+>(
   "/boards",
   withLicenseGuard(boards.filter, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.get<unknown, unknown, unknown, IGetBoardsRequestQuery>(
+router.get<
+  unknown,
+  unknown,
+  unknown,
+  operations["filterPublicBoards"]["parameters"]["query"]
+>(
   "/boards/get",
-  // @ts-expect-error
   authOptional,
   withLicenseGuard(boards.get, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.get<IGetBoardByUrlRequestParams>(
+router.get<operations["getBoardByUrl"]["parameters"]["path"]>(
   "/boards/:url",
-  // @ts-expect-error
   authOptional,
   boardExists,
   withLicenseGuard(boards.boardByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.get<ISearchBoardRequestParams>(
+router.get<operations["searchBoardByName"]["parameters"]["path"]>(
   "/boards/search/:name",
-  // @ts-expect-error
   authRequired,
   withLicenseGuard(boards.searchBoard, {
     requiredPlan: ["pro", "business", "enterprise"],
@@ -64,7 +67,6 @@ router.post(
 router.patch(
   "/boards",
   authRequired,
-  // @ts-expect-error
   boardExists,
   withLicenseGuard(boards.updateBoard, {
     requiredPlan: ["pro", "business", "enterprise"],
@@ -74,7 +76,6 @@ router.patch(
 router.delete(
   "/boards",
   authRequired,
-  // @ts-expect-error
   boardExists,
   withLicenseGuard(boards.deleteById, {
     requiredPlan: ["pro", "business", "enterprise"],

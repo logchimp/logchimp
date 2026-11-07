@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetBoardByUrlRequestParams,
-  IGetBoardsByUrlResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import database from "../../../../database";
 import logger from "../../../../utils/logger";
@@ -15,10 +10,12 @@ import { valkey } from "../../../../cache";
 
 const boardRepository = new BoardRepository(database, valkey);
 
-type ResponseBody = IGetBoardsByUrlResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetBoardByUrlResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function boardByUrl(
-  req: Request<IGetBoardByUrlRequestParams>,
+  req: Request<operations["getBoardByUrl"]["parameters"]["path"]>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
@@ -33,7 +30,9 @@ export async function boardByUrl(
   }
 
   // @ts-expect-error
-  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const permissions = (req?.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const hasPermission = permissions.includes("board:read");
 
   if (!hasPermission && !board.display) {

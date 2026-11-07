@@ -1,5 +1,6 @@
+import type { components } from "@logchimp/api-ts-types";
+
 import logger from "../utils/logger";
-import type { IPostVote } from "@logchimp/types";
 import { QueryRepository } from "./query";
 
 export interface IVoteTableColumns {
@@ -19,8 +20,8 @@ export class VoteRepository extends QueryRepository {
   async GetVotesByPostIDs(
     postIds: string[],
     userId?: string,
-  ): Promise<Map<string, IPostVote>> {
-    const votesMap = new Map<string, IPostVote>();
+  ): Promise<Map<string, components["schemas"]["PostVote"]>> {
+    const votesMap = new Map<string, components["schemas"]["PostVote"]>();
 
     if (postIds.length === 0) {
       return votesMap;

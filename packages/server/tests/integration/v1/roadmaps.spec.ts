@@ -2,12 +2,7 @@ import { beforeAll, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
-import type {
-  IAuthLoginResponseBody,
-  IGetRoadmapByUrlResponseBody,
-  IRoadmapPrivate,
-  IUpdateRoadmapRequestBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../src/app";
 import { roadmap as generateRoadmap } from "../../utils/generators";
@@ -58,8 +53,9 @@ describeEE("GET /api/v1/roadmaps", () => {
     itEE("should return default list when no '?first=' param", async () => {
       const res = await supertest(app).get("/api/v1/roadmaps");
 
-      const firstItem: IRoadmapPrivate = res.body.results[0];
-      const lastItem: IRoadmapPrivate =
+      const firstItem: components["schemas"]["RoadmapPrivate"] =
+        res.body.results[0];
+      const lastItem: components["schemas"]["RoadmapPrivate"] =
         res.body.results[res.body.results.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
@@ -89,8 +85,9 @@ describeEE("GET /api/v1/roadmaps", () => {
         .get("/api/v1/roadmaps")
         .query({ first: 5 });
 
-      const firstItem: IRoadmapPrivate = res.body.results[0];
-      const lastItem: IRoadmapPrivate =
+      const firstItem: components["schemas"]["RoadmapPrivate"] =
+        res.body.results[0];
+      const lastItem: components["schemas"]["RoadmapPrivate"] =
         res.body.results[res.body.results.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
@@ -120,8 +117,9 @@ describeEE("GET /api/v1/roadmaps", () => {
         .get("/api/v1/roadmaps")
         .query({ first: 25 });
 
-      const firstItem: IRoadmapPrivate = res.body.results[0];
-      const lastItem: IRoadmapPrivate =
+      const firstItem: components["schemas"]["RoadmapPrivate"] =
+        res.body.results[0];
+      const lastItem: components["schemas"]["RoadmapPrivate"] =
         res.body.results[res.body.results.length - 1];
 
       expect(res.headers["content-type"]).toContain("application/json");
@@ -180,8 +178,12 @@ describeEE("GET /api/v1/roadmaps", () => {
       expect(res2.body.page_info.end_cursor).toBeTypeOf("string");
       expect(res2.body.page_info.start_cursor).toBeTypeOf("string");
 
-      const ids1 = res1.body.results.map((r: IRoadmapPrivate) => r.id);
-      const ids2 = res2.body.results.map((r: IRoadmapPrivate) => r.id);
+      const ids1 = res1.body.results.map(
+        (r: components["schemas"]["RoadmapPrivate"]) => r.id,
+      );
+      const ids2 = res2.body.results.map(
+        (r: components["schemas"]["RoadmapPrivate"]) => r.id,
+      );
       expect(ids1.some((id: string) => ids2.includes(id))).toBe(false);
     });
 
@@ -240,7 +242,7 @@ describeEE("GET /api/v1/roadmaps", () => {
 
         expect(
           resPrivate.body.results.every(
-            (r: IRoadmapPrivate) => r.display === true,
+            (r: components["schemas"]["RoadmapPrivate"]) => r.display === true,
           ),
         ).toBeTruthy();
 
@@ -256,7 +258,7 @@ describeEE("GET /api/v1/roadmaps", () => {
 
         expect(
           resBoth.body.results.every(
-            (r: IRoadmapPrivate) => r.display === true,
+            (r: components["schemas"]["RoadmapPrivate"]) => r.display === true,
           ),
         ).toBeTruthy();
 
@@ -274,7 +276,9 @@ describeEE("GET /api/v1/roadmaps", () => {
         expect(res.status).toBe(200);
         // expect(res.body.total_count).toBe(10);
         expect(
-          res.body.results.every((r: IRoadmapPrivate) => r.display === true),
+          res.body.results.every(
+            (r: components["schemas"]["RoadmapPrivate"]) => r.display === true,
+          ),
         ).toBeTruthy();
       },
     );
@@ -299,7 +303,7 @@ describeEE("GET /api/v1/roadmaps", () => {
         // expect(resPrivate.body.total_count).toBe(5);
         expect(
           resPrivate.body.results.every(
-            (r: IRoadmapPrivate) => r.display === false,
+            (r: components["schemas"]["RoadmapPrivate"]) => r.display === false,
           ),
         ).toBeTruthy();
 
@@ -313,7 +317,7 @@ describeEE("GET /api/v1/roadmaps", () => {
         // expect(resPublic.body.total_count).toBe(10);
         expect(
           resPublic.body.results.every(
-            (r: IRoadmapPrivate) => r.display === true,
+            (r: components["schemas"]["RoadmapPrivate"]) => r.display === true,
           ),
         ).toBeTruthy();
 
@@ -431,7 +435,8 @@ describeEE("GET /api/v1/roadmaps/:url", () => {
     expect(res.headers["content-type"]).toContain("application/json");
     expect(res.status).toBe(200);
 
-    const body = res.body as IGetRoadmapByUrlResponseBody;
+    const body =
+      res.body as components["schemas"]["GetRoadmapByUrlResponseBody"];
 
     expect(body.roadmap).not.toBeNull();
     expect(body.roadmap).not.toBeUndefined();
@@ -625,9 +630,9 @@ describeEE("GET /api/v1/roadmaps/search/:name", () => {
 
       const roadmaps = response.body.roadmaps;
       expect(roadmaps.length).toBeGreaterThanOrEqual(1);
-      expect(roadmaps.map((r: IRoadmapPrivate) => r.id)).not.toContain(
-        nonMatchingRoadmap.id,
-      );
+      expect(
+        roadmaps.map((r: components["schemas"]["RoadmapPrivate"]) => r.id),
+      ).not.toContain(nonMatchingRoadmap.id);
 
       expect(roadmaps).toEqual(
         expect.arrayContaining([
@@ -726,7 +731,9 @@ describeEE("POST /api/v1/roadmaps", () => {
   });
 
   describeEE("", () => {
-    let createUserResponse: IAuthLoginResponseBody | undefined;
+    let createUserResponse:
+      | components["schemas"]["LoginResponseBody"]
+      | undefined;
     beforeAll(async () => {
       createUserResponse = await createUser({
         isVerified: true,
@@ -950,7 +957,7 @@ describeEE("PATCH /api/v1/roadmaps", () => {
         const r1 = await generateRoadmap({}, true);
         const roadmap = await generateRoadmap({}, false);
 
-        const requestBody: IUpdateRoadmapRequestBody = {
+        const requestBody: components["schemas"]["UpdateRoadmapRequestBody"] = {
           id: r1.id,
           name: roadmap.name,
           url: roadmap.url,

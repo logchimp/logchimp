@@ -1,12 +1,6 @@
 import jwt, { type JwtPayload } from "jsonwebtoken";
-import type { Request, Response, NextFunction } from "express";
-import type {
-  IApiErrorResponse,
-  IApiValidationErrorResponse,
-  ISetPasswordRequestBody,
-  IValidateEmailVerificationTokenRequestBody,
-  TEmailVerification,
-} from "@logchimp/types";
+import type { NextFunction, Request, Response } from "express";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../database";
@@ -18,14 +12,15 @@ import error from "../errorResponse.json";
 import type {
   IPasswordResetJwtPayload,
   IVerifyEmailJwtPayload,
+  TEmailVerification,
 } from "../types";
 
 const config = configManager.getConfig();
 
 type RequestBody =
-  | IValidateEmailVerificationTokenRequestBody
-  | ISetPasswordRequestBody;
-type ResponseBody = IApiValidationErrorResponse | IApiErrorResponse;
+  | components["schemas"]["ValidateEmailVerificationTokenRequestBody"]
+  | components["schemas"]["SetNewPasswordRequestBody"];
+type ResponseBody = components["schemas"]["GenericAPIErrorResponseBody"];
 
 const TOKEN_TYPES = ["emailVerification", "resetPassword"];
 
@@ -38,6 +33,8 @@ export async function validateEmailToken(
 
   if (!token) {
     res.status(400).send({
+      message: "Invalid body parameters",
+      code: "VALIDATION_ERROR",
       errors: [
         token
           ? undefined

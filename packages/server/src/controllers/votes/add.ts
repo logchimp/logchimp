@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IAddVoteRequestBody,
-  IAddVoteResponseBody,
-  IApiErrorResponse,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // services
 import { VoteService } from "../../services/votes/vote.service";
@@ -16,16 +11,24 @@ import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
 import { ConflictError } from "../../utils/error";
 
-type ResponseBody = IAddVoteResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["AddVoteToPostResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function add(
-  req: Request<unknown, unknown, IAddVoteRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["AddVoteToPostRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.includes("vote:create");
   if (!checkPermission) {
     res.status(403).send({

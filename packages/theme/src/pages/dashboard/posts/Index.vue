@@ -81,8 +81,8 @@ const postTemplate = {
   slug: "",
   slugId: "",
   contentMarkdown: "",
-  updatedAt: new Date(),
-  createdAt: new Date(),
+  updatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
   author: {
     userId: "",
     name: "",
@@ -94,7 +94,7 @@ const postTemplate = {
     name: "",
     url: "",
     color: "",
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   },
   roadmap: {
     id: "",
@@ -118,7 +118,9 @@ async function createPostHandler() {
   createPostButtonLoading.value = true;
 
   try {
-    const response = await postsAPI.CreatePost({});
+    const response = await postsAPI.CreatePost({
+      title: "new post",
+    });
     Object.assign(postTemplate, response.post);
     dashboardPosts.appendPost(postTemplate);
 

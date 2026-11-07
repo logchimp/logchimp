@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IUpdatePostRequestBody,
-  TPermission,
-  TUpdatePostResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 import xss from "xss";
 import database from "../../database";
@@ -16,20 +11,28 @@ import { updatePostRequestBodySchema } from "./schema";
 import type { GetPostStatement } from "../../middlewares/postExists";
 import { PostService } from "../../services/posts/post.service";
 
-type ResponseBody = TUpdatePostResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["UpdatePostResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const schemaBodyErrorMap = {
   POST_TITLE_MISSING: error.api.posts.titleMissing,
 };
 
 export async function updatePost(
-  req: Request<unknown, unknown, IUpdatePostRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdatePostRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   // @ts-expect-error
   const postId = (req.post as GetPostStatement).postId;
   // @ts-expect-error

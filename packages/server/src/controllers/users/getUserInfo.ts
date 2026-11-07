@@ -1,26 +1,26 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetUserInfoRequestParams,
-  IUserInfo,
-  TGetUserInfoResponseBody,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
+
 import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-type ResponseBody = TGetUserInfoResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetCustomerByIdResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function getUserInfo(
-  req: Request<IGetUserInfoRequestParams>,
+  req: Request<operations["getCustomerById"]["parameters"]["path"]>,
   res: Response<ResponseBody>,
 ) {
-  const { user_id } = req.params;
+  const { customer_id } = req.params;
 
   try {
-    const user = await database<IUserInfo>("users")
+    const customer = await database<components["schemas"]["CustomerItemInfo"]>(
+      "users",
+    )
       .select(
         "userId",
         "name",
@@ -34,12 +34,12 @@ export async function getUserInfo(
         "createdAt",
       )
       .where({
-        userId: user_id,
+        userId: customer_id,
       })
       .first();
 
     res.status(200).send({
-      user,
+      customer,
     });
   } catch (err) {
     logger.error({

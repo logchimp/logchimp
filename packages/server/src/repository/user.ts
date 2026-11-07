@@ -1,5 +1,6 @@
 import type { Knex } from "knex";
-import type { IPublicUserInfo, IUserInfo } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
+
 import type { TCreatedUser } from "../services/auth/types";
 import database from "../database";
 import { QueryRepository } from "./query";
@@ -11,18 +12,24 @@ export class UserRepository extends QueryRepository {
 
     if (userIds.length === 0) return [];
 
-    const { results, missingIds } =
-      await this.GetManyWithCached<IPublicUserInfo>({
-        keyPrefix,
-        ids: userIds,
-      });
+    const { results, missingIds } = await this.GetManyWithCached<
+      components["schemas"]["PublicUserInfo"]
+    >({
+      keyPrefix,
+      ids: userIds,
+    });
 
     const dbResults = await this.db
-      .select<IPublicUserInfo[]>("userId", "name", "avatar", "username")
+      .select<components["schemas"]["PublicUserInfo"][]>(
+        "userId",
+        "name",
+        "avatar",
+        "username",
+      )
       .from("users")
       .whereIn("userId", missingIds);
 
-    await this.CacheMissingResults<IPublicUserInfo>({
+    await this.CacheMissingResults<components["schemas"]["PublicUserInfo"]>({
       idField: "userId",
       keyPrefix,
       results: dbResults,
@@ -35,7 +42,7 @@ export class UserRepository extends QueryRepository {
 
 export function getUserById(db: Knex, id: string) {
   return db("users")
-    .select<IUserInfo>(
+    .select<components["schemas"]["CustomerItemInfo"]>(
       "userId",
       "name",
       "username",
@@ -55,7 +62,7 @@ export function getUserByEmail(db: Knex, email: string) {
   const e = (email || "").trim();
 
   return db("users")
-    .select<IUserInfo>(
+    .select<components["schemas"]["CustomerItemInfo"]>(
       "userId",
       "name",
       "username",

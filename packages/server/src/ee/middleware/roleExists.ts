@@ -1,13 +1,19 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 // utils
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
 import { RoleIdService } from "../services/roles/roles.service";
 
+type RequestParam =
+  | operations["getRoleByID"]["parameters"]["path"]
+  | operations["assignRoleToUser"]["parameters"]["path"]
+  | operations["unassignRoleFromUser"]["parameters"]["path"];
+
 export async function roleExists(
-  req: Request,
-  res: Response,
+  req: Request<RequestParam>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) {
   const id = validUUID(req.body.id || req.params.role_id);

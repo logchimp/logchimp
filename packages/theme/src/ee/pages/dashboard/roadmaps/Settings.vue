@@ -25,7 +25,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -36,13 +35,15 @@ import { RoadmapsEE } from "../../../modules/roadmaps";
 import Dashboard404 from "../../../../components/dashboard/404.vue";
 import Dashboard500 from "../../../../components/dashboard/500.vue";
 import LoaderContainer from "../../../../components/ui/LoaderContainer.vue";
-import RoadmapEditor from "../../../components/roadmap/RoadmapEditor.vue";
+import RoadmapEditor, {
+  type RoadmapEditorForm,
+} from "../../../components/roadmap/RoadmapEditor.vue";
 
 const { t } = useI18n();
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
 const title = ref<string>("");
-const roadmap = reactive<IUpdateRoadmapRequestBody>({
+const roadmap = reactive<RoadmapEditorForm>({
   id: "",
   name: "",
   url: "",

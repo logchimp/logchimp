@@ -1,7 +1,10 @@
 import { ref } from "vue";
-import type { IBoard, IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
-export type TCurrentBoard = IBoard | IBoardPrivate | null;
+export type TCurrentBoard =
+  | components["schemas"]["BoardItem"]
+  | components["schemas"]["BoardPrivate"]
+  | null;
 const currentBoard = ref<TCurrentBoard>(null);
 
 export function useBoardSearch() {

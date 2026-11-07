@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IAuthSignupResponseBody,
-  TAuthSignupRequestBody,
-} from "@logchimp/types";
-
+import type { components } from "@logchimp/api-ts-types";
 import database from "../../database";
 import { validEmail } from "../../helpers";
 import logger from "../../utils/logger";
@@ -15,10 +10,12 @@ import {
   UsernameExistsError,
 } from "../../services/auth/errors";
 
-type ResponseBody = IAuthSignupResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["SignupResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function signup(
-  req: Request<unknown, unknown, TAuthSignupRequestBody>,
+  req: Request<unknown, unknown, components["schemas"]["LoginRequestBody"]>,
   res: Response<ResponseBody>,
 ) {
   const { email, password } = req.body;

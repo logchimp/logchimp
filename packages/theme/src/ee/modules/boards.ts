@@ -1,17 +1,4 @@
-// packages
-import type {
-  IBoardUpdateRequestBody,
-  IFilterBoardResponseBody,
-  IGetBoardsByUrlResponseBody,
-  IGetBoardsRequestQuery,
-  IGetBoardsResponseBody,
-  ISearchBoardResponseBody,
-  TBoardCheckSlugResponse,
-  TBoardCreateRequestBody,
-  TBoardCreateResponseBody,
-  TBoardUpdateResponseBody,
-  TFilterBoardRequestQuery,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import { VITE_API_URL } from "../../constants";
 import { APIService } from "../../modules/api.ts";
@@ -24,23 +11,16 @@ export class BoardsEE extends APIService {
 
   /**
    * Get public boards
-   * @param {TFilterBoardRequestQuery} params
+   * @param {operations["filterPublicBoards"]["parameters"]["query"]} params
    * @param {string} params.first number of items to fetch
    * @param {string} params.after cursor to fetch next page
-   * @param {ApiSortType} params.created sort type asc or desc
-   * @returns {Promise<IFilterBoardResponseBody>} response
+   * @param {components["schemas"]["SortTypeEnum"]} params.created sort type asc or desc
+   * @returns {Promise<components['schemas']['FilterBoardResponseBody']>} response
    */
   GetPublicBoards = async (
-    params: TFilterBoardRequestQuery,
-  ): Promise<IFilterBoardResponseBody> => {
-    const searchParams = new URLSearchParams();
-
-    for (const paramsKey in params) {
-      const value = params[paramsKey as keyof TFilterBoardRequestQuery];
-      if (value) {
-        searchParams.append(paramsKey, value.toString());
-      }
-    }
+    params: operations["filterPublicBoards"]["parameters"]["query"],
+  ): Promise<components["schemas"]["FilterBoardResponseBody"]> => {
+    const searchParams = this.buildQueryParams(params);
 
     return this.get(`/v1/boards?${searchParams.toString()}`, {})
       .then((response) => response?.data)
@@ -53,14 +33,16 @@ export class BoardsEE extends APIService {
    *	Get all boards
    * @param {string} page page number default to 1
    * @param {string} limit number of items per page
-   * @param {ApiSortType} created sort type asc or desc
-   * @returns {Promise<IGetBoardsResponseBody>} response
+   * @param {components["schemas"]["SortTypeEnum"]} created sort type asc or desc
+   * @returns {Promise<components["schemas"]["GetBoardsResponseBody"]>} response
    */
   GetAllBoards = async ({
     page = "1",
     limit = "10",
     created = "DESC",
-  }: IGetBoardsRequestQuery): Promise<IGetBoardsResponseBody> => {
+  }: operations["listBoards"]["parameters"]["query"] = {}): Promise<
+    components["schemas"]["GetBoardsResponseBody"]
+  > => {
     return this.get("/v1/boards/get", {
       page,
       limit,
@@ -75,9 +57,11 @@ export class BoardsEE extends APIService {
   /**
    *	Get board by URL
    * @param {string} url board url
-   * @returns {Promise<IGetBoardsByUrlResponseBody>} response
+   * @returns {Promise<components["schemas"]["GetBoardByUrlResponseBody"]>} response
    */
-  GetBoardByUrl = async (url: string): Promise<IGetBoardsByUrlResponseBody> => {
+  GetBoardByUrl = async (
+    url: string,
+  ): Promise<components["schemas"]["GetBoardByUrlResponseBody"]> => {
     return this.get(`/v1/boards/${encodeURIComponent(url)}`)
       .then((response) => response?.data)
       .catch((error) => {
@@ -88,9 +72,11 @@ export class BoardsEE extends APIService {
   /**
    * Search board by name
    * @param {string} name board name
-   * @returns {Promise<ISearchBoardResponseBody>} response
+   * @returns {Promise<components["schemas"]["SearchBoardResponseBody"]>} response
    */
-  SearchBoard = async (name: string): Promise<ISearchBoardResponseBody> => {
+  SearchBoard = async (
+    name: string,
+  ): Promise<components["schemas"]["SearchBoardResponseBody"]> => {
     return this.get(`/v1/boards/search/${encodeURIComponent(name)}`)
       .then((response) => response?.data)
       .catch((error) => {
@@ -103,11 +89,11 @@ export class BoardsEE extends APIService {
    * @param {object} board
    * @param {string} board.name
    * @param {string} board.display
-   * @returns {Promise<TBoardCreateRequestBody>} response
+   * @returns {Promise<components["schemas"]["CreateBoardResponseBody"]>} response
    */
   CreateBoard = async (
-    board?: TBoardCreateRequestBody,
-  ): Promise<TBoardCreateResponseBody> => {
+    board?: components["schemas"]["CreateBoardRequestBody"],
+  ): Promise<components["schemas"]["CreateBoardResponseBody"]> => {
     return this.post("/v1/boards", board)
       .then((response) => response?.data)
       .catch((error) => {
@@ -124,11 +110,11 @@ export class BoardsEE extends APIService {
    * @param {string} board.color board color
    * @param {boolean} board.view_voters view voters in this board
    * @param {boolean} board.display display board on the site
-   * @returns {Promise<TBoardUpdateResponseBody>} response
+   * @returns {Promise<components["schemas"]["UpdateBoardResponseBody"]>} response
    */
   UpdateBoard = async (
-    board: IBoardUpdateRequestBody,
-  ): Promise<TBoardUpdateResponseBody> => {
+    board: components["schemas"]["UpdateBoardRequestBody"],
+  ): Promise<components["schemas"]["UpdateBoardResponseBody"]> => {
     return this.patch("/v1/boards", {
       ...board,
     })
@@ -152,7 +138,9 @@ export class BoardsEE extends APIService {
   /*
    * Check if board slug exists
    */
-  CheckBoardSlug = async (url: string): Promise<TBoardCheckSlugResponse> => {
+  CheckBoardSlug = async (
+    url: string,
+  ): Promise<components["schemas"]["CheckBoardSlugResponseBody"]> => {
     return this.post("/v1/boards/check-slug", {
       url,
     })

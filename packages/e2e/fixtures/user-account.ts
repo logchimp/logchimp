@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import type { IAuthSignupResponseBody, IAuthUser } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { request, test as baseTest } from "@playwright/test";
 
 import { userSignup } from "../helpers/api";
@@ -18,14 +18,15 @@ export const test = baseTest.extend({
         requestContext,
         baseURL,
       });
-      const body = (await res.json()) as IAuthSignupResponseBody;
+      const body =
+        (await res.json()) as components["schemas"]["SignupResponseBody"];
 
       const context = await browser.newContext();
       const page = await context.newPage();
       await page.goto(baseURL);
 
       // Store the auth user in localStorage (or use cookies/sessionStorage based on your app)
-      await page.evaluate((payload: IAuthUser) => {
+      await page.evaluate((payload: components["schemas"]["AuthUser"]) => {
         localStorage.setItem("user", JSON.stringify(payload));
       }, body.user);
 

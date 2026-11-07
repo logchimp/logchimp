@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
+import type { components } from "@logchimp/api-ts-types";
 
 import app from "../../../../src/app";
 import { createToken } from "../../../../src/services/token.service";
 import { createUser } from "../../../utils/seed/user";
 import database from "../../../../src/database";
-import type { IAuthPasswordResetResponseBody } from "@logchimp/types";
 
 async function resetPassword() {
   const { user } = await createUser();
@@ -55,7 +55,8 @@ describe("POST /api/v1/auth/password/reset", () => {
 
     expect(response.status).toBe(200);
     expect(response.headers["content-type"]).toContain("application/json");
-    const body = response.body satisfies IAuthPasswordResetResponseBody;
+    const body =
+      response.body satisfies components["schemas"]["SendPasswordResetEmailResponseBody"];
     expect(body).toHaveProperty("reset.success");
     expect(body.reset.success).toBe(true);
   });

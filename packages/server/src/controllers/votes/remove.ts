@@ -1,10 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IRemoveVoteRequestBody,
-  TPermission,
-  TRemoveVoteResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // services
 import { getVotes } from "../../services/votes/getVotes";
@@ -16,16 +11,24 @@ import { validUUID } from "../../helpers";
 import { VoteService } from "../../services/votes/vote.service";
 import { NotFoundError } from "../../utils/error";
 
-type ResponseBody = TRemoveVoteResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["RemoveVoteResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function remove(
-  req: Request<unknown, unknown, IRemoveVoteRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["RemoveVoteRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
   const userId = req.user.userId;
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.includes("vote:destroy");
   if (!checkPermission) {
     res.status(403).send({

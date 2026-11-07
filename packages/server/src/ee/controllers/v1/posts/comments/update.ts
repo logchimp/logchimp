@@ -1,12 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IComment,
-  IUpdatePostCommentRequestBody,
-  IUpdatePostCommentRequestParam,
-  IUpdatePostCommentResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 
 import database from "../../../../../database";
@@ -18,7 +11,9 @@ import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import type { GetCommentStatement } from "../../../../middleware/commentExists";
 
-type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["UpdatePostCommentResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 /**
  * Comment update endpoint.
@@ -27,9 +22,9 @@ type ResponseBody = IUpdatePostCommentResponseBody | IApiErrorResponse;
  */
 export async function update(
   req: Request<
-    IUpdatePostCommentRequestParam,
+    operations["updateComment"]["parameters"]["path"],
     unknown,
-    IUpdatePostCommentRequestBody
+    components["schemas"]["UpdatePostCommentRequestBody"]
   >,
   res: Response<ResponseBody>,
 ) {
@@ -75,11 +70,13 @@ export async function update(
   const userId = req.user.userId;
 
   // @ts-expect-error
-  const permissions = (req.user?.permissions || []) as TPermission[];
+  const permissions = (req.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const requiredPermission = [
     "comment:update:own",
     "comment:update:any",
-  ] satisfies TPermission[];
+  ] satisfies Array<components["schemas"]["Permission"]>;
   const hasPermission = requiredPermission.some((permission) =>
     permissions.includes(permission),
   );
@@ -92,7 +89,7 @@ export async function update(
   }
 
   const ownComment = permissions.includes(
-    "comment:update:own" satisfies TPermission,
+    "comment:update:own" satisfies components["schemas"]["Permission"],
   );
   if (ownComment) {
     let isAuthor: {
@@ -179,7 +176,7 @@ async function commentUpdateStatement({
     })
     .from("posts_comments")
     .where({ id: comment_id })
-    .returning<Array<IComment>>([
+    .returning<Array<components["schemas"]["CommentItem"]>>([
       "id",
       "body",
       "is_internal",
