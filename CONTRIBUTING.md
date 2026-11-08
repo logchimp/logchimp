@@ -51,15 +51,7 @@ cp ./packages/server/.env.example ./packages/server/.env; \
   cp ./packages/e2e/.env.example ./packages/e2e/.env
 ```
 
-3. Build the LogChimp Types package
-
-_We're still trying to figure out how to automate this step._
-
-```shell
-pnpm --filter="@logchimp/types" build
-```
-
-4. Start the Docker containers
+3. Start the Docker containers
 
 Run this command from the root directory.
 
@@ -67,7 +59,7 @@ Run this command from the root directory.
 docker compose -f ./docker/local/docker-compose.dev.yml up -d
 ```
 
-5. Start the LogChimp theme
+4. Start the LogChimp theme
 
 If opening inside VSCode, open the command (`Ctrl` / `Command` + `Shift` + `P`), type `Tasks: Run Task` and hit enter, you will find the task in the list `LogChimp Theme Dev` and hit enter.
 

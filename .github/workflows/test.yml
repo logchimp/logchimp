@@ -73,9 +73,6 @@ jobs:
           node_version: ${{ matrix.node }}
           pnpm_version: ${{ env.pnpm-version }}
 
-      - name: Compile LogChimp Types package
-        run: pnpm --filter="@logchimp/types" build;
-
       - name: Build theme
         run: pnpm --filter @logchimp/theme build
 
@@ -99,9 +96,6 @@ jobs:
         with:
           node_version: ${{ matrix.node }}
           pnpm_version: ${{ env.pnpm-version }}
-
-      - name: logchimp/type typecheck
-        run: pnpm --filter @logchimp/types exec pnpm tsc
 
       - name: API typecheck
         run: pnpm --filter @logchimp/api exec pnpm tsc --noEmit
@@ -199,9 +193,6 @@ jobs:
         with:
           node_version: ${{ matrix.node }}
           pnpm_version: ${{ env.pnpm-version }}
-
-      - name: Compile LogChimp Types package
-        run: pnpm --filter="@logchimp/types" build;
 
       - name: Database setup
         run: |
