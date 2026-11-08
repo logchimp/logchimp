@@ -11,8 +11,8 @@ import error from "../../../../errorResponse.json";
 import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
 import {
   parseAndValidateLimit,
-  parseAndValidatePage
-,} from "../../../../helpers";
+  parseAndValidatePage,
+} from "../../../../helpers";
 import { ZeroResultsCursorPagination } from "../../../../utils/cursor";
 
 const querySchema = v.object({
