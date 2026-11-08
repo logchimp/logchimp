@@ -41,7 +41,7 @@ export async function updateProfile(
       .where({
         userId,
       })
-      .returning(["userId", "name", "username", "email"]);
+      .returning(["userId", "name", "username", "email", "isVerified"]);
 
     if (cache.isActive) {
       try {

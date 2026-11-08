@@ -109,7 +109,7 @@ export async function updateBoard(
   }
 
   try {
-    const boards = await database
+    await database
       .update({
         name,
         url,
@@ -121,12 +121,12 @@ export async function updateBoard(
       .from("boards")
       .where({
         boardId,
-      })
-      .returning("*");
-
-    const board = boards[0];
+      });
 
     await boardRepository.InvalidateBoardCache([boardId]);
+
+    const boards = await boardRepository.GetPrivateBoardByIDs([boardId]);
+    const board = boards[0];
 
     res.status(200).send({ board });
   } catch (err) {

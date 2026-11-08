@@ -63,7 +63,10 @@ export async function get(
       });
     }
 
-    const boards = await query;
+    const boards = (await query).map((board) => ({
+      ...board,
+      post_count: Number.parseInt(board.post_count, 10),
+    }));
 
     res.status(200).send({ boards });
   } catch (err) {

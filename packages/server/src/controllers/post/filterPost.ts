@@ -336,7 +336,7 @@ async function getPostMetadata({
 }) {
   return database.transaction(async (trx) => {
     // Total count
-    const totalCountQuery = trx("posts").count("* as count");
+    const totalCountQuery = trx("posts").count<{ count: string }>("* as count");
 
     if (query.length > 0) {
       totalCountQuery.where("title", "ILIKE", `%${query}%`);
@@ -383,7 +383,7 @@ async function getPostMetadata({
     }
 
     const remainingResult = await trx
-      .count("* as count")
+      .count<{ count: string }>("* as count")
       .from(remainingQuery)
       .first();
 

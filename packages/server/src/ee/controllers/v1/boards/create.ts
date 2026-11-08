@@ -12,10 +12,14 @@ import {
 } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
+import { BoardRepository } from "../../../repository/board";
+import valkey from "../../../../cache";
 
 type ResponseBody =
   | components["schemas"]["CreateBoardResponseBody"]
   | components["schemas"]["GenericAPIErrorResponseBody"];
+
+const boardRepository = new BoardRepository(database, valkey);
 
 export async function create(
   req: Request<
@@ -41,19 +45,21 @@ export async function create(
     return;
   }
 
+  const boardId = uuidv4();
+
   try {
-    const createBoard = await database
+    await database
       .insert({
-        boardId: uuidv4(),
+        boardId,
         name,
         url: `new-board-${nanoid(10)}`,
         color: generateHexColor(),
         display,
       })
-      .into("boards")
-      .returning("*");
+      .into("boards");
 
-    const board = createBoard[0];
+    const boards = await boardRepository.GetPrivateBoardByIDs([boardId]);
+    const board = boards[0];
 
     res.status(201).send({ board });
   } catch (err) {
