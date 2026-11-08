@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import database from "../../src/database";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 type RoleInput = {
   roleId?: string;
@@ -9,7 +9,7 @@ type RoleInput = {
 
 export async function createRoleWithPermissions(
   userId: string,
-  permissions: TPermission[],
+  permissions: Array<components["schemas"]["Permission"]>,
   role?: RoleInput,
 ): Promise<string> {
   const roleId = role?.roleId ?? uuidv4();

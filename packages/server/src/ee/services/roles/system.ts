@@ -2,7 +2,7 @@
  * This file contains system roles and permissions.
  */
 
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { RoleIdService, RolesService } from "./roles.service";
 import { PermissionService } from "./permission.service";
@@ -13,7 +13,7 @@ interface ISystemRole {
   id: string; // uuid v4
   name: string;
   description: string;
-  permissions: TPermission[];
+  permissions: Array<components["schemas"]["Permission"]>;
 }
 
 const PERMISSIONS = [
@@ -53,7 +53,7 @@ const PERMISSIONS = [
   "comment:delete:own",
   "comment:delete:any",
   "comment:view_internal",
-] satisfies TPermission[];
+] satisfies Array<components["schemas"]["Permission"]>;
 
 const ROLES = [
   {

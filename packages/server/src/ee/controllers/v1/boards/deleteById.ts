@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
+import type { components } from "@logchimp/api-ts-types";
+
 import { validate as validateUUID } from "uuid";
-import type { IBoardDeleteRequestBody, TPermission } from "@logchimp/types";
 import database from "../../../../database";
 import { valkey } from "../../../../cache";
 
@@ -12,11 +13,17 @@ import { BoardRepository } from "../../../repository/board";
 const boardRepository = new BoardRepository(database, valkey);
 
 export async function deleteById(
-  req: Request<unknown, unknown, IBoardDeleteRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["DeleteBoardRequestBody"]
+  >,
   res: Response,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const boardId = req.body.boardId;
   if (!validateUUID(boardId)) {

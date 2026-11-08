@@ -37,7 +37,7 @@
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import type { AxiosError } from "axios";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -117,7 +117,9 @@ async function submitPost() {
     const slug = response.post.slug;
     router.push(`${dashboardUrl.value}/posts/${encodeURIComponent(slug)}`);
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     tokenError(err);
   } finally {
     loading.value = false;

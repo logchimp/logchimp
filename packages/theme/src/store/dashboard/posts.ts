@@ -1,7 +1,7 @@
 import { ref, watch } from "vue";
 import { defineStore } from "pinia";
 import { useDebounceFn } from "@vueuse/core";
-import type { IApiErrorResponse, IPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { type AxiosError, isCancel } from "axios";
 
 import type { InfiniteScrollStateType } from "../../components/ui/InfiniteScroll.vue";
@@ -10,11 +10,11 @@ import { PostsAPI } from "../../modules/posts";
 const postsAPI = new PostsAPI();
 
 export const useDashboardPosts = defineStore("dashboardPosts", () => {
-  const posts = ref<IPost[]>([]);
+  const posts = ref<components["schemas"]["Post"][]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
   const searchQuery = ref<string | undefined>();
-  const endCursor = ref<string | undefined>();
+  const endCursor = ref<string | null>(null);
   const hasNextPage = ref<boolean>(false);
   const errorCode = ref<unknown>(undefined);
 
@@ -35,7 +35,7 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
           query: searchQuery.value,
         },
         {
-          after: endCursor.value,
+          after: endCursor.value ?? undefined,
           created: "DESC",
         },
         {
@@ -45,14 +45,14 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
 
       if (abortController.signal.aborted) return;
 
-      const postsList = response.posts;
-
-      if (postsList.length > 0) {
-        posts.value.push(...response.posts);
+      if (response.results.length > 0) {
+        posts.value.push(...response.results);
       }
 
-      endCursor.value = response.page_info?.end_cursor || undefined;
-      hasNextPage.value = response.page_info?.has_next_page || false;
+      if ("page_info" in response) {
+        endCursor.value = response.page_info.end_cursor;
+        hasNextPage.value = response.page_info.has_next_page;
+      }
 
       if (hasNextPage.value) {
         state.value = "LOADED";
@@ -60,7 +60,9 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
         state.value = "COMPLETED";
       }
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
 
       // axios request canceled
       if (isCancel(err) || err.code === "ERR_CANCELED") return;
@@ -76,11 +78,11 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
     }
   }
 
-  function appendPost(post: IPost) {
+  function appendPost(post: components["schemas"]["Post"]) {
     posts.value.unshift(post);
   }
 
-  function updatePost(post: IPost) {
+  function updatePost(post: components["schemas"]["Post"]) {
     const postIdx = posts.value.findIndex(
       (item) => item.postId === post.postId,
     );
@@ -98,7 +100,7 @@ export const useDashboardPosts = defineStore("dashboardPosts", () => {
   }
 
   const debounceFetchPosts = useDebounceFn(async () => {
-    endCursor.value = undefined;
+    endCursor.value = null;
     hasNextPage.value = false;
     errorCode.value = undefined;
     posts.value = [];

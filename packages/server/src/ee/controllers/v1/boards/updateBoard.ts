@@ -1,11 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IApiValidationErrorResponse,
-  IBoardUpdateRequestBody,
-  TBoardUpdateResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 
 import database from "../../../../database";
@@ -18,9 +12,8 @@ import { valkey } from "../../../../cache";
 import { sanitiseURL } from "../../../../helpers";
 
 type ResponseBody =
-  | TBoardUpdateResponseBody
-  | IApiErrorResponse
-  | IApiValidationErrorResponse;
+  | components["schemas"]["UpdateBoardResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const boardRepository = new BoardRepository(database, valkey);
 
@@ -54,11 +47,17 @@ const schemaBodyErrorMap = {
 };
 
 export async function updateBoard(
-  req: Request<unknown, unknown, IBoardUpdateRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdateBoardRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.includes("board:update");
   if (!checkPermission) {

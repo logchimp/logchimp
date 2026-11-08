@@ -1,15 +1,14 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetSiteSettingsResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { workspaceRepository } from "../../repository/workspace";
 
-type ResponseBody = IGetSiteSettingsResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetSiteSettingsResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const workspace = new workspaceRepository();
 

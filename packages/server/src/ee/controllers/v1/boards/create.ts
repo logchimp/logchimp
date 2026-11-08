@@ -1,11 +1,6 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  IApiErrorResponse,
-  TBoardCreateRequestBody,
-  TBoardCreateResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../../../database";
@@ -18,14 +13,22 @@ import {
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = TBoardCreateResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["CreateBoardResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function create(
-  req: Request<unknown, unknown, TBoardCreateRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CreateBoardRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const name = req.body.name || "new board";
   const display = req.body.display;
 

@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { provide } from "vue";
 import { Eye as EyeIcon, EyeOff as EyeOffIcon } from "lucide-vue";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { boardKey } from "./options";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
@@ -62,7 +62,7 @@ import ColorDot from "../../../../../components/ui/ColorDot/ColorDot.vue";
 import Td from "../../../../../components/ui/Table/Td.vue";
 
 interface Props {
-  board: IBoardPrivate;
+  board: components["schemas"]["BoardPrivate"];
 }
 const props = defineProps<Props>();
 provide(boardKey, props.board);

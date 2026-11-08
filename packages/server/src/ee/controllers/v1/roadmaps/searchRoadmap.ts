@@ -1,26 +1,25 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IRoadmapPrivate,
-  ISearchRoadmapRequestParam,
-  ISearchRoadmapResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
+
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = ISearchRoadmapResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["SearchRoadmapResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function searchRoadmap(
-  req: Request<ISearchRoadmapRequestParam>,
+  req: Request<operations["searchRoadmaps"]["parameters"]["path"]>,
   res: Response<ResponseBody>,
 ) {
   const name = (req.params?.name || "").trim();
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.includes("roadmap:read");
   if (!checkPermission) {
@@ -33,7 +32,7 @@ export async function searchRoadmap(
 
   const escaped = name.replace(/[\\%_]/g, "\\$&");
 
-  const query = database<IRoadmapPrivate>("roadmaps")
+  const query = database<components["schemas"]["RoadmapPrivate"]>("roadmaps")
     .select()
     .orderByRaw(
       `CASE

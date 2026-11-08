@@ -1,4 +1,5 @@
-import type { IBoard, IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
+
 import { QueryRepository } from "../../repository/query";
 import { DAY } from "../../cache/time";
 import logger from "../../utils/logger";
@@ -6,12 +7,16 @@ import logger from "../../utils/logger";
 type BoardCacheKey = "public" | "detail" | "private";
 
 export class BoardRepository extends QueryRepository {
-  async GetPublicBoardByIDs(boardIds: string[]): Promise<IBoard[]> {
+  async GetPublicBoardByIDs(
+    boardIds: string[],
+  ): Promise<components["schemas"]["BoardItem"][]> {
     const keyPrefix = "board:public";
 
     if (boardIds.length === 0) return [];
 
-    const { results, missingIds } = await this.GetManyWithCached<IBoard>({
+    const { results, missingIds } = await this.GetManyWithCached<
+      components["schemas"]["BoardItem"]
+    >({
       ids: boardIds,
       keyPrefix,
     });
@@ -19,10 +24,16 @@ export class BoardRepository extends QueryRepository {
     if (missingIds.length === 0) return results;
 
     const dbResults = await this.db("boards")
-      .select<IBoard[]>("boardId", "name", "url", "color", "createdAt")
+      .select<components["schemas"]["BoardItem"][]>(
+        "boardId",
+        "name",
+        "url",
+        "color",
+        "createdAt",
+      )
       .whereIn("boardId", missingIds);
 
-    await this.CacheMissingResults<IBoard>({
+    await this.CacheMissingResults<components["schemas"]["BoardItem"]>({
       idField: "boardId",
       results: dbResults,
       keyPrefix,
@@ -32,22 +43,24 @@ export class BoardRepository extends QueryRepository {
     return [...results, ...dbResults];
   }
 
-  async GetPrivateBoardByIDs(boards: string[]): Promise<IBoardPrivate[]> {
+  async GetPrivateBoardByIDs(
+    boards: string[],
+  ): Promise<components["schemas"]["BoardPrivate"][]> {
     const keyPrefix = "board:private";
 
     if (boards.length === 0) return [];
 
-    const { results, missingIds } = await this.GetManyWithCached<IBoardPrivate>(
-      {
-        ids: boards,
-        keyPrefix,
-      },
-    );
+    const { results, missingIds } = await this.GetManyWithCached<
+      components["schemas"]["BoardPrivate"]
+    >({
+      ids: boards,
+      keyPrefix,
+    });
 
     if (missingIds.length === 0) return results;
 
     const dbResults = await this.db("boards")
-      .select<IBoardPrivate[]>(
+      .select<components["schemas"]["BoardPrivate"][]>(
         "boards.boardId",
         "boards.name",
         "boards.url",
@@ -56,20 +69,28 @@ export class BoardRepository extends QueryRepository {
         "boards.view_voters",
         "boards.createdAt",
       )
-      .count<IBoardPrivate[]>("posts.postId", { as: "post_count" })
+      .count<components["schemas"]["BoardPrivate"][]>("posts.postId", {
+        as: "post_count",
+      })
       .from("boards")
       .leftJoin("posts", "boards.boardId", "posts.boardId")
       .groupBy("boards.boardId")
       .whereIn("boards.boardId", missingIds);
 
-    await this.CacheMissingResults<IBoardPrivate>({
+    const typedDbResults = dbResults.map((board) => ({
+      ...board,
+      // convert post_count from string → number
+      post_count: Number(board.post_count),
+    })) as components["schemas"]["BoardPrivate"][];
+
+    await this.CacheMissingResults<components["schemas"]["BoardPrivate"]>({
       idField: "boardId",
-      results: dbResults,
+      results: typedDbResults,
       keyPrefix,
       ttlSeconds: DAY * 7,
     });
 
-    return [...results, ...dbResults];
+    return [...results, ...typedDbResults];
   }
 
   async InvalidateBoardCache(

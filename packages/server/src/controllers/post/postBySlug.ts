@@ -1,10 +1,6 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetPostBySlugRequestBody,
-  IGetPostBySlugResponseBody,
-} from "@logchimp/types";
 import database from "../../database";
+import type { components } from "@logchimp/api-ts-types";
 
 // services
 import { getVotes } from "../../services/votes/getVotes";
@@ -13,10 +9,16 @@ import { getVotes } from "../../services/votes/getVotes";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 
-type ResponseBody = IGetPostBySlugResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetPostBySlugResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function postBySlug(
-  req: Request<unknown, unknown, IGetPostBySlugRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["GetPostBySlugRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error

@@ -1,24 +1,23 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetRoadmapByUrlRequestParam,
-  IGetRoadmapByUrlResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = IGetRoadmapByUrlResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetRoadmapByUrlResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export function roadmapByUrl(
-  req: Request<IGetRoadmapByUrlRequestParam>,
+  req: Request<operations["getRoadmapByUrl"]["parameters"]["path"]>,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const roadmap = req.roadmap;
+  const roadmap = req.roadmap as components["schemas"]["RoadmapPrivate"];
 
   // @ts-expect-error
-  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const permissions = (req?.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const hasPermission = permissions.includes("roadmap:read");
 
   if (!hasPermission && !roadmap.display) {

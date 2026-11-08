@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { onMounted, inject, computed } from "vue";
 import { ComputerIcon } from "lucide-vue";
+import type { components } from "@logchimp/api-ts-types";
 
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useDashboardUsers } from "../../../../../store/dashboard/users";
@@ -58,11 +59,13 @@ async function assignRoleHandler(roleId: string) {
   try {
     const response = await usersEeServices.assignRole(roleId, userId);
     if (response.success === 1) {
+      const successResponse =
+        response as components["schemas"]["AssignRoleToUserResponseBodySuccess"];
       dashboardUsers.appendUserRole(userId, {
-        id: response.id,
-        name: response.name,
-        isSystem: response.isSystem,
-        user_role_id: response.user_role_id,
+        id: successResponse.id,
+        name: successResponse.name,
+        isSystem: successResponse.isSystem,
+        user_role_id: successResponse.user_role_id,
       });
     }
   } catch (error) {

@@ -1,9 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  ICreateSiteSetupRequestBody,
-  TCreateSiteSetupResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../database";
@@ -19,10 +15,16 @@ import {
   UsernameExistsError,
 } from "../../services/auth/errors";
 
-type ResponseBody = TCreateSiteSetupResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["CreateSiteSetupResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function setup(
-  req: Request<unknown, unknown, ICreateSiteSetupRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CreateSiteSetupRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const { name, email, password } = req.body;

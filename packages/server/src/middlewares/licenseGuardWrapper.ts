@@ -1,4 +1,5 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import type { components } from "@logchimp/api-ts-types";
 
 import type { LicenseGuardOptions } from "../types";
 import logger from "../utils/logger";
@@ -14,11 +15,6 @@ type ControllerHandler<
   next: NextFunction,
 ) => void | Promise<void> | Response<ResBody> | Promise<Response<ResBody>>;
 
-interface IApiErrorResponse {
-  message: string;
-  code: string;
-}
-
 type WithLicenseGuardFunction = <
   P = any,
   ResBody = any,
@@ -29,7 +25,7 @@ type WithLicenseGuardFunction = <
   options: LicenseGuardOptions,
 ) => (
   req: Request<P, ResBody, ReqBody, ReqQuery>,
-  res: Response<ResBody | IApiErrorResponse>,
+  res: Response<ResBody | components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) => Promise<void>;
 
@@ -42,7 +38,9 @@ const createFallbackGuard = (): WithLicenseGuardFunction => {
   ) => {
     return async (
       req: Request<P, ResBody, ReqBody, ReqQuery>,
-      res: Response<ResBody | IApiErrorResponse>,
+      res: Response<
+        ResBody | components["schemas"]["GenericAPIErrorResponseBody"]
+      >,
       next: NextFunction,
     ) => {
       if (requiredPlan.includes("free")) {
@@ -83,12 +81,16 @@ const withLicenseGuardWrapper: WithLicenseGuardFunction = <
 ) => {
   return async (
     req: Request<P, ResBody, ReqBody, ReqQuery>,
-    res: Response<ResBody | IApiErrorResponse>,
+    res: Response<
+      ResBody | components["schemas"]["GenericAPIErrorResponseBody"]
+    >,
     next: NextFunction,
   ) => {
     let guardedHandler: (
       req: Request<P, ResBody, ReqBody, ReqQuery>,
-      res: Response<ResBody | IApiErrorResponse>,
+      res: Response<
+        ResBody | components["schemas"]["GenericAPIErrorResponseBody"]
+      >,
       next: NextFunction,
     ) => Promise<void>;
 
@@ -125,4 +127,4 @@ const withLicenseGuardWrapper: WithLicenseGuardFunction = <
 };
 
 export { withLicenseGuardWrapper };
-export type { LicenseGuardOptions, ControllerHandler, IApiErrorResponse };
+export type { LicenseGuardOptions, ControllerHandler };

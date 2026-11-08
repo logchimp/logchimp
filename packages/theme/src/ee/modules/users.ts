@@ -1,5 +1,4 @@
-import type { TUserAssignRoleResponse } from "@logchimp/types";
-
+import type { components } from "@logchimp/api-ts-types";
 import { VITE_API_URL } from "../../constants";
 
 // store
@@ -18,7 +17,7 @@ export class UsersEEAPI extends APIService {
   async assignRole(
     roleId: string,
     userId: string,
-  ): Promise<TUserAssignRoleResponse> {
+  ): Promise<components["schemas"]["AssignRoleToUserResponseBody"]> {
     return this.put(
       `/v1/roles/${encodeURIComponent(roleId)}/users/${encodeURIComponent(userId)}`,
     )

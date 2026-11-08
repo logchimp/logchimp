@@ -1,18 +1,16 @@
 import type { Request, Response } from "express";
 import * as v from "valibot";
-import type {
-  IApiErrorResponse,
-  IGetPostVotesRequestParams,
-  IPaginatedPostVotesResponse,
-  IUserVoteV2,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
+
 import { GET_POST_VOTES_COUNT } from "../../constants";
 import { parseAndValidateLimit } from "../../helpers";
 import error from "../../errorResponse.json";
 import { VoteService } from "../../services/votes/vote.service";
 import type { IAuthenticationMiddlewareUser } from "../../types";
 
-type ResponseBody = IPaginatedPostVotesResponse | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetPostVotesResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const querySchema = v.object({
   first: v.pipe(
@@ -30,7 +28,12 @@ const schemaQueryErrorMap = {
 };
 
 export async function getPostVotes(
-  req: Request<IGetPostVotesRequestParams>,
+  req: Request<
+    operations["getPostVotes"]["parameters"]["path"],
+    unknown,
+    unknown,
+    operations["getPostVotes"]["parameters"]["query"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const query = v.safeParse(querySchema, req.query);
@@ -66,7 +69,7 @@ export async function getPostVotes(
       },
     });
 
-    let viewerVote: IUserVoteV2 | undefined;
+    let viewerVote: components["schemas"]["UserVoteV2"] | undefined;
     if (userId) {
       viewerVote = await voteService.getUserVote(postId, userId);
     }

@@ -1,9 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IUpdatePostCommentRequestParam,
-  TDeletePostCommentRequestParam,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import database from "../../database";
 import error from "../../errorResponse.json";
@@ -11,12 +7,12 @@ import { validUUID } from "../../helpers";
 import logger from "../../utils/logger";
 
 type RequestParam =
-  | IUpdatePostCommentRequestParam
-  | TDeletePostCommentRequestParam;
+  | operations["updateComment"]["parameters"]["path"]
+  | operations["deleteComment"]["parameters"]["path"];
 
 export async function commentExists(
   req: Request<RequestParam>,
-  res: Response<IApiErrorResponse>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) {
   const id = validUUID(req.params.comment_id);

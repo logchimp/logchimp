@@ -1,14 +1,13 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  ICheckLicenseControllerResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import error from "../../../errorResponse.json";
 import logger from "../../../utils/logger";
 import { licenseService } from "../../do-not-remove/services/LicenseService";
 
-type ResponseType = IApiErrorResponse | ICheckLicenseControllerResponseBody;
+type ResponseType =
+  | components["schemas"]["CheckLicenseControllerResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function checkLicenseController(
   _: Request,

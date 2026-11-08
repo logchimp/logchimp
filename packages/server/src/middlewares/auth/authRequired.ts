@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import type {
   IAuthenticationMiddlewareUser,
@@ -14,11 +14,12 @@ import {
 } from "./helpers";
 import logger from "../../utils/logger";
 import { configManager } from "../../utils/logchimpConfig";
+
 const config = configManager.getConfig();
 
 const authenticateWithToken = async (
   req: Request,
-  res: Response<IApiErrorResponse>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
   token: string,
 ) => {
@@ -83,7 +84,7 @@ const authenticateWithToken = async (
 // Only allow the user to proceed further after completing all the checks
 const authRequired = (
   req: Request,
-  res: Response<IApiErrorResponse>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) => {
   // check for authorization header

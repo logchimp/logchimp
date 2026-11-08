@@ -18,7 +18,7 @@
         :name="board.name"
         :color="board.color"
         :url="board.url"
-        :post-count="Number.parseInt(board.post_count, 10)"
+        :post-count="board.post_count"
       />
     </div>
 
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IApiErrorResponse, IBoardDetail } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 
@@ -50,8 +50,9 @@ import BoardItem from "../../components/boards/BoardItem.vue";
 const { get: siteSettings } = useSettingStore();
 const { t } = useI18n();
 
-const boards = ref<IBoardDetail[]>([]);
-const endCursor = ref<string | undefined>();
+const boards = ref<components["schemas"]["BoardDetail"][]>([]);
+const endCursor = ref<string | null>(null);
+const hasNextPage = ref<boolean>(false);
 const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string>();
 
@@ -64,23 +65,28 @@ async function getBoards() {
   try {
     const response = await boardsEEAPI.GetPublicBoards({
       first: "8",
-      after: endCursor.value,
+      after: endCursor.value ?? undefined,
       created: "DESC",
     });
 
-    if (response.boards.length) {
-      boards.value.push(...response.boards);
+    if (response.results.length) {
+      boards.value.push(...response.results);
     }
-    endCursor.value = response.page_info?.end_cursor || undefined;
 
-    const nextPage = response.page_info?.has_next_page;
-    if (nextPage) {
+    if ("page_info" in response) {
+      endCursor.value = response.page_info?.end_cursor;
+      hasNextPage.value = response.page_info?.has_next_page;
+    }
+
+    if (hasNextPage.value) {
       state.value = "LOADED";
     } else {
       state.value = "COMPLETED";
     }
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     state.value = "ERROR";
 
     if (err.response?.data.code === "LICENSE_VALIDATION_FAILED") {

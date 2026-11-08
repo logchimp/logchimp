@@ -41,7 +41,7 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import type { AxiosError } from "axios";
-import type { IApiErrorResponse, IDashboardPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { router } from "../../../router";
@@ -61,16 +61,14 @@ const { permissions, getUserId } = useUserStore();
 const postsAPI = new PostsAPI();
 
 // posts
-const post = reactive<IDashboardPost>({
+const post = reactive<components["schemas"]["DashboardPost"]>({
   postId: "",
   title: "",
   slug: "",
   slugId: "",
   contentMarkdown: "",
-  // TODO: what should be the default/empty value
-  updatedAt: new Date(),
-  // TODO: what should be the default/empty value
-  createdAt: new Date(),
+  updatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
   author: {
     userId: "",
     name: "",
@@ -82,7 +80,7 @@ const post = reactive<IDashboardPost>({
     name: "",
     url: "",
     color: "",
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   },
   roadmap: {
     id: "",
@@ -139,7 +137,9 @@ async function getPost() {
     post.board = response.post.board;
     post.roadmap = response.post.roadmap;
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     if (err.response?.data?.code === "POST_NOT_FOUND") {
       isPostExist.value = false;
     }

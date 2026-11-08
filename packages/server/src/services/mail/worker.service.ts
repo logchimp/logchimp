@@ -1,8 +1,8 @@
-import type { TEmailVerification, TResetPassword } from "@logchimp/types";
-
 import type {
   IPasswordResetJwtPayload,
   IVerifyEmailJwtPayload,
+  TEmailVerification,
+  TResetPassword,
 } from "../../types";
 import { createToken } from "../token.service";
 import database from "../../database";

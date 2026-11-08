@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref } from "vue";
 import dayjs from "dayjs";
-import type { IApiErrorResponse, IPostActivity } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { LockKeyhole, Trash2Icon } from "lucide-vue";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { AxiosError } from "axios";
@@ -105,7 +105,7 @@ const postsEEAPI = new PostsEE();
 
 interface Props {
   postId: string;
-  activity: IPostActivity;
+  activity: components["schemas"]["PostActivityItem"];
   allowDelete?: boolean;
 }
 const props = defineProps<Props>();
@@ -154,7 +154,9 @@ async function updateCommentHandler() {
     });
     isEditing.value = false;
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     tokenError(err);
   } finally {
     isLoading.value = false;

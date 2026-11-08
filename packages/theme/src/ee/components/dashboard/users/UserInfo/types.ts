@@ -1,5 +1,5 @@
-import type { IUser } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 export interface UserInfoDialogProps {
-  user: IUser;
+  user: components["schemas"]["UserItem"];
 }

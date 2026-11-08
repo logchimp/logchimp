@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { IPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { PostsAPI } from "../../../modules/posts";
@@ -41,7 +41,7 @@ const props = defineProps({
 });
 
 const postsAPI = new PostsAPI();
-const posts = ref<IPost[]>([]);
+const posts = ref<components["schemas"]["Post"][]>([]);
 
 async function getRoadmapPosts() {
   const roadmapId = props.roadmap.id;

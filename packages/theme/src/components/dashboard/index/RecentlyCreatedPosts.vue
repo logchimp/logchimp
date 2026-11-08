@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { IApiErrorResponse, IPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 
 import InfiniteScroll, {
@@ -13,7 +13,7 @@ import Td from "../../../components/ui/Table/Td.vue";
 import { PostsAPI } from "../../../modules/posts.ts";
 import LicenseValidationFailed from "../../LicenseValidationFailed.vue";
 
-const posts = ref<IPost[]>([]);
+const posts = ref<components["schemas"]["Post"][]>([]);
 const state = ref<InfiniteScrollStateType>("IDLE");
 const errorCode = ref<string | null>(null);
 const postsAPI = new PostsAPI();
@@ -36,7 +36,9 @@ async function getRecentPosts() {
     posts.value = response.posts;
     state.value = "COMPLETED";
   } catch (error) {
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     state.value = "ERROR";
 
     if (err.response?.data?.code === "LICENSE_VALIDATION_FAILED") {

@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import { provide } from "vue";
 import { ComputerIcon } from "lucide-vue";
-import type { IRole } from "@logchimp/types";
 import {
   TooltipProvider,
   TooltipRoot,
@@ -47,13 +46,14 @@ import {
   TooltipPortal,
   TooltipTrigger,
 } from "reka-ui";
+import type { components } from "@logchimp/api-ts-types";
 
 import { roleIdKey } from "./options";
 import Td from "../../../../../components/ui/Table/Td.vue";
 import MoreOptionsDropdown from "./MoreOptionsDropdown.vue";
 
 interface Props {
-  role: IRole;
+  role: components["schemas"]["RoleItem"];
 }
 const props = defineProps<Props>();
 

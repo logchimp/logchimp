@@ -1,7 +1,8 @@
 import { reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { useThrottleFn } from "@vueuse/core";
-import type { ICheckLicenseControllerResponseBody } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
+import type { AxiosError } from "axios";
 
 import { SettingsEE } from "../modules/settings";
 
@@ -9,7 +10,9 @@ const settingsEEStore = new SettingsEE();
 
 export const useSettingsEEStore = defineStore("settingsEE", () => {
   const loading = ref<boolean>(true);
-  const license = reactive<ICheckLicenseControllerResponseBody>({
+  const license = reactive<
+    components["schemas"]["CheckLicenseControllerResponseBody"]
+  >({
     status: "",
     hierarchy: 0,
   });
@@ -27,9 +30,13 @@ export const useSettingsEEStore = defineStore("settingsEE", () => {
           hierarchy: response.hierarchy ?? 0,
         });
       }
-    } catch (e) {
-      // @ts-expect-error
-      const isInvalid = e.response?.data?.code === "LICENSE_VALIDATION_FAILED";
+    } catch (error) {
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
+
+      const isInvalid =
+        err.response?.data?.code === "LICENSE_VALIDATION_FAILED";
       hasValidLicense.value = !isInvalid;
     } finally {
       loading.value = false;
