@@ -147,7 +147,7 @@ function getActivityQuery({
           'is_edited', posts_comments.is_edited,
           'is_spam', posts_comments.is_spam,
           'created_at', posts_comments.created_at,
-          'updated_at', posts_comments.updated_at,
+          'updated_at', posts_comments.updated_at
         ) AS comment
       `),
       database.raw(`
