@@ -178,7 +178,7 @@ export class VoteService {
     userId: string,
   ) {
     return db
-      .select<IVoteTableColumns>("voteId", "userId", "postId", "createdAt")
+      .select("voteId", "userId", "postId", "createdAt")
       .from("votes")
       .where({
         postId,
@@ -247,7 +247,7 @@ export class VoteService {
     }: {
       postId: string;
       after: string;
-      createdAt: string;
+      createdAt: Date;
     },
   ) {
     return query
@@ -281,7 +281,7 @@ export class VoteService {
     return database("votes")
       .select<{
         voteId: string;
-        createdAt: string;
+        createdAt: Date;
       }>("voteId", "createdAt")
       .where({
         postId,

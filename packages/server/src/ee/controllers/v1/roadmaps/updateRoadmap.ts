@@ -8,7 +8,7 @@ import * as cache from "../../../../cache";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { sanitiseURL } from "../../../../helpers";
+import { dateToISOString, sanitiseURL } from "../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["UpdateRoadmapResponseBody"]
@@ -97,7 +97,7 @@ export async function updateRoadmap(
       .where({
         id,
       })
-      .returning<components["schemas"]["RoadmapPrivate"][]>([
+      .returning([
         "id",
         "name",
         "url",
@@ -119,7 +119,12 @@ export async function updateRoadmap(
 
     const roadmap = roadmaps[0];
 
-    res.status(200).send({ roadmap });
+    res.status(200).send({
+      roadmap: {
+        ...roadmap,
+        created_at: dateToISOString(roadmap.created_at),
+      },
+    });
   } catch (err) {
     logger.error({
       message: err,

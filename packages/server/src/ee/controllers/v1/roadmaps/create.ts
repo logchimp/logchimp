@@ -7,6 +7,7 @@ import database from "../../../../database";
 
 // utils
 import {
+  dateToISOString,
   generateHexColor,
   generateNanoID as nanoid,
 } from "../../../../helpers";
@@ -61,7 +62,7 @@ export async function create(
         index: (roadmapIndex?.max ?? 0) + 1,
       })
       .into("roadmaps")
-      .returning<components["schemas"]["RoadmapPrivate"][]>([
+      .returning([
         "id",
         "name",
         "url",
@@ -73,7 +74,12 @@ export async function create(
 
     const roadmap = createRoadmap[0];
 
-    res.status(201).send({ roadmap });
+    res.status(201).send({
+      roadmap: {
+        ...roadmap,
+        created_at: dateToISOString(roadmap.created_at),
+      },
+    });
   } catch (err) {
     logger.error({
       message: err,
