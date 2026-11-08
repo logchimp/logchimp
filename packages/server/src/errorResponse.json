@@ -70,6 +70,7 @@
     },
     "boards": {
       "nameMissing": "Board name missing",
+      "nameTooLong": "Board name cannot be longer than 50 characters",
       "urlMissing": "Board url cannot be empty",
       "boardIdMissing": "Board ID missing",
       "exists": "Board already exists",
@@ -78,6 +79,7 @@
     },
     "roadmaps": {
       "nameMissing": "Roadmap name missing",
+      "nameTooLong": "Roadmap name cannot be longer than 50 characters",
       "urlMissing": "Roadmap url cannot be empty",
       "roadmapNotFound": "Roadmap not found"
     },
