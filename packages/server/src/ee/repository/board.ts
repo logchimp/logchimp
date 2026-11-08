@@ -16,6 +16,8 @@ export class BoardRepository extends QueryRepository {
       keyPrefix,
     });
 
+    if (missingIds.length === 0) return results;
+
     const dbResults = await this.db("boards")
       .select<IBoard[]>("boardId", "name", "url", "color", "createdAt")
       .whereIn("boardId", missingIds);
@@ -41,6 +43,8 @@ export class BoardRepository extends QueryRepository {
         keyPrefix,
       },
     );
+
+    if (missingIds.length === 0) return results;
 
     const dbResults = await this.db("boards")
       .select<IBoardPrivate[]>(
