@@ -14,6 +14,7 @@ import {
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../helpers";
+import { ZeroResultsCursorPagination } from "../../../../utils/cursor";
 
 const querySchema = v.object({
   first: v.pipe(
@@ -90,6 +91,15 @@ export async function filter(
   try {
     const boards = await getBoards({ first, page, after, created });
     const boardsLength = boards.length;
+
+    if (boardsLength === 0) {
+      res.status(200).send({
+        boards: [],
+        results: [],
+        ...(page ? {} : ZeroResultsCursorPagination),
+      });
+      return;
+    }
 
     let startCursor: string | null = null;
     let endCursor: string | null = null;
