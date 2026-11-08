@@ -134,7 +134,7 @@ importers:
         specifier: 10.1.4
         version: 10.1.4
       openid-client:
-        specifier: ^6.8.8
+        specifier: ^6.8.9
         version: 6.8.9
       pg:
         specifier: ^8.23.1
