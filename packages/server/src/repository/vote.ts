@@ -80,7 +80,7 @@ export class VoteRepository extends QueryRepository {
   ): Promise<Array<{ postId: string; count: string }>> {
     return this.db
       .select("postId")
-      .count("voteId as count")
+      .count<{ count: string }>("voteId as count")
       .from("votes")
       .whereIn("postId", postIds)
       .groupBy("postId");

@@ -42,15 +42,12 @@ export async function postRoadmapChangeEvent(payload: IPostRoadmapChangeEvent) {
     }
 
     const totalCountQuery = await database
-      .count()
+      .count<{ count: string }>()
       .from("votes")
       .where("postId", payload.postId)
       .first();
 
-    const totalVotersCount =
-      typeof totalCountQuery.count === "string"
-        ? Number.parseInt(totalCountQuery?.count, 10)
-        : totalCountQuery?.count;
+    const totalVotersCount = Number.parseInt(totalCountQuery?.count, 10);
 
     if (totalVotersCount === 0) {
       return;
