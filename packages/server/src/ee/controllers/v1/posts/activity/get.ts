@@ -7,6 +7,7 @@ import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import {
+  dateToISOString,
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../../helpers";
@@ -77,7 +78,7 @@ export async function get(
   const hasPermission = permissions.includes("comment:view_internal");
 
   try {
-    const activities = await getActivityQuery({
+    const dbResults = await getActivityQuery({
       postId: post_id,
       limit,
       page: query.output.page,
@@ -86,6 +87,16 @@ export async function get(
       // @ts-expect-error
       subscription: req?.subscription,
     });
+
+    const activities = dbResults.map((activity) => ({
+      ...activity,
+      created_at: dateToISOString(activity.created_at),
+      comment: {
+        ...activity.comment,
+        created_at: dateToISOString(activity.comment.created_at),
+        updated_at: dateToISOString(activity.comment.updated_at),
+      },
+    }));
 
     res.status(200).send({
       activity: activities,
@@ -134,7 +145,7 @@ function getActivityQuery({
       "posts_activity.id",
     )
     .leftJoin("users", "users.userId", "posts_activity.author_id")
-    .select<Array<components["schemas"]["PostActivityItem"]>>(
+    .select(
       "posts_activity.id",
       "posts_activity.type",
       "posts_activity.created_at",

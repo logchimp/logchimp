@@ -11,6 +11,7 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { createPostRequestBodySchema } from "./schema";
 import { PostService } from "../../services/posts/post.service";
+import { dateToISOString } from "../../helpers";
 
 type ResponseBody =
   | components["schemas"]["CreatePostResponseBody"]
@@ -90,7 +91,11 @@ export async function create(
       .into("votes");
 
     res.status(201).send({
-      post,
+      post: {
+        ...post,
+        createdAt: dateToISOString(post.createdAt),
+        updatedAt: dateToISOString(post.updatedAt),
+      },
     });
   } catch (err) {
     logger.log({

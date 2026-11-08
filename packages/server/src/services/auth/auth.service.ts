@@ -6,6 +6,7 @@ import type {
   TCreatedUser,
 } from "./types";
 import {
+  dateToISOString,
   generateUniqueUsername as _generateUniqueUsername,
   sanitiseName,
   sanitiseUsername,
@@ -188,7 +189,10 @@ export class AuthService {
       if (!user) {
         throw new AuthenticationFailedError();
       }
-      return user;
+      return {
+        ...user,
+        createdAt: dateToISOString(user.createdAt),
+      };
     }
 
     // check if an existing email needs to be linked
@@ -219,7 +223,10 @@ export class AuthService {
       })
       .into("auth_identities");
 
-    return user;
+    return {
+      ...user,
+      createdAt: dateToISOString(user.createdAt),
+    };
   }
 
   private async isEmailUniqueQuery(email: string): Promise<boolean> {

@@ -10,6 +10,7 @@ import {
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import type { GetCommentStatement } from "../../../../middleware/commentExists";
+import { dateToISOString } from "../../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["UpdatePostCommentResponseBody"]
@@ -138,7 +139,11 @@ export async function update(
     });
 
     res.status(200).send({
-      comment: comment,
+      comment: {
+        ...comment,
+        created_at: dateToISOString(comment.created_at),
+        updated_at: dateToISOString(comment.updated_at),
+      },
     });
   } catch (err) {
     logger.log({
@@ -176,7 +181,7 @@ async function commentUpdateStatement({
     })
     .from("posts_comments")
     .where({ id: comment_id })
-    .returning<Array<components["schemas"]["CommentItem"]>>([
+    .returning([
       "id",
       "body",
       "is_internal",

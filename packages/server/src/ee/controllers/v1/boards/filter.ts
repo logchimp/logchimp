@@ -10,6 +10,7 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
 import {
+  dateToISOString,
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../helpers";
@@ -161,7 +162,9 @@ export async function getBoards({
   after,
   created,
   page,
-}: IGetBoardQueryOptions) {
+}: IGetBoardQueryOptions): Promise<
+  Array<components["schemas"]["BoardPrivate"]>
+> {
   try {
     let boardsQuery = database("boards")
       .select(
@@ -189,7 +192,7 @@ export async function getBoards({
       const afterBoard = await database("boards")
         .select<{
           boardId: string;
-          createdAt: string;
+          createdAt: Date;
         }>("boardId", "createdAt")
         .where({
           boardId: after,
@@ -206,12 +209,13 @@ export async function getBoards({
       });
     }
 
-    const boards = (await boardsQuery).map((board) => ({
+    const boards = await boardsQuery;
+
+    return boards.map((board) => ({
       ...board,
+      createdAt: dateToISOString(board.createdAt),
       post_count: Number.parseInt(board.post_count, 10),
     }));
-
-    return boards;
   } catch (error) {
     logger.log({
       level: "error",
@@ -245,7 +249,7 @@ export async function getBoardMetaData({
       const afterBoard = await trx("boards")
         .select<{
           boardId: string;
-          createdAt: string;
+          createdAt: Date;
         }>("boardId", "createdAt")
         .where({
           boardId: after,
@@ -289,7 +293,7 @@ function applyCursorFilter(
   }: {
     created: components["schemas"]["SortTypeEnum"];
     after: string;
-    createdAt: string;
+    createdAt: Date;
   },
 ) {
   const op = created === "ASC" ? ">" : "<";

@@ -6,20 +6,12 @@ import { rawPermissionArrayQuery } from "../../../middlewares/auth/helpers";
 import { PermissionService } from "./permission.service";
 import logger from "../../../utils/logger";
 import { ValidationError } from "../../../utils/error";
+import { dateToISOString } from "../../../helpers";
 
 interface CreateRoleArgs {
   id?: string;
   name: string;
   description?: string;
-}
-
-export interface IRoleTableColumns {
-  id: string;
-  name: string;
-  description: string | null;
-  is_system: number;
-  created_at: string;
-  updated_at: string;
 }
 
 interface IRolePermissionsTableColumns {
@@ -42,7 +34,7 @@ export class RolesService {
         name: "new role",
       })
       .into("roles")
-      .returning<IRoleTableColumns[]>([
+      .returning([
         "id",
         "name",
         "description",
@@ -59,8 +51,8 @@ export class RolesService {
       name: role.name,
       description: role.description,
       isSystem: !!role.is_system,
-      created_at: role.created_at,
-      updated_at: role.updated_at,
+      created_at: dateToISOString(role.created_at),
+      updated_at: dateToISOString(role.updated_at),
     };
   }
 
@@ -134,7 +126,7 @@ export class RoleIdService {
 
   async getRole(): Promise<components["schemas"]["RoleItem"] | null> {
     const role = await database
-      .select<IRoleTableColumns>(
+      .select(
         "id",
         "name",
         "description",
@@ -154,8 +146,8 @@ export class RoleIdService {
       name: role.name,
       description: role.description,
       isSystem: !!role.is_system,
-      created_at: role.created_at,
-      updated_at: role.updated_at,
+      created_at: dateToISOString(role.created_at),
+      updated_at: dateToISOString(role.updated_at),
     };
   }
 
@@ -175,7 +167,7 @@ export class RoleIdService {
       .where({
         id: this.roleId,
       })
-      .returning<IRoleTableColumns[]>([
+      .returning([
         "id",
         "name",
         "description",
@@ -191,8 +183,8 @@ export class RoleIdService {
       name: role.name,
       description: role.description,
       isSystem: !!role.is_system,
-      created_at: role.created_at,
-      updated_at: role.updated_at,
+      created_at: dateToISOString(role.created_at),
+      updated_at: dateToISOString(role.updated_at),
     };
   }
 
