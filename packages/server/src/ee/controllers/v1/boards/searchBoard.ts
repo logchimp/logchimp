@@ -1,25 +1,24 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  ISearchBoardRequestParams,
-  ISearchBoardResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../../../../database";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = ISearchBoardResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["SearchBoardResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function searchBoard(
-  req: Request<ISearchBoardRequestParams>,
+  req: Request<operations["searchBoardByName"]["parameters"]["path"]>,
   res: Response<ResponseBody>,
 ) {
   const name = (req.params?.name || "").trim();
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const checkPermission = permissions.includes("board:read");
   if (!checkPermission) {

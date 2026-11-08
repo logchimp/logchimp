@@ -1,3 +1,5 @@
+import type { components } from "@logchimp/api-ts-types";
+
 import type {
   CreateUserOptions,
   GetOrCreateOpenIDConnectUserOptions,
@@ -42,7 +44,6 @@ import {
   UserNotFoundError,
 } from "./errors";
 import logger from "../../utils/logger";
-import type { IUserInfo } from "@logchimp/types";
 
 export class AuthService {
   async PasswordLogin(email: string, password: string) {
@@ -174,7 +175,9 @@ export class AuthService {
     email,
     emailVerified,
     picture,
-  }: GetOrCreateOpenIDConnectUserOptions): Promise<IUserInfo> {
+  }: GetOrCreateOpenIDConnectUserOptions): Promise<
+    components["schemas"]["CustomerItemInfo"]
+  > {
     const getUserIdentity = await database("auth_identities")
       .select<{ userId: string }>("user_id as userId")
       .where({ provider: issuer, subject })

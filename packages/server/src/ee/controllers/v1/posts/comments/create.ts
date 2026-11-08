@@ -1,27 +1,20 @@
 import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
-import type {
-  IApiErrorResponse,
-  ICreatePostCommentRequestBody,
-  TCreatePostCommentRequestParam,
-  ICreatePostCommentResponseBody,
-  IPublicUserInfo,
-  IComment,
-  TPostActivityType,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import * as v from "valibot";
 
 import database from "../../../../../database";
 import {
-  upsertCommentRequestBodySchema,
   upsertCommentRequestBodyErrorMap as requestBodyErrorMap,
+  upsertCommentRequestBodySchema,
 } from "./utils";
 import logger from "../../../../../utils/logger";
 import error from "../../../../../errorResponse.json";
 import { validUUID } from "../../../../../helpers";
 
-type ResponseBody = ICreatePostCommentResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["CreatePostCommentResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const { is_spam, ...upsertCommentRequestBodySchemaRest } =
   upsertCommentRequestBodySchema.entries;
@@ -37,9 +30,9 @@ const requestBodySchema = v.object({
  */
 export async function create(
   req: Request<
-    TCreatePostCommentRequestParam,
+    operations["postComment"]["parameters"]["path"],
     unknown,
-    ICreatePostCommentRequestBody
+    components["schemas"]["CreatePostCommentRequestBody"]
   >,
   res: Response<ResponseBody>,
 ) {
@@ -67,7 +60,9 @@ export async function create(
   }
 
   // @ts-expect-error
-  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const permissions = (req?.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const permission = reqBody.output.is_internal
     ? "comment:create_internal"
@@ -180,7 +175,7 @@ const createCommentStatement = ({
         created_at: now,
         updated_at: now,
       })
-      .returning<IComment[]>([
+      .returning<components["schemas"]["CommentItem"][]>([
         "id",
         "parent_id",
         "body",
@@ -208,12 +203,17 @@ const createCommentStatement = ({
         .returning<
           {
             id: string;
-            type: TPostActivityType;
-            created_at: Date;
+            type: components["schemas"]["PostActivityTypeEnum"];
+            created_at: string;
           }[]
         >(["id", "type", "created_at"]),
       trx("users")
-        .select<IPublicUserInfo>("userId", "name", "username", "avatar")
+        .select<components["schemas"]["PublicUserInfo"]>(
+          "userId",
+          "name",
+          "username",
+          "avatar",
+        )
         .where({ userId })
         .first(),
     ]);

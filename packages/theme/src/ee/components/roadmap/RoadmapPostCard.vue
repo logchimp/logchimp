@@ -93,7 +93,7 @@ import { computed, ref } from "vue";
 import { ChevronUp as ArrowTopIcon } from "lucide-vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import type { IPost, IPostVote } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { useTrim } from "../../../hooks";
 
@@ -105,7 +105,7 @@ import { AvatarStack } from "../../../components/ui/Avatar";
 dayjs.extend(relativeTime);
 
 interface Props {
-  post: IPost;
+  post: components["schemas"]["Post"];
 }
 
 const props = defineProps<Props>();
@@ -116,7 +116,7 @@ const isVoted = computed<boolean>(() =>
   Boolean(props.post.voters?.viewerVote?.voteId),
 );
 
-function updateVoters(voters: IPostVote) {
+function updateVoters(voters: components["schemas"]["PostVote"]) {
   postData.value.voters.votesCount = voters.votesCount;
   postData.value.voters.viewerVote = voters.viewerVote;
 }

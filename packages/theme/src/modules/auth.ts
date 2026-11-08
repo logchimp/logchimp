@@ -1,15 +1,5 @@
-import type {
-  IAuthLoginRequestBody,
-  IAuthLoginResponseBody,
-  IAuthMeResponseBody,
-  IAuthPasswordResetResponseBody,
-  IAuthSignupResponseBody,
-  IPasswordResetValidationTokenResponseBody,
-  ISetPasswordRequestBody,
-  ISetPasswordResponseBody,
-  IValidateEmailVerificationTokenResponseBody,
-  TAuthSignupRequestBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
+
 import { VITE_API_URL } from "../constants";
 import { APIService } from "./api.ts";
 
@@ -23,12 +13,14 @@ export class AuthAPI extends APIService {
    * @param {object} arg0
    * @param {string} arg0.email user email address
    * @param {string} arg0.password user password
-   * @returns {Promise<IAuthLoginResponseBody>} response
+   * @returns {Promise<components["schemas"]["LoginResponseBody"]>} response
    */
   Signin = async ({
     email,
     password,
-  }: IAuthLoginRequestBody): Promise<IAuthLoginResponseBody> => {
+  }: components["schemas"]["LoginRequestBody"]): Promise<
+    components["schemas"]["LoginResponseBody"]
+  > => {
     return this.post("/v1/auth/login", {
       email,
       password,
@@ -44,12 +36,14 @@ export class AuthAPI extends APIService {
    * @param {object} arg0
    * @param {string} arg0.email user email address
    * @param {string} arg0.password user password
-   * @returns {Promise<IAuthSignupResponseBody>} response
+   * @returns {Promise<components["schemas"]["SignupResponseBody"]>} response
    */
   Signup = async ({
     email,
     password,
-  }: TAuthSignupRequestBody): Promise<IAuthSignupResponseBody> => {
+  }: components["schemas"]["LoginRequestBody"]): Promise<
+    components["schemas"]["SignupResponseBody"]
+  > => {
     return this.post("/v1/auth/signup", {
       email,
       password,
@@ -63,11 +57,13 @@ export class AuthAPI extends APIService {
   /**
    * Validate user email address
    * @param {string} token email address verification token
-   * @returns {Promise<IValidateEmailVerificationTokenResponseBody>} response
+   * @returns {Promise<components['schemas']['ValidateEmailVerificationTokenResponseBody']>} response
    */
   VerifyUserEmail = async (
     token: string,
-  ): Promise<IValidateEmailVerificationTokenResponseBody> => {
+  ): Promise<
+    components["schemas"]["ValidateEmailVerificationTokenResponseBody"]
+  > => {
     return this.post("/v1/auth/email/validate", {
       token,
     })
@@ -80,11 +76,11 @@ export class AuthAPI extends APIService {
   /**
    * Request for password reset
    * @param {string} email user email address
-   * @returns {Promise<IAuthPasswordResetResponseBody>} response
+   * @returns {Promise<components["schemas"]["SendPasswordResetEmailResponseBody"]>} response
    */
   RequestPasswordReset = async (
     email: string,
-  ): Promise<IAuthPasswordResetResponseBody> => {
+  ): Promise<components["schemas"]["SendPasswordResetEmailResponseBody"]> => {
     return this.post("/v1/auth/password/reset", {
       email,
     })
@@ -97,11 +93,13 @@ export class AuthAPI extends APIService {
   /**
    * Validate reset password token
    * @param {string} token reset password token
-   * @returns {Promise<IPasswordResetValidationTokenResponseBody>} response
+   * @returns {Promise<components['schemas']['ValidatePasswordResetTokenResponseBody']>} response
    */
   ValidateResetPasswordToken = async (
     token: string,
-  ): Promise<IPasswordResetValidationTokenResponseBody> => {
+  ): Promise<
+    components["schemas"]["ValidatePasswordResetTokenResponseBody"]
+  > => {
     return this.post("/v1/auth/password/validateToken", {
       token,
     })
@@ -116,12 +114,14 @@ export class AuthAPI extends APIService {
    * @param {object} arg0
    * @param {string} arg0.token reset password token
    * @param {string} arg0.password new password
-   * @returns {Promise<ISetPasswordResponseBody>} response
+   * @returns {Promise<components["schemas"]["SetNewPasswordResponseBody"]>} response
    */
   SetNewPassword = async ({
     token,
     password,
-  }: ISetPasswordRequestBody): Promise<ISetPasswordResponseBody> => {
+  }: components["schemas"]["SetNewPasswordRequestBody"]): Promise<
+    components["schemas"]["SetNewPasswordResponseBody"]
+  > => {
     return this.post("/v1/auth/password/set", {
       token,
       password,
@@ -132,7 +132,7 @@ export class AuthAPI extends APIService {
       });
   };
 
-  getMe = async (): Promise<IAuthMeResponseBody> => {
+  getMe = async (): Promise<components["schemas"]["AuthMeResponseBody"]> => {
     return this.get("/v1/auth/me")
       .then((response) => response?.data)
       .catch((error) => {

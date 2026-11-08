@@ -1,22 +1,19 @@
-import type { Request, Response, NextFunction } from "express";
-import type {
-  IApiErrorResponse,
-  IBoardDeleteRequestBody,
-  IBoardUpdateRequestBody,
-  IGetBoardByUrlRequestParams,
-} from "@logchimp/types";
+import type { NextFunction, Request, Response } from "express";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../../database";
 
 // utils
 import error from "../../errorResponse.json";
 import { validUUID } from "../../helpers";
 
-type RequestParams = IGetBoardByUrlRequestParams;
-type RequestBody = IBoardUpdateRequestBody | IBoardDeleteRequestBody;
+type RequestParams = operations["getBoardByUrl"]["parameters"]["path"];
+type RequestBody =
+  | components["schemas"]["UpdateBoardRequestBody"]
+  | components["schemas"]["DeleteBoardRequestBody"];
 
 export async function boardExists(
   req: Request<RequestParams, unknown, RequestBody>,
-  res: Response<IApiErrorResponse>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) {
   const url = req.params.url;

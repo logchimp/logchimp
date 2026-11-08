@@ -45,7 +45,7 @@
 import { nextTick, ref, useId, useTemplateRef, watch } from "vue";
 import { DropdownMenuContent } from "reka-ui";
 import { watchDebounced } from "@vueuse/core";
-import type { IRoadmapPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { RoadmapsEE } from "../../../../modules/roadmaps";
 import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
@@ -56,7 +56,7 @@ import CreateRoadmapItem from "./CreateRoadmapItem.vue";
 import NoRoadmap from "./NoRoadmap.vue";
 
 const search = ref("");
-const suggestions = ref<IRoadmapPrivate[]>([]);
+const suggestions = ref<components["schemas"]["RoadmapPrivate"][]>([]);
 const searchInputId = useId();
 const searchInputRef = useTemplateRef<HTMLInputElement>("searchInputRef");
 
@@ -106,7 +106,7 @@ function selectHandler(e: TCurrentRoadmap) {
   searchRoadmap.select(e);
 }
 
-function createRoadmap(e: IRoadmapPrivate) {
+function createRoadmap(e: components["schemas"]["RoadmapPrivate"]) {
   selectHandler(e);
   dashboardRoadmaps.resetRoadmaps();
 }

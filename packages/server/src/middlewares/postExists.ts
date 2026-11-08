@@ -1,13 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type {
-  IAddVoteRequestBody,
-  IApiErrorResponse,
-  IDeletePostByIdRequestBody,
-  IGetPostActivityRequestParam,
-  IGetPostBySlugRequestBody,
-  IRemoveVoteRequestBody,
-  IUpdatePostRequestBody,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../database";
 
 // utils
@@ -15,16 +7,23 @@ import { toTrimmedString, validUUID } from "../helpers";
 import error from "../errorResponse.json";
 import logger from "../utils/logger";
 
+type RequestParam =
+  | operations["postComment"]["parameters"]["path"]
+  | operations["updateComment"]["parameters"]["path"]
+  | operations["getPostActivity"]["parameters"]["path"];
+
 type RequestBody =
-  | IGetPostBySlugRequestBody
-  | IUpdatePostRequestBody
-  | IDeletePostByIdRequestBody
-  | IAddVoteRequestBody
-  | IRemoveVoteRequestBody;
+  | components["schemas"]["GetPostBySlugRequestBody"]
+  | components["schemas"]["CreatePostRequestBody"]
+  | components["schemas"]["UpdatePostRequestBody"]
+  | components["schemas"]["DeletePostByIdRequestBody"]
+  | components["schemas"]["AddVoteToPostRequestBody"]
+  | components["schemas"]["RemoveVoteRequestBody"]
+  | components["schemas"]["CreatePostCommentRequestBody"];
 
 export async function postExists(
-  req: Request<IGetPostActivityRequestParam, unknown, RequestBody>,
-  res: Response<IApiErrorResponse>,
+  req: Request<RequestParam, unknown, RequestBody>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
   next: NextFunction,
 ) {
   const { id, slug } = getPostIdentifier(req);
@@ -65,7 +64,11 @@ export async function postExists(
 }
 
 function getPostIdentifier(
-  req: Request<IGetPostActivityRequestParam, unknown, RequestBody>,
+  req: Request<
+    operations["getPostActivity"]["parameters"]["path"],
+    unknown,
+    RequestBody
+  >,
 ): { id: string | null; slug: string | null } {
   let id: string | null = null;
   let slug: string | null = null;

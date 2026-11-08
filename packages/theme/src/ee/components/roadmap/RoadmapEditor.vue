@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import type { IUpdateRoadmapRequestBody } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -91,9 +91,14 @@ const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const { t } = useI18n();
 
+export type RoadmapEditorForm = Omit<
+  components["schemas"]["RoadmapPrivate"],
+  "index" | "created_at"
+>;
+
 interface Props {
   title: string;
-  roadmap: IUpdateRoadmapRequestBody;
+  roadmap: RoadmapEditorForm;
 }
 const props = defineProps<Props>();
 

@@ -369,7 +369,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import type { IPermissionsState, IRole, TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { ComputerIcon, ShieldAlert, TriangleAlert } from "lucide-vue";
 import { useI18n } from "vue-i18n";
 
@@ -390,6 +390,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import Alert from "../../../components/ui/Alert/Alert.vue";
 import RoleModifyPermissionScope from "./ModifyPermissionScope.vue";
+import type { IPermissionsState } from "../../types";
 
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
@@ -398,12 +399,12 @@ const { t } = useI18n();
 
 interface Props {
   title: string;
-  role: IRole;
+  role: components["schemas"]["RoleItem"];
   permissions: IPermissionsState;
 }
 const props = defineProps<Props>();
 
-const role = ref<IRole>(props.role);
+const role = ref<components["schemas"]["RoleItem"]>(props.role);
 const permissions = reactive<IPermissionsState>(props.permissions);
 const updateRoleButtonLoading = ref(false);
 
@@ -416,7 +417,7 @@ const disableRoleEditorForm = computed(() => {
 async function updateRoleHandler() {
   updateRoleButtonLoading.value = true;
 
-  const activePermissions: TPermission[] = [];
+  const activePermissions: Array<components["schemas"]["Permission"]> = [];
   for (const permissionType in permissions) {
     const typedPermissionType = permissionType as keyof typeof permissions;
     const permissionGroup = permissions[typedPermissionType];
@@ -427,14 +428,16 @@ async function updateRoleHandler() {
         typeof permissionGroup[typedAction] === "boolean" &&
         permissionGroup[typedAction] === true
       ) {
-        activePermissions.push(`${permissionType}:${action}` as TPermission);
+        activePermissions.push(
+          `${permissionType}:${action}` as components["schemas"]["Permission"],
+        );
       } else if (
         typeof permissionGroup[typedAction] === "string" &&
         permissionGroup[typedAction] !== "none" &&
         permissionGroup[typedAction] !== ""
       ) {
         activePermissions.push(
-          `${permissionType}:${action}:${permissionGroup[typedAction]}` as TPermission,
+          `${permissionType}:${action}:${permissionGroup[typedAction]}` as components["schemas"]["Permission"],
         );
       }
     }

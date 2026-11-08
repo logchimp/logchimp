@@ -1,24 +1,27 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  TBoardCheckSlugBody,
-  TBoardCheckSlugResponse,
-  TPermission,
-} from "@logchimp/types";
 import database from "../../../../database";
+import type { components } from "@logchimp/api-ts-types";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 
-type ResponseBody = TBoardCheckSlugResponse | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["CheckBoardSlugResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function checkSlug(
-  req: Request<unknown, unknown, TBoardCheckSlugBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["CheckBoardSlugRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const slugUrl = req.body.url;
 

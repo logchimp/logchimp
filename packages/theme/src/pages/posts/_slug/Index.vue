@@ -77,7 +77,7 @@ import { computed, defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import type { IPost, IPostVote } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import DOMPurify from "dompurify";
 
 // modules
@@ -106,15 +106,13 @@ const postsAPI = new PostsAPI();
 dayjs.extend(relativeTime);
 
 // posts
-const post = reactive<IPost>({
+const post = reactive<components["schemas"]["Post"]>({
   postId: "",
   title: "",
   slug: "",
   contentMarkdown: "",
-  // TODO: what should be the default/empty value
-  updatedAt: new Date(),
-  // TODO: what should be the default/empty value
-  createdAt: new Date(),
+  updatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
   author: {
     name: "",
     username: "",
@@ -175,7 +173,7 @@ async function postBySlug() {
   }
 }
 
-function updateVoters(voters: IPostVote) {
+function updateVoters(voters: components["schemas"]["PostVote"]) {
   post.voters.votesCount = voters.votesCount;
   post.voters.viewerVote = voters.viewerVote;
 }

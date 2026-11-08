@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent } from "vue";
-import type { IPostActivity } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { PostsEE } from "../../../modules/posts";
 import { usePostActivityEEStore } from "../../../store/postActivity";
@@ -92,7 +92,9 @@ async function fetchPostActivity() {
   }
 }
 
-function addCommentHandler(activity: IPostActivity) {
+function addCommentHandler(
+  activity: components["schemas"]["PostActivityItem"],
+) {
   postActivityEEStore.addPostActivity(props.postId, activity);
 }
 

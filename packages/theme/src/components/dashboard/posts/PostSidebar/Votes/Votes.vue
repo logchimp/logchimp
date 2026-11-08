@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, ref } from "vue";
-import type { IUserVoteV2 } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { PostsAPI } from "../../../../../modules/posts";
 import { Avatar } from "../../../../ui/Avatar";
@@ -44,7 +44,7 @@ const UserSelectorList = defineAsyncComponent(
     import("../../../../../ee/components/dashboard/users/UserSelectorList.vue"),
 );
 
-const votes = ref<Array<IUserVoteV2>>([]);
+const votes = ref<Array<components["schemas"]["UserVoteV2"]>>([]);
 const loading = ref(false);
 const postService = new PostsAPI();
 
@@ -71,7 +71,7 @@ async function getVotes() {
   }
 }
 
-function onVoteAdded(vote: IUserVoteV2) {
+function onVoteAdded(vote: components["schemas"]["UserVoteV2"]) {
   if (votes.value.length >= 10) return;
   votes.value.push(vote);
 }

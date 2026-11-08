@@ -1,9 +1,6 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  TGetSiteSettingsLabResponseBody,
-  TUpdateSiteSettingsLabResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
+
 // database
 import database from "../../database";
 
@@ -16,7 +13,9 @@ import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
 import { DAY } from "../../cache/time";
 
-type ResponseBody = TGetSiteSettingsLabResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetSiteSettingsLabsResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function getLabs(_: Request, res: Response<ResponseBody>) {
   if (cache.isActive) {
@@ -38,7 +37,7 @@ export async function getLabs(_: Request, res: Response<ResponseBody>) {
     const results = (await database
       .select(database.raw("labs::json"))
       .from("settings")
-      .first()) as unknown as TUpdateSiteSettingsLabResponseBody;
+      .first()) as unknown as components["schemas"]["GetSiteSettingsLabsResponseBody"];
 
     const labs = results.labs;
     if (cache.isActive) {

@@ -1,14 +1,15 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IApiErrorResponse, IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 
 import { BoardsEE } from "../../modules/boards";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
+
 const boardsEEAPI = new BoardsEE();
 
 export const useDashboardBoards = defineStore("dashboardBoards", () => {
-  const boards = ref<IBoardPrivate[]>([]);
+  const boards = ref<components["schemas"]["BoardPrivate"][]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
   const errorCode = ref<unknown>(undefined);
 
@@ -34,7 +35,9 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
         state.value = "COMPLETED";
       }
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
       state.value = "ERROR";
 
       if (err.response?.status === 404) {
@@ -52,11 +55,11 @@ export const useDashboardBoards = defineStore("dashboardBoards", () => {
     }
   }
 
-  function appendBoard(board: IBoardPrivate) {
+  function appendBoard(board: components["schemas"]["BoardPrivate"]) {
     boards.value.unshift(board);
   }
 
-  function updateBoard(board: IBoardPrivate) {
+  function updateBoard(board: components["schemas"]["BoardPrivate"]) {
     const boardIdx = boards.value.findIndex(
       (item) => item.boardId === board.boardId,
     );

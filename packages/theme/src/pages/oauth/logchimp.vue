@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 import Cookie from "js-cookie";
 
 import AuthForm from "../../layout/AuthForm.vue";
@@ -8,8 +10,6 @@ import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
 import Loader from "../../components/icons/Loader.vue";
 import { useUserStore } from "../../store/user.ts";
 import tokenError from "../../utils/tokenError.ts";
-import type { AxiosError } from "axios";
-import type { IApiErrorResponse } from "@logchimp/types";
 import { UsersAPI } from "../../modules/users.ts";
 import { AuthAPI } from "../../modules/auth.ts";
 
@@ -88,7 +88,9 @@ async function onMountedHandler() {
   } catch (error) {
     isError.value = true;
 
-    const err = error as AxiosError<IApiErrorResponse>;
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     tokenError(err);
   } finally {
     isLoading.value = false;

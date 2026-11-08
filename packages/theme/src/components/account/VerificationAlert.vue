@@ -49,7 +49,7 @@
 import { ref, reactive } from "vue";
 import axios, { type AxiosResponse } from "axios";
 import { CheckCircle2Icon, XCircleIcon } from "lucide-vue";
-import type { IAuthEmailVerifyResponseBody } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 import { Alert } from "../ui/Alert";
@@ -97,8 +97,11 @@ async function sendEmailVerificationHandler() {
   }
 }
 
+/**
+ * @returns {Promise<AxiosResponse<components["schemas"]["AuthEmailVerifyResponseBody"]>>}
+ */
 async function sendEmailVerification(): Promise<
-  AxiosResponse<IAuthEmailVerifyResponseBody>
+  AxiosResponse<components["schemas"]["AuthEmailVerifyResponseBody"]>
 > {
   return axios({
     method: "POST",

@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { DropdownMenuTrigger } from "reka-ui";
 import { MoreHorizontal as MoreIcon, Edit2 as EditIcon } from "lucide-vue";
-import type { IPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 import { router } from "../../router";
@@ -34,7 +34,7 @@ import DropdownItem from "../ui/DropdownV2/DropdownItem.vue";
 const { t } = useI18n();
 
 interface Props {
-  post: IPost;
+  post: components["schemas"]["Post"];
 }
 
 defineProps<Props>();

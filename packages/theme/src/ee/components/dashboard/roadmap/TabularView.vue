@@ -88,7 +88,7 @@
 <script setup lang="ts">
 import draggable from "vuedraggable";
 import { computed, ref } from "vue";
-import type { ISortRoadmapRequestBody } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { KanbanIcon } from "lucide-vue";
 import { useI18n } from "vue-i18n";
 
@@ -118,7 +118,7 @@ const requireUpgrade = computed(
 );
 const roadmapEEAPI = new RoadmapsEE();
 
-const sort = ref<ISortRoadmapRequestBody>({
+const sort = ref<components["schemas"]["SortRoadmapRequestBody"]>({
   from: {
     id: "",
     index: 0,
@@ -132,8 +132,8 @@ const drag = ref(false);
 
 function moveItem(
   event: VueDraggableEvent<
-    ISortRoadmapRequestBody["from"],
-    ISortRoadmapRequestBody["to"]
+    components["schemas"]["SortRoadmapRequestBody"]["from"],
+    components["schemas"]["SortRoadmapRequestBody"]["to"]
   >,
 ) {
   // current

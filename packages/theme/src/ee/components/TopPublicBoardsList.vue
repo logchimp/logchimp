@@ -41,12 +41,13 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { IBoardDetail } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
+
 import { BoardsEE } from "../modules/boards";
 import ColorDot from "../../components/ui/ColorDot/ColorDot.vue";
 
-const boards = ref<IBoardDetail[]>([]);
+const boards = ref<components["schemas"]["BoardDetail"][]>([]);
 const boardsEEAPI = new BoardsEE();
 const { t } = useI18n();
 

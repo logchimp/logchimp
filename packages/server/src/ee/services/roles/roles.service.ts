@@ -1,8 +1,4 @@
-import type {
-  IRole,
-  IUpdateRoleRequestBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { v4 as uuidv4 } from "uuid";
 
 import database from "../../../database";
@@ -22,8 +18,8 @@ export interface IRoleTableColumns {
   name: string;
   description: string | null;
   is_system: number;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
 
 interface IRolePermissionsTableColumns {
@@ -70,7 +66,7 @@ export class RolesService {
 
   async createRoleWithPermissions(
     role: CreateRoleArgs,
-    permissions: TPermission[],
+    permissions: Array<components["schemas"]["Permission"]>,
     options?: {
       isSystem?: number;
       enableLogging?: boolean;
@@ -136,7 +132,7 @@ export class RoleIdService {
     return this.roleId;
   }
 
-  async getRole(): Promise<IRole | null> {
+  async getRole(): Promise<components["schemas"]["RoleItem"] | null> {
     const role = await database
       .select<IRoleTableColumns>(
         "id",
@@ -164,8 +160,11 @@ export class RoleIdService {
   }
 
   async updateRole(
-    _role: Omit<IUpdateRoleRequestBody, "id" | "permissions">,
-  ): Promise<IRole | null> {
+    _role: Omit<
+      components["schemas"]["UpdateRoleRequestBody"],
+      "id" | "permissions"
+    >,
+  ): Promise<components["schemas"]["RoleItem"] | null> {
     const res = await database
       .update({
         name: _role.name,
@@ -201,7 +200,9 @@ export class RoleIdService {
    * Update permissions for a role
    * @param permissions
    */
-  async updatePermission(permissions: TPermission[]) {
+  async updatePermission(
+    permissions: Array<components["schemas"]["Permission"]>,
+  ) {
     await this.permissionService.load();
 
     await database.transaction(async (trx) => {
@@ -242,7 +243,7 @@ export class RoleIdService {
   async getRolePermissions() {
     return database
       .select<{
-        permissions: TPermission[] | null;
+        permissions: Array<components["schemas"]["Permission"]> | null;
       }>(rawPermissionArrayQuery)
       .from("permissions_roles AS pr")
       .leftJoin("permissions AS p", "pr.permission_id", "p.id")

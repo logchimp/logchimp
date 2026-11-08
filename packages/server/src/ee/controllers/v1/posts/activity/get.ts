@@ -1,14 +1,7 @@
 import type { Request, Response } from "express";
 import type { Knex } from "knex";
 import * as v from "valibot";
-import type {
-  IApiErrorResponse,
-  IGetPostActivityRequestParam,
-  IGetPostActivityRequestQuery,
-  IGetPostActivityResponseBody,
-  IPostActivity,
-  TFilterPostActivityVisibility,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import database from "../../../../../database";
 import logger from "../../../../../utils/logger";
@@ -19,9 +12,13 @@ import {
 } from "../../../../../helpers";
 import { GET_COMMENTS_FILTER_COUNT } from "../../../../../constants";
 
-type ResponseBody = IGetPostActivityResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetPostActivityResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
-const FilterVisibilitySchema = v.picklist(["public", "internal"]);
+const FilterVisibilitySchema = v.picklist<
+  Array<components["schemas"]["PostActivityVisibilityEnum"]>
+>(["public", "internal"]);
 const querySchema = v.object({
   limit: v.optional(
     v.pipe(
@@ -48,10 +45,10 @@ const querySchema = v.object({
 
 export async function get(
   req: Request<
-    IGetPostActivityRequestParam,
+    operations["getPostActivity"]["parameters"]["path"],
     unknown,
     unknown,
-    IGetPostActivityRequestQuery
+    operations["getPostActivity"]["parameters"]["query"]
   >,
   res: Response<ResponseBody>,
 ) {
@@ -74,7 +71,9 @@ export async function get(
   const limit = query.output.limit ?? GET_COMMENTS_FILTER_COUNT;
 
   // @ts-expect-error
-  const permissions = (req?.user?.permissions || []) as TPermission[];
+  const permissions = (req?.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const hasPermission = permissions.includes("comment:view_internal");
 
   try {
@@ -109,7 +108,7 @@ interface Sub {
 }
 
 interface IPostCommentVisibilityOptions {
-  visibility: Array<TFilterPostActivityVisibility>;
+  visibility: Array<components["schemas"]["PostActivityVisibilityEnum"]>;
   hasPermission?: boolean;
   subscription?: Sub;
 }
@@ -135,7 +134,7 @@ function getActivityQuery({
       "posts_activity.id",
     )
     .leftJoin("users", "users.userId", "posts_activity.author_id")
-    .select<Array<IPostActivity>>(
+    .select<Array<components["schemas"]["PostActivityItem"]>>(
       "posts_activity.id",
       "posts_activity.type",
       "posts_activity.created_at",

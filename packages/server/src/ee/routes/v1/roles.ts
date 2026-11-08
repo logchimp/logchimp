@@ -1,11 +1,5 @@
 import express from "express";
-import type {
-  IAssignRoleToUserRequestParams,
-  IGetRoleByIdRequestParams,
-  TUnassignRoleToUserRequestParams,
-} from "@logchimp/types";
-
-const router = express.Router();
+import type { operations } from "@logchimp/api-ts-types";
 
 // controller
 import * as roles from "../../controllers/v1/roles";
@@ -16,6 +10,8 @@ import { roleExists } from "../../middleware/roleExists";
 import { userExists } from "../../../middlewares/userExists";
 import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
 
+const router = express.Router();
+
 router.get(
   "/roles",
   authRequired,
@@ -23,9 +19,8 @@ router.get(
     requiredPlan: ["enterprise"],
   }),
 );
-router.get<IGetRoleByIdRequestParams>(
+router.get<operations["getRoleByID"]["parameters"]["path"]>(
   "/roles/:role_id",
-  // @ts-expect-error
   authRequired,
   roleExists,
   withLicenseGuard(roles.getOne, {
@@ -50,9 +45,8 @@ router.patch(
   }),
 );
 
-router.put<IAssignRoleToUserRequestParams>(
+router.put<operations["assignRoleToUser"]["parameters"]["path"]>(
   "/roles/:role_id/users/:user_id",
-  // @ts-expect-error
   authRequired,
   roleExists,
   userExists,
@@ -61,9 +55,8 @@ router.put<IAssignRoleToUserRequestParams>(
   }),
 );
 
-router.delete<TUnassignRoleToUserRequestParams>(
+router.delete<operations["unassignRoleFromUser"]["parameters"]["path"]>(
   "/roles/:role_id/users/:user_id",
-  // @ts-expect-error
   authRequired,
   roleExists,
   userExists,

@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { components } from "@logchimp/api-ts-types";
 import database from "../../database";
 
 // utils
@@ -7,14 +8,24 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import * as cache from "../../cache";
 
-export async function updateProfile(req: Request, res: Response) {
+export async function updateProfile(
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdateUserProfileRequestBody"]
+  >,
+  res: Response<
+    | components["schemas"]["UpdateUserProfileResponseBody"]
+    | components["schemas"]["GenericAPIErrorResponseBody"]
+  >,
+) {
   // @ts-expect-error
   const userId = req.user.userId;
   const name = sanitiseName(req.body.name);
 
   if (name?.length > 30) {
     res.status(400).send({
-      name: "Name cannot exceed 30 characters",
+      message: "Name cannot exceed 30 characters",
       code: "NAME_LENGTH",
     });
     return;

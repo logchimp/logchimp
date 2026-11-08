@@ -1,12 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IAddVoteRequestParams,
-  IAddVoteV2ResponseBody,
-  IApiErrorResponse,
-  IPublicUserInfo,
-  TPermission,
-  TRemoveVoteRequestParams,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 import error from "../../../errorResponse.json";
 import { validUUID } from "../../../helpers";
@@ -17,10 +10,12 @@ import { ConflictError, NotFoundError } from "../../../utils/error";
 import database from "../../../database";
 import { isFeatureEnabled } from "../../services/settings/labs";
 
-type AddVoteResponseBody = IAddVoteV2ResponseBody | IApiErrorResponse;
+type AddVoteResponseBody =
+  | components["schemas"]["AddVoteOnBehalfOfUserResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function addVote(
-  req: Request<IAddVoteRequestParams>,
+  req: Request<operations["addVoteOnBehalfOfUser"]["parameters"]["path"]>,
   res: Response<AddVoteResponseBody>,
 ) {
   const featureEnabled = await isFeatureEnabled("voteOnBehalf");
@@ -43,7 +38,7 @@ export async function addVote(
 
   // @ts-expect-error
   const permissions = (req.user as IAuthenticationMiddlewareUser)
-    .permissions as TPermission[];
+    .permissions as Array<components["schemas"]["Permission"]>;
   const checkPermission = permissions.includes("vote:assign");
   if (!checkPermission) {
     res.status(403).send({
@@ -58,7 +53,12 @@ export async function addVote(
 
   try {
     const getUser = await database
-      .select<IPublicUserInfo>("userId", "name", "avatar", "username")
+      .select<components["schemas"]["PublicUserInfo"]>(
+        "userId",
+        "name",
+        "avatar",
+        "username",
+      )
       .from("users")
       .where({
         userId: onBehalfOfUserId,
@@ -107,10 +107,11 @@ export async function addVote(
   }
 }
 
-type RemoveVoteResponseBody = IApiErrorResponse;
+type RemoveVoteResponseBody =
+  components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function removeVote(
-  req: Request<TRemoveVoteRequestParams>,
+  req: Request<operations["removeVoteOnBehalfOfUser"]["parameters"]["path"]>,
   res: Response<RemoveVoteResponseBody>,
 ) {
   const featureEnabled = await isFeatureEnabled("voteOnBehalf");
@@ -133,7 +134,7 @@ export async function removeVote(
 
   // @ts-expect-error
   const permissions = (req.user as IAuthenticationMiddlewareUser)
-    .permissions as TPermission[];
+    .permissions as Array<components["schemas"]["Permission"]>;
   const checkPermission = permissions.includes("vote:unassign");
   if (!checkPermission) {
     res.status(403).send({

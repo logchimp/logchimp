@@ -1,6 +1,6 @@
 import type { Knex } from "knex";
 import { v4 as uuidv4 } from "uuid";
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import logger from "../utils/logger";
 
@@ -37,7 +37,7 @@ const permissionExists = async (
 
 async function addPermission(
   database: Knex,
-  permissions: TPermission[],
+  permissions: Array<components["schemas"]["Permission"]>,
 ): Promise<void> {
   for (const permission of permissions) {
     const [type, action, scope] = permission.split(":");
@@ -74,7 +74,7 @@ async function addPermission(
 
 async function removePermission(
   database: Knex,
-  permissions: TPermission[],
+  permissions: Array<components["schemas"]["Permission"]>,
 ): Promise<void> {
   for (const permission of permissions) {
     const [type, action, scope] = permission.split(":");

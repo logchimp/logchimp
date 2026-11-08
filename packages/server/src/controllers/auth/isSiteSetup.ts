@@ -1,8 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetSiteSetupResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // database
 import database from "../../database";
@@ -15,7 +12,9 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { CACHE_KEYS } from "../../cache/keys";
 
-type ResponseBody = IGetSiteSetupResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetSiteSetupResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function isSiteSetup(_: Request, res: Response<ResponseBody>) {
   const cacheKey = CACHE_KEYS.SITE_SETUP;

@@ -13,11 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import type { IUserRole } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { ComputerIcon } from "lucide-vue";
 
 interface Props {
-  role: IUserRole;
+  role: components["schemas"]["UserItemRole"];
 }
 
 defineProps<Props>();

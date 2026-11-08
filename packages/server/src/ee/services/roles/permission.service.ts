@@ -1,5 +1,5 @@
-import type { TPermission } from "@logchimp/types";
 import { v4 as uuidv4 } from "uuid";
+import type { components } from "@logchimp/api-ts-types";
 
 import database from "../../../database";
 import logger from "../../../utils/logger";
@@ -54,11 +54,11 @@ export class PermissionService {
 
   /**
    * Add a permission to the database
-   * @param {TPermission} permission
+   * @param {components["schemas"]["Permission"]} permission
    * @param options
    */
   async addPermission(
-    permission: TPermission,
+    permission: components["schemas"]["Permission"],
     options?: {
       enableLogging?: boolean;
     },

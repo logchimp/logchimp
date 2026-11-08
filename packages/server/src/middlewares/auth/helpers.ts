@@ -1,4 +1,4 @@
-import type { TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
 import type {
@@ -60,12 +60,12 @@ export const getUserInfoWithRoles = async (
 
 export const computePermissions = async (
   user: IGetUserInfoWithRoles,
-): Promise<TPermission[]> => {
+): Promise<Array<components["schemas"]["Permission"]>> => {
   // return all permission for owner
   if (user.isOwner) {
     const perms = await database("permissions AS p")
       .select<{
-        permissions: TPermission[];
+        permissions: Array<components["schemas"]["Permission"]>;
       }>(rawPermissionArrayQuery)
       .first();
 
@@ -81,7 +81,9 @@ export const computePermissions = async (
     .innerJoin("permissions_roles", "roles.id", "permissions_roles.role_id")
     .innerJoin("permissions AS p", "permissions_roles.permission_id", "p.id")
     .whereIn("roles.id", roles)
-    .first()) as unknown as { permissions: TPermission[] };
+    .first()) as unknown as {
+    permissions: Array<components["schemas"]["Permission"]>;
+  };
 
   return perms.permissions;
 };
@@ -89,7 +91,9 @@ export const computePermissions = async (
 /**
  * `p` is a table alias for permissions
  */
-export const rawPermissionArrayQuery = database.raw<TPermission[]>(`
+export const rawPermissionArrayQuery = database.raw<
+  Array<components["schemas"]["Permission"]>
+>(`
   COALESCE(
     ARRAY_AGG(
       CASE WHEN p.scope IS NOT NULL THEN

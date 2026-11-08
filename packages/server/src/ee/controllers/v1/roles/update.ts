@@ -1,11 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IRole,
-  IUpdateRoleRequestBody,
-  IUpdateRoleResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 // utils
 import error from "../../../../errorResponse.json";
@@ -13,16 +7,24 @@ import logger from "../../../../utils/logger";
 import { RoleIdService } from "../../../services/roles/roles.service";
 import { ValidationError } from "../../../../utils/error";
 
-type ResponseBody = IUpdateRoleResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["UpdateRoleResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function update(
-  req: Request<unknown, unknown, IUpdateRoleRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["UpdateRoleRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   const role = req.body;
 
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.includes("role:update");
   if (!checkPermission) {
     res.status(403).send({
@@ -33,7 +35,7 @@ export async function update(
   }
 
   // @ts-expect-error
-  const reqRole = req?.role as IRole;
+  const reqRole = req?.role as components["schemas"]["RoleItem"];
   if (reqRole.isSystem) {
     res.status(403).send({
       message: error.api.roles.cannotUpdateSystemRole,
@@ -44,7 +46,7 @@ export async function update(
 
   const roleIdService = new RoleIdService(role.id);
 
-  let updatedRole: IRole | null;
+  let updatedRole: components["schemas"]["RoleItem"] | null;
   try {
     updatedRole = await roleIdService.updateRole({
       name: req.body.name,

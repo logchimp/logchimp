@@ -1,4 +1,4 @@
-import type { TLicenseSubscriptionType, TPermission } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 export interface IAuthenticationTokenPayload {
   userId: string;
@@ -17,7 +17,7 @@ export interface IGetUserInfoWithRoles {
 
 export interface IAuthenticationMiddlewareUser
   extends Omit<IGetUserInfoWithRoles, "roles"> {
-  permissions: TPermission[];
+  permissions: components["schemas"]["Permission"][];
 }
 
 export interface IPasswordResetJwtPayload {
@@ -32,7 +32,21 @@ export interface IVerifyEmailJwtPayload {
   type: "emailVerification";
 }
 
+export type TLicenseSubscriptionType =
+  | "free"
+  | "pro"
+  | "business"
+  | "enterprise";
+
 export interface LicenseGuardOptions {
   requiredPlan: Array<TLicenseSubscriptionType>;
   skipHandlerOnFailure: boolean;
 }
+
+export type TEmailVerification = {
+  email: string;
+  token: string;
+  createdAt: Date;
+};
+
+export type TResetPassword = TEmailVerification;

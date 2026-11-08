@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { IPostVote, IPost } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { useTrim } from "../../hooks";
 
@@ -56,7 +56,7 @@ import Vote from "../vote/Vote.vue";
 import BoardBadge from "../../ee/components/boards/BoardBadge.vue";
 
 interface Props {
-  post: IPost;
+  post: components["schemas"]["Post"];
   dashboard?: boolean;
   showBoard?: boolean;
 }
@@ -72,7 +72,7 @@ const isVoted = computed<boolean>(() =>
   Boolean(props.post.voters?.viewerVote?.voteId),
 );
 
-function updateVoters(voters: IPostVote) {
+function updateVoters(voters: components["schemas"]["PostVote"]) {
   postData.value.voters.votesCount = voters.votesCount;
   postData.value.voters.viewerVote = voters.viewerVote;
 }

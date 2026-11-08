@@ -1,5 +1,7 @@
 // modules
 import express from "express";
+import type { operations } from "@logchimp/api-ts-types";
+
 const router = express.Router();
 
 // controller
@@ -9,10 +11,6 @@ import * as roadmaps from "../../controllers/v1/roadmaps";
 import { authOptional, authRequired } from "../../../middlewares/auth";
 import { roadmapExists } from "../../../middlewares/roadmapExists";
 import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
-import type {
-  IGetRoadmapByUrlRequestParam,
-  ISearchRoadmapRequestParam,
-} from "@logchimp/types";
 
 router.get(
   "/roadmaps",
@@ -21,18 +19,16 @@ router.get(
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.get<IGetRoadmapByUrlRequestParam>(
+router.get<operations["getRoadmapByUrl"]["parameters"]["path"]>(
   "/roadmaps/:url",
-  // @ts-expect-error
   authOptional,
   roadmapExists,
   withLicenseGuard(roadmaps.roadmapByUrl, {
     requiredPlan: ["pro", "business", "enterprise"],
   }),
 );
-router.get<ISearchRoadmapRequestParam>(
+router.get<operations["searchRoadmaps"]["parameters"]["path"]>(
   "/roadmaps/search/:name",
-  // @ts-expect-error
   authRequired,
   withLicenseGuard(roadmaps.searchRoadmap, {
     requiredPlan: ["pro", "business", "enterprise"],

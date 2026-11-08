@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { IApiErrorResponse, IRoadmapPrivate } from "@logchimp/types";
 import { type AxiosError, isCancel } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 import { RoadmapsEE } from "../../modules/roadmaps";
 import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScroll.vue";
@@ -9,7 +9,7 @@ import type { InfiniteScrollStateType } from "../../../components/ui/InfiniteScr
 const roadmapsEEAPI = new RoadmapsEE();
 
 export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
-  const roadmaps = ref<IRoadmapPrivate[]>([]);
+  const roadmaps = ref<components["schemas"]["RoadmapPrivate"][]>([]);
   const state = ref<InfiniteScrollStateType>("IDLE");
 
   const hasNextPage = ref<boolean>(false);
@@ -53,7 +53,9 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
         hasNextPage.value = false;
       }
     } catch (error) {
-      const err = error as AxiosError<IApiErrorResponse>;
+      const err = error as AxiosError<
+        components["schemas"]["GenericAPIErrorResponseBody"]
+      >;
 
       // axios request canceled
       if (isCancel(err) || err.code === "ERR_CANCELED") return;
@@ -75,7 +77,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     }
   }
 
-  function appendRoadmap(roadmap: IRoadmapPrivate) {
+  function appendRoadmap(roadmap: components["schemas"]["RoadmapPrivate"]) {
     const existingIdx = roadmaps.value.findIndex(
       (item) => item.id === roadmap.id,
     );
@@ -86,7 +88,7 @@ export const useDashboardRoadmaps = defineStore("dashboardRoadmaps", () => {
     }
   }
 
-  function updateRoadmap(roadmap: IRoadmapPrivate) {
+  function updateRoadmap(roadmap: components["schemas"]["RoadmapPrivate"]) {
     const roadmapIdx = roadmaps.value.findIndex(
       (item) => item.id === roadmap.id,
     );

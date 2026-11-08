@@ -1,9 +1,5 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  TDeletePostCommentRequestParam,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 import database from "../../../../../database";
 
 // utils
@@ -17,8 +13,8 @@ import type { GetCommentStatement } from "../../../../middleware/commentExists";
  * `post_id` param and `comment_id` param are validated in their respective middlewares.
  */
 export async function destroy(
-  req: Request<TDeletePostCommentRequestParam>,
-  res: Response<IApiErrorResponse>,
+  req: Request<operations["deleteComment"]["parameters"]["path"]>,
+  res: Response<components["schemas"]["GenericAPIErrorResponseBody"]>,
 ) {
   const { comment_id, post_id } = req.params;
 
@@ -43,7 +39,9 @@ export async function destroy(
   }
 
   // @ts-expect-error
-  const permissions = (req.user?.permissions || []) as TPermission[];
+  const permissions = (req.user?.permissions || []) as Array<
+    components["schemas"]["Permission"]
+  >;
   const hasPermission = permissions.includes("comment:delete:any");
   if (!hasPermission) {
     res.status(403).send({

@@ -1,10 +1,12 @@
 import type { AxiosError } from "axios";
-import type { IApiErrorResponse } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { useUserStore } from "../store/user";
 import { router } from "../router";
 
-export const tokenError = (error: AxiosError<IApiErrorResponse>) => {
+export const tokenError = (
+  error: AxiosError<components["schemas"]["GenericAPIErrorResponseBody"]>,
+) => {
   const { logout } = useUserStore();
 
   const errorCode = error.response?.data?.code as unknown as string;

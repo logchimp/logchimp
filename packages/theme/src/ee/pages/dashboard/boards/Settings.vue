@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
-import type { IBoardPrivate } from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 
 // modules
@@ -42,15 +42,15 @@ const { t } = useI18n();
 const errorCode = ref<string | undefined>();
 const loading = ref<boolean>(false);
 const title = ref<string>("");
-const board = reactive<IBoardPrivate>({
+const board = reactive<components["schemas"]["BoardPrivate"]>({
   boardId: "",
   name: "",
   url: "",
   color: "",
   view_voters: false,
   display: false,
-  createdAt: new Date(),
-  post_count: "",
+  createdAt: new Date().toDateString(),
+  post_count: 0,
 });
 const boardsEEAPI = new BoardsEE();
 

@@ -1,10 +1,6 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IDeleteRoadmapRequestBody,
-  TDeleteRoadmapResponseBody,
-  TPermission,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
+
 import database from "../../../../database";
 
 // utils
@@ -13,14 +9,20 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import * as cache from "../../../../cache";
 
-type ResponseBody = TDeleteRoadmapResponseBody | IApiErrorResponse;
+type ResponseBody = components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function deleteById(
-  req: Request<unknown, unknown, IDeleteRoadmapRequestBody>,
+  req: Request<
+    unknown,
+    unknown,
+    components["schemas"]["DeleteRoadmapRequestBody"]
+  >,
   res: Response<ResponseBody>,
 ) {
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
 
   const id = validUUID(req.body.id);
 

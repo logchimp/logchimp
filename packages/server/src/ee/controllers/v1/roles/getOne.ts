@@ -1,27 +1,25 @@
 import type { Request, Response } from "express";
-import type {
-  IApiErrorResponse,
-  IGetRoleByIdRequestParams,
-  IGetRoleByIdResponseBody,
-  IRole,
-  TPermission,
-} from "@logchimp/types";
+import type { components, operations } from "@logchimp/api-ts-types";
 
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { RoleIdService } from "../../../services/roles/roles.service";
 
-type ResponseBody = IGetRoleByIdResponseBody | IApiErrorResponse;
+type ResponseBody =
+  | components["schemas"]["GetRoleByIdResponseBody"]
+  | components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function getOne(
-  req: Request<IGetRoleByIdRequestParams>,
+  req: Request<operations["getRoleByID"]["parameters"]["path"]>,
   res: Response<ResponseBody>,
 ) {
   const id = req.params.role_id;
 
   // @ts-expect-error
-  const permissions = req.user.permissions as TPermission[];
+  const permissions = req.user.permissions as Array<
+    components["schemas"]["Permission"]
+  >;
   const checkPermission = permissions.includes("role:read");
   if (!checkPermission) {
     res.status(403).send({
@@ -35,7 +33,7 @@ export async function getOne(
 
   try {
     // @ts-expect-error
-    const role = req?.role as IRole;
+    const role = req?.role as components["schemas"]["RoleItem"];
     const rolePermissions = await roleIdService.getRolePermissions();
 
     res.status(200).send({

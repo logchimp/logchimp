@@ -1,15 +1,5 @@
 import axios, { type AxiosResponse } from "axios";
-import type {
-  ICreateSiteSetupRequestBody,
-  IGetSiteSettingsResponseBody,
-  IGetSiteSetupResponseBody,
-  IUpdateSiteSettingsRequestBody,
-  TCreateSiteSetupResponseBody,
-  TGetSiteSettingsLabResponseBody,
-  TUpdateSiteSettingsLabRequestBody,
-  TUpdateSiteSettingsLabResponseBody,
-  TUpdateSiteSettingsResponseBody,
-} from "@logchimp/types";
+import type { components } from "@logchimp/api-ts-types";
 
 import { useUserStore } from "../store/user";
 import { VITE_API_URL } from "../constants";
@@ -29,8 +19,8 @@ export const siteSetup = async ({
   name,
   email,
   password,
-}: ICreateSiteSetupRequestBody): Promise<
-  AxiosResponse<TCreateSiteSetupResponseBody>
+}: components["schemas"]["CreateSiteSetupRequestBody"]): Promise<
+  AxiosResponse<components["schemas"]["CreateSiteSetupResponseBody"]>
 > => {
   return await axios({
     method: "POST",
@@ -46,10 +36,10 @@ export const siteSetup = async ({
 
 /**
  * Get site settings
- * @returns {Promise<AxiosResponse<IGetSiteSetupResponseBody>>} response
+ * @returns {Promise<AxiosResponse<components['schemas']['GetSiteSetupResponseBody']>>} response
  */
 export const isSiteSetup = async (): Promise<
-  AxiosResponse<IGetSiteSetupResponseBody>
+  AxiosResponse<components["schemas"]["GetSiteSetupResponseBody"]>
 > => {
   return await axios({
     method: "GET",
@@ -59,10 +49,10 @@ export const isSiteSetup = async (): Promise<
 
 /**
  * Get site settings
- * @returns {Promise<AxiosResponse<IGetSiteSetupResponseBody>>} response
+ * @returns {Promise<AxiosResponse<components["schemas"]["GetSiteSettingsResponseBody"]>>} response
  */
 export const getSettings = async (): Promise<
-  AxiosResponse<IGetSiteSettingsResponseBody>
+  AxiosResponse<components["schemas"]["GetSiteSettingsResponseBody"]>
 > => {
   return await axios({
     method: "GET",
@@ -73,7 +63,7 @@ export const getSettings = async (): Promise<
 /**
  * Update site settings
  *
- * @param {object} site update site setting data
+ * @param {components["schemas"]["UpdateSiteSettingsRequestBody"]} site update site setting data
  * @param {string} site.title site title
  * @param {string} site.description site description
  * @param {string} site.logo site logo URL
@@ -81,11 +71,13 @@ export const getSettings = async (): Promise<
  * @param {string} site.googleAnalyticsId site google analytics ID
  * @param {boolean} site.allowSignup allow user creating account
  * @param {boolean} site.developer_mode toggle developer mode
- * @returns {Promise<AxiosResponse<TUpdateSiteSettingsResponseBody>>} response
+ * @returns {Promise<AxiosResponse<components["schemas"]["UpdateSiteSettingsResponseBody"]>>} response
  */
 export const updateSettings = async (
-  site: IUpdateSiteSettingsRequestBody,
-): Promise<AxiosResponse<TUpdateSiteSettingsResponseBody>> => {
+  site: components["schemas"]["UpdateSiteSettingsRequestBody"],
+): Promise<
+  AxiosResponse<components["schemas"]["UpdateSiteSettingsResponseBody"]>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({
@@ -117,10 +109,10 @@ export const uploadSiteLogo = async (logo: FormData) => {
 
 /**
  * Get labs settings
- * @returns {Promise<AxiosResponse<TGetSiteSettingsLabResponseBody>>} response
+ * @returns {Promise<AxiosResponse<components["schemas"]["GetSiteSettingsLabsResponseBody"]>>} response
  */
 export const getLabsSettings = async (): Promise<
-  AxiosResponse<TGetSiteSettingsLabResponseBody>
+  AxiosResponse<components["schemas"]["GetSiteSettingsLabsResponseBody"]>
 > => {
   return await axios({
     method: "GET",
@@ -130,12 +122,14 @@ export const getLabsSettings = async (): Promise<
 
 /**
  * update labs settings
- * @param {TUpdateSiteSettingsLabRequestBody} labs
- * @returns {Promise<AxiosResponse<TUpdateSiteSettingsLabResponseBody>>} response
+ * @param {components["schemas"]["UpdateSiteSettingsLabsRequestBody"]} labs
+ * @returns {Promise<AxiosResponse<components["schemas"]["UpdateSiteSettingsLabsResponseBody"]>>} response
  */
 export const updateLabsSettings = async (
-  labs: TUpdateSiteSettingsLabRequestBody,
-): Promise<AxiosResponse<TUpdateSiteSettingsLabResponseBody>> => {
+  labs: components["schemas"]["UpdateSiteSettingsLabsRequestBody"],
+): Promise<
+  AxiosResponse<components["schemas"]["UpdateSiteSettingsLabsResponseBody"]>
+> => {
   const { authToken } = useUserStore();
 
   return await axios({
