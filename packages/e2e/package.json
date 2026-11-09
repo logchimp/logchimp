@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.65.0",
     "@types/node": "^24.19.2",
     "dotenv": "^17.4.2"
   },
