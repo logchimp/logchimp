@@ -73,7 +73,7 @@ export async function create(
     await database
       .insert({
         boardId,
-        name: body.output.name ?? "new board",
+        name: body.output.name || "new board",
         url: `new-board-${nanoid(10)}`,
         color: generateHexColor(),
         display: body.output.display,
