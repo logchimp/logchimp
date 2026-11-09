@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import type { components } from "@logchimp/api-ts-types";
+import * as v from "valibot";
 
 // database
 import database from "../../../../database";
@@ -15,12 +16,18 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { BoardRepository } from "../../../repository/board";
 import valkey from "../../../../cache";
+import { createBoardEERequestBodySchema } from "./schema";
 
 type ResponseBody =
   | components["schemas"]["CreateBoardResponseBody"]
   | components["schemas"]["GenericAPIErrorResponseBody"];
 
 const boardRepository = new BoardRepository(database, valkey);
+
+const createBoardSchemaBodyErrorMap = {
+  NAME_MIN_LENGTH: "Board name cannot be empty.",
+  NAME_MAX_LENGTH: "Board name cannot exceed 50 characters.",
+};
 
 export async function create(
   req: Request<
@@ -34,8 +41,6 @@ export async function create(
   const permissions = req.user.permissions as Array<
     components["schemas"]["Permission"]
   >;
-  const name = req.body.name || "new board";
-  const display = req.body.display;
 
   const checkPermission = permissions.includes("board:create");
   if (!checkPermission) {
@@ -46,16 +51,32 @@ export async function create(
     return;
   }
 
+  const body = v.safeParse(createBoardEERequestBodySchema, req.body);
+  if (!body.success) {
+    res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Invalid body parameters",
+      errors: body.issues.map((issue) => ({
+        ...issue,
+        message: createBoardSchemaBodyErrorMap[issue.message]
+          ? createBoardSchemaBodyErrorMap[issue.message]
+          : undefined,
+        code: issue.message,
+      })),
+    });
+    return;
+  }
+
   const boardId = uuidv4();
 
   try {
     await database
       .insert({
         boardId,
-        name,
+        name: body.output.name ?? "new board",
         url: `new-board-${nanoid(10)}`,
         color: generateHexColor(),
-        display,
+        display: body.output.display,
       })
       .into("boards");
 
