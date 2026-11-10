@@ -1,40 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import logger from "../../utils/logger";
+import validator from "validator";
 import error from "../../errorResponse.json";
 import { validEmail } from "../../helpers";
 import { domainBlacklistManager } from "../services/auth/auth.service";
-
-export function isValidDomain(domain: string) {
-  if (typeof domain !== "string") return false;
-
-  const trimmed = domain.trim().toLowerCase();
-  if (trimmed.length === 0 || trimmed.length > 255) return false;
-
-  const domainRegex =
-    /^(?!-)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/;
-
-  return domainRegex.test(trimmed);
-}
-
-export const parseBlacklistedDomains = (rawDomains: string) => {
-  const result = new Set<string>();
-
-  if (!rawDomains || typeof rawDomains !== "string") return result;
-
-  rawDomains
-    .split(",")
-    .map((domain) => domain.trim().toLowerCase())
-    .forEach((domain) => {
-      if (!domain) return;
-      if (!isValidDomain(domain)) {
-        logger.warn(`Invalid domain in blacklist config: "${domain}"`);
-        return;
-      }
-      result.add(domain);
-    });
-
-  return result;
-};
 
 export function domainBlacklist(
   req: Request,
@@ -62,7 +30,7 @@ export function domainBlacklist(
    */
   const domain = parts[parts.length - 1].trim().toLowerCase();
 
-  if (!isValidDomain(domain)) {
+  if (!validator.isFQDN(domain)) {
     res.status(400).json({
       message: error.api.authentication.invalidEmailDomain,
       code: "INVALID_EMAIL_DOMAIN",
