@@ -36,15 +36,24 @@ const authenticateWithToken = async (
         // err,
       });
       return;
-    } else {
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
     }
+
+    res.status(500).send({
+      message: error.general.serverError,
+      code: "SERVER_ERROR",
+    });
+    return;
   }
 
   if (!("userId" in jwtTokenPayload)) {
+    res.status(401).send({
+      message: error.middleware.auth.invalidToken,
+      code: "INVALID_TOKEN",
+    });
+    return;
+  }
+
+  if ("type" in jwtTokenPayload) {
     res.status(401).send({
       message: error.middleware.auth.invalidToken,
       code: "INVALID_TOKEN",

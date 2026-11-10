@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
@@ -18,6 +18,8 @@ import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions
 import { GET_POSTS_FILTER_COUNT } from "../../../src/constants";
 import { describeEE, itEE } from "../../utils/skipEE";
 import { removeRoleFromUserId } from "../../utils/roles";
+import { createToken } from "../../../src/services/token.service";
+import logger from "../../../src/utils/logger";
 
 /**
  * Malicious/HTML-injection payloads used to verify that the post `title` and
@@ -1602,5 +1604,76 @@ describe("POST /api/v1/posts/slug", () => {
 
     const post = res.body.post as components["schemas"]["Post"];
     expect(post.voters.viewerVote).toBeUndefined();
+  });
+
+  it("should ignore a token carrying a 'type' claim", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({ isVerified: true });
+
+    const p1 = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    await assignVote(user.userId, p1.postId);
+
+    // Password reset / email verification tokens share the session secret
+    const token = createToken(
+      { userId: user.userId, email: user.email, type: "resetPassword" },
+      { expiresIn: "2h" },
+    );
+
+    const res = await supertest(app)
+      .post("/api/v1/posts/slug")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ slug: p1.slug });
+
+    expect(res.headers["content-type"]).toContain("application/json");
+    expect(res.status).toBe(200);
+
+    const post = res.body.post as components["schemas"]["Post"];
+    expect(post.voters.viewerVote).toBeUndefined();
+  });
+
+  it("should not look up a user for a valid token without 'userId'", async () => {
+    const board = await generateBoard({}, true);
+    const roadmap = await generateRoadmap({}, true);
+    const { user } = await createUser({ isVerified: true });
+
+    const p1 = await generatePost(
+      {
+        userId: user.userId,
+        boardId: board.boardId,
+        roadmapId: roadmap.id,
+      },
+      true,
+    );
+
+    const token = createToken({ email: user.email }, { expiresIn: "1h" });
+    const loggerErrorSpy = vi.spyOn(logger, "error");
+
+    try {
+      const res = await supertest(app)
+        .post("/api/v1/posts/slug")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ slug: p1.slug });
+
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.status).toBe(200);
+
+      const post = res.body.post as components["schemas"]["Post"];
+      expect(post.voters.viewerVote).toBeUndefined();
+      // The response is the same before/after the fix: reaching
+      // `getUserInfoWithRoles(undefined)` is only observable through the
+      // swallowed query error that gets logged
+      expect(loggerErrorSpy).not.toHaveBeenCalled();
+    } finally {
+      loggerErrorSpy.mockRestore();
+    }
   });
 });
