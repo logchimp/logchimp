@@ -58,6 +58,61 @@ describe("GET /api/v1/auth/me", () => {
     expect(response.body.code).toBe("INVALID_TOKEN");
   });
 
+  it.each([
+    ["password reset", "resetPassword"],
+    ["email verification", "emailVerification"],
+  ] as const)(
+    "should throw 'INVALID_TOKEN' for %s tokens",
+    async (_label, type) => {
+      const { user } = await createUser();
+      // Non-session tokens are signed with the same secret key and carry a
+      // `userId`, so they must be rejected before the user is looked up.
+      const token = createToken(
+        { userId: user.userId, email: user.email, type },
+        { expiresIn: "2h" },
+      );
+
+      const response = await supertest(app)
+        .get("/api/v1/auth/me")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(401);
+      expect(response.body.code).toBe("INVALID_TOKEN");
+    },
+  );
+
+  it("should not fall through after sending 'SERVER_ERROR'", async () => {
+    const { user } = await createUser();
+    // A future `nbf` claim makes `jwt.verify` throw `NotBeforeError`, which is
+    // not a 401 case: it must send a 500 and stop, instead of falling through
+    // to the payload checks below with an undefined payload
+    const token = createToken({ userId: user.userId }, { notBefore: "1h" });
+
+    const unhandledRejections: Array<unknown> = [];
+    const onUnhandledRejection = (reason: unknown) => {
+      unhandledRejections.push(reason);
+    };
+    process.on("unhandledRejection", onUnhandledRejection);
+
+    try {
+      const response = await supertest(app)
+        .get("/api/v1/auth/me")
+        .set("Authorization", `Bearer ${token}`);
+
+      // The 500 is already sent before the fall-through, so the regression
+      // signal is the unhandled rejection from `"userId" in undefined`
+      await new Promise((resolve) => setImmediate(resolve));
+
+      expect(response.headers["content-type"]).toContain("application/json");
+      expect(response.status).toBe(500);
+      expect(response.body.code).toBe("SERVER_ERROR");
+      expect(unhandledRejections).toEqual([]);
+    } finally {
+      process.off("unhandledRejection", onUnhandledRejection);
+    }
+  });
+
   it("should throw 'USER_NOT_FOUND' error with fake user ID", async () => {
     const nonExistentUserId = uuid();
     const fakeToken = createToken(
