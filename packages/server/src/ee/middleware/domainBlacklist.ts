@@ -1,7 +1,8 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { validEmail } from "../../helpers";
+import { domainBlacklistManager } from "../services/auth/auth.service";
 
 export function isValidDomain(domain: string) {
   if (typeof domain !== "string") return false;
@@ -34,27 +35,6 @@ export const parseBlacklistedDomains = (rawDomains: string) => {
 
   return result;
 };
-
-export class BlacklistManager {
-  private cachedBlacklist: Set<string> | null = null;
-
-  getBlacklistedDomains(): Set<string> {
-    if (this.cachedBlacklist) {
-      return this.cachedBlacklist;
-    }
-
-    const blacklist = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "";
-    this.cachedBlacklist = parseBlacklistedDomains(blacklist);
-
-    return this.cachedBlacklist;
-  }
-
-  reset(): void {
-    this.cachedBlacklist = null;
-  }
-}
-
-export const blacklistManager = new BlacklistManager();
 
 export function domainBlacklist(
   req: Request,
@@ -90,7 +70,7 @@ export function domainBlacklist(
     return;
   }
 
-  if (blacklistManager.getBlacklistedDomains().has(domain)) {
+  if (domainBlacklistManager.domains.has(domain)) {
     res.status(403).send({
       message: error.api.authentication.emailDomainBlacklisted,
       code: "EMAIL_DOMAIN_BLACKLISTED",
