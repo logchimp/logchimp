@@ -1,13 +1,12 @@
-// packages
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "./store/user";
 import { isSiteSetup } from "./modules/site";
-import { UsersAPI } from "./modules/users";
+import { MeAPI } from "./modules/me";
 import { onRouteChange } from "./plugins/i18n";
 
-const usersAPI = new UsersAPI();
+const meAPI = new MeAPI();
 
 const routes = [
   {
@@ -116,7 +115,7 @@ const routes = [
         }
 
         // Check user access to dashboard
-        const response = await usersAPI.CheckUserDashboardAccess();
+        const response = await meAPI.CheckUserDashboardAccess();
         if (response.access) {
           return next();
         }
