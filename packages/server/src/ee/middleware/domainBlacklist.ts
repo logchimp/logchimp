@@ -38,7 +38,7 @@ export function domainBlacklist(
     return;
   }
 
-  if (domainBlacklistManager.domains.has(domain)) {
+  if (domainBlacklistManager.isBlacklisted(domain)) {
     res.status(403).send({
       message: error.api.authentication.emailDomainBlacklisted,
       code: "EMAIL_DOMAIN_BLACKLISTED",

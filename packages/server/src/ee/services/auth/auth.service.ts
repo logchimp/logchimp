@@ -1,6 +1,10 @@
 import validator from "validator";
 
 export class DomainBlacklistManager {
+  /**
+   * Make public only for unit tests.
+   * Instead, use isBlacklisted method
+   */
   domains: Set<string> = new Set();
 
   constructor() {
