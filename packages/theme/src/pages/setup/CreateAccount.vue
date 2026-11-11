@@ -183,9 +183,6 @@ async function createAccount() {
     } else if (code === "EMAIL_INVALID") {
       email.error.message = "Invalid email";
       email.error.show = true;
-    } else if (code === "INVALID_EMAIL_DOMAIN") {
-      email.error.message = "Invalid email domain";
-      email.error.show = true;
     } else {
       serverError.value = true;
     }
