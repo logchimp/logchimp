@@ -24,8 +24,6 @@ export async function OIDCLogin(
   _req: Request,
   res: Response<OIDCLoginResponse>,
 ) {
-  const oidcService = new OIDCService();
-
   try {
     const { authorizationUrl } = await oidcService.CreateAuthorizationUrl();
 
