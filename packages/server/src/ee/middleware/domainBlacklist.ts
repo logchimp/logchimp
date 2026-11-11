@@ -23,22 +23,7 @@ export function domainBlacklist(
     return;
   }
 
-  const parts = email.trim().split("@");
-  /*
-   * Few cases of valid email (per RFC 5322):
-   * - "a@b"@example.com
-   */
-  const domain = parts[parts.length - 1].trim().toLowerCase();
-
-  if (!validator.isFQDN(domain)) {
-    res.status(400).json({
-      message: error.api.authentication.invalidEmailDomain,
-      code: "INVALID_EMAIL_DOMAIN",
-    });
-    return;
-  }
-
-  if (domainBlacklistManager.isBlacklisted(domain)) {
+  if (domainBlacklistManager.isBlacklisted(email)) {
     res.status(403).send({
       message: error.api.authentication.emailDomainBlacklisted,
       code: "EMAIL_DOMAIN_BLACKLISTED",

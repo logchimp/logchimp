@@ -99,6 +99,7 @@ describe("domainBlacklist middleware", () => {
       .send({ email: "user@invalid" });
 
     expect(res.status).toBe(400);
+    expect(res.body.code).toBe("EMAIL_INVALID");
   });
 
   it("should block multiple blacklisted domains", async () => {
@@ -123,6 +124,8 @@ describe("domainBlacklist middleware", () => {
       .post("/test")
       .send({ email: "User@Example.Com" });
 
+    // Domain is normalized to lowercase before checking blacklist
     expect(res.status).toBe(403);
+    expect(res.body.code).toBe("EMAIL_DOMAIN_BLACKLISTED");
   });
 });
