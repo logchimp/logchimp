@@ -24,11 +24,9 @@ export class DomainBlacklistManager {
    * @param email
    */
   public isBlacklisted(email: string) {
-    const e = email.trim().toLowerCase();
-    if (e.length === 0) return true;
-    const atIndex = e.lastIndexOf("@");
+    const atIndex = email.lastIndexOf("@");
     if (atIndex === -1) return true;
-    const domain = e.slice(atIndex + 1);
+    const domain = email.slice(atIndex + 1);
     return this.domains.has(domain);
   }
 
