@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from "express";
-import validator from "validator";
 import error from "../../errorResponse.json";
 import { validEmail } from "../../helpers";
 import { domainBlacklistManager } from "../services/auth/auth.service";
