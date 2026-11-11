@@ -15,6 +15,9 @@ import {
   getUserInfoWithRoles,
 } from "../../middlewares/auth/helpers";
 
+const oidcService = new OIDCService();
+const authService = new AuthService();
+
 type OIDCLoginResponse = components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function OIDCLogin(
@@ -58,9 +61,6 @@ export async function OIDCLoginCallback(
   }
 
   const currentUrl = new URL(config.apiUrl + req.originalUrl);
-
-  const oidcService = new OIDCService();
-  const authService = new AuthService();
 
   try {
     let user: components["schemas"]["CustomerItemInfo"];
