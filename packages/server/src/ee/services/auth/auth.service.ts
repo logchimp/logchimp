@@ -8,10 +8,23 @@ export class DomainBlacklistManager {
     this.parse(blacklist);
   }
 
-  reset(): void {
+  public reset(): void {
     this.domains = new Set();
     const blacklist = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "";
     this.parse(blacklist);
+  }
+
+  /**
+   * Is this provided email address blacklisted?
+   * @param email
+   */
+  public isBlacklisted(email: string) {
+    const e = email.trim().toLowerCase();
+    if (e.length === 0) return true;
+    const atIndex = e.lastIndexOf("@");
+    if (atIndex === -1) return true;
+    const domain = e.slice(atIndex + 1);
+    return this.domains.has(domain);
   }
 
   public parse(rawDomains: string) {
