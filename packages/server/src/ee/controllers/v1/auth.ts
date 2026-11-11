@@ -34,7 +34,8 @@ export async function OIDCLoginCallback(
   try {
     let user: components["schemas"]["CustomerItemInfo"];
     try {
-      user = await oidcService.Authenticate(currentUrl, oidcState);
+      const identity = await oidcService.VerifyCallback(currentUrl, oidcState);
+      user = await authService.GetOrCreateOpenIDConnectUser(identity);
     } catch (err) {
       if (err instanceof OIDCAuthenticationFailedError) {
         redirectURI.searchParams.set("error", err.code);
