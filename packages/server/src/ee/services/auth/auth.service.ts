@@ -1,4 +1,5 @@
 import validator from "validator";
+import logger from "../../../utils/logger";
 
 export class DomainBlacklistManager {
   /**
@@ -40,6 +41,8 @@ export class DomainBlacklistManager {
       if (!d) return;
       if (validator.isFQDN(d)) {
         this.domains.add(d);
+      } else {
+        logger.warn(`Invalid domain in blacklist config: "${d}"`);
       }
     });
   }
