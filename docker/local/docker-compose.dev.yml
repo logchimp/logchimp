@@ -161,6 +161,7 @@ services:
         DOCKER_BUILDKIT: 1
     volumes:
       - ../../:/app
+      - /app/node_modules
       - /app/packages/theme/node_modules
       - /app/packages/theme/dist
     env_file:
