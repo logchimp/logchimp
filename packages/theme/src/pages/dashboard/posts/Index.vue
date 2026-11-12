@@ -47,12 +47,15 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useHead } from "@unhead/vue";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { useDashboardPosts } from "../../../store/dashboard/posts";
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
 import { PostsAPI } from "../../../modules/posts";
+import { useAlertStore } from "../../../store/alert.ts";
 
 // components
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
@@ -64,6 +67,7 @@ import Button from "../../../components/ui/Button.vue";
 import LicenseValidationFailed from "../../../components/LicenseValidationFailed.vue";
 import LText from "../../../components/ui/input/LText.vue";
 
+const { add: alert } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
 const postsAPI = new PostsAPI();
@@ -126,8 +130,15 @@ async function createPostHandler() {
 
     const url = response.post.slug;
     router.push(`/dashboard/posts/${encodeURIComponent(url)}`);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message || "Failed to create post",
+      type: "error",
+    });
   } finally {
     createPostButtonLoading.value = false;
   }

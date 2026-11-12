@@ -33,6 +33,8 @@ import { computed, onMounted, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { router } from "../../../../../router";
@@ -40,6 +42,7 @@ import { useUserStore } from "../../../../../store/user";
 import { RolesEEAPI } from "../../../../modules/roles";
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useSettingsEEStore } from "../../../../store/settings";
+import { useAlertStore } from "../../../../../store/alert.ts";
 
 // components
 import Button from "../../../../../components/ui/Button.vue";
@@ -51,6 +54,7 @@ import TabularView from "../../../../components/dashboard/roles/TabularView.vue"
 import UpgradeTooltip from "../../../../components/UpgradeTooltip.vue";
 import LicenseCrown from "../../../../components/icons/LicenseCrown.vue";
 
+const { add: alert } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const settingsEEStore = useSettingsEEStore();
@@ -76,7 +80,14 @@ async function createRoleHandler() {
     );
     dashboardRoles.appendRole(role);
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message || "Failed to create roles",
+      type: "error",
+    });
   } finally {
     createRoleButtonLoading.value = false;
   }
