@@ -108,6 +108,7 @@ services:
       - /app/node_modules
       - /app/packages/server/node_modules
       - /app/packages/server/dist
+      - ../../traefik/certs/logchimp.dev.pem:/etc/ssl/certs/logchimp.dev.pem
     depends_on:
       db:
         condition: service_healthy
@@ -129,6 +130,9 @@ services:
       LOGCHIMP_MAIL_USER: test
       LOGCHIMP_MAIL_PASSWORD: test
       PNPM_CONFIG_CONFIRM_MODULES_PURGE: "false"
+      # OIDC - Trust self-signed certificate
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/logchimp.dev.pem
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
     env_file:
       - ../../packages/server/.env
     labels:
@@ -137,6 +141,8 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.services.api.loadbalancer.server.port=3000"
+    extra_hosts:
+      - "oidc-mock.logchimp.dev:host-gateway"
 
   bullboard:
     image: venatum/bull-board:latest
@@ -176,6 +182,19 @@ services:
       - "traefik.http.routers.webapp.entrypoints=websecure"
       - "traefik.http.routers.webapp.tls=true"
       - "traefik.http.services.webapp.loadbalancer.server.port=3000"
+
+  oidc_mock:
+    image: ghcr.io/geigerzaehler/oidc-provider-mock
+    networks:
+      - logchimp-dev-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.oidc_mock.rule=Host(`oidc-mock.logchimp.dev`)"
+      - "traefik.http.routers.oidc_mock.entrypoints=websecure"
+      - "traefik.http.routers.oidc_mock.tls=true"
+      - "traefik.http.services.oidc_mock.loadbalancer.server.port=9400"
+    profiles:
+      - oidc-mock
 
 networks:
   logchimp-dev-network:
