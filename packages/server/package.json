@@ -54,10 +54,10 @@
     "@types/node": "^24.19.2",
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
-    "@types/supertest": "^6.0.3",
+    "@types/supertest": "^7.2.1",
     "@types/validator": "^13.15.10",
     "nodemon": "^3.1.14",
-    "supertest": "^7.1.4",
+    "supertest": "^7.3.2",
     "ts-node": "^10.9.2",
     "typescript": "5.9.3",
     "vitest": "4.1.12"

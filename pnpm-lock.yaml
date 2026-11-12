@@ -195,8 +195,8 @@ importers:
         specifier: ^8.23.1
         version: 8.23.1
       '@types/supertest':
-        specifier: ^6.0.3
-        version: 6.0.3
+        specifier: ^7.2.1
+        version: 7.2.1
       '@types/validator':
         specifier: ^13.15.10
         version: 13.15.10
@@ -204,8 +204,8 @@ importers:
         specifier: ^3.1.14
         version: 3.1.14
       supertest:
-        specifier: ^7.1.4
-        version: 7.3.1(supports-color@5.5.0)
+        specifier: ^7.3.2
+        version: 7.3.2(supports-color@5.5.0)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@24.19.2)(typescript@5.9.3)
@@ -1632,11 +1632,6 @@ packages:
   '@tailwindcss/postcss@4.3.4':
     resolution: {integrity: sha512-6O0QLY+1CseO8ivlYK2Y7IxNPaQ8D5ypxrV+ws34mbxknWH824J+gEWtJ0gyFiYAudmdEeXdF8kqwgXIaZRyHw==}
 
-  '@tailwindcss/vite@4.3.4':
-    resolution: {integrity: sha512-wGukGWb8SVuN7+FJvSS7M5eSJWDIWwVSvUvj1q41eTIhGPsS2DAgFWjA7YURJNwjHSgty59Hz8iMUiyO+YMHBQ==}
-    peerDependencies:
-      vite: ^5.2.0 || ^6 || ^7 || ^8
-
   '@tailwindcss/vite@4.3.5':
     resolution: {integrity: sha512-BCNiY0a1ZjdOHVqw7kyb7U72BwfMF3dfUuN+tQsLWky/J5JOI/r7abibglXfygrZhVO/3u3V+E25kkKTeMkXaQ==}
     peerDependencies:
@@ -1775,8 +1770,8 @@ packages:
   '@types/superagent@8.1.11':
     resolution: {integrity: sha512-KA7srSW/HENDtOw9DOqaFLgWuMqN9WgjEw62lh9dpvRaZDkhdOkazASd7X7i2eMUYLHa1U37ZttnePsH5zTDHw==}
 
-  '@types/supertest@6.0.3':
-    resolution: {integrity: sha512-8WzXq62EXFhJ7QsH3Ocb/iKQ/Ty9ZVWnVzoTKc9tyyFRRF3a74Tk2+TLFgaFFw364Ere+npzHKEJ6ga2LzIL7w==}
+  '@types/supertest@7.2.1':
+    resolution: {integrity: sha512-4CbBvoYVLHL7+yhbYrZET0vsvuyXTC05aRe7dNQkwMzm56auceoy6Yu3K50uZmwfHna1os3CMSgM/3QVkUtPTw==}
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -4326,8 +4321,8 @@ packages:
     resolution: {integrity: sha512-PVMkMrhKrSTtFhUU8jiWuGh/gyRMKiyCTCmm0+qVzRNxlfntmRKJkDhlEXN62x3HIb33sQ4kmL8lcSdccWAchQ==}
     engines: {node: '>=14.18.0'}
 
-  supertest@7.3.1:
-    resolution: {integrity: sha512-vNaNCFoCR/edDbErQZp5KLNT8R4dSPHX7rlDLoE8hWLAm/878j6ShMbe8HK/E6RwwuhlSXVelXAIg9AxR5WWPw==}
+  supertest@7.3.2:
+    resolution: {integrity: sha512-hR0dKRUE+PwZhHLdq/GRhf97HbUQte+AhbpWBQ9nh02tpjujVJj0GY4aygd1dAKdNZ7UZexWHpeItyJi/jLsgw==}
     engines: {node: '>=14.18.0'}
 
   supports-color@5.5.0:
@@ -5378,7 +5373,7 @@ snapshots:
       '@lucide/vue': 1.68.0(vue@3.5.45(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
       '@tailwindcss/postcss': 4.3.4
-      '@tailwindcss/vite': 4.3.4(vite@8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0))
+      '@tailwindcss/vite': 4.3.5(vite@8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0))
       '@unhead/vue': 3.4.3(@oxc-project/types@0.156.0)(esbuild@0.27.7)(lightningcss@1.33.0)(rolldown@1.2.16)(rollup@4.67.5)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
       '@vitejs/plugin-vue': 6.0.10(vite@8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
       '@vueuse/core': 14.3.0(vue@3.5.45(typescript@6.0.3))
@@ -5908,19 +5903,19 @@ snapshots:
       postcss: 8.5.32
       tailwindcss: 4.3.4
 
-  '@tailwindcss/vite@4.3.4(vite@8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0))':
-    dependencies:
-      '@tailwindcss/node': 4.3.4
-      '@tailwindcss/oxide': 4.3.4
-      tailwindcss: 4.3.4
-      vite: 8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0)
-
   '@tailwindcss/vite@4.3.5(vite@6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))':
     dependencies:
       '@tailwindcss/node': 4.3.5
       '@tailwindcss/oxide': 4.3.5
       tailwindcss: 4.3.5
       vite: 6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5)
+
+  '@tailwindcss/vite@4.3.5(vite@8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0))':
+    dependencies:
+      '@tailwindcss/node': 4.3.5
+      '@tailwindcss/oxide': 4.3.5
+      tailwindcss: 4.3.5
+      vite: 8.3.5(@types/node@24.19.2)(esbuild@0.27.7)(jiti@2.7.0)
 
   '@tanstack/virtual-core@3.19.11': {}
 
@@ -6069,7 +6064,7 @@ snapshots:
       '@types/node': 24.19.2
       form-data: 4.0.6
 
-  '@types/supertest@6.0.3':
+  '@types/supertest@7.2.1':
     dependencies:
       '@types/methods': 1.1.4
       '@types/superagent': 8.1.11
@@ -9001,7 +8996,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  supertest@7.3.1(supports-color@5.5.0):
+  supertest@7.3.2(supports-color@5.5.0):
     dependencies:
       cookie-signature: 1.2.2
       methods: 1.1.2
