@@ -13,7 +13,7 @@ export type CreateUserOptions = {
   };
 };
 
-export type GetOrCreateOpenIDConnectUserOptions = {
+export type OpenIDConnectUserIdentity = {
   issuer: string;
   subject: string;
   name?: string;

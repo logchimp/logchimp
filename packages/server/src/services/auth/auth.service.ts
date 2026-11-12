@@ -2,7 +2,7 @@ import type { components } from "@logchimp/api-ts-types";
 
 import type {
   CreateUserOptions,
-  GetOrCreateOpenIDConnectUserOptions,
+  OpenIDConnectUserIdentity,
   TCreatedUser,
 } from "./types";
 import {
@@ -176,7 +176,7 @@ export class AuthService {
     email,
     emailVerified,
     picture,
-  }: GetOrCreateOpenIDConnectUserOptions): Promise<
+  }: OpenIDConnectUserIdentity): Promise<
     components["schemas"]["CustomerItemInfo"]
   > {
     const getUserIdentity = await database("auth_identities")

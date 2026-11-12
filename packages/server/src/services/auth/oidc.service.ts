@@ -6,10 +6,10 @@ import {
   AuthenticationFailedError,
   OIDCAuthenticationFailedError,
 } from "./errors";
-import { AuthService } from "./auth.service";
 import {
   OIDC_AUTHENTICATION_ERROR_CODES,
   type OIDCAuthenticationErrorCode,
+  type OpenIDConnectUserIdentity,
 } from "./types";
 
 const OIDC_TRANSACTION_TTL = 300; // 5 minutes
@@ -77,7 +77,10 @@ export class OIDCService {
     };
   }
 
-  async Authenticate(currentUrl: URL, state: string) {
+  async VerifyCallback(
+    currentUrl: URL,
+    state: string,
+  ): Promise<OpenIDConnectUserIdentity> {
     const transactionCache = await cache.getdel(`oidc:transaction:${state}`);
 
     if (!transactionCache) {
@@ -129,28 +132,20 @@ export class OIDCService {
     const email =
       typeof claims.email === "string" ? claims.email.trim().toLowerCase() : "";
 
-    const name = typeof claims.name === "string" ? claims.name.trim() : "";
-
-    const emailVerified =
-      typeof claims.email_verified === "boolean"
-        ? claims.email_verified
-        : undefined;
-
     if (!email) {
       throw new AuthenticationFailedError();
     }
 
-    const authService = new AuthService();
-
-    const user = await authService.GetOrCreateOpenIDConnectUser({
+    return {
       issuer,
       subject,
-      name,
+      name: typeof claims.name === "string" ? claims.name.trim() : "",
       email,
-      emailVerified,
+      emailVerified:
+        typeof claims.email_verified === "boolean"
+          ? claims.email_verified
+          : undefined,
       picture: typeof claims.picture === "string" ? claims.picture : undefined,
-    });
-
-    return user;
+    };
   }
 }

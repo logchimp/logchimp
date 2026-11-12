@@ -15,14 +15,15 @@ import {
   getUserInfoWithRoles,
 } from "../../middlewares/auth/helpers";
 
+const oidcService = new OIDCService();
+const authService = new AuthService();
+
 type OIDCLoginResponse = components["schemas"]["GenericAPIErrorResponseBody"];
 
 export async function OIDCLogin(
   _req: Request,
   res: Response<OIDCLoginResponse>,
 ) {
-  const oidcService = new OIDCService();
-
   try {
     const { authorizationUrl } = await oidcService.CreateAuthorizationUrl();
 
@@ -59,13 +60,11 @@ export async function OIDCLoginCallback(
 
   const currentUrl = new URL(config.apiUrl + req.originalUrl);
 
-  const oidcService = new OIDCService();
-  const authService = new AuthService();
-
   try {
     let user: components["schemas"]["CustomerItemInfo"];
     try {
-      user = await oidcService.Authenticate(currentUrl, oidcState);
+      const identity = await oidcService.VerifyCallback(currentUrl, oidcState);
+      user = await authService.GetOrCreateOpenIDConnectUser(identity);
     } catch (err) {
       if (err instanceof OIDCAuthenticationFailedError) {
         redirectURI.searchParams.set("error", err.code);

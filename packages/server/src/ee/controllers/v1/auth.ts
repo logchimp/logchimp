@@ -9,6 +9,9 @@ import {
 } from "../../../services/auth/errors";
 import logger from "../../../utils/logger";
 
+const oidcService = new OIDCService();
+const authService = new AuthService();
+
 type OIDCLoginCallbackResponse =
   components["schemas"]["GenericAPIErrorResponseBody"];
 
@@ -28,13 +31,11 @@ export async function OIDCLoginCallback(
 
   const currentUrl = new URL(config.apiUrl + req.originalUrl);
 
-  const oidcService = new OIDCService();
-  const authService = new AuthService();
-
   try {
     let user: components["schemas"]["CustomerItemInfo"];
     try {
-      user = await oidcService.Authenticate(currentUrl, oidcState);
+      const identity = await oidcService.VerifyCallback(currentUrl, oidcState);
+      user = await authService.GetOrCreateOpenIDConnectUser(identity);
     } catch (err) {
       if (err instanceof OIDCAuthenticationFailedError) {
         redirectURI.searchParams.set("error", err.code);
