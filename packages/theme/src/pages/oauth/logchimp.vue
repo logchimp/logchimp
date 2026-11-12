@@ -12,6 +12,7 @@ import { useUserStore } from "../../store/user.ts";
 import tokenError from "../../utils/tokenError.ts";
 import { MeAPI } from "../../modules/me";
 import { AuthAPI } from "../../modules/auth.ts";
+import { getQueryParam } from "../../utils/func";
 
 const route = useRoute();
 const router = useRouter();
@@ -46,14 +47,15 @@ const OIDC_ERROR_MESSAGES: Record<string, string> = {
 };
 
 async function onMountedHandler() {
-  const error = (route.query?.error || "").toString();
+  const error = getQueryParam(route.query.error);
+  const errorMessage = getQueryParam(route.query?.error_description);
+
   if (error) {
     if (error in OIDC_ERROR_MESSAGES) {
       setError(OIDC_ERROR_MESSAGES[error]);
     } else {
-      setError();
+      setError(errorMessage);
     }
-
     return;
   }
 
@@ -104,7 +106,7 @@ onMounted(() => {
 
 function setError(msg?: string) {
   isError.value = true;
-  errMsg.value = msg ?? "Authentication failed";
+  errMsg.value = msg || "Authentication failed";
   isLoading.value = false;
 }
 </script>

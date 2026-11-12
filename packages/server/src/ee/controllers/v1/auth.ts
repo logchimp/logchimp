@@ -8,6 +8,8 @@ import {
   OIDCAuthenticationFailedError,
 } from "../../../services/auth/errors";
 import logger from "../../../utils/logger";
+import { domainBlacklistManager } from "../../services/auth/auth.service";
+import error from "../../../errorResponse.json";
 
 const oidcService = new OIDCService();
 const authService = new AuthService();
@@ -35,6 +37,17 @@ export async function OIDCLoginCallback(
     let user: components["schemas"]["CustomerItemInfo"];
     try {
       const identity = await oidcService.VerifyCallback(currentUrl, oidcState);
+
+      if (domainBlacklistManager.isBlacklisted(identity.email)) {
+        redirectURI.searchParams.set("error", "email_domain_blacklisted");
+        redirectURI.searchParams.set(
+          "error_description",
+          error.api.authentication.emailDomainBlacklisted,
+        );
+        res.redirect(redirectURI.toString());
+        return;
+      }
+
       user = await authService.GetOrCreateOpenIDConnectUser(identity);
     } catch (err) {
       if (err instanceof OIDCAuthenticationFailedError) {
