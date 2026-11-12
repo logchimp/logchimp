@@ -34,3 +34,6 @@ coverage
 
 # theme
 packages/theme/.out
+
+# Traefik reverse proxy certs
+/traefik/certs/*

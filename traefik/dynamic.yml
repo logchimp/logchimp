@@ -1,0 +1,9 @@
+tls:
+  certificates:
+    - certFile: /etc/certs/logchimp.dev.pem
+      keyFile: /etc/certs/logchimp.dev-key.pem
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/certs/logchimp.dev.pem
+        keyFile: /etc/certs/logchimp.dev-key.pem
