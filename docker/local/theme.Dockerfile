@@ -8,7 +8,7 @@ COPY packages/theme ./packages/theme
 ENV NODE_ENV=development
 
 RUN \
-  npm i -g pnpm@11.25.0 && \
+  npm i -g pnpm@latest-12 && \
   pnpm install
 
 WORKDIR /app/packages/theme

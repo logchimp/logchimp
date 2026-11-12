@@ -22,7 +22,7 @@ pre-commit:
   jobs:
     - name: biome
       run: |
-        PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+        PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io@12 pnpm")
         $PNPM_CMD biome format --write {staged_files}
       glob: "*.{js,ts,json,css,html}"
       stage_fixed: true
@@ -36,7 +36,7 @@ pre-commit:
           - name: prettier
             root: "packages/theme/"
             run: |
-              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io@12 pnpm")
               $PNPM_CMD exec prettier --write {staged_files}
             glob: "packages/theme/**/*.vue"
             stage_fixed: true
@@ -44,7 +44,7 @@ pre-commit:
           - name: eslint
             root: "packages/theme/"
             run: |
-              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io@12 pnpm")
               $PNPM_CMD exec eslint --fix {staged_files}
             glob: "packages/theme/**/*.vue"
             stage_fixed: true
@@ -56,7 +56,7 @@ pre-commit:
           - name: prettier
             root: "packages/email-templates/"
             run: |
-              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io@12 pnpm")
               $PNPM_CMD exec prettier --write {staged_files}
             glob: "packages/email-templates/**/*.vue"
             stage_fixed: true
@@ -64,7 +64,7 @@ pre-commit:
           - name: eslint
             root: "packages/email-templates/"
             run: |
-              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+              PNPM_CMD=$(command -v pnpm > /dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io@12 pnpm")
               $PNPM_CMD exec eslint --fix {staged_files}
             glob: "packages/email-templates/**/*.vue"
             stage_fixed: true

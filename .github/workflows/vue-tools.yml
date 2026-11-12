@@ -24,7 +24,7 @@ on:
 
 env:
   node-version: 24
-  pnpm-version: 10
+  pnpm-version: latest-12
 
 jobs:
   theme:

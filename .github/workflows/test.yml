@@ -24,7 +24,7 @@ permissions:
   pull-requests: write
 
 env:
-  pnpm-version: 10
+  pnpm-version: latest-12
 
 jobs:
   theme-unit:
