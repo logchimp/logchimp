@@ -19,7 +19,7 @@ import type { AxiosError } from "axios";
 import { computed, onMounted, watch } from "vue";
 import type { components } from "@logchimp/api-ts-types";
 // import gtag, { setOptions, bootstrap } from "vue-gtag";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 
 import packageJson from "../package.json";
 

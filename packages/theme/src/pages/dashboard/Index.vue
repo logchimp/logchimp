@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 

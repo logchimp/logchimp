@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import type { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";
 

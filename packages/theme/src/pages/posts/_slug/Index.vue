@@ -74,7 +74,7 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, reactive, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { components } from "@logchimp/api-ts-types";

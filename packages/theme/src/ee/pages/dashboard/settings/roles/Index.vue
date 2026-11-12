@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 

@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 
 // modules
 import { router } from "../../router";

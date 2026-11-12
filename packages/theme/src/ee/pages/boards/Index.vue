@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
 import { useI18n } from "vue-i18n";
