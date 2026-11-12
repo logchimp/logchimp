@@ -11,6 +11,26 @@ x-postgres-environment: &postgres-environment
   # LOGCHIMP_DB_URL: postgresql://lc:password@db:5432/db
 
 services:
+  traefik:
+    image: "traefik:v3"
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../../traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ../../traefik/dynamic.yml:/etc/traefik/dynamic.yml
+      - ../../traefik/certs:/etc/certs
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - logchimp-dev-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.logchimp.dev`)"
+      - "traefik.http.routers.traefik.entrypoints=web,websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
   cache:
     image: valkey/valkey:8
     ports:
@@ -67,11 +87,16 @@ services:
     image: mailhog/mailhog
     ports:
       - "1025:1025"
-      - "8025:8025"
     networks:
       - logchimp-dev-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mail.rule=Host(`mail.logchimp.dev`)"
+      - "traefik.http.routers.mail.entrypoints=websecure"
+      - "traefik.http.routers.mail.tls=true"
+      - "traefik.http.services.mail.loadbalancer.server.port=8025"
 
-  logchimp:
+  api:
     build:
       dockerfile: docker/local/server.Dockerfile
       context: ../..
@@ -93,7 +118,7 @@ services:
     networks:
       - logchimp-dev-network
     environment:
-      PORT: 8000
+      PORT: 3000
       # Database
       <<: *postgres-environment
       # Cache
@@ -106,27 +131,46 @@ services:
       PNPM_CONFIG_CONFIRM_MODULES_PURGE: "false"
     env_file:
       - ../../packages/server/.env
-    ports:
-      - "8000:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.logchimp.dev`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
 
   bullboard:
     image: venatum/bull-board:latest
-    ports:
-      - "8081:3000"
     environment:
       REDIS_HOST: "cache"
     networks:
       - logchimp-dev-network
     depends_on:
       - cache
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bullboard.rule=Host(`bullmq-ui.logchimp.dev`)"
+      - "traefik.http.routers.bullboard.entrypoints=websecure"
+      - "traefik.http.routers.bullboard.tls=true"
+      - "traefik.http.services.bullboard.loadbalancer.server.port=3000"
 
-  # theme:
-  #   image: logchimp-theme:0.2.0
-  #   environment:
-  #     API_HOST: logchimp
-  #     command: /logchimp/scripts/run_nginx.sh
-  #   depends_on:
-  #     - logchimp
+  theme:
+    build:
+      dockerfile: docker/local/theme.Dockerfile
+      context: ../..
+      args:
+        DOCKER_BUILDKIT: 1
+    environment:
+      VITE_API_URL: https://api.logchimp.dev
+      VITE_IS_SELF_HOSTED: true
+      API_HOST: logchimp
+    depends_on:
+       - api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webapp.rule=Host(`logchimp.dev`)"
+      - "traefik.http.routers.webapp.entrypoints=websecure"
+      - "traefik.http.routers.webapp.tls=true"
+      - "traefik.http.services.webapp.loadbalancer.server.port=3000"
 
 networks:
   logchimp-dev-network:
