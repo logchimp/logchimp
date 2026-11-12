@@ -34,7 +34,7 @@
 <script setup lang="ts">
 // packages
 import { onMounted, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 import { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";

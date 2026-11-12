@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted, reactive, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
 

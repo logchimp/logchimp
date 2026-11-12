@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { I18nT, useI18n } from "vue-i18n";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 
 // components
 import Breadcrumbs from "../../../../components/Breadcrumbs.vue";

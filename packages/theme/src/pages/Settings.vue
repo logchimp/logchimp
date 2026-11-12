@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import type { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";

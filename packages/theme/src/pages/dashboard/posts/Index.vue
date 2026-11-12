@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 
 // modules
 import { useDashboardPosts } from "../../../store/dashboard/posts";

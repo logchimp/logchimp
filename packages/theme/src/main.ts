@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { createHead } from "@vueuse/head";
+import { createHead } from "@unhead/vue/client";
 import { createPinia } from "pinia";
 import i18n from "./plugins/i18n";
 

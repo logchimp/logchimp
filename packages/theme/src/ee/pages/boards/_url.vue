@@ -34,7 +34,7 @@
 // packages
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import { SortAsc as SortAscIcon, SortDesc as SortDescIcon } from "lucide-vue";
 import type { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";
@@ -126,7 +126,7 @@ useHead({
           name: "robots",
           content: "noindex",
         }
-      : {},
+      : undefined,
   ],
 });
 

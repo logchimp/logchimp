@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from "vue";
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 import { useInfiniteScroll } from "@vueuse/core";
 import type { components } from "@logchimp/api-ts-types";
 import type { AxiosError } from "axios";
