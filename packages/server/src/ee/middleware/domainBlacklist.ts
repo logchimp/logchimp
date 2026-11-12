@@ -1,60 +1,7 @@
-import type { Request, Response, NextFunction } from "express";
-import logger from "../../utils/logger";
+import type { NextFunction, Request, Response } from "express";
 import error from "../../errorResponse.json";
 import { validEmail } from "../../helpers";
-
-export function isValidDomain(domain: string) {
-  if (typeof domain !== "string") return false;
-
-  const trimmed = domain.trim().toLowerCase();
-  if (trimmed.length === 0 || trimmed.length > 255) return false;
-
-  const domainRegex =
-    /^(?!-)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/;
-
-  return domainRegex.test(trimmed);
-}
-
-export const parseBlacklistedDomains = (rawDomains: string) => {
-  const result = new Set<string>();
-
-  if (!rawDomains || typeof rawDomains !== "string") return result;
-
-  rawDomains
-    .split(",")
-    .map((domain) => domain.trim().toLowerCase())
-    .forEach((domain) => {
-      if (!domain) return;
-      if (!isValidDomain(domain)) {
-        logger.warn(`Invalid domain in blacklist config: "${domain}"`);
-        return;
-      }
-      result.add(domain);
-    });
-
-  return result;
-};
-
-export class BlacklistManager {
-  private cachedBlacklist: Set<string> | null = null;
-
-  getBlacklistedDomains(): Set<string> {
-    if (this.cachedBlacklist) {
-      return this.cachedBlacklist;
-    }
-
-    const blacklist = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "";
-    this.cachedBlacklist = parseBlacklistedDomains(blacklist);
-
-    return this.cachedBlacklist;
-  }
-
-  reset(): void {
-    this.cachedBlacklist = null;
-  }
-}
-
-export const blacklistManager = new BlacklistManager();
+import { domainBlacklistManager } from "../services/auth/auth.service";
 
 export function domainBlacklist(
   req: Request,
@@ -75,22 +22,7 @@ export function domainBlacklist(
     return;
   }
 
-  const parts = email.trim().split("@");
-  /*
-   * Few cases of valid email (per RFC 5322):
-   * - "a@b"@example.com
-   */
-  const domain = parts[parts.length - 1].trim().toLowerCase();
-
-  if (!isValidDomain(domain)) {
-    res.status(400).json({
-      message: error.api.authentication.invalidEmailDomain,
-      code: "INVALID_EMAIL_DOMAIN",
-    });
-    return;
-  }
-
-  if (blacklistManager.getBlacklistedDomains().has(domain)) {
+  if (domainBlacklistManager.isBlacklisted(email)) {
     res.status(403).send({
       message: error.api.authentication.emailDomainBlacklisted,
       code: "EMAIL_DOMAIN_BLACKLISTED",

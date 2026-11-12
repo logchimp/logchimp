@@ -1,0 +1,49 @@
+import validator from "validator";
+import logger from "../../../utils/logger";
+
+export class DomainBlacklistManager {
+  /**
+   * Make public only for unit tests.
+   * Instead, use isBlacklisted method
+   */
+  domains: Set<string> = new Set();
+
+  constructor() {
+    const blacklist = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "";
+    this.parse(blacklist);
+  }
+
+  public reset(): void {
+    this.domains = new Set();
+    const blacklist = process.env.LOGCHIMP_BLACKLISTED_DOMAINS || "";
+    this.parse(blacklist);
+  }
+
+  /**
+   * Is this provided email address blacklisted?
+   * @param email
+   */
+  public isBlacklisted(email: string) {
+    const atIndex = email.lastIndexOf("@");
+    if (atIndex === -1) return true;
+    const domain = email.slice(atIndex + 1);
+    return this.domains.has(domain);
+  }
+
+  public parse(rawDomains: string) {
+    this.domains = new Set();
+    if (!rawDomains || typeof rawDomains !== "string") return;
+
+    rawDomains.split(",").forEach((domain) => {
+      const d = domain.trim().toLowerCase();
+      if (!d) return;
+      if (validator.isFQDN(d)) {
+        this.domains.add(d);
+      } else {
+        logger.warn(`Invalid domain in blacklist config: "${d}"`);
+      }
+    });
+  }
+}
+
+export const domainBlacklistManager = new DomainBlacklistManager();
