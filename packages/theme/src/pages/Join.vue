@@ -51,9 +51,9 @@ import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import type { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";
+import { useRoute, useRouter } from "vue-router";
 
 // modules
-import { router } from "../router";
 import { AuthAPI } from "../modules/auth";
 import { MeAPI } from "../modules/me";
 import { useSettingStore } from "../store/settings";
@@ -67,7 +67,10 @@ import ServerError from "../components/serverError.vue";
 import LText from "../components/ui/input/LText.vue";
 import Button from "../components/ui/Button.vue";
 import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
+import { getQueryParam } from "../utils/func.ts";
 
+const router = useRouter();
+const route = useRoute();
 const { get: siteSettings } = useSettingStore();
 const { getUserId, login, setPermissions } = useUserStore();
 const authAPI = new AuthAPI();
@@ -127,12 +130,8 @@ async function join() {
     const permissions = await meAPI.GetPermissions();
     setPermissions(permissions.permissions);
 
-    const route = router.currentRoute.value;
-    if (route.query.redirect) {
-      router.push(route.query.redirect.toString());
-    } else {
-      router.push("/");
-    }
+    const redirect = getQueryParam(route.query.redirect);
+    router.push(redirect ? redirect : "/");
   } catch (error) {
     const err = error as AxiosError<
       components["schemas"]["GenericAPIErrorResponseBody"]
@@ -167,12 +166,8 @@ onMounted(() => {
    * If the user is already authenticated.
    */
   if (getUserId) {
-    const route = router.currentRoute.value;
-    if (route.query.redirect) {
-      router.push(route.query?.redirect.toString());
-    } else {
-      router.push("/");
-    }
+    const redirect = getQueryParam(route.query.redirect);
+    router.push(redirect ? redirect : "/");
   }
 });
 
