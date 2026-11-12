@@ -1,5 +1,5 @@
 <template>
-  <div class="alerts">
+  <div class="fixed bottom-6 right-6 z-10 space-y-3">
     <Alert
       v-for="(alert, index) in getAlerts"
       :key="alert.time"
@@ -154,11 +154,3 @@ useHead({
   ],
 });
 </script>
-
-<style lang="sass">
-.alerts
-	position: fixed
-	top: 1.5rem
-	right: 1.5rem
-	z-index: 10
-</style>
