@@ -43,6 +43,8 @@ const OIDC_ERROR_MESSAGES: Record<string, string> = {
   invalid_scope: "Sign-in isn't configured correctly. Please contact support.",
   authorization_failed:
     "We couldn't sign you in. Please try again, or contact support if the problem persists.",
+  email_domain_blacklisted:
+    "Your email domain is restricted from signing in. Please contact support if you believe this is an error.",
 };
 
 async function onMountedHandler() {

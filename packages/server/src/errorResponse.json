@@ -32,7 +32,7 @@
       "invalidEmail": "Enter valid email",
       "invalidEmailFormat": "Invalid email format",
       "invalidEmailDomain": "Invalid email domain",
-      "emailDomainBlacklisted": "Domain not allowed",
+      "emailDomainBlacklisted": "Your email domain is restricted from signing in. Please contact support if you believe this is an error.",
       "noPasswordProvided": "No password provided",
       "setupAlreadyCompleted": "Setup has already been completed.",
       "usernameExists": "Username already exists"
