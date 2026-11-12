@@ -13,7 +13,7 @@
     "db:seed:run": "knex --knexfile ./src/database/config.ts seed:run"
   },
   "dependencies": {
-    "@logchimp/api-ts-types": "^0.2.1",
+    "@logchimp/api-ts-types": "^0.2.2",
     "@valkey/valkey-glide": "^2.5.3",
     "bcryptjs": "^3.0.3",
     "bullmq": "^6.7.2",

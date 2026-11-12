@@ -21,8 +21,8 @@ importers:
   packages/e2e:
     dependencies:
       '@logchimp/api-ts-types':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.6.0
@@ -77,8 +77,8 @@ importers:
   packages/server:
     dependencies:
       '@logchimp/api-ts-types':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       '@valkey/valkey-glide':
         specifier: ^2.5.3
         version: 2.5.3
@@ -219,8 +219,8 @@ importers:
   packages/theme:
     dependencies:
       '@logchimp/api-ts-types':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       '@phosphor-icons/vue':
         specifier: ^2.2.1
         version: 2.2.1(vue@3.5.45(typescript@5.9.3))
@@ -916,8 +916,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@logchimp/api-ts-types@0.2.1':
-    resolution: {integrity: sha512-WlIF9Q7BLF83gX8DLWtbikd124grUs7PaqakOGv+rt1enqy1m70QWUDFswH1qYA1uX9BrcbbTUrwkjMM/9J6GQ==}
+  '@logchimp/api-ts-types@0.2.2':
+    resolution: {integrity: sha512-wECUX1SYgbYGuhiIfONv3E176HljWoauuZvsDDcn6p+MGo6dV6F+figiW1PErLth5UQZ8hHSaqWPiGgeVcHvMg==}
 
   '@lucide/vue@1.68.0':
     resolution: {integrity: sha512-ywFT0JLQC89yjvOD2XXwwT0s+T9ydharRZBgFEIAbk6YyvrNv5MWjkRfzW+hlcxWJJujyzXqofeLjyJC4au4tQ==}
@@ -5362,7 +5362,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@logchimp/api-ts-types@0.2.1': {}
+  '@logchimp/api-ts-types@0.2.2': {}
 
   '@lucide/vue@1.68.0(vue@3.5.45(typescript@6.0.3))':
     dependencies:

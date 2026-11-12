@@ -15,7 +15,7 @@
     "lint:fix": "eslint \"src/**/*.vue\" --fix"
   },
   "dependencies": {
-    "@logchimp/api-ts-types": "^0.2.1",
+    "@logchimp/api-ts-types": "^0.2.2",
     "@phosphor-icons/vue": "^2.2.1",
     "@tailwindcss/vite": "^4.3.5",
     "@vueuse/components": "14.3.0",
