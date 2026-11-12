@@ -4,17 +4,14 @@ import tailwind from "@tailwindcss/vite";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const apiUrl = env.VITE_API_URL;
+  const host = env.VITE_HOST;
 
   return {
     plugins: [vue(), tailwind()],
     server: {
+      host: host || "localhost",
       port: 3000,
-      proxy: {
-        "/api": {
-          target: apiUrl,
-        },
-      },
+      allowedHosts: ["logchimp.dev"],
     },
     build: {
       outDir: "./dist",
