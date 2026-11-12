@@ -159,12 +159,16 @@ services:
       context: ../..
       args:
         DOCKER_BUILDKIT: 1
-    environment:
-      VITE_API_URL: https://api.logchimp.dev
-      VITE_IS_SELF_HOSTED: true
-      API_HOST: logchimp
+    volumes:
+      - ../../:/app
+      - /app/packages/theme/node_modules
+      - /app/packages/theme/dist
+    env_file:
+      - ../../packages/theme/.env
     depends_on:
        - api
+    networks:
+      - logchimp-dev-network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.webapp.rule=Host(`logchimp.dev`)"
