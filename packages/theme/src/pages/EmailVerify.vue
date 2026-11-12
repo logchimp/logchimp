@@ -38,9 +38,9 @@ import { useHead } from "@unhead/vue";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
 import { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";
+import { useRouter, useRoute } from "vue-router";
 
 // modules
-import { router } from "../router";
 import { useSettingStore } from "../store/settings";
 import { AuthAPI } from "../modules/auth";
 
@@ -49,7 +49,10 @@ import AuthForm from "../layout/AuthForm.vue";
 import AuthFormHelperText from "../components/auth/AuthFormHelperText.vue";
 import LoaderContainer from "../components/ui/LoaderContainer.vue";
 import AuthFormHeader from "../components/auth/AuthFormHeader.vue";
+import { getQueryParam } from "../utils/func";
 
+const router = useRouter();
+const route = useRoute();
 const { get: siteSettings } = useSettingStore();
 const authAPI = new AuthAPI();
 
@@ -58,15 +61,14 @@ const success = ref(false);
 const error = ref(false);
 
 async function verifyEmail() {
-  const route = router.currentRoute.value;
-  if (!route.query.token) {
+  const token = getQueryParam(route.query.token);
+  if (!token) {
     loading.value = false;
     error.value = true;
     return;
   }
 
   try {
-    const token = route.query.token.toString();
     const response = await authAPI.VerifyUserEmail(token);
 
     if (response.verify.success) {

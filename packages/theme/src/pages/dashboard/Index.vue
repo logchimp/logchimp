@@ -26,6 +26,7 @@ import { useI18n } from "vue-i18n";
 
 import { useSettingStore } from "../../store/settings";
 import DashboardPageHeader from "../../components/dashboard/PageHeader.vue";
+import { getQueryParam } from "../../utils/func.ts";
 
 const RecentlyCreatedPosts = defineAsyncComponent(
   () => import("../../components/dashboard/index/RecentlyCreatedPosts.vue"),
@@ -40,7 +41,8 @@ const settingsStore = useSettingStore();
 const { t } = useI18n();
 
 onMounted(() => {
-  if (route.query.onboarding === "complete") {
+  const onboarding = getQueryParam(route.query.onboarding);
+  if (onboarding === "complete") {
     // Remove the query param so confetti only shows once
     const { onboarding, ...restQuery } = route.query;
     routerInstance.replace({ query: restQuery });

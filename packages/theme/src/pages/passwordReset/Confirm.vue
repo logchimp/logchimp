@@ -60,10 +60,10 @@
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { CheckCircle as SuccessIcon, XCircle as ErrorIcon } from "lucide-vue";
+import { useRoute } from "vue-router";
 
 // modules
 import { AuthAPI } from "../../modules/auth";
-import { router } from "../../router";
 import { useSettingStore } from "../../store/settings";
 
 // component
@@ -73,7 +73,9 @@ import LoaderContainer from "../../components/ui/LoaderContainer.vue";
 import LText from "../../components/ui/input/LText.vue";
 import Button from "../../components/ui/Button.vue";
 import AuthFormHeader from "../../components/auth/AuthFormHeader.vue";
+import { getQueryParam } from "../../utils/func.ts";
 
+const route = useRoute();
 const { get: siteSettings } = useSettingStore();
 const authAPI = new AuthAPI();
 
@@ -112,16 +114,14 @@ function hideConfirmPasswordError(event: FormFieldErrorType) {
 
 async function validateToken() {
   // have reset password token
-  const route = router.currentRoute.value;
-
-  if (!route.query.token) {
+  const token = getQueryParam(route.query.token);
+  if (!token) {
     validToken.loading = false;
     validToken.error = true;
     return;
   }
 
   try {
-    const token = route.query.token.toString();
     const response = await authAPI.ValidateResetPasswordToken(token);
 
     if (response.reset.valid) {
@@ -135,8 +135,8 @@ async function validateToken() {
 }
 
 async function setPassword() {
-  const route = router.currentRoute.value;
-  if (!route.query.token) {
+  const token = getQueryParam(route.query.token);
+  if (!token) {
     validToken.error = true;
     return;
   }
@@ -161,7 +161,6 @@ async function setPassword() {
     return;
   }
 
-  const token = route.query.token.toString();
   buttonLoading.value = true;
 
   try {

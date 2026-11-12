@@ -48,7 +48,7 @@ const OIDC_ERROR_MESSAGES: Record<string, string> = {
 
 async function onMountedHandler() {
   const error = getQueryParam(route.query.error);
-  const errorMessage = getQueryParam(route.query?.error_description);
+  const errorMessage = getQueryParam(route.query.error_description);
 
   if (error) {
     if (error in OIDC_ERROR_MESSAGES) {
@@ -81,12 +81,8 @@ async function onMountedHandler() {
       path: "/oauth/logchimp",
     });
 
-    const route = router.currentRoute.value;
-    if (route.query.redirect) {
-      router.push(route.query?.redirect.toString());
-    } else {
-      router.push("/");
-    }
+    const redirect = getQueryParam(route.query.redirect);
+    router.push(redirect ? redirect : "/");
   } catch (error) {
     isError.value = true;
 
