@@ -18,9 +18,11 @@
 import { ref } from "vue";
 import { DropdownMenuItem } from "reka-ui";
 import { PlusIcon } from "lucide-vue";
+import type { AxiosError } from "axios";
 import type { components } from "@logchimp/api-ts-types";
 
 import { RoadmapsEE } from "../../../../modules/roadmaps";
+import { useAlertStore } from "../../../../../store/alert.ts";
 
 interface Props {
   search: string;
@@ -32,6 +34,7 @@ const emit =
   >();
 const roadmapEEAPI = new RoadmapsEE();
 
+const { add: alert } = useAlertStore();
 const loading = ref(false);
 
 async function createRoadmapHandler() {
@@ -46,9 +49,17 @@ async function createRoadmapHandler() {
 
     emit("created", roadmap);
     loading.value = false;
-  } catch (err) {
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to create roadmap",
+      type: "error",
+    });
+  } finally {
     loading.value = false;
-    console.error(err);
   }
 }
 </script>
