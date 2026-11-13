@@ -62,15 +62,23 @@ export abstract class APIService {
           const method = (config?.method ?? "GET").toUpperCase();
           const url = config ? axios.getUri(config) : "";
           const status = response?.status ?? error.code ?? "NETWORK";
+          const errorMsg = response?.data?.message ?? error.message;
           const errorCode = response?.data?.code;
           const duration =
             config?.meta?.start !== undefined
               ? `(${Math.round(performance.now() - config.meta.start)}ms)`
               : "";
 
-          console.log(
-            `✖ ${method} ${url} → ${status} ${errorCode ? `'${errorCode}' ` : ""}${duration}`,
-          );
+          const parts = [
+            status,
+            method,
+            url,
+            "→",
+            errorMsg && `'${errorMsg}'`,
+            errorCode && `[${errorCode}]`,
+            duration,
+          ].filter(Boolean);
+          console.log(parts.join(" "));
         }
         return Promise.reject(error);
       },
