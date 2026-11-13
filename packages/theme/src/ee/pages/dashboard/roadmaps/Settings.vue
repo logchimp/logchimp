@@ -26,6 +26,8 @@
 import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { router } from "../../../../router";
@@ -67,10 +69,12 @@ async function getRoadmap(url: string) {
       color: response.roadmap.color,
       display: response.roadmap.display,
     });
-  } catch (err) {
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     console.error(err);
-    // @ts-expect-error
-    errorCode.value = err.response.data.code;
+    errorCode.value = err.response?.data.code;
   } finally {
     loading.value = false;
   }

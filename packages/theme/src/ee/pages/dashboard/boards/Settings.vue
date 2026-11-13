@@ -27,6 +27,7 @@ import { onMounted, reactive, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../../../../router";
@@ -63,10 +64,12 @@ async function getBoard(url: string) {
 
     title.value = response.board.name;
     Object.assign(board, response.board);
-  } catch (err) {
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     console.error(err);
-    // @ts-expect-error
-    errorCode.value = err.response.data.code;
+    errorCode.value = err.response?.data.code;
   } finally {
     loading.value = false;
   }

@@ -372,12 +372,14 @@ import { computed, reactive, ref } from "vue";
 import type { components } from "@logchimp/api-ts-types";
 import { ComputerIcon, ShieldAlert, TriangleAlert } from "lucide-vue";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../../../router";
 import { useUserStore } from "../../../store/user";
 import { RolesEEAPI } from "../../modules/roles";
 import { useDashboardRoles } from "../../store/dashboard/roles";
+import { useAlertStore } from "../../../store/alert.ts";
 
 // components
 import Button from "../../../components/ui/Button.vue";
@@ -392,6 +394,7 @@ import Alert from "../../../components/ui/Alert/Alert.vue";
 import RoleModifyPermissionScope from "./ModifyPermissionScope.vue";
 import type { IPermissionsState } from "../../types";
 
+const { add: alert } = useAlertStore();
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const rolesEEAPI = new RolesEEAPI();
@@ -453,8 +456,15 @@ async function updateRoleHandler() {
 
     dashboardRoles.updateRole(response.role);
     router.push("/dashboard/settings/roles");
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to save role",
+      type: "error",
+    });
   } finally {
     updateRoleButtonLoading.value = false;
   }

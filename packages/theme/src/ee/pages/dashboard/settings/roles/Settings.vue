@@ -39,6 +39,7 @@ import Dashboard500 from "../../../../../components/dashboard/500.vue";
 import LoaderContainer from "../../../../../components/ui/LoaderContainer.vue";
 import RoleEditor from "../../../../components/roles/RoleEditor.vue";
 import type { IPermissionsState } from "../../../../types";
+import type { AxiosError } from "axios";
 
 const { t } = useI18n();
 const errorCode = ref<string | undefined>();
@@ -143,10 +144,12 @@ async function getRoleHandler(id: string) {
         }
       }
     });
-  } catch (err) {
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     console.error(err);
-    // @ts-expect-error
-    errorCode.value = err.response.data.code;
+    errorCode.value = err.response?.data.code;
   } finally {
     loading.value = false;
   }

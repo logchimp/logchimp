@@ -69,6 +69,7 @@
 import { computed, reactive, ref } from "vue";
 import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../../../router";
@@ -86,7 +87,9 @@ import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
+import { useAlertStore } from "../../../store/alert.ts";
 
+const { add: alert } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const { t } = useI18n();
@@ -145,8 +148,15 @@ async function updateHandler() {
 
     dashboardRoadmaps.updateRoadmap(response.roadmap);
     router.push("/dashboard/roadmaps");
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to save roadmap",
+      type: "error",
+    });
   } finally {
     updateButtonLoading.value = false;
   }

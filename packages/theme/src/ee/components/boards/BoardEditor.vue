@@ -91,6 +91,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
+import type { AxiosError } from "axios";
 const SlugInputField = defineAsyncComponent(
   () =>
     import("../../../ee/components/dashboard/boards/BoardSettingsForm/SlugInputField.vue"),
@@ -150,7 +151,14 @@ async function update() {
     dashboardBoards.updateBoard(response.board);
     router.push("/dashboard/boards");
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to save board",
+      type: "error",
+    });
   } finally {
     saveButtonLoading.value = false;
   }
