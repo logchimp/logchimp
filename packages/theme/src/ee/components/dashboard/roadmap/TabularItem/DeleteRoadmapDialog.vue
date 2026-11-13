@@ -40,12 +40,16 @@
 
 <script setup lang="ts">
 import { inject, ref } from "vue";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 import { RoadmapsEE } from "../../../../modules/roadmaps";
 import { roadmapKey } from "./options";
 import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
+import { useAlertStore } from "../../../../../store/alert.ts";
 
+const { add: alert } = useAlertStore();
 const roadmap = inject(roadmapKey);
 const dashboardRoadmaps = useDashboardRoadmaps();
 
@@ -53,6 +57,7 @@ interface Props {
   open: boolean;
 }
 defineProps<Props>();
+
 const emit = defineEmits<(e: "close", value: boolean) => void>();
 const loading = ref<boolean>(false);
 const roadmapEEAPI = new RoadmapsEE();
@@ -71,7 +76,14 @@ async function deleteRoadmapHandler() {
       emit("close", false);
     }
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to delete roadmap",
+      type: "error",
+    });
   } finally {
     loading.value = false;
   }

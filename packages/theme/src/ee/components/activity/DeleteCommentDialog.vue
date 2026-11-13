@@ -37,12 +37,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { components } from "@logchimp/api-ts-types";
+import type { AxiosError } from "axios";
 
 import { PostsEE } from "../../modules/posts";
 import { usePostActivityEEStore } from "../../store/postActivity";
 
 import Dialog from "../../../components/ui/Dialog/Dialog.vue";
+import { useAlertStore } from "../../../store/alert.ts";
 
+const { add: alert } = useAlertStore();
 const postActivityEEStore = usePostActivityEEStore();
 
 interface Props {
@@ -70,7 +73,14 @@ async function deleteHandler() {
       emit("close", false);
     }
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to delete comment",
+      type: "error",
+    });
   } finally {
     loading.value = false;
   }
