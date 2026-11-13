@@ -74,12 +74,14 @@
 import { computed, reactive, ref, defineAsyncComponent } from "vue";
 import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../../../router";
 import { BoardsEE } from "../../modules/boards";
 import { useUserStore } from "../../../store/user";
 import { useDashboardBoards } from "../../store/dashboard/boards";
+import { useAlertStore } from "../../../store/alert";
 
 // components
 import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
@@ -91,7 +93,6 @@ import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vue";
 import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
-import type { AxiosError } from "axios";
 const SlugInputField = defineAsyncComponent(
   () =>
     import("../../../ee/components/dashboard/boards/BoardSettingsForm/SlugInputField.vue"),
@@ -108,6 +109,7 @@ const saveButtonLoading = ref(false);
 const board = reactive<components["schemas"]["BoardPrivate"]>(props.board);
 const boardsEEAPI = new BoardsEE();
 
+const { add: alert } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 const { t } = useI18n();
