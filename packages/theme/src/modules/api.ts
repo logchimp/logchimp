@@ -26,9 +26,9 @@ export abstract class APIService {
       const { authToken } = useUserStore();
 
       if (authToken) {
-        config.headers.Authorization = `Bearer ${authToken}`;
+        config.headers.set("Authorization", `Bearer ${authToken}`);
       } else {
-        delete config.headers.Authorization;
+        config.headers.delete("Authorization");
       }
 
       return config;
