@@ -1,8 +1,21 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
+} from "axios";
 
 import { useUserStore } from "../store/user";
+import type { components } from "@logchimp/api-ts-types";
 
 type PrimitiveType = string | number | boolean;
+
+// `meta` isn't a built-in axios field — declare it so TS is happy.
+declare module "axios" {
+  export interface InternalAxiosRequestConfig {
+    meta?: { start: number };
+  }
+}
 
 /**
  * Abstract base class for making HTTP requests using axios
@@ -22,17 +35,46 @@ export abstract class APIService {
       baseURL,
     });
 
-    this.axiosInstance.interceptors.request.use((config) => {
-      const { authToken } = useUserStore();
+    this.axiosInstance.interceptors.request.use(
+      (config: InternalAxiosRequestConfig) => {
+        const { authToken } = useUserStore();
 
-      if (authToken) {
-        config.headers.set("Authorization", `Bearer ${authToken}`);
-      } else {
-        config.headers.delete("Authorization");
-      }
+        if (authToken) {
+          config.headers.set("Authorization", `Bearer ${authToken}`);
+        } else {
+          config.headers.delete("Authorization");
+        }
 
-      return config;
-    });
+        config.meta = { start: performance.now() };
+
+        return config;
+      },
+    );
+
+    // Console.log error-ed API calls
+    this.axiosInstance.interceptors.response.use(
+      (res) => res,
+      (error) => {
+        if (!axios.isCancel(error) && axios.isAxiosError(error)) {
+          const { config, response } = error as AxiosError<
+            components["schemas"]["GenericAPIErrorResponseBody"]
+          >;
+          const method = (config?.method ?? "GET").toUpperCase();
+          const url = config ? axios.getUri(config) : "";
+          const status = response?.status ?? error.code ?? "NETWORK";
+          const errorCode = response?.data?.code;
+          const duration =
+            config?.meta?.start !== undefined
+              ? `(${Math.round(performance.now() - config.meta.start)}ms)`
+              : "";
+
+          console.log(
+            `✖ ${method} ${url} → ${status} ${errorCode ? `'${errorCode}' ` : ""}${duration}`,
+          );
+        }
+        return Promise.reject(error);
+      },
+    );
   }
 
   /**
