@@ -123,11 +123,14 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
 import { getSettings, updateSettings } from "../../../modules/site";
+import { useAlertStore } from "../../../store/alert.ts";
 
 // components
 import type { FormFieldErrorType } from "../../../components/ui/input/formBaseProps";
@@ -141,6 +144,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
+const { add: alert } = useAlertStore();
 const { updateSettings: update } = useSettingStore();
 const { permissions } = useUserStore();
 const { t } = useI18n();
@@ -248,7 +252,14 @@ async function updateSettingsHandler() {
 
     update(response.data.settings);
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    alert({
+      title: err.response?.data.message ?? "Failed to save settings",
+      type: "error",
+    });
   } finally {
     updateSettingsButtonLoading.value = false;
   }
