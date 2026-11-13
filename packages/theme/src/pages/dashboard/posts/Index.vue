@@ -136,7 +136,7 @@ async function createPostHandler() {
     >;
 
     alert({
-      title: err.response?.data.message || "Failed to create post",
+      title: err.response?.data.message ?? "Failed to create post",
       type: "error",
     });
   } finally {

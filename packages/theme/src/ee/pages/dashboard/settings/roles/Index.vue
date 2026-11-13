@@ -85,7 +85,7 @@ async function createRoleHandler() {
     >;
 
     alert({
-      title: err.response?.data.message || "Failed to create roles",
+      title: err.response?.data.message ?? "Failed to create roles",
       type: "error",
     });
   } finally {

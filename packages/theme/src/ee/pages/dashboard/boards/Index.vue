@@ -85,7 +85,7 @@ async function createBoardHandler() {
     >;
 
     alert({
-      title: err.response?.data.message || "Failed to create board",
+      title: err.response?.data.message ?? "Failed to create board",
       type: "error",
     });
   } finally {

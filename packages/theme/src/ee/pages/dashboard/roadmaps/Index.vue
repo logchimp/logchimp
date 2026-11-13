@@ -86,7 +86,7 @@ async function createRoadmapHandler() {
     >;
 
     alert({
-      title: err.response?.data.message || "Failed to create roadmap",
+      title: err.response?.data.message ?? "Failed to create roadmap",
       type: "error",
     });
   } finally {
