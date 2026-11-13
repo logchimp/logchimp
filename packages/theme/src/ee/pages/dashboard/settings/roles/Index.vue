@@ -54,7 +54,7 @@ import TabularView from "../../../../components/dashboard/roles/TabularView.vue"
 import UpgradeTooltip from "../../../../components/UpgradeTooltip.vue";
 import LicenseCrown from "../../../../components/icons/LicenseCrown.vue";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const settingsEEStore = useSettingsEEStore();
@@ -84,7 +84,7 @@ async function createRoleHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to create roles",
       type: "error",
     });

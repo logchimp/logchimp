@@ -54,7 +54,7 @@ import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 import { useAlertStore } from "../../../../store/alert.ts";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const settingsEEStore = useSettingsEEStore();
@@ -85,7 +85,7 @@ async function createRoadmapHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to create roadmap",
       type: "error",
     });

@@ -144,7 +144,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { updateSettings: update } = useSettingStore();
 const { permissions } = useUserStore();
 const { t } = useI18n();
@@ -256,7 +256,7 @@ async function updateSettingsHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to save settings",
       type: "error",
     });

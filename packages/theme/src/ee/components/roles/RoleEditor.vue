@@ -394,7 +394,7 @@ import Alert from "../../../components/ui/Alert/Alert.vue";
 import RoleModifyPermissionScope from "./ModifyPermissionScope.vue";
 import type { IPermissionsState } from "../../types";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions: userPermissions } = useUserStore();
 const dashboardRoles = useDashboardRoles();
 const rolesEEAPI = new RolesEEAPI();
@@ -461,7 +461,7 @@ async function updateRoleHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to save role",
       type: "error",
     });

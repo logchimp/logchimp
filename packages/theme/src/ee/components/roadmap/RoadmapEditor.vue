@@ -89,7 +89,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 import { useAlertStore } from "../../../store/alert.ts";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const { t } = useI18n();
@@ -153,7 +153,7 @@ async function updateHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to save roadmap",
       type: "error",
     });

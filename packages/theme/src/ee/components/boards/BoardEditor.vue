@@ -109,7 +109,7 @@ const saveButtonLoading = ref(false);
 const board = reactive<components["schemas"]["BoardPrivate"]>(props.board);
 const boardsEEAPI = new BoardsEE();
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 const { t } = useI18n();
@@ -157,7 +157,7 @@ async function update() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to save board",
       type: "error",
     });

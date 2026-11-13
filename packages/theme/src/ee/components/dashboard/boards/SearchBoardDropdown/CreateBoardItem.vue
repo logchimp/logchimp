@@ -33,7 +33,7 @@ const emit =
     (e: "created", event: components["schemas"]["BoardPrivate"]) => void
   >();
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const loading = ref(false);
 const boardsEEAPI = new BoardsEE();
 
@@ -53,7 +53,7 @@ async function createBoardHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to create board",
       type: "error",
     });

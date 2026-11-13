@@ -34,7 +34,7 @@ const emit =
   >();
 const roadmapEEAPI = new RoadmapsEE();
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const loading = ref(false);
 
 async function createRoadmapHandler() {
@@ -54,7 +54,7 @@ async function createRoadmapHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to create roadmap",
       type: "error",
     });

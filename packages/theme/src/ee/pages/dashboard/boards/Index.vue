@@ -54,7 +54,7 @@ import TabularView from "../../../components/dashboard/boards/TabularView.vue";
 import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 const settingsEEStore = useSettingsEEStore();
@@ -84,7 +84,7 @@ async function createBoardHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to create board",
       type: "error",
     });

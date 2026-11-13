@@ -45,7 +45,7 @@ import { usePostActivityEEStore } from "../../store/postActivity";
 import Dialog from "../../../components/ui/Dialog/Dialog.vue";
 import { useAlertStore } from "../../../store/alert.ts";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const postActivityEEStore = usePostActivityEEStore();
 
 interface Props {
@@ -77,7 +77,7 @@ async function deleteHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to delete comment",
       type: "error",
     });

@@ -49,7 +49,7 @@ import { roadmapKey } from "./options";
 import { useDashboardRoadmaps } from "../../../../store/dashboard/roadmaps";
 import { useAlertStore } from "../../../../../store/alert.ts";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const roadmap = inject(roadmapKey);
 const dashboardRoadmaps = useDashboardRoadmaps();
 
@@ -80,7 +80,7 @@ async function deleteRoadmapHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to delete roadmap",
       type: "error",
     });

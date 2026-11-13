@@ -67,7 +67,7 @@ import Button from "../../../components/ui/Button.vue";
 import LicenseValidationFailed from "../../../components/LicenseValidationFailed.vue";
 import LText from "../../../components/ui/input/LText.vue";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardPosts = useDashboardPosts();
 const postsAPI = new PostsAPI();
@@ -135,7 +135,7 @@ async function createPostHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to create post",
       type: "error",
     });

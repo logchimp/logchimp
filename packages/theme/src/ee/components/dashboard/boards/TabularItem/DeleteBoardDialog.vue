@@ -52,7 +52,7 @@ import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
 import { useAlertStore } from "../../../../../store/alert.ts";
 
 const board = inject(boardKey);
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const dashboardBoards = useDashboardBoards();
 const { t } = useI18n();
 
@@ -83,7 +83,7 @@ async function deleteBoardHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to delete board",
       type: "error",
     });

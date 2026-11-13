@@ -120,7 +120,7 @@ import LicenseCrown from "../../../../ee/components/icons/LicenseCrown.vue";
 import UpgradeTooltip from "../../../../ee/components/UpgradeTooltip.vue";
 import Checkbox from "../../../ui/Checkbox.vue";
 
-const { add: alert } = useAlertStore();
+const { add: toast } = useAlertStore();
 const dashboardPosts = useDashboardPosts();
 const settingsEEStore = useSettingsEEStore();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
@@ -188,7 +188,7 @@ async function updatePostHandler() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
 
-    alert({
+    toast({
       title: err.response?.data.message ?? "Failed to save post",
       type: "error",
     });
