@@ -7,7 +7,7 @@ COPY ./packages/email-templates/package.json ./packages/email-templates/package.
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 
 RUN \
-    npm i -g pnpm@11.25.0 && \
+    npm i -g pnpm@12.18.0 && \
     pnpm install --frozen-lockfile --prod=false;
 
 COPY ./packages/server ./packages/server/
@@ -33,7 +33,7 @@ COPY --from=builder /app/packages/server/scripts ./packages/server/scripts
 COPY --from=builder /app/packages/email-templates/dist/ ./packages/server/dist/services/mail/templates
 
 RUN \
-    npm i -g pnpm@11.25.0 && \
+    npm i -g pnpm@12.18.0 && \
     pnpm install --filter="@logchimp/api" && \
     chmod +x ./packages/server/scripts/*.sh
 

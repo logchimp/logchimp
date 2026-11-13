@@ -1,5 +1,5 @@
 # Command detection helpers
-PNPM_CMD := $(shell command -v pnpm >/dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io pnpm")
+PNPM_CMD := $(shell command -v pnpm >/dev/null 2>&1 && echo "pnpm" || echo "pkgx +nodejs.org@22 +pnpm.io@12 pnpm")
 
 server-integration-test:
 	cd ./packages/server; \

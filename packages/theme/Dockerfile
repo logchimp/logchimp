@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN \
-    npm i -g pnpm@11.25.0 && \
+    npm i -g pnpm@12.18.0 && \
     pnpm install --frozen-lockfile --prod=false && \
     # TODO: use pnpm build script which does typescript check
     pnpm --filter="@logchimp/theme" exec pnpm vite build;
