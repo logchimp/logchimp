@@ -119,8 +119,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       knex:
-        specifier: ^2.5.1
-        version: 2.5.1(pg@8.23.1)(supports-color@5.5.0)
+        specifier: ^3.3.0
+        version: 3.3.0(pg@8.23.1)(supports-color@5.5.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1716,13 +1716,6 @@ packages:
     resolution: {integrity: sha512-5lLrm/0VLCIsWSgHSgAc1FwfDQ+kEDk5yfvGELblIG1c6lmsQ6jSofvbDjcPcpvD131hOJy/tfGrO+QFcrcGIw==}
     engines: {node: '>=20'}
 
-  '@vitejs/plugin-vue@6.0.10':
-    resolution: {integrity: sha512-b80aUQh3n+qEzzZm5oQp3rT2QImeCx58K6eFl/RkJ3d65KW0kTuv5lNsLRVAjbW9YRUpo/wzmvzMgV34bTAItA==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    peerDependencies:
-      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.2.25 || ^3.6.0-rc.10
-
   '@vitejs/plugin-vue@6.0.11':
     resolution: {integrity: sha512-m48lskIUJGlB6qUiYhDMI8nd2ngeidz2U4nKTjqI13cFMu5rH8JeEILPkDtK9Fk/TjBA2pkj8AlbenqDaKu+ww==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -3037,20 +3030,24 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
-  knex@2.5.1:
-    resolution: {integrity: sha512-z78DgGKUr4SE/6cm7ku+jHvFT0X97aERh/f0MUKAKgFnwCYBEW4TFBqtHWFYiJFid7fMrtpZ/gxJthvz5mEByA==}
-    engines: {node: '>=12'}
+  knex@3.3.0:
+    resolution: {integrity: sha512-LgWl031hNuLv9Lhxdd9093zULa2aNcoP04Bk29e5NidgRcEr/T0rAr2WYi4BhjTiCDoQiRU56meUE5rppLKZzQ==}
+    engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
       better-sqlite3: '*'
+      mariadb: '*'
       mysql: '*'
       mysql2: '*'
       pg: '*'
       pg-native: '*'
+      pg-query-stream: ^4.14.0
       sqlite3: '*'
       tedious: '*'
     peerDependenciesMeta:
       better-sqlite3:
+        optional: true
+      mariadb:
         optional: true
       mysql:
         optional: true
@@ -3059,6 +3056,8 @@ packages:
       pg:
         optional: true
       pg-native:
+        optional: true
+      pg-query-stream:
         optional: true
       sqlite3:
         optional: true
@@ -3590,8 +3589,8 @@ packages:
   pg-connection-string@2.14.1:
     resolution: {integrity: sha512-qR3kGNPBLpCNtz0evbKA0Y/MRFXwSSdT+pTJvYp/bXTcReZbvX1kzF0IyTc1QnxqF7AZbOeBhNL8R5mYQZV/MA==}
 
-  pg-connection-string@2.6.1:
-    resolution: {integrity: sha512-w6ZzNu6oMmIzEAYVw+RLK0+nqHPt8K3ZnknKi+g48Ak2pr3dtljJW3o+D/n2zzCG07Zoe9VOX3aiKpj+BN0pjg==}
+  pg-connection-string@2.6.2:
+    resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
 
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -5070,7 +5069,7 @@ snapshots:
       '@tailwindcss/postcss': 4.3.5
       '@tailwindcss/vite': 4.3.5(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))
       '@unhead/vue': 3.4.3(@oxc-project/types@0.156.0)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
-      '@vitejs/plugin-vue': 6.0.10(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
+      '@vitejs/plugin-vue': 6.0.11(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
       '@vueuse/core': 14.4.0(vue@3.5.45(typescript@6.0.3))
       class-variance-authority: 0.7.1
       clsx: 2.1.1
@@ -6026,17 +6025,17 @@ snapshots:
       '@valkey/valkey-glide-linux-x64-gnu': 2.6.0
       '@valkey/valkey-glide-linux-x64-musl': 2.6.0
 
-  '@vitejs/plugin-vue@6.0.10(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))':
-    dependencies:
-      '@rolldown/pluginutils': 1.1.0
-      vite: 8.3.8(@types/node@24.19.2)(jiti@2.7.0)
-      vue: 3.5.45(typescript@6.0.3)
-
   '@vitejs/plugin-vue@6.0.11(vite@6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.45(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.1.0
       vite: 6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5)
       vue: 3.5.45(typescript@5.9.3)
+
+  '@vitejs/plugin-vue@6.0.11(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))':
+    dependencies:
+      '@rolldown/pluginutils': 1.1.0
+      vite: 8.3.8(@types/node@24.19.2)(jiti@2.7.0)
+      vue: 3.5.45(typescript@6.0.3)
 
   '@vitest/expect@4.1.12':
     dependencies:
@@ -7531,7 +7530,7 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  knex@2.5.1(pg@8.23.1)(supports-color@5.5.0):
+  knex@3.3.0(pg@8.23.1)(supports-color@5.5.0):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
@@ -7542,7 +7541,7 @@ snapshots:
       getopts: 2.3.0
       interpret: 2.2.0
       lodash: 4.18.1
-      pg-connection-string: 2.6.1
+      pg-connection-string: 2.6.2
       rechoir: 0.8.0
       resolve-from: 5.0.0
       tarn: 3.1.2
@@ -8044,7 +8043,7 @@ snapshots:
 
   pg-connection-string@2.14.1: {}
 
-  pg-connection-string@2.6.1: {}
+  pg-connection-string@2.6.2: {}
 
   pg-int8@1.0.1: {}
 
