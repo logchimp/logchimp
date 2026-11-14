@@ -51,7 +51,7 @@ importers:
         version: 24.19.2
       '@vue/eslint-config-prettier':
         specifier: ^10.2.0
-        version: 10.2.0(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.0)
+        version: 10.2.0(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.1)
       '@vue/eslint-config-typescript':
         specifier: ^14.9.0
         version: 14.9.0(eslint-plugin-vue@10.12.1(@typescript-eslint/parser@8.72.2(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(supports-color@5.5.0)(typescript@6.0.3))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(vue-eslint-parser@10.4.2(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(supports-color@5.5.0)))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(supports-color@5.5.0)(typescript@6.0.3)
@@ -65,8 +65,8 @@ importers:
         specifier: ^17.12.0
         version: 17.14.0
       prettier:
-        specifier: ^3.9.10
-        version: 3.10.0
+        specifier: ^3.10.1
+        version: 3.10.1
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -299,7 +299,7 @@ importers:
         version: 6.0.10(vite@6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.45(typescript@5.9.3))
       '@vue/eslint-config-prettier':
         specifier: ^10.2.0
-        version: 10.2.0(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.0)
+        version: 10.2.0(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.1)
       '@vue/eslint-config-typescript':
         specifier: ^14.9.0
         version: 14.9.0(eslint-plugin-vue@10.12.1(@typescript-eslint/parser@8.72.2(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(vue-eslint-parser@10.4.2(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(supports-color@5.5.0)))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3)
@@ -322,8 +322,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3(supports-color@5.5.0)
       prettier:
-        specifier: ^3.9.10
-        version: 3.10.0
+        specifier: ^3.10.1
+        version: 3.10.1
       sass:
         specifier: 1.69.5
         version: 1.69.5
@@ -3677,6 +3677,7 @@ packages:
   postcss-selector-parser@7.2.0:
     resolution: {integrity: sha512-Khh/tERVBn0I1499dvBSHY0pWJloMJWUxDsOBM0CCDPAcVZ10Jl2L1qy1f19uEX22spa8Mv7DCdEQJc0cGwBhQ==}
     engines: {node: '>=4'}
+    deprecated: Double-escapes CSS Modules class names (#362). Use 7.2.1.
 
   postcss-sort-media-queries@6.7.1:
     resolution: {integrity: sha512-NU+cVdLaPMYspggR6JSpk7YdAoRY9Y9jNacHRjA/5vJ0iP6/Stgg2FV82IVnryTQKbtp7B5cQ33KrWbVe07VSQ==}
@@ -3715,8 +3716,8 @@ packages:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.10.0:
-    resolution: {integrity: sha512-mBi4765LgjO1PFjlEs7pUeK0nb1bw71c+N4/ItfeUWNdY5cV2pRKaFpbbFRYmDJMO+5ZwzGxHRqHxFZna7iv5w==}
+  prettier@3.10.1:
+    resolution: {integrity: sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -6148,12 +6149,12 @@ snapshots:
 
   '@vue/devtools-shared@8.2.1': {}
 
-  '@vue/eslint-config-prettier@10.2.0(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.0)':
+  '@vue/eslint-config-prettier@10.2.0(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.1)':
     dependencies:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@5.5.0)
       eslint-config-prettier: 10.1.8(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))
-      eslint-plugin-prettier: 5.5.7(eslint-config-prettier@10.1.8(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0)))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.0)
-      prettier: 3.10.0
+      eslint-plugin-prettier: 5.5.7(eslint-config-prettier@10.1.8(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0)))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.1)
+      prettier: 3.10.1
     transitivePeerDependencies:
       - '@types/eslint'
 
@@ -6907,10 +6908,10 @@ snapshots:
     dependencies:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@5.5.0)
 
-  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.8(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0)))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.0):
+  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.8(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0)))(eslint@10.14.0(jiti@2.7.0)(supports-color@5.5.0))(prettier@3.10.1):
     dependencies:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@5.5.0)
-      prettier: 3.10.0
+      prettier: 3.10.1
       prettier-linter-helpers: 1.0.1
       synckit: 0.12.3
     optionalDependencies:
@@ -8159,7 +8160,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.10.0: {}
+  prettier@3.10.1: {}
 
   property-information@7.2.0: {}
 
