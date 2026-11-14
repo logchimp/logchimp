@@ -27,7 +27,7 @@
     "deepmerge": "^4.3.1",
     "dompurify": "^3.4.17",
     "js-cookie": "^3.0.8",
-    "lucide-vue": "npm:lucide-vue-next@0.546.0",
+    "lucide-vue": "npm:@lucide/vue@^1.73.0",
     "pinia": "2.3.1",
     "reka-ui": "^2.11.0",
     "tailwindcss": "^4.3.5",
