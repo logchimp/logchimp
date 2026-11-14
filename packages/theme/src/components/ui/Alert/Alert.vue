@@ -110,25 +110,25 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" module>
+<style module>
 .alert.toast {
   animation-name: alertfade;
   animation-timing-function: linear;
   max-width: 300px;
+}
 
-  @keyframes alertfade {
-    0% {
-      opacity: 1;
-    }
-    60% {
-      opacity: 1;
-    }
-    80% {
-      opacity: 0.5;
-    }
-    100% {
-      opacity: 0;
-    }
+@keyframes alertfade {
+  0% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>
