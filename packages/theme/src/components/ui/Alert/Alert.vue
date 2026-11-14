@@ -19,9 +19,9 @@
         :class="[
           'flex',
           isToast ? 'size-5 [&>svg]:size-5' : 'size-6 [&>svg]:size-6',
-          type === 'success' && '[&>svg]:fill-(--color-emerald-600)',
-          type === 'warning' && '[&>svg]:fill-(--color-yellow-600)',
-          type === 'error' && '[&>svg]:fill-(--color-red-600)',
+          type === 'success' && 'text-(--color-emerald-600)',
+          type === 'warning' && 'text-(--color-yellow-600)',
+          type === 'error' && 'text-(--color-red-600)',
         ]"
       >
         <slot name="icon">
