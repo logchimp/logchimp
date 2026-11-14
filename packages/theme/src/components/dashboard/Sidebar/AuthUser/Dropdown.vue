@@ -26,7 +26,7 @@
       </Dropdown-v2-item>
       <dropdown-v2-item @click="tweetLogChimp">
         <template #icon>
-          <x-icon />
+          <x-icon class="fill-neutral-700 stroke-none!" />
         </template>
         Tweet @LogChimp!
       </dropdown-v2-item>
