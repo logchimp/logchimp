@@ -21,10 +21,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import type { components } from "@logchimp/api-ts-types";
+import type { AxiosError } from "axios";
 
 import { UsersAPI as UserService } from "../../../../modules/users";
 import { PostsEE as PostEEService } from "../../../../ee/modules/posts";
+import { useAlertStore } from "../../../../store/alert.ts";
 
+const { add: toast } = useAlertStore();
 const users = ref<Array<components["schemas"]["UserItem"]>>([]);
 const loading = ref(false);
 const isError = ref(false);
@@ -61,7 +64,17 @@ async function addVote(userId: string) {
   try {
     const r = await postEEService.castVoteOnBehalf(props.postId, userId);
     emit("add-vote", r.vote);
-  } catch (e) {}
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title:
+        err.response?.data.message ?? "Failed to add vote on behalf of user",
+      type: "error",
+    });
+  }
 }
 
 onMounted(() => {

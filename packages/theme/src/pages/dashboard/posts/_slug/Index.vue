@@ -27,6 +27,7 @@ import { defineAsyncComponent, onMounted, reactive, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import type { components } from "@logchimp/api-ts-types";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
 
 // modules
 import { router } from "../../../../router";
@@ -86,10 +87,12 @@ async function postBySlug(slug: string) {
   try {
     const response = await postsAPI.GetPostBySlug(slug);
     Object.assign(post, response.post);
-  } catch (err) {
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
     console.error(err);
-    // @ts-expect-error
-    errorCode.value = err.response.data.code;
+    errorCode.value = err.response?.data.code;
   } finally {
     loading.value = false;
   }

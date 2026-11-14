@@ -96,11 +96,13 @@
 import { computed, reactive, ref, useId } from "vue";
 import type { components } from "@logchimp/api-ts-types";
 import { storeToRefs } from "pinia";
+import type { AxiosError } from "axios";
 
 // modules
 import { PostsAPI } from "../../../../modules/posts";
 import { useDashboardPosts } from "../../../../store/dashboard/posts";
 import { useSettingsEEStore } from "../../../../ee/store/settings";
+import { useAlertStore } from "../../../../store/alert.ts";
 
 // components
 import HelperText from "../../../../components/ui/input/HelperText.vue";
@@ -118,6 +120,7 @@ import LicenseCrown from "../../../../ee/components/icons/LicenseCrown.vue";
 import UpgradeTooltip from "../../../../ee/components/UpgradeTooltip.vue";
 import Checkbox from "../../../ui/Checkbox.vue";
 
+const { add: toast } = useAlertStore();
 const dashboardPosts = useDashboardPosts();
 const settingsEEStore = useSettingsEEStore();
 const { hasValidLicense } = storeToRefs(settingsEEStore);
@@ -180,8 +183,15 @@ async function updatePostHandler() {
     dashboardPosts.updatePost(post);
     emit("updated", post);
     notifyVoters.roadmap = false;
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to save post",
+      type: "error",
+    });
   } finally {
     setLoading(false);
   }

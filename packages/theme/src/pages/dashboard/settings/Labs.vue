@@ -48,8 +48,10 @@ import { computed, onMounted, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { useI18n } from "vue-i18n";
 import type { components } from "@logchimp/api-ts-types";
+import type { AxiosError } from "axios";
 
 // modules
+import { useAlertStore } from "../../../store/alert.ts";
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
 import { getLabsSettings, updateLabsSettings } from "../../../modules/site";
@@ -62,6 +64,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import DashboardPageHeader from "../../../components/dashboard/PageHeader.vue";
 import BreadcrumbDivider from "../../../components/ui/breadcrumbs/BreadcrumbDivider.vue";
 
+const { add: toast } = useAlertStore();
 const { updateLabs: update } = useSettingStore();
 const { permissions } = useUserStore();
 
@@ -85,7 +88,14 @@ async function updateSettings() {
 
     update(labs.value);
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to save labs settings",
+      type: "error",
+    });
   } finally {
     updateSettingsButtonLoading.value = false;
   }

@@ -33,6 +33,8 @@ import { computed, onMounted, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { router } from "../../../../router";
@@ -50,7 +52,9 @@ import TabularView from "../../../components/dashboard/roadmap/TabularView.vue";
 import LicenseRequired from "../../../components/LicenseRequired.vue";
 import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
+import { useAlertStore } from "../../../../store/alert.ts";
 
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const settingsEEStore = useSettingsEEStore();
@@ -76,10 +80,17 @@ async function createRoadmapHandler() {
     router.push(
       `/dashboard/roadmaps/${encodeURIComponent(roadmap.url)}/settings`,
     );
-  } catch (err) {
-    createRoadmapButtonLoading.value = false;
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
 
-    console.error(err);
+    toast({
+      title: err.response?.data.message ?? "Failed to create roadmap",
+      type: "error",
+    });
+  } finally {
+    createRoadmapButtonLoading.value = false;
   }
 }
 

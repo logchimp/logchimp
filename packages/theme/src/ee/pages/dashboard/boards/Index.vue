@@ -33,6 +33,8 @@ import { computed, onMounted, ref } from "vue";
 import { useHead } from "@unhead/vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 // modules
 import { router } from "../../../../router";
@@ -40,6 +42,7 @@ import { useUserStore } from "../../../../store/user";
 import { BoardsEE } from "../../../modules/boards";
 import { useDashboardBoards } from "../../../store/dashboard/boards";
 import { useSettingsEEStore } from "../../../store/settings";
+import { useAlertStore } from "../../../../store/alert.ts";
 
 // components
 import Button from "../../../../components/ui/Button.vue";
@@ -51,6 +54,7 @@ import TabularView from "../../../components/dashboard/boards/TabularView.vue";
 import UpgradeTooltip from "../../../components/UpgradeTooltip.vue";
 import LicenseCrown from "../../../components/icons/LicenseCrown.vue";
 
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const dashboardBoards = useDashboardBoards();
 const settingsEEStore = useSettingsEEStore();
@@ -75,8 +79,15 @@ async function createBoardHandler() {
 
     const url = response.board.url;
     router.push(`/dashboard/boards/${encodeURIComponent(url)}/settings`);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to create board",
+      type: "error",
+    });
   } finally {
     createBoardButtonLoading.value = false;
   }

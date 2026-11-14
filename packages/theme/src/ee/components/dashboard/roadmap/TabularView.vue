@@ -108,7 +108,10 @@ import LicenseValidationFailed from "../../../../components/LicenseValidationFai
 import Button from "../../../../components/ui/Button.vue";
 import EmptyScreen from "../../../../components/EmptyScreen.vue";
 import { EXAMPLE_ROADMAPS_DATA } from "./example-data.ts";
+import type { AxiosError } from "axios";
+import { useAlertStore } from "../../../../store/alert.ts";
 
+const { add: toast } = useAlertStore();
 const { t } = useI18n();
 const dashboardRoadmaps = useDashboardRoadmaps();
 const requireUpgrade = computed(
@@ -163,8 +166,15 @@ async function initialiseSort(event: VueDraggableEndEvent) {
     if (response.status === 200) {
       dashboardRoadmaps.sortRoadmap(sort.value.from.index, sort.value.to.index);
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to save roadmap re-order",
+      type: "error",
+    });
   }
 }
 

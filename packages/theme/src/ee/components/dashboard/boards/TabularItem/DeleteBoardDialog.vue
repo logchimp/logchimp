@@ -42,13 +42,17 @@
 <script setup lang="ts">
 import { inject, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import type { AxiosError } from "axios";
+import type { components } from "@logchimp/api-ts-types";
 
 import { boardKey } from "./options";
 import { BoardsEE } from "../../../../modules/boards";
 import { useDashboardBoards } from "../../../../store/dashboard/boards";
 import Dialog from "../../../../../components/ui/Dialog/Dialog.vue";
+import { useAlertStore } from "../../../../../store/alert.ts";
 
 const board = inject(boardKey);
+const { add: toast } = useAlertStore();
 const dashboardBoards = useDashboardBoards();
 const { t } = useI18n();
 
@@ -56,6 +60,7 @@ interface Props {
   open: boolean;
 }
 defineProps<Props>();
+
 const emit = defineEmits<(e: "close", value: boolean) => void>();
 const loading = ref<boolean>(false);
 const boardsEEAPI = new BoardsEE();
@@ -74,7 +79,14 @@ async function deleteBoardHandler() {
       emit("close", false);
     }
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to delete board",
+      type: "error",
+    });
   } finally {
     loading.value = false;
   }

@@ -19,7 +19,9 @@ import { ref } from "vue";
 import { DropdownMenuItem } from "reka-ui";
 import { PlusIcon } from "lucide-vue";
 import type { components } from "@logchimp/api-ts-types";
+import type { AxiosError } from "axios";
 
+import { useAlertStore } from "../../../../../store/alert.ts";
 import { BoardsEE } from "../../../../modules/boards";
 
 interface Props {
@@ -31,6 +33,7 @@ const emit =
     (e: "created", event: components["schemas"]["BoardPrivate"]) => void
   >();
 
+const { add: toast } = useAlertStore();
 const loading = ref(false);
 const boardsEEAPI = new BoardsEE();
 
@@ -45,10 +48,17 @@ async function createBoardHandler() {
     const board = response.board;
 
     emit("created", board);
+  } catch (error) {
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to create board",
+      type: "error",
+    });
+  } finally {
     loading.value = false;
-  } catch (err) {
-    loading.value = false;
-    console.error(err);
   }
 }
 </script>

@@ -7,7 +7,10 @@ export interface AlertObjectType {
   title: string;
   type: AlertType;
   time?: number;
-  timeout: number;
+  /**
+   * Default to 5s (5000ms)
+   */
+  timeout?: number;
 }
 
 export const useAlertStore = defineStore("alerts", () => {
@@ -20,7 +23,7 @@ export const useAlertStore = defineStore("alerts", () => {
       title,
       type,
       time: Date.now(),
-      timeout,
+      timeout: timeout ?? 5000,
     };
 
     alert.value.push(alertObject);
