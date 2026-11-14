@@ -129,4 +129,8 @@ function resetRequestStatus() {
       150,
   );
 }
+
+defineOptions({
+  name: "AccountVerificationAlert",
+});
 </script>
