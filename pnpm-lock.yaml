@@ -255,8 +255,8 @@ importers:
         specifier: ^3.0.8
         version: 3.0.8
       lucide-vue:
-        specifier: npm:lucide-vue-next@0.546.0
-        version: lucide-vue-next@0.546.0(vue@3.5.45(typescript@5.9.3))
+        specifier: npm:@lucide/vue@^1.73.0
+        version: '@lucide/vue@1.73.0(vue@3.5.45(typescript@5.9.3))'
       pinia:
         specifier: 2.3.1
         version: 2.3.1(typescript@5.9.3)(vue@3.5.45(typescript@5.9.3))
@@ -774,6 +774,11 @@ packages:
 
   '@lucide/vue@1.72.0':
     resolution: {integrity: sha512-BPcYejGErv+kg4ilXyPU7j6YdA0kQaMiBnlcCElTsoLdQgD+6aoquA/0I4amN5yzkJrZgpULvpDonXui94ez8A==}
+    peerDependencies:
+      vue: '>=3.0.1'
+
+  '@lucide/vue@1.73.0':
+    resolution: {integrity: sha512-QVVRSgu2rqRX3NAUktT9venW0Bvtr03aCZjhFRLwnV3uqLyR7KCTOx5mMlukhw0aiyjC3D6w2b+fmy4MeM5R3Q==}
     peerDependencies:
       vue: '>=3.0.1'
 
@@ -1715,13 +1720,6 @@ packages:
   '@valkey/valkey-glide@2.6.0':
     resolution: {integrity: sha512-5lLrm/0VLCIsWSgHSgAc1FwfDQ+kEDk5yfvGELblIG1c6lmsQ6jSofvbDjcPcpvD131hOJy/tfGrO+QFcrcGIw==}
     engines: {node: '>=20'}
-
-  '@vitejs/plugin-vue@6.0.10':
-    resolution: {integrity: sha512-b80aUQh3n+qEzzZm5oQp3rT2QImeCx58K6eFl/RkJ3d65KW0kTuv5lNsLRVAjbW9YRUpo/wzmvzMgV34bTAItA==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    peerDependencies:
-      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.2.25 || ^3.6.0-rc.10
 
   '@vitejs/plugin-vue@6.0.11':
     resolution: {integrity: sha512-m48lskIUJGlB6qUiYhDMI8nd2ngeidz2U4nKTjqI13cFMu5rH8JeEILPkDtK9Fk/TjBA2pkj8AlbenqDaKu+ww==}
@@ -3255,12 +3253,6 @@ packages:
   lru-cache@11.5.3:
     resolution: {integrity: sha512-U4N8FgzmWxc8k1VH8Kr6lQg18U7Fjvby6wXHVRX/ZZ7IwWbRMgrRbP0Wrb5q5NVinryp4SQampHKdvtecItxUg==}
     engines: {node: 20 || >=22}
-
-  lucide-vue-next@0.546.0:
-    resolution: {integrity: sha512-Ra4lNbm0m9uSb82ZBMCUg3c2xQ4qaU9b87fAFvFPoLC0/u7JxG5FJjhUFqfNfofk1xdZiDpF6EnCbaxTHXzLcw==}
-    deprecated: Package deprecated. Please use @lucide/vue instead.
-    peerDependencies:
-      vue: '>=3.0.1'
 
   luxon@3.7.2:
     resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
@@ -5063,6 +5055,10 @@ snapshots:
     dependencies:
       vue: 3.5.45(typescript@6.0.3)
 
+  '@lucide/vue@1.73.0(vue@3.5.45(typescript@5.9.3))':
+    dependencies:
+      vue: 3.5.45(typescript@5.9.3)
+
   '@maizzle/framework@6.3.2(@oxc-project/types@0.156.0)(@types/node@24.19.2)(@vue/compiler-sfc@3.5.45)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(shiki@4.6.0)(tailwind-merge@3.7.0)(vue@3.5.45(typescript@6.0.3))':
     dependencies:
       '@lucide/vue': 1.72.0(vue@3.5.45(typescript@6.0.3))
@@ -5070,7 +5066,7 @@ snapshots:
       '@tailwindcss/postcss': 4.3.5
       '@tailwindcss/vite': 4.3.5(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))
       '@unhead/vue': 3.4.3(@oxc-project/types@0.156.0)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
-      '@vitejs/plugin-vue': 6.0.10(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
+      '@vitejs/plugin-vue': 6.0.11(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))
       '@vueuse/core': 14.4.0(vue@3.5.45(typescript@6.0.3))
       class-variance-authority: 0.7.1
       clsx: 2.1.1
@@ -6026,17 +6022,17 @@ snapshots:
       '@valkey/valkey-glide-linux-x64-gnu': 2.6.0
       '@valkey/valkey-glide-linux-x64-musl': 2.6.0
 
-  '@vitejs/plugin-vue@6.0.10(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))':
-    dependencies:
-      '@rolldown/pluginutils': 1.1.0
-      vite: 8.3.8(@types/node@24.19.2)(jiti@2.7.0)
-      vue: 3.5.45(typescript@6.0.3)
-
   '@vitejs/plugin-vue@6.0.11(vite@6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5))(vue@3.5.45(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.1.0
       vite: 6.4.6(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.69.5)
       vue: 3.5.45(typescript@5.9.3)
+
+  '@vitejs/plugin-vue@6.0.11(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.45(typescript@6.0.3))':
+    dependencies:
+      '@rolldown/pluginutils': 1.1.0
+      vite: 8.3.8(@types/node@24.19.2)(jiti@2.7.0)
+      vue: 3.5.45(typescript@6.0.3)
 
   '@vitest/expect@4.1.12':
     dependencies:
@@ -7702,10 +7698,6 @@ snapshots:
   long@5.3.2: {}
 
   lru-cache@11.5.3: {}
-
-  lucide-vue-next@0.546.0(vue@3.5.45(typescript@5.9.3)):
-    dependencies:
-      vue: 3.5.45(typescript@5.9.3)
 
   luxon@3.7.2: {}
 
