@@ -3,7 +3,6 @@
     :title="t('auth_user.email_verification.title')"
     :description="t('auth_user.email_verification.description')"
     type="warning"
-    class="mb-8"
   >
     <template #cta>
       <div class="flex items-center gap-x-4">
