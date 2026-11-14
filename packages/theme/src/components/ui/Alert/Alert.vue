@@ -25,9 +25,21 @@
         ]"
       >
         <slot name="icon">
-          <success-icon v-if="type === 'success'" aria-hidden="true" />
-          <warning-icon v-if="type === 'warning'" aria-hidden="true" />
-          <error-icon v-if="type === 'error'" aria-hidden="true" />
+          <success-icon
+            v-if="type === 'success'"
+            weight="fill"
+            aria-hidden="true"
+          />
+          <warning-icon
+            v-if="type === 'warning'"
+            weight="fill"
+            aria-hidden="true"
+          />
+          <error-icon
+            v-if="type === 'error'"
+            weight="fill"
+            aria-hidden="true"
+          />
         </slot>
       </div>
 
@@ -59,10 +71,10 @@
 <script setup lang="ts">
 import { onMounted, computed, useSlots } from "vue";
 import {
-  CheckCircle2 as SuccessIcon,
-  AlertTriangle as WarningIcon,
-  XCircle as ErrorIcon,
-} from "lucide-vue";
+  PhCheckCircle as SuccessIcon,
+  PhWarning as WarningIcon,
+  PhWarningCircle as ErrorIcon,
+} from "@phosphor-icons/vue";
 
 const props = defineProps({
   title: {
