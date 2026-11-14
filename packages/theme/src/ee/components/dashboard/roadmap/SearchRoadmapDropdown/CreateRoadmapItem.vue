@@ -48,7 +48,6 @@ async function createRoadmapHandler() {
     const roadmap = response.roadmap;
 
     emit("created", roadmap);
-    loading.value = false;
   } catch (error) {
     const err = error as AxiosError<
       components["schemas"]["GenericAPIErrorResponseBody"]
