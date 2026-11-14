@@ -80,7 +80,7 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       '@valkey/valkey-glide':
-        specifier: ^2.5.3
+        specifier: ^2.6.0
         version: 2.6.0
       bcryptjs:
         specifier: ^3.0.3
