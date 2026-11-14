@@ -61,7 +61,7 @@
         </template>
       </div>
 
-      <div v-if="$slots.cta" class="mt-4">
+      <div v-if="$slots.cta" class="mt-4 ml-8">
         <slot name="cta" />
       </div>
     </div>
