@@ -24,13 +24,16 @@
 import { onMounted, inject, computed } from "vue";
 import { ComputerIcon } from "lucide-vue";
 import type { components } from "@logchimp/api-ts-types";
+import type { AxiosError } from "axios";
 
 import { useDashboardRoles } from "../../../../store/dashboard/roles";
 import { useDashboardUsers } from "../../../../../store/dashboard/users";
 import DropdownV2CheckboxItem from "../../../../../components/ui/DropdownV2/CheckboxItem.vue";
 import { userIdKey } from "./options";
 import { UsersEEAPI } from "../../../../modules/users";
+import { useAlertStore } from "../../../../../store/alert.ts";
 
+const { add: toast } = useAlertStore();
 const dashboardRoles = useDashboardRoles();
 const dashboardUsers = useDashboardUsers();
 const usersEeServices = new UsersEEAPI();
@@ -69,7 +72,14 @@ async function assignRoleHandler(roleId: string) {
       });
     }
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to assign role to user",
+      type: "error",
+    });
   }
 }
 
@@ -82,7 +92,14 @@ async function unassignRoleHandler(roleId: string) {
       dashboardUsers.removeUserRole(userId, roleId);
     }
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError<
+      components["schemas"]["GenericAPIErrorResponseBody"]
+    >;
+
+    toast({
+      title: err.response?.data.message ?? "Failed to remove role from user",
+      type: "error",
+    });
   }
 }
 
