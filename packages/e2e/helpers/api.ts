@@ -4,7 +4,7 @@ import { SITE_NAME } from "./constants";
 
 interface UserSignupOptions {
   requestContext: APIRequestContext;
-  baseURL: string;
+  baseURL?: string;
   email?: string;
   password?: string;
   isOwner?: boolean;
@@ -12,9 +12,18 @@ interface UserSignupOptions {
 
 interface UserLoginOptions {
   requestContext: APIRequestContext;
-  baseURL: string;
+  baseURL?: string;
   email?: string;
   password?: string;
+}
+
+interface CreatePostOptions {
+  requestContext: APIRequestContext;
+  baseURL?: string;
+  authToken: string;
+  title?: string;
+  contentMarkdown?: string;
+  boardId?: string;
 }
 
 export async function userSignup({
@@ -62,6 +71,29 @@ export async function userLogin({
     data: {
       email,
       password,
+    },
+  });
+}
+
+export async function createPost({
+  requestContext,
+  baseURL: _baseURL,
+  authToken,
+  title,
+  contentMarkdown,
+  boardId,
+}: CreatePostOptions): Promise<APIResponse> {
+  // custom base URL used for executing API calls and fallback to web base URL
+  const baseURL = process.env.LOGCHIMP_API_URL || _baseURL;
+
+  return await requestContext.post(`${baseURL}/api/v1/posts`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: {
+      title: title || faker.lorem.sentence(),
+      contentMarkdown: contentMarkdown || faker.lorem.paragraph(),
+      boardId,
     },
   });
 }
