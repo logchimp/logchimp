@@ -12,3 +12,4 @@ minimumReleaseAgeExclude:
   - prettier@3.9.7
   - '@logchimp/api-ts-types'
   - bullmq@6.7.5
+  - '@lucide/vue@1.73.0'
