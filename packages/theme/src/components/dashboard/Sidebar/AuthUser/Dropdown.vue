@@ -28,7 +28,7 @@
         <template #icon>
           <x-icon class="fill-neutral-700 stroke-none!" />
         </template>
-        Tweet @LogChimp!
+        Share LogChimp on X
       </dropdown-v2-item>
       <dropdown-v2-separator />
       <dropdown-v2-item @click="logout">
