@@ -26,9 +26,9 @@
       </Dropdown-v2-item>
       <dropdown-v2-item @click="tweetLogChimp">
         <template #icon>
-          <twitter-icon />
+          <x-icon class="fill-neutral-700 stroke-none!" />
         </template>
-        Tweet @LogChimp!
+        Share LogChimp on X
       </dropdown-v2-item>
       <dropdown-v2-separator />
       <dropdown-v2-item @click="logout">
@@ -42,11 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  Info as InfoIcon,
-  Twitter as TwitterIcon,
-  LogOut as LogoutIcon,
-} from "lucide-vue";
+import { Info as InfoIcon, LogOut as LogoutIcon } from "lucide-vue";
 import { DropdownMenuTrigger } from "reka-ui";
 
 import { useUserStore } from "../../../../store/user";
@@ -56,6 +52,7 @@ import DropdownV2 from "../../../ui/DropdownV2/Dropdown.vue";
 import DropdownV2Content from "../../../ui/DropdownV2/DropdownContent.vue";
 import DropdownV2Item from "../../../ui/DropdownV2/DropdownItem.vue";
 import DropdownV2Separator from "../../../ui/DropdownV2/DropdownSeparator.vue";
+import XIcon from "../../../icons/XIcon.vue";
 
 const { user, logout } = useUserStore();
 
