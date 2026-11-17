@@ -45,6 +45,29 @@
             label="Allow signups"
             note="Allows users to create account?"
           />
+
+          <div>
+            <div class="font-medium">Blacklisted domains</div>
+            <p class="input-field-label">
+              The following email domains are blocked from creating new accounts
+              on LogChimp.
+              <a
+                href="https://docs.logchimp.app/guide/user#domain-blacklist"
+                target="_blank"
+              >
+                Learn more about domain blacklist.
+              </a>
+            </p>
+            <div class="flex flex-wrap space-x-3 mt-2">
+              <div
+                v-for="domain in blockedDomains"
+                :key="domain"
+                class="select-none px-3 py-0.5 bg-neutral-200 rounded-lg text-sm text-neutral-800 font-medium"
+              >
+                {{ domain }}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="form-column">
@@ -192,6 +215,7 @@ const googleAnalyticsId = reactive<
   },
 });
 const developer_mode = ref(false);
+const blockedDomains = ref<string[]>([]);
 const updateSettingsButtonLoading = ref(false);
 
 const updateSettingsPermissionDisabled = computed(() => {
@@ -276,6 +300,7 @@ async function getSettingsHandler() {
     accentColor.value = response.data.settings.accentColor;
     googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
     developer_mode.value = response.data.settings.developer_mode;
+    blockedDomains.value = response.data.settings.blockedDomains ?? [];
   } catch (error) {
     console.error(error);
   }
