@@ -1,6 +1,6 @@
 import type { components } from "@logchimp/api-ts-types";
 
-import type { IAuthenticationMiddlewareUser } from "../types";
+import type { IAuthenticationMiddlewareUser } from "../../types";
 import { workspaceRepository } from "../repository/workspace";
 
 type SiteSettings = components["schemas"]["SiteSettings"];

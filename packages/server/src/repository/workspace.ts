@@ -5,7 +5,6 @@ import { CACHE_KEYS } from "../cache/keys";
 import logger from "../utils/logger";
 import database from "../database";
 import { DAY } from "../cache/time";
-import { domainBlacklistManager } from "../ee/services/auth/auth.service";
 
 export class workspaceRepository {
   async GetSettings() {
@@ -21,17 +20,12 @@ export class workspaceRepository {
     }
 
     try {
-      const dbSettings = await database("settings")
+      const settings = await database("settings")
         .select<components["schemas"]["SiteSettings"]>(
           "*",
           database.raw("labs::json as labs"),
         )
         .first();
-
-      const settings = {
-        ...dbSettings,
-        blockedDomains: [...domainBlacklistManager.domains],
-      };
 
       if (cache.isActive) {
         try {
