@@ -21,8 +21,8 @@ importers:
   packages/e2e:
     dependencies:
       '@logchimp/api-ts-types':
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.4
+        version: 0.2.4
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.6.0
@@ -77,8 +77,8 @@ importers:
   packages/server:
     dependencies:
       '@logchimp/api-ts-types':
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.4
+        version: 0.2.4
       '@valkey/valkey-glide':
         specifier: ^2.6.0
         version: 2.6.0
@@ -219,8 +219,8 @@ importers:
   packages/theme:
     dependencies:
       '@logchimp/api-ts-types':
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.4
+        version: 0.2.4
       '@phosphor-icons/vue':
         specifier: ^2.2.1
         version: 2.2.1(vue@3.5.45(typescript@5.9.3))
@@ -769,13 +769,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@logchimp/api-ts-types@0.2.2':
-    resolution: {integrity: sha512-wECUX1SYgbYGuhiIfONv3E176HljWoauuZvsDDcn6p+MGo6dV6F+figiW1PErLth5UQZ8hHSaqWPiGgeVcHvMg==}
-
-  '@lucide/vue@1.72.0':
-    resolution: {integrity: sha512-BPcYejGErv+kg4ilXyPU7j6YdA0kQaMiBnlcCElTsoLdQgD+6aoquA/0I4amN5yzkJrZgpULvpDonXui94ez8A==}
-    peerDependencies:
-      vue: '>=3.0.1'
+  '@logchimp/api-ts-types@0.2.4':
+    resolution: {integrity: sha512-zUHoGd6pPDaUBu7AC6IQFpNH8q0i+uHZD1a3wn57BAF4+TowKW1HDHXH3XG6XYHwPEp7JuQlBfAeNlUMRB0+JA==}
 
   '@lucide/vue@1.73.0':
     resolution: {integrity: sha512-QVVRSgu2rqRX3NAUktT9venW0Bvtr03aCZjhFRLwnV3uqLyR7KCTOx5mMlukhw0aiyjC3D6w2b+fmy4MeM5R3Q==}
@@ -5049,19 +5044,19 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@logchimp/api-ts-types@0.2.2': {}
-
-  '@lucide/vue@1.72.0(vue@3.5.45(typescript@6.0.3))':
-    dependencies:
-      vue: 3.5.45(typescript@6.0.3)
+  '@logchimp/api-ts-types@0.2.4': {}
 
   '@lucide/vue@1.73.0(vue@3.5.45(typescript@5.9.3))':
     dependencies:
       vue: 3.5.45(typescript@5.9.3)
 
+  '@lucide/vue@1.73.0(vue@3.5.45(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.45(typescript@6.0.3)
+
   '@maizzle/framework@6.3.2(@oxc-project/types@0.156.0)(@types/node@24.19.2)(@vue/compiler-sfc@3.5.45)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(shiki@4.6.0)(tailwind-merge@3.7.0)(vue@3.5.45(typescript@6.0.3))':
     dependencies:
-      '@lucide/vue': 1.72.0(vue@3.5.45(typescript@6.0.3))
+      '@lucide/vue': 1.73.0(vue@3.5.45(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
       '@tailwindcss/postcss': 4.3.5
       '@tailwindcss/vite': 4.3.5(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))
