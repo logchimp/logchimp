@@ -6,16 +6,15 @@ import * as settingsEE from "../../controllers/v1/settings";
 
 // middleware
 import { authOptional, authRequired } from "../../../middlewares/auth";
-import { withLicenseGuard } from "../../do-not-remove/middleware/licenseGuard";
+import { attachSubscription } from "../../do-not-remove/middleware/attachSubscription";
 
 const router = express.Router();
 
 router.get(
   "/settings/site",
   authOptional,
-  withLicenseGuard(settingsEE.getSiteSettings, {
-    requiredPlan: ["pro", "business", "enterprise"],
-  }),
+  attachSubscription,
+  settingsEE.getSiteSettings,
 );
 router.patch("/settings/site", authRequired, settings.update);
 // NOTE: Temporarily disable API-endpoint due to no file storage system implemented.
