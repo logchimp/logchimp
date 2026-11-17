@@ -58,14 +58,19 @@
                 Learn more about domain blacklist.
               </a>
             </p>
-            <div class="flex flex-wrap space-x-3 mt-2">
-              <div
-                v-for="domain in blockedDomains"
-                :key="domain"
-                class="select-none px-3 py-0.5 bg-neutral-200 rounded-lg text-sm text-neutral-800 font-medium"
-              >
-                {{ domain }}
+            <div v-if="blockedDomains" class="flex flex-wrap space-x-3 mt-2">
+              <div v-if="blockedDomains.length > 0">
+                <div
+                  v-for="domain in blockedDomains"
+                  :key="domain"
+                  class="select-none px-3 py-0.5 bg-neutral-200 rounded-lg text-sm text-neutral-800 font-medium"
+                >
+                  {{ domain }}
+                </div>
               </div>
+            </div>
+            <div v-else class="text-xs text-neutral-700">
+              No domains blocked.
             </div>
           </div>
         </div>
@@ -216,7 +221,7 @@ const googleAnalyticsId = reactive<
   },
 });
 const developer_mode = ref(false);
-const blockedDomains = ref<string[]>([]);
+const blockedDomains = ref<Partial<string[]>>();
 const updateSettingsButtonLoading = ref(false);
 
 const updateSettingsPermissionDisabled = computed(() => {
@@ -301,7 +306,7 @@ async function getSettingsHandler() {
     accentColor.value = response.settings.accentColor;
     googleAnalyticsId.value = response.settings.googleAnalyticsId;
     developer_mode.value = response.settings.developer_mode;
-    blockedDomains.value = response.settings.blockedDomains ?? [];
+    blockedDomains.value = response.settings.blockedDomains;
   } catch (error) {
     console.error(error);
   }
