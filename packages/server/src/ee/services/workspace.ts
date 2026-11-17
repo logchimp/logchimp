@@ -2,6 +2,7 @@ import type { components } from "@logchimp/api-ts-types";
 
 import type { IAuthenticationMiddlewareUser } from "../../types";
 import { workspaceRepository } from "../repository/workspace";
+import type { ILicenseGuardMiddleware } from "../types";
 
 type SiteSettings = components["schemas"]["SiteSettings"];
 type PublicSiteSettings = components["schemas"]["PublicSiteSettings"];
@@ -23,8 +24,8 @@ export class WorkspaceService {
   }
 
   /**
-   * Returns site settings, including sensitive fields only when the caller is
-   * allowed to see them.
+   * Returns site settings, including sensitive fields only when the caller has
+   * the `settings:read` permission and a paid license.
    *
    * `user` comes from `req.user` (populated by the auth middleware). The
    * service never reads the request itself, which keeps it usable from
@@ -32,29 +33,38 @@ export class WorkspaceService {
    */
   async GetSettings(
     user?: IAuthenticationMiddlewareUser,
+    subscription?: ILicenseGuardMiddleware,
   ): Promise<SiteSettings | PublicSiteSettings> {
-    const canViewSensitive =
-      user !== undefined &&
-      Boolean(user.userId) &&
-      !user.isBlocked &&
-      (user.isOwner || user.permissions.includes("settings:read"));
-
     const settings = await this.workspaceRepo.GetSettings();
 
-    if (canViewSensitive) {
-      return settings;
+    return this.canViewSensitiveSettings(user, subscription)
+      ? settings
+      : this.omitSensitiveSettings(settings);
+  }
+
+  private canViewSensitiveSettings(
+    user?: IAuthenticationMiddlewareUser,
+    subscription?: ILicenseGuardMiddleware,
+  ): boolean {
+    if (!user?.userId || user.isBlocked) {
+      return false;
     }
 
-    return this.omitSensitiveSettings(settings);
+    const hasPermission =
+      user.isOwner || user.permissions.includes("settings:read");
+    const hasSubscription =
+      subscription !== undefined && subscription.hierarchy >= 1;
+
+    return hasPermission && hasSubscription;
   }
 
   private omitSensitiveSettings(settings: SiteSettings): PublicSiteSettings {
-    const publicSettings: Partial<SiteSettings> = { ...settings };
+    const publicSettings = { ...settings };
 
     for (const key of SENSITIVE_SETTINGS) {
       delete publicSettings[key];
     }
 
-    return publicSettings as PublicSiteSettings;
+    return publicSettings;
   }
 }
