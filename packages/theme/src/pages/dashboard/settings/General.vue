@@ -58,18 +58,19 @@
                 Learn more about domain blacklist.
               </a>
             </p>
-            <div v-if="blockedDomains" class="flex flex-wrap space-x-3 mt-2">
-              <div v-if="blockedDomains.length > 0">
-                <div
-                  v-for="domain in blockedDomains"
-                  :key="domain"
-                  class="select-none px-3 py-0.5 bg-neutral-200 rounded-lg text-sm text-neutral-800 font-medium"
-                >
-                  {{ domain }}
-                </div>
+            <div
+              v-if="blockedDomains?.length"
+              class="flex flex-wrap gap-2 mt-2"
+            >
+              <div
+                v-for="domain in blockedDomains"
+                :key="domain"
+                class="select-none px-3 py-0.5 bg-neutral-200 rounded-lg text-sm text-neutral-800 font-medium"
+              >
+                {{ domain }}
               </div>
             </div>
-            <div v-else class="text-xs text-neutral-700">
+            <div v-else-if="blockedDomains" class="text-xs text-neutral-700">
               No domains blocked.
             </div>
           </div>
