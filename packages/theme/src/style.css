@@ -67,10 +67,10 @@
 
   --border-color-default: var(--color-neutral-200);
   --color-main-page-bg: var(--color-white);
+}
 
-  .dark {
-    --color-main-page-bg: var(--color-neutral-900);
-  }
+.dark {
+  --color-main-page-bg: var(--color-neutral-900);
 }
 
 @layer base {
