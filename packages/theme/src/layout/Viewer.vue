@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-(--color-main-page-bg)">
     <Header />
     <div class="w-full max-w-6xl mx-auto px-6 my-8">
       <router-view />
