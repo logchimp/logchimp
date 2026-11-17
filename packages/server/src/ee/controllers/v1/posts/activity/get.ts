@@ -176,7 +176,7 @@ function getActivityQuery({
     .limit(limit)
     .offset(limit * (page - 1));
 
-  if (subscription?.hierarchy === 1) {
+  if (subscription && subscription?.hierarchy === 1) {
     query = query.where("posts_activity.type", "comment");
   }
 
@@ -207,7 +207,7 @@ function postCommentVisibility<T>(
   const hasInternal = visibility.includes("internal");
   const hasPublic = visibility.includes("public");
 
-  if (subscription?.hierarchy >= 2) {
+  if (subscription && subscription?.hierarchy >= 2) {
     if (!hasPermission) {
       return showPublic();
     }
