@@ -152,7 +152,7 @@ import type { components } from "@logchimp/api-ts-types";
 // modules
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import { getSettings, updateSettings } from "../../../modules/site";
+import { SiteAPI, updateSettings } from "../../../modules/site";
 import { useAlertStore } from "../../../store/alert.ts";
 
 // components
@@ -167,6 +167,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
+const siteAPI = new SiteAPI();
 const { add: toast } = useAlertStore();
 const { updateSettings: update } = useSettingStore();
 const { permissions } = useUserStore();
@@ -291,16 +292,16 @@ async function updateSettingsHandler() {
 
 async function getSettingsHandler() {
   try {
-    const response = await getSettings();
+    const response = await siteAPI.getSettings();
 
-    siteName.value = response.data.settings.title;
-    logo.value = response.data.settings.logo;
-    description.value = response.data.settings.description;
-    allowSignup.value = response.data.settings.allowSignup;
-    accentColor.value = response.data.settings.accentColor;
-    googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
-    developer_mode.value = response.data.settings.developer_mode;
-    blockedDomains.value = response.data.settings.blockedDomains ?? [];
+    siteName.value = response.settings.title;
+    logo.value = response.settings.logo;
+    description.value = response.settings.description;
+    allowSignup.value = response.settings.allowSignup;
+    accentColor.value = response.settings.accentColor;
+    googleAnalyticsId.value = response.settings.googleAnalyticsId;
+    developer_mode.value = response.settings.developer_mode;
+    blockedDomains.value = response.settings.blockedDomains ?? [];
   } catch (error) {
     console.error(error);
   }
