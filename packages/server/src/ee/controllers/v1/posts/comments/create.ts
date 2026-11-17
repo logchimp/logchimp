@@ -40,9 +40,6 @@ export async function create(
   const userId = req.user.userId;
   const { post_id } = req.params;
 
-  // check auth user has required permission to set comment as internal
-  // check the auth user has permission to comment
-
   const reqBody = v.safeParse(requestBodySchema, req.body);
   if (!reqBody.success) {
     res.status(400).json({
@@ -78,7 +75,8 @@ export async function create(
 
   // @ts-expect-error
   const subscription = req?.subscription;
-  if (!(subscription?.hierarchy >= (reqBody.output.is_internal ? 2 : 1))) {
+  const requiredHierarchy = reqBody.output.is_internal ? 2 : 1;
+  if (!subscription || subscription.hierarchy < requiredHierarchy) {
     res.status(403).send({
       message: error.middleware.license.higherPlan,
       code: "LICENSE_INSUFFICIENT_TIER",

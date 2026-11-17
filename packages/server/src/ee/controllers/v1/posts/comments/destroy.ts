@@ -30,7 +30,8 @@ export async function destroy(
 
   // @ts-expect-error
   const subscription = req?.subscription;
-  if (!(subscription?.hierarchy >= (comment.is_internal ? 2 : 1))) {
+  const requiredHierarchy = comment.is_internal ? 2 : 1;
+  if (!subscription || subscription.hierarchy < requiredHierarchy) {
     res.status(403).send({
       message: error.middleware.license.higherPlan,
       code: "LICENSE_INSUFFICIENT_TIER",
