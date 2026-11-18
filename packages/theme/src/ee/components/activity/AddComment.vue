@@ -53,6 +53,7 @@ import { PostsEE } from "../../modules/posts";
 import tokenError from "../../../utils/tokenError";
 import { useUserStore } from "../../../store/user";
 import { useSettingsEEStore } from "../../store/settings";
+import { useAlertStore } from "../../../store/alert.ts";
 
 // components
 import LText from "../../../components/ui/input/LText.vue";
@@ -67,6 +68,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   allowInternal: false,
 });
+const { add: toast } = useAlertStore();
 const { permissions } = useUserStore();
 const settingsEEStore = useSettingsEEStore();
 const postsEEAPI = new PostsEE();
@@ -113,6 +115,12 @@ async function submitComment() {
       components["schemas"]["GenericAPIErrorResponseBody"]
     >;
     tokenError(err);
+
+    toast({
+      title: err.response?.data.message ?? "Failed to add comment",
+      type: "error",
+    });
+  } finally {
     loading.value = false;
   }
 }
