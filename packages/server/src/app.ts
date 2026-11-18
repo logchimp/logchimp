@@ -6,6 +6,8 @@ import express from "express";
 import cors from "cors";
 
 import routes from "./routes";
+import { rateLimit } from "./middlewares/rateLimit";
+import { apiRateLimiter } from "./services/rateLimit/limiters";
 
 const app = express();
 app.disable("x-powered-by");
@@ -19,6 +21,9 @@ app.use(express.json());
 
 // enable all CORS requests
 app.use(cors());
+
+// baseline rate limit for every API request
+app.use("/api", rateLimit(apiRateLimiter));
 
 // import all routes
 app.use(routes);
