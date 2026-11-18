@@ -6,13 +6,14 @@ import express from "express";
 import cors from "cors";
 
 import routes from "./routes";
+import { config } from "./utils/logchimpConfig";
 import { rateLimit } from "./middlewares/rateLimit";
 import { apiRateLimiter } from "./services/rateLimit/limiters";
 
 const app = express();
 app.disable("x-powered-by");
 
-if (process.env.LOGCHIMP_TRUST_PROXY === "true") {
+if (config.trustProxy === true) {
   app.set("trust proxy", true);
 }
 

@@ -46,6 +46,9 @@ interface Config {
   mailPassword: string | undefined;
   mailPort: number;
 
+  rateLimitDisabled: boolean;
+  trustProxy: boolean;
+
   // OIDC
   oidcClientId: string | undefined;
   oidcClientSecret: string | undefined;
@@ -159,6 +162,9 @@ class ConfigManager {
       mailPassword: this.envString(config.mail?.password),
       mailPort: this.envNumber(mailPort, 465),
 
+      rateLimitDisabled: this.envBoolean(config?.rateLimitDisabled),
+      trustProxy: this.envBoolean(config.server?.trustProxy),
+
       // OIDC
       oidcClientId: this.envString(config.oidc?.clientId),
       oidcClientSecret: this.envString(config.oidc?.clientSecret),
@@ -220,6 +226,11 @@ class ConfigManager {
       mailUser: this.envString(process.env.LOGCHIMP_MAIL_USER),
       mailPassword: this.envString(process.env.LOGCHIMP_MAIL_PASSWORD),
       mailPort: this.envNumber(mailPort, DEFAULT_MAIL_PORT),
+
+      rateLimitDisabled: this.envBoolean(
+        process.env.LOGCHIMP_RATE_LIMIT_DISABLED,
+      ),
+      trustProxy: this.envBoolean(process.env.LOGCHIMP_TRUST_PROXY),
 
       // OIDC
       oidcClientId: this.envString(process.env.LOGCHIMP_OIDC_CLIENT_ID),

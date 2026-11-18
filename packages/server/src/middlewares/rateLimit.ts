@@ -4,6 +4,7 @@ import error from "../errorResponse.json";
 import type { RateLimitResult } from "../services/rateLimit/types";
 import type { RateLimiter } from "../services/rateLimit/limiter";
 import logger from "../utils/logger";
+import { config } from "../utils/logchimpConfig";
 
 export type RateLimitMiddlewareOptions = {
   /**
@@ -43,7 +44,7 @@ function isRateLimitingDisabled(): boolean {
   return (
     process.env.NODE_ENV === "testing" ||
     process.env.NODE_ENV === "ci" ||
-    process.env.LOGCHIMP_RATE_LIMIT_DISABLED === "true"
+    config.rateLimitDisabled === true
   );
 }
 
