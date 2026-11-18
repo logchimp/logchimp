@@ -7,6 +7,7 @@ import boards from "./boards";
 import roles from "./roles";
 import license from "./license";
 import votes from "./votes";
+import settings from "./settings";
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use(boards);
 router.use(roles);
 router.use(license);
 router.use(votes);
+router.use(settings);
 
 export default router;

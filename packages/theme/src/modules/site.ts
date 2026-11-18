@@ -1,8 +1,29 @@
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosError, type AxiosResponse } from "axios";
 import type { components } from "@logchimp/api-ts-types";
 
 import { useUserStore } from "../store/user";
 import { VITE_API_URL } from "../constants";
+import { APIService } from "./api.ts";
+
+export class SiteAPI extends APIService {
+  constructor(baseURL?: string) {
+    super(baseURL || `${VITE_API_URL}/api`);
+  }
+
+  /**
+   * Get site settings
+   * @returns {Promise<AxiosResponse<components["schemas"]["GetSiteSettingsResponseBody"]>>} response
+   */
+  async getSettings(): Promise<
+    components["schemas"]["GetSiteSettingsResponseBody"]
+  > {
+    return await this.get("/v1/settings/site")
+      .then((response) => response?.data)
+      .catch((error: AxiosError) => {
+        throw error;
+      });
+  }
+}
 
 /**
  * Create owner account while setting up LogChimp site.
@@ -44,19 +65,6 @@ export const isSiteSetup = async (): Promise<
   return await axios({
     method: "GET",
     url: `${VITE_API_URL}/api/v1/auth/setup`,
-  });
-};
-
-/**
- * Get site settings
- * @returns {Promise<AxiosResponse<components["schemas"]["GetSiteSettingsResponseBody"]>>} response
- */
-export const getSettings = async (): Promise<
-  AxiosResponse<components["schemas"]["GetSiteSettingsResponseBody"]>
-> => {
-  return await axios({
-    method: "GET",
-    url: `${VITE_API_URL}/api/v1/settings/site`,
   });
 };
 

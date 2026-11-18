@@ -1,0 +1,54 @@
+import type { components } from "@logchimp/api-ts-types";
+
+import * as cache from "../../cache";
+import { CACHE_KEYS } from "../../cache/keys";
+import logger from "../../utils/logger";
+import database from "../../database";
+import { DAY } from "../../cache/time";
+import { domainBlacklistManager } from "../services/auth/auth.service";
+
+export class workspaceRepository {
+  async GetSettings() {
+    if (cache.isActive) {
+      try {
+        const cached = await cache.valkey.get(CACHE_KEYS.SITE_SETTINGS);
+        if (cached) {
+          return JSON.parse(cached) as components["schemas"]["SiteSettings"];
+        }
+      } catch (err) {
+        logger.error({ message: err });
+      }
+    }
+
+    try {
+      const dbSettings = await database("settings")
+        .select<components["schemas"]["SiteSettings"]>(
+          "*",
+          database.raw("labs::json as labs"),
+        )
+        .first();
+
+      const settings = {
+        ...dbSettings,
+        blockedDomains: [...domainBlacklistManager.domains],
+      };
+
+      if (cache.isActive) {
+        try {
+          await cache.valkey.set(
+            CACHE_KEYS.SITE_SETTINGS,
+            JSON.stringify(settings),
+            "EX",
+            7 * DAY,
+          );
+        } catch (err) {
+          logger.error({ message: err });
+        }
+      }
+
+      return settings;
+    } catch (err) {
+      throw err;
+    }
+  }
+}

@@ -11,7 +11,7 @@ import votes from "./votes";
 import users from "./users";
 import settings from "./settings";
 
-router.use("/api/v1", me, votes, users, settings);
+router.use("/api/v1", me, votes, users);
 
 let eeRoutesLoaded = false;
 export async function initialiseEERoutes() {
@@ -34,7 +34,7 @@ export const ready = (async () => {
   config?.licenseKey ? await initialiseEERoutes() : null;
 
   if (!eeRoutesLoaded) {
-    router.use("/api/v1", auth, posts);
+    router.use("/api/v1", auth, posts, settings);
   }
 })();
 

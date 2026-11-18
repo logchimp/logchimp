@@ -45,6 +45,35 @@
             label="Allow signups"
             note="Allows users to create account?"
           />
+
+          <div>
+            <div class="font-medium">Blacklisted domains</div>
+            <p class="input-field-label">
+              The following email domains are blocked from creating new accounts
+              on LogChimp.
+              <a
+                href="https://docs.logchimp.app/guide/user#domain-blacklist"
+                target="_blank"
+              >
+                Learn more about domain blacklist.
+              </a>
+            </p>
+            <div
+              v-if="blockedDomains?.length"
+              class="flex flex-wrap gap-2 mt-2"
+            >
+              <div
+                v-for="domain in blockedDomains"
+                :key="domain"
+                class="select-none px-3 py-0.5 bg-neutral-200 rounded-lg text-sm text-neutral-800 font-medium"
+              >
+                {{ domain }}
+              </div>
+            </div>
+            <div v-else-if="blockedDomains" class="text-xs text-neutral-700">
+              No domains blocked.
+            </div>
+          </div>
         </div>
 
         <div class="form-column">
@@ -129,7 +158,7 @@ import type { components } from "@logchimp/api-ts-types";
 // modules
 import { useSettingStore } from "../../../store/settings";
 import { useUserStore } from "../../../store/user";
-import { getSettings, updateSettings } from "../../../modules/site";
+import { SiteAPI, updateSettings } from "../../../modules/site";
 import { useAlertStore } from "../../../store/alert.ts";
 
 // components
@@ -144,6 +173,7 @@ import BreadcrumbItem from "../../../components/ui/breadcrumbs/BreadcrumbItem.vu
 import SettingsTelemetryForm from "../../../components/dashboard/settings/general/Telemetry.vue";
 import InputLabel from "../../../components/ui/input/InputLabel.vue";
 
+const siteAPI = new SiteAPI();
 const { add: toast } = useAlertStore();
 const { updateSettings: update } = useSettingStore();
 const { permissions } = useUserStore();
@@ -192,6 +222,7 @@ const googleAnalyticsId = reactive<
   },
 });
 const developer_mode = ref(false);
+const blockedDomains = ref<Partial<string[]>>();
 const updateSettingsButtonLoading = ref(false);
 
 const updateSettingsPermissionDisabled = computed(() => {
@@ -267,15 +298,16 @@ async function updateSettingsHandler() {
 
 async function getSettingsHandler() {
   try {
-    const response = await getSettings();
+    const response = await siteAPI.getSettings();
 
-    siteName.value = response.data.settings.title;
-    logo.value = response.data.settings.logo;
-    description.value = response.data.settings.description;
-    allowSignup.value = response.data.settings.allowSignup;
-    accentColor.value = response.data.settings.accentColor;
-    googleAnalyticsId.value = response.data.settings.googleAnalyticsId;
-    developer_mode.value = response.data.settings.developer_mode;
+    siteName.value = response.settings.title;
+    logo.value = response.settings.logo;
+    description.value = response.settings.description;
+    allowSignup.value = response.settings.allowSignup;
+    accentColor.value = response.settings.accentColor;
+    googleAnalyticsId.value = response.settings.googleAnalyticsId;
+    developer_mode.value = response.settings.developer_mode;
+    blockedDomains.value = response.settings.blockedDomains;
   } catch (error) {
     console.error(error);
   }

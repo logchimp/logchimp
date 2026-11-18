@@ -6,9 +6,9 @@ const router = express.Router();
 import * as settings from "../../controllers/settings";
 
 // middleware
-import { authRequired } from "../../middlewares/auth";
+import { authOptional, authRequired } from "../../middlewares/auth";
 
-router.get("/settings/site", settings.siteSettings);
+router.get("/settings/site", authOptional, settings.siteSettings);
 router.patch("/settings/site", authRequired, settings.update);
 // NOTE: Temporarily disable API-endpoint due to no file storage system implemented.
 // router.post(
