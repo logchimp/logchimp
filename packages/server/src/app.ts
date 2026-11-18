@@ -10,6 +10,10 @@ import routes from "./routes";
 const app = express();
 app.disable("x-powered-by");
 
+if (process.env.LOGCHIMP_TRUST_PROXY === "true") {
+  app.set("trust proxy", true);
+}
+
 // contains key-value pairs of data submitted in the request body
 app.use(express.json());
 
