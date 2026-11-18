@@ -14,7 +14,7 @@ const app = express();
 app.disable("x-powered-by");
 
 if (config.trustProxy === true) {
-  app.set("trust proxy", true);
+  app.set("trust proxy", 1);
 }
 
 // contains key-value pairs of data submitted in the request body
