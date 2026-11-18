@@ -31,7 +31,8 @@ def convert_to_sarif(trufflehog_results):
     detector_types = set()
 
     for finding in trufflehog_results:
-        detector_type = finding.get('DetectorType', 'Unknown')
+        # `DetectorType` is a numeric enum in the JSON; prefer the readable name.
+        detector_type = finding.get('DetectorName') or finding.get('DetectorType', 'Unknown')
         detector_types.add(detector_type)
 
         # Extract file information

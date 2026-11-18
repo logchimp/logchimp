@@ -23,6 +23,8 @@ permissions:
 env:
   TRUFFLEHOG_VERSION: 3.94.0
   TRUFFLEHOG_REPORT_FILE_PATH: results/trufflehog-results.json
+  # Stable marker for the PR comment, so the findings and success steps update the same comment.
+  TRUFFLEHOG_COMMENT_MARKER: "<!-- trufflehog-scan -->"
 
 jobs:
   trufflehog-cli:
@@ -46,12 +48,29 @@ jobs:
       - name: Scan current commit
         id: trufflehog
         run: |
+          # TruffleHog has no `--output` flag, so the findings printer is redirected to a file.
+          # `--json` and `--github-actions` select mutually exclusive printers; the SARIF
+          # upload below provides the annotations that `--github-actions` used to emit.
+          set +e
           trufflehog filesystem . \
-          --results=unverified,verified \
-          --github-actions \
-          --exclude-paths .config/.trufflehogignore \
-          --fail \
-          --output=${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}
+            --results=unverified,verified \
+            --exclude-paths .config/.trufflehogignore \
+            --fail \
+            --json > "$TRUFFLEHOG_REPORT_FILE_PATH.raw"
+          scan_status=$?
+          set -e
+
+          # The JSON printer emits one object per line. Slurp it into an array, and keep only
+          # the fields used downstream so raw secret material never reaches the artifact.
+          if [ -s "$TRUFFLEHOG_REPORT_FILE_PATH.raw" ]; then
+            jq -s 'map({DetectorName, DetectorType, Verified, SourceMetadata})' \
+              "$TRUFFLEHOG_REPORT_FILE_PATH.raw" > "$TRUFFLEHOG_REPORT_FILE_PATH"
+          else
+            echo '[]' > "$TRUFFLEHOG_REPORT_FILE_PATH"
+          fi
+          rm -f "$TRUFFLEHOG_REPORT_FILE_PATH.raw"
+
+          exit "$scan_status"
 
       - name: Upload TruffleHog results
         if: always()
@@ -60,69 +79,78 @@ jobs:
           name: trufflehog-results-${{ github.run_id }}
           path: results/
           retention-days: 30
+          if-no-files-found: ignore
 
       - name: Process Results for PR Comment
         if: github.event_name == 'pull_request' && (steps.trufflehog.outcome == 'failure' || steps.trufflehog.outcome == 'success')
         id: process-results
         run: |
-          if [ -f "${{ env.TRUFFLEHOG_REPORT_FILE_PATH }}" ]; then
-            # Count total findings
-            FINDINGS_COUNT=$(jq length ${{ env.TRUFFLEHOG_REPORT_FILE_PATH }} 2>/dev/null || echo "0")
-            echo "findings_count=$FINDINGS_COUNT" >> $GITHUB_OUTPUT
-          
-            if [ "$FINDINGS_COUNT" -gt 0 ]; then
-              # Create summary for first few findings
-              SUMMARY=$(jq -r '.[0:3] | map("- **\(.DetectorType // "Unknown")**: \(.Raw[:50] // "No raw data")...") | join("\n")' ${{ env.TRUFFLEHOG_REPORT_FILE_PATH }} 2>/dev/null || echo "- Unable to parse findings")
-              echo "findings_summary<<EOF" >> $GITHUB_OUTPUT
-              echo "$SUMMARY" >> $GITHUB_OUTPUT
-              echo "EOF" >> $GITHUB_OUTPUT
-            fi
+          FINDINGS_COUNT=0
+
+          if [ -f "$TRUFFLEHOG_REPORT_FILE_PATH" ]; then
+            FINDINGS_COUNT=$(jq length "$TRUFFLEHOG_REPORT_FILE_PATH" 2>/dev/null || echo "0")
           else
-            echo "findings_count=0" >> $GITHUB_OUTPUT
-            echo "No results file found" >> $GITHUB_STEP_SUMMARY
+            echo "No results file found" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "findings_count=$FINDINGS_COUNT" >> "$GITHUB_OUTPUT"
+
+          if [ "$FINDINGS_COUNT" -gt 0 ]; then
+            # Detector and location only: the comment must never carry secret material.
+            SUMMARY=$(jq -r '.[0:3] | map("- **\(.DetectorName // "Unknown")** in `\(.SourceMetadata.Data.Filesystem.file // "unknown"):\(.SourceMetadata.Data.Filesystem.line // 1)`") | join("\n")' "$TRUFFLEHOG_REPORT_FILE_PATH" 2>/dev/null || echo "- Unable to parse findings")
+
+            # Findings are untrusted PR content, so use a random delimiter for the multiline output.
+            DELIMITER="EOF_$(dd if=/dev/urandom bs=15 count=1 status=none | base64)"
+            {
+              echo "findings_summary<<$DELIMITER"
+              echo "$SUMMARY"
+              echo "$DELIMITER"
+            } >> "$GITHUB_OUTPUT"
           fi
 
       - name: Comment PR with findings
         if: github.event_name == 'pull_request' && steps.process-results.outputs.findings_count != '0'
         uses: actions/github-script@v8
+        env:
+          FINDINGS_COUNT: ${{ steps.process-results.outputs.findings_count }}
+          FINDINGS_SUMMARY: ${{ steps.process-results.outputs.findings_summary }}
         with:
           script: |
-            const findingsCount = '${{ steps.process-results.outputs.findings_count }}';
-            const findingsSummary = `${{ steps.process-results.outputs.findings_summary }}`;
-            
+            const marker = process.env.TRUFFLEHOG_COMMENT_MARKER;
+            const findingsCount = Number(process.env.FINDINGS_COUNT) || 0;
+            const findingsSummary = process.env.FINDINGS_SUMMARY || '';
+
             // Check if we already commented on this PR
-            const comments = await github.rest.issues.listComments({
+            const comments = await github.paginate(github.rest.issues.listComments, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
-            const existingComment = comments.data.find(comment => 
-              comment.body.includes('🚨 TruffleHog Security Scan Results')
-            );
-            
-            const body = `## 🚨 TruffleHog Security Scan Results
-            
+
+            const existingComment = comments.find(comment => comment.body.includes(marker));
+
+            const body = `${marker}
+            ## 🚨 TruffleHog Security Scan Results
+
             **Found ${findingsCount} potential secret(s) in this PR**
-            
+
             ### Summary of findings:
             ${findingsSummary}
-            
-            ${findingsCount > 3 ? `\n_... and ${findingsCount - 3} more findings_` : ''}
-            
+
+            ${findingsCount > 3 ? `_... and ${findingsCount - 3} more findings_` : ''}
+
             ### ⚠️ Next Steps:
-            1. Review the findings in the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            1. Review the findings in the [workflow run](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
             2. Remove any real secrets from your code and commit history
             3. Rotate any exposed credentials
             4. If these are false positives, add them to your TruffleHog ignore file
-            
+
             ### 📋 Full Results:
-            Download the complete scan results from the workflow artifacts.
-            
+            Download the redacted scan results from this workflow run's artifacts.
+
             ---
             *Last updated: ${new Date().toISOString()}*
             `;
-            
+
             if (existingComment) {
               // Update existing comment
               await github.rest.issues.updateComment({
@@ -143,30 +171,31 @@ jobs:
 
       - name: Comment PR with success
         if: github.event_name == 'pull_request' && steps.process-results.outputs.findings_count == '0' && steps.trufflehog.outcome == 'success'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
+            const marker = process.env.TRUFFLEHOG_COMMENT_MARKER;
+
             // Check for existing TruffleHog comments and update/delete them
-            const comments = await github.rest.issues.listComments({
+            const comments = await github.paginate(github.rest.issues.listComments, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
-            const existingComment = comments.data.find(comment => 
-              comment.body.includes('🚨 TruffleHog Security Scan Results')
-            );
-            
+
+            const existingComment = comments.find(comment => comment.body.includes(marker));
+
             if (existingComment) {
               // Update to show success
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: existingComment.id,
-                body: `## ✅ TruffleHog Security Scan Results
-            
+                body: `${marker}
+            ## ✅ TruffleHog Security Scan Results
+
                 **No secrets detected in this PR** 🎉
-            
+
                 ---
                 *Last updated: ${new Date().toISOString()}*`
               });
