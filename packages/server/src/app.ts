@@ -6,15 +6,25 @@ import express from "express";
 import cors from "cors";
 
 import routes from "./routes";
+import { config } from "./utils/logchimpConfig";
+import { rateLimit } from "./middlewares/rateLimit";
+import { apiRateLimiter } from "./services/rateLimit/limiters";
 
 const app = express();
 app.disable("x-powered-by");
+
+if (config.trustProxy === true) {
+  app.set("trust proxy", 1);
+}
 
 // contains key-value pairs of data submitted in the request body
 app.use(express.json());
 
 // enable all CORS requests
 app.use(cors());
+
+// baseline rate limit for every API request
+app.use("/api", rateLimit(apiRateLimiter));
 
 // import all routes
 app.use(routes);

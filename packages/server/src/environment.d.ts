@@ -30,6 +30,10 @@ declare namespace NodeJS {
     // Cache
     readonly LOGCHIMP_VALKEY_URL: string | undefined;
 
+    // Rate limiting
+    readonly LOGCHIMP_RATE_LIMIT_DISABLED: string | undefined;
+    readonly LOGCHIMP_TRUST_PROXY: string | undefined;
+
     // SMTP - Mail Configuration
     /**
      * @deprecated
