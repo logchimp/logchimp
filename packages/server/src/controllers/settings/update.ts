@@ -8,10 +8,13 @@ import database from "../../database";
 // utils
 import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
+import { workspaceRepository } from "../../repository/workspace";
 
 // cache
 import * as cache from "../../cache";
 import { CACHE_KEYS } from "../../cache/keys";
+
+const workspaceRepo = new workspaceRepository();
 
 type ResponseBody =
   | components["schemas"]["UpdateSiteSettingsResponseBody"]
@@ -93,13 +96,30 @@ export async function update(
   }
 
   // Validate: at least one of site name or logo must be provided when both are sent
-  if ("title" in req.body && "logo" in req.body) {
-    const effectiveTitle = (title ?? "").trim();
-    const effectiveLogo = logo === null ? "" : (logo ?? "").trim();
-    if (!effectiveTitle && !effectiveLogo) {
-      return res.status(400).send({
-        message: "Either a site name or logo URL is required",
-        code: "SITE_NAME_OR_LOGO_REQUIRED",
+  if ("title" in req.body || "logo" in req.body) {
+    try {
+      const currentSettings = await workspaceRepo.GetSettings();
+
+      const title = (
+        "title" in req.body
+          ? (req.body.title ?? "")
+          : (currentSettings?.title ?? "")
+      ).trim();
+      const effectiveLogo = (
+        "logo" in req.body ? (logo ?? "") : (currentSettings?.logo ?? "")
+      ).trim();
+
+      if (!title && !effectiveLogo) {
+        return res.status(400).send({
+          message: "Either a site name or logo URL is required",
+          code: "SITE_NAME_OR_LOGO_REQUIRED",
+        });
+      }
+    } catch (err) {
+      logger.log({ level: "error", message: err });
+      return res.status(500).send({
+        message: error.general.serverError,
+        code: "SERVER_ERROR",
       });
     }
   }
