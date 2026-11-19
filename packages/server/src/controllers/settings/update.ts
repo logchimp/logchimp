@@ -3,7 +3,6 @@ import type { components } from "@logchimp/api-ts-types";
 import { JSDOM } from "jsdom";
 import { isHexColor, isURL } from "validator";
 import createDOMPurify from "dompurify";
-import database from "../../database";
 
 // utils
 import logger from "../../utils/logger";
@@ -11,8 +10,6 @@ import error from "../../errorResponse.json";
 import { workspaceRepository } from "../../repository/workspace";
 
 // cache
-import * as cache from "../../cache";
-import { CACHE_KEYS } from "../../cache/keys";
 
 const workspaceRepo = new workspaceRepository();
 
@@ -125,29 +122,15 @@ export async function update(
   }
 
   try {
-    const updateSettings = await database
-      .update({
-        title,
-        description,
-        logo,
-        icon: logo,
-        allowSignup,
-        accentColor,
-        googleAnalyticsId,
-        developer_mode,
-      })
-      .from("settings")
-      .returning(["*", database.raw("labs::json as labs")]);
-
-    const settings = updateSettings[0];
-
-    if (cache.isActive) {
-      try {
-        await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
-      } catch (err) {
-        logger.error({ message: err });
-      }
-    }
+    const settings = await workspaceRepo.UpdateSettings({
+      title,
+      description,
+      logo,
+      allowSignup,
+      accentColor,
+      googleAnalyticsId,
+      developer_mode,
+    });
 
     res.status(200).send({
       settings,

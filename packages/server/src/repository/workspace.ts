@@ -45,4 +45,42 @@ export class workspaceRepository {
       throw err;
     }
   }
+
+  async UpdateSettings(
+    settings: Partial<{
+      title: string;
+      description: string;
+      logo: string;
+      allowSignup: boolean;
+      accentColor: string;
+      googleAnalyticsId: string;
+      developer_mode: boolean;
+    }>,
+  ) {
+    await database
+      .update({
+        title: settings.title,
+        description: settings.description,
+        logo: settings.logo,
+        icon: settings.logo,
+        allowSignup: settings.allowSignup,
+        accentColor: settings.accentColor,
+        googleAnalyticsId: settings.googleAnalyticsId,
+        developer_mode: settings.developer_mode,
+      })
+      .from("settings");
+
+    if (cache.isActive) {
+      try {
+        await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
+      } catch (err) {
+        logger.error({
+          message: "failed to delete site settings cache",
+          error: err,
+        });
+      }
+    }
+
+    return await this.GetSettings();
+  }
 }
