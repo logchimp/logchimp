@@ -1,11 +1,10 @@
 import type { Request, Response } from "express";
 import type { components } from "@logchimp/api-ts-types";
-import { JSDOM } from "jsdom";
 import { isHexColor, isURL } from "validator";
-import createDOMPurify from "dompurify";
 
 // utils
 import logger from "../../utils/logger";
+import { sanitizeUrl } from "../../utils/sanitizeUrl";
 import error from "../../errorResponse.json";
 import { workspaceRepository } from "../../repository/workspace";
 
@@ -146,25 +145,4 @@ export async function update(
       code: "SERVER_ERROR",
     });
   }
-}
-
-function sanitizeUrl(value: string): string | null {
-  // Create a DOM window for DOMPurify to use
-  const window = new JSDOM("").window;
-  // @ts-expect-error
-  const DOMPurify = createDOMPurify(window as unknown);
-
-  const imgDiv = `<img src="${value}">`;
-
-  // Sanitize the HTML using DOMPurify
-  const sanitized = (
-    DOMPurify.sanitize(imgDiv, {
-      ALLOWED_TAGS: ["img"],
-      ALLOWED_ATTR: ["src"],
-      ALLOW_DATA_ATTR: false,
-    }) || ""
-  ).trim();
-
-  const url = sanitized.substring(10, sanitized.length - 2);
-  return url || null;
 }
