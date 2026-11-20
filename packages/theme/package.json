@@ -57,6 +57,6 @@
     "vite": "6.4.6",
     "vitest": "4.1.12",
     "vue-eslint-parser": "^10.4.2",
-    "vue-tsc": "3.1.5"
+    "vue-tsc": "3.3.14"
   }
 }
