@@ -181,34 +181,27 @@ const { t } = useI18n();
 
 type TextInputField = {
   value: string | null;
-  error: {
-    show: boolean;
-    message: string;
-  };
+  error: FormFieldErrorType;
 };
+
+const fieldErrorState = {
+  show: false,
+  message: "",
+} satisfies FormFieldErrorType;
 
 const siteName = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: fieldErrorState,
 });
 const logo = ref<string | null>("");
 const description = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: fieldErrorState,
 });
 const allowSignup = ref(false);
 const accentColor = reactive<TextInputField>({
   value: "484d7c",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: fieldErrorState,
 });
 const googleAnalyticsId = reactive<
   Omit<TextInputField, "value"> & {
@@ -216,10 +209,7 @@ const googleAnalyticsId = reactive<
   }
 >({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: fieldErrorState,
 });
 const developer_mode = ref(false);
 const blockedDomains = ref<Partial<string[]>>();
