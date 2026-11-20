@@ -62,6 +62,16 @@ const error = reactive({
 });
 
 watch(
+  () => props.error,
+  (newError) => {
+    if (newError) {
+      Object.assign(error, newError);
+    }
+  },
+  { immediate: true, deep: true },
+);
+
+watch(
   () => props.modelValue,
   (newValue) => {
     if (!newValue) return;
