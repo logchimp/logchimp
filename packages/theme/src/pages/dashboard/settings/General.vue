@@ -185,36 +185,31 @@ type TextInputField = {
   error: FormFieldErrorType;
 };
 
-const fieldErrorState = {
-  show: false,
-  message: "",
-} satisfies FormFieldErrorType;
-
 // Reset stale validation errors
 function resetFormStaleValidation() {
-  siteName.error = fieldErrorState;
-  description.error = fieldErrorState;
-  logo.error = fieldErrorState;
-  accentColor.error = fieldErrorState;
-  googleAnalyticsId.error = fieldErrorState;
+  siteName.error = { show: false, message: "" };
+  description.error = { show: false, message: "" };
+  logo.error = { show: false, message: "" };
+  accentColor.error = { show: false, message: "" };
+  googleAnalyticsId.error = { show: false, message: "" };
 }
 
 const siteName = reactive<TextInputField>({
   value: "",
-  error: fieldErrorState,
+  error: { show: false, message: "" },
 });
 const logo = reactive<TextInputField>({
   value: "",
-  error: fieldErrorState,
+  error: { show: false, message: "" },
 });
 const description = reactive<TextInputField>({
   value: "",
-  error: fieldErrorState,
+  error: { show: false, message: "" },
 });
 const allowSignup = ref(false);
 const accentColor = reactive<TextInputField>({
   value: "484d7c",
-  error: fieldErrorState,
+  error: { show: false, message: "" },
 });
 const googleAnalyticsId = reactive<
   Omit<TextInputField, "value"> & {
@@ -222,7 +217,7 @@ const googleAnalyticsId = reactive<
   }
 >({
   value: "",
-  error: fieldErrorState,
+  error: { show: false, message: "" },
 });
 const developer_mode = ref(false);
 const blockedDomains = ref<Partial<string[]>>();
