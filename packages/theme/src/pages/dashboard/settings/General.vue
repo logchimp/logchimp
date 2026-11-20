@@ -190,6 +190,15 @@ const fieldErrorState = {
   message: "",
 } satisfies FormFieldErrorType;
 
+// Reset stale validation errors
+function resetFormStaleValidation() {
+  siteName.error = fieldErrorState;
+  description.error = fieldErrorState;
+  logo.error = fieldErrorState;
+  accentColor.error = fieldErrorState;
+  googleAnalyticsId.error = fieldErrorState;
+}
+
 const siteName = reactive<TextInputField>({
   value: "",
   error: fieldErrorState,
@@ -241,13 +250,7 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 }
 
 async function updateSettingsHandler() {
-  // Reset stale validation errors before running new validation
-  siteName.error.show = false;
-  siteName.error.message = "";
-  logo.error.show = false;
-  logo.error.message = "";
-  accentColor.error.show = false;
-  accentColor.error.message = "";
+  resetFormStaleValidation();
 
   // At least one of site name or logo must be provided
   const hasSiteName = !!siteName.value?.trim();
