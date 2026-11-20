@@ -112,8 +112,10 @@
       <div class="form-columns">
         <div class="form-column">
           <color-input
+            :error="accentColor.error"
             :model-value="accentColor.value ?? undefined"
             @update:model-value="(value) => (accentColor.value = value ?? null)"
+            @hide-error="hideAccentColorError"
           />
         </div>
       </div>
@@ -238,9 +240,9 @@ function setFieldError(field: TextInputField) {
   };
 }
 
-// function hideAccentColorError(event: FormFieldErrorType) {
-//   accentColor.error = event;
-// }
+function hideAccentColorError(event: FormFieldErrorType) {
+  accentColor.error = event;
+}
 
 function hideGoogleAnalyticsError() {
   googleAnalyticsId.error = createFormFieldError();
@@ -259,12 +261,12 @@ async function updateSettingsHandler() {
     siteName.error.message = message;
     logo.error.show = true;
     logo.error.message = message;
-    return;
+    hasValidationError = true;
   }
 
   if (!accentColor.value) {
     accentColor.error.show = true;
-    accentColor.error.message = "Required";
+    accentColor.error.message = "Please enter a valid color code.";
     hasValidationError = true;
   }
 
