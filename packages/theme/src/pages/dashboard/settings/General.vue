@@ -87,19 +87,20 @@
                 ]"
               >
                 <img
-                  v-if="logo"
-                  :src="logo"
+                  v-if="logo.value"
+                  :src="logo.value"
                   :alt="siteName.value || ''"
                   class="w-full h-full"
                 />
               </div>
             </div>
             <l-text
-              :model-value="logo ?? undefined"
+              :model-value="logo.value ?? undefined"
               label="Logo URL"
               data-testid="logo-url"
+              :error="logo.error"
               placeholder="https://avatar-url.png"
-              @update:model-value="(value) => (logo = value ?? null)"
+              @update:model-value="(value) => (logo.value = value ?? null)"
             />
           </div>
         </div>
@@ -193,7 +194,10 @@ const siteName = reactive<TextInputField>({
   value: "",
   error: fieldErrorState,
 });
-const logo = ref<string | null>("");
+const logo = reactive<TextInputField>({
+  value: "",
+  error: fieldErrorState,
+});
 const description = reactive<TextInputField>({
   value: "",
   error: fieldErrorState,
@@ -240,6 +244,8 @@ async function updateSettingsHandler() {
   // Reset stale validation errors before running new validation
   siteName.error.show = false;
   siteName.error.message = "";
+  logo.error.show = false;
+  logo.error.message = "";
   accentColor.error.show = false;
   accentColor.error.message = "";
 
