@@ -53,6 +53,15 @@ interface Config {
   oidcClientId: string | undefined;
   oidcClientSecret: string | undefined;
   oidcIssuer: string | undefined;
+
+  // Slack
+  slackBotToken: string | undefined;
+  slackSigningSecret: string | undefined;
+
+  // AI (any OpenAI-compatible chat completions API)
+  aiBaseUrl: string | undefined;
+  aiApiKey: string | undefined;
+  aiModel: string | undefined;
 }
 
 class ConfigManager {
@@ -170,6 +179,15 @@ class ConfigManager {
       oidcClientSecret: this.envString(config.oidc?.clientSecret),
       oidcIssuer: this.envString(config.oidc?.issuer),
 
+      // Slack
+      slackBotToken: this.envString(config.slack?.botToken),
+      slackSigningSecret: this.envString(config.slack?.signingSecret),
+
+      // AI
+      aiBaseUrl: this.envString(config.ai?.baseUrl),
+      aiApiKey: this.envString(config.ai?.apiKey),
+      aiModel: this.envString(config.ai?.model),
+
       version: this.envString(""),
     };
   }
@@ -236,6 +254,17 @@ class ConfigManager {
       oidcClientId: this.envString(process.env.LOGCHIMP_OIDC_CLIENT_ID),
       oidcClientSecret: this.envString(process.env.LOGCHIMP_OIDC_CLIENT_SECRET),
       oidcIssuer: this.envString(process.env.LOGCHIMP_OIDC_ISSUER),
+
+      // Slack
+      slackBotToken: this.envString(process.env.LOGCHIMP_SLACK_BOT_TOKEN),
+      slackSigningSecret: this.envString(
+        process.env.LOGCHIMP_SLACK_SIGNING_SECRET,
+      ),
+
+      // AI
+      aiBaseUrl: this.envString(process.env.LOGCHIMP_AI_BASE_URL),
+      aiApiKey: this.envString(process.env.LOGCHIMP_AI_API_KEY),
+      aiModel: this.envString(process.env.LOGCHIMP_AI_MODEL),
 
       version: this.envString(""),
     };
