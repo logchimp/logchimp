@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { reactive, watch } from "vue";
-import type { IFormBaseProps } from "./input/formBaseProps";
+import type { FormFieldErrorType, IFormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
 
 const props = withDefaults(defineProps<IFormBaseProps & FormInputBinds>(), {
@@ -50,11 +50,15 @@ const props = withDefaults(defineProps<IFormBaseProps & FormInputBinds>(), {
   placeholder: "abcdef",
 });
 
-const emit = defineEmits<(e: "update:modelValue", event: string) => void>();
+const emit = defineEmits<{
+  (e: "hide-error", event: FormFieldErrorType): void;
+  (e: "update:modelValue", event: string): void;
+}>();
 
+const InvalidColorCodeErrorMessage = "Please enter a valid color code.";
 const error = reactive({
   show: false,
-  message: "The color should be in valid hex format.",
+  message: "",
 });
 
 watch(
@@ -63,11 +67,16 @@ watch(
     if (!newValue) return;
     const validColor = /^[0-9A-F]{6}$/i.test(newValue);
     error.show = !validColor;
+    error.message = InvalidColorCodeErrorMessage;
   },
 );
 
 function hideError() {
   error.show = false;
+  emit("hide-error", {
+    show: false,
+    message: "",
+  });
 }
 
 function input(event: Event) {
