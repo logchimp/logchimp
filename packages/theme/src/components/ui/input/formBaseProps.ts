@@ -1,3 +1,17 @@
+export interface IFormBaseProps {
+  label?: string;
+  placeholder?: string;
+  description?: string;
+  /**
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * @default FormFieldErrorType
+   */
+  error?: FormFieldErrorType;
+}
+
 export const formBaseProps = {
   label: {
     type: String,
