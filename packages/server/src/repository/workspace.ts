@@ -5,6 +5,12 @@ import { CACHE_KEYS } from "../cache/keys";
 import logger from "../utils/logger";
 import database from "../database";
 import { DAY } from "../cache/time";
+import { SiteNameOrLogoRequiredError } from "../services/workspace/error";
+
+type SiteNameOrLogo = {
+  title?: string | null;
+  logo?: string | null;
+};
 
 export class workspaceRepository {
   async GetSettings() {
@@ -46,6 +52,11 @@ export class workspaceRepository {
     }
   }
 
+  /**
+   * Update settings within a transaction, optionally validating the name-or-logo invariant.
+   * @param settings - Settings to update
+   * @throws {Error} If both title and logo would be empty after update
+   */
   async UpdateSettings(
     settings: Partial<{
       title: string;
@@ -57,30 +68,78 @@ export class workspaceRepository {
       developer_mode: boolean;
     }>,
   ) {
-    await database
-      .update({
-        title: settings.title,
-        description: settings.description,
-        logo: settings.logo,
-        icon: settings.logo,
-        allowSignup: settings.allowSignup,
-        accentColor: settings.accentColor,
-        googleAnalyticsId: settings.googleAnalyticsId,
-        developer_mode: settings.developer_mode,
-      })
-      .from("settings");
+    return await database.transaction(async (trx) => {
+      const currentSettings = await trx("settings")
+        .select("*", trx.raw("labs::json as labs"))
+        .forUpdate()
+        .first();
 
-    if (cache.isActive) {
-      try {
-        await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
-      } catch (err) {
-        logger.error({
-          message: "failed to delete site settings cache",
-          error: err,
-        });
+      if (
+        !this.hasSiteNameOrLogo(settings, {
+          title: currentSettings?.title,
+          logo: currentSettings?.logo,
+        })
+      ) {
+        throw new SiteNameOrLogoRequiredError();
       }
-    }
 
-    return await this.GetSettings();
+      const updateData: Record<string, string | boolean | null> = {};
+      if (settings.title !== undefined) updateData.title = settings.title;
+      if (settings.description !== undefined)
+        updateData.description = settings.description;
+      if (settings.logo !== undefined) {
+        updateData.logo = settings.logo;
+        updateData.icon = settings.logo;
+      }
+      if (settings.allowSignup !== undefined)
+        updateData.allowSignup = settings.allowSignup;
+      if (settings.accentColor !== undefined)
+        updateData.accentColor = settings.accentColor;
+      if (settings.googleAnalyticsId !== undefined)
+        updateData.googleAnalyticsId = settings.googleAnalyticsId;
+      if (settings.developer_mode !== undefined)
+        updateData.developer_mode = settings.developer_mode;
+
+      if (Object.keys(updateData).length === 0) {
+        return currentSettings;
+      }
+
+      await trx("settings").update(updateData);
+
+      if (cache.isActive) {
+        try {
+          await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
+        } catch (err) {
+          logger.error({
+            message: "failed to delete site settings cache",
+            error: err,
+          });
+        }
+      }
+
+      const updatedSettings = await trx("settings")
+        .select("*", trx.raw("labs::json as labs"))
+        .first();
+
+      return updatedSettings as components["schemas"]["SiteSettings"];
+    });
+  }
+
+  /**
+   * At least one of site name or logo must remain after the update.
+   * Fields absent from `body` fall back to the `current` settings.
+   */
+  private hasSiteNameOrLogo(
+    body: SiteNameOrLogo,
+    current: SiteNameOrLogo | undefined,
+  ): boolean {
+    const title = (
+      body.title !== undefined ? (body.title ?? "") : (current?.title ?? "")
+    ).trim();
+    const logo = (
+      body.logo !== undefined ? (body.logo ?? "") : (current?.logo ?? "")
+    ).trim();
+
+    return Boolean(title || logo);
   }
 }

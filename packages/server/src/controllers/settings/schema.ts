@@ -60,26 +60,3 @@ export const updateSiteSettingsRequestBodySchema = v.object({
   googleAnalyticsId: v.optional(v.nullable(v.string())),
   developer_mode: v.optional(v.boolean()),
 });
-
-type SiteNameOrLogo = {
-  title?: string | null;
-  logo?: string | null;
-};
-
-/**
- * At least one of site name or logo must remain after the update.
- * Fields absent from `body` fall back to the `current` settings.
- */
-export function hasSiteNameOrLogo(
-  body: SiteNameOrLogo,
-  current: SiteNameOrLogo | undefined,
-): boolean {
-  const title = (
-    body.title !== undefined ? (body.title ?? "") : (current?.title ?? "")
-  ).trim();
-  const logo = (
-    body.logo !== undefined ? (body.logo ?? "") : (current?.logo ?? "")
-  ).trim();
-
-  return Boolean(title || logo);
-}

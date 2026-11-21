@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import * as v from "valibot";
 
 import {
-  hasSiteNameOrLogo,
   settingsErrorMap,
   updateSiteSettingsRequestBodySchema,
 } from "./schema";
@@ -137,49 +136,5 @@ describe("other fields", () => {
 
   test("rejects non-object body", () => {
     expect(parse(undefined).success).toBe(false);
-  });
-});
-
-describe("hasSiteNameOrLogo", () => {
-  test("empty title and cleared logo, no current settings", () => {
-    expect(hasSiteNameOrLogo({ title: "", logo: null }, undefined)).toBe(false);
-  });
-
-  test("whitespace-only title and cleared logo", () => {
-    expect(hasSiteNameOrLogo({ title: "   ", logo: null }, undefined)).toBe(
-      false,
-    );
-  });
-
-  test("clearing logo falls back to current title", () => {
-    expect(hasSiteNameOrLogo({ logo: null }, { title: "LogChimp" })).toBe(true);
-  });
-
-  test("clearing logo with no current title is rejected", () => {
-    expect(hasSiteNameOrLogo({ logo: null }, { title: "", logo: "x" })).toBe(
-      false,
-    );
-  });
-
-  test("clearing title falls back to current logo", () => {
-    expect(
-      hasSiteNameOrLogo({ title: "" }, { logo: "https://example.com/a.png" }),
-    ).toBe(true);
-  });
-
-  test("clearing title with no current logo is rejected", () => {
-    expect(hasSiteNameOrLogo({ title: null }, { title: "x", logo: null })).toBe(
-      false,
-    );
-  });
-
-  test("clearing title with no current settings is rejected", () => {
-    expect(hasSiteNameOrLogo({ title: "" }, undefined)).toBe(false);
-  });
-
-  test("new logo satisfies the rule", () => {
-    expect(
-      hasSiteNameOrLogo({ title: "", logo: "https://example.com/a.png" }, {}),
-    ).toBe(true);
   });
 });

@@ -7,10 +7,10 @@ import logger from "../../utils/logger";
 import error from "../../errorResponse.json";
 import { workspaceRepository } from "../../repository/workspace";
 import {
-  hasSiteNameOrLogo,
   settingsErrorMap,
   updateSiteSettingsRequestBodySchema,
 } from "./schema";
+import { SiteNameOrLogoRequiredError } from "../../services/workspace/error";
 
 const workspaceRepo = new workspaceRepository();
 
@@ -58,37 +58,21 @@ export async function update(
     return;
   }
 
-  const settingsUpdate = body.output;
-
-  // Validate: at least one of site name or logo must remain after the update
-  if (settingsUpdate.title !== undefined || settingsUpdate.logo !== undefined) {
-    try {
-      const currentSettings = await workspaceRepo.GetSettings();
-
-      if (!hasSiteNameOrLogo(settingsUpdate, currentSettings)) {
-        res.status(400).send({
-          message: settingsErrorMap.SITE_NAME_OR_LOGO_REQUIRED,
-          code: "SITE_NAME_OR_LOGO_REQUIRED",
-        });
-        return;
-      }
-    } catch (err) {
-      logger.log({ level: "error", message: err });
-      res.status(500).send({
-        message: error.general.serverError,
-        code: "SERVER_ERROR",
-      });
-      return;
-    }
-  }
-
   try {
-    const settings = await workspaceRepo.UpdateSettings(settingsUpdate);
+    const settings = await workspaceRepo.UpdateSettings(body.output);
 
     res.status(200).send({
       settings,
     });
   } catch (err) {
+    if (err instanceof SiteNameOrLogoRequiredError) {
+      res.status(400).send({
+        message: settingsErrorMap.SITE_NAME_OR_LOGO_REQUIRED,
+        code: "SITE_NAME_OR_LOGO_REQUIRED",
+      });
+      return;
+    }
+
     logger.log({
       level: "error",
       message: err,
