@@ -115,7 +115,7 @@
             :error="accentColor.error"
             :model-value="accentColor.value ?? undefined"
             @update:model-value="(value) => (accentColor.value = value ?? null)"
-            @hide-error="hideAccentColorError"
+            @hide-error="setFieldError(accentColor)"
           />
         </div>
       </div>
@@ -238,10 +238,6 @@ function setFieldError(field: TextInputField) {
   return () => {
     field.error = createFormFieldError();
   };
-}
-
-function hideAccentColorError(event: FormFieldErrorType) {
-  accentColor.error = event;
 }
 
 function hideGoogleAnalyticsError() {
