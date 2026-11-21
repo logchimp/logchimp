@@ -25,6 +25,7 @@
         :disabled="disabled ? 'true' : undefined"
         :aria-disabled="disabled ? 'true' : undefined"
         @input="input"
+        @blur="onBlur"
       />
     </div>
     <p v-if="description" class="input-description">
@@ -42,6 +43,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { watchDebounced } from "@vueuse/core";
 import { type FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
 
@@ -57,6 +59,7 @@ const emit = defineEmits<{
 }>();
 
 const InvalidColorCodeErrorMessage = "Please enter a valid color code.";
+const touched = ref(false);
 const errorMessage = ref<string | null>(null);
 
 watch(
@@ -69,21 +72,41 @@ watch(
 
 watch(
   () => props.modelValue,
-  (newValue) => {
-    if (!newValue) {
-      errorMessage.value = props.required ? "Required" : null;
-    } else {
-      errorMessage.value = /^[0-9A-F]{6}$/i.test(newValue)
-        ? null
-        : InvalidColorCodeErrorMessage;
-    }
-    emit("update:error", errorMessage.value);
+  (value) => {
+    // clear error instantly on valid
+    if (errorMessage.value && !getError(value)) validate(value);
+  },
+);
+
+watchDebounced(
+  () => props.modelValue,
+  (value) => {
+    if (!touched.value) return;
+    validate(value);
+  },
+  {
+    debounce: 600,
   },
 );
 
 function input(event: Event) {
   const target = event.target as HTMLInputElement;
+  touched.value = true;
   emit("update:modelValue", target.value);
+}
+
+function onBlur() {
+  validate(props.modelValue);
+}
+
+function getError(value?: string | null) {
+  if (!value) return props.required ? "Required" : null;
+  return /^[0-9A-F]{6}$/i.test(value) ? null : InvalidColorCodeErrorMessage;
+}
+
+function validate(value?: string | null) {
+  errorMessage.value = getError(value);
+  emit("update:error", errorMessage.value);
 }
 </script>
 
