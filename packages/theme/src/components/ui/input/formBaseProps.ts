@@ -12,6 +12,10 @@ export interface IFormBaseProps {
   error?: FormFieldErrorType;
 }
 
+export type FormBasePropsV2 = Omit<IFormBaseProps, "error"> & {
+  error?: string | null;
+};
+
 export const formBaseProps = {
   label: {
     type: String,

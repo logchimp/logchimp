@@ -6,7 +6,7 @@
         class="color-preview"
         data-test="color-preview"
         :class="{
-          'input-error': error.show,
+          'input-error': !!error,
         }"
         :style="{
           backgroundColor: `#${modelValue || 'fff'}`,
@@ -17,7 +17,7 @@
         class="input-field"
         :class="{
           'input-field-disabled': disabled,
-          'input-error': error.show,
+          'input-error': !!error,
         }"
         type="text"
         :placeholder="placeholder"
@@ -31,44 +31,41 @@
       {{ description }}
     </p>
     <p
-      v-if="error.show"
+      v-if="errorMessage"
       data-test="input-error-message"
       class="input-error-message"
     >
-      {{ error.message }}
+      {{ errorMessage }}
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
-import type { FormFieldErrorType, IFormBaseProps } from "./input/formBaseProps";
+import { ref, watch } from "vue";
+import type { FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
 
-const props = withDefaults(defineProps<IFormBaseProps & FormInputBinds>(), {
+const props = withDefaults(defineProps<FormBaseProps & FormInputBinds>(), {
   label: "Color",
   placeholder: "abcdef",
 });
 
 const emit = defineEmits<{
-  (e: "hide-error", event: FormFieldErrorType): void;
   (e: "update:modelValue", event: string): void;
+  (e: "update:error", event: string | null): void;
 }>();
 
 const InvalidColorCodeErrorMessage = "Please enter a valid color code.";
-const error = reactive({
-  show: false,
-  message: "",
-});
+const errorMessage = ref<string | null>(null);
 
 watch(
   () => props.error,
   (newError) => {
     if (newError) {
-      Object.assign(error, newError);
+      errorMessage.value = newError;
     }
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 );
 
 watch(
@@ -77,14 +74,11 @@ watch(
     if (!newValue) return;
     const validColor = /^[0-9A-F]{6}$/i.test(newValue);
     if (validColor) {
-      emit("hide-error", {
-        show: false,
-        message: "",
-      });
+      errorMessage.value = null;
     } else {
-      error.message = InvalidColorCodeErrorMessage;
+      errorMessage.value = InvalidColorCodeErrorMessage;
     }
-    error.show = !validColor;
+    emit("update:error", errorMessage.value);
   },
 );
 
