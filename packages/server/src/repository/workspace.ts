@@ -68,7 +68,7 @@ export class workspaceRepository {
       developer_mode: boolean;
     }>,
   ) {
-    return await database.transaction(async (trx) => {
+    const updatedSettingsTrx = await database.transaction(async (trx) => {
       const currentSettings = await trx("settings")
         .select("*", trx.raw("labs::json as labs"))
         .forUpdate()
@@ -106,23 +106,23 @@ export class workspaceRepository {
 
       await trx("settings").update(updateData);
 
-      if (cache.isActive) {
-        try {
-          await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
-        } catch (err) {
-          logger.error({
-            message: "failed to delete site settings cache",
-            error: err,
-          });
-        }
-      }
-
-      const updatedSettings = await trx("settings")
+      return (await trx("settings")
         .select("*", trx.raw("labs::json as labs"))
-        .first();
-
-      return updatedSettings as components["schemas"]["SiteSettings"];
+        .first()) as components["schemas"]["SiteSettings"];
     });
+
+    if (cache.isActive) {
+      try {
+        await cache.valkey.del(CACHE_KEYS.SITE_SETTINGS);
+      } catch (err) {
+        logger.error({
+          message: "failed to delete site settings cache",
+          error: err,
+        });
+      }
+    }
+
+    return updatedSettingsTrx;
   }
 
   /**
