@@ -7,7 +7,7 @@ export interface IFormBaseProps {
    */
   disabled?: boolean;
   /**
-   * @default FormFieldErrorType
+   * @default { show: false, message: "" }
    */
   error?: FormFieldErrorType;
 }
