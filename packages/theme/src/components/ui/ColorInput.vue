@@ -25,7 +25,6 @@
         :disabled="disabled ? 'true' : undefined"
         :aria-disabled="disabled ? 'true' : undefined"
         @input="input"
-        @click="hideError"
       />
     </div>
     <p v-if="description" class="input-description">
@@ -77,20 +76,17 @@ watch(
   (newValue) => {
     if (!newValue) return;
     const validColor = /^[0-9A-F]{6}$/i.test(newValue);
-    if (!validColor) {
+    if (validColor) {
+      emit("hide-error", {
+        show: false,
+        message: "",
+      });
+    } else {
       error.message = InvalidColorCodeErrorMessage;
     }
     error.show = !validColor;
   },
 );
-
-function hideError() {
-  error.show = false;
-  emit("hide-error", {
-    show: false,
-    message: "",
-  });
-}
 
 function input(event: Event) {
   const target = event.target as HTMLInputElement;
