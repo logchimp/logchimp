@@ -233,7 +233,7 @@ function setFieldError(field: TextInputField) {
 function updateAccentColorError(value: string | null) {
   Object.assign(accentColor.error, {
     show: value !== null,
-    message: value,
+    message: value ?? "",
   });
 }
 
