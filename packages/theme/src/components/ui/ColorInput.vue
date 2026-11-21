@@ -16,6 +16,7 @@
         :value="modelValue"
         class="input-field"
         :class="{
+          'input-field-disabled': disabled,
           'input-error': error.show,
         }"
         type="text"
