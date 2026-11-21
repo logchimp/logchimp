@@ -26,7 +26,7 @@
             placeholder="Enter site name"
             :error="siteName.error"
             @update:model-value="(value) => (siteName.value = value ?? null)"
-            @hide-error="hideSiteNameError"
+            @hide-error="setFieldError(siteName)"
           />
 
           <l-text
@@ -36,7 +36,7 @@
             data-testid="site-description"
             :error="description.error"
             @update:model-value="(value) => (description.value = value ?? null)"
-            @hide-error="hideDescriptionError"
+            @hide-error="setFieldError(description)"
           />
 
           <toggle-item
@@ -87,19 +87,20 @@
                 ]"
               >
                 <img
-                  v-if="logo"
-                  :src="logo"
+                  v-if="logo.value"
+                  :src="logo.value"
                   :alt="siteName.value || ''"
                   class="w-full h-full"
                 />
               </div>
             </div>
             <l-text
-              :model-value="logo ?? undefined"
+              :model-value="logo.value ?? undefined"
               label="Logo URL"
               data-testid="logo-url"
+              :error="logo.error"
               placeholder="https://avatar-url.png"
-              @update:model-value="(value) => (logo = value ?? null)"
+              @update:model-value="(value) => (logo.value = value ?? null)"
             />
           </div>
         </div>
@@ -181,34 +182,38 @@ const { t } = useI18n();
 
 type TextInputField = {
   value: string | null;
-  error: {
-    show: boolean;
-    message: string;
-  };
+  error: FormFieldErrorType;
 };
+
+function createFormFieldError(): FormFieldErrorType {
+  return { show: false, message: "" };
+}
+
+// Reset stale validation errors
+function resetFormStaleValidation() {
+  siteName.error = createFormFieldError();
+  description.error = createFormFieldError();
+  logo.error = createFormFieldError();
+  accentColor.error = createFormFieldError();
+  googleAnalyticsId.error = createFormFieldError();
+}
 
 const siteName = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: createFormFieldError(),
 });
-const logo = ref<string | null>("");
+const logo = reactive<TextInputField>({
+  value: "",
+  error: createFormFieldError(),
+});
 const description = reactive<TextInputField>({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: createFormFieldError(),
 });
 const allowSignup = ref(false);
 const accentColor = reactive<TextInputField>({
   value: "484d7c",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: createFormFieldError(),
 });
 const googleAnalyticsId = reactive<
   Omit<TextInputField, "value"> & {
@@ -216,10 +221,7 @@ const googleAnalyticsId = reactive<
   }
 >({
   value: "",
-  error: {
-    show: false,
-    message: "",
-  },
+  error: createFormFieldError(),
 });
 const developer_mode = ref(false);
 const blockedDomains = ref<Partial<string[]>>();
@@ -230,28 +232,22 @@ const updateSettingsPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
-function hideSiteNameError(event: FormFieldErrorType) {
-  siteName.error = event;
-}
-
-function hideDescriptionError(event: FormFieldErrorType) {
-  description.error = event;
+function setFieldError(field: TextInputField) {
+  return () => {
+    field.error = createFormFieldError();
+  };
 }
 
 // function hideAccentColorError(event: FormFieldErrorType) {
 //   accentColor.error = event;
 // }
 
-function hideGoogleAnalyticsError(event: FormFieldErrorType) {
-  googleAnalyticsId.error = event;
+function hideGoogleAnalyticsError() {
+  googleAnalyticsId.error = createFormFieldError();
 }
 
 async function updateSettingsHandler() {
-  // Reset stale validation errors before running new validation
-  siteName.error.show = false;
-  siteName.error.message = "";
-  accentColor.error.show = false;
-  accentColor.error.message = "";
+  resetFormStaleValidation();
 
   // At least one of site name or logo must be provided
   const hasSiteName = !!siteName.value?.trim();
