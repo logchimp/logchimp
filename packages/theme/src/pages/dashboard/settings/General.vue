@@ -112,8 +112,10 @@
       <div class="form-columns">
         <div class="form-column">
           <color-input
+            :error="accentColor.error"
             :model-value="accentColor.value ?? undefined"
             @update:model-value="(value) => (accentColor.value = value ?? null)"
+            @hide-error="setFieldError(accentColor)"
           />
         </div>
       </div>
@@ -238,10 +240,6 @@ function setFieldError(field: TextInputField) {
   };
 }
 
-// function hideAccentColorError(event: FormFieldErrorType) {
-//   accentColor.error = event;
-// }
-
 function hideGoogleAnalyticsError() {
   googleAnalyticsId.error = createFormFieldError();
 }
@@ -249,21 +247,22 @@ function hideGoogleAnalyticsError() {
 async function updateSettingsHandler() {
   resetFormStaleValidation();
 
-  // At least one of site name or logo must be provided
-  const hasSiteName = !!siteName.value?.trim();
-  const hasLogo = !!logo.value?.trim();
-
+  const _title = (siteName.value || "").trim();
+  const _logo = (logo.value || "").trim();
   let hasValidationError = false;
 
-  if (!hasSiteName && !hasLogo) {
+  if (!_title && !_logo) {
+    const message = "Please enter a site name or a logo URL.";
     siteName.error.show = true;
-    siteName.error.message = "Either a site name or logo URL is required";
+    siteName.error.message = message;
+    logo.error.show = true;
+    logo.error.message = message;
     hasValidationError = true;
   }
 
   if (!accentColor.value) {
     accentColor.error.show = true;
-    accentColor.error.message = "Required";
+    accentColor.error.message = "Please enter a valid color code.";
     hasValidationError = true;
   }
 
