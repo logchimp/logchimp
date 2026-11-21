@@ -6,7 +6,7 @@
         class="color-preview"
         data-test="color-preview"
         :class="{
-          'input-error': !!error,
+          'input-error': !!errorMessage,
         }"
         :style="{
           backgroundColor: `#${modelValue || 'fff'}`,
@@ -17,7 +17,7 @@
         class="input-field"
         :class="{
           'input-field-disabled': disabled,
-          'input-error': !!error,
+          'input-error': !!errorMessage,
         }"
         type="text"
         :placeholder="placeholder"
