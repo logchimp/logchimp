@@ -5,6 +5,10 @@ export interface IFormBaseProps {
   /**
    * @default false
    */
+  required?: boolean;
+  /**
+   * @default false
+   */
   disabled?: boolean;
   /**
    * @default { show: false, message: "" }

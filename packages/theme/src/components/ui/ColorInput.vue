@@ -42,12 +42,13 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import type { FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
+import { type FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
 
 const props = withDefaults(defineProps<FormBaseProps & FormInputBinds>(), {
   label: "Color",
   placeholder: "abcdef",
+  required: false,
 });
 
 const emit = defineEmits<{
@@ -69,12 +70,12 @@ watch(
 watch(
   () => props.modelValue,
   (newValue) => {
-    if (!newValue) return;
-    const validColor = /^[0-9A-F]{6}$/i.test(newValue);
-    if (validColor) {
-      errorMessage.value = null;
+    if (!newValue) {
+      errorMessage.value = props.required ? "Required" : null;
     } else {
-      errorMessage.value = InvalidColorCodeErrorMessage;
+      errorMessage.value = /^[0-9A-F]{6}$/i.test(newValue)
+        ? null
+        : InvalidColorCodeErrorMessage;
     }
     emit("update:error", errorMessage.value);
   },
