@@ -185,31 +185,35 @@ type TextInputField = {
   error: FormFieldErrorType;
 };
 
+function createFormFieldError(): FormFieldErrorType {
+  return { show: false, message: "" };
+}
+
 // Reset stale validation errors
 function resetFormStaleValidation() {
-  siteName.error = { show: false, message: "" };
-  description.error = { show: false, message: "" };
-  logo.error = { show: false, message: "" };
-  accentColor.error = { show: false, message: "" };
-  googleAnalyticsId.error = { show: false, message: "" };
+  siteName.error = createFormFieldError();
+  description.error = createFormFieldError();
+  logo.error = createFormFieldError();
+  accentColor.error = createFormFieldError();
+  googleAnalyticsId.error = createFormFieldError();
 }
 
 const siteName = reactive<TextInputField>({
   value: "",
-  error: { show: false, message: "" },
+  error: createFormFieldError(),
 });
 const logo = reactive<TextInputField>({
   value: "",
-  error: { show: false, message: "" },
+  error: createFormFieldError(),
 });
 const description = reactive<TextInputField>({
   value: "",
-  error: { show: false, message: "" },
+  error: createFormFieldError(),
 });
 const allowSignup = ref(false);
 const accentColor = reactive<TextInputField>({
   value: "484d7c",
-  error: { show: false, message: "" },
+  error: createFormFieldError(),
 });
 const googleAnalyticsId = reactive<
   Omit<TextInputField, "value"> & {
@@ -217,7 +221,7 @@ const googleAnalyticsId = reactive<
   }
 >({
   value: "",
-  error: { show: false, message: "" },
+  error: createFormFieldError(),
 });
 const developer_mode = ref(false);
 const blockedDomains = ref<Partial<string[]>>();
