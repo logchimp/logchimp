@@ -78,9 +78,9 @@ watch(
     if (!newValue) return;
     const validColor = /^[0-9A-F]{6}$/i.test(newValue);
     if (!validColor) {
-      error.show = true;
       error.message = InvalidColorCodeErrorMessage;
     }
+    error.show = !validColor;
   },
 );
 
