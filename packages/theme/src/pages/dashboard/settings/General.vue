@@ -26,7 +26,7 @@
             placeholder="Enter site name"
             :error="siteName.error"
             @update:model-value="(value) => (siteName.value = value ?? null)"
-            @hide-error="hideSiteNameError"
+            @hide-error="setFieldError(siteName)"
           />
 
           <l-text
@@ -36,7 +36,7 @@
             data-testid="site-description"
             :error="description.error"
             @update:model-value="(value) => (description.value = value ?? null)"
-            @hide-error="hideDescriptionError"
+            @hide-error="setFieldError(description)"
           />
 
           <toggle-item
@@ -232,20 +232,18 @@ const updateSettingsPermissionDisabled = computed(() => {
   return !checkPermission;
 });
 
-function hideSiteNameError(event: FormFieldErrorType) {
-  siteName.error = event;
-}
-
-function hideDescriptionError(event: FormFieldErrorType) {
-  description.error = event;
+function setFieldError(field: TextInputField) {
+  return () => {
+    field.error = createFormFieldError();
+  };
 }
 
 // function hideAccentColorError(event: FormFieldErrorType) {
 //   accentColor.error = event;
 // }
 
-function hideGoogleAnalyticsError(event: FormFieldErrorType) {
-  googleAnalyticsId.error = event;
+function hideGoogleAnalyticsError() {
+  googleAnalyticsId.error = createFormFieldError();
 }
 
 async function updateSettingsHandler() {
