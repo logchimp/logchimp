@@ -262,8 +262,12 @@ describe("PATCH /api/v1/settings/site", () => {
           expect(response.headers["content-type"]).toContain(
             "application/json",
           );
-          expect(response.body.code).toBe("INVALID_LOGO_URL");
+
           expect(response.status).toBe(400);
+          expect(response.body.code).toBe("VALIDATION_ERROR");
+
+          // Field validation errors
+          expect(response.body.errors[0].code).toBe("INVALID_LOGO_URL");
         } else if (response.status === 304) {
           expect(response.headers["content-type"]).toBeUndefined();
         } else {
@@ -289,10 +293,14 @@ describe("PATCH /api/v1/settings/site", () => {
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.body.code).toBe("VALIDATION_ERROR");
     expect(response.status).toBe(400);
 
-    expect(response.body.code).toBe("INVALID_ACCENT_COLOR");
-    expect(response.body.message).toBe("Invalid accent color");
+    // Field validation errors
+    const fieldError = response.body.errors[0];
+    expect(fieldError.field).toBe("accentColor");
+    expect(fieldError.message).toBe("Invalid accent color");
+    expect(fieldError.code).toBe("INVALID_ACCENT_COLOR");
   });
 
   it("should remove accent color when 'null' is passed", async () => {
