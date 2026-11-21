@@ -5,12 +5,20 @@ export interface IFormBaseProps {
   /**
    * @default false
    */
+  required?: boolean;
+  /**
+   * @default false
+   */
   disabled?: boolean;
   /**
    * @default { show: false, message: "" }
    */
   error?: FormFieldErrorType;
 }
+
+export type FormBasePropsV2 = Omit<IFormBaseProps, "error"> & {
+  error?: string | null;
+};
 
 export const formBaseProps = {
   label: {

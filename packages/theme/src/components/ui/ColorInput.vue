@@ -6,7 +6,7 @@
         class="color-preview"
         data-test="color-preview"
         :class="{
-          'input-error': error.show,
+          'input-error': !!errorMessage,
         }"
         :style="{
           backgroundColor: `#${modelValue || 'fff'}`,
@@ -17,7 +17,7 @@
         class="input-field"
         :class="{
           'input-field-disabled': disabled,
-          'input-error': error.show,
+          'input-error': !!errorMessage,
         }"
         type="text"
         :placeholder="placeholder"
@@ -25,76 +25,88 @@
         :disabled="disabled ? 'true' : undefined"
         :aria-disabled="disabled ? 'true' : undefined"
         @input="input"
-        @click="hideError"
+        @blur="onBlur"
       />
     </div>
     <p v-if="description" class="input-description">
       {{ description }}
     </p>
     <p
-      v-if="error.show"
+      v-if="errorMessage"
       data-test="input-error-message"
       class="input-error-message"
     >
-      {{ error.message }}
+      {{ errorMessage }}
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
-import type { FormFieldErrorType, IFormBaseProps } from "./input/formBaseProps";
+import { ref, watch } from "vue";
+import { watchDebounced } from "@vueuse/core";
+import { type FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
 
-const props = withDefaults(defineProps<IFormBaseProps & FormInputBinds>(), {
+const props = withDefaults(defineProps<FormBaseProps & FormInputBinds>(), {
   label: "Color",
   placeholder: "abcdef",
+  required: false,
 });
 
 const emit = defineEmits<{
-  (e: "hide-error", event: FormFieldErrorType): void;
   (e: "update:modelValue", event: string): void;
+  (e: "update:error", event: string | null): void;
 }>();
 
 const InvalidColorCodeErrorMessage = "Please enter a valid color code.";
-const error = reactive({
-  show: false,
-  message: "",
-});
+const touched = ref(false);
+const errorMessage = ref<string | null>(null);
 
 watch(
   () => props.error,
   (newError) => {
-    if (newError) {
-      Object.assign(error, newError);
-    }
+    errorMessage.value = newError ?? null;
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 );
 
 watch(
   () => props.modelValue,
-  (newValue) => {
-    if (!newValue) return;
-    const validColor = /^[0-9A-F]{6}$/i.test(newValue);
-    if (!validColor) {
-      error.message = InvalidColorCodeErrorMessage;
-    }
-    error.show = !validColor;
+  (value) => {
+    // clear error instantly on valid
+    if (errorMessage.value && !getError(value)) validate(value);
   },
 );
 
-function hideError() {
-  error.show = false;
-  emit("hide-error", {
-    show: false,
-    message: "",
-  });
-}
+watchDebounced(
+  () => props.modelValue,
+  (value) => {
+    if (!touched.value) return;
+    validate(value);
+  },
+  {
+    debounce: 600,
+  },
+);
 
 function input(event: Event) {
   const target = event.target as HTMLInputElement;
+  touched.value = true;
   emit("update:modelValue", target.value);
+}
+
+function onBlur() {
+  validate(props.modelValue);
+}
+
+function getError(value?: string | null) {
+  if (!value) return props.required ? "Required" : null;
+  return /^[0-9A-F]{6}$/i.test(value) ? null : InvalidColorCodeErrorMessage;
+}
+
+function validate(value?: string | null) {
+  errorMessage.value = getError(value);
+  emit("update:error", errorMessage.value);
 }
 </script>
 
