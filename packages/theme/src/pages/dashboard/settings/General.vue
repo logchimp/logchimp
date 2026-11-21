@@ -113,8 +113,10 @@
       <div class="form-columns">
         <div class="form-column">
           <color-input
+            :error="accentColor.error.message"
             :model-value="accentColor.value ?? undefined"
             @update:model-value="(value) => (accentColor.value = value ?? null)"
+            @update:error="updateAccentColorError"
           />
         </div>
       </div>
@@ -190,15 +192,6 @@ function createFormFieldError(): FormFieldErrorType {
   return { show: false, message: "" };
 }
 
-// Reset stale validation errors
-function resetFormStaleValidation() {
-  siteName.error = createFormFieldError();
-  description.error = createFormFieldError();
-  logo.error = createFormFieldError();
-  accentColor.error = createFormFieldError();
-  googleAnalyticsId.error = createFormFieldError();
-}
-
 const siteName = reactive<TextInputField>({
   value: "",
   error: createFormFieldError(),
@@ -237,32 +230,43 @@ function setFieldError(field: TextInputField) {
   Object.assign(field.error, createFormFieldError());
 }
 
-// function hideAccentColorError(event: FormFieldErrorType) {
-//   accentColor.error = event;
-// }
+function updateAccentColorError(value: string | null) {
+  Object.assign(accentColor.error, {
+    show: value !== null,
+    message: value ?? "",
+  });
+}
 
 function hideGoogleAnalyticsError() {
   googleAnalyticsId.error = createFormFieldError();
 }
 
 async function updateSettingsHandler() {
-  resetFormStaleValidation();
+  siteName.error = createFormFieldError();
+  description.error = createFormFieldError();
+  logo.error = createFormFieldError();
+  googleAnalyticsId.error = createFormFieldError();
 
-  // At least one of site name or logo must be provided
-  const hasSiteName = !!siteName.value?.trim();
-  const hasLogo = !!logo.value?.trim();
-
+  const _title = (siteName.value || "").trim();
+  const _logo = (logo.value || "").trim();
   let hasValidationError = false;
 
-  if (!hasSiteName && !hasLogo) {
+  if (!_title && !_logo) {
+    const message = "Please enter a site name or a logo URL.";
     siteName.error.show = true;
-    siteName.error.message = "Either a site name or logo URL is required";
+    siteName.error.message = message;
+    logo.error.show = true;
+    logo.error.message = message;
+    hasValidationError = true;
+  }
+
+  if (accentColor.error.show) {
     hasValidationError = true;
   }
 
   if (!accentColor.value) {
     accentColor.error.show = true;
-    accentColor.error.message = "Required";
+    accentColor.error.message = "Please enter a valid color code.";
     hasValidationError = true;
   }
 
