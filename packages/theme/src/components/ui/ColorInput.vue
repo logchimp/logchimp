@@ -61,9 +61,7 @@ const errorMessage = ref<string | null>(null);
 watch(
   () => props.error,
   (newError) => {
-    if (newError) {
-      errorMessage.value = newError;
-    }
+    errorMessage.value = newError ?? null;
   },
   { immediate: true },
 );
