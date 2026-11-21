@@ -44,6 +44,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { watchDebounced } from "@vueuse/core";
+import { isHexColor } from "validator";
 import { type FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
 
@@ -101,7 +102,7 @@ function onBlur() {
 
 function getError(value?: string | null) {
   if (!value) return props.required ? "Required" : null;
-  return /^[0-9A-F]{6}$/i.test(value) ? null : InvalidColorCodeErrorMessage;
+  return isHexColor(value) ? null : InvalidColorCodeErrorMessage;
 }
 
 function validate(value?: string | null) {
