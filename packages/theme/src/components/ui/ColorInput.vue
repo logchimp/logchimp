@@ -76,8 +76,10 @@ watch(
   (newValue) => {
     if (!newValue) return;
     const validColor = /^[0-9A-F]{6}$/i.test(newValue);
-    error.show = !validColor;
-    error.message = InvalidColorCodeErrorMessage;
+    if (!validColor) {
+      error.show = true;
+      error.message = InvalidColorCodeErrorMessage;
+    }
   },
 );
 
