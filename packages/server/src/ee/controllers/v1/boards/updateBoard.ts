@@ -9,7 +9,11 @@ import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
 import { BoardRepository } from "../../../repository/board";
 import { valkey } from "../../../../cache";
-import { dateToISOString, sanitiseURL } from "../../../../helpers";
+import {
+  dateToISOString,
+  isHexColorWithoutHash,
+  sanitiseURL,
+} from "../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["UpdateBoardResponseBody"]
@@ -29,9 +33,7 @@ const bodySchema = v.object({
   color: v.optional(
     v.pipe(
       v.string(),
-      v.trim(),
-      v.length(6, "BOARD_COLOR_HEX_LENGTH"),
-      v.hexadecimal("BOARD_COLOR_HEX_CHAR"),
+      v.check((value) => isHexColorWithoutHash(value), "INVALID_BOARD_COLOR"),
     ),
   ),
   view_voters: v.optional(v.boolean("BOOLEAN_EXPECTED")),

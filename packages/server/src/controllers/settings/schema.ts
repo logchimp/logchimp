@@ -1,8 +1,9 @@
 import * as v from "valibot";
-import { isHexColor, isURL } from "validator";
+import { isURL } from "validator";
 
 import { sanitizeUrl } from "../../utils/sanitizeUrl";
 import { clearable } from "../../utils/schema";
+import { isHexColorWithoutHash } from "../../helpers";
 
 export const settingsErrorMap: Record<string, string> = {
   INVALID_LOGO_URL: "Invalid Logo URL",
@@ -23,7 +24,7 @@ const logoSchema = clearable(
 const accentColorSchema = clearable(
   v.pipe(
     v.string(),
-    v.check((value) => isHexColor(value), "INVALID_ACCENT_COLOR"),
+    v.check((value) => isHexColorWithoutHash(value), "INVALID_ACCENT_COLOR"),
   ),
 );
 

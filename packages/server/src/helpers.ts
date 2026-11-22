@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { validate as validateUUID } from "uuid";
 import fs from "fs";
-import { isEmail } from "validator";
+import { isEmail, isHexColor } from "validator";
 import { OFFSET_PAGINATION_UPPER_LIMIT } from "./constants";
 import { customAlphabet } from "nanoid";
 
@@ -56,6 +56,12 @@ const generateHexColor = () => {
   random *= 10 ** exponent;
   return (~~(random * (1 << 24))).toString(16);
 };
+
+function isHexColorWithoutHash(value: unknown) {
+  return (
+    typeof value === "string" && !value.startsWith("#") && isHexColor(value)
+  );
+}
 
 /**
  * Sanitise username
@@ -255,4 +261,5 @@ export {
   normalize,
   arraysEqual,
   dateToISOString,
+  isHexColorWithoutHash,
 };
