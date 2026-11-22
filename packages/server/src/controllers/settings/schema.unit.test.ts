@@ -106,7 +106,7 @@ describe("accentColor", () => {
     },
   );
 
-  test.each(["not-a-color", "gggggg", "1234567", "ab", "invalid"])(
+  test.each(["not-a-color", "gggggg", "1234567", "ab", "abcde", "invalid"])(
     "rejects invalid color %j",
     (accentColor) => {
       const result = parse({ accentColor });
