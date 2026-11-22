@@ -46,7 +46,7 @@ export async function create(
       message: "Invalid request body",
       code: "VALIDATION_ERROR",
       errors: reqBody.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: requestBodyErrorMap[issue.message]
           ? requestBodyErrorMap[issue.message]
           : undefined,
