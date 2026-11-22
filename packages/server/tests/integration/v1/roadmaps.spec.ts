@@ -904,22 +904,52 @@ describeEE("PATCH /api/v1/roadmaps", () => {
         expectedStatus: 400,
       },
       {
-        testName: "ROADMAP_COLOR_HEX_LENGTH",
+        testName: "INVALID_HEX_COLOR_CODE for invalid hex characters",
         omitField: null,
-        overrideFields: { color: "fff" }, // 3 chars instead of 6
+        overrideFields: { color: "gggggg" }, // Invalid hex characters
         expectedError: {
-          message: "Color must be exactly 6 characters",
-          code: "ROADMAP_COLOR_HEX_LENGTH",
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
         },
         expectedStatus: 400,
       },
       {
-        testName: "ROADMAP_COLOR_HEX_CHAR",
+        testName: "INVALID_HEX_COLOR_CODE for color with hash prefix",
         omitField: null,
-        overrideFields: { color: "gggggg" }, // Invalid hex characters
+        overrideFields: { color: "#ff0000" }, // Hash prefix not allowed
         expectedError: {
-          message: "Color must be a valid hexadecimal value",
-          code: "ROADMAP_COLOR_HEX_CHAR",
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "INVALID_HEX_COLOR_CODE for random string",
+        omitField: null,
+        overrideFields: { color: "not-a-hex-code" }, // Random string
+        expectedError: {
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "INVALID_HEX_COLOR_CODE for too short color",
+        omitField: null,
+        overrideFields: { color: "ff" }, // Only 2 characters
+        expectedError: {
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "INVALID_HEX_COLOR_CODE for too long color",
+        omitField: null,
+        overrideFields: { color: "ff0000ff" }, // 8 characters
+        expectedError: {
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
         },
         expectedStatus: 400,
       },
@@ -1112,6 +1142,109 @@ describeEE("PATCH /api/v1/roadmaps", () => {
     expect(response.status).toBe(200);
     expect(response.body.roadmap.url).toBe(base);
   });
+
+  itEE("should update roadmap with 3-character hex color code", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+    await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+      roleName: "Roadmap Patcher",
+    });
+
+    const roadmap = await generateRoadmap({}, true);
+    const shortColor = "f00"; // 3-character hex color code
+
+    const response = await supertest(app)
+      .patch("/api/v1/roadmaps")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        id: roadmap.id,
+        name: roadmap.name,
+        url: roadmap.url,
+        color: shortColor,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const updated = response.body.roadmap;
+    expect(updated.id).toBe(roadmap.id);
+    expect(updated.color).toBe(shortColor);
+  });
+
+  itEE(
+    "should update roadmap with various valid 3-character hex color codes",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+      await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+        roleName: "Roadmap Patcher",
+      });
+
+      const testCases = [
+        { color: "fff", description: "white" },
+        { color: "000", description: "black" },
+        { color: "f00", description: "red" },
+        { color: "0f0", description: "green" },
+        { color: "00f", description: "blue" },
+        { color: "abc", description: "mixed" },
+        { color: "ABC", description: "uppercase" },
+        { color: "AbC", description: "mixed case" },
+      ];
+
+      for (const testCase of testCases) {
+        const roadmap = await generateRoadmap({}, true);
+
+        const response = await supertest(app)
+          .patch("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send({
+            id: roadmap.id,
+            name: roadmap.name,
+            url: roadmap.url,
+            color: testCase.color,
+          });
+
+        expect(response.status).toBe(200);
+        expect(response.body.roadmap.color).toBe(testCase.color);
+      }
+    },
+  );
+
+  itEE(
+    "should update roadmap with various valid 6-character hex color codes",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+      await createRoleWithPermissions(authUser.userId, ["roadmap:update"], {
+        roleName: "Roadmap Patcher",
+      });
+
+      const testCases = [
+        { color: "ffffff", description: "white" },
+        { color: "000000", description: "black" },
+        { color: "ff0000", description: "red" },
+        { color: "00ff00", description: "green" },
+        { color: "0000ff", description: "blue" },
+        { color: "ff00ff", description: "magenta" },
+        { color: "ABCDEF", description: "uppercase" },
+        { color: "aBcDeF", description: "mixed case" },
+      ];
+
+      for (const testCase of testCases) {
+        const roadmap = await generateRoadmap({}, true);
+
+        const response = await supertest(app)
+          .patch("/api/v1/roadmaps")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send({
+            id: roadmap.id,
+            name: roadmap.name,
+            url: roadmap.url,
+            color: testCase.color,
+          });
+
+        expect(response.status).toBe(200);
+        expect(response.body.roadmap.color).toBe(testCase.color);
+      }
+    },
+  );
 });
 
 // Delete roadmaps
