@@ -33,7 +33,10 @@ const bodySchema = v.object({
   color: v.optional(
     v.pipe(
       v.string(),
-      v.check((value) => isHexColorWithoutHash(value), "INVALID_BOARD_COLOR"),
+      v.check(
+        (value) => isHexColorWithoutHash(value),
+        "INVALID_HEX_COLOR_CODE",
+      ),
     ),
   ),
   view_voters: v.optional(v.boolean("BOOLEAN_EXPECTED")),
@@ -43,8 +46,7 @@ const bodySchema = v.object({
 const schemaBodyErrorMap = {
   BOARD_NAME_MISSING: error.api.boards.nameMissing,
   BOARD_URL_MISSING: error.api.boards.urlMissing,
-  BOARD_COLOR_HEX_LENGTH: error.general.colorCodeLength,
-  BOARD_COLOR_HEX_CHAR: error.general.colorCodeInvalid,
+  INVALID_HEX_COLOR_CODE: error.general.invalidHexColorCode,
   BOOLEAN_EXPECTED: error.general.booleanValue,
 };
 

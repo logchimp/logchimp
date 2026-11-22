@@ -30,7 +30,10 @@ const bodySchema = v.object({
   color: v.optional(
     v.pipe(
       v.string(),
-      v.check((value) => isHexColorWithoutHash(value), "INVALID_ROADMAP_COLOR"),
+      v.check(
+        (value) => isHexColorWithoutHash(value),
+        "INVALID_HEX_COLOR_CODE",
+      ),
     ),
   ),
   display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
@@ -39,8 +42,7 @@ const bodySchema = v.object({
 const schemaBodyErrorMap = {
   ROADMAP_NAME_MISSING: error.api.roadmaps.nameMissing,
   ROADMAP_URL_MISSING: error.api.roadmaps.urlMissing,
-  ROADMAP_COLOR_HEX_LENGTH: error.general.colorCodeLength,
-  ROADMAP_COLOR_HEX_CHAR: error.general.colorCodeInvalid,
+  INVALID_HEX_COLOR_CODE: error.general.invalidHexColorCode,
   BOOLEAN_EXPECTED: error.general.booleanValue,
 };
 
