@@ -46,6 +46,7 @@ import { ref, watch } from "vue";
 import { watchDebounced } from "@vueuse/core";
 import { type FormBasePropsV2 as FormBaseProps } from "./input/formBaseProps";
 import type { FormInputBinds } from "./input/formInputBind";
+import { isHexColorWithoutHash } from "../../utils/func";
 
 const props = withDefaults(defineProps<FormBaseProps & FormInputBinds>(), {
   label: "Color",
@@ -101,7 +102,7 @@ function onBlur() {
 
 function getError(value?: string | null) {
   if (!value) return props.required ? "Required" : null;
-  return /^[0-9A-F]{6}$/i.test(value) ? null : InvalidColorCodeErrorMessage;
+  return isHexColorWithoutHash(value) ? null : InvalidColorCodeErrorMessage;
 }
 
 function validate(value?: string | null) {

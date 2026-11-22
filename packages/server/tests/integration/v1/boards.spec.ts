@@ -1040,22 +1040,52 @@ describeEE("PATCH /api/v1/boards", () => {
         expectedStatus: 400,
       },
       {
-        testName: "BOARD_COLOR_HEX_LENGTH",
+        testName: "INVALID_HEX_COLOR_CODE for invalid hex characters",
         omitField: null,
-        overrideFields: { color: "fff" }, // 3 chars instead of 6
+        overrideFields: { color: "gggggg" }, // Invalid hex characters
         expectedError: {
-          message: "Color must be exactly 6 characters",
-          code: "BOARD_COLOR_HEX_LENGTH",
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
         },
         expectedStatus: 400,
       },
       {
-        testName: "BOARD_COLOR_HEX_CHAR",
+        testName: "INVALID_HEX_COLOR_CODE for color with hash prefix",
         omitField: null,
-        overrideFields: { color: "gggggg" }, // Invalid hex characters
+        overrideFields: { color: "#00aaff" }, // Hash prefix not allowed
         expectedError: {
-          message: "Color must be a valid hexadecimal value",
-          code: "BOARD_COLOR_HEX_CHAR",
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "INVALID_HEX_COLOR_CODE for random string",
+        omitField: null,
+        overrideFields: { color: "not-a-hex-code" }, // Random string
+        expectedError: {
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "INVALID_HEX_COLOR_CODE for too short color",
+        omitField: null,
+        overrideFields: { color: "ab" }, // Only 2 characters
+        expectedError: {
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
+        },
+        expectedStatus: 400,
+      },
+      {
+        testName: "INVALID_HEX_COLOR_CODE for too long color",
+        omitField: null,
+        overrideFields: { color: "aabbccdd" }, // 8 characters
+        expectedError: {
+          message: "Please enter a valid color code",
+          code: "INVALID_HEX_COLOR_CODE",
         },
         expectedStatus: 400,
       },
@@ -1299,6 +1329,109 @@ describeEE("PATCH /api/v1/boards", () => {
     expect(response.status).toBe(200);
     expect(response.body.board.url).toBe(base);
   });
+
+  itEE("should update board with 3-character hex color code", async () => {
+    const { user: authUser } = await createUser({ isVerified: true });
+    await createRoleWithPermissions(authUser.userId, ["board:update"], {
+      roleName: "Board Patcher",
+    });
+
+    const board = await generateBoards({}, true);
+    const shortColor = "0af"; // 3-character hex color code
+
+    const response = await supertest(app)
+      .patch("/api/v1/boards")
+      .set("Authorization", `Bearer ${authUser.authToken}`)
+      .send({
+        boardId: board.boardId,
+        name: board.name,
+        url: board.url,
+        color: shortColor,
+      });
+
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.status).toBe(200);
+
+    const updated = response.body.board;
+    expect(updated.boardId).toBe(board.boardId);
+    expect(updated.color).toBe(shortColor);
+  });
+
+  itEE(
+    "should update board with various valid 3-character hex color codes",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+      await createRoleWithPermissions(authUser.userId, ["board:update"], {
+        roleName: "Board Patcher",
+      });
+
+      const testCases = [
+        { color: "fff", description: "white" },
+        { color: "000", description: "black" },
+        { color: "f00", description: "red" },
+        { color: "0f0", description: "green" },
+        { color: "00f", description: "blue" },
+        { color: "abc", description: "mixed" },
+        { color: "ABC", description: "uppercase" },
+        { color: "AbC", description: "mixed case" },
+      ];
+
+      for (const testCase of testCases) {
+        const board = await generateBoards({}, true);
+
+        const response = await supertest(app)
+          .patch("/api/v1/boards")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send({
+            boardId: board.boardId,
+            name: board.name,
+            url: board.url,
+            color: testCase.color,
+          });
+
+        expect(response.status).toBe(200);
+        expect(response.body.board.color).toBe(testCase.color);
+      }
+    },
+  );
+
+  itEE(
+    "should update board with various valid 6-character hex color codes",
+    async () => {
+      const { user: authUser } = await createUser({ isVerified: true });
+      await createRoleWithPermissions(authUser.userId, ["board:update"], {
+        roleName: "Board Patcher",
+      });
+
+      const testCases = [
+        { color: "ffffff", description: "white" },
+        { color: "000000", description: "black" },
+        { color: "ff0000", description: "red" },
+        { color: "00ff00", description: "green" },
+        { color: "0000ff", description: "blue" },
+        { color: "ff00ff", description: "magenta" },
+        { color: "ABCDEF", description: "uppercase" },
+        { color: "aBcDeF", description: "mixed case" },
+      ];
+
+      for (const testCase of testCases) {
+        const board = await generateBoards({}, true);
+
+        const response = await supertest(app)
+          .patch("/api/v1/boards")
+          .set("Authorization", `Bearer ${authUser.authToken}`)
+          .send({
+            boardId: board.boardId,
+            name: board.name,
+            url: board.url,
+            color: testCase.color,
+          });
+
+        expect(response.status).toBe(200);
+        expect(response.body.board.color).toBe(testCase.color);
+      }
+    },
+  );
 });
 
 // Delete boards by id

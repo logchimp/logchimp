@@ -10,3 +10,10 @@ export function getQueryParam(
   const first = Array.isArray(value) ? value[0] : value;
   return first ?? undefined;
 }
+
+export function isHexColorWithoutHash(value: unknown) {
+  return (
+    typeof value === "string" &&
+    /^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6})$/.test(value)
+  );
+}

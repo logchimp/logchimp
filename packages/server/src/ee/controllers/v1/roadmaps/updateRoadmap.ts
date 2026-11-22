@@ -8,7 +8,11 @@ import * as cache from "../../../../cache";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { dateToISOString, sanitiseURL } from "../../../../helpers";
+import {
+  dateToISOString,
+  isHexColorWithoutHash,
+  sanitiseURL,
+} from "../../../../helpers";
 
 type ResponseBody =
   | components["schemas"]["UpdateRoadmapResponseBody"]
@@ -26,9 +30,10 @@ const bodySchema = v.object({
   color: v.optional(
     v.pipe(
       v.string(),
-      v.trim(),
-      v.length(6, "ROADMAP_COLOR_HEX_LENGTH"),
-      v.hexadecimal("ROADMAP_COLOR_HEX_CHAR"),
+      v.check(
+        (value) => isHexColorWithoutHash(value),
+        "INVALID_HEX_COLOR_CODE",
+      ),
     ),
   ),
   display: v.optional(v.boolean("BOOLEAN_EXPECTED")),
@@ -37,8 +42,7 @@ const bodySchema = v.object({
 const schemaBodyErrorMap = {
   ROADMAP_NAME_MISSING: error.api.roadmaps.nameMissing,
   ROADMAP_URL_MISSING: error.api.roadmaps.urlMissing,
-  ROADMAP_COLOR_HEX_LENGTH: error.general.colorCodeLength,
-  ROADMAP_COLOR_HEX_CHAR: error.general.colorCodeInvalid,
+  INVALID_HEX_COLOR_CODE: error.general.invalidHexColorCode,
   BOOLEAN_EXPECTED: error.general.booleanValue,
 };
 

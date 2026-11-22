@@ -279,74 +279,113 @@ describe("PATCH /api/v1/settings/site", () => {
     );
   });
 
-  it('should throw error "INVALID_ACCENT_COLOR" for "not-a-color" accent color ', async () => {
+  describe("accent color validation", () => {
+    const invalidAccentColorTestCases = [
+      {
+        description: "not-a-color string",
+        accentColor: "not-a-color",
+      },
+      {
+        description: "hash prefix not allowed",
+        accentColor: "#ff0000",
+      },
+      {
+        description: "invalid hex characters",
+        accentColor: "gggggg",
+      },
+      {
+        description: "too short (2 characters)",
+        accentColor: "ff",
+      },
+      {
+        description: "too long (8 characters)",
+        accentColor: "ff0000ff",
+      },
+    ];
+
+    invalidAccentColorTestCases.forEach(({ description, accentColor }) => {
+      it(`should throw error "INVALID_ACCENT_COLOR" for ${description}`, async () => {
+        const { user } = await createUser();
+        await createRoleWithPermissions(user.userId, ["settings:update"], {
+          roleName: "Settings update",
+        });
+
+        const response = await supertest(app)
+          .patch("/api/v1/settings/site")
+          .set("Authorization", `Bearer ${user.authToken}`)
+          .send({
+            accentColor,
+          });
+
+        expect(response.headers["content-type"]).toContain("application/json");
+        expect(response.body.code).toBe("VALIDATION_ERROR");
+        expect(response.status).toBe(400);
+
+        const fieldError = response.body.errors[0];
+        expect(fieldError.field).toBe("accentColor");
+        expect(fieldError.message).toBe("Invalid accent color");
+        expect(fieldError.code).toBe("INVALID_ACCENT_COLOR");
+      });
+    });
+  });
+
+  it("should accept 3-character hex color for accent color", async () => {
     const { user } = await createUser();
     await createRoleWithPermissions(user.userId, ["settings:update"], {
       roleName: "Settings update",
     });
 
+    const accentColor = "f00"; // 3-character hex code (red)
     const response = await supertest(app)
       .patch("/api/v1/settings/site")
       .set("Authorization", `Bearer ${user.authToken}`)
       .send({
-        accentColor: "not-a-color",
+        accentColor,
       });
 
     expect(response.headers["content-type"]).toContain("application/json");
-    expect(response.body.code).toBe("VALIDATION_ERROR");
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(200);
 
-    // Field validation errors
-    const fieldError = response.body.errors[0];
-    expect(fieldError.field).toBe("accentColor");
-    expect(fieldError.message).toBe("Invalid accent color");
-    expect(fieldError.code).toBe("INVALID_ACCENT_COLOR");
+    const settings = response.body.settings;
+    expect(settings.accentColor).toBe(accentColor);
   });
 
-  it("should remove accent color when 'null' is passed", async () => {
-    const { user } = await createUser();
-    await createRoleWithPermissions(user.userId, ["settings:update"], {
-      roleName: "Settings update",
+  describe("accent color removal", () => {
+    const removalTestCases = [
+      {
+        description: "null is passed",
+        accentColor: null,
+      },
+      {
+        description: "empty string is passed",
+        accentColor: "",
+      },
+    ];
+
+    removalTestCases.forEach(({ description, accentColor }) => {
+      it(`should remove accent color when ${description}`, async () => {
+        const { user } = await createUser();
+        await createRoleWithPermissions(user.userId, ["settings:update"], {
+          roleName: "Settings update",
+        });
+
+        const res = await supertest(app)
+          .patch("/api/v1/settings/site")
+          .send({ accentColor })
+          .set("Authorization", `Bearer ${user.authToken}`);
+
+        expect(res.headers["content-type"]).toContain("application/json");
+        expect(res.status).toBe(200);
+
+        const settings = res.body.settings;
+        expect(settings.accentColor).toBeNull();
+
+        const getSiteSettingsCache = await cache.valkey.get(
+          CACHE_KEYS.SITE_SETTINGS,
+        );
+        expect(getSiteSettingsCache).toBeNull();
+      });
     });
-
-    const res = await supertest(app)
-      .patch("/api/v1/settings/site")
-      .send({ accentColor: null })
-      .set("Authorization", `Bearer ${user.authToken}`);
-
-    expect(res.headers["content-type"]).toContain("application/json");
-    expect(res.status).toBe(200);
-
-    const settings = res.body.settings;
-    expect(settings.accentColor).toBeNull();
-
-    const getSiteSettingsCache = await cache.valkey.get(
-      CACHE_KEYS.SITE_SETTINGS,
-    );
-    expect(getSiteSettingsCache).toBeNull();
-  });
-
-  it("should remove accent color when 'empty' string is passed", async () => {
-    const { user } = await createUser();
-    await createRoleWithPermissions(user.userId, ["settings:update"], {
-      roleName: "Settings update",
-    });
-
-    const res = await supertest(app)
-      .patch("/api/v1/settings/site")
-      .send({ accentColor: "" })
-      .set("Authorization", `Bearer ${user.authToken}`);
-
-    expect(res.headers["content-type"]).toContain("application/json");
-    expect(res.status).toBe(200);
-
-    const settings = res.body.settings;
-    expect(settings.accentColor).toBeNull();
-
-    const getSiteSettingsCache = await cache.valkey.get(
-      CACHE_KEYS.SITE_SETTINGS,
-    );
-    expect(getSiteSettingsCache).toBeNull();
   });
 
   it("should not touch accent color if not provided", async () => {

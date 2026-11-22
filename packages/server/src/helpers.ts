@@ -57,6 +57,13 @@ const generateHexColor = () => {
   return (~~(random * (1 << 24))).toString(16);
 };
 
+function isHexColorWithoutHash(value: unknown) {
+  return (
+    typeof value === "string" &&
+    /^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6})$/.test(value)
+  );
+}
+
 /**
  * Sanitise username
  *
@@ -255,4 +262,5 @@ export {
   normalize,
   arraysEqual,
   dateToISOString,
+  isHexColorWithoutHash,
 };
