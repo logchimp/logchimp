@@ -84,21 +84,39 @@ describe("accentColor", () => {
     expect(result.output).toEqual({ title: "LogChimp" });
   });
 
-  test.each(["#fff", "#ff00aa", "ff00aa"])("accepts %j", (accentColor) => {
-    const result = parse({ accentColor });
+  test.each(["fff", "ff00aa", "FFF", "FF00AA", "aabbcc", "123"])(
+    "accepts %j",
+    (accentColor) => {
+      const result = parse({ accentColor });
 
-    expect(result.success).toBe(true);
-    expect(result.output).toEqual({ accentColor });
-  });
+      expect(result.success).toBe(true);
+      expect(result.output).toEqual({ accentColor });
+    },
+  );
 
-  test("rejects invalid color", () => {
-    const result = parse({ accentColor: "not-a-color" });
+  test.each(["#fff", "#ff00aa", "#abcdef", "#123"])(
+    "rejects hex color with hash prefix %j",
+    (accentColor) => {
+      const result = parse({ accentColor });
 
-    expect(result.success).toBe(false);
-    const code = result.issues?.[0].message as string;
-    expect(code).toBe("INVALID_ACCENT_COLOR");
-    expect(settingsErrorMap[code]).toBe("Invalid accent color");
-  });
+      expect(result.success).toBe(false);
+      const code = result.issues?.[0].message as string;
+      expect(code).toBe("INVALID_ACCENT_COLOR");
+      expect(settingsErrorMap[code]).toBe("Invalid accent color");
+    },
+  );
+
+  test.each(["not-a-color", "gggggg", "1234567", "ab", "invalid"])(
+    "rejects invalid color %j",
+    (accentColor) => {
+      const result = parse({ accentColor });
+
+      expect(result.success).toBe(false);
+      const code = result.issues?.[0].message as string;
+      expect(code).toBe("INVALID_ACCENT_COLOR");
+      expect(settingsErrorMap[code]).toBe("Invalid accent color");
+    },
+  );
 });
 
 describe("other fields", () => {
