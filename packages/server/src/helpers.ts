@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { validate as validateUUID } from "uuid";
 import fs from "fs";
-import { isEmail, isHexColor } from "validator";
+import { isEmail } from "validator";
 import { OFFSET_PAGINATION_UPPER_LIMIT } from "./constants";
 import { customAlphabet } from "nanoid";
 
@@ -58,9 +58,7 @@ const generateHexColor = () => {
 };
 
 function isHexColorWithoutHash(value: unknown) {
-  return (
-    typeof value === "string" && !value.startsWith("#") && isHexColor(value)
-  );
+  return typeof value === "string" && /^[0-9a-fA-F]{3,6}$/.test(value);
 }
 
 /**
