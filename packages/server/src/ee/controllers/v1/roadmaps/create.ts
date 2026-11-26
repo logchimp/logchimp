@@ -13,7 +13,7 @@ import {
 } from "../../../../helpers";
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { ROADMAP_NAME_MAX_LENGTH } from "../../../../constants";
+import { ROADMAP_NAME_MAX_LENGTH } from "../../../constants";
 
 type ResponseBody =
   | components["schemas"]["CreateRoadmapResponseBody"]

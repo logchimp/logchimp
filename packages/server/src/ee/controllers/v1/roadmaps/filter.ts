@@ -9,7 +9,7 @@ import database from "../../../../database";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { GET_ROADMAPS_FILTER_COUNT } from "../../../../constants";
+import { GET_ROADMAPS_FILTER_COUNT } from "../../../constants";
 import { parseAndValidateLimit } from "../../../../helpers";
 
 const FilterVisibilitySchema = v.picklist(["public", "private"]);

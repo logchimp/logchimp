@@ -7,7 +7,7 @@ import database from "../../../../database";
 import error from "../../../../errorResponse.json";
 import logger from "../../../../utils/logger";
 import { dateToISOString, parseAndValidateLimit } from "../../../../helpers";
-import { GET_ROLES_FILTER_COUNT } from "../../../../constants";
+import { GET_ROLES_FILTER_COUNT } from "../../../constants";
 
 type ResponseBody =
   | components["schemas"]["GetFilterRolesResponseBody"]

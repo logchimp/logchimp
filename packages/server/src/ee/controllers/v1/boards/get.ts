@@ -6,7 +6,7 @@ import database from "../../../../database";
 // utils
 import logger from "../../../../utils/logger";
 import error from "../../../../errorResponse.json";
-import { GET_BOARDS_FILTER_COUNT } from "../../../../constants";
+import { GET_BOARDS_FILTER_COUNT } from "../../../constants";
 import {
   dateToISOString,
   parseAndValidateLimit,
