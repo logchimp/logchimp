@@ -41,7 +41,7 @@ importers:
     dependencies:
       '@maizzle/framework':
         specifier: latest
-        version: 6.4.0(@oxc-project/types@0.156.0)(@types/node@24.19.2)(@vue/compiler-sfc@3.5.45)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(shiki@4.6.0)(tailwind-merge@3.7.0)(vue@3.5.46(typescript@6.0.3))
+        version: 6.4.0(@oxc-project/types@0.156.0)(@types/node@24.19.2)(@vue/compiler-sfc@3.5.46)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(shiki@4.6.0)(tailwind-merge@3.7.0)(vue@3.5.46(typescript@6.0.3))
       '@maizzle/tailwindcss':
         specifier: ^1.5.6
         version: 1.5.6
@@ -119,8 +119,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       knex:
-        specifier: ^2.5.1
-        version: 2.5.1(pg@8.23.1)(supports-color@5.5.0)
+        specifier: ^3.3.0
+        version: 3.3.0(pg@8.23.1)(supports-color@5.5.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1791,14 +1791,8 @@ packages:
   '@vue/compiler-dom@3.5.46':
     resolution: {integrity: sha512-Bj3lCSw3DQnDRDxw115XqdLDd0+18Nftlgd8OXSGG+ud74hxJIE17eYrM+VWgQrTMsvJbLh9Hzf2MkwAzru36Q==}
 
-  '@vue/compiler-sfc@3.5.45':
-    resolution: {integrity: sha512-MKFjb2UX0M/l/jhfzqMLrI8VM4pfvFKG3pqFZkSZFHRLtNld/O4RtUPZFWSwhro/14qP88UQEkWzHxAZAQ0tsw==}
-
   '@vue/compiler-sfc@3.5.46':
     resolution: {integrity: sha512-hjUvMxGh+QIgegwksfp6BRBYleE/a8veZHvTR6sa+o+bM4HU+WnrUZlhN0X+pDcsl8Lhwmbu72xPvLMk3XUwog==}
-
-  '@vue/compiler-ssr@3.5.45':
-    resolution: {integrity: sha512-RF5sbZOfYz5AK00tOJUn2PwFXR2fS1u2HVzI8D9VF9rGAFxuGBqg2bB1kJ3ZHMprqSltXnT9MZE1IsqjSM8oew==}
 
   '@vue/compiler-ssr@3.5.46':
     resolution: {integrity: sha512-qebChL3aP0m1k+TlSf+fZWvOwAf3flBCi5o+n01ykR3DX4mTIWheFltmoiQ12+z66/4cGeXqbB2P7sPWkGhQNQ==}
@@ -3049,20 +3043,24 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
-  knex@2.5.1:
-    resolution: {integrity: sha512-z78DgGKUr4SE/6cm7ku+jHvFT0X97aERh/f0MUKAKgFnwCYBEW4TFBqtHWFYiJFid7fMrtpZ/gxJthvz5mEByA==}
-    engines: {node: '>=12'}
+  knex@3.3.0:
+    resolution: {integrity: sha512-LgWl031hNuLv9Lhxdd9093zULa2aNcoP04Bk29e5NidgRcEr/T0rAr2WYi4BhjTiCDoQiRU56meUE5rppLKZzQ==}
+    engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
       better-sqlite3: '*'
+      mariadb: '*'
       mysql: '*'
       mysql2: '*'
       pg: '*'
       pg-native: '*'
+      pg-query-stream: ^4.14.0
       sqlite3: '*'
       tedious: '*'
     peerDependenciesMeta:
       better-sqlite3:
+        optional: true
+      mariadb:
         optional: true
       mysql:
         optional: true
@@ -3071,6 +3069,8 @@ packages:
       pg:
         optional: true
       pg-native:
+        optional: true
+      pg-query-stream:
         optional: true
       sqlite3:
         optional: true
@@ -3600,8 +3600,8 @@ packages:
   pg-connection-string@2.14.1:
     resolution: {integrity: sha512-qR3kGNPBLpCNtz0evbKA0Y/MRFXwSSdT+pTJvYp/bXTcReZbvX1kzF0IyTc1QnxqF7AZbOeBhNL8R5mYQZV/MA==}
 
-  pg-connection-string@2.6.1:
-    resolution: {integrity: sha512-w6ZzNu6oMmIzEAYVw+RLK0+nqHPt8K3ZnknKi+g48Ak2pr3dtljJW3o+D/n2zzCG07Zoe9VOX3aiKpj+BN0pjg==}
+  pg-connection-string@2.6.2:
+    resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
 
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -5083,7 +5083,7 @@ snapshots:
     dependencies:
       vue: 3.5.46(typescript@6.0.3)
 
-  '@maizzle/framework@6.4.0(@oxc-project/types@0.156.0)(@types/node@24.19.2)(@vue/compiler-sfc@3.5.45)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(shiki@4.6.0)(tailwind-merge@3.7.0)(vue@3.5.46(typescript@6.0.3))':
+  '@maizzle/framework@6.4.0(@oxc-project/types@0.156.0)(@types/node@24.19.2)(@vue/compiler-sfc@3.5.46)(lightningcss@1.33.0)(rolldown@1.2.19)(rollup@4.68.2)(shiki@4.6.0)(tailwind-merge@3.7.0)(vue@3.5.46(typescript@6.0.3))':
     dependencies:
       '@lucide/vue': 1.73.0(vue@3.5.46(typescript@6.0.3))
       '@maizzle/tailwindcss': 1.5.6
@@ -5132,7 +5132,7 @@ snapshots:
       uqr: 0.1.3
       vite: 8.3.8(@types/node@24.19.2)(jiti@2.7.0)
       vue: 3.5.46(typescript@6.0.3)
-      vue-router: 5.5.0(@vue/compiler-sfc@3.5.45)(rolldown@1.2.19)(rollup@4.68.2)(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.46(typescript@6.0.3))
+      vue-router: 5.5.0(@vue/compiler-sfc@3.5.46)(rolldown@1.2.19)(rollup@4.68.2)(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.46(typescript@6.0.3))
     transitivePeerDependencies:
       - '@astrojs/compiler-rs'
       - '@farmfe/core'
@@ -6125,7 +6125,7 @@ snapshots:
 
   '@vue-macros/common@3.1.4(vue@3.5.46(typescript@6.0.3))':
     dependencies:
-      '@vue/compiler-sfc': 3.5.45
+      '@vue/compiler-sfc': 3.5.46
       ast-kit: 2.2.0
       local-pkg: 1.2.1
       magic-string-ast: 1.0.3
@@ -6159,18 +6159,6 @@ snapshots:
       '@vue/compiler-core': 3.5.46
       '@vue/shared': 3.5.46
 
-  '@vue/compiler-sfc@3.5.45':
-    dependencies:
-      '@babel/parser': 7.29.13
-      '@vue/compiler-core': 3.5.45
-      '@vue/compiler-dom': 3.5.45
-      '@vue/compiler-ssr': 3.5.45
-      '@vue/shared': 3.5.45
-      estree-walker: 2.0.2
-      magic-string: 0.30.21
-      postcss: 8.5.32
-      source-map-js: 1.2.2
-
   '@vue/compiler-sfc@3.5.46':
     dependencies:
       '@babel/parser': 7.29.13
@@ -6182,11 +6170,6 @@ snapshots:
       magic-string: 0.30.21
       postcss: 8.5.32
       source-map-js: 1.2.4
-
-  '@vue/compiler-ssr@3.5.45':
-    dependencies:
-      '@vue/compiler-dom': 3.5.45
-      '@vue/shared': 3.5.45
 
   '@vue/compiler-ssr@3.5.46':
     dependencies:
@@ -7585,7 +7568,7 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  knex@2.5.1(pg@8.23.1)(supports-color@5.5.0):
+  knex@3.3.0(pg@8.23.1)(supports-color@5.5.0):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
@@ -7596,7 +7579,7 @@ snapshots:
       getopts: 2.3.0
       interpret: 2.2.0
       lodash: 4.18.1
-      pg-connection-string: 2.6.1
+      pg-connection-string: 2.6.2
       rechoir: 0.8.0
       resolve-from: 5.0.0
       tarn: 3.1.2
@@ -8099,7 +8082,7 @@ snapshots:
 
   pg-connection-string@2.14.1: {}
 
-  pg-connection-string@2.6.1: {}
+  pg-connection-string@2.6.2: {}
 
   pg-int8@1.0.1: {}
 
@@ -8204,7 +8187,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.20
       picocolors: 1.1.1
-      source-map-js: 1.2.2
+      source-map-js: 1.2.4
 
   postgres-array@2.0.0: {}
 
@@ -9175,7 +9158,7 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.46(typescript@5.9.3)
 
-  vue-router@5.5.0(@vue/compiler-sfc@3.5.45)(rolldown@1.2.19)(rollup@4.68.2)(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.46(typescript@6.0.3)):
+  vue-router@5.5.0(@vue/compiler-sfc@3.5.46)(rolldown@1.2.19)(rollup@4.68.2)(vite@8.3.8(@types/node@24.19.2)(jiti@2.7.0))(vue@3.5.46(typescript@6.0.3)):
     dependencies:
       '@vue-macros/common': 3.1.4(vue@3.5.46(typescript@6.0.3))
       '@vue/devtools-api': 8.2.1
@@ -9195,7 +9178,7 @@ snapshots:
       unplugin-utils: 0.3.2
       vue: 3.5.46(typescript@6.0.3)
     optionalDependencies:
-      '@vue/compiler-sfc': 3.5.45
+      '@vue/compiler-sfc': 3.5.46
       vite: 8.3.8(@types/node@24.19.2)(jiti@2.7.0)
     transitivePeerDependencies:
       - '@farmfe/core'
