@@ -10,6 +10,7 @@ import * as cache from "../../../src/cache";
 import { createUser } from "../../utils/seed/user";
 import {
   board as generateBoard,
+  comment as generateComment,
   post as generatePost,
   roadmap as generateRoadmap,
   vote as assignVote,
@@ -1499,6 +1500,81 @@ describe("DELETE /api/v1/posts", () => {
     expect(fetchAfter.status).toBe(404);
     expect(fetchAfter.body.code).toBe("POST_NOT_FOUND");
   });
+
+  it.skipIf(!cache.isActive)(
+    "should invalidate the board cache after deleting a post",
+    async () => {
+      const board = await generateBoard({}, true);
+      const { user: moderator } = await createUser({ isVerified: true });
+
+      await createRoleWithPermissions(moderator.userId, ["post:destroy"], {
+        roleName: "Moderator",
+      });
+
+      const post = await generatePost(
+        {
+          userId: moderator.userId,
+          boardId: board.boardId,
+        },
+        true,
+      );
+
+      const cacheKey = `board:private:${board.boardId}`;
+      await cache.valkey.set(
+        cacheKey,
+        JSON.stringify({ boardId: board.boardId, post_count: 1 }),
+      );
+
+      const del = await supertest(app)
+        .delete("/api/v1/posts")
+        .set("Authorization", `Bearer ${moderator.authToken}`)
+        .send({ id: post.postId });
+
+      expect(del.status).toBe(204);
+      expect(await cache.valkey.get(cacheKey)).toBeNull();
+    },
+  );
+
+  it.skipIf(!cache.isActive)(
+    "should keep the board cache when deleting a post fails",
+    async () => {
+      const board = await generateBoard({}, true);
+      const { user: moderator } = await createUser({ isVerified: true });
+
+      await createRoleWithPermissions(moderator.userId, ["post:destroy"], {
+        roleName: "Moderator",
+      });
+
+      const post = await generatePost(
+        {
+          userId: moderator.userId,
+          boardId: board.boardId,
+        },
+        true,
+      );
+
+      // `posts_activity.post_id` has no `ON DELETE` action, so deleting a post
+      // that has activity fails at the database level.
+      await generateComment(moderator.userId, post.postId);
+
+      const cacheKey = `board:private:${board.boardId}`;
+      await cache.valkey.set(
+        cacheKey,
+        JSON.stringify({ boardId: board.boardId, post_count: 1 }),
+      );
+
+      const del = await supertest(app)
+        .delete("/api/v1/posts")
+        .set("Authorization", `Bearer ${moderator.authToken}`)
+        .send({ id: post.postId });
+
+      expect(del.status).toBe(500);
+      expect(del.body.code).toBe("SERVER_ERROR");
+      expect(await cache.valkey.get(cacheKey)).not.toBeNull();
+
+      await cache.valkey.del(cacheKey);
+    },
+  );
 });
 
 // Get post by slug

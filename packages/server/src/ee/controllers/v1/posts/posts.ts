@@ -27,6 +27,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { getVotes } from "../../../../services/votes/getVotes";
 import { PostService } from "../../../../services/posts/post.service";
+import { invalidateBoardCache } from "../../../services/boards/invalidateCache";
 
 const userRepository = new UserRepository(database, valkey);
 const boardRepository = new BoardRepository(database, valkey);
@@ -489,6 +490,8 @@ export async function createPost(
 
     const post = createPost[0];
 
+    await invalidateBoardCache([post.boardId]);
+
     await database
       .insert({
         voteId: uuidv4(),
@@ -623,13 +626,7 @@ export async function updatePost(
     }
 
     if (hasBoardId && newBoardId !== currentBoardId) {
-      const boardIds = [currentBoardId, newBoardId].filter(
-        (boardId): boardId is string => Boolean(boardId),
-      );
-      await boardRepository.InvalidateBoardCache(boardIds, [
-        "private",
-        "detail",
-      ]);
+      await invalidateBoardCache([currentBoardId, newBoardId]);
     }
 
     const post = posts[0];
