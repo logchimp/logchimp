@@ -16,7 +16,7 @@
     "@logchimp/api-ts-types": "^0.2.4",
     "@valkey/valkey-glide": "^2.6.0",
     "bcryptjs": "^3.0.3",
-    "bullmq": "^6.7.8",
+    "bullmq": "^6.7.10",
     "cors": "^2.8.6",
     "dompurify": "^3.4.18",
     "dotenv": "^17.4.2",
