@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { BOARD_NAME_MAX_LENGTH } from "../../../../constants";
 
 export const createBoardEERequestBodySchema = v.object({
   name: v.optional(
@@ -7,7 +8,7 @@ export const createBoardEERequestBodySchema = v.object({
         v.string(),
         v.trim(),
         // v.minLength(1, "NAME_MIN_LENGTH"),
-        v.maxLength(50, "NAME_MAX_LENGTH"),
+        v.maxCodePoints(BOARD_NAME_MAX_LENGTH, "NAME_MAX_LENGTH"),
       ),
     ),
   ),
