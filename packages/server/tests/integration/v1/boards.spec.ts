@@ -842,7 +842,7 @@ describeEE("POST /api/v1/boards", () => {
       // the name is trimmed before the length check
       { input: `  ${"b".repeat(50)}  `, expected: "b".repeat(50) },
     ])(
-      "should create roadmap with 50 character name: '$input'",
+      "should create board with 50 character name: '$input'",
       async ({ input, expected }) => {
         const res = await supertest(app)
           .post("/api/v1/boards")
