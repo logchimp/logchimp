@@ -56,7 +56,7 @@ export async function updatePost(
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: schemaBodyErrorMap[issue.message]
           ? schemaBodyErrorMap[issue.message]
           : undefined,

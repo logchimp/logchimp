@@ -61,7 +61,7 @@ export async function get(
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: issue.message,
         code: issue.message,
       })),

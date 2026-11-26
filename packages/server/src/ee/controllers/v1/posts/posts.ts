@@ -70,7 +70,7 @@ export async function filterPost(
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: schemaQueryErrorMap[issue.message]
           ? schemaQueryErrorMap[issue.message]
           : undefined,
@@ -86,7 +86,7 @@ export async function filterPost(
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: schemaBodyErrorMap[issue.message]
           ? schemaBodyErrorMap[issue.message]
           : undefined,
@@ -446,7 +446,7 @@ export async function createPost(
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: createPostSchemaBodyErrorMap[issue.message]
           ? createPostSchemaBodyErrorMap[issue.message]
           : undefined,
@@ -565,7 +565,7 @@ export async function updatePost(
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: updatePostSchemaBodyErrorMap[issue.message]
           ? updatePostSchemaBodyErrorMap[issue.message]
           : undefined,

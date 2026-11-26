@@ -65,7 +65,7 @@ export async function filter(
       code: "VALIDATION_ERROR",
       message: "Invalid query parameters",
       errors: query.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: schemaQueryErrorMap[issue.message]
           ? schemaQueryErrorMap[issue.message]
           : undefined,

@@ -57,7 +57,7 @@ export async function create(
       code: "VALIDATION_ERROR",
       message: "Invalid body parameters",
       errors: body.issues.map((issue) => ({
-        ...issue,
+        field: v.getDotPath(issue),
         message: createBoardSchemaBodyErrorMap[issue.message]
           ? createBoardSchemaBodyErrorMap[issue.message]
           : undefined,
