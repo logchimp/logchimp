@@ -11,7 +11,7 @@ import {
   parseAndValidateLimit,
   parseAndValidatePage,
 } from "../../../../../helpers";
-import { GET_COMMENTS_FILTER_COUNT } from "../../../../../constants";
+import { GET_COMMENTS_FILTER_COUNT } from "../../../../constants";
 
 type ResponseBody =
   | components["schemas"]["GetPostActivityResponseBody"]

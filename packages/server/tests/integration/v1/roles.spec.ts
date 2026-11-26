@@ -10,7 +10,7 @@ import { createUser } from "../../utils/seed/user";
 import { role as generateRole } from "../../utils/generators";
 import { createRoleWithPermissions } from "../../utils/createRoleWithPermissions";
 import { toSlug } from "../../../src/helpers";
-import { GET_ROLES_FILTER_COUNT } from "../../../src/constants";
+import { GET_ROLES_FILTER_COUNT } from "../../../src/ee/constants";
 import { describeEE, itEE } from "../../utils/skipEE";
 
 const roleIdSlug = toSlug(faker.commerce.productName());

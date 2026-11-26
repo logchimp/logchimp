@@ -6,15 +6,8 @@ export const OFFSET_PAGINATION_UPPER_LIMIT = 99999999;
 export const GET_USERS_FILTER_COUNT = 10;
 export const GET_POSTS_FILTER_COUNT = 10;
 export const GET_POST_VOTES_COUNT = 20;
-export const GET_COMMENTS_FILTER_COUNT = 10;
-export const GET_BOARDS_FILTER_COUNT = 10;
-export const GET_ROADMAPS_FILTER_COUNT = 20;
-export const GET_ROLES_FILTER_COUNT = 10;
 
 export const SIGNUP_USERNAME_MAX_ATTEMPTS = 2;
-
-export const BOARD_NAME_MAX_LENGTH = 50;
-export const ROADMAP_NAME_MAX_LENGTH = 50;
 
 // 1 day in seconds
 export const LOGCHIMP_LICENSE_CACHE_TTL_IN_SEC = 60 * 60 * 24;

@@ -1,0 +1,7 @@
+export const GET_COMMENTS_FILTER_COUNT = 10;
+export const GET_BOARDS_FILTER_COUNT = 10;
+export const GET_ROADMAPS_FILTER_COUNT = 20;
+export const GET_ROLES_FILTER_COUNT = 10;
+
+export const BOARD_NAME_MAX_LENGTH = 50;
+export const ROADMAP_NAME_MAX_LENGTH = 50;

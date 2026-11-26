@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { BOARD_NAME_MAX_LENGTH } from "../../../../constants";
+import { BOARD_NAME_MAX_LENGTH } from "../../../constants";
 
 export const createBoardEERequestBodySchema = v.object({
   name: v.optional(
