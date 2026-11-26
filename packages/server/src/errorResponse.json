@@ -80,6 +80,7 @@
     },
     "roadmaps": {
       "nameMissing": "Roadmap name missing",
+      "nameTooLong": "Roadmap name cannot be longer than 50 characters",
       "urlMissing": "Roadmap url cannot be empty",
       "roadmapNotFound": "Roadmap not found"
     },

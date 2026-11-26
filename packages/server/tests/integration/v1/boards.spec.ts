@@ -835,19 +835,23 @@ describeEE("POST /api/v1/boards", () => {
       },
     );
 
-    itEE(
-      "should create a board with a name of exactly 50 characters",
-      async () => {
-        const name = "a".repeat(50);
-
+    itEE.each([
+      { input: "a".repeat(50), expected: "a".repeat(50) },
+      // 50 characters, 100 UTF-16 code units
+      { input: "😀".repeat(50), expected: "😀".repeat(50) },
+      // the name is trimmed before the length check
+      { input: `  ${"b".repeat(50)}  `, expected: "b".repeat(50) },
+    ])(
+      "should create roadmap with 50 character name: '$input'",
+      async ({ input, expected }) => {
         const res = await supertest(app)
           .post("/api/v1/boards")
           .set("Authorization", `Bearer ${createUserResponse.user.authToken}`)
-          .send({ name, display: true });
+          .send({ name: input });
 
         expect(res.headers["content-type"]).toContain("application/json");
         expect(res.status).toBe(201);
-        expect(res.body.board.name).toBe(name);
+        expect(res.body.board.name).toBe(expected);
       },
     );
 

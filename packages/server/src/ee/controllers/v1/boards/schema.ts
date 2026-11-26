@@ -7,7 +7,7 @@ export const createBoardEERequestBodySchema = v.object({
         v.string(),
         v.trim(),
         // v.minLength(1, "NAME_MIN_LENGTH"),
-        v.maxLength(50, "NAME_MAX_LENGTH"),
+        v.maxCodePoints(50, "NAME_MAX_LENGTH"),
       ),
     ),
   ),
