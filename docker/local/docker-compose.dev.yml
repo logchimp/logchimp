@@ -87,6 +87,7 @@ services:
     image: mailhog/mailhog
     ports:
       - "1025:1025"
+      - "8025:8025"
     networks:
       - logchimp-dev-network
     labels:
@@ -103,6 +104,8 @@ services:
       args:
         DOCKER_BUILDKIT: 1
     command: [ "sh", "docker-dev-entrypoint.sh" ]
+    ports:
+      - "8000:3000"
     volumes:
       - ../..:/app
       - /app/node_modules
